@@ -1,0 +1,37 @@
+//
+//  OWGiphySDKInterop.m
+//  OpenWebSDK
+//
+//  Created by  Nogah Melamed on 25/03/2024.
+//  Copyright © 2024 Spot.IM. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "OWGiphySDKInterop.h"
+
+@import GiphyUISDK;
+
+@interface OWGiphySDKInterop()
+
+@end
+
+@implementation OWGiphySDKInterop
+
++ (BOOL)giphySDKAvailable {
+    if ([GiphyCore class]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (instancetype)init {
+    self = [super init];
+//    if (self && [OWGiphySDKInterop giphySDKAvailable]) {
+//        _primeChecker = [[PrimeNumberChecker alloc] init];
+//        [_primeChecker setDelegate:self];
+//    }
+    return self;
+}
+
+@end

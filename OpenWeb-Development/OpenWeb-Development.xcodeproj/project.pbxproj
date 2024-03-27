@@ -290,6 +290,9 @@
 		24E753602940A26F00A74427 /* OWCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */; };
 		24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */; };
 		24ECB4A22A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24ECB4A12A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift */; };
+		24ED931D2BB4344C0090D1FF /* OWGiphySDKInterop.h in Headers */ = {isa = PBXBuildFile; fileRef = 24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		24ED931E2BB4344C0090D1FF /* OWGiphySDKInterop.m in Sources */ = {isa = PBXBuildFile; fileRef = 24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */; };
+		24ED93202BB44CE60090D1FF /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED931F2BB44CE60090D1FF /* GiphyUISDK.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		24EF864429C9D7FF00327394 /* OWCompactContentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EF864329C9D7FF00327394 /* OWCompactContentType.swift */; };
 		24EF864629C9ED0A00327394 /* OWCompactCommentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EF864529C9ED0A00327394 /* OWCompactCommentType.swift */; };
 		24EF864829CAE8D800327394 /* OWSubscriberIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EF864729CAE8D800327394 /* OWSubscriberIconView.swift */; };
@@ -1319,6 +1322,9 @@
 		24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderViewModel.swift; sourceTree = "<group>"; };
 		24ECB4A12A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWArticleInformationStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		24ED931A2BB432DC0090D1FF /* OpenWebSDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = OpenWebSDK.modulemap; sourceTree = "<group>"; };
+		24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWGiphySDKInterop.h; sourceTree = "<group>"; };
+		24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWGiphySDKInterop.m; sourceTree = "<group>"; };
+		24ED931F2BB44CE60090D1FF /* GiphyUISDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = GiphyUISDK.xcframework; sourceTree = "<group>"; };
 		24EF864329C9D7FF00327394 /* OWCompactContentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCompactContentType.swift; sourceTree = "<group>"; };
 		24EF864529C9ED0A00327394 /* OWCompactCommentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCompactCommentType.swift; sourceTree = "<group>"; };
 		24EF864729CAE8D800327394 /* OWSubscriberIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberIconView.swift; sourceTree = "<group>"; };
@@ -2057,6 +2063,7 @@
 			files = (
 				16EA828A2B8CDED5004D6FF2 /* RxSwift.xcframework in Frameworks */,
 				16EA82862B8CDED5004D6FF2 /* RxCocoa.xcframework in Frameworks */,
+				24ED93202BB44CE60090D1FF /* GiphyUISDK.xcframework in Frameworks */,
 				16EA82882B8CDED5004D6FF2 /* RxRelay.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4558,6 +4565,8 @@
 				2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */,
 				241B07562643CCA000253944 /* image_placeholder.png */,
 				24ED931A2BB432DC0090D1FF /* OpenWebSDK.modulemap */,
+				24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */,
+				24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -4905,6 +4914,7 @@
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
+				24ED931F2BB44CE60090D1FF /* GiphyUISDK.xcframework */,
 				8D5D7A63297560FC0082A7C6 /* swiftlint */,
 				0EAFED7922E505A900B57E29 /* fastlane */,
 				5D697A3D22B65106001AD556 /* OpenWeb-SampleApp */,
@@ -5965,6 +5975,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				44C879E023608E3600E0E662 /* OpenWebSDK.h in Headers */,
+				24ED931D2BB4344C0090D1FF /* OWGiphySDKInterop.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6045,6 +6056,7 @@
 				TargetAttributes = {
 					44C8788C23608BC100E0E662 = {
 						CreatedOnToolsVersion = 11.1;
+						LastSwiftMigration = 1500;
 					};
 					5D697A3A22B65106001AD556 = {
 						CreatedOnToolsVersion = 10.2.1;
@@ -6735,6 +6747,7 @@
 				240D6E852AB882E400EB70FA /* OWConversationCountersResponse.swift in Sources */,
 				3DA264642951E3B200688FFF /* OWNetworkHTTPMethod.swift in Sources */,
 				240E8FAE2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift in Sources */,
+				24ED931E2BB4344C0090D1FF /* OWGiphySDKInterop.m in Sources */,
 				8DBC16882A5D45610010759E /* OWFontTypography.swift in Sources */,
 				9E82787D2A4DC24E00EAA88E /* OWTitleViewVM.swift in Sources */,
 				3DDA9A7F291A55BA00FE3B86 /* OWCustomizations.swift in Sources */,
@@ -7353,6 +7366,7 @@
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -7385,6 +7399,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PUBLIC_DEMO_APP";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -7514,6 +7529,7 @@
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -7546,6 +7562,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG BETA AUTOMATION";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -7668,6 +7685,7 @@
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -7822,6 +7840,7 @@
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -7877,6 +7896,7 @@
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -7908,6 +7928,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -7921,6 +7942,7 @@
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
