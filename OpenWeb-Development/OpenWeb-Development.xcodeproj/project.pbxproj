@@ -1090,7 +1090,6 @@
 		162B83522A688BDC002290EE /* OWCommentCreationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationType.swift; sourceTree = "<group>"; };
 		162B83542A715729002290EE /* OWCloseEditorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCloseEditorAlert.swift; sourceTree = "<group>"; };
 		162B83582A766582002290EE /* OWCachedCommentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCachedCommentKey.swift; sourceTree = "<group>"; };
-		162B835A2A769FFC002290EE /* OWCommentCreationCtaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OWCommentCreationCtaData.swift; path = SpotImCore/Services/CommentsCacheService/Models/OWCommentCreationCtaData.swift; sourceTree = SOURCE_ROOT; };
 		162B835C2A7A4D94002290EE /* OWConversationUpdaterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationUpdaterService.swift; sourceTree = "<group>"; };
 		162B835E2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLocalCommentDataPopulator.swift; sourceTree = "<group>"; };
 		163E02BD2A852C4F00DDB73C /* OWCommentCreatorNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreatorNetworkHelper.swift; sourceTree = "<group>"; };
@@ -4923,7 +4922,6 @@
 				16EA82822B8CDC8A004D6FF2 /* Vendor-Frameworks */,
 				5D697A6A22B6586C001AD556 /* Frameworks */,
 				F6D45AB80C879EE6B5C01DA4 /* Pods */,
-				9E0C60622A89410F001B8D5D /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -5569,14 +5567,6 @@
 			path = TransitionAnimations;
 			sourceTree = "<group>";
 		};
-		9E0C60622A89410F001B8D5D /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				162B835A2A769FFC002290EE /* OWCommentCreationCtaData.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		9E2857B02A14DBA90066D726 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -6051,7 +6041,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1210;
-				ORGANIZATIONNAME = Spot.IM;
+				ORGANIZATIONNAME = OpenWeb;
 				TargetAttributes = {
 					44C8788C23608BC100E0E662 = {
 						CreatedOnToolsVersion = 11.1;
