@@ -249,6 +249,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
         let textViewData = OWTextViewData(placeholderText: Metrics.textViewPlaceholderText,
                                           charectersLimitEnabled: false,
+                                          showCharectersLimit: false,
                                           isEditable: true,
                                           isAutoExpandable: true,
                                           hasSuggestionsBar: currentOrientation == .portrait)

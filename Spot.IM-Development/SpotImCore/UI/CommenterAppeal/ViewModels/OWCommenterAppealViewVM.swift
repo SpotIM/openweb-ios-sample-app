@@ -66,6 +66,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
                                           placeholderText: "",
                                           charectersLimitEnabled: false,
+                                          showCharectersLimit: false,
                                           isEditable: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         self._appealOptions.onNext(data.reasons)

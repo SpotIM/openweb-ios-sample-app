@@ -13,6 +13,7 @@ struct OWTextViewData {
     let placeholderText: String
     let textViewText: String
     let charectersLimitEnabled: Bool
+    let showCharectersLimit: Bool
     let isEditable: Bool
     let isAutoExpandable: Bool
     let hasSuggestionsBar: Bool
@@ -21,6 +22,7 @@ struct OWTextViewData {
          placeholderText: String,
          textViewText: String = "",
          charectersLimitEnabled: Bool,
+         showCharectersLimit: Bool,
          isEditable: Bool,
          isAutoExpandable: Bool = false,
          hasSuggestionsBar: Bool = true) {
@@ -28,6 +30,7 @@ struct OWTextViewData {
         self.placeholderText = placeholderText
         self.textViewText = textViewText
         self.charectersLimitEnabled = charectersLimitEnabled
+        self.showCharectersLimit = showCharectersLimit
         self.isEditable = isEditable
         self.isAutoExpandable = isAutoExpandable
         self.hasSuggestionsBar = hasSuggestionsBar
