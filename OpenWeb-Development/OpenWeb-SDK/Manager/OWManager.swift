@@ -39,12 +39,7 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     // Environment (only available for BETA app)
     var environment: OWNetworkEnvironmentType = .production {
         didSet {
-            switch environment {
-            case .production:
-                OWEnvironment.set(environment: OWEnvironment.production)
-            case .staging:
-                OWEnvironment.set(environment: OWEnvironment.staging)
-            }
+            OWEnvironment.set(environmentType: environment)
             // When env is set we must reset networkApi
             self.servicesProvider.configure.resetNetworkEnvironment()
         }

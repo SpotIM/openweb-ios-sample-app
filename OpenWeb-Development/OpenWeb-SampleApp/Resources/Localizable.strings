@@ -134,5 +134,6 @@
 "ShowLoginPromptTitle" = "Show Login Prompt";
 "EnableAll" = "Enable All";
 "Landscape" = "Landscape";
+"Portrait" = "Portrait";
 "Production" = "Production";
 "Staging" = "Staging";
