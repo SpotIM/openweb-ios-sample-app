@@ -6,17 +6,17 @@
 //  Copyright © 2024 Spot.IM. All rights reserved.
 //
 
-//#if canImport(GiphyUISDK)
-//import Foundation
-//import GiphyUISDK
-//import RxSwift
-//import RxCocoa
-//import UIKit
+// #if canImport(GiphyUISDK)
+// import Foundation
+// import GiphyUISDK
+// import RxSwift
+// import RxCocoa
+// import UIKit
 
 // TODO: shoyuld be available only if giphy SDK is available
 
 // https://jayleeios.medium.com/rxswift-delegate-proxy-35362b1e5e10
-//class GifViewControllerProxy: DelegateProxy<GiphyViewController, GiphyDelegate>, DelegateProxyType, GiphyDelegate {
+// class GifViewControllerProxy: DelegateProxy<GiphyViewController, GiphyDelegate>, DelegateProxyType, GiphyDelegate {
 //    fileprivate weak var _control: GiphyViewController? = nil
 //
 //    init(parentObject: GiphyViewController) {
@@ -39,9 +39,9 @@
 //    func didDismiss(controller: GiphyUISDK.GiphyViewController?) {
 //
 //    }
-//}
+// }
 //
-//extension Reactive where Base: GiphyViewController {
+// extension Reactive where Base: GiphyViewController {
 //    var delegate: DelegateProxy<GiphyViewController, GiphyDelegate> {
 //        return GifViewControllerProxy.proxy(for: self.base)
 //    }
@@ -81,6 +81,6 @@
 //
 //        return returnValue
 //    }
-//}
+// }
 
-//#endif
+// #endif
