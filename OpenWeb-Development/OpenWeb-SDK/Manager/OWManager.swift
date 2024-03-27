@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import OpenWebSDK.OWGiphySDK
 
 // Internal protocol
 protocol OWManagerInternalProtocol: AnyObject {
@@ -50,8 +49,6 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
         self.authenticationLayer = authenticationLayer
         self.helpersLayer = helpersLayer
         setupObservers()
-
-        print("NOGAH: \(OWGiphySDKInterop.giphySDKAvailable())")
     }
 }
 
