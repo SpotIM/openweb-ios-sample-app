@@ -162,18 +162,18 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             }
     }
 
-    #if canImport(GiphyUISDK)
-    var showAddGifButton: Observable<Bool> {
-        return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
-            .map {
-                $0.mobileSdk.postGifEnabled
-            }
-    }
-    #else
+//    #if canImport(GiphyUISDK)
+//    var showAddGifButton: Observable<Bool> {
+//        return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+//            .map {
+//                $0.mobileSdk.postGifEnabled
+//            }
+//    }
+//    #else
     var showAddGifButton: Observable<Bool> {
         return .just(false)
     }
-    #endif
+//    #endif
 
     init(commentCreationType: OWCommentCreationTypeInternal,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
