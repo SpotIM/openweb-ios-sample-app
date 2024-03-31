@@ -158,8 +158,8 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
                                           charectersLimitEnabled: false,
                                           showCharectersLimit: false,
                                           isEditable: true,
-                                          isAutoExpandable: true,
-                                          hasSuggestionsBar: currentOrientation == .portrait)
+                                          isAutoExpandable: false,
+                                          hasSuggestionsBar: currentOrientation == .portrait, isScrollEnabled: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         self.setupInitialTextIfNeeded()
         self.setupInitialImageIfNeeded()
