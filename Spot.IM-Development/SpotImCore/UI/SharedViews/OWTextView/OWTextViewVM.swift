@@ -133,6 +133,8 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var cursorRangeExternalChange = PublishSubject<Range<String.Index>?>()
     var cursorRangeExternalChanged: Observable<Range<String.Index>> {
         return cursorRangeExternalChange
+            // Prevent first cursor change that comes from the textView itself
+            .skip(1)
             .unwrap()
             .asObservable()
     }

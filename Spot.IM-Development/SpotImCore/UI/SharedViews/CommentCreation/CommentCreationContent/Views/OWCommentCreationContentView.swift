@@ -84,7 +84,6 @@ class OWCommentCreationContentView: UIView {
         avatarView.configure(with: viewModel.outputs.avatarViewVM)
 
         setupUI()
-        setupObservers()
         applyAccessibility()
 
         viewModel.outputs.textViewVM.inputs.becomeFirstResponderCallWithDelay.onNext(Metrics.becomeFirstResponderDelay)
@@ -103,22 +102,6 @@ fileprivate extension OWCommentCreationContentView {
         scrollView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-    }
-
-    func setupObservers() {
-        viewModel.outputs.becomeFirstResponderCalled
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.textInput.becomeFirstResponder()
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.resignFirstResponderCalled
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.textInput.resignFirstResponder()
-            })
-            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

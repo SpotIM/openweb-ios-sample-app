@@ -18,9 +18,6 @@ protocol OWCommentCreationContentViewModelingInputs {
 protocol OWCommentCreationContentViewModelingOutputs {
     var commentImageOutput: Observable<OWCommentImage?> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
-    var placeholderText: Observable<String> { get }
-    var becomeFirstResponderCalled: Observable<Void> { get }
-    var resignFirstResponderCalled: Observable<Void> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
     var isValidatedContent: Observable<Bool> { get }
@@ -42,7 +39,6 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     fileprivate struct Metrics {
         static let delayAfterLoadingImage = 50
-        static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -95,26 +91,8 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             .asObservable()
     }
 
-    var placeholderText: Observable<String> {
-        switch commentCreationType {
-        case .replyToComment:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "TypeYourReply"))
-        default:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
-        }
-    }
-
     var becomeFirstResponder = PublishSubject<Void>()
-    var becomeFirstResponderCalled: Observable<Void> {
-        return becomeFirstResponder
-            .asObservable()
-    }
-
     var resignFirstResponder = PublishSubject<Void>()
-    var resignFirstResponderCalled: Observable<Void> {
-        return resignFirstResponder
-            .asObservable()
-    }
 
     var isInitialContentEdited: Observable<Bool> {
         Observable.combineLatest(
@@ -154,7 +132,15 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         self.imageURLProvider = imageURLProvider
         self.commentCreationType = commentCreationType
         let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
-        let textViewData = OWTextViewData(placeholderText: Metrics.textViewPlaceholderText,
+        let placeholderText = {
+            switch commentCreationType {
+            case .replyToComment:
+                return OWLocalizationManager.shared.localizedString(key: "TypeYourReply")
+            default:
+                return OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
+            }
+        }()
+        let textViewData = OWTextViewData(placeholderText: placeholderText,
                                           charectersLimitEnabled: false,
                                           showCharectersLimit: false,
                                           isEditable: true,
@@ -186,9 +172,10 @@ fileprivate extension OWCommentCreationContentViewModel {
             if let commentText = comment.text?.text {
                 initialText = commentText
             }
-            guard let postId = postId,
-                  let commentCreationCache = commentsCacheService[.edit(postId: postId)] else { return }
-            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
+            if let postId = postId,
+               let commentCreationCache = commentsCacheService[.edit(postId: postId)] {
+                initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
+            }
         }
 
         if let text = initialText {
@@ -287,6 +274,15 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self.textViewVM.inputs.textViewMaxCharectersChange.onNext(limit)
                 self.textViewVM.inputs.charectarsLimitEnabledChange.onNext(limit > 0)
             })
+            .disposed(by: disposeBag)
+
+        becomeFirstResponder
+            .map { 0 }
+            .bind(to: textViewVM.inputs.becomeFirstResponderCallWithDelay)
+            .disposed(by: disposeBag)
+
+        resignFirstResponder
+            .bind(to: textViewVM.inputs.resignFirstResponderCall)
             .disposed(by: disposeBag)
     }
 
