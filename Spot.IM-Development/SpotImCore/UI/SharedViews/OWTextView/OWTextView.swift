@@ -54,6 +54,7 @@ class OWTextView: UIView {
                     right: Metrics.textViewLeadingTrailingPadding
                 )
             )
+            .isScrollEnabled(viewModel.outputs.scrollEnabled)
             .enforceSemanticAttribute()
         return textView
     }()

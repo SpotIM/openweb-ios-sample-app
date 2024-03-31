@@ -48,6 +48,7 @@ protocol OWTextViewViewModelingOutputs {
     var attributedTextChanged: Observable<NSAttributedString> { get }
     var cursorRangeExternalChanged: Observable<Range<String.Index>> { get }
     var hasSuggestionsBarChanged: Observable<Bool> { get }
+    var scrollEnabled: Bool { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -62,6 +63,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
 
     let isEditable: Bool
     let isAutoExpandable: Bool
+    let scrollEnabled: Bool
     var textViewMaxCharecters: Int
     var textViewMaxCharectersChange = PublishSubject<Int>()
 
@@ -173,6 +175,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         self.showCharectersLimit = textViewData.showCharectersLimit
         self.isAutoExpandable = textViewData.isAutoExpandable
         self.hasSuggestionsBarChange.onNext(textViewData.hasSuggestionsBar)
+        self.scrollEnabled = textViewData.isScrollEnabled
         self.setupObservers()
     }
 }
