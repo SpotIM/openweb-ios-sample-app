@@ -177,11 +177,17 @@ fileprivate extension OWCommentCreationRegularView {
             commentLabelsContainerHeightConstraint = make.height.equalTo(0).constraint
         }
 
+        self.addSubview(commentReplyCounterView)
+        commentReplyCounterView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(commentLabelsContainerView.OWSnp.top)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+        }
+
         self.addSubview(contentView)
         contentView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperviewSafeArea()
             make.top.equalTo(viewModel.outputs.shouldShowReplySnippet ? replySnippetView.OWSnp.bottom : articleDescriptionView.OWSnp.bottom)
-            make.bottom.equalTo(commentLabelsContainerView.OWSnp.top)
+            make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
         }
     }
 
