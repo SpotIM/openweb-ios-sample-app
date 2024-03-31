@@ -227,6 +227,8 @@ fileprivate extension OWTextView {
             .disposed(by: disposeBag)
 
         textView.rx.text
+            // Skip first empty string from textView that deletes the initial text
+            .skip(1)
             .unwrap()
             .bind(to: viewModel.inputs.textInternalChange)
             .disposed(by: disposeBag)
