@@ -16,6 +16,7 @@ class OWUserMentionView: UIView {
         static let rowHeight: CGFloat = 56
         static let maxNumberOfCellsHeight = 2.7
         static let heightAnimationDuration: CGFloat = 0.2
+        static let delayFrameChanged = 10
     }
 
     fileprivate let viewModel: OWUserMentionViewViewModeling
@@ -64,6 +65,17 @@ fileprivate extension OWUserMentionView {
     }
 
     func setupObservers() {
+        self.rx.observe(CGRect.self, #keyPath(UIView.bounds))
+            // Since the bounds change earlier than the frame, we delay a little
+            // to let the frame update and set the correct current frame
+            .delay(.milliseconds(Metrics.delayFrameChanged), scheduler: MainScheduler.instance)
+            .unwrap()
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.inputs.viewFrameChanged.onNext(self.frame)
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.cellsViewModels
             .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(cellIdentifier: OWUserMentionCell.identifierName,
