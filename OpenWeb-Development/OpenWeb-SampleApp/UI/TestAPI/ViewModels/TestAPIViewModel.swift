@@ -23,6 +23,7 @@ protocol TestAPIViewModelingInputs {
     var settingsTapped: PublishSubject<Void> { get }
     var authenticationTapped: PublishSubject<Void> { get }
     var selectedConversationPresetIndex: PublishSubject<Int> { get }
+    var viewWillAppear: PublishSubject<Void> { get }
 }
 
 protocol TestAPIViewModelingOutputs {
@@ -41,6 +42,7 @@ protocol TestAPIViewModelingOutputs {
     var openAuthentication: Observable<Void> { get }
     var selectedSpotId: Observable<OWSpotId> { get }
     var selectedPostId: Observable<OWPostId> { get }
+    var envLabelString: Observable<String> { get }
 }
 
 protocol TestAPIViewModeling {
@@ -72,6 +74,29 @@ class TestAPIViewModel: TestAPIViewModeling,
     let settingsTapped = PublishSubject<Void>()
     let authenticationTapped = PublishSubject<Void>()
     let doneSelectPresetTapped = PublishSubject<Void>()
+    let viewWillAppear = PublishSubject<Void>()
+
+    var envLabelString: Observable<String> {
+        return viewWillAppear
+            .map {
+                UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
+            }
+            .map { env -> String? in
+                switch env {
+                case .production:
+                    return nil // no label for production
+                case .staging:
+                    return NSLocalizedString("Staging", comment: "")
+                }
+            }
+            .map { envString in
+                guard let envString = envString else {
+                    return ""
+                }
+                return NSLocalizedString("NetworkEnvironment", comment: "") + ": \(envString)"
+            }
+            .asObservable()
+    }
 
     var selectedSpotId: Observable<OWSpotId> {
         return userDefaultsProvider.values(key: .selectedSpotId, defaultValue: Metrics.preFilledSpotId)
@@ -274,10 +299,10 @@ fileprivate extension TestAPIViewModel {
             })
             .subscribe()
             .disposed(by: disposeBag)
-
     }
 
     func setSDKConfigurations(_ spotId: String) {
+        setupEnvironment() // env must be set before spotId because we fetch config right after spotId set
         var manager = OpenWeb.manager
         manager.spotId = spotId
         var customizations = manager.ui.customizations
@@ -312,5 +337,18 @@ fileprivate extension TestAPIViewModel {
         }
 
         analytics.addBICallback(BIClosure)
+    }
+
+    func setupEnvironment() {
+        #if BETA
+        let env = UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
+        var manager = OpenWeb.manager
+        switch env {
+        case .production:
+            manager.environment = .production
+        case .staging:
+            manager.environment = .staging
+        }
+        #endif
     }
 }
