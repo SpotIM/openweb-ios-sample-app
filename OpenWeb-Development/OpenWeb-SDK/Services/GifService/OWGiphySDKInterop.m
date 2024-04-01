@@ -12,7 +12,7 @@
 @import GiphyUISDK;
 
 @interface OWGiphySDKInterop() <GiphyDelegate>
-
+@property GiphyViewController* _Nullable giphyVc;
 @end
 
 @implementation OWGiphySDKInterop
@@ -38,20 +38,30 @@
     }
 }
 
-// TODO: support theme change
-- (nullable UIViewController*)gifSelectionVC {
+- (nullable UIViewController*)gifSelectionVC:(Boolean)isDarkMode {
     if (OWGiphySDKInterop.giphySDKAvailable) {
         GiphyViewController *giphy = [[GiphyViewController alloc]init];
+        GPHThemeType themetype = isDarkMode ? GPHThemeTypeDark : GPHThemeTypeLight;
+        GPHTheme *theme = [[GPHTheme alloc]initWithType:themetype];
+        giphy.theme = theme;
         giphy.delegate = self;
+        self.giphyVc = giphy;
         return giphy;
     } else {
         return nil;
     }
 }
 
+- (void)setThemeMode:(Boolean)isDarkMode {
+    GPHThemeType themetype = isDarkMode ? GPHThemeTypeDark : GPHThemeTypeLight;
+    GPHTheme *theme = [[GPHTheme alloc]initWithType:themetype];
+    self.giphyVc.theme = theme;
+}
+
 // Giphy delegate implementation
 - (void)didDismissWithController:(GiphyViewController * _Nullable)controller {
     [self.delegate didDismissWithController:controller];
+    self.giphyVc = nil; // TODO: GiphyVC is still in memry - investigate why
 }
 
 - (void)didSelectMediaWithGiphyViewController:(GiphyViewController *)giphyViewController media:(GPHMedia *)media {

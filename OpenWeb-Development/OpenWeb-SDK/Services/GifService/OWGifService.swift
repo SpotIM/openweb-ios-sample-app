@@ -22,9 +22,6 @@ class OWGifService: OWGifServicing {
     fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
     let giphyBridg: OWGiphySDKInterop
 
-//    fileprivate var giphyVC: GiphyViewController? = nil
-//    fileprivate var theme: GPHTheme = GPHTheme()
-
     fileprivate let disposeBag = DisposeBag()
 
     var isGiphyAvailable: Bool {
@@ -52,17 +49,8 @@ class OWGifService: OWGifServicing {
     }
 
     func gifSelectionVC() -> UIViewController? {
-        let giphy = giphyBridg.gifSelectionVC() // TODO: hanle nil ?
-        return giphy
+        return giphyBridg.gifSelectionVC(sharedServicesProvider.themeStyleService().currentStyle == .dark)
     }
-
-//    func gifSelectionVC() -> GiphyViewController {
-//        let giphy = GiphyViewController()
-//        self.giphyVC = giphy
-//        giphy.theme = theme
-//
-//        return giphy
-//    }
 }
 
 fileprivate extension OWGifService {
@@ -71,20 +59,13 @@ fileprivate extension OWGifService {
     }
 
     func setupObservers() {
-        // TODO: check why changing theme while open mess with alignement
-//        sharedServicesProvider.themeStyleService()
-//            .style
-//            .subscribe(onNext: { [weak self] style in
-//                guard let self = self else { return }
-//                switch style {
-//                case .dark:
-//                    self.theme = GPHTheme(type: .dark)
-//                case .light:
-//                    self.theme = GPHTheme(type: .light)
-//                }
-//                self.giphyVC?.theme = self.theme
-//            })
-//            .disposed(by: disposeBag)
+        sharedServicesProvider.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] style in
+                guard let self = self else { return }
+                self.giphyBridg.setThemeMode(style == .dark ? true : false)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
