@@ -30,6 +30,8 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         tap.numberOfTapsRequired = 1
+        tap.addTarget(self, action: #selector(didTapCommentView(tap:)))
+        tap.delegate = self
         return tap
     }()
 
@@ -50,6 +52,29 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
 
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+    }
+
+    @objc func didTapCommentView(tap: UITapGestureRecognizer) {
+        self.endEditing(true)
+    }
+}
+
+extension OWCommentCreationView: UIGestureRecognizerDelegate {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        let userMentionVM: OWUserMentionViewViewModeling? = {
+            switch viewModel.outputs.commentCreationStyle {
+            case .regular:
+                return viewModel.outputs.commentCreationRegularViewVm.outputs.userMentionVM
+            case .light:
+                return viewModel.outputs.commentCreationLightViewVm.outputs.userMentionVM
+            case .floatingKeyboard:
+                break
+            }
+            return nil
+        }()
+        guard let userMentionVM = userMentionVM else { return true }
+        let tappedOnUserMention = userMentionVM.outputs.isUserMentionAt(point: gestureRecognizer.location(in: self))
+        return !tappedOnUserMention
     }
 }
 
@@ -81,14 +106,6 @@ fileprivate extension OWCommentCreationView {
     }
 
     func setupObservers() {
-        tapGesture.rx.event
-            .voidify()
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.endEditing(true)
-            })
-            .disposed(by: disposeBag)
-
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
                                  OWSharedServicesProvider.shared.orientationService().orientation)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation in

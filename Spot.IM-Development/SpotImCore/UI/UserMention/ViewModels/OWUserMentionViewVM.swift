@@ -21,6 +21,7 @@ protocol OWUserMentionViewViewModelingInputs {
     var textChange: PublishSubject<String> { get }
     var cursorRangeChange: PublishSubject<Range<String.Index>> { get }
     var initialMentions: PublishSubject<[OWUserMentionObject]?> { get }
+    var viewFrameChanged: BehaviorSubject<CGRect> { get }
 }
 
 protocol OWUserMentionViewViewModelingOutputs {
@@ -32,6 +33,7 @@ protocol OWUserMentionViewViewModelingOutputs {
     var attributedTextChanged: Observable<NSAttributedString> { get }
     var textChanged: Observable<String> { get }
     var cursorRangeChanged: Observable<Range<String.Index>> { get }
+    func isUserMentionAt(point: CGPoint) -> Bool
 }
 
 protocol OWUserMentionViewViewModeling: AnyObject {
@@ -58,8 +60,11 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     var replaceData = PublishSubject<OWTextViewReplaceData>()
     var textViewText = PublishSubject<String>()
     var cursorRange = PublishSubject<Range<String.Index>>()
+    fileprivate var viewFrame: CGRect = .zero
     fileprivate var tappedMentionInProgress = false
     fileprivate var textAfterMention = BehaviorSubject<String>(value: "")
+
+    var viewFrameChanged = BehaviorSubject<CGRect>(value: .zero)
 
     var attributedTextChange = PublishSubject<NSAttributedString>()
     var textChange = PublishSubject<String>()
@@ -159,11 +164,21 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
         self.randomGenerator = randomGenerator
         self.setupObservers()
     }
+
+    func isUserMentionAt(point: CGPoint) -> Bool {
+        return viewFrame.contains(point)
+    }
 }
 
 fileprivate extension OWUserMentionViewVM {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewFrameChanged
+            .subscribe(onNext: { [weak self] viewFrame in
+                self?.viewFrame = viewFrame
+            })
+            .disposed(by: disposeBag)
+
         initialMentions
             .unwrap()
             .withLatestFrom(mentionsData) { ($0, $1) }
