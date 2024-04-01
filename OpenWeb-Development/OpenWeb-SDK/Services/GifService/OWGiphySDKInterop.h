@@ -36,7 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init;
 - (void)configure:(NSString*)apiKey;
-- (nullable UIViewController*)gifSelectionVC;
+- (nullable UIViewController*)gifSelectionVC:(Boolean)isDarkMode;
+- (void)setThemeMode:(Boolean)isDarkMode;
 
 @end
 
