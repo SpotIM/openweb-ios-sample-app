@@ -343,7 +343,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         var topView: UIView {
             switch viewModel.outputs.commentType {
             case .comment:
-                return textViewObject
+                return footerView
             case .edit, .replyToComment:
                 return headerView
             }
@@ -352,6 +352,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         userMentionView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperviewSafeArea()
             make.bottom.equalTo(topView.OWSnp.top)
+            make.top.greaterThanOrEqualTo(mainContainer.OWSnp.top)
         }
     }
 
