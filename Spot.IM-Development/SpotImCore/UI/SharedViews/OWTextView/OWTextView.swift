@@ -325,10 +325,33 @@ fileprivate extension OWTextView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.hasSuggestionsBarChanged
-            .subscribe(onNext: { [weak self] hasSuggestionsBar in
-                guard let self = self else { return }
+            .withLatestFrom(viewModel.outputs.cursorRange) { ($0, $1) }
+            .subscribe(onNext: { [weak self] hasSuggestionsBar, selectedRange in
+                guard let self = self,
+                      let selecedNSRange = self.textView.text?.nsRange(from: selectedRange) else { return }
                 textView.spellCheckingType(hasSuggestionsBar ? .default : .no)
                 textView.autocorrectionType(hasSuggestionsBar ? .default : .no)
+
+                // Since the suggestions bar UI is not updated untill text changes
+                // We need to add and remove some text so it updates the UI
+                // 1 Stopping delegate so that no updates are sent out
+                // 2 Save attrubuted and regular text
+                // 3 Add a space to the current text
+                // 4 Remove the space
+                // 5 Set attributed text if exists
+                // 6 Set back the cursor range
+                // 7 Set back the textView's delegate
+                let savedDelegate = self.textView.delegate
+                self.textView.delegate = nil
+                let attributedText = self.textView.attributedText
+                let text = self.textView.text ?? ""
+                self.textView.text = text + " "
+                self.textView.text = text
+                if attributedText?.length ?? 0 > 0 {
+                    self.textView.attributedText = attributedText
+                }
+                self.textView.selectedRange = selecedNSRange
+                self.textView.delegate = savedDelegate // Return rx proxy delegate back again
             })
             .disposed(by: disposeBag)
     }

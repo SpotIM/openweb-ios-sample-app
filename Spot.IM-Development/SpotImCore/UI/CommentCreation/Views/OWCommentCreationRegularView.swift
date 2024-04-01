@@ -105,6 +105,10 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol, OWToas
         return OWCommentCreationFooterView(with: self.viewModel.outputs.footerViewModel)
     }()
 
+    fileprivate lazy var userMentionView: OWUserMentionView = {
+        return OWUserMentionView(viewModel: viewModel.outputs.userMentionVM)
+    }()
+
     fileprivate var replySnippetHeightConstraint: OWConstraint? = nil
     fileprivate var articleDescriptionHeightConstraint: OWConstraint? = nil
     fileprivate var commentLabelsContainerHeightConstraint: OWConstraint? = nil
@@ -188,6 +192,12 @@ fileprivate extension OWCommentCreationRegularView {
             make.leading.trailing.equalToSuperviewSafeArea()
             make.top.equalTo(viewModel.outputs.shouldShowReplySnippet ? replySnippetView.OWSnp.bottom : articleDescriptionView.OWSnp.bottom)
             make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
+        }
+
+        self.addSubview(userMentionView)
+        userMentionView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperviewSafeArea()
+            make.bottom.equalTo(footerView.OWSnp.top)
         }
     }
 

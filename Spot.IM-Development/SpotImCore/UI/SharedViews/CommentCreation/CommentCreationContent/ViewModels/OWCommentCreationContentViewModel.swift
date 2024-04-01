@@ -284,6 +284,14 @@ fileprivate extension OWCommentCreationContentViewModel {
         resignFirstResponder
             .bind(to: textViewVM.inputs.resignFirstResponderCall)
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.orientationService().orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                guard let self = self else { return }
+                let isSuggestionBarEnabled = (currentOrientation == .portrait)
+                self.textViewVM.inputs.hasSuggestionsBarChange.onNext(isSuggestionBarEnabled)
+            })
+            .disposed(by: disposeBag)
     }
 
     func setupImageObserver() {
