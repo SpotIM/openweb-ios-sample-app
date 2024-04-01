@@ -109,9 +109,11 @@ fileprivate extension OWTextView {
     }
 
     func setupViews() {
-        self.layer.cornerRadius = Metrics.cornerRadius
-        self.layer.borderWidth = Metrics.borderWidth
-        self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
+        if viewModel.outputs.hasBorder {
+            self.layer.cornerRadius = Metrics.cornerRadius
+            self.layer.borderWidth = Metrics.borderWidth
+            self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
+        }
 
         if viewModel.outputs.charectersLimitEnabled && viewModel.outputs.showCharectersLimit {
             self.addSubviews(charectersCountLabel)
@@ -306,7 +308,9 @@ fileprivate extension OWTextView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
+                if viewModel.outputs.hasBorder {
+                    self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
+                }
                 self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.textView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.textView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)

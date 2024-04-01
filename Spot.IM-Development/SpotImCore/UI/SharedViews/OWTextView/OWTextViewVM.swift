@@ -49,6 +49,7 @@ protocol OWTextViewViewModelingOutputs {
     var cursorRangeExternalChanged: Observable<Range<String.Index>> { get }
     var hasSuggestionsBarChanged: Observable<Bool> { get }
     var scrollEnabled: Bool { get }
+    var hasBorder: Bool { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -61,6 +62,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var outputs: OWTextViewViewModelingOutputs { return self }
     fileprivate let disposeBag = DisposeBag()
 
+    let hasBorder: Bool
     let isEditable: Bool
     let isAutoExpandable: Bool
     let scrollEnabled: Bool
@@ -178,6 +180,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         self.isAutoExpandable = textViewData.isAutoExpandable
         self.hasSuggestionsBarChange.onNext(textViewData.hasSuggestionsBar)
         self.scrollEnabled = textViewData.isScrollEnabled
+        self.hasBorder = textViewData.hasBorder
         self.setupObservers()
     }
 }
