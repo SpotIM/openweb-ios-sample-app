@@ -198,6 +198,7 @@ fileprivate extension OWCommentCreationRegularView {
         userMentionView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperviewSafeArea()
             make.bottom.equalTo(footerView.OWSnp.top)
+            make.top.greaterThanOrEqualTo(contentView.OWSnp.top)
         }
     }
 

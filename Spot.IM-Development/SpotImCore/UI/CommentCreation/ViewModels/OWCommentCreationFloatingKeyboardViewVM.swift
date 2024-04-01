@@ -324,6 +324,14 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        OWSharedServicesProvider.shared.orientationService().orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                guard let self = self else { return }
+                let isSuggestionBarEnabled = (currentOrientation == .portrait)
+                self.textViewVM.inputs.hasSuggestionsBarChange.onNext(isSuggestionBarEnabled)
+            })
+            .disposed(by: disposeBag)
+
         textViewVM.outputs.replaceData
             .bind(to: userMentionVM.inputs.replaceData)
             .disposed(by: disposeBag)

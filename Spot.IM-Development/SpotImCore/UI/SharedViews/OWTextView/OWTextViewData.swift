@@ -18,6 +18,7 @@ struct OWTextViewData {
     let isAutoExpandable: Bool
     let hasSuggestionsBar: Bool
     let isScrollEnabled: Bool
+    let hasBorder: Bool
 
     init(textViewMaxCharecters: Int = 0,
          placeholderText: String,
@@ -27,7 +28,8 @@ struct OWTextViewData {
          isEditable: Bool,
          isAutoExpandable: Bool = false,
          hasSuggestionsBar: Bool = true,
-         isScrollEnabled: Bool = true) {
+         isScrollEnabled: Bool = true,
+         hasBorder: Bool = true) {
         self.textViewMaxCharecters = textViewMaxCharecters
         self.placeholderText = placeholderText
         self.textViewText = textViewText
@@ -37,5 +39,6 @@ struct OWTextViewData {
         self.isAutoExpandable = isAutoExpandable
         self.hasSuggestionsBar = hasSuggestionsBar
         self.isScrollEnabled = isScrollEnabled
+        self.hasBorder = hasBorder
     }
 }

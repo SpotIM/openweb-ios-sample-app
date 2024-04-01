@@ -24,7 +24,8 @@ class OWUserMentionView: UIView {
 
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
-            .separatorStyle(.none)
+            .separatorStyle(.singleLine)
+            .separatorColor(OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light))
         tableView.allowsSelection = true
         tableView.rowHeight = Metrics.rowHeight
         tableView.register(cellClass: OWUserMentionCell.self)
@@ -55,7 +56,7 @@ fileprivate extension OWUserMentionView {
         self.apply(shadow: .standard, direction: .up)
 
         self.OWSnp.makeConstraints { make in
-            make.height.equalTo(0)
+            make.height.equalTo(0).priority(250)
         }
 
         self.addSubviews(tableView)
@@ -99,12 +100,20 @@ fileprivate extension OWUserMentionView {
                 let wantedHeight = CGFloat(cellsViewModels.count) * Metrics.rowHeight
                 let newHeight = min(maxHeight, wantedHeight)
                 self.OWSnp.updateConstraints { make in
-                    make.height.equalTo(newHeight)
+                    make.height.equalTo(newHeight).priority(250)
                 }
 
                 UIView.animate(withDuration: Metrics.heightAnimationDuration) {
                     self.superview?.layoutIfNeeded()
                 }
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.tableView.separatorColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
     }
