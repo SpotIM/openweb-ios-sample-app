@@ -147,16 +147,17 @@ class OWPresenterService: OWPresenterServicing {
 
         presenterVC.present(giphyVC, animated: true)
 
-//        let pickerCanceled = gifService.giphyBridg.rx.didCancel
-//            .map { OWGifPickerPresenterResponseType.cancled }
+        let pickerCanceled = gifService.didCancel
+            .map { OWGifPickerPresenterResponseType.cancled }
 
-//        return Observable.merge(pickerCanceled) //, didSelectMedia)
-//            .do(onNext: { _ in
-//                giphyVC.dismiss(animated: true, completion: nil)
-//            })
-        return .empty()
+        let didSelectMedia = gifService.didSelectMedia
+            .map { OWGifPickerPresenterResponseType.mediaInfo($0) }
+
+        return Observable.merge(pickerCanceled, didSelectMedia)
+            .do(onNext: { _ in
+                giphyVC.dismiss(animated: true, completion: nil)
+            })
     }
-//    #endif
 }
 
 fileprivate extension OWPresenterService {

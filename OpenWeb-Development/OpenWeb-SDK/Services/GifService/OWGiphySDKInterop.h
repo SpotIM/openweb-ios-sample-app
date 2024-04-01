@@ -10,20 +10,21 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-typedef struct {
-    NSInteger previewWidth;
-    NSInteger previewHeight;
-    NSInteger originalWidth;
-    NSInteger originalHeight;
-    NSString* originalUrl;
-    NSString * _Nullable title;
-    NSString * _Nullable previewUrl;
-} OWGiphyMedia;
 
-@protocol OWGiphySDKInteropDelegate // <NSObject>
+@interface OWGiphyMedia : NSObject
+@property NSInteger previewWidth;
+@property NSInteger previewHeight;
+@property NSInteger originalWidth;
+@property NSInteger originalHeight;
+@property NSString * originalUrl;
+@property NSString * _Nullable title;
+@property NSString * _Nullable previewUrl;
+@end
+
+@protocol OWGiphySDKInteropDelegate
 
 - (void)didDismissWithController:(UIViewController*)controller;
-//- (void)didSelectMediaWithGiphyViewController:(UIViewController *)giphyViewController media:(OWGiphyMedia)media;
+- (void)didSelectMediaWithGiphyViewController:(UIViewController *)giphyViewController media:(OWGiphyMedia*)media;
 
 @end
 

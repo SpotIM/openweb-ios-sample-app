@@ -10,12 +10,12 @@ import Foundation
 import RxSwift
 import UIKit
 
-// TODO: Check if giphy sdk is available and import accordingly
 protocol OWGifServicing {
     var isGiphyAvailable: Bool { get }
     func gifSelectionVC() -> UIViewController?
     var giphyBridg: OWGiphySDKInterop { get }
-//    func gifSelectionVC() -> GiphyViewController
+    var didCancel: Observable<Void> { get }
+    var didSelectMedia: Observable<OWCommentGif> { get }
 }
 
 class OWGifService: OWGifServicing {
@@ -31,9 +31,22 @@ class OWGifService: OWGifServicing {
         OWGiphySDKInterop.giphySDKAvailable()
     }
 
+    fileprivate var _didCancel = PublishSubject<Void>()
+    var didCancel: Observable<Void> {
+        return _didCancel
+            .asObservable()
+    }
+
+    fileprivate var _didSelectMedia = PublishSubject<OWCommentGif>()
+    var didSelectMedia: Observable<OWCommentGif> {
+        return _didSelectMedia
+            .asObservable()
+    }
+
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
         giphyBridg = OWGiphySDKInterop()
+        giphyBridg.delegate = self
         configure()
         setupObservers()
     }
@@ -72,5 +85,22 @@ fileprivate extension OWGifService {
 //                self.giphyVC?.theme = self.theme
 //            })
 //            .disposed(by: disposeBag)
+    }
+}
+
+extension OWGifService: OWGiphySDKInteropDelegate {
+    func didSelectMedia(withGiphyViewController giphyViewController: UIViewController, media: OWGiphyMedia) {
+        _didSelectMedia
+            .onNext(OWCommentGif(previewWidth: media.previewWidth,
+                                 previewHeight: media.previewHeight,
+                                 originalWidth: media.originalWidth,
+                                 originalHeight: media.originalHeight,
+                                 originalUrl: media.originalUrl,
+                                 title: media.title,
+                                 previewUrl: media.previewUrl))
+    }
+    
+    func didDismiss(with controller: UIViewController) {
+        _didCancel.onNext()
     }
 }
