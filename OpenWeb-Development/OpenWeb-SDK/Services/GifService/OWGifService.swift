@@ -14,12 +14,13 @@ import UIKit
 protocol OWGifServicing {
     var isGiphyAvailable: Bool { get }
     func gifSelectionVC() -> UIViewController?
+    var giphyBridg: OWGiphySDKInterop { get }
 //    func gifSelectionVC() -> GiphyViewController
 }
 
 class OWGifService: OWGifServicing {
     fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
-    fileprivate let giphyBridg: OWGiphySDKInterop
+    let giphyBridg: OWGiphySDKInterop
 
 //    fileprivate var giphyVC: GiphyViewController? = nil
 //    fileprivate var theme: GPHTheme = GPHTheme()

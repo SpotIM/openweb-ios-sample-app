@@ -170,7 +170,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
                       gifService.isGiphyAvailable else {
                     return false
                 }
-                
+
                 return $0.mobileSdk.postGifEnabled
             }
     }
