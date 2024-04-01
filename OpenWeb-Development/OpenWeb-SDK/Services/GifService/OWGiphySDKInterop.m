@@ -55,7 +55,7 @@
 }
 
 - (void)didSelectMediaWithGiphyViewController:(GiphyViewController *)giphyViewController media:(GPHMedia *)media {
-    OWGiphyMedia owMedia;
+    OWGiphyMedia *owMedia = [[OWGiphyMedia alloc]init];
 
     // Initialize the struct
     owMedia.previewWidth = media.images.preview.width;
@@ -66,7 +66,12 @@
     owMedia.title = media.title;
     owMedia.previewUrl = media.images.preview.gifUrl;
 
-//    [self.delegate didSelectMediaWithGiphyViewController:giphyViewController media:owMedia];
+    [self.delegate didSelectMediaWithGiphyViewController:giphyViewController media:owMedia];
 }
+
+@end
+
+// Giphy Media class
+@implementation OWGiphyMedia
 
 @end
