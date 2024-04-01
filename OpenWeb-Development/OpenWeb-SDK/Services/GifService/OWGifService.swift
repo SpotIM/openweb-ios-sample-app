@@ -99,7 +99,7 @@ extension OWGifService: OWGiphySDKInteropDelegate {
                                  title: media.title,
                                  previewUrl: media.previewUrl))
     }
-    
+
     func didDismiss(with controller: UIViewController) {
         _didCancel.onNext()
     }
