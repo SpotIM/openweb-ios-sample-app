@@ -307,7 +307,6 @@
 		24F611D82AD5577600BAA574 /* OWBadgesKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F611D72AD5577600BAA574 /* OWBadgesKeys.swift */; };
 		24F611DB2AD5757500BAA574 /* OWOpenProfileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F611DA2AD5757500BAA574 /* OWOpenProfileType.swift */; };
 		24F828D02B8C60F900BFD159 /* OWToastCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828CF2B8C60F900BFD159 /* OWToastCompletion.swift */; };
-		24F828D42B8F403300BFD159 /* GiphyViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828D32B8F403300BFD159 /* GiphyViewController+Rx.swift */; };
 		24F828D62B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */; };
 		3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */; };
 		3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05C287598F800E6F1AC /* OWConversationView.swift */; };
@@ -1338,7 +1337,6 @@
 		24F611DA2AD5757500BAA574 /* OWOpenProfileType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOpenProfileType.swift; sourceTree = "<group>"; };
 		24F828CF2B8C60F900BFD159 /* OWToastCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWToastCompletion.swift; sourceTree = "<group>"; };
 		24F828D12B8F14AB00BFD159 /* OWGifService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWGifService.swift; sourceTree = "<group>"; };
-		24F828D32B8F403300BFD159 /* GiphyViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GiphyViewController+Rx.swift"; sourceTree = "<group>"; };
 		24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWGifPickerPresenterResponseType.swift; sourceTree = "<group>"; };
 		3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCoordinator.swift; sourceTree = "<group>"; };
@@ -2529,7 +2527,6 @@
 				16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */,
 				8D4983B22A97B48B0072A4CF /* UIView+Rx.swift */,
 				8DCC87C02B554DB400E053A4 /* WKWebView+Rx.swift */,
-				24F828D32B8F403300BFD159 /* GiphyViewController+Rx.swift */,
 				24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */,
 			);
 			path = "Presenter+Rx";
@@ -6257,7 +6254,6 @@
 				9E36BFF129F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift in Sources */,
 				9ED2E58129EBFF3B00B39A00 /* OWReportReasonType.swift in Sources */,
 				3DDA9A88291A5E1F00FE3B86 /* OWThemeStyle.swift in Sources */,
-				24F828D42B8F403300BFD159 /* GiphyViewController+Rx.swift in Sources */,
 				3D50D9142B164FE700FD3232 /* OWCommentVotingModel.swift in Sources */,
 				24A691C329D2BB28005A5DFE /* OWCommentingReadOnlyView.swift in Sources */,
 				16B2F7AB2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift in Sources */,
