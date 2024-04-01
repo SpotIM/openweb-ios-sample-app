@@ -8,13 +8,28 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-// #import <OpenWebSDK/OpenWebSDK-Swift.h>
 
 NS_ASSUME_NONNULL_BEGIN
+typedef struct {
+    NSInteger previewWidth;
+    NSInteger previewHeight;
+    NSInteger originalWidth;
+    NSInteger originalHeight;
+    NSString* originalUrl;
+    NSString * _Nullable title;
+    NSString * _Nullable previewUrl;
+} OWGiphyMedia;
+
+@protocol OWGiphySDKInteropDelegate // <NSObject>
+
+- (void)didDismissWithController:(UIViewController*)controller;
+//- (void)didSelectMediaWithGiphyViewController:(UIViewController *)giphyViewController media:(OWGiphyMedia)media;
+
+@end
 
 @interface OWGiphySDKInterop : NSObject
 
-//@property (weak, nonatomic) id<InteropDelegate> delegate;
+@property (nonatomic, weak) id<OWGiphySDKInteropDelegate> delegate;
 
 + (BOOL)giphySDKAvailable;
 

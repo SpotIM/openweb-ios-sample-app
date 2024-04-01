@@ -7,19 +7,19 @@
 //
 
 // #if canImport(GiphyUISDK)
-// import Foundation
-// import GiphyUISDK
-// import RxSwift
-// import RxCocoa
-// import UIKit
+import Foundation
+import GiphyUISDK
+import RxSwift
+import RxCocoa
+import UIKit
 
 // TODO: shoyuld be available only if giphy SDK is available
 
 // https://jayleeios.medium.com/rxswift-delegate-proxy-35362b1e5e10
-// class GifViewControllerProxy: DelegateProxy<GiphyViewController, GiphyDelegate>, DelegateProxyType, GiphyDelegate {
-//    fileprivate weak var _control: GiphyViewController? = nil
+//class GifViewControllerProxy: DelegateProxy<OWGiphySDKInterop, OWGiphySDKInteropDelegate>, DelegateProxyType, OWGiphySDKInteropDelegate {
+//    fileprivate weak var _control: OWGiphySDKInterop? = nil
 //
-//    init(parentObject: GiphyViewController) {
+//    init(parentObject: OWGiphySDKInterop) {
 //        self._control = parentObject
 //        super.init(parentObject: parentObject, delegateProxy: GifViewControllerProxy.self)
 //    }
@@ -28,29 +28,32 @@
 //        self.register { GifViewControllerProxy(parentObject: $0) }
 //    }
 //
-//    static func currentDelegate(for object: GiphyUISDK.GiphyViewController) -> GiphyUISDK.GiphyDelegate? {
+//    static func currentDelegate(for object: OWGiphySDKInterop) -> OWGiphySDKInteropDelegate? {
 //        return object.delegate
 //    }
 //
-//    static func setCurrentDelegate(_ delegate: GiphyUISDK.GiphyDelegate?, to object: GiphyUISDK.GiphyViewController) {
+//    static func setCurrentDelegate(_ delegate: OWGiphySDKInteropDelegate?, to object: OWGiphySDKInterop) {
 //        object.delegate = delegate
 //    }
 //
-//    func didDismiss(controller: GiphyUISDK.GiphyViewController?) {
+//    func didDismiss(with controller: UIViewController) {
 //
 //    }
 // }
-//
-// extension Reactive where Base: GiphyViewController {
-//    var delegate: DelegateProxy<GiphyViewController, GiphyDelegate> {
+
+//extension Reactive where Base: OWGiphySDKInterop {
+//    var delegate: DelegateProxy<OWGiphySDKInterop, OWGiphySDKInteropDelegate> {
 //        return GifViewControllerProxy.proxy(for: self.base)
 //    }
-//
+
 //    var didSelectMedia: Observable<OWCommentGif> {
 //        return delegate
-//            .methodInvoked(#selector(GiphyDelegate.didSelectMedia(giphyViewController:media:contentType:)))
+
+//            .methodInvoked(#selector(OWGiphySDKInteropDelegate.didSelectMedia(withGiphyViewController:media:)))
 //            .map { (result) in
-//                let media = try castOrThrow(GPHMedia.self, result[1])
+//                
+//                return nil
+//                let media = try castOrThrow(OWGiphyMedia.self, result[1])
 //                guard let original = media.images?.original,
 //                      let preview = media.images?.preview,
 //                      let url = original.gifUrl,
@@ -67,10 +70,10 @@
 //            }
 //            .unwrap()
 //    }
-//
+
 //    var didCancel: Observable<Void> {
 //        return delegate
-//            .methodInvoked(#selector(GiphyDelegate.didDismiss(controller:)))
+//            .methodInvoked(#selector(OWGiphySDKInteropDelegate.didDismiss(with:)))
 //            .voidify()
 //    }
 //
@@ -82,5 +85,3 @@
 //        return returnValue
 //    }
 // }
-
-// #endif

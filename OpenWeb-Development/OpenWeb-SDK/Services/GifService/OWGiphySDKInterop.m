@@ -11,11 +11,13 @@
 
 @import GiphyUISDK;
 
-@interface OWGiphySDKInterop()
+@interface OWGiphySDKInterop() <GiphyDelegate>
 
 @end
 
 @implementation OWGiphySDKInterop
+
+@synthesize delegate;
 
 + (BOOL)giphySDKAvailable {
     if ([Giphy class]) {
@@ -27,10 +29,6 @@
 
 - (instancetype)init {
     self = [super init];
-//    if (self && [OWGiphySDKInterop giphySDKAvailable]) {
-//        _primeChecker = [[PrimeNumberChecker alloc] init];
-//        [_primeChecker setDelegate:self];
-//    }
     return self;
 }
 
@@ -40,13 +38,35 @@
     }
 }
 
+// TODO: support theme change
 - (nullable UIViewController*)gifSelectionVC {
     if (OWGiphySDKInterop.giphySDKAvailable) {
         GiphyViewController *giphy = [[GiphyViewController alloc]init];
+        giphy.delegate = self;
         return giphy;
     } else {
         return nil;
     }
+}
+
+// Giphy delegate implementation
+- (void)didDismissWithController:(GiphyViewController * _Nullable)controller {
+    [self.delegate didDismissWithController:controller];
+}
+
+- (void)didSelectMediaWithGiphyViewController:(GiphyViewController *)giphyViewController media:(GPHMedia *)media {
+    OWGiphyMedia owMedia;
+
+    // Initialize the struct
+    owMedia.previewWidth = media.images.preview.width;
+    owMedia.previewHeight = media.images.preview.height;
+    owMedia.originalWidth = media.images.original.width;
+    owMedia.originalHeight = media.images.original.height;
+    owMedia.originalUrl = media.images.original.gifUrl;
+    owMedia.title = media.title;
+    owMedia.previewUrl = media.images.preview.gifUrl;
+
+//    [self.delegate didSelectMediaWithGiphyViewController:giphyViewController media:owMedia];
 }
 
 @end
