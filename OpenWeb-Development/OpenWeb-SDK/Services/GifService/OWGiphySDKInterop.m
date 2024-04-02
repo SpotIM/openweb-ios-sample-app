@@ -61,7 +61,7 @@
 // Giphy delegate implementation
 - (void)didDismissWithController:(GiphyViewController * _Nullable)controller {
     [self.delegate didDismissWithController:controller];
-    self.giphyVc = nil; // TODO: GiphyVC is still in memry - investigate why
+    self.giphyVc = nil;
 }
 
 - (void)didSelectMediaWithGiphyViewController:(GiphyViewController *)giphyViewController media:(GPHMedia *)media {

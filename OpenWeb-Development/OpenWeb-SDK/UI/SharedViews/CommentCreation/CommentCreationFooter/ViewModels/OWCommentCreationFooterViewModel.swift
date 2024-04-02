@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import RxSwift
-import OpenWebSDK.OWGiphySDK
 
 protocol OWCommentCreationFooterViewModelingInputs {
     var tapCta: PublishSubject<Void> { get }
