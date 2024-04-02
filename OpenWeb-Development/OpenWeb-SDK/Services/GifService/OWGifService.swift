@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import UIKit
+import OpenWebSDK.OWGiphySDK
 
 protocol OWGifServicing {
     var isGiphyAvailable: Bool { get }
@@ -21,6 +22,7 @@ protocol OWGifServicing {
 class OWGifService: OWGifServicing {
     fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
     let giphyBridg: OWGiphySDKInterop
+    fileprivate static let giphyApiKey = "3ramR4915VrqRb5U5FBcybtsTvSGFJu8"
 
     fileprivate let disposeBag = DisposeBag()
 
@@ -55,7 +57,7 @@ class OWGifService: OWGifServicing {
 
 fileprivate extension OWGifService {
     func configure() {
-        giphyBridg.configure("3ramR4915VrqRb5U5FBcybtsTvSGFJu8") // TODO: key should not be here
+        giphyBridg.configure(OWGifService.giphyApiKey)
     }
 
     func setupObservers() {
