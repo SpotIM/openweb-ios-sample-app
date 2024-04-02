@@ -2518,6 +2518,7 @@
 				16EA82842B8CDD14004D6FF2 /* RxCocoa.xcframework */,
 				16EA82852B8CDD14004D6FF2 /* RxRelay.xcframework */,
 				16EA82832B8CDD13004D6FF2 /* RxSwift.xcframework */,
+				24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */,
 			);
 			path = "Vendor-Frameworks";
 			sourceTree = "<group>";
@@ -4919,7 +4920,6 @@
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
-				24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */,
 				8D5D7A63297560FC0082A7C6 /* swiftlint */,
 				0EAFED7922E505A900B57E29 /* fastlane */,
 				5D697A3D22B65106001AD556 /* OpenWeb-SampleApp */,
