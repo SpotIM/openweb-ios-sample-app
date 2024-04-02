@@ -27,6 +27,7 @@ class OWCommentCreationFooterView: UIView {
         static let horizontalPortraitMargin: CGFloat = 16.0
         static let horizontalLandscapeMargin: CGFloat = 66.0
 
+        static let addMediaStackViewSpacing: CGFloat = 10
         static let addImageButtonSize: CGFloat = 32
         static let addGifButtonSize: CGFloat = 32
     }
@@ -56,7 +57,7 @@ class OWCommentCreationFooterView: UIView {
 
     fileprivate lazy var addMediaStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.spacing = 10
+        stackView.spacing = Metrics.addMediaStackViewSpacing
         stackView.axis = .horizontal
         stackView.alignment = .fill
         return stackView
