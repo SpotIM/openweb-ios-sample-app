@@ -9,7 +9,6 @@
 import Foundation
 
 struct APIConstants {
-    static let baseURLString: String = "https://mobile-gw.spot.im"
     static let uploadImageBaseURL: String = "https://api.cloudinary.com/v1_1/com-3pix/image/upload/"
     static let fetchImageBaseURL: String = "https://images.spot.im/image/upload/"
     static let cdnBaseURL: String = "https://static-cdn.spot.im/production/"

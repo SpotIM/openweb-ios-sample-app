@@ -36,6 +36,15 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     let authenticationLayer: OWAuthentication
     let helpersLayer: OWHelpers
 
+    // Environment (only available for BETA app)
+    var environment: OWNetworkEnvironmentType = .production {
+        didSet {
+            OWEnvironment.set(environmentType: environment)
+            // When env is set we must reset networkApi
+            self.servicesProvider.configure.resetNetworkEnvironment()
+        }
+    }
+
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
                  uiLayer: OWUI = OWUILayer(),
