@@ -14,6 +14,7 @@ protocol OWSharedServicesProviderConfigure {
     func set(spotId: OWSpotId)
     // If spotId re-set, this function should be called to re-prepare all the services which require a spotId
     func change(spotId: OWSpotId)
+    func resetNetworkEnvironment()
 }
 
 protocol OWSharedServicesProviding: AnyObject {
@@ -424,6 +425,10 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _commentsInMemoryCacheService.cleanCache()
         _lastCommentTypeInMemoryCacheService.cleanCache()
         _commentStatusUpdaterService.spotChanged(newSpotId: spotId)
+    }
+
+    func resetNetworkEnvironment() {
+        _networkAPI = OWNetworkAPI(environment: OWEnvironment.currentEnvironment)
     }
 }
 
