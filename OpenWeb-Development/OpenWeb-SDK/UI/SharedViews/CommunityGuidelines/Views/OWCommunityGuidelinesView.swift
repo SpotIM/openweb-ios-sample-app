@@ -93,7 +93,8 @@ fileprivate extension OWCommunityGuidelinesView {
             self.addSubview(guidelinesContainer)
             guidelinesContainer.OWSnp.makeConstraints { [weak self] make in
                 guard let self = self else { return }
-                make.top.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing)
+                make.top.equalToSuperview().inset(self.viewModel.outputs.spacing.top)
+                make.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
                 self.heightConstraint = make.height.equalTo(0).constraint
             }
@@ -115,7 +116,8 @@ fileprivate extension OWCommunityGuidelinesView {
             self.addSubview(titleLabel)
             titleLabel.OWSnp.makeConstraints { [weak self] make in
                 guard let self = self else { return }
-                make.top.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing)
+                make.top.equalToSuperview().inset(self.viewModel.outputs.spacing.top)
+                make.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
                 self.heightConstraint = make.height.equalTo(0).constraint
             }

@@ -93,7 +93,8 @@ fileprivate extension OWCommunityQuestionView {
         if viewModel.outputs.shouldShowContainer {
             self.addSubview(questionContainer)
             questionContainer.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
+                make.top.equalToSuperview().inset(viewModel.outputs.spacing.top)
+                make.bottom.equalToSuperview().inset(viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }
@@ -108,7 +109,8 @@ fileprivate extension OWCommunityQuestionView {
         } else {
             self.addSubview(questionLabel)
             questionLabel.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
+                make.top.equalToSuperview().inset(viewModel.outputs.spacing.top)
+                make.bottom.equalToSuperview().inset(viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }

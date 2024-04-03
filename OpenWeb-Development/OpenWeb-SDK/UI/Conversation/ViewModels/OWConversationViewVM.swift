@@ -534,8 +534,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return self.conversationData.settings.fullConversationSettings.style
     }()
 
-    fileprivate lazy var spacingBetweenComments: CGFloat = {
-        return self.conversationStyle.spacing.betweenComments / Metrics.spacingBetweenCommentsDivisor
+    fileprivate lazy var spacingBetweenComments: OWVerticalSpacing = {
+        let top = self.conversationStyle.spacing.betweenComments.top / Metrics.spacingBetweenCommentsDivisor
+        let bottom = self.conversationStyle.spacing.betweenComments.bottom / Metrics.spacingBetweenCommentsDivisor
+        return OWVerticalSpacing(top: top, bottom: bottom)
     }()
 
     var viewInitialized = PublishSubject<Void>()
@@ -672,7 +674,7 @@ fileprivate extension OWConversationViewViewModel {
                         data: commentPresentationData,
                         mode: .collapse,
                         depth: depth,
-                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
+                        spacing: spacingBetweenComments
                     )))
                 } else {
                     // This is expand in a reply or more in depth replies
@@ -681,7 +683,7 @@ fileprivate extension OWConversationViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                     )))
                 }
             default:
@@ -690,7 +692,7 @@ fileprivate extension OWConversationViewViewModel {
                     data: commentPresentationData,
                     mode: .collapse,
                     depth: depth,
-                    spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
+                    spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                 )))
 
                 cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
@@ -703,7 +705,7 @@ fileprivate extension OWConversationViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                     )))
                 }
             }
@@ -847,7 +849,7 @@ fileprivate extension OWConversationViewViewModel {
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
             section: self.conversationData.article.additionalSettings.section),
-                                      spacing: OWVerticalSpacing(self.spacingBetweenComments))
+                                      spacing: self.spacingBetweenComments)
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {

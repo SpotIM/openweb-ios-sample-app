@@ -29,7 +29,7 @@ protocol OWCommunityGuidelinesViewModelingOutputs {
     var shouldShowView: Observable<Bool> { get }
 
     var shouldShowContainer: Bool { get }
-    var spacing: CGFloat { get }
+    var spacing: OWVerticalSpacing { get }
     var style: OWCommunityGuidelinesStyle { get }
 }
 
@@ -39,7 +39,7 @@ protocol OWCommunityGuidelinesViewModeling {
 }
 
 class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
-                                        OWCommunityGuidelinesViewModelingInputs,
+                                      OWCommunityGuidelinesViewModelingInputs,
                                       OWCommunityGuidelinesViewModelingOutputs {
 
     struct Metrics {
@@ -159,12 +159,12 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     }()
 
     let style: OWCommunityGuidelinesStyle
-    let spacing: CGFloat
+    let spacing: OWVerticalSpacing
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
     init(style: OWCommunityGuidelinesStyle,
-         spacing: CGFloat,
+         spacing: OWVerticalSpacing,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.style = style
         self.spacing = spacing

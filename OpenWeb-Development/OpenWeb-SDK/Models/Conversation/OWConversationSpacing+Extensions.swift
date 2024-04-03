@@ -21,36 +21,36 @@ extension OWConversationSpacing {
                        communityQuestions: communityQuestions)
     }
 
-    var betweenComments: CGFloat {
+    var betweenComments: OWVerticalSpacing {
         switch self {
         case .regular:
-            return Metrics.defaultSpaceBetweenComments
+            return OWVerticalSpacing(Metrics.defaultSpaceBetweenComments)
         case .compact:
-            return Metrics.defaultSpaceBetweenComments
+            return OWVerticalSpacing(Metrics.defaultSpaceBetweenComments)
         case .custom(betweenComments: let betweenComments, communityGuidelines: _, communityQuestions: _):
-            return betweenComments
+            return OWVerticalSpacing(betweenComments)
         }
     }
 
-    var communityGuidelines: CGFloat {
+    var communityGuidelines: OWVerticalSpacing {
         switch self {
         case .regular:
-            return Metrics.defaultSpaceCommunityGuidelines
+            return OWVerticalSpacing(Metrics.defaultSpaceCommunityGuidelines)
         case .compact:
-            return Metrics.defaultSpaceCommunityGuidelines
+            return OWVerticalSpacing(Metrics.defaultSpaceCommunityGuidelines)
         case .custom(betweenComments: _, communityGuidelines: let communityGuidelinesSpacing, communityQuestions: _):
-            return communityGuidelinesSpacing
+            return OWVerticalSpacing(communityGuidelinesSpacing)
         }
     }
 
-    var communityQuestions: CGFloat {
+    var communityQuestions: OWVerticalSpacing {
         switch self {
         case .regular:
-            return Metrics.defaultSpaceCommunityQuestions
+            return OWVerticalSpacing(Metrics.defaultSpaceCommunityQuestions)
         case .compact:
-            return Metrics.defaultSpaceCommunityQuestions
+            return OWVerticalSpacing(Metrics.defaultSpaceCommunityQuestions)
         case .custom(betweenComments: _, communityGuidelines: _, communityQuestions: let communityQuestionsSpacing):
-            return communityQuestionsSpacing
+            return OWVerticalSpacing(communityQuestionsSpacing)
         }
     }
 }
