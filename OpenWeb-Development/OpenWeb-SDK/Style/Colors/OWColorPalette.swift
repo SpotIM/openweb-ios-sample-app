@@ -34,12 +34,21 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
 
     static let shared: OWColorPaletteProtocol & OWColorPaletteConfigurable = OWColorPalette()
 
+    // Multiple threads / queues access to this class
+    // Avoiding "data race" by using a lock
+    fileprivate let lock: OWLock = OWUnfairLock()
+
     private init() {
         initiateColors()
     }
 
     func initiateColors() {
         // Initialize default colors
+
+        // swiftlint:disable self_capture_in_blocks
+        self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
+
         colors.removeAll()
         for type in OWColor.OWType.allCases {
             colors[type] = type.default
@@ -50,6 +59,10 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor {
+        // swiftlint:disable self_capture_in_blocks
+        self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
+
         guard let color = colors[type] else {
             // We should never get here. I chose to work with non-optional so as a default value we will return "clear"
             return .clear
@@ -59,6 +72,10 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func setColor(_ color: UIColor, forType type: OWColor.OWType, forThemeStyle themeStyle: OWThemeStyle) {
+        // swiftlint:disable self_capture_in_blocks
+        self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
+
         guard var encapsulateColor = colors[type],
               !blockedForOverride.contains(type)
         else { return }
@@ -72,6 +89,10 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func blockForOverride(color: OWColor.OWType) {
+        // swiftlint:disable self_capture_in_blocks
+        self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
+
         self.blockedForOverride.insert(color)
     }
 }
