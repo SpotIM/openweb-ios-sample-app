@@ -87,4 +87,8 @@ fileprivate extension NetworkSettingsVM {
     }
 }
 
-extension NetworkSettingsVM: SettingsGroupVMProtocol { }
+extension NetworkSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        // TODO: implement
+    }
+}

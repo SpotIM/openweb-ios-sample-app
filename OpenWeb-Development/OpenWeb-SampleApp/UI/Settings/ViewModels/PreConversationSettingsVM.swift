@@ -213,4 +213,8 @@ fileprivate extension PreConversationSettingsVM {
     }
 }
 
-extension PreConversationSettingsVM: SettingsGroupVMProtocol { }
+extension PreConversationSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        // TODO: implement
+    }
+}

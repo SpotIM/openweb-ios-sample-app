@@ -42,6 +42,7 @@ class SettingsVC: UIViewController {
     init(viewModel: SettingsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        setupObservers()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -159,5 +160,11 @@ fileprivate extension SettingsVC {
             let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
             scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - self.view.frame.height / 3), animated: true)
         }
+    }
+
+    func setupObservers() {
+        resetButton.rx.tap
+            .bind(to: viewModel.inputs.resetToDefaultTap)
+            .disposed(by: disposeBag)
     }
 }
