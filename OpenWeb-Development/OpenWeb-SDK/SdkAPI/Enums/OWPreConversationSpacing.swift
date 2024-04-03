@@ -11,8 +11,8 @@ import UIKit
 public enum OWPreConversationSpacing: Codable {
     public struct Metrics {
         public static let defaultSpaceBetweenComments: CGFloat = 28.0
-        public static let defaultSpaceCommunityGuidelines: CGFloat = 12.0 // TODO: check
-        public static let defaultSpaceCommunityQuestions: CGFloat = 12.0 // TODO: check
+        public static let defaultSpaceCommunityGuidelines: CGFloat = 12.0
+        public static let defaultSpaceCommunityQuestions: CGFloat = 12.0
     }
 
     case regular
