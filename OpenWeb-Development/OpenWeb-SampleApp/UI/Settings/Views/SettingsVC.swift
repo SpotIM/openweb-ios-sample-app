@@ -13,8 +13,10 @@ class SettingsVC: UIViewController {
 
     fileprivate struct Metrics {
         static let identifier = "settings_vc_id"
+        static let resetButtonId = "settings_reset_button_id"
         static let verticalOffset: CGFloat = 40
         static let verticalBetweenSettingViewsOffset: CGFloat = 80
+        static let resetButtonHeight: CGFloat = 50
     }
 
     fileprivate lazy var scrollView: UIScrollView = {
@@ -22,6 +24,11 @@ class SettingsVC: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
+    }()
+
+    fileprivate lazy var resetButton: UIButton = {
+        return NSLocalizedString("ResetToDefaults", comment: "")
+            .blueRoundedButton
     }()
 
     fileprivate lazy var settingViews: [UIView] = {
@@ -55,6 +62,7 @@ class SettingsVC: UIViewController {
 fileprivate extension SettingsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
+        resetButton.accessibilityIdentifier = Metrics.resetButtonId
     }
 
     func setupViews() {
@@ -71,6 +79,13 @@ fileprivate extension SettingsVC {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
+        scrollView.addSubview(resetButton)
+        resetButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.resetButtonHeight)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
+        }
+
         var previousView: UIView? = nil
         for (index, settingsView) in settingViews.enumerated() {
             scrollView.addSubview(settingsView)
@@ -81,7 +96,7 @@ fileprivate extension SettingsVC {
                     make.top.equalTo(topView.snp.bottom).offset(Metrics.verticalBetweenSettingViewsOffset)
                 } else {
                     // Telling the scroll view that this is the first settingsView
-                    make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
+                    make.top.equalTo(resetButton.snp.bottom).offset(Metrics.verticalOffset)
                 }
                 if index == settingViews.count - 1 {
                     // Telling the scroll view that this is the last settingsView
