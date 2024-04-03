@@ -26,6 +26,8 @@ class SettingsViewsFactory {
             return CommentThreadSettingsView(viewModel: settingsVM as! CommentThreadSettingsVM)
         case is IAUSettingsVM:
             return IAUSettingsView(viewModel: settingsVM as! IAUSettingsVM)
+        case is NetworkSettingsVM:
+            return NetworkSettingsView(viewModel: settingsVM as! NetworkSettingsVM)
         default:
             return nil
         }

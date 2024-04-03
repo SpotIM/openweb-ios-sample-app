@@ -3,7 +3,7 @@
 //  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 21/11/2023.
-//  Copyright © 2023 Spot.IM. All rights reserved.
+//  Copyright © 2023 OpenWeb. All rights reserved.
 //
 
 import Foundation
