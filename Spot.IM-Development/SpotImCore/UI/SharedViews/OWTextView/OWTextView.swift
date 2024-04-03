@@ -29,7 +29,6 @@ class OWTextView: UIView {
         static let textViewFontSize: CGFloat = 15
         static let charectersFontSize: CGFloat = 13
         static let baseTextViewHeight: CGFloat = 30
-        static let maxNumberOfLines = 5
         static let expandAnimationDuration: CGFloat = 0.1
         static let heightConstraintPriority: CGFloat = 500
         static let didBeginEditDelay = 1
@@ -133,7 +132,7 @@ fileprivate extension OWTextView {
             }
             if viewModel.outputs.isAutoExpandable {
                 make.height.equalTo(textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
-                                                       maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
+                                                       maxLines: viewModel.outputs.maxLines)).priority(Metrics.heightConstraintPriority)
             }
         }
 
@@ -147,6 +146,18 @@ fileprivate extension OWTextView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.maxLinesChanged
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let height = self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
+                                                     maxLines: self.viewModel.outputs.maxLines)
+                self.textView.OWSnp.updateConstraints { make in
+                    make.height.equalTo(height).priority(Metrics.heightConstraintPriority)
+                }
+                self.layoutIfNeeded()
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.attributedTextChanged
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] attributedText in
@@ -268,7 +279,7 @@ fileprivate extension OWTextView {
                             UIView.animate(withDuration: Metrics.expandAnimationDuration) {
                                 self.textView.OWSnp.updateConstraints { make in
                                     make.height.equalTo(self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
-                                                                                maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
+                                                                                maxLines: self.viewModel.outputs.maxLines)).priority(Metrics.heightConstraintPriority)
                                 }
                                 self.layoutIfNeeded()
                             }

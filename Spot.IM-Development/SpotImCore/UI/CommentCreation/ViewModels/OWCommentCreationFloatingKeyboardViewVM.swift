@@ -62,6 +62,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
         static let ctaIconName = "sendCommentIcon"
         static let delayForDismiss: Int = 350 // ms
+        static let maxLandscapeLines = 1
     }
 
     var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
@@ -327,8 +328,12 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
         OWSharedServicesProvider.shared.orientationService().orientation
             .subscribe(onNext: { [weak self] currentOrientation in
                 guard let self = self else { return }
-                let isSuggestionBarEnabled = (currentOrientation == .portrait)
-                self.textViewVM.inputs.hasSuggestionsBarChange.onNext(isSuggestionBarEnabled)
+                let isPortrait = (currentOrientation == .portrait)
+                self.textViewVM.inputs.hasSuggestionsBarChange.onNext(isPortrait)
+
+                // We limit textView lines in landscape orientation
+                let maxLines = isPortrait ? OWTextViewViewModel.ExternalMetrics.maxNumberOfLines : Metrics.maxLandscapeLines
+                self.textViewVM.inputs.maxLinesChange.onNext(maxLines)
             })
             .disposed(by: disposeBag)
 
