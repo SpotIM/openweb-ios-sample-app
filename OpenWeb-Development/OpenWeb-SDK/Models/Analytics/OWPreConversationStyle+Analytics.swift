@@ -23,7 +23,7 @@ extension OWPreConversationStyle {
                 OWAnalyticEventPayloadKeys.communityGuidelinesStyle: communityGuidelinesStyle,
                 OWAnalyticEventPayloadKeys.communityQuestionsStyle: communityQuestionsStyle
             ])
-        case .custom(let numberOfComments, let communityGuidelinesStyle, let communityQuestionsStyle):
+        case .custom(let numberOfComments, let communityGuidelinesStyle, let communityQuestionsStyle, _):
             return OWAnalyticEventPayload(payloadDictionary: [
                 OWAnalyticEventPayloadKeys.style: "custom",
                 OWAnalyticEventPayloadKeys.numberOfComments: numberOfComments,
