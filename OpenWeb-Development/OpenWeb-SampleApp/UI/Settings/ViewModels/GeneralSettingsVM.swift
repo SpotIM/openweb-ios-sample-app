@@ -680,4 +680,8 @@ fileprivate extension GeneralSettingsVM {
     // swiftlint:enable function_body_length
 }
 
-extension GeneralSettingsVM: SettingsGroupVMProtocol { }
+extension GeneralSettingsVM: SettingsGroupVMProtocol { 
+    func resetToDefault() {
+        // TODO: implement
+    }
+}

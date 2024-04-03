@@ -314,4 +314,8 @@ fileprivate extension ConversationSettingsVM {
     }
 }
 
-extension ConversationSettingsVM: SettingsGroupVMProtocol { }
+extension ConversationSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        // TODO: implement
+    }
+}
