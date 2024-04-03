@@ -680,8 +680,22 @@ fileprivate extension GeneralSettingsVM {
     // swiftlint:enable function_body_length
 }
 
-extension GeneralSettingsVM: SettingsGroupVMProtocol { 
+extension GeneralSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        // TODO: implement
+        articleHeaderSelectedStyle.onNext(OWArticleHeaderStyle.default)
+        articleInformationSelectedStrategy.onNext(OWArticleInformationStrategy.default)
+        articleSelectedSection.onNext("")
+        elementsCustomizationStyleSelectedIndex.onNext(SettingsElementsCustomizationStyle.defaultIndex)
+        colorsCustomizationStyleSelectedIndex.onNext(SettingsColorCustomizationStyle.defaultIndex)
+        readOnlyModeSelectedIndex.onNext(OWReadOnlyMode.default.index)
+        themeModeSelectedIndex.onNext(OWThemeStyleEnforcement.default.index)
+        statusBarStyleSelectedIndex.onNext(OWStatusBarEnforcement.default.index)
+        navigationBarStyleSelectedIndex.onNext(OWNavigationBarEnforcement.default.index)
+        modalStyleSelectedIndex.onNext(OWModalPresentationStyle.default.index)
+        initialSortSelectedIndex.onNext(OWInitialSortStrategy.default.index)
+        fontGroupTypeSelectedIndex.onNext(OWFontGroupFamilyIndexer.`default`.index)
+        languageStrategySelectedIndex.onNext(OWLanguageStrategy.defaultStrategyIndex)
+        showLoginPromptSelected.onNext(false)
+        orientationSelectedEnforcement.onNext(OWOrientationEnforcement.default)
     }
 }
