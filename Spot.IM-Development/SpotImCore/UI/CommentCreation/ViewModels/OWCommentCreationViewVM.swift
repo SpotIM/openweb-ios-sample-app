@@ -233,6 +233,14 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     self.sendEvent(for: .postReplyClicked(replyToCommentId: originComment.id ?? ""))
                 }
             })
+            .map { [weak self] commentCreationData -> OWCommentCreationCtaData in
+                // Here we add the user mention ids into the text (Each @user is changed to {"id":"xxxxx-xxxxx..."}
+                guard let userMentions = commentCreationData.commentUserMentions else { return commentCreationData }
+                var commentCreationData = commentCreationData
+                let textWithMentions = OWUserMentionHelper.addUserMentionIds(to: commentCreationData.commentContent.text, mentions: userMentions)
+                commentCreationData.commentContent.text = textWithMentions
+                return commentCreationData
+            }
             .map { [weak self] commentCreationData -> (OWCommentCreationCtaData, OWNetworkParameters)? in
                 // 1 - get create comment request params
                 guard let self = self else { return nil }
