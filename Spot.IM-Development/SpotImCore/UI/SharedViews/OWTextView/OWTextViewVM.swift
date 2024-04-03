@@ -27,6 +27,7 @@ protocol OWTextViewViewModelingInputs {
     var replacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
     var internalReplacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
     var attributedTextChange: BehaviorSubject<NSAttributedString?> { get }
+    var maxLinesChange: PublishSubject<Int> { get }
 }
 
 protocol OWTextViewViewModelingOutputs {
@@ -50,6 +51,8 @@ protocol OWTextViewViewModelingOutputs {
     var hasSuggestionsBarChanged: Observable<Bool> { get }
     var scrollEnabled: Bool { get }
     var hasBorder: Bool { get }
+    var maxLines: Int { get }
+    var maxLinesChanged: Observable<Void> { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -60,6 +63,11 @@ protocol OWTextViewViewModeling {
 class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingOutputs, OWTextViewViewModeling {
     var inputs: OWTextViewViewModelingInputs { return self }
     var outputs: OWTextViewViewModelingOutputs { return self }
+
+    struct ExternalMetrics {
+        static let maxNumberOfLines = 5
+    }
+
     fileprivate let disposeBag = DisposeBag()
 
     let hasBorder: Bool
@@ -74,6 +82,14 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         return hasSuggestionsBarChange
             .asObservable()
     }
+
+    var maxLinesChange = PublishSubject<Int>()
+    var maxLinesChanged: Observable<Void> {
+        return maxLinesChange
+            .voidify()
+            .asObservable()
+    }
+    var maxLines: Int = ExternalMetrics.maxNumberOfLines
 
     var charectersLimitEnabled: Bool
     let showCharectersLimit: Bool
@@ -187,6 +203,12 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
 
 fileprivate extension OWTextViewViewModel {
     func setupObservers() {
+        maxLinesChange
+            .subscribe(onNext: { [weak self] maxLines in
+                self?.maxLines = maxLines
+            })
+            .disposed(by: disposeBag)
+
         textViewMaxCharectersChange
             .subscribe(onNext: { [weak self] limit in
                 guard let self = self else { return }
