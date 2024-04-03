@@ -54,9 +54,13 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                 guard let self = self else { return false }
 
                 if case .edit(let comment) = self.commentCreationType {
-                    if let commentLabels = comment.additionalData?.labels,
-                       let labelIds = commentLabels.ids,
+                    let initialSelectedLabels = comment.additionalData?.labels
+                    if initialSelectedLabels == nil && !selectedLabelIds.isEmpty {
+                        // no initial labels were selected and currently some labels are selected
+                        return true
+                    } else if let labelIds = initialSelectedLabels?.ids,
                        Set(labelIds) != selectedLabelIds {
+                        // initial selected labels are different from the current selection
                         return true
                     }
                 }
