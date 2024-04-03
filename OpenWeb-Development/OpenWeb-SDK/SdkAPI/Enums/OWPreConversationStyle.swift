@@ -12,6 +12,7 @@ public enum OWPreConversationStyle: Codable {
     public struct Metrics {
         public static let defaultCommunityGuidelinesStyle: OWCommunityGuidelinesStyle = .regular
         public static let defaultCommunityQuestionsStyle: OWCommunityQuestionStyle = .regular
+        public static let defaultSpacing: OWPreConversationSpacing = .regular
         public static let defaultRegularNumberOfComments: Int = 2
         public static let minNumberOfComments: Int = 1
         public static let maxNumberOfComments: Int = 8
@@ -24,5 +25,6 @@ public enum OWPreConversationStyle: Codable {
                         communityQuestionsStyle: OWCommunityQuestionStyle = Metrics.defaultCommunityQuestionsStyle) // Called "Button only mode" - title, before the refactor
     case custom(numberOfComments: Int = Metrics.defaultRegularNumberOfComments,
                 communityGuidelinesStyle: OWCommunityGuidelinesStyle = Metrics.defaultCommunityGuidelinesStyle,
-                communityQuestionsStyle: OWCommunityQuestionStyle = Metrics.defaultCommunityQuestionsStyle)
+                communityQuestionsStyle: OWCommunityQuestionStyle = Metrics.defaultCommunityQuestionsStyle,
+                spacing: OWPreConversationSpacing = Metrics.defaultSpacing)
 }

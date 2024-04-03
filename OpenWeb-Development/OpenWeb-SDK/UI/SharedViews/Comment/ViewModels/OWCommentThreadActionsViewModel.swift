@@ -8,11 +8,13 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 enum OWCommentThreadActionType {
     case collapseThread
     case viewMoreReplies(count: Int)
     case viewMoreRepliesRange(from: Int, to: Int)
+    case openCommentThread(count: Int)
 }
 
 protocol OWCommentThreadActionsViewModelingInputs {
@@ -25,9 +27,10 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var tapOutput: Observable<Void> { get }
     var actionLabelText: Observable<String> { get }
     var disclosureTransform: Observable<CGAffineTransform> { get }
-    var updateSpacing: Observable<CGFloat> { get }
+    var updateSpacing: Observable<OWVerticalSpacing> { get }
     var commentId: String { get }
     var isLoadingChanged: Observable<Bool> { get }
+    var disclosureImage: Observable<UIImage> { get }
 }
 
 protocol OWCommentThreadActionsViewModeling {
@@ -57,20 +60,33 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
             .asObservable()
     }()
 
-    fileprivate let _updateSpacing = BehaviorSubject<CGFloat?>(value: nil)
-    var updateSpacing: Observable<CGFloat> {
+    fileprivate let _updateSpacing = BehaviorSubject<OWVerticalSpacing?>(value: nil)
+    var updateSpacing: Observable<OWVerticalSpacing> {
         _updateSpacing
             .unwrap()
             .take(1)
             .asObservable()
     }
 
+    var disclosureImage: Observable<UIImage> {
+        return updatedType
+            .map { type -> UIImage? in
+                switch type {
+                case .openCommentThread:
+                    return UIImage(spNamed: "openThreadIcon", supportDarkMode: false)
+                default:
+                    return UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: false)
+                }
+            }
+            .unwrap()
+    }
+
     let commentId: String
-    fileprivate let spacing: CGFloat
+    fileprivate let spacing: OWVerticalSpacing
 
     init(with type: OWCommentThreadActionType,
          commentId: String,
-         spacing: CGFloat) {
+         spacing: OWVerticalSpacing) {
         self.commentId = commentId
         self.spacing = spacing
         self.setupObservers()
@@ -102,7 +118,7 @@ fileprivate extension OWCommentThreadActionsViewModel {
                 case .collapseThread:
                     self._actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "CollapseThread"))
                     self._disclosureTransform.onNext(.identity)
-                    self._updateSpacing.onNext(0)
+                    self._updateSpacing.onNext(OWVerticalSpacing(0))
 
                 case .viewMoreReplies(count: let count):
                     let multipleRepliesString = OWLocalizationManager.shared.localizedString(key: "ViewMultipleRepliesFormat")
@@ -117,6 +133,14 @@ fileprivate extension OWCommentThreadActionsViewModel {
                     let repliesString = OWLocalizationManager.shared.localizedString(key: "ViewPartOfRepliesFormat")
                     self._actionLabelText.onNext(String(format: repliesString, from, to))
                     self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+                    self._updateSpacing.onNext(self.spacing)
+
+                case .openCommentThread(let count):
+                    let multipleRepliesString = OWLocalizationManager.shared.localizedString(key: "ViewMultipleRepliesFormat")
+                    let singleReplyString = OWLocalizationManager.shared.localizedString(key: "ViewSingleReplyFormat")
+
+                    let repliesString = count > 1 ? multipleRepliesString : singleReplyString
+                    self._actionLabelText.onNext(String(format: repliesString, count))
                     self._updateSpacing.onNext(self.spacing)
                 }
             })

@@ -14,7 +14,7 @@ protocol OWCommunityQuestionCellViewModelingInputs { }
 protocol OWCommunityQuestionCellViewModelingOutputs {
     var id: String { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
-    var communityQuestionSpacing: CGFloat { get }
+    var communityQuestionSpacing: OWVerticalSpacing { get }
 }
 
 protocol OWCommunityQuestionCellViewModeling: OWCellViewModel {
@@ -32,12 +32,12 @@ class OWCommunityQuestionCellViewModel: OWCommunityQuestionCellViewModeling,
         return OWCommunityQuestionViewModel(style: self.style, spacing: self.spacing)
     }()
 
-    lazy var communityQuestionSpacing: CGFloat = {
+    lazy var communityQuestionSpacing: OWVerticalSpacing = {
         return self.spacing
     }()
 
     fileprivate let style: OWCommunityQuestionStyle
-    fileprivate let spacing: CGFloat
+    fileprivate let spacing: OWVerticalSpacing
 
     // Unique identifier
     let id: String = UUID().uuidString

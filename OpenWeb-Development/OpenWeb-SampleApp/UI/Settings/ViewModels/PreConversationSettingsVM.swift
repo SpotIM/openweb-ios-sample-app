@@ -87,7 +87,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
         return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
             .map { preConversationStyle in
                 switch preConversationStyle {
-                case .custom(let numberOfComments, _, _):
+                case .custom(let numberOfComments, _, _, _):
                     return numberOfComments
                 default:
                     return OWPreConversationStyle.Metrics.defaultRegularNumberOfComments
@@ -100,7 +100,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
         return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
             .map { preConversationStyle in
                 switch preConversationStyle {
-                case .custom(_, let communityGuidelinesStyle, _):
+                case .custom(_, let communityGuidelinesStyle, _, _):
                     return communityGuidelinesStyle.index
                 default:
                     return OWCommunityGuidelinesStyle.default.index
@@ -113,7 +113,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
         return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
             .map { preConversationStyle in
                 switch preConversationStyle {
-                case .custom(_, _, let communityQuestionStyle):
+                case .custom(_, _, let communityQuestionStyle, _):
                     return communityQuestionStyle.index
                 default:
                     return OWCommunityQuestionStyle.default.index

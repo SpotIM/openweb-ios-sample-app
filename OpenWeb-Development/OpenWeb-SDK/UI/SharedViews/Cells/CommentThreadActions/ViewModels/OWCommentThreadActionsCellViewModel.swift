@@ -30,6 +30,7 @@ protocol OWCommentThreadActionsCellViewModeling: OWCellViewModel {
 enum OWCommentThreadActionsCellMode {
     case collapse
     case expand
+    case openCommentThread
 }
 
 class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModeling, OWCommentThreadActionsCellViewModelingInputs, OWCommentThreadActionsCellViewModelingOutputs {
@@ -51,26 +52,33 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
     var triggerUpdateActionType = PublishSubject<Void>()
 
-    fileprivate var spacingBetweenComments: CGFloat = 0
+    fileprivate let spacing: OWVerticalSpacing
 
     lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread,
                                                                                                  commentId: self.commentPresentationData.id,
-                                                                                                 spacing: self.spacingBetweenComments)
+                                                                                                 spacing: self.spacing)
 
     init(id: String = UUID().uuidString,
          data: OWCommentPresentationData,
          mode: OWCommentThreadActionsCellMode = .collapse,
          depth: Int = 0,
-         spacing: CGFloat) {
+         spacing: OWVerticalSpacing) {
         self.id = id
         self.commentPresentationData = data
         self.depth = depth
-        self.spacingBetweenComments = spacing
+        self.spacing = spacing
         self.mode = mode
 
-        let commentThreadActionType: OWCommentThreadActionType = mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
+        let commentThreadActionType: OWCommentThreadActionType = switch mode {
+        case .collapse:
+                .collapseThread
+        case .expand:
+            self.getCommentThreadActionTypeForExpand()
+        case .openCommentThread:
+                .openCommentThread(count: commentPresentationData.totalRepliesCount)
+        }
 
-        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id, spacing: self.spacingBetweenComments)
+        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id, spacing: self.spacing)
         self.setupObservers()
         self.triggerUpdateActionType.onNext()
     }
@@ -83,6 +91,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
             repliesOffset: 0,
             repliesPresentation: []
         )
+        self.spacing = .zero
         self.setupObservers()
     }
 
@@ -96,7 +105,15 @@ fileprivate extension OWCommentThreadActionsCellViewModel {
         triggerUpdateActionType
             .map({ [weak self] _ -> OWCommentThreadActionType? in
                 guard let self = self else { return nil }
-                return self.mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
+
+                switch mode {
+                case .collapse:
+                    return .collapseThread
+                case .expand:
+                    return self.getCommentThreadActionTypeForExpand()
+                case .openCommentThread:
+                    return .openCommentThread(count: commentPresentationData.totalRepliesCount)
+                }
             })
             .unwrap()
             .bind(to: self.commentActionsVM.inputs.updateActionType)
