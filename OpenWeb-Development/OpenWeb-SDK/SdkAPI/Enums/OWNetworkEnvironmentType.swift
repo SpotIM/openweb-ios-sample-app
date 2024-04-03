@@ -1,0 +1,22 @@
+//
+//  OWNetworkEnvironmentType.swift
+//  SpotImCore
+//
+//  Created by  Nogah Melamed on 21/02/2024.
+//  Copyright © 2024 Spot.IM. All rights reserved.
+//
+
+import Foundation
+
+#if BETA
+public enum OWNetworkEnvironmentType {
+    case production
+    case staging
+}
+#else
+enum OWNetworkEnvironmentType {
+    case production
+    case staging
+}
+#endif
+

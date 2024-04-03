@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import OpenWebSDK
 
 internal class DemoUserAuthentication {
 
@@ -21,12 +22,41 @@ internal class DemoUserAuthentication {
         static let baseUrlPath = "https://api.spot.im/sso-mock-server"
         static let loginURLPath = "\(baseUrlPath)/api/login"
         static let codeBURLPath = "\(baseUrlPath)/api/spotim-sso"
+
+        #if BETA
+        static let baseUrlPathStaging = "https://dev.staging-spot.im/proxy/staging-v2/sso-mock-server/9292"
+        static func loginURLPath(env: OWNetworkEnvironmentType) -> String {
+            switch env {
+            case .production:
+                return "\(baseUrlPath)/api/login"
+            case .staging:
+                return "\(baseUrlPathStaging)/api/login"
+            default:
+                return "\(baseUrlPath)/api/login"
+            }
+        }
+        static func codeBURLPath(env: OWNetworkEnvironmentType) -> String {
+            switch env {
+            case .production:
+                return "\(baseUrlPath)/api/spotim-sso"
+            case .staging:
+                return "\(baseUrlPathStaging)/api/spotim-sso"
+            default:
+                return "\(baseUrlPath)/api/spotim-sso"
+            }
+        }
+        #endif
     }
 
     internal static func logIn(with username: String,
                                password: String,
                                completion: @escaping (_ token: String?, _ error: Error?) -> Void) {
-        guard let url = URL(string: Metrics.loginURLPath) else { return }
+        var urlString = Metrics.loginURLPath
+        #if BETA
+        let env = OpenWeb.manager.environment
+        urlString = Metrics.loginURLPath(env: env)
+        #endif
+        guard let url = URL(string: urlString) else { return }
 
         let params = ["username": username,
                       "password": password]
@@ -56,12 +86,19 @@ internal class DemoUserAuthentication {
                                   username: String?,
                                   accessTokenNetwork: String?,
                                   completion: @escaping (_ authCode: String?, _ error: Error?) -> Void) {
-        guard let url = URL(string: Metrics.codeBURLPath) else { return }
+        var urlString = Metrics.codeBURLPath
+        var environment = "production"
+        #if BETA
+        let env = OpenWeb.manager.environment
+        urlString = Metrics.codeBURLPath(env: env)
+        environment = env == .production ? "production" : "staging"
+        #endif
+        guard let url = URL(string: urlString) else { return }
 
         let params: Parameters = ["code_a": codeA ?? "",
                                   "access_token": accessToken ?? "",
                                   "username": username ?? "",
-                                  "environment": "production"]
+                                  "env": environment]
 
         let headers: HTTPHeaders = ["access-token-network": accessTokenNetwork ?? ""]
 

@@ -106,6 +106,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case preConversationStyle = "preConversationCustomStyle"
         case conversationStyle = "conversationCustomStyleModeSelected"
         case commentCreationStyle = "commentCreationCustomStyleModeSelected"
+        case networkEnvironment = "networkEnvironmentSelected"
         case languageStrategy = "languageStrategy"
         case localeStrategy = "localeStrategy"
         case openCommentId = "openCommentId"
@@ -174,6 +175,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores conversation's style"
         case .commentCreationStyle:
             return "Key which stores comment creation style"
+        case .networkEnvironment:
+            return "Key which stores network environment"
         case .fontGroupType:
             return "Key which stores general setting's font type"
         case .languageStrategy:
