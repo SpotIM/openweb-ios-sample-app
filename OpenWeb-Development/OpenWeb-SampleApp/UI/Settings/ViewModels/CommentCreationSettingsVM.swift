@@ -145,4 +145,8 @@ fileprivate extension CommentCreationSettingsVM {
     }
 }
 
-extension CommentCreationSettingsVM: SettingsGroupVMProtocol { }
+extension CommentCreationSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        // TODO: implement
+    }
+}
