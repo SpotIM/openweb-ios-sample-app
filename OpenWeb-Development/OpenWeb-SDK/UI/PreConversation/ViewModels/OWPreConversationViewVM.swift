@@ -78,8 +78,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
 
         static let defaultBetweenCommentsSpacing = OWConversationSpacing.regular.betweenComments
-        static let threadActionCellSpacing: CGFloat = 22
-        static let commentBottomSpacingWithThred: CGFloat = 10
+        static let threadActionCellSpacing = OWVerticalSpacing(bottom: 22)
+        static let commentSpacingWithThread = OWVerticalSpacing(top: defaultBetweenCommentsSpacing.top, bottom: 10)
         static let defaultCommunityGuidelinesSpacing = OWConversationSpacing.regular.communityGuidelines
         static let defaultCommunityQuestionSpacing = OWConversationSpacing.regular.communityQuestions
     }
@@ -652,8 +652,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                         section: self.preConversationData.article.additionalSettings.section),
-                                                    spacing: OWVerticalSpacing(top: Metrics.defaultBetweenCommentsSpacing,
-                                                                               bottom: hasReplies ? Metrics.commentBottomSpacingWithThred : Metrics.defaultBetweenCommentsSpacing))
+                                                    spacing: hasReplies ? Metrics.commentSpacingWithThread : Metrics.defaultBetweenCommentsSpacing)
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
 
                     if hasReplies {
@@ -669,7 +668,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             data: presentationData,
                             mode: .openCommentThread,
                             depth: 0,
-                            spacing: OWVerticalSpacing(bottom: Metrics.threadActionCellSpacing)
+                            spacing: Metrics.threadActionCellSpacing
                         )))
                     }
 
@@ -1005,7 +1004,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             replyToUser: nil,
                             collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                             section: self.preConversationData.article.additionalSettings.section),
-                                                      spacing: OWVerticalSpacing(Metrics.defaultBetweenCommentsSpacing))
+                                                      spacing: Metrics.defaultBetweenCommentsSpacing)
                     }.unwrap()
                     let viewModels = self._cellsViewModels
                     let filteredCommentsVms = commentsVms.filter { commentVm in
