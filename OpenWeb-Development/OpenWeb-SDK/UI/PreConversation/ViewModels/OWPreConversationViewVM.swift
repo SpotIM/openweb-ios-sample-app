@@ -76,10 +76,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
-
-        static let defaultBetweenCommentsSpacing = OWConversationSpacing.regular.betweenComments
-        static let defaultCommunityGuidelinesSpacing = OWConversationSpacing.regular.communityGuidelines
-        static let defaultCommunityQuestionSpacing = OWConversationSpacing.regular.communityQuestions
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -143,12 +139,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
         return OWCommunityGuidelinesViewModel(style: preConversationStyle.communityGuidelinesStyle,
-                                              spacing: Metrics.defaultCommunityGuidelinesSpacing)
+                                              spacing: preConversationStyle.spacing.communityGuidelines)
     }()
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
         return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle,
-                                            spacing: Metrics.defaultCommunityQuestionSpacing)
+                                            spacing: preConversationStyle.spacing.communityQuestions)
     }()
 
     lazy var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling = {
@@ -643,14 +639,33 @@ fileprivate extension OWPreConversationViewViewModel {
                     let reportedCommentsService = self.servicesProvider.reportedCommentsService()
                     let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
 
+                    let hasReplies: Bool = (commentWithUpdatedStatus.totalRepliesCount ?? 0) > 0
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
                         comment: commentWithUpdatedStatus,
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                         section: self.preConversationData.article.additionalSettings.section),
-                                                    spacing: Metrics.defaultBetweenCommentsSpacing)
+                                                    spacing: hasReplies ? self.preConversationStyle.spacing.commentSpacingWithThread : self.preConversationStyle.spacing.betweenComments)
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+
+                    if hasReplies {
+                        let presentationData = OWCommentPresentationData(
+                            id: commentWithUpdatedStatus.id ?? "",
+                            repliesIds: commentWithUpdatedStatus.replies?.map { $0.id }.unwrap() ?? [],
+                            totalRepliesCount: commentWithUpdatedStatus.repliesCount ?? 0,
+                            repliesOffset: commentWithUpdatedStatus.offset ?? 0,
+                            repliesPresentation: [])
+
+                        viewModels.append(OWPreConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                            id: "\(presentationData.id)_openThread",
+                            data: presentationData,
+                            mode: .openCommentThread,
+                            depth: 0,
+                            spacing: self.preConversationStyle.spacing.threadActionSpacing
+                        )))
+                    }
+
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
                     }
@@ -983,7 +998,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             replyToUser: nil,
                             collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                             section: self.preConversationData.article.additionalSettings.section),
-                                                      spacing: Metrics.defaultBetweenCommentsSpacing)
+                                                      spacing: self.preConversationStyle.spacing.betweenComments)
                     }.unwrap()
                     let viewModels = self._cellsViewModels
                     let filteredCommentsVms = commentsVms.filter { commentVm in
@@ -1447,6 +1462,46 @@ fileprivate extension OWPreConversationViewViewModel {
                     .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
+
+        // Observable of the comment action cell VMs
+        let commentThreadActionsCellsVmsObservable: Observable<[OWCommentThreadActionsCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommentThreadActionsCellViewModeling]> in
+                let commentThreadActionsCellsVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
+                    if case.commentThreadActions(let commentThreadActionsCellViewModel) = vm {
+                        return commentThreadActionsCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                    .unwrap()
+
+                return Observable.just(commentThreadActionsCellsVms)
+            }
+            .share()
+
+        commentThreadActionsCellsVmsObservable
+            .flatMapLatest { commentThreadActionsCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode, BehaviorSubject<Bool>)> in
+                let threadActionsClickObservable = commentThreadActionsCellsVms.map { commentThreadActionsCellsVm in
+                    return commentThreadActionsCellsVm.outputs.commentActionsVM
+                        .outputs.tapOutput
+                        .map { (commentThreadActionsCellsVm.outputs.commentPresentationData,
+                                commentThreadActionsCellsVm.outputs.mode,
+                                commentThreadActionsCellsVm.outputs.commentActionsVM.inputs.isLoading) }
+                }
+
+                return Observable.merge(threadActionsClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentPresentationData, mode, isLoading in
+                guard let self = self else { return }
+                switch mode {
+                case .openCommentThread:
+                    self._openCommentThread.onNext((commentPresentationData.id, .none))
+                    isLoading.onNext(false)
+                default:
+                    // not relevant
+                    break
+                }
+            })
 
         // Actions after internet connection restored
         servicesProvider
