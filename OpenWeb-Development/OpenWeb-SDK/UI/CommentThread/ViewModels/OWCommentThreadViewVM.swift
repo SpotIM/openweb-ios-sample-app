@@ -113,8 +113,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         return OWManager.manager.postId ?? ""
     }
 
-    fileprivate lazy var spacingBetweenComments: CGFloat = {
-        return self.commentThreadData.settings.fullConversationSettings.style.spacing.betweenComments / Metrics.spacingBetweenCommentsDivisor
+    fileprivate lazy var spacingBetweenComments: OWVerticalSpacing = {
+        let top = self.commentThreadData.settings.fullConversationSettings.style.spacing.betweenComments.top / Metrics.spacingBetweenCommentsDivisor
+        let bottom = self.commentThreadData.settings.fullConversationSettings.style.spacing.betweenComments.bottom / Metrics.spacingBetweenCommentsDivisor
+        return OWVerticalSpacing(top: top, bottom: bottom)
     }()
 
     fileprivate let commentThreadData: OWCommentThreadRequiredData
@@ -445,7 +447,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         data: commentPresentationData,
                         mode: .collapse,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                     )))
                 } else {
                     cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
@@ -453,7 +455,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                     )))
                 }
             default:
@@ -462,7 +464,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     data: commentPresentationData,
                     mode: .collapse,
                     depth: depth,
-                    spacing: spacingBetweenComments
+                    spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                 )))
 
                 cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
@@ -475,7 +477,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                     )))
                 }
             }
@@ -1172,6 +1174,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                 case .expand:
                     self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
                     self._loadMoreReplies.onNext(commentPresentationData)
+                case .openCommentThread:
+                    // not relevant (only for pre-conversation)
+                    break
                 }
 
             })

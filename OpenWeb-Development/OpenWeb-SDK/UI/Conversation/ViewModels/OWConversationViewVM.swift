@@ -534,8 +534,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return self.conversationData.settings.fullConversationSettings.style
     }()
 
-    fileprivate lazy var spacingBetweenComments: CGFloat = {
-        return self.conversationStyle.spacing.betweenComments / Metrics.spacingBetweenCommentsDivisor
+    fileprivate lazy var spacingBetweenComments: OWVerticalSpacing = {
+        let top = self.conversationStyle.spacing.betweenComments.top / Metrics.spacingBetweenCommentsDivisor
+        let bottom = self.conversationStyle.spacing.betweenComments.bottom / Metrics.spacingBetweenCommentsDivisor
+        return OWVerticalSpacing(top: top, bottom: bottom)
     }()
 
     var viewInitialized = PublishSubject<Void>()
@@ -681,7 +683,7 @@ fileprivate extension OWConversationViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                     )))
                 }
             default:
@@ -690,7 +692,7 @@ fileprivate extension OWConversationViewViewModel {
                     data: commentPresentationData,
                     mode: .collapse,
                     depth: depth,
-                    spacing: spacingBetweenComments
+                    spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                 )))
 
                 cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
@@ -703,7 +705,7 @@ fileprivate extension OWConversationViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments.bottom)
                     )))
                 }
             }
@@ -1527,6 +1529,9 @@ fileprivate extension OWConversationViewViewModel {
                 case .expand:
                     self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
                     self._loadMoreReplies.onNext(commentPresentationData)
+                case .openCommentThread:
+                    // not relevant (only for pre-conversation)
+                    break
                 }
 
             })

@@ -85,8 +85,7 @@ class OWCommentThreadActionsView: UIView {
     }()
 
     fileprivate lazy var disclosureImageView: UIImageView = {
-        let image = UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: false)!
-        return UIImageView(image: image.withRenderingMode(.alwaysTemplate))
+        return UIImageView()
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
@@ -135,13 +134,23 @@ fileprivate extension OWCommentThreadActionsView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.disclosureImage
+            .subscribe(onNext: { [weak self] image in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.disclosureImageView.image = image.withRenderingMode(.alwaysTemplate)
+                }
+            })
+            .disposed(by: disposeBag)
+
         // Update bottom spacing
         viewModel.outputs.updateSpacing
-            .subscribe(onNext: { [weak self] spacingBetweenComments in
+            .subscribe(onNext: { [weak self] spacing in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
                     self.actionView.OWSnp.updateConstraints { make in
-                        make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+                        make.top.equalToSuperview().inset(spacing.top)
+                        make.bottom.equalToSuperview().inset(spacing.bottom)
                     }
                 }
             })
