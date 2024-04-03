@@ -116,6 +116,15 @@ extension OWPreConversationStyle {
             return false
         }
     }
+
+    var spacing: OWPreConversationSpacing {
+        switch self {
+        case .regular, .compact, .ctaButtonOnly, .ctaWithSummary:
+            return .regular
+        case .custom(_, _, _, let spacing):
+            return spacing
+        }
+    }
 }
 
 extension OWPreConversationStyle: Equatable {
