@@ -205,10 +205,11 @@ fileprivate extension OWTextView {
             .disposed(by: disposeBag)
 
         textView.rx.didChangeSelection
-            .map { [weak self] _ -> Range<String.Index>? in
+            .withLatestFrom(textView.rx.text)
+            .unwrap()
+            .map { [weak self] text -> Range<String.Index>? in
                 guard let self = self else { return nil }
-                let range = Range(self.textView.selectedRange, in: self.textView.text)
-                return range
+                return Range(self.textView.selectedRange, in: text)
             }
             .unwrap()
             .bind(to: viewModel.inputs.cursorRangeInternalChange)
