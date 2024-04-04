@@ -199,7 +199,7 @@ class OWUserMentionHelper {
     }
 
     /// This function creates an array of OWUserMentionObjects and also inserts the user mentions display names - @JohnSmith into the OWComment text instead of the user mention content json ids @{"id"="xxxxxxxxxx"} found in the comment text
-    static func createUserMentions(from comment: inout OWComment) -> [OWUserMentionObject] {
+    @discardableResult static func createUserMentions(from comment: inout OWComment) -> [OWUserMentionObject] {
         guard var text = comment.text?.text else { return [] }
         let jsonRanges = parseJsonsInText(text: text)
         var userMentions: [OWUserMentionObject] = []

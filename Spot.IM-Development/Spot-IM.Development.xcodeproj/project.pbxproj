@@ -898,8 +898,8 @@
 		9E4B4E6C2AADC75000F4425F /* OWErrorStateTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B4E6B2AADC75000F4425F /* OWErrorStateTypes.swift */; };
 		9E4B4E6E2AADE2E500F4425F /* OWErrorStateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B4E6D2AADE2E500F4425F /* OWErrorStateCell.swift */; };
 		9E4B4E702AADE74800F4425F /* OWErrorStateCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B4E6F2AADE74800F4425F /* OWErrorStateCellVM.swift */; };
-		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53758C297841C000C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9E53758E2978476900C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
 		9E559C112BA2E33F0035397C /* OWUserMentionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E559C102BA2E33F0035397C /* OWUserMentionHelper.swift */; };
@@ -976,8 +976,8 @@
 		9ED2E58D29EC01AD00B39A00 /* OWReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58C29EC01AD00B39A00 /* OWReportReasonView.swift */; };
 		9ED2E58F29EC01E900B39A00 /* OWSubmittedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58E29EC01E900B39A00 /* OWSubmittedVC.swift */; };
 		9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E59029EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift */; };
-		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDED29798919000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		9EE87B462AC8EE9400F11DD2 /* OWRepliesErrorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE87B452AC8EE9400F11DD2 /* OWRepliesErrorState.swift */; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
@@ -6172,6 +6172,7 @@
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
 				8D455ADB296C13CA0091A027 /* ShellScript */,
+				641BCD400A2B9C986A12B7BE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -6319,6 +6320,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		641BCD400A2B9C986A12B7BE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6D5DB15923CF5D73003F9D46 /* ShellScript */ = {
@@ -7230,11 +7248,11 @@
 				24D0CAF82B4D76A300C750C1 /* ColorType.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
 				243ED2A92B3C65210036E71D /* ColorCustomizationService.swift in Sources */,
-				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
-				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
+				9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */,
+				9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */,
 				3D1D24912A4AF60600692E2A /* ToolbarCollectionCell.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
-				9EE2CDED29798919000C0E38 /* (null) in Sources */,
+				9EE2CDED29798919000C0E38 /* BuildFile in Sources */,
 				3D50D9382B1657F500FD3232 /* AuthenticationError.swift in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
 				9EBE5C3029AE29B3001150DA /* OWFontGroupFamily+Extensions.swift in Sources */,
@@ -7256,7 +7274,7 @@
 				8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */,
 				8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */,
 				3DB3D199282AFDD2008654CF /* FontBook.swift in Sources */,
-				9E53758C297841C000C85983 /* (null) in Sources */,
+				9E53758C297841C000C85983 /* BuildFile in Sources */,
 				9EA0F84329AD11C4008FD7A6 /* ConversationSettingsVM.swift in Sources */,
 				3DF9418A2A56DB6800A687BD /* AutomationVC.swift in Sources */,
 				9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */,
@@ -7347,7 +7365,7 @@
 				3DB3D18B282A5624008654CF /* DLog.swift in Sources */,
 				3D611B8E28C4EE68003960CE /* MockArticleFlowsViewModel.swift in Sources */,
 				9E7D5B122A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift in Sources */,
-				9E53758E2978476900C85983 /* (null) in Sources */,
+				9E53758E2978476900C85983 /* BuildFile in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

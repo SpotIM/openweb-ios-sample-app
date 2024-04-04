@@ -202,9 +202,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
          viewableMode: OWViewableMode) {
         self.originCommentCreationData = commentCreationData
         self.commentCreatorNetworkHelper = commentCreatorNetworkHelper
-        self.commentCreationData = commentCreationData
         self.servicesProvider = servicesProvider
         self.viewableMode = viewableMode
+        var commentCreationData = commentCreationData
+        let userMentions = OWCommentCreationViewViewModel.addDisplayUserMentions(to: &commentCreationData)
+        self.commentCreationData = commentCreationData
+        self.addInitialUserMentions(userMentions: userMentions)
         setupObservers()
     }
 
@@ -393,6 +396,30 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 }
 
 fileprivate extension OWCommentCreationViewViewModel {
+    static func addDisplayUserMentions(to commentCreationData: inout OWCommentCreationRequiredData) -> [OWUserMentionObject]? {
+        switch commentCreationData.commentCreationType {
+        case .edit(comment: let comment):
+            var comment = comment
+            let userMentionObjects = OWUserMentionHelper.createUserMentions(from: &comment)
+            commentCreationData.commentCreationType = .edit(comment: comment)
+            return userMentionObjects
+        case .comment, .replyToComment:
+            break
+        }
+        return nil
+    }
+
+    func addInitialUserMentions(userMentions: [OWUserMentionObject]?) {
+        guard let userMentions = userMentions else { return }
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            commentCreationRegularViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+        case .light:
+            commentCreationLightViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+        case .floatingKeyboard(accessoryViewStrategy: _):
+            commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+        }
+    }
     // swiftlint:disable function_body_length
     func setupObservers() {
         Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
