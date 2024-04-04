@@ -34,6 +34,7 @@ class OWTextView: UIView {
         static let didBeginEditDelay = 1
         static let delayTextViewTextChange = 5
         static let delayTextViewExpand = 10
+        static let didChangeSelectionDelay = 1
     }
 
     let viewModel: OWTextViewViewModeling
@@ -205,6 +206,8 @@ fileprivate extension OWTextView {
             .disposed(by: disposeBag)
 
         textView.rx.didChangeSelection
+            // delay so that textView.rx.text is updated with updated text
+            .delay(.microseconds(Metrics.didChangeSelectionDelay), scheduler: MainScheduler.instance)
             .withLatestFrom(textView.rx.text)
             .unwrap()
             .map { [weak self] text -> Range<String.Index>? in
