@@ -134,6 +134,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .asObservable()
     }
 
+    // This is used to prevent memory leak when binding textViewVM with userMentionVM
+    var cursorRangeChange = PublishSubject<Range<String.Index>>()
+
     var submitCommentInProgress = BehaviorSubject<Bool>(value: false)
     var ctaButtonLoading: Observable<Bool> {
         submitCommentInProgress
@@ -346,6 +349,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
             .disposed(by: disposeBag)
 
         textViewVM.outputs.cursorRange
+            .bind(to: cursorRangeChange)
+            .disposed(by: disposeBag)
+
+        cursorRangeChange
             .bind(to: userMentionVM.inputs.cursorRange)
             .disposed(by: disposeBag)
 

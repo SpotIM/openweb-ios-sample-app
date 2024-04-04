@@ -58,6 +58,9 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
         return OWUserMentionViewVM(servicesProvider: servicesProvider)
     }()
 
+    // This is used to prevent memory leak when binding textViewVM with userMentionVM
+    var cursorRangeChange = PublishSubject<Range<String.Index>>()
+
     var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
     var displayToastCalled: Observable<OWToastNotificationCombinedData> {
         return displayToast
@@ -211,6 +214,10 @@ fileprivate extension OWCommentCreationLightViewViewModel {
             .disposed(by: disposeBag)
 
         commentCreationContentVM.outputs.textViewVM.outputs.cursorRange
+            .bind(to: cursorRangeChange)
+            .disposed(by: disposeBag)
+
+        cursorRangeChange
             .bind(to: userMentionVM.inputs.cursorRange)
             .disposed(by: disposeBag)
 
