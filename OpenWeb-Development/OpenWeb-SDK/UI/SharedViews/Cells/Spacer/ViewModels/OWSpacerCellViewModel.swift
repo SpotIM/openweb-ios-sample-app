@@ -1,0 +1,50 @@
+//
+//  OWSpacerViewModel.swift
+//  OpenWebSDK
+//
+//  Created by Alon Haiut on 27/07/2022.
+//  Copyright © 2022 OpenWeb. All rights reserved.
+//
+
+import Foundation
+import RxSwift
+
+protocol OWSpacerCellViewModelingInputs { }
+
+protocol OWSpacerCellViewModelingOutputs {
+    var spacerViewModel: OWSpacerViewModeling { get }
+    var id: String { get }
+}
+
+protocol OWSpacerCellViewModeling: OWCellViewModel {
+    var inputs: OWSpacerCellViewModelingInputs { get }
+    var outputs: OWSpacerCellViewModelingOutputs { get }
+}
+
+class OWSpacerCellViewModel: OWSpacerCellViewModeling,
+                                OWSpacerCellViewModelingInputs,
+                                OWSpacerCellViewModelingOutputs {
+    var inputs: OWSpacerCellViewModelingInputs { return self }
+    var outputs: OWSpacerCellViewModelingOutputs { return self }
+
+    lazy var spacerViewModel: OWSpacerViewModeling = {
+        return OWSpacerViewModel(style: self.style)
+    }()
+
+    fileprivate let style: OWSpacerStyle
+
+    // Unique identifier
+    let id: String
+
+    init(id: String = UUID().uuidString, style: OWSpacerStyle = .none) {
+        self.id = id
+        self.style = style
+    }
+}
+
+extension OWSpacerCellViewModel {
+    static func stub() -> OWSpacerCellViewModeling {
+        return OWSpacerCellViewModel()
+    }
+}
+
