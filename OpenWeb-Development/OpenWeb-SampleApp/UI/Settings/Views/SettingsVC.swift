@@ -17,6 +17,7 @@ class SettingsVC: UIViewController {
         static let verticalOffset: CGFloat = 40
         static let verticalBetweenSettingViewsOffset: CGFloat = 80
         static let resetButtonHeight: CGFloat = 50
+        static let resetButtonVerticalPadding: CGFloat = 20
     }
 
     fileprivate lazy var scrollView: UIScrollView = {
@@ -72,19 +73,19 @@ fileprivate extension SettingsVC {
 
         title = viewModel.outputs.title
 
+        view.addSubview(resetButton)
+        resetButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().inset(Metrics.resetButtonVerticalPadding)
+            make.height.equalTo(Metrics.resetButtonHeight)
+        }
+
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(resetButton.snp.top).offset(-Metrics.resetButtonVerticalPadding)
             make.top.equalToSuperview()
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-        }
-
-        scrollView.addSubview(resetButton)
-        resetButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.resetButtonHeight)
-            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
         }
 
         var previousView: UIView? = nil
@@ -97,7 +98,7 @@ fileprivate extension SettingsVC {
                     make.top.equalTo(topView.snp.bottom).offset(Metrics.verticalBetweenSettingViewsOffset)
                 } else {
                     // Telling the scroll view that this is the first settingsView
-                    make.top.equalTo(resetButton.snp.bottom).offset(Metrics.verticalOffset)
+                    make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
                 }
                 if index == settingViews.count - 1 {
                     // Telling the scroll view that this is the last settingsView
