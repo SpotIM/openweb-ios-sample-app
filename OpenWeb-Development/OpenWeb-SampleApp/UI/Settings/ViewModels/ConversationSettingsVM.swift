@@ -316,6 +316,12 @@ fileprivate extension ConversationSettingsVM {
 
 extension ConversationSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        // TODO: implement
+        styleModeSelectedIndex.onNext(OWConversationStyle.defaultIndex)
+        communityGuidelinesStyleSelectedIndex.onNext(OWCommunityGuidelinesStyle.default.index)
+        communityQuestionsStyleModeSelectedIndex.onNext(OWCommunityQuestionStyle.default.index)
+        conversationSpacingSelectedIndex.onNext(OWConversationSpacing.defaultIndex)
+        betweenCommentsSpacingSelected.onNext("\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)")
+        communityGuidelinesSpacingSelected.onNext("\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)")
+        communityQuestionsGuidelinesSpacingSelected.onNext("\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)")
     }
 }
