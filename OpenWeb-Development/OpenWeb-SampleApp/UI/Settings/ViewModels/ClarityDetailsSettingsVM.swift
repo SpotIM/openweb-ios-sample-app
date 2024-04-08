@@ -45,6 +45,5 @@ fileprivate extension ClarityDetailsSettingsVM {
 
 extension ClarityDetailsSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        // TODO: implement
     }
 }
