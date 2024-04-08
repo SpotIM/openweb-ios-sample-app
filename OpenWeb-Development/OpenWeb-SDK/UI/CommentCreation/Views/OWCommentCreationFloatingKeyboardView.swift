@@ -18,8 +18,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerViewIdentifier = "comment_creation_floating_keyboard_header_view_id"
         static let headerCloseButtonIdentifier = "comment_creation_floating_keyboard_header_close_button_id"
         static let headerTitleLabelIdentifier = "comment_creation_floating_keyboard_header_title_label_id"
-        static let headerIconViewIdentifier = "comment_creation_floating_keyboard_header_icon_view_id"
-        static let userAvatarViewIdentifier = "comment_creation_floating_keyboard_user_avatar_view_id"
+        static func headerIconViewIdentifier(commentType type: String) -> String { return "comment_creation_floating_keyboard_header_\(type)_icon_view_id" }
         static let closeButtonIdentifier = "comment_creation_floating_keyboard_close_button_id"
         static let ctaButtonIdentifier = "comment_creation_floating_keyboard_cta_button_id"
         static let toolbarIdentifier = "comment_creation_floating_keyboard_toolbar_view_id"
@@ -239,12 +238,20 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         headerView.accessibilityIdentifier = Metrics.headerViewIdentifier
         headerCloseButton.accessibilityIdentifier = Metrics.headerCloseButtonIdentifier
         headerTitleLabel.accessibilityIdentifier = Metrics.headerTitleLabelIdentifier
-        headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier
-        userAvatarView.accessibilityIdentifier = Metrics.userAvatarViewIdentifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
         ctaButton.accessibilityIdentifier = Metrics.ctaButtonIdentifier
         toolbar?.accessibilityIdentifier = Metrics.toolbarIdentifier
         lineSeparator.accessibilityIdentifier = Metrics.lineSeparatorIdentifier
+
+        switch viewModel.outputs.commentType {
+        case .comment:
+            headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier(commentType: "comment")
+        case .edit:
+            headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier(commentType: "edit_comment")
+        case .replyToComment:
+            headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier(commentType: "reply_to_comment")
+
+        }
     }
 }
 
