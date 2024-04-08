@@ -43,7 +43,7 @@ fileprivate extension ClarityDetailsSettingsVM {
     }
 }
 
-extension ClarityDetailsSettingsVM: SettingsGroupVMProtocol { 
+extension ClarityDetailsSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
         // TODO: implement
     }
