@@ -126,7 +126,7 @@ fileprivate extension SettingsVC {
                     let expandedKeyboardHeight = notification.keyboardSize?.height,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
-                self.scrollView.snp.updateConstraints { make in
+                self.resetButton.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-expandedKeyboardHeight)
                 }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
@@ -148,8 +148,8 @@ fileprivate extension SettingsVC {
             .voidify()
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.scrollView.snp.updateConstraints { make in
-                    make.bottom.equalToSuperview()
+                self.resetButton.snp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(-Metrics.resetButtonVerticalPadding)
                 }
             })
             .disposed(by: disposeBag)
