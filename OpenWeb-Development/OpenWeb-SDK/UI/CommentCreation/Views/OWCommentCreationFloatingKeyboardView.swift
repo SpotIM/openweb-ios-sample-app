@@ -469,7 +469,11 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .observe(on: MainScheduler.instance)
             .delay(.milliseconds(toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration), scheduler: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
-            .bind(to: viewModel.inputs.closeInstantly)
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else { return }
+                self.viewModel.inputs.closeInstantly.onNext(text)
+                self.viewModel.inputs.pop.onNext()
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.ctaButtonLoading
