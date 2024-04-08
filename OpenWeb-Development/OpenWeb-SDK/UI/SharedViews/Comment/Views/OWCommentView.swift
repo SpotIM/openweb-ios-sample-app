@@ -32,6 +32,13 @@ class OWCommentView: UIView {
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
             .alpha(0.5)
     }()
+    fileprivate lazy var blockingViewTapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        blockingOpacityView.addGestureRecognizer(tap)
+        self.isUserInteractionEnabled = true
+
+        return tap
+    }()
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
@@ -159,6 +166,22 @@ fileprivate extension OWCommentView {
         viewModel.outputs.showBlockingLayoutView
             .map { !$0 }
             .bind(to: blockingOpacityView.rx.isHidden)
+            .disposed(by: disposedBag)
+
+        blockingViewTapGesture.rx.event
+            .map { [weak self] event in
+                guard let self = self else { return nil }
+                let tapLocation = event.location(in: self)
+                let optionButton = self.commentHeaderView.optionButton
+                let optionButtonLocation = optionButton.convert(optionButton.bounds, to: self)
+                if optionButtonLocation.contains(tapLocation) {
+                    return optionButton
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
+            .bind(to: self.viewModel.outputs.commentHeaderVM.inputs.tapMore)
             .disposed(by: disposedBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
