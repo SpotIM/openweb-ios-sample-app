@@ -97,7 +97,7 @@ class OWCommentHeaderView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var optionButton: UIButton = {
+    lazy var optionButton: UIButton = {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
         let leftInset: CGFloat =  OWLocalizationManager.shared.textAlignment == .left ? 0 : -Metrics.optionsImageInset
         let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -Metrics.optionsImageInset
