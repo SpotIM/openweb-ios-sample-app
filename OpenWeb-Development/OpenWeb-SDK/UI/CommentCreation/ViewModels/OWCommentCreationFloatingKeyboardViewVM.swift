@@ -11,6 +11,7 @@ import UIKit
 import RxSwift
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
+    var pop: PublishSubject<Void> { get }
     var closeWithDelay: PublishSubject<Void> { get }
     var closeInstantly: PublishSubject<String> { get }
     var ctaTap: PublishSubject<Void> { get }
@@ -25,6 +26,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
+    var popped: Observable<OWCommentCreationCtaData> { get }
     var commentType: OWCommentCreationTypeInternal { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var textViewVM: OWTextViewViewModeling { get }
@@ -128,6 +130,14 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             }
             .asObservable()
     }
+
+    var pop = PublishSubject<Void>()
+    var popped: Observable<OWCommentCreationCtaData> {
+        return pop
+            .withLatestFrom(closedInstantly)
+            .asObservable()
+    }
+
     var ctaTap = PublishSubject<Void>()
     var closeWithDelay = PublishSubject<Void>()
     var closedWithDelay: Observable<Void> {
