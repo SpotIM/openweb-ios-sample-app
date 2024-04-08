@@ -1,0 +1,15 @@
+platform :ios, '11.0'
+inhibit_all_warnings!
+use_frameworks!
+
+target 'OpenWeb-SampleApp' do
+  pod 'SnapKit', '~> 5.6.0'
+  pod 'Google-Mobile-Ads-SDK', '= 8.0'
+  pod 'Alamofire', '~> 5.6.2'
+  pod 'FirebaseCrashlytics', '~> 10.23.0'
+end
+
+target 'OpenWebSDKTests' do
+  pod 'Quick', '~> 5.0.1'
+  pod 'Nimble', '~> 10.0.0'
+end
