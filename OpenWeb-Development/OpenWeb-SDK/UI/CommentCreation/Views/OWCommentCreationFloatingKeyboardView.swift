@@ -426,7 +426,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: viewModel.inputs.resetTypeToNewCommentChange)
             .disposed(by: disposeBag)
 
-        let postedOrClosedObservable = Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
+        let postedOrClosedObservable = Observable.merge(closeButton.rx.tap.asObservable(),
+                                                        viewModel.outputs.closedWithDelay.asObservable())
             .observe(on: MainScheduler.instance)
             .flatMap({ [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
@@ -450,7 +451,11 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .observe(on: MainScheduler.instance)
             .delay(.milliseconds(toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration), scheduler: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
-            .bind(to: viewModel.inputs.closeInstantly)
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else { return }
+                self.viewModel.inputs.closeInstantly.onNext(text)
+                self.viewModel.inputs.pop.onNext()
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.ctaButtonLoading
