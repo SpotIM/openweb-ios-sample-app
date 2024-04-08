@@ -684,6 +684,7 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
         articleHeaderSelectedStyle.onNext(OWArticleHeaderStyle.default)
         articleInformationSelectedStrategy.onNext(OWArticleInformationStrategy.default)
+        articleAssociatedSelectedURL.onNext("")
         articleSelectedSection.onNext("")
         elementsCustomizationStyleSelectedIndex.onNext(SettingsElementsCustomizationStyle.defaultIndex)
         colorsCustomizationStyleSelectedIndex.onNext(SettingsColorCustomizationStyle.defaultIndex)
