@@ -14,14 +14,14 @@ import OpenWebSDK.OWGiphySDK
 protocol OWGifServicing {
     var isGiphyAvailable: Bool { get }
     func gifSelectionVC() -> UIViewController?
-    var giphyBridg: OWGiphySDKBridge { get }
+    var giphyBridge: OWGiphySDKBridge { get }
     var didCancel: Observable<Void> { get }
     var didSelectMedia: Observable<OWCommentGif> { get }
 }
 
 class OWGifService: OWGifServicing {
     fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
-    let giphyBridg: OWGiphySDKBridge
+    let giphyBridge: OWGiphySDKBridge
     fileprivate static let giphyApiKey = "3ramR4915VrqRb5U5FBcybtsTvSGFJu8"
 
     fileprivate let disposeBag = DisposeBag()
@@ -44,20 +44,22 @@ class OWGifService: OWGifServicing {
 
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
-        giphyBridg = OWGiphySDKBridge()
-        giphyBridg.delegate = self
+        giphyBridge = OWGiphySDKBridge()
+        giphyBridge.delegate = self
         configure()
         setupObservers()
     }
 
     func gifSelectionVC() -> UIViewController? {
-        return giphyBridg.gifSelectionVC(sharedServicesProvider.themeStyleService().currentStyle == .dark)
+        let vc = giphyBridge.gifSelectionVC()
+        giphyBridge.setThemeMode(sharedServicesProvider.themeStyleService().currentStyle == .dark)
+        return vc
     }
 }
 
 fileprivate extension OWGifService {
     func configure() {
-        giphyBridg.configure(OWGifService.giphyApiKey)
+        giphyBridge.configure(OWGifService.giphyApiKey)
     }
 
     func setupObservers() {
@@ -65,7 +67,7 @@ fileprivate extension OWGifService {
             .style
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
-                self.giphyBridg.setThemeMode(style == .dark ? true : false)
+                self.giphyBridge.setThemeMode(style == .dark ? true : false)
             })
             .disposed(by: disposeBag)
     }
