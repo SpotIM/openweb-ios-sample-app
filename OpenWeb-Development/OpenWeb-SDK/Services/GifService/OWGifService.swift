@@ -14,20 +14,20 @@ import OpenWebSDK.OWGiphySDK
 protocol OWGifServicing {
     var isGiphyAvailable: Bool { get }
     func gifSelectionVC() -> UIViewController?
-    var giphyBridg: OWGiphySDKInterop { get }
+    var giphyBridg: OWGiphySDKBridge { get }
     var didCancel: Observable<Void> { get }
     var didSelectMedia: Observable<OWCommentGif> { get }
 }
 
 class OWGifService: OWGifServicing {
     fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
-    let giphyBridg: OWGiphySDKInterop
+    let giphyBridg: OWGiphySDKBridge
     fileprivate static let giphyApiKey = "3ramR4915VrqRb5U5FBcybtsTvSGFJu8"
 
     fileprivate let disposeBag = DisposeBag()
 
     var isGiphyAvailable: Bool {
-        OWGiphySDKInterop.giphySDKAvailable()
+        OWGiphySDKBridge.giphySDKAvailable()
     }
 
     fileprivate var _didCancel = PublishSubject<Void>()
@@ -44,7 +44,7 @@ class OWGifService: OWGifServicing {
 
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
-        giphyBridg = OWGiphySDKInterop()
+        giphyBridg = OWGiphySDKBridge()
         giphyBridg.delegate = self
         configure()
         setupObservers()
@@ -71,7 +71,7 @@ fileprivate extension OWGifService {
     }
 }
 
-extension OWGifService: OWGiphySDKInteropDelegate {
+extension OWGifService: OWGiphySDKBridgeDelegate {
     func didSelectMedia(withGiphyViewController giphyViewController: UIViewController, media: OWGiphyMedia) {
         _didSelectMedia
             .onNext(OWCommentGif(previewWidth: media.previewWidth,

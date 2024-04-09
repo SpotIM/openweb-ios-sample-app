@@ -13,7 +13,7 @@ framework module OpenWebSDK {
     module * { export * }
 
     explicit module OWGiphySDK {
-      header "OWGiphySDKInterop.h"
+      header "OWGiphySDKBridge.h"
       export *
     }
 }
