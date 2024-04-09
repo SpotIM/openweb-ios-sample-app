@@ -107,8 +107,8 @@ fileprivate extension OWCommentView {
         self.addSubview(optionButton)
         optionButton.OWSnp.makeConstraints { make in
             make.size.equalTo(InternalMetrics.optionButtonSize)
-            make.top.equalTo(commentStatusView.OWSnp.bottom).offset(InternalMetrics.commentStatusBottomPadding) // TODO: fix
-            make.top.equalToSuperview()
+            make.top.equalTo(commentStatusView.OWSnp.bottom) //.offset(6) // TODO: fix
+//            make.top.equalTo(commentHeaderView.OWSnp.top)
             make.trailing.equalToSuperview()
         }
 
@@ -142,6 +142,7 @@ fileprivate extension OWCommentView {
             make.top.equalTo(commentContentView.OWSnp.bottom).offset(InternalMetrics.commentActionsTopPadding)
         }
         self.bringSubviewToFront(blockingOpacityView)
+        self.bringSubviewToFront(optionButton)
     }
 
     func setupObservers() {
@@ -171,6 +172,9 @@ fileprivate extension OWCommentView {
                     self.commentHeaderView.OWSnp.updateConstraints { make in
                         make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? InternalMetrics.commentStatusBottomPadding : 0)
                     }
+//                    self.optionButton.OWSnp.updateConstraints { make in
+//                        make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? 6 : 0)
+//                    }
                     self.commentStatusView.isHidden = !shouldShow
                     self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
                 }
@@ -182,13 +186,13 @@ fileprivate extension OWCommentView {
             .bind(to: blockingOpacityView.rx.isHidden)
             .disposed(by: disposedBag)
 
-//        optionButton.rx.tap
-//            .map { [weak self] in
-//                return self?.optionButton
-//            }
-//            .unwrap()
-//            .bind(to: viewModel.inputs.tapMore)
-//            .disposed(by: disposeBag)
+        optionButton.rx.tap
+            .map { [weak self] in
+                return self?.optionButton
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.tapMore)
+            .disposed(by: disposedBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
