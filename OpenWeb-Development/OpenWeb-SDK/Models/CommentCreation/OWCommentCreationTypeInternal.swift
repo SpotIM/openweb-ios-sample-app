@@ -13,3 +13,16 @@ enum OWCommentCreationTypeInternal {
     case edit(comment: OWComment)
     case replyToComment(originComment: OWComment)
 }
+
+extension OWCommentCreationTypeInternal {
+    var identifierDescription: String {
+        switch self {
+        case .comment:
+            return "comment"
+        case .edit(_):
+            return "edit_comment"
+        case .replyToComment(_):
+            return "reply_to_comment"
+        }
+    }
+}
