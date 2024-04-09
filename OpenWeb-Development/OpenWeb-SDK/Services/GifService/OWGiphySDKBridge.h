@@ -1,5 +1,5 @@
 //
-//  OWGiphySDKInterop.h
+//  OWGiphySDKBridge.h
 //  OpenWeb-Development
 //
 //  Created by  Nogah Melamed on 25/03/2024.
@@ -21,16 +21,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString * _Nullable previewUrl;
 @end
 
-@protocol OWGiphySDKInteropDelegate
+@protocol OWGiphySDKBridgeDelegate
 
 - (void)didDismissWithController:(UIViewController*)controller;
 - (void)didSelectMediaWithGiphyViewController:(UIViewController *)giphyViewController media:(OWGiphyMedia*)media;
 
 @end
 
-@interface OWGiphySDKInterop : NSObject
+@interface OWGiphySDKBridge : NSObject
 
-@property (nonatomic, weak) id<OWGiphySDKInteropDelegate> delegate;
+@property (nonatomic, weak) id<OWGiphySDKBridgeDelegate> delegate;
 
 + (BOOL)giphySDKAvailable;
 

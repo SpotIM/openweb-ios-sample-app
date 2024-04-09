@@ -294,8 +294,8 @@
 		24E753602940A26F00A74427 /* OWCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */; };
 		24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */; };
 		24ECB4A22A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24ECB4A12A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift */; };
-		24ED931D2BB4344C0090D1FF /* OWGiphySDKInterop.h in Headers */ = {isa = PBXBuildFile; fileRef = 24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		24ED931E2BB4344C0090D1FF /* OWGiphySDKInterop.m in Sources */ = {isa = PBXBuildFile; fileRef = 24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */; };
+		24ED931D2BB4344C0090D1FF /* OWGiphySDKBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 24ED931B2BB4344C0090D1FF /* OWGiphySDKBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		24ED931E2BB4344C0090D1FF /* OWGiphySDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 24ED931C2BB4344C0090D1FF /* OWGiphySDKBridge.m */; };
 		24ED932C2BB457420090D1FF /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		24ED93342BB466140090D1FF /* OWGifService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828D12B8F14AB00BFD159 /* OWGifService.swift */; };
 		24EF864429C9D7FF00327394 /* OWCompactContentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EF864329C9D7FF00327394 /* OWCompactContentType.swift */; };
@@ -1328,8 +1328,8 @@
 		24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderViewModel.swift; sourceTree = "<group>"; };
 		24ECB4A12A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWArticleInformationStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		24ED931A2BB432DC0090D1FF /* OpenWebSDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = OpenWebSDK.modulemap; sourceTree = "<group>"; };
-		24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWGiphySDKInterop.h; sourceTree = "<group>"; };
-		24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWGiphySDKInterop.m; sourceTree = "<group>"; };
+		24ED931B2BB4344C0090D1FF /* OWGiphySDKBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWGiphySDKBridge.h; sourceTree = "<group>"; };
+		24ED931C2BB4344C0090D1FF /* OWGiphySDKBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWGiphySDKBridge.m; sourceTree = "<group>"; };
 		24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = GiphyUISDK.xcframework; sourceTree = "<group>"; };
 		24EF864329C9D7FF00327394 /* OWCompactContentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCompactContentType.swift; sourceTree = "<group>"; };
 		24EF864529C9ED0A00327394 /* OWCompactCommentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCompactCommentType.swift; sourceTree = "<group>"; };
@@ -2834,8 +2834,8 @@
 			isa = PBXGroup;
 			children = (
 				24F828D12B8F14AB00BFD159 /* OWGifService.swift */,
-				24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */,
-				24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */,
+				24ED931B2BB4344C0090D1FF /* OWGiphySDKBridge.h */,
+				24ED931C2BB4344C0090D1FF /* OWGiphySDKBridge.m */,
 			);
 			path = GifService;
 			sourceTree = "<group>";
@@ -5974,7 +5974,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				44C879E023608E3600E0E662 /* OpenWebSDK.h in Headers */,
-				24ED931D2BB4344C0090D1FF /* OWGiphySDKInterop.h in Headers */,
+				24ED931D2BB4344C0090D1FF /* OWGiphySDKBridge.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6748,7 +6748,7 @@
 				240D6E852AB882E400EB70FA /* OWConversationCountersResponse.swift in Sources */,
 				3DA264642951E3B200688FFF /* OWNetworkHTTPMethod.swift in Sources */,
 				240E8FAE2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift in Sources */,
-				24ED931E2BB4344C0090D1FF /* OWGiphySDKInterop.m in Sources */,
+				24ED931E2BB4344C0090D1FF /* OWGiphySDKBridge.m in Sources */,
 				8DBC16882A5D45610010759E /* OWFontTypography.swift in Sources */,
 				9E82787D2A4DC24E00EAA88E /* OWTitleViewVM.swift in Sources */,
 				3DDA9A7F291A55BA00FE3B86 /* OWCustomizations.swift in Sources */,
