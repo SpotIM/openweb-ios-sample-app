@@ -96,6 +96,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
+    fileprivate lazy var _commentGif: Observable<OWCommentGif?> = {
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.gifPreviewVM.outputs.gifDataOutput
+        case .light:
+            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.gifPreviewVM.outputs.gifDataOutput
+        case .floatingKeyboard:
+            return Observable.just(nil)
+        }
+    }()
+
     fileprivate lazy var _commentSelectedLabelIds: Observable<[String]> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
@@ -107,9 +118,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, [String])> = {
-        Observable.combineLatest(_commentText, _commentImage, _commentSelectedLabelIds) { commentText, commentImage, commentSelectedLabelIds in
-            return (commentText, commentImage, commentSelectedLabelIds)
+    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, OWCommentGif?, [String])> = {
+        Observable.combineLatest(_commentText, _commentImage, _commentGif, _commentSelectedLabelIds) { commentText, commentImage, commentGif, commentSelectedLabelIds in
+            return (commentText, commentImage, commentGif, commentSelectedLabelIds)
         }
     }()
 
@@ -138,21 +149,23 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
         return Observable.combineLatest(commentTextAfterTapObservable,
                                         _commentImage,
+                                        _commentGif,
                                         _commentSelectedLabelIds)
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .commentCreationClosePage)
             })
-            .flatMap { [weak self] commentText, commentImage, commentSelectedLabelIds -> Observable<Void> in
+            .flatMap { [weak self] commentText, commentImage, commentGif, commentSelectedLabelIds -> Observable<Void> in
                 guard let self = self else { return Observable.empty() }
                 let hasText = !commentText.isEmpty
                 let hasImage = commentImage != nil
+                let hasGif = commentGif != nil
                 let hasSelectedLabel = commentSelectedLabelIds.count > 0
-                guard hasText || hasImage || hasSelectedLabel else {
+                guard hasText || hasImage || hasGif || hasSelectedLabel else {
                     self.clearCachedCommentIfNeeded()
                     return Observable.just(())
                 }
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage, gif: commentGif),
                                   commentLabels: commentSelectedLabelIds)
                 self.sendEvent(for: .commentCreationLeavePage)
                 return Observable.just(())
@@ -433,9 +446,10 @@ fileprivate extension OWCommentCreationViewViewModel {
             if replyToCommentId != nil {
                 let commentText = commentContent.0
                 let commentImage = commentContent.1
-                let commentSelectedLabelIds = commentContent.2
+                let commentGif = commentContent.2
+                let commentSelectedLabelIds = commentContent.3
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage, gif: commentGif),
                                   commentLabels: commentSelectedLabelIds)
             }
         })
@@ -542,6 +556,26 @@ fileprivate extension OWCommentCreationViewViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        Observable.merge(
+            commentCreationRegularViewVm.outputs.footerViewModel.outputs.addGifTapped,
+            commentCreationLightViewVm.outputs.footerViewModel.outputs.addGifTapped
+        )
+        .flatMap { [weak self] _ -> Observable<OWGifPickerPresenterResponseType> in
+            guard let self = self else { return .empty() }
+            return self.servicesProvider.presenterService()
+                .showGifPicker(viewableMode: self.viewableMode)
+        }
+        .subscribe(onNext: { [weak self] response in
+            switch response {
+            case .mediaInfo(let data):
+                self?.commentCreationRegularViewVm.outputs.commentCreationContentVM.inputs.gifPicked.onNext(data)
+                self?.commentCreationLightViewVm.outputs.commentCreationContentVM.inputs.gifPicked.onNext(data)
+            case .cancled:
+                break
+            }
+        })
+        .disposed(by: disposeBag)
 
         servicesProvider
             .activeArticleService()

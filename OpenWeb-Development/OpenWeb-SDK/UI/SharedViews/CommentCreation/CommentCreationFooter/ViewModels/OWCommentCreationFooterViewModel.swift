@@ -13,6 +13,7 @@ import RxSwift
 protocol OWCommentCreationFooterViewModelingInputs {
     var tapCta: PublishSubject<Void> { get }
     var tapAddImage: PublishSubject<Void> { get }
+    var tapAddGif: PublishSubject<Void> { get }
     var ctaEnabled: BehaviorSubject<Bool> { get }
     var submitCommentInProgress: BehaviorSubject<Bool> { get }
     var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
@@ -23,8 +24,10 @@ protocol OWCommentCreationFooterViewModelingOutputs {
     var ctaButtonEnabled: Observable<Bool> { get }
     var ctaButtonLoading: Observable<Bool> { get }
     var showAddImageButton: Observable<Bool> { get }
+    var showAddGifButton: Observable<Bool> { get }
     var performCtaAction: Observable<Void> { get }
     var addImageTapped: Observable<Void> { get }
+    var addGifTapped: Observable<Void> { get }
     var loginToPostClick: Observable<Void> { get }
     var customizeSubmitButtonUI: Observable<UIButton> { get }
 }
@@ -47,6 +50,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     var tapCta = PublishSubject<Void>()
     var tapAddImage = PublishSubject<Void>()
+    var tapAddGif = PublishSubject<Void>()
 
     fileprivate let _triggerCustomizeSubmitButtonUI = BehaviorSubject<UIButton?>(value: nil)
     var triggerCustomizeSubmitButtonUI = PublishSubject<UIButton>()
@@ -59,6 +63,11 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     var addImageTapped: Observable<Void> {
         tapAddImage
+            .asObservable()
+    }
+
+    var addGifTapped: Observable<Void> {
+        tapAddGif
             .asObservable()
     }
 
@@ -150,6 +159,18 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
             .map {
                 $0.conversation?.disableImageUploadButton != true
+            }
+    }
+
+    var showAddGifButton: Observable<Bool> {
+        return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+            .map { [weak self] in
+                guard let gifService = self?.servicesProvider.gifService(),
+                      gifService.isGiphyAvailable else {
+                    return false
+                }
+
+                return $0.mobileSdk.postGifEnabled
             }
     }
 

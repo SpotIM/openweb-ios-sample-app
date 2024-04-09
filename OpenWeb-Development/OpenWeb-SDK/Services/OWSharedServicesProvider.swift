@@ -58,6 +58,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
     func conversationSizeService() -> OWConversationSizeServicing
+    func gifService() -> OWGifServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -83,6 +84,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _conversationSizeService: OWConversationSizeServicing = {
         return OWConversationSizeService()
+    }()
+
+    fileprivate lazy var _gifService: OWGifServicing = {
+        return OWGifService(sharedServicesProvider: self)
     }()
 
     fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
@@ -182,7 +187,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _presenterService: OWPresenterServicing = {
-        return OWPresenterService()
+        return OWPresenterService(sharedServicesProvider: self)
     }()
 
     fileprivate lazy var _commentCreationRequestsService: OWCommentCreationRequestsServicing = {
@@ -387,6 +392,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func conversationSizeService() -> OWConversationSizeServicing {
         return _conversationSizeService
+    }
+
+    func gifService() -> OWGifServicing {
+        return _gifService
     }
 }
 
