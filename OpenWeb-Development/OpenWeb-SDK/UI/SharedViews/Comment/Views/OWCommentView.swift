@@ -24,6 +24,7 @@ class OWCommentView: UIView {
         static let commentActionsTopPadding: CGFloat = 15.0
         static let optionsImageInset: CGFloat = 22
         static let optionButtonSize: CGFloat = 30
+        static let optionButtonIdentifier = "comment_header_option_button_id"
     }
 
     fileprivate lazy var commentStatusView: OWCommentStatusView = {
@@ -39,7 +40,7 @@ class OWCommentView: UIView {
     }()
     fileprivate lazy var optionButton: UIButton = {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
-        let leftInset: CGFloat = OWLocalizationManager.shared.textAlignment == .left ? 0.0 : -InternalMetrics.optionsImageInset
+        let leftInset: CGFloat = OWLocalizationManager.shared.textAlignment == .left ? 0 : -InternalMetrics.optionsImageInset
         let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -InternalMetrics.optionsImageInset
         return UIButton()
             .image(image, state: .normal)
@@ -67,6 +68,7 @@ class OWCommentView: UIView {
     init() {
         super.init(frame: .zero)
         setupUI()
+        applyAccessibility()
     }
 
     func configure(with viewModel: OWCommentViewModeling) {
@@ -107,8 +109,7 @@ fileprivate extension OWCommentView {
         self.addSubview(optionButton)
         optionButton.OWSnp.makeConstraints { make in
             make.size.equalTo(InternalMetrics.optionButtonSize)
-            make.top.equalTo(commentStatusView.OWSnp.bottom) //.offset(6) // TODO: fix
-//            make.top.equalTo(commentHeaderView.OWSnp.top)
+            make.top.equalTo(commentStatusView.OWSnp.bottom)
             make.trailing.equalToSuperview()
         }
 
@@ -172,9 +173,6 @@ fileprivate extension OWCommentView {
                     self.commentHeaderView.OWSnp.updateConstraints { make in
                         make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? InternalMetrics.commentStatusBottomPadding : 0)
                     }
-//                    self.optionButton.OWSnp.updateConstraints { make in
-//                        make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? 6 : 0)
-//                    }
                     self.commentStatusView.isHidden = !shouldShow
                     self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
                 }
@@ -203,5 +201,11 @@ fileprivate extension OWCommentView {
                 self.optionButton.image(UIImage(spNamed: "optionsIcon", supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposedBag)
+    }
+
+    func applyAccessibility() {
+        optionButton.accessibilityIdentifier = InternalMetrics.optionButtonIdentifier
+        optionButton.accessibilityTraits = .button
+        optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "OptionsMenu")
     }
 }
