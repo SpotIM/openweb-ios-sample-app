@@ -145,6 +145,7 @@
 		240E8FAC2AA5B53400903E51 /* OWArticleExtraData+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240E8FAA2AA5B44100903E51 /* OWArticleExtraData+Extensions.swift */; };
 		240E8FAE2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240E8FAD2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift */; };
 		240E8FB02AA76A3600903E51 /* OWCommentStatusResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240E8FAF2AA76A3600903E51 /* OWCommentStatusResponse.swift */; };
+		2419BB052BC54EE200074704 /* GiphyConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2419BB032BC54D3C00074704 /* GiphyConfiguration.plist */; };
 		241AF9EF295B215600A941C1 /* OWCommentTextLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9EE295B215600A941C1 /* OWCommentTextLabel.swift */; };
 		241AF9F1295B22A900A941C1 /* OWCommentTextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F0295B22A900A941C1 /* OWCommentTextViewModel.swift */; };
 		241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */; };
@@ -1178,6 +1179,7 @@
 		240E8FAA2AA5B44100903E51 /* OWArticleExtraData+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWArticleExtraData+Extensions.swift"; sourceTree = "<group>"; };
 		240E8FAD2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentStatusUpdaterService.swift; sourceTree = "<group>"; };
 		240E8FAF2AA76A3600903E51 /* OWCommentStatusResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentStatusResponse.swift; sourceTree = "<group>"; };
+		2419BB032BC54D3C00074704 /* GiphyConfiguration.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = GiphyConfiguration.plist; sourceTree = "<group>"; };
 		241AF9EE295B215600A941C1 /* OWCommentTextLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentTextLabel.swift; sourceTree = "<group>"; };
 		241AF9F0295B22A900A941C1 /* OWCommentTextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentTextViewModel.swift; sourceTree = "<group>"; };
 		241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementView.swift; sourceTree = "<group>"; };
@@ -4566,6 +4568,7 @@
 			children = (
 				44C879DF23608E3600E0E662 /* Info.plist */,
 				3DA0AA04292A88DD00CED855 /* OpenWebSettings.plist */,
+				2419BB032BC54D3C00074704 /* GiphyConfiguration.plist */,
 				44C8793B23608E3500E0E662 /* OpenWebSDK.h */,
 				4454179E236850C0001D0ED0 /* SPAssets.xcassets */,
 				4416C65A237ABE3D00D3F7B9 /* Localizable.strings */,
@@ -6104,6 +6107,7 @@
 				445417A6236850C0001D0ED0 /* SPAssets.xcassets in Resources */,
 				3DDA9A3528F5897C00FE3B86 /* OpenSans-Italic.ttf in Resources */,
 				3DDA9A3428F5897C00FE3B86 /* OpenSans-Light.ttf in Resources */,
+				2419BB052BC54EE200074704 /* GiphyConfiguration.plist in Resources */,
 				3DDA9A3828F5897C00FE3B86 /* OpenSans-Medium.ttf in Resources */,
 				3DDA9A3728F5897C00FE3B86 /* OpenSans-Regular.ttf in Resources */,
 				3DA0AA05292A88DD00CED855 /* OpenWebSettings.plist in Resources */,

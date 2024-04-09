@@ -22,7 +22,15 @@ protocol OWGifServicing {
 class OWGifService: OWGifServicing {
     fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
     let giphyBridge: OWGiphySDKBridge
-    fileprivate static let giphyApiKey = "3ramR4915VrqRb5U5FBcybtsTvSGFJu8"
+
+    fileprivate var giphyApiKey: String? {
+        if let path = Bundle.openWeb.path(forResource: "GiphyConfiguration", ofType: "plist") {
+            let dictionary: NSDictionary?
+            dictionary = NSDictionary(contentsOfFile: path)
+            return dictionary?["apiKey"] as? String
+        }
+        return nil
+    }
 
     fileprivate let disposeBag = DisposeBag()
 
@@ -59,7 +67,8 @@ class OWGifService: OWGifServicing {
 
 fileprivate extension OWGifService {
     func configure() {
-        giphyBridge.configure(OWGifService.giphyApiKey)
+        guard let giphyApiKey else { return }
+        giphyBridge.configure(giphyApiKey)
     }
 
     func setupObservers() {
