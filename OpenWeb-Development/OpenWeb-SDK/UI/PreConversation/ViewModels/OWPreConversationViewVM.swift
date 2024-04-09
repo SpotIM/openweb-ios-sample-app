@@ -1059,9 +1059,9 @@ fileprivate extension OWPreConversationViewViewModel {
                 let openMenuClickObservable = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
                     let commentVm = commentCellVm.outputs.commentVM
 //                    let commentHeaderVm = commentVm.outputs.commentHeaderVM
-                    
+
                     return commentVm.outputs.openMenu
-                        .map{ ($0.0, $0.1, commentVm) }
+                        .map { ($0.0, $0.1, commentVm) }
 //                    return commentHeaderVm.outputs.openMenu
 //                        .map { ($0.0, $0.1, commentVm) }
                 }
