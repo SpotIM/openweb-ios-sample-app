@@ -28,4 +28,5 @@ struct SPConfigurationSDKStatus: Decodable {
     let eventsStrategyConfig: SPEventsStrategyConfig?
     let shouldShowReportReasonsCounter: Bool?
     let reportReasonsCounterMaxLength: Int?
+    let postGifEnabled: Bool
 }
