@@ -32,12 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<OWGiphySDKBridgeDelegate> delegate;
 
-+ (BOOL)giphySDKAvailable;
++ (BOOL)isGiphySDKAvailable;
 
 - (instancetype)init;
 - (void)configure:(NSString*)apiKey;
 - (nullable UIViewController*)gifSelectionVC;
-- (void)setThemeMode:(Boolean)isDarkMode;
+- (void)setIsDarkMode:(Boolean)isDarkMode;
 
 @end
 

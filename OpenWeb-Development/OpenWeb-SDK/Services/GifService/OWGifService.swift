@@ -27,7 +27,7 @@ class OWGifService: OWGifServicing {
     fileprivate let disposeBag = DisposeBag()
 
     var isGiphyAvailable: Bool {
-        OWGiphySDKBridge.giphySDKAvailable()
+        OWGiphySDKBridge.isGiphySDKAvailable()
     }
 
     fileprivate var _didCancel = PublishSubject<Void>()
@@ -52,7 +52,7 @@ class OWGifService: OWGifServicing {
 
     func gifSelectionVC() -> UIViewController? {
         let vc = giphyBridge.gifSelectionVC()
-        giphyBridge.setThemeMode(sharedServicesProvider.themeStyleService().currentStyle == .dark)
+        giphyBridge.setIsDarkMode(sharedServicesProvider.themeStyleService().currentStyle == .dark)
         return vc
     }
 }
@@ -67,7 +67,7 @@ fileprivate extension OWGifService {
             .style
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
-                self.giphyBridge.setThemeMode(style == .dark ? true : false)
+                self.giphyBridge.setIsDarkMode(style == .dark ? true : false)
             })
             .disposed(by: disposeBag)
     }
