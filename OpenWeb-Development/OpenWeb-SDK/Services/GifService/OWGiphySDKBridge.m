@@ -19,7 +19,7 @@
 
 @synthesize delegate;
 
-+ (BOOL)giphySDKAvailable {
++ (BOOL)isGiphySDKAvailable {
     if ([Giphy class]) {
         return YES;
     } else {
@@ -33,13 +33,13 @@
 }
 
 - (void)configure:(NSString*)apiKey {
-    if (OWGiphySDKBridge.giphySDKAvailable) {
+    if (OWGiphySDKBridge.isGiphySDKAvailable) {
         [Giphy configureWithApiKey:apiKey verificationMode:false metadata:@{@"": @""}];
     }
 }
 
 - (nullable UIViewController*)gifSelectionVC {
-    if (OWGiphySDKBridge.giphySDKAvailable) {
+    if (OWGiphySDKBridge.isGiphySDKAvailable) {
         GiphyViewController *giphy = [[GiphyViewController alloc]init];
         giphy.delegate = self;
         self.giphyVc = giphy;
@@ -49,7 +49,7 @@
     }
 }
 
-- (void)setThemeMode:(Boolean)isDarkMode {
+- (void)setIsDarkMode:(Boolean)isDarkMode {
     GPHThemeType themetype = isDarkMode ? GPHThemeTypeDark : GPHThemeTypeLight;
     GPHTheme *theme = [[GPHTheme alloc]initWithType:themetype];
     self.giphyVc.theme = theme;
