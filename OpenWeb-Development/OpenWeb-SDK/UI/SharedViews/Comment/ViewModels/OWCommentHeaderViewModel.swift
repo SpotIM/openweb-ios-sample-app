@@ -15,7 +15,6 @@ protocol OWCommentHeaderViewModelingInputs {
     func update(user: SPUser)
     var isCommentOfActiveUser: BehaviorSubject<Bool> { get }
     var tapUserName: PublishSubject<Void> { get }
-//    var tapMore: PublishSubject<OWUISource> { get }
 }
 
 protocol OWCommentHeaderViewModelingOutputs {
@@ -31,7 +30,6 @@ protocol OWCommentHeaderViewModelingOutputs {
     var hiddenCommentReasonText: Observable<String> { get }
 
     var userNameTapped: Observable<Void> { get }
-//    var openMenu: Observable<([OWRxPresenterAction], OWUISource)> { get }
     var openProfile: Observable<OWOpenProfileType> { get }
 }
 
@@ -111,7 +109,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }()
 
     var tapUserName = PublishSubject<Void>()
-//    var tapMore = PublishSubject<OWUISource>()
 
     lazy var subscriberBadgeVM: OWSubscriberIconViewModeling = {
         return OWSubscriberIconViewModel(user: user!, servicesProvider: servicesProvider, subscriberBadgeService: OWSubscriberBadgeService())
@@ -206,75 +203,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         tapUserName
             .asObservable()
     }
-
-//    fileprivate var isLoggedInUserComment: Observable<Bool> {
-//        _unwrappedModel
-//            .map { $0.userId }
-//            .unwrap()
-//            .flatMapLatest { [weak self] userId -> Observable<(String, OWUserAvailability)> in
-//                guard let self = self else { return .empty() }
-//                return self.servicesProvider
-//                    .authenticationManager()
-//                    .activeUserAvailability
-//                    .map { (userId, $0) }
-//            }
-//            .map { commentUserId, userAvailability in
-//                switch userAvailability {
-//                case .user(let user):
-//                    return user.userId == commentUserId
-//                case .notAvailable:
-//                    return false
-//                }
-//            }
-//    }
-
-//    var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
-//        tapMore
-//            .flatMapLatest { [weak self] view -> Observable<([OWUserAction: Bool], UIView)> in
-//                guard let self = self else { return .empty() }
-//                let actions: [OWUserAction] = [.deletingComment, .editingComment]
-//                let authentication = self.servicesProvider.authenticationManager()
-//
-//                return authentication.userHasAuthenticationLevel(for: actions)
-//                    .take(1)
-//                    .map { ($0, view) }
-//            }
-//            .withLatestFrom(isLoggedInUserComment) { ($0.0, $0.1, $1) }
-//            .withLatestFrom(_unwrappedUser) { ($0.0, $0.1, $0.2, $1) }
-//            .map { actionsAuthenticationLevel, view, isLoggedInUserComment, user in
-//                let allowDeletingComment = actionsAuthenticationLevel[.deletingComment] ?? false
-//                let allowEditingComment = actionsAuthenticationLevel[.editingComment] ?? false
-//
-//                var optionsActions: [OWRxPresenterAction] = []
-//                if (!isLoggedInUserComment) {
-//                    optionsActions.append(OWRxPresenterAction(
-//                        title: OWLocalizationManager.shared.localizedString(key: "Report"),
-//                        type: OWCommentOptionsMenu.reportComment)
-//                    )
-//                }
-//                if (allowEditingComment && isLoggedInUserComment) {
-//                    optionsActions.append(OWRxPresenterAction(
-//                        title: OWLocalizationManager.shared.localizedString(key: "Edit"),
-//                        type: OWCommentOptionsMenu.editComment)
-//                    )
-//                }
-//                if (allowDeletingComment && isLoggedInUserComment) {
-//                    optionsActions.append(OWRxPresenterAction(
-//                        title: OWLocalizationManager.shared.localizedString(key: "Delete"),
-//                        type: OWCommentOptionsMenu.deleteComment)
-//                    )
-//                }
-//                if (!isLoggedInUserComment && !user.isAdmin) {
-//                    optionsActions.append(OWRxPresenterAction(
-//                        title: OWLocalizationManager.shared.localizedString(key: "Mute"),
-//                        type: OWCommentOptionsMenu.muteUser)
-//                    )
-//                }
-//                return (optionsActions, view)
-//            }
-//            .unwrap()
-//            .asObservable()
-//    }
 }
 
 fileprivate extension OWCommentHeaderViewModel {
