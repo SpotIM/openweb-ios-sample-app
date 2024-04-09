@@ -38,12 +38,9 @@
     }
 }
 
-- (nullable UIViewController*)gifSelectionVC:(Boolean)isDarkMode {
+- (nullable UIViewController*)gifSelectionVC {
     if (OWGiphySDKBridge.giphySDKAvailable) {
         GiphyViewController *giphy = [[GiphyViewController alloc]init];
-        GPHThemeType themetype = isDarkMode ? GPHThemeTypeDark : GPHThemeTypeLight;
-        GPHTheme *theme = [[GPHTheme alloc]initWithType:themetype];
-        giphy.theme = theme;
         giphy.delegate = self;
         self.giphyVc = giphy;
         return giphy;
