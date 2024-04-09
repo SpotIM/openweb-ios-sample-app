@@ -1,5 +1,5 @@
 //
-//  OWGiphySDKInterop.m
+//  OWGiphySDKBridge.m
 //  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 25/03/2024.
@@ -7,15 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OWGiphySDKInterop.h"
+#import "OWGiphySDKBridge.h"
 
 @import GiphyUISDK;
 
-@interface OWGiphySDKInterop() <GiphyDelegate>
+@interface OWGiphySDKBridge() <GiphyDelegate>
 @property GiphyViewController* _Nullable giphyVc;
 @end
 
-@implementation OWGiphySDKInterop
+@implementation OWGiphySDKBridge
 
 @synthesize delegate;
 
@@ -33,13 +33,13 @@
 }
 
 - (void)configure:(NSString*)apiKey {
-    if (OWGiphySDKInterop.giphySDKAvailable) {
+    if (OWGiphySDKBridge.giphySDKAvailable) {
         [Giphy configureWithApiKey:apiKey verificationMode:false metadata:@{@"": @""}];
     }
 }
 
 - (nullable UIViewController*)gifSelectionVC:(Boolean)isDarkMode {
-    if (OWGiphySDKInterop.giphySDKAvailable) {
+    if (OWGiphySDKBridge.giphySDKAvailable) {
         GiphyViewController *giphy = [[GiphyViewController alloc]init];
         GPHThemeType themetype = isDarkMode ? GPHThemeTypeDark : GPHThemeTypeLight;
         GPHTheme *theme = [[GPHTheme alloc]initWithType:themetype];
