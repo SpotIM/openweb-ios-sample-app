@@ -22,6 +22,8 @@ class OWCommentView: UIView {
         static let commentLabelTopPadding: CGFloat = 10.0
         static let messageContainerTopOffset: CGFloat = 4.0
         static let commentActionsTopPadding: CGFloat = 15.0
+        static let optionsImageInset: CGFloat = 22
+        static let optionButtonSize: CGFloat = 30
     }
 
     fileprivate lazy var commentStatusView: OWCommentStatusView = {
@@ -32,15 +34,16 @@ class OWCommentView: UIView {
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
             .alpha(0.5)
     }()
-    fileprivate lazy var blockingViewTapGesture: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer()
-        blockingOpacityView.addGestureRecognizer(tap)
-        self.isUserInteractionEnabled = true
-
-        return tap
-    }()
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
+    }()
+    fileprivate lazy var optionButton: UIButton = {
+        let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
+        let leftInset: CGFloat = OWLocalizationManager.shared.textAlignment == .left ? 0.0 : -InternalMetrics.optionsImageInset
+        let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -InternalMetrics.optionsImageInset
+        return UIButton()
+            .image(image, state: .normal)
+            .imageEdgeInsets(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset))
     }()
     fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
         return OWCommentLabelsContainerView()
@@ -81,6 +84,7 @@ class OWCommentView: UIView {
         commentHeaderView.prepareForReuse()
         commentLabelsContainerView.prepareForReuse()
         commentEngagementView.prepareForReuse()
+        self.optionButton.isHidden = false
     }
 }
 
@@ -100,9 +104,18 @@ fileprivate extension OWCommentView {
             make.top.equalTo(commentStatusView.OWSnp.bottom)
         }
 
+        self.addSubview(optionButton)
+        optionButton.OWSnp.makeConstraints { make in
+            make.size.equalTo(InternalMetrics.optionButtonSize)
+            make.top.equalTo(commentStatusView.OWSnp.bottom).offset(InternalMetrics.commentStatusBottomPadding) // TODO: fix
+            make.top.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
+
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalTo(optionButton.OWSnp.leading)
             make.top.equalTo(commentStatusView.OWSnp.bottom).offset(InternalMetrics.commentStatusBottomPadding)
             commentHeaderBottomConstraint = make.bottom.equalToSuperview().constraint
         }
@@ -142,6 +155,7 @@ fileprivate extension OWCommentView {
                 } else if (self.commentLabelsContainerView.superview == nil) {
                     self.setupCommentContentUI()
                 }
+                self.optionButton.isHidden = shouldBlockComment
             }).disposed(by: disposedBag)
 
         if let commentHeaderBottomConstraint = commentHeaderBottomConstraint {
@@ -168,21 +182,13 @@ fileprivate extension OWCommentView {
             .bind(to: blockingOpacityView.rx.isHidden)
             .disposed(by: disposedBag)
 
-        blockingViewTapGesture.rx.event
-            .map { [weak self] event in
-                guard let self = self else { return nil }
-                let tapLocation = event.location(in: self)
-                let optionButton = self.commentHeaderView.optionButton
-                let optionButtonLocation = optionButton.convert(optionButton.bounds, to: self)
-                if optionButtonLocation.contains(tapLocation) {
-                    return optionButton
-                } else {
-                    return nil
-                }
-            }
-            .unwrap()
-            .bind(to: self.viewModel.outputs.commentHeaderVM.inputs.tapMore)
-            .disposed(by: disposedBag)
+//        optionButton.rx.tap
+//            .map { [weak self] in
+//                return self?.optionButton
+//            }
+//            .unwrap()
+//            .bind(to: viewModel.inputs.tapMore)
+//            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
@@ -190,6 +196,7 @@ fileprivate extension OWCommentView {
                 guard let self = self else { return }
 
                 self.blockingOpacityView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.optionButton.image(UIImage(spNamed: "optionsIcon", supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposedBag)
     }
