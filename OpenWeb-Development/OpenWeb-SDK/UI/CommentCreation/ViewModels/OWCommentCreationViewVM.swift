@@ -123,7 +123,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
                 .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
         case .floatingKeyboard:
-            return commentCreationFloatingKeyboardViewVm.outputs.closedInstantly
+            return commentCreationFloatingKeyboardViewVm.outputs.popped
                 .do(onNext: { [weak self] commentText in
                     guard let self = self else { return }
                     let hasText = !commentText.isEmpty
