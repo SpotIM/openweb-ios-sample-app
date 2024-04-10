@@ -145,4 +145,9 @@ fileprivate extension CommentCreationSettingsVM {
     }
 }
 
-extension CommentCreationSettingsVM: SettingsGroupVMProtocol { }
+extension CommentCreationSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        customStyleModeSelectedIndex.onNext(0)
+        accessoryViewSelectedIndex.onNext(0)
+    }
+}

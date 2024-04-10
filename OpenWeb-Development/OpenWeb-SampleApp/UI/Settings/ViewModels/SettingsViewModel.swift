@@ -11,7 +11,7 @@ import RxSwift
 import OpenWebSDK
 
 protocol SettingsViewModelingInputs {
-
+    var resetToDefaultTap: PublishSubject<Void> { get }
 }
 
 protocol SettingsViewModelingOutputs {
@@ -45,10 +45,25 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
         return NSLocalizedString("Settings", comment: "")
     }()
 
+    var resetToDefaultTap = PublishSubject<Void>()
+
     init(settingViewTypes: [SettingsGroupType] = SettingsGroupType.all, userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          manager: OWManagerProtocol = OpenWeb.manager) {
         self.settingViewTypes = settingViewTypes
         self.userDefaultsProvider = userDefaultsProvider
         self.manager = manager
+
+        setupObservers()
+    }
+}
+
+fileprivate extension SettingsViewModel {
+    func setupObservers() {
+        resetToDefaultTap
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.settingsVMs.forEach { $0.resetToDefault() }
+            })
+            .disposed(by: disposeBag)
     }
 }
