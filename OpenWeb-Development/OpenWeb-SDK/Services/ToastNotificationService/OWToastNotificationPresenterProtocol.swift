@@ -57,7 +57,8 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
 
     func dismissToast() {
         UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
-            guard let toastView = self?.toastView else { return }
+            guard let toastView = self?.toastView,
+                  toastView.superview != nil else { return }
             toastView.OWSnp.updateConstraints { make in
                 make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
             }

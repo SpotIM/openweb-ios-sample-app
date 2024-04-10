@@ -19,7 +19,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
     fileprivate let queue = OWQueue<OWToastNotificationPresentData>()
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate var mapToastToActionPublishSubject: [String: PublishSubject<Void>?] = [:]
-    fileprivate var dismissAfterDurationBlock = DispatchWorkItem {}
+    fileprivate var dismissAfterDurationBlocks: [DispatchWorkItem] = []
     fileprivate var disposeBag: DisposeBag = DisposeBag()
 
     fileprivate var _toastToShow = BehaviorSubject<OWToastNotificationCombinedData?>(value: nil)
@@ -47,7 +47,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
     }
 
     func clearCurrentToast() {
-        dismissAfterDurationBlock.cancel()
+        dismissAfterDurationBlocks.forEach { $0.perform() }
         self.servicesProvider.blockerServicing().removeBlocker(perType: .toastNotification)
     }
 }
@@ -73,7 +73,7 @@ fileprivate extension OWToastNotificationService {
                 let actionCompletion = self.mapToastToActionPublishSubject[toast.uuid] ?? nil
                 self._toastToShow.onNext(OWToastNotificationCombinedData(presentData: toast, actionCompletion: actionCompletion))
                 // Dismiss toast after duration
-                dismissAfterDurationBlock = DispatchWorkItem(block: { [weak self] in
+                let dismissBlock = DispatchWorkItem(block: { [weak self] in
                     if let _ = self?.mapToastToActionPublishSubject[toast.uuid] {
                         self?._toastToShow.onNext(nil)
                     }
@@ -83,7 +83,8 @@ fileprivate extension OWToastNotificationService {
                         action.finish()
                     }
                 })
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + toast.durationInSec, execute: dismissAfterDurationBlock)
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + toast.durationInSec, execute: dismissBlock)
+                dismissAfterDurationBlocks.append(dismissBlock)
             })
             .disposed(by: disposeBag)
     }
