@@ -28,44 +28,49 @@ struct ToastMetrics {
 extension OWToastNotificationPresenterProtocol where Self: UIView {
 
     mutating func presentToast(requiredData: OWToastRequiredData, completions: [OWToastCompletion: PublishSubject<Void>?], disposeBag: DisposeBag) {
-        // Make sure no old toast is visible
-        removeToast()
+        OWScheduler.runOnMainThreadIfNeeded { [weak self] in
+            guard var self = self else { return }
+            // Make sure no old toast is visible
+            self.removeToast()
 
-        let toastVM = OWToastViewModel(requiredData: requiredData, completions: completions)
-        self.toastView = OWToastView(viewModel: toastVM)
-        guard let toastView = toastView else { return }
+            let toastVM = OWToastViewModel(requiredData: requiredData, completions: completions)
+            self.toastView = OWToastView(viewModel: toastVM)
+            guard let toastView = toastView else { return }
 
-        self.addSubview(toastView)
-        toastView.OWSnp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
-        }
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-
-        UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
-            guard let toastView = self?.toastView else { return }
-            toastView.OWSnp.updateConstraints { make in
-                make.bottom.equalToSuperview().inset(requiredData.bottomPadding)
+            self.addSubview(toastView)
+            toastView.OWSnp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
             }
-            self?.setNeedsLayout()
-            self?.layoutIfNeeded()
-        })
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
 
-        self.setupToastObservers(disposeBag: disposeBag)
+            UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
+                guard let toastView = self?.toastView else { return }
+                toastView.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperview().inset(requiredData.bottomPadding)
+                }
+                self?.setNeedsLayout()
+                self?.layoutIfNeeded()
+            })
+
+            self.setupToastObservers(disposeBag: disposeBag)
+        }
     }
 
     func dismissToast() {
-        UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
-            guard let toastView = self?.toastView else { return }
-            toastView.OWSnp.updateConstraints { make in
-                make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
-            }
-            self?.setNeedsLayout()
-            self?.layoutIfNeeded()
-        }, completion: { [weak self] _ in
-            self?.removeToast()
-        })
+        OWScheduler.runOnMainThreadIfNeeded {
+            UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
+                guard let toastView = self?.toastView else { return }
+                toastView.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
+                }
+                self?.setNeedsLayout()
+                self?.layoutIfNeeded()
+            }, completion: { [weak self] _ in
+                self?.removeToast()
+            })
+        }
     }
 
     fileprivate func setupToastObservers(disposeBag: DisposeBag) {
