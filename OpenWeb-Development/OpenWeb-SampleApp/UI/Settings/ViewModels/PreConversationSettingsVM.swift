@@ -213,4 +213,11 @@ fileprivate extension PreConversationSettingsVM {
     }
 }
 
-extension PreConversationSettingsVM: SettingsGroupVMProtocol { }
+extension PreConversationSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        customStyleModeSelectedIndex.onNext(OWPreConversationStyle.defaultIndex)
+        customStyleModeSelectedNumberOfComments.onNext(0)
+        communityGuidelinesStyleSelectedIndex.onNext(OWCommunityGuidelinesStyle.default.index)
+        communityQuestionsStyleModeSelectedIndex.onNext(OWCommunityQuestionStyle.default.index)
+    }
+}

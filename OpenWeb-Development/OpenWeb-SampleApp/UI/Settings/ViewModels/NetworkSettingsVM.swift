@@ -52,7 +52,7 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
         return [_prod, _staging]
     }()
 
-    var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: 0)
+    var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: OWNetworkEnvironment.default.index)
 
     var networkEnvironmentIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
@@ -87,4 +87,8 @@ fileprivate extension NetworkSettingsVM {
     }
 }
 
-extension NetworkSettingsVM: SettingsGroupVMProtocol { }
+extension NetworkSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        networkEnvironmentSelectedIndex.onNext(OWNetworkEnvironment.default.index)
+    }
+}
