@@ -56,16 +56,18 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
     }
 
     func dismissToast() {
-        UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
-            guard let toastView = self?.toastView else { return }
-            toastView.OWSnp.updateConstraints { make in
-                make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
-            }
-            self?.setNeedsLayout()
-            self?.layoutIfNeeded()
-        }, completion: { [weak self] _ in
-            self?.removeToast()
-        })
+        OWScheduler.runOnMainThreadIfNeeded {
+            UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
+                guard let toastView = self?.toastView else { return }
+                toastView.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
+                }
+                self?.setNeedsLayout()
+                self?.layoutIfNeeded()
+            }, completion: { [weak self] _ in
+                self?.removeToast()
+            })
+        }
     }
 
     fileprivate func setupToastObservers(disposeBag: DisposeBag) {
