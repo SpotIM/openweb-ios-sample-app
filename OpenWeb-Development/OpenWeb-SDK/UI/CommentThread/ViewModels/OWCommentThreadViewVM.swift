@@ -1336,12 +1336,12 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return commentIndex
             }
-            .unwrap()
             .share()
 
         // perform highlight animation for selected comment id
         selectedCommentCellVmIndex
             .distinctUntilChanged()
+            .unwrap()
             .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
