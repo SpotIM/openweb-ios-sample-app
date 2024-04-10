@@ -222,11 +222,6 @@ fileprivate extension OWClarityDetailsView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.shouldShowAppealView
-            .map { !$0 }
-            .bind(to: appealLabel.rx.isHidden)
-            .disposed(by: disposeBag)
-
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
