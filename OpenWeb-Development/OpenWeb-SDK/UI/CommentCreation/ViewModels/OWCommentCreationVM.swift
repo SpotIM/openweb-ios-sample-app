@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationViewModelingInputs {
-    var viewDidLoad: PublishSubject<Void> { get }
+    var viewDidLoad: BehaviorSubject<Void?> { get }
 }
 
 protocol OWCommentCreationViewModelingOutputs {
@@ -36,9 +36,11 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
                                               viewableMode: viewableMode)
     }()
 
-    var viewDidLoad = PublishSubject<Void>()
+    var viewDidLoad = BehaviorSubject<Void?>(value: nil)
     var loadedToScreen: Observable<Void> {
-        return viewDidLoad.asObservable()
+        return viewDidLoad
+            .unwrap()
+            .asObservable()
     }
 
     init(commentCreationData: OWCommentCreationRequiredData,
