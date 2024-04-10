@@ -24,6 +24,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         static let buttomBottomPadding: CGFloat = 36
         static let buttonTextPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
         static let appealLabelTopPadding: CGFloat = 24
+        static let scrollViewBottomPadding: CGFloat = 16
 
         static let identifier = "clarity_details_view_id"
         static let titleLabelIdentifier = "clarity_details_title_id"
@@ -162,7 +163,7 @@ fileprivate extension OWClarityDetailsView {
         scrollView.OWSnp.makeConstraints { make in
             make.top.equalTo(topContainerView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(gotItButton.OWSnp.top)
+            make.bottom.equalTo(gotItButton.OWSnp.top).offset(-Metrics.scrollViewBottomPadding)
         }
 
         scrollView.addSubview(topParagraphLabel)
