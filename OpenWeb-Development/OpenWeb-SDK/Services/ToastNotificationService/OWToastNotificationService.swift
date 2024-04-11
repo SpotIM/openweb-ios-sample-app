@@ -27,8 +27,8 @@ class OWToastNotificationService: OWToastNotificationServicing {
             .asObservable()
     }
 
-    fileprivate var triggerNextToastInQueue = PublishSubject<Void>()
-    fileprivate var newToast = PublishSubject<Void>()
+    fileprivate var triggerWaitNextToastInQueue = PublishSubject<Void>()
+    fileprivate var presentToastFromQueue = PublishSubject<Void>()
 
     var clearCurrentToast = PublishSubject<Void>()
 
@@ -41,7 +41,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
     func showToast(data: OWToastNotificationCombinedData) {
         queue.insert(data.presentData)
         mapToastToActionPublishSubject[data.presentData.uuid] = data.actionCompletion
-        triggerNextToastInQueue.onNext()
+        triggerWaitNextToastInQueue.onNext()
     }
 }
 
@@ -61,17 +61,17 @@ fileprivate extension OWToastNotificationService {
             })
             .disposed(by: disposeBag)
 
-        triggerNextToastInQueue
+        triggerWaitNextToastInQueue
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.blockerServicing().waitForNonBlocker(for: [.toastNotification])
             }
-            .bind(to: newToast)
+            .bind(to: presentToastFromQueue)
             .disposed(by: disposeBag)
     }
 
     func setupNewToastObservable() {
-        newToast
+        presentToastFromQueue
             .map { [weak self] _ -> OWToastNotificationPresentData? in
                 guard let self = self,
                       !self.queue.isEmpty(),
