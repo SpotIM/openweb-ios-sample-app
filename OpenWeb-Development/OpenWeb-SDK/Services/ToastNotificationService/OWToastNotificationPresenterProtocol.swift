@@ -18,7 +18,8 @@ protocol OWToastNotificationPresenterProtocol {
 
 struct ToastMetrics {
     fileprivate static var bottomOffsetForAnimation: CGFloat = 50
-    static var animationDuration: TimeInterval = 0.5
+    static var animationDurationInt: Int = 500
+    static var animationDurationDouble = Double(animationDurationInt) / 1000
 
     fileprivate static let swipeThresholdToDismiss: CGFloat = 50
     fileprivate static let swipeMagnetAnimationDuration: CGFloat = 0.3
@@ -45,7 +46,7 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
             self.setNeedsLayout()
             self.layoutIfNeeded()
 
-            UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
+            UIView.animate(withDuration: ToastMetrics.animationDurationDouble, animations: { [weak self] in
                 guard let toastView = self?.toastView else { return }
                 toastView.OWSnp.updateConstraints { make in
                     make.bottom.equalToSuperview().inset(requiredData.bottomPadding)
@@ -60,8 +61,9 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
 
     func dismissToast() {
         OWScheduler.runOnMainThreadIfNeeded {
-            UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
-                guard let toastView = self?.toastView else { return }
+            UIView.animate(withDuration: ToastMetrics.animationDurationDouble, animations: { [weak self] in
+                guard let toastView = self?.toastView,
+                      toastView.superview != nil else { return }
                 toastView.OWSnp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
                 }

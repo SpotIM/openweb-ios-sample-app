@@ -374,9 +374,7 @@ fileprivate extension OWCommentCreationViewViewModel {
         Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
                          commentCreationRegularViewVm.outputs.dismissedToast,
                          commentCreationLightViewVm.outputs.dismissedToast)
-            .subscribe(onNext: { [weak self] in
-                self?.servicesProvider.toastNotificationService().clearCurrentToast()
-            })
+            .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
 
         servicesProvider.activeArticleService().updateStrategy(commentCreationData.article.articleInformationStrategy)
