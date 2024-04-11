@@ -49,8 +49,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel(commentCreationData: commentCreationData, viewableMode: .partOfFlow)
         let commentCreationVC = OWCommentCreationVC(viewModel: commentCreationVM)
 
-        let commentCreationPopped = PublishSubject<Void>()
-
         let pushStyle: OWScreenPushStyle = {
             switch commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
             case .regular, .light:
@@ -82,30 +80,12 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         router.push(commentCreationVC,
                     pushStyle: pushStyle,
                     animated: animated,
-                    popCompletion: commentCreationPopped)
+                    popCompletion: nil) // We do not send a back button pop completion here since comment creation is never pushed with a back button
 
         setupObservers(forViewModel: commentCreationVM)
         setupViewActionsCallbacks(forViewModel: commentCreationVM.outputs.commentCreationViewVM)
 
         let commentCreatedObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
-            .filter { _ in
-                if case .floatingKeyboard = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-                    return false
-                } else {
-                    return true
-                }
-            }
-            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
-            .asObservable()
-
-        let commentCreatedByFloatingKeyboardStyleObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
-            .filter { _ in
-                if case .floatingKeyboard = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-                    return true
-                } else {
-                    return false
-                }
-            }
             .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
 
@@ -124,10 +104,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             }
             .unwrap()
             .map { OWCommentCreationCoordinatorResult.userLoggedInWhileWritingReplyToComment(id: $0) }
-            .asObservable()
-
-        let poppedFromBackButtonObservable = commentCreationPopped
-            .map { OWCommentCreationCoordinatorResult.popped }
             .asObservable()
 
         let commentCreationViewVM = commentCreationVM.outputs.commentCreationViewVM
@@ -157,9 +133,8 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             })
 
         return Observable.merge(resultsWithPopAnimation.take(1),
-                                commentCreationLoadedToScreenObservable.take(1),
-                                poppedFromBackButtonObservable.take(1),
-                                commentCreatedByFloatingKeyboardStyleObservable.take(1))
+                                commentCreationLoadedToScreenObservable.take(1))
+
     }
 
     override func showableComponent() -> Observable<OWShowable> {
