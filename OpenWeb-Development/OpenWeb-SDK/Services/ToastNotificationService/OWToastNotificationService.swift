@@ -27,7 +27,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
             .asObservable()
     }
 
-    fileprivate var presentNextToastInQueue = PublishSubject<Void>()
+    fileprivate var triggerNextToastInQueue = PublishSubject<Void>()
     fileprivate var newToast = PublishSubject<Void>()
 
     var clearCurrentToast = PublishSubject<Void>()
@@ -41,7 +41,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
     func showToast(data: OWToastNotificationCombinedData) {
         queue.insert(data.presentData)
         mapToastToActionPublishSubject[data.presentData.uuid] = data.actionCompletion
-        presentNextToastInQueue.onNext()
+        triggerNextToastInQueue.onNext()
     }
 }
 
@@ -61,7 +61,7 @@ fileprivate extension OWToastNotificationService {
             })
             .disposed(by: disposeBag)
 
-        presentNextToastInQueue
+        triggerNextToastInQueue
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.blockerServicing().waitForNonBlocker(for: [.toastNotification])
@@ -94,10 +94,11 @@ fileprivate extension OWToastNotificationService {
                     .delay(.seconds(toastPresentData.durationInSec), scheduler: MainScheduler.instance)
             }
             .do(onNext: { [weak self] toastPresentData in
-                if let _ = self?.mapToastToActionPublishSubject[toastPresentData.uuid] {
-                    self?._toastToShow.onNext(nil)
+                guard let self = self else { return }
+                if let _ = self.mapToastToActionPublishSubject[toastPresentData.uuid] {
+                    self._toastToShow.onNext(nil)
                 }
-                self?.mapToastToActionPublishSubject.removeValue(forKey: toastPresentData.uuid)
+                self.mapToastToActionPublishSubject.removeValue(forKey: toastPresentData.uuid)
             })
             // Wait for the exiting animation to complete before unblocking next toast
             .delay(.milliseconds(ToastMetrics.animationDurationInt), scheduler: MainScheduler.instance)
