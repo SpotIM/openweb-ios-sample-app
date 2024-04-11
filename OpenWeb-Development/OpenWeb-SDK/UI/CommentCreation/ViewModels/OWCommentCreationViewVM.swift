@@ -134,7 +134,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
                 .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
         case .floatingKeyboard:
-            return commentCreationFloatingKeyboardViewVm.outputs.closedInstantly
+            return commentCreationFloatingKeyboardViewVm.outputs.popped
                 .do(onNext: { [weak self] commentText in
                     guard let self = self else { return }
                     let hasText = !commentText.isEmpty
@@ -387,9 +387,7 @@ fileprivate extension OWCommentCreationViewViewModel {
         Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
                          commentCreationRegularViewVm.outputs.dismissedToast,
                          commentCreationLightViewVm.outputs.dismissedToast)
-            .subscribe(onNext: { [weak self] in
-                self?.servicesProvider.toastNotificationService().clearCurrentToast()
-            })
+            .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
 
         servicesProvider.activeArticleService().updateStrategy(commentCreationData.article.articleInformationStrategy)

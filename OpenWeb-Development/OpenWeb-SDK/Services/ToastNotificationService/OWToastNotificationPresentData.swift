@@ -11,5 +11,5 @@ import Foundation
 struct OWToastNotificationPresentData: Codable, Equatable {
     var uuid = UUID().uuidString
     var data: OWToastRequiredData
-    var durationInSec: Double = 5
+    var durationInSec: Int = 5
 }
