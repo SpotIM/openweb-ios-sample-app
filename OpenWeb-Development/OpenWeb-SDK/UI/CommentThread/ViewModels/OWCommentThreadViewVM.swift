@@ -631,9 +631,7 @@ fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         dismissToast
-            .subscribe(onNext: { [weak self] in
-                self?.servicesProvider.toastNotificationService().clearCurrentToast()
-            })
+            .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
 
         servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
