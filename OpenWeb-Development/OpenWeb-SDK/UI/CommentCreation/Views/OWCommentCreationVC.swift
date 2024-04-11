@@ -47,7 +47,7 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.inputs.viewDidLoad.onNext()
+        viewModel.inputs.viewDidLoad.onNext(())
     }
 
     lazy var floatingNavigationBarOverlayButton = {

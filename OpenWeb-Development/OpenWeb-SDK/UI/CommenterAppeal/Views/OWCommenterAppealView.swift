@@ -58,14 +58,14 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
         topContainerView.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview().inset(Metrics.navigationBottomPadding)
-            make.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
+            make.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalPadding)
             make.size.equalTo(Metrics.closeButtonSize)
         }
 
         topContainerView.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(Metrics.navigationBottomPadding)
-            make.leading.equalToSuperview().offset(Metrics.horizontalPadding)
+            make.leading.equalToSuperviewSafeArea().offset(Metrics.horizontalPadding)
             make.trailing.equalTo(closeButton.OWSnp.leading).inset(Metrics.navigationTitleTrailingPadding)
         }
 
@@ -143,19 +143,20 @@ fileprivate extension OWCommenterAppealView {
 
         self.addSubview(topContainerView)
         topContainerView.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperviewSafeArea()
         }
 
         self.addSubview(tableViewReasons)
         tableViewReasons.OWSnp.makeConstraints { make in
             make.top.equalTo(topContainerView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperviewSafeArea()
         }
 
         self.addSubviews(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.top.equalTo(tableViewReasons.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperviewSafeArea()
             make.bottom.equalToSuperview()
         }
 
