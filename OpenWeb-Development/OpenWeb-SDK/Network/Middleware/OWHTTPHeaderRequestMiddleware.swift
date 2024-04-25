@@ -11,6 +11,7 @@ import UIKit
 
 struct OWHTTPHeaderContent {
     static let json = "application/json"
+    static let mobileGWHost = "mobile-gw.spot.im"
 }
 
 class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
@@ -36,6 +37,10 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
             OWHTTPHeaderType.userAgent.rawValue: extendedAgent(),
             OWHTTPHeaderType.pageViewId.rawValue: servicesProvider.pageViewIdHolder().pageViewId
         ]
+
+        if OpenWeb.manager.environment == .cluster1d {
+            headers[OWHTTPHeaderType.host.rawValue] = OWHTTPHeaderContent.mobileGWHost
+        }
 
         let authenticationManager = servicesProvider.authenticationManager()
         let cerdentials = authenticationManager.networkCredentials
