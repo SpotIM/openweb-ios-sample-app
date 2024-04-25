@@ -38,9 +38,11 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
             OWHTTPHeaderType.pageViewId.rawValue: servicesProvider.pageViewIdHolder().pageViewId
         ]
 
+        #if BETA
         if OpenWeb.manager.environment == .cluster1d {
             headers[OWHTTPHeaderType.host.rawValue] = OWHTTPHeaderContent.mobileGWHost
         }
+        #endif
 
         let authenticationManager = servicesProvider.authenticationManager()
         let cerdentials = authenticationManager.networkCredentials
