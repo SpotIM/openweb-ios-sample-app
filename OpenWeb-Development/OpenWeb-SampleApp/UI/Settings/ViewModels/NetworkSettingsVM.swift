@@ -48,8 +48,9 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     lazy var networkEnvironmentSettings: [String] = {
         let _prod = NSLocalizedString("Production", comment: "")
         let _staging = NSLocalizedString("Staging", comment: "")
+        let _cluster1d = NSLocalizedString("1DCluster", comment: "")
 
-        return [_prod, _staging]
+        return [_prod, _staging, _cluster1d]
     }()
 
     var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: OWNetworkEnvironment.default.index)
