@@ -404,7 +404,12 @@ fileprivate extension OWCommentCreationViewViewModel {
             let userMentionObjects = OWUserMentionHelper.createUserMentions(from: &comment)
             commentCreationData.commentCreationType = .edit(comment: comment)
             return userMentionObjects
-        case .comment, .replyToComment:
+        case .replyToComment(let originComment):
+            var originComment = originComment
+            let userMentionObjects = OWUserMentionHelper.createUserMentions(from: &originComment)
+            commentCreationData.commentCreationType = .replyToComment(originComment: originComment)
+            return userMentionObjects
+        case .comment:
             break
         }
         return nil

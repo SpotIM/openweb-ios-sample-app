@@ -177,11 +177,11 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
             .share()
     }()
 
-    init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentCreationData: OWCommentCreationRequiredData,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentCreationData = commentCreationData
-        commentType = commentCreationData.commentCreationType
+        self.commentType = commentCreationData.commentCreationType
         setupObservers()
         setupInitialMentionsIfNeeded()
     }
