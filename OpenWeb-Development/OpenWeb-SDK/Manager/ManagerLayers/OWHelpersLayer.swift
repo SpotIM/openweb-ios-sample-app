@@ -39,7 +39,7 @@ extension OWHelpersLayer {
                               completion: @escaping OWConversationCountersCompletion) {
         guard validateSpotIdExist(completion: completion) else { return }
 
-        _ = sharedServicesProvider.netwokAPI()
+        _ = sharedServicesProvider.networkAPI()
             .conversation
             .commentsCounters(conversationIds: postIds)
             .response

@@ -65,11 +65,12 @@ class OWUserMentionCell: UITableViewCell {
         setupViews()
     }
 
-    func configure(with viewModel: OWUserMentionCellViewModeling) {
-        self.viewModel = viewModel
+    override func configure(with viewModel: OWCellViewModel) {
+        guard let vm = viewModel as? OWUserMentionCellViewModeling else { return }
+        self.viewModel = vm
         setupObservers()
         applyAccessibility()
-        avatarView.configure(with: viewModel.outputs.avatarVM)
+        avatarView.configure(with: vm.outputs.avatarVM)
     }
 }
 

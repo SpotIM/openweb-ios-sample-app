@@ -28,7 +28,10 @@ class OWUserMentionView: UIView {
             .separatorColor(OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light))
         tableView.allowsSelection = true
         tableView.rowHeight = Metrics.rowHeight
-        tableView.register(cellClass: OWUserMentionCell.self)
+        // Register cells
+        for option in OWUserMentionsCellOption.allCases {
+            tableView.register(cellClass: option.cellClass)
+        }
         return tableView
     }()
 
@@ -45,6 +48,23 @@ class OWUserMentionView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    fileprivate lazy var userMentionsDataSource: OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel> = {
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
+            return .reload
+        }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+            guard let self = self else { return UITableViewCell() }
+
+            let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
+            cell.configure(with: item.viewModel)
+
+            return cell
+        })
+
+        let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
+        dataSource.animationConfiguration = animationConfiguration
+        return dataSource
+    }()
 }
 
 fileprivate extension OWUserMentionView {
@@ -77,12 +97,9 @@ fileprivate extension OWUserMentionView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.cellsViewModels
+        viewModel.outputs.userMentionsDataSourceSections
             .observe(on: MainScheduler.instance)
-            .bind(to: tableView.rx.items(cellIdentifier: OWUserMentionCell.identifierName,
-                                         cellType: OWUserMentionCell.self)) { _, viewModel, cell in
-                cell.configure(with: viewModel)
-            }
+            .bind(to: tableView.rx.items(dataSource: userMentionsDataSource))
             .disposed(by: disposeBag)
 
         tableView.rx.itemSelected
@@ -92,12 +109,13 @@ fileprivate extension OWUserMentionView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.cellsViewModels
+        viewModel.outputs.userMentionsDataSourceSections
+            .map { $0.isEmpty ? 0 : $0[0].items.count }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] cellsViewModels in
+            .subscribe(onNext: { [weak self] cellsCount in
                 guard let self = self else { return }
                 let maxHeight = CGFloat(Metrics.maxNumberOfCellsHeight) * Metrics.rowHeight
-                let wantedHeight = CGFloat(cellsViewModels.count) * Metrics.rowHeight
+                let wantedHeight = CGFloat(cellsCount) * Metrics.rowHeight
                 let newHeight = min(maxHeight, wantedHeight)
                 self.OWSnp.updateConstraints { make in
                     make.height.equalTo(newHeight).priority(250)

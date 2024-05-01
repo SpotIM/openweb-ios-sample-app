@@ -265,7 +265,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 // 2 - perform create comment request
                 guard let self = self else { return .empty() }
 
-                let conversationApi = self.servicesProvider.netwokAPI().conversation
+                let conversationApi = self.servicesProvider.networkAPI().conversation
 
                 let commentNetworkResponse: OWNetworkResponse<OWComment>
                 switch self.commentCreationData.commentCreationType {
