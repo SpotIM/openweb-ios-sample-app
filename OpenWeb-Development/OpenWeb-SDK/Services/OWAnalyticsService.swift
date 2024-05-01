@@ -70,7 +70,7 @@ class OWAnalyticsService: OWAnalyticsServicing {
 fileprivate extension OWAnalyticsService {
 
     func flushEvents() {
-        let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.netwokAPI().analytics
+        let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.networkAPI().analytics
 
         _ = Observable.just(())
             .flatMap { [weak self] _ -> Observable<[OWAnalyticEvent]> in

@@ -17,7 +17,7 @@ class OWAuthenticationRenewerService: OWAuthenticationRenewerServicing {
     fileprivate let disposeBag = DisposeBag()
 
     init(appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle(),
-         netwokAPI: OWNetworkAPIProtocol = OWSharedServicesProvider.shared.netwokAPI()) {
+         netwokAPI: OWNetworkAPIProtocol = OWSharedServicesProvider.shared.networkAPI()) {
         self.appLifeCycle = appLifeCycle
         self.netwokAPI = netwokAPI
 

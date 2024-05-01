@@ -204,7 +204,7 @@ fileprivate extension OWCommenterAppealViewVM {
             .flatMapLatest { [weak self] reason, message -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 self._submitInProgress.onNext(true)
-                return self.servicesProvider.netwokAPI()
+                return self.servicesProvider.networkAPI()
                     .appeal
                     .submitAppeal(commentId: self.commentId, reason: reason, message: message)
                     .response

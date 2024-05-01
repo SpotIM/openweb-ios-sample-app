@@ -341,7 +341,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 let userJustLoggedIn = result.2
                 self.setSubmitInProgress.onNext(true)
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .reportReason
                     .report(commentId: self.commentId,
                             parentId: self.parentId,

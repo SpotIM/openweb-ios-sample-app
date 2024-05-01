@@ -88,7 +88,7 @@ class OWProfileService: OWProfileServicing {
                     return Observable.just((nil, true))
                 }
 
-                return self.sharedServicesProvider.netwokAPI()
+                return self.sharedServicesProvider.networkAPI()
                     .profile
                     .createSingleUseToken()
                     .response

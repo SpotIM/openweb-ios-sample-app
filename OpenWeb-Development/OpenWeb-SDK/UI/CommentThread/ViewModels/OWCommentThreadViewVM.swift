@@ -666,7 +666,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMap { [weak self] data -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                .netwokAPI()
+                .networkAPI()
                 .conversation
                 .conversationRead(mode: .newest, page: OWPaginationPage.first, childCount: 5, messageId: data.commentId)
                 .response
@@ -848,7 +848,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingMoreReplies(commentId: commentPresentationData.id))
 
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .conversationRead(mode: .best, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
                     .response
@@ -1523,7 +1523,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                       let commentId = comment.id
                 else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .commentDelete(id: commentId, parentId: comment.parentId)
                     .response
@@ -1700,7 +1700,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .user
                     .mute(userId: userId)
                     .response
