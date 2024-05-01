@@ -23,7 +23,7 @@ protocol OWUserMentionCellViewModeling: OWCellViewModel {
     var outputs: OWUserMentionCellViewModelingOutputs { get }
 }
 
-class OWUserMentionCellVM: OWUserMentionCellViewModelingInputs,
+class OWUserMentionCellViewModel: OWUserMentionCellViewModelingInputs,
                            OWUserMentionCellViewModelingOutputs,
                            OWUserMentionCellViewModeling {
     var inputs: OWUserMentionCellViewModelingInputs { return self }
@@ -50,5 +50,15 @@ class OWUserMentionCellVM: OWUserMentionCellViewModelingInputs,
         self._userName.onNext(user.userName)
         self._displayName.onNext(user.displayName)
         self.avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
+    }
+}
+
+extension OWUserMentionCellViewModel {
+    static func stub() -> OWUserMentionCellViewModeling {
+        return OWUserMentionCellViewModel(user: OWUserMention(id: "",
+                                                              displayName: "",
+                                                              imageId: "",
+                                                              online: false,
+                                                              userName: ""))
     }
 }

@@ -310,7 +310,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 let imageId = UUID().uuidString
                 let timestamp = String(format: "%.3f", NSDate().timeIntervalSince1970)
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .images
                     .login(publicId: imageId, timestamp: timestamp)
                     .response
@@ -335,7 +335,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                       let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
                 else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .images
                     .upload(
                         signature: cloudinarySignature,

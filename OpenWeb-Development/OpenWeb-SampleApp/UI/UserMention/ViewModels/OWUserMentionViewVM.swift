@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+typealias UserMentionsDataSourceModel = OWAnimatableSectionModel<String, OWUserMentionsCellOption>
+
 protocol OWUserMentionViewViewModelingInputs {
     var textData: PublishSubject<OWUserMentionTextData> { get }
     var tappedMentionIndex: PublishSubject<Int> { get }
@@ -25,7 +27,7 @@ protocol OWUserMentionViewViewModelingInputs {
 }
 
 protocol OWUserMentionViewViewModelingOutputs {
-    var cellsViewModels: Observable<[OWUserMentionCellViewModeling]> { get }
+    var userMentionsDataSourceSections: Observable<[UserMentionsDataSourceModel]> { get }
     var mentionsData: Observable<OWUserMentionData> { get }
     var currentMentionRange: Observable<Range<String.Index>?> { get }
     var tappedMention: Observable<OWUserMentionData> { get }
@@ -101,12 +103,14 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .asObservable()
     }()
 
-    fileprivate lazy var _users = PublishSubject<[OWUserMention]>()
+    fileprivate lazy var _users = BehaviorSubject<[OWUserMention]>(value: [])
     fileprivate lazy var users: Observable<[OWUserMention]> = {
         return _users
             .asObservable()
 
     }()
+
+    fileprivate let isSearchingUsers = BehaviorSubject<Bool>(value: false)
 
     var tappedMentionAction = PublishSubject<OWUserMentionData>()
     var tappedMention: Observable<OWUserMentionData> {
@@ -118,12 +122,13 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
         return name
             .do(onNext: { [weak self] name in
                 self?.getUsersForName = name
+                self?.isSearchingUsers.onNext(true)
             })
             .asObservable()
             .throttle(.milliseconds(Metrics.throttleGetUsers), scheduler: MainScheduler.instance)
             .flatMapLatest { [weak self] name -> Observable<[OWUserMention]> in
                 guard let self = self else { return .empty() }
-                return self.servicesProvider.netwokAPI()
+                return self.servicesProvider.networkAPI()
                     .userMention
                     .getUsers(name: name, count: Metrics.usersCount)
                     .response
@@ -131,6 +136,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
                     .map { [weak self] event in
                         guard let self = self,
                               self.getUsersForName == name else { return nil }
+                        self.isSearchingUsers.onNext(false)
                         switch event {
                         case .next(let userMentionResponse):
                             let suggestions = userMentionResponse.suggestions ?? []
@@ -146,17 +152,31 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             }
     }()
 
-    lazy var cellsViewModels: Observable<[OWUserMentionCellViewModeling]> = {
-        return users
-            .map { users in
-                var viewModels: [OWUserMentionCellViewModeling] = []
-                for user in users {
-                    viewModels.append(OWUserMentionCellVM(user: user))
+    fileprivate lazy var cellsViewModels: Observable<[OWUserMentionsCellOption]> = {
+        return Observable.combineLatest(users, isSearchingUsers)
+            .flatMapLatest({ [weak self] result -> Observable<[OWUserMentionsCellOption]> in
+                let (users,
+                     isSearchingUsers) = result
+                if isSearchingUsers {
+                    return Observable.just([OWUserMentionsCellOption.searching(viewModel: OWUserMentionSearchingCellViewModel())])
                 }
-                return viewModels
-            }
+                var viewModels: [OWUserMentionsCellOption] = []
+                for user in users {
+                    let viewModel = OWUserMentionCellViewModel(user: user)
+                    viewModels.append(OWUserMentionsCellOption.mention(viewModel: viewModel))
+                }
+                return Observable.just(viewModels)
+            })
             .asObservable()
     }()
+
+    var userMentionsDataSourceSections: Observable<[UserMentionsDataSourceModel]> {
+        return cellsViewModels
+            .map { items in
+                let section = UserMentionsDataSourceModel(model: "", items: items)
+                return [section]
+            }
+    }
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          randomGenerator: OWRandomGeneratorProtocol = OWRandomGenerator()) {
@@ -229,7 +249,8 @@ fileprivate extension OWUserMentionViewVM {
             .withLatestFrom(cellsViewModels) { ($0, $1) }
             .flatMapLatest { index, cellsViewModels -> Observable<(String, String)> in
                 guard index < cellsViewModels.count else { return .empty() }
-                let selectedCellVM = cellsViewModels[index]
+                let selectedCellOption = cellsViewModels[index]
+                guard let selectedCellVM = selectedCellOption.viewModel as? OWUserMentionCellViewModeling else { return .empty() }
                 let id = selectedCellVM.outputs.id
                 let selectedDisplayName = selectedCellVM.outputs.displayName
                 return selectedDisplayName.map { ($0, id) }
