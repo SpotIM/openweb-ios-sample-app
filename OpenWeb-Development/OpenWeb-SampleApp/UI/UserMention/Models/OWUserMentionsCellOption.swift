@@ -12,11 +12,11 @@ import UIKit
 enum OWUserMentionsCellOption: CaseIterable, OWUpdaterProtocol {
     static var allCases: [OWUserMentionsCellOption] {
         return [.mention(viewModel: OWUserMentionCellViewModel.stub()),
-                .searching(viewModel: OWUserMentionSearchingCellViewModel.stub())]
+                .loading(viewModel: OWUserMentionLoadingCellViewModel.stub())]
     }
 
     case mention(viewModel: OWUserMentionCellViewModeling)
-    case searching(viewModel: OWUserMentionSearchingCellViewModeling)
+    case loading(viewModel: OWUserMentionLoadingCellViewModeling)
 }
 
 extension OWUserMentionsCellOption {
@@ -24,7 +24,7 @@ extension OWUserMentionsCellOption {
         switch self {
         case .mention(let viewModel):
             return viewModel
-        case .searching(let viewModel):
+        case .loading(let viewModel):
             return viewModel
         }
     }
@@ -33,8 +33,8 @@ extension OWUserMentionsCellOption {
         switch self {
         case .mention:
             return OWUserMentionCell.self
-        case .searching:
-            return OWUserMentionSearchingCell.self
+        case .loading:
+            return OWUserMentionLoadingCell.self
         }
     }
 }
@@ -44,7 +44,7 @@ extension OWUserMentionsCellOption: Equatable {
         switch self {
         case .mention(let viewModel):
             return viewModel.outputs.id
-        case .searching(let viewModel):
+        case .loading(let viewModel):
             return viewModel.outputs.id
         }
     }
@@ -53,7 +53,7 @@ extension OWUserMentionsCellOption: Equatable {
         switch (lhs, rhs) {
         case (.mention(_), .mention(_)):
             return lhs.identifier == rhs.identifier
-        case (.searching(_), .searching(_)):
+        case (.loading(_), .loading(_)):
             return lhs.identifier == rhs.identifier
         default:
             return false
