@@ -120,13 +120,17 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     fileprivate lazy var getUsers: Observable<[OWUserMention]> = {
         return name
-            .do(onNext: { [weak self] name in
-                self?.getUsersForName = name
-                self?.isSearchingUsers.onNext(true)
+            .withLatestFrom(users) { ($0, $1) }
+            .do(onNext: { [weak self] name, users in
+                guard let self = self else { return }
+                if name.count > 0, users.count == 0 {
+                    self.isSearchingUsers.onNext(true)
+                }
+                self.getUsersForName = name
             })
             .asObservable()
             .throttle(.milliseconds(Metrics.throttleGetUsers), scheduler: MainScheduler.instance)
-            .flatMapLatest { [weak self] name -> Observable<[OWUserMention]> in
+            .flatMapLatest { [weak self] name, _ -> Observable<[OWUserMention]> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.networkAPI()
                     .userMention
@@ -158,7 +162,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
                 let (users,
                      isSearchingUsers) = result
                 if isSearchingUsers {
-                    return Observable.just([OWUserMentionsCellOption.searching(viewModel: OWUserMentionSearchingCellViewModel())])
+                    return Observable.just([OWUserMentionsCellOption.loading(viewModel: OWUserMentionLoadingCellViewModel())])
                 }
                 var viewModels: [OWUserMentionsCellOption] = []
                 for user in users {

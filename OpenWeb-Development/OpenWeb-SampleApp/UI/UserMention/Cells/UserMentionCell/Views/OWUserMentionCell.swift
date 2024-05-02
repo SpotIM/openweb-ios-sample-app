@@ -54,6 +54,7 @@ class OWUserMentionCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+        applyAccessibility()
     }
 
     override func prepareForReuse() {
@@ -63,13 +64,13 @@ class OWUserMentionCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupViews()
+        applyAccessibility()
     }
 
     override func configure(with viewModel: OWCellViewModel) {
         guard let vm = viewModel as? OWUserMentionCellViewModeling else { return }
         self.viewModel = vm
         setupObservers()
-        applyAccessibility()
         avatarView.configure(with: vm.outputs.avatarVM)
     }
 }
