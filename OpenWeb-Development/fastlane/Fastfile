@@ -73,6 +73,10 @@ platform :ios do
       clean: true,
       build: true
     )
+
+    sign_xcframework(
+      file: "../Release/SpotImCore.xcframework"
+    )
   end
 
   desc "Build release ipa"
@@ -215,5 +219,21 @@ platform :ios do
   desc "Set build to specific number"
   lane :set_build do |options|
     increment_build_number(build_number: options[:build])
+  end
+
+  private_lane :sign_xcframework do |options|
+    match(
+        type: "appstore",
+        readonly: true,
+        skip_provisioning_profiles: true
+    )
+
+    sh(
+      "codesign",
+      "--timestamp",
+      "-v",
+      "--sign", "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)",
+      options[:file]
+    )
   end
 end
