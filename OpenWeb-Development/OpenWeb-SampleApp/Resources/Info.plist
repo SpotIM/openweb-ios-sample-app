@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>2.2.0</string>
 	<key>CFBundleVersion</key>
-	<string>0</string>
+	<string>8</string>
 	<key>GADIsAdManagerApp</key>
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
