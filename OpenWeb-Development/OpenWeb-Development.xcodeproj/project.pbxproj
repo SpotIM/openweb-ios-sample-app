@@ -901,11 +901,11 @@
 		9E3C3EAB2BEBBA31001B1B6C /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9E3C3EB22BEBBD02001B1B6C /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; };
 		9E3C3EB32BEBBD02001B1B6C /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9E3C3EB42BEBBD17001B1B6C /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; };
+		9E3C3EB42BEBBD17001B1B6C /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9E3C3EB52BEBBD17001B1B6C /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9E3C3EB72BEBBD19001B1B6C /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */; };
+		9E3C3EB72BEBBD19001B1B6C /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9E3C3EB82BEBBD19001B1B6C /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9E3C3EB92BEBBD1A001B1B6C /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; };
+		9E3C3EB92BEBBD1A001B1B6C /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9E3C3EBA2BEBBD1A001B1B6C /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9E3C3EBB2BEBBD3C001B1B6C /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; };
 		9E3C3EBC2BEBBD3C001B1B6C /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
