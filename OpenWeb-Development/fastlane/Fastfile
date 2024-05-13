@@ -75,7 +75,7 @@ platform :ios do
     )
 
     sign_xcframework(
-      file: "../Release/SpotImCore.xcframework"
+      file: "../Release/OpenWebSDK.xcframework"
     )
   end
 
