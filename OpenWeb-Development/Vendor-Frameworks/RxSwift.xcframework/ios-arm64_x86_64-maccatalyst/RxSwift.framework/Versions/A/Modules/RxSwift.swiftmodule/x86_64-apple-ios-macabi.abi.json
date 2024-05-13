@@ -27,7 +27,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -197,12 +197,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "GenericFunction",
-                "printedName": "<τ_0_0> (RxSwift.MaybeEvent<τ_0_0>.Type) -> (Swift.Error) -> RxSwift.MaybeEvent<τ_0_0>",
+                "printedName": "<τ_0_0> (RxSwift.MaybeEvent<τ_0_0>.Type) -> (any Swift.Error) -> RxSwift.MaybeEvent<τ_0_0>",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) -> RxSwift.MaybeEvent<τ_0_0>",
+                    "printedName": "(any Swift.Error) -> RxSwift.MaybeEvent<τ_0_0>",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -220,7 +220,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -481,7 +481,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -618,7 +618,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "AsyncThrowingStream",
-                "printedName": "_Concurrency.AsyncThrowingStream<τ_0_0.Element, Swift.Error>",
+                "printedName": "_Concurrency.AsyncThrowingStream<τ_0_0.Element, any Swift.Error>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -628,7 +628,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ],
@@ -652,7 +652,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "AsyncThrowingStream",
-                    "printedName": "_Concurrency.AsyncThrowingStream<τ_0_0.Element, Swift.Error>",
+                    "printedName": "_Concurrency.AsyncThrowingStream<τ_0_0.Element, any Swift.Error>",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -662,7 +662,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ],
@@ -781,7 +781,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) -> RxSwift.Infallible<τ_0_0.Element>",
+                "printedName": "(any Swift.Error) -> RxSwift.Infallible<τ_0_0.Element>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -799,7 +799,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -1060,6 +1060,16 @@
         "printedName": "Foundation",
         "declKind": "Import",
         "moduleName": "RxSwift"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
+          "RawDocComment"
+        ]
       },
       {
         "kind": "TypeDecl",
@@ -1387,7 +1397,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -1398,12 +1408,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_0_0) -> RxSwift.Disposable",
+                "printedName": "(τ_0_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -1435,7 +1445,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -1452,12 +1462,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_0_0) -> RxSwift.Disposable",
+                "printedName": "(τ_0_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -1489,7 +1499,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -1698,7 +1708,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -2106,6 +2116,26 @@
             "usr": "s:7RxSwift22ImmediateSchedulerTypeP",
             "mangledName": "$s7RxSwift22ImmediateSchedulerTypeP"
           }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
+          "RawDocComment"
         ]
       },
       {
@@ -3025,7 +3055,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -3451,12 +3481,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(RxSwift.CompletableEvent.Type) -> (Swift.Error) -> RxSwift.CompletableEvent",
+                "printedName": "(RxSwift.CompletableEvent.Type) -> (any Swift.Error) -> RxSwift.CompletableEvent",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) -> RxSwift.CompletableEvent",
+                    "printedName": "(any Swift.Error) -> RxSwift.CompletableEvent",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -3467,7 +3497,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -4126,7 +4156,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -4148,7 +4178,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -4286,7 +4316,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -4883,7 +4913,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -4934,7 +4964,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -5496,12 +5526,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Tuple",
-                    "printedName": "(inout τ_1_0, τ_0_0.Element)",
+                    "printedName": "(τ_1_0, τ_0_0.Element)",
                     "children": [
                       {
                         "kind": "TypeNominal",
-                        "name": "InOut",
-                        "printedName": "inout τ_1_0"
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_1_0"
                       },
                       {
                         "kind": "TypeNominal",
@@ -5882,7 +5912,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -7419,7 +7449,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7539,7 +7569,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7642,7 +7672,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -8369,7 +8399,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
@@ -8422,7 +8452,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
@@ -8467,7 +8497,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
@@ -8721,12 +8751,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(@escaping (RxSwift.InfallibleEvent<τ_0_0>) -> ()) -> RxSwift.Disposable",
+                "printedName": "(@escaping (RxSwift.InfallibleEvent<τ_0_0>) -> ()) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -9528,6 +9558,16 @@
         ]
       },
       {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
         "kind": "TypeDecl",
         "name": "VirtualTimeScheduler",
         "printedName": "VirtualTimeScheduler",
@@ -9665,7 +9705,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -9676,12 +9716,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_1_0) -> RxSwift.Disposable",
+                "printedName": "(τ_1_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -9712,7 +9752,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -9729,12 +9769,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_1_0) -> RxSwift.Disposable",
+                "printedName": "(τ_1_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -9765,7 +9805,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -9781,12 +9821,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_1_0) -> RxSwift.Disposable",
+                "printedName": "(τ_1_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -9817,7 +9857,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -9833,12 +9873,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_1_0) -> RxSwift.Disposable",
+                "printedName": "(τ_1_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -10331,7 +10371,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               },
@@ -10609,7 +10649,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -10620,12 +10660,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_0_0) -> RxSwift.Disposable",
+                "printedName": "(τ_0_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -10772,7 +10812,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "([Swift.String], Swift.Error) -> ()",
+                "printedName": "([Swift.String], any Swift.Error) -> ()",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -10782,7 +10822,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Tuple",
-                    "printedName": "([Swift.String], Swift.Error)",
+                    "printedName": "([Swift.String], any Swift.Error)",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -10801,7 +10841,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -10828,7 +10868,7 @@
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "([Swift.String], Swift.Error) -> ()",
+                    "printedName": "([Swift.String], any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -10838,7 +10878,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "([Swift.String], Swift.Error)",
+                        "printedName": "([Swift.String], any Swift.Error)",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -10857,7 +10897,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ]
@@ -10886,7 +10926,7 @@
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "([Swift.String], Swift.Error) -> ()",
+                    "printedName": "([Swift.String], any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -10896,7 +10936,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "([Swift.String], Swift.Error)",
+                        "printedName": "([Swift.String], any Swift.Error)",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -10915,7 +10955,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ]
@@ -11110,6 +11150,16 @@
         "moduleName": "RxSwift",
         "declAttributes": [
           "AccessControl",
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
           "RawDocComment"
         ]
       },
@@ -11476,7 +11526,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -11760,7 +11810,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -11777,12 +11827,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_1_0) -> RxSwift.Disposable",
+                "printedName": "(τ_1_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -11814,7 +11864,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -11873,7 +11923,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -11943,6 +11993,16 @@
             "usr": "s:7RxSwift22ImmediateSchedulerTypeP",
             "mangledName": "$s7RxSwift22ImmediateSchedulerTypeP"
           }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
+          "RawDocComment"
         ]
       },
       {
@@ -12106,7 +12166,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -12117,12 +12177,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_0_0) -> RxSwift.Disposable",
+                "printedName": "(τ_0_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -12206,7 +12266,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -12235,12 +12295,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[RxSwift.Disposable]",
+                "printedName": "[any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -12273,17 +12333,17 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "() -> [RxSwift.Disposable]",
+                "printedName": "() -> [any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Array",
-                    "printedName": "[RxSwift.Disposable]",
+                    "printedName": "[any RxSwift.Disposable]",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Disposable",
-                        "printedName": "RxSwift.Disposable",
+                        "printedName": "any RxSwift.Disposable",
                         "usr": "s:7RxSwift10DisposableP"
                       }
                     ],
@@ -12326,12 +12386,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[RxSwift.Disposable]",
+                "printedName": "[any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -12363,12 +12423,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[RxSwift.Disposable]",
+                "printedName": "[any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -12400,17 +12460,17 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "() -> [RxSwift.Disposable]",
+                "printedName": "() -> [any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Array",
-                    "printedName": "[RxSwift.Disposable]",
+                    "printedName": "[any RxSwift.Disposable]",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Disposable",
-                        "printedName": "RxSwift.Disposable",
+                        "printedName": "any RxSwift.Disposable",
                         "usr": "s:7RxSwift10DisposableP"
                       }
                     ],
@@ -12452,12 +12512,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[RxSwift.Disposable]",
+                "printedName": "[any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -12489,12 +12549,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Array",
-                    "printedName": "[RxSwift.Disposable]",
+                    "printedName": "[any RxSwift.Disposable]",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Disposable",
-                        "printedName": "RxSwift.Disposable",
+                        "printedName": "any RxSwift.Disposable",
                         "usr": "s:7RxSwift10DisposableP"
                       }
                     ],
@@ -12503,12 +12563,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Array",
-                    "printedName": "[RxSwift.Disposable]",
+                    "printedName": "[any RxSwift.Disposable]",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Disposable",
-                        "printedName": "RxSwift.Disposable",
+                        "printedName": "any RxSwift.Disposable",
                         "usr": "s:7RxSwift10DisposableP"
                       }
                     ],
@@ -12664,7 +12724,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -12771,6 +12831,16 @@
           "RawDocComment"
         ],
         "hasMissingDesignatedInitializers": true
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
+          "RawDocComment"
+        ]
       },
       {
         "kind": "Import",
@@ -12988,7 +13058,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -13037,7 +13107,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -13080,7 +13150,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -13123,7 +13193,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -13168,7 +13238,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -13211,7 +13281,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -13256,7 +13326,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) throws -> RxSwift.PrimitiveSequence<τ_0_0, τ_0_1>",
+                "printedName": "(any Swift.Error) throws -> RxSwift.PrimitiveSequence<τ_0_0, τ_0_1>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -13279,7 +13349,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -13326,7 +13396,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) throws -> RxSwift.PrimitiveSequence<τ_0_0, τ_0_1>",
+                "printedName": "(any Swift.Error) throws -> RxSwift.PrimitiveSequence<τ_0_0, τ_0_1>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -13349,7 +13419,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -13563,7 +13633,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(RxSwift.Observable<Swift.Error>) -> τ_1_0",
+                "printedName": "(RxSwift.Observable<any Swift.Error>) -> τ_1_0",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -13573,12 +13643,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Observable",
-                    "printedName": "RxSwift.Observable<Swift.Error>",
+                    "printedName": "RxSwift.Observable<any Swift.Error>",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ],
@@ -13626,7 +13696,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(RxSwift.Observable<Swift.Error>) -> τ_1_0",
+                "printedName": "(RxSwift.Observable<any Swift.Error>) -> τ_1_0",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -13636,12 +13706,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Observable",
-                    "printedName": "RxSwift.Observable<Swift.Error>",
+                    "printedName": "RxSwift.Observable<any Swift.Error>",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ],
@@ -13862,7 +13932,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -13929,7 +13999,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -14285,12 +14355,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(@escaping (RxSwift.MaybeEvent<τ_0_0.Element>) -> ()) -> RxSwift.Disposable",
+                "printedName": "(@escaping (RxSwift.MaybeEvent<τ_0_0.Element>) -> ()) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -14343,7 +14413,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -14393,7 +14463,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -14442,12 +14512,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((τ_1_0, Swift.Error) -> ())?",
+                "printedName": "((τ_1_0, any Swift.Error) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(τ_1_0, Swift.Error) -> ()",
+                    "printedName": "(τ_1_0, any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -14457,7 +14527,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "(τ_1_0, Swift.Error)",
+                        "printedName": "(τ_1_0, any Swift.Error)",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -14467,7 +14537,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ]
@@ -14552,7 +14622,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -14584,12 +14654,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) -> ())?",
+                "printedName": "((any Swift.Error) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) -> ()",
+                    "printedName": "(any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -14599,7 +14669,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -14750,7 +14820,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -14795,7 +14865,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Error",
-                "printedName": "Swift.Error",
+                "printedName": "any Swift.Error",
                 "usr": "s:s5ErrorP"
               }
             ],
@@ -14970,12 +15040,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) throws -> ())?",
+                "printedName": "((any Swift.Error) throws -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) throws -> ()",
+                    "printedName": "(any Swift.Error) throws -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -14985,7 +15055,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -14997,12 +15067,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) throws -> ())?",
+                "printedName": "((any Swift.Error) throws -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) throws -> ()",
+                    "printedName": "(any Swift.Error) throws -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -15012,7 +15082,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -20255,12 +20325,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(@escaping (RxSwift.CompletableEvent) -> ()) -> RxSwift.Disposable",
+                "printedName": "(@escaping (RxSwift.CompletableEvent) -> ()) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -20306,7 +20376,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -20349,7 +20419,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -20386,12 +20456,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((τ_1_0, Swift.Error) -> ())?",
+                "printedName": "((τ_1_0, any Swift.Error) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(τ_1_0, Swift.Error) -> ()",
+                    "printedName": "(τ_1_0, any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -20401,7 +20471,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "(τ_1_0, Swift.Error)",
+                        "printedName": "(τ_1_0, any Swift.Error)",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -20411,7 +20481,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ]
@@ -20470,7 +20540,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -20502,12 +20572,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) -> ())?",
+                "printedName": "((any Swift.Error) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) -> ()",
+                    "printedName": "(any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -20517,7 +20587,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -20594,7 +20664,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Error",
-                "printedName": "Swift.Error",
+                "printedName": "any Swift.Error",
                 "usr": "s:s5ErrorP"
               }
             ],
@@ -20720,12 +20790,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) throws -> ())?",
+                "printedName": "((any Swift.Error) throws -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) throws -> ()",
+                    "printedName": "(any Swift.Error) throws -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -20735,7 +20805,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -20747,12 +20817,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) throws -> ())?",
+                "printedName": "((any Swift.Error) throws -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) throws -> ()",
+                    "printedName": "(any Swift.Error) throws -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -20762,7 +20832,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -21563,7 +21633,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -21608,18 +21678,18 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(@escaping (Swift.Result<τ_0_0.Element, Swift.Error>) -> ()) -> RxSwift.Disposable",
+                "printedName": "(@escaping (Swift.Result<τ_0_0.Element, any Swift.Error>) -> ()) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Result<τ_0_0.Element, Swift.Error>) -> ()",
+                    "printedName": "(Swift.Result<τ_0_0.Element, any Swift.Error>) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -21629,7 +21699,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Result",
-                        "printedName": "Swift.Result<τ_0_0.Element, Swift.Error>",
+                        "printedName": "Swift.Result<τ_0_0.Element, any Swift.Error>",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -21639,7 +21709,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ],
@@ -21672,13 +21742,13 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Result<τ_0_0.Element, Swift.Error>) -> ()",
+                "printedName": "(Swift.Result<τ_0_0.Element, any Swift.Error>) -> ()",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -21688,7 +21758,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Result",
-                    "printedName": "Swift.Result<τ_0_0.Element, Swift.Error>",
+                    "printedName": "Swift.Result<τ_0_0.Element, any Swift.Error>",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -21698,7 +21768,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ],
@@ -21728,7 +21798,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -21760,7 +21830,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) -> ()",
+                "printedName": "(any Swift.Error) -> ()",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -21770,7 +21840,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -21825,7 +21895,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -21874,12 +21944,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((τ_1_0, Swift.Error) -> ())?",
+                "printedName": "((τ_1_0, any Swift.Error) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(τ_1_0, Swift.Error) -> ()",
+                    "printedName": "(τ_1_0, any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -21889,7 +21959,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "(τ_1_0, Swift.Error)",
+                        "printedName": "(τ_1_0, any Swift.Error)",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -21899,7 +21969,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ]
@@ -21958,7 +22028,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -21990,12 +22060,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) -> ())?",
+                "printedName": "((any Swift.Error) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) -> ()",
+                    "printedName": "(any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -22005,7 +22075,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -22130,7 +22200,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -22175,7 +22245,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Error",
-                "printedName": "Swift.Error",
+                "printedName": "any Swift.Error",
                 "usr": "s:s5ErrorP"
               }
             ],
@@ -22311,12 +22381,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) throws -> ())?",
+                "printedName": "((any Swift.Error) throws -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) throws -> ()",
+                    "printedName": "(any Swift.Error) throws -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -22326,7 +22396,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -22338,12 +22408,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) throws -> ())?",
+                "printedName": "((any Swift.Error) throws -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) throws -> ()",
+                    "printedName": "(any Swift.Error) throws -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -22353,7 +22423,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -23270,7 +23340,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -23281,12 +23351,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_0_0) -> RxSwift.Disposable",
+                "printedName": "(τ_0_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -23318,7 +23388,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -23335,12 +23405,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_0_0) -> RxSwift.Disposable",
+                "printedName": "(τ_0_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -23372,7 +23442,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -23666,7 +23736,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -23859,6 +23929,16 @@
         ]
       },
       {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
         "kind": "TypeDecl",
         "name": "ObservableType",
         "printedName": "ObservableType",
@@ -23871,7 +23951,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -24559,7 +24639,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -25342,7 +25422,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(RxSwift.Observable<Swift.Error>) -> τ_1_0",
+                "printedName": "(RxSwift.Observable<any Swift.Error>) -> τ_1_0",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -25352,12 +25432,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Observable",
-                    "printedName": "RxSwift.Observable<Swift.Error>",
+                    "printedName": "RxSwift.Observable<any Swift.Error>",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ],
@@ -25400,7 +25480,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(RxSwift.Observable<Swift.Error>) -> τ_1_0",
+                "printedName": "(RxSwift.Observable<any Swift.Error>) -> τ_1_0",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -25410,12 +25490,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Observable",
-                    "printedName": "RxSwift.Observable<Swift.Error>",
+                    "printedName": "RxSwift.Observable<any Swift.Error>",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ],
@@ -25466,7 +25546,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -25547,7 +25627,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -25690,7 +25770,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -25773,7 +25853,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -26183,7 +26263,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -26233,7 +26313,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -26282,12 +26362,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((τ_1_0, Swift.Error) -> ())?",
+                "printedName": "((τ_1_0, any Swift.Error) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(τ_1_0, Swift.Error) -> ()",
+                    "printedName": "(τ_1_0, any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -26297,7 +26377,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "(τ_1_0, Swift.Error)",
+                        "printedName": "(τ_1_0, any Swift.Error)",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -26307,7 +26387,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ]
@@ -26392,7 +26472,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -26424,12 +26504,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) -> ())?",
+                "printedName": "((any Swift.Error) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) -> ()",
+                    "printedName": "(any Swift.Error) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -26439,7 +26519,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -26663,7 +26743,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) throws -> RxSwift.Observable<τ_0_0.Element>",
+                "printedName": "(any Swift.Error) throws -> RxSwift.Observable<τ_0_0.Element>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -26681,7 +26761,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -26721,7 +26801,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) throws -> RxSwift.Observable<τ_0_0.Element>",
+                "printedName": "(any Swift.Error) throws -> RxSwift.Observable<τ_0_0.Element>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -26739,7 +26819,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -27159,7 +27239,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -27219,7 +27299,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -27258,7 +27338,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Error",
-                "printedName": "Swift.Error",
+                "printedName": "any Swift.Error",
                 "usr": "s:s5ErrorP"
               }
             ],
@@ -27373,12 +27453,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(RxSwift.AnyObserver<τ_0_0.Element>) -> RxSwift.Disposable",
+                "printedName": "(RxSwift.AnyObserver<τ_0_0.Element>) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -27447,12 +27527,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Tuple",
-                    "printedName": "(inout τ_1_0, τ_0_0.Element)",
+                    "printedName": "(τ_1_0, τ_0_0.Element)",
                     "children": [
                       {
                         "kind": "TypeNominal",
-                        "name": "InOut",
-                        "printedName": "inout τ_1_0"
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_1_0"
                       },
                       {
                         "kind": "TypeNominal",
@@ -27587,7 +27667,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               },
@@ -27688,7 +27768,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -27732,7 +27812,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -27891,7 +27971,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
@@ -28046,7 +28126,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -28095,7 +28175,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -29912,7 +29992,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -29950,7 +30030,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -29995,7 +30075,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
@@ -30169,12 +30249,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) throws -> ())?",
+                "printedName": "((any Swift.Error) throws -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) throws -> ()",
+                    "printedName": "(any Swift.Error) throws -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -30184,7 +30264,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -30196,12 +30276,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "((Swift.Error) throws -> ())?",
+                "printedName": "((any Swift.Error) throws -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) throws -> ()",
+                    "printedName": "(any Swift.Error) throws -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -30211,7 +30291,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -30405,7 +30485,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -31790,7 +31870,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -31885,7 +31965,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -32100,7 +32180,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
@@ -32153,7 +32233,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
@@ -32198,7 +32278,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "hasDefaultArg": true,
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
@@ -32481,7 +32561,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -32856,7 +32936,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -32894,7 +32974,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -33035,6 +33115,16 @@
             "usr": "s:7RxSwift25ObservableConvertibleTypeP",
             "mangledName": "$s7RxSwift25ObservableConvertibleTypeP"
           }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
+          "RawDocComment"
         ]
       },
       {
@@ -33258,7 +33348,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -33269,12 +33359,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_0_0) -> RxSwift.Disposable",
+                "printedName": "(τ_0_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -33306,7 +33396,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -33323,12 +33413,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_0_0) -> RxSwift.Disposable",
+                "printedName": "(τ_0_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -33360,7 +33450,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -33450,7 +33540,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -33474,19 +33564,19 @@
               {
                 "kind": "TypeNominal",
                 "name": "Cancelable",
-                "printedName": "RxSwift.Cancelable",
+                "printedName": "any RxSwift.Cancelable",
                 "usr": "s:7RxSwift10CancelableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -33510,7 +33600,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Cancelable",
-                "printedName": "RxSwift.Cancelable",
+                "printedName": "any RxSwift.Cancelable",
                 "usr": "s:7RxSwift10CancelableP"
               },
               {
@@ -33551,25 +33641,25 @@
               {
                 "kind": "TypeNominal",
                 "name": "Cancelable",
-                "printedName": "RxSwift.Cancelable",
+                "printedName": "any RxSwift.Cancelable",
                 "usr": "s:7RxSwift10CancelableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -33593,36 +33683,36 @@
               {
                 "kind": "TypeNominal",
                 "name": "Cancelable",
-                "printedName": "RxSwift.Cancelable",
+                "printedName": "any RxSwift.Cancelable",
                 "usr": "s:7RxSwift10CancelableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[RxSwift.Disposable]",
+                "printedName": "[any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -33649,18 +33739,18 @@
               {
                 "kind": "TypeNominal",
                 "name": "Cancelable",
-                "printedName": "RxSwift.Cancelable",
+                "printedName": "any RxSwift.Cancelable",
                 "usr": "s:7RxSwift10CancelableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[RxSwift.Disposable]",
+                "printedName": "[any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -33686,6 +33776,16 @@
         "moduleName": "RxSwift",
         "declAttributes": [
           "AccessControl",
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "RxSwift",
+        "declAttributes": [
           "RawDocComment"
         ]
       },
@@ -34309,7 +34409,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -34320,12 +34420,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(τ_1_0) -> RxSwift.Disposable",
+                "printedName": "(τ_1_0) -> any RxSwift.Disposable",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   },
                   {
@@ -34357,7 +34457,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -34606,7 +34706,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               }
             ],
@@ -34630,7 +34730,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "ImmediateSchedulerType",
-                    "printedName": "RxSwift.ImmediateSchedulerType",
+                    "printedName": "any RxSwift.ImmediateSchedulerType",
                     "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
                   }
                 ],
@@ -34705,13 +34805,13 @@
               {
                 "kind": "TypeNominal",
                 "name": "ImmediateSchedulerType",
-                "printedName": "RxSwift.ImmediateSchedulerType",
+                "printedName": "any RxSwift.ImmediateSchedulerType",
                 "usr": "s:7RxSwift22ImmediateSchedulerTypeP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -35115,13 +35215,13 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -35149,19 +35249,19 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -35189,36 +35289,36 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[RxSwift.Disposable]",
+                "printedName": "[any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -35249,12 +35349,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[RxSwift.Disposable]",
+                "printedName": "[any RxSwift.Disposable]",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -35293,7 +35393,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -35637,7 +35737,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Error",
-                "printedName": "Swift.Error",
+                "printedName": "any Swift.Error",
                 "usr": "s:s5ErrorP"
               }
             ],
@@ -35677,7 +35777,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -35735,8 +35835,7 @@
         "genericSig": "<τ_0_0>",
         "sugared_genericSig": "<Element>",
         "declAttributes": [
-          "AccessControl",
-          "RawDocComment"
+          "AccessControl"
         ],
         "hasMissingDesignatedInitializers": true,
         "conformances": [
@@ -35852,7 +35951,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -35874,7 +35973,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -35900,7 +35999,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Disposable",
-                    "printedName": "RxSwift.Disposable",
+                    "printedName": "any RxSwift.Disposable",
                     "usr": "s:7RxSwift10DisposableP"
                   }
                 ],
@@ -36070,12 +36169,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "GenericFunction",
-                "printedName": "<τ_0_0> (RxSwift.Event<τ_0_0>.Type) -> (Swift.Error) -> RxSwift.Event<τ_0_0>",
+                "printedName": "<τ_0_0> (RxSwift.Event<τ_0_0>.Type) -> (any Swift.Error) -> RxSwift.Event<τ_0_0>",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) -> RxSwift.Event<τ_0_0>",
+                    "printedName": "(any Swift.Error) -> RxSwift.Event<τ_0_0>",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -36093,7 +36192,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -36342,12 +36441,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "Swift.Error?",
+                "printedName": "(any Swift.Error)?",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ],
@@ -36372,12 +36471,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Optional",
-                    "printedName": "Swift.Error?",
+                    "printedName": "(any Swift.Error)?",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ],
@@ -36941,6 +37040,16 @@
         "mangledName": "$s10Foundation11JSONDecoderC",
         "moduleName": "Foundation",
         "isOpen": true,
+        "intro_Macosx": "10.10",
+        "intro_iOS": "8.0",
+        "intro_tvOS": "9.0",
+        "intro_watchOS": "2.0",
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
         "isExternal": true,
         "conformances": [
           {
@@ -36990,6 +37099,16 @@
         "mangledName": "$s10Foundation19PropertyListDecoderC",
         "moduleName": "Foundation",
         "isOpen": true,
+        "intro_Macosx": "10.10",
+        "intro_iOS": "8.0",
+        "intro_tvOS": "9.0",
+        "intro_watchOS": "2.0",
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
         "isExternal": true,
         "conformances": [
           {
@@ -37289,7 +37408,7 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/DelaySubscription.swift",
       "kind": "StringLiteral",
-      "offset": 1191,
+      "offset": 1210,
       "length": 17,
       "value": "\"RxSwift.DelaySubscription\""
     },
@@ -37380,35 +37499,35 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Skip.swift",
       "kind": "StringLiteral",
-      "offset": 1578,
+      "offset": 1597,
       "length": 13,
       "value": "\"RxSwift.SkipCountSink\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Skip.swift",
       "kind": "StringLiteral",
-      "offset": 2476,
+      "offset": 2495,
       "length": 9,
       "value": "\"RxSwift.SkipCount\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Skip.swift",
       "kind": "BooleanLiteral",
-      "offset": 3318,
+      "offset": 3337,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Skip.swift",
       "kind": "StringLiteral",
-      "offset": 3108,
+      "offset": 3127,
       "length": 12,
       "value": "\"RxSwift.SkipTimeSink\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Skip.swift",
       "kind": "StringLiteral",
-      "offset": 4312,
+      "offset": 4331,
       "length": 8,
       "value": "\"RxSwift.SkipTime\""
     },
@@ -37443,14 +37562,14 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Traits\/Infallible\/Infallible+Operators.swift",
       "kind": "BooleanLiteral",
-      "offset": 11318,
+      "offset": 11337,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Traits\/Infallible\/Infallible+Operators.swift",
       "kind": "IntegerLiteral",
-      "offset": 30432,
+      "offset": 30451,
       "length": 1,
       "value": "0"
     },
@@ -37515,7 +37634,7 @@
       "kind": "IntegerLiteral",
       "offset": 10136,
       "length": 2,
-      "value": "1"
+      "value": "-1"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Multicast.swift",
@@ -37576,21 +37695,21 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Subjects\/ReplaySubject.swift",
       "kind": "StringLiteral",
-      "offset": 6308,
+      "offset": 6232,
       "length": 14,
       "value": "\"RxSwift.ReplayManyBase\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Subjects\/ReplaySubject.swift",
       "kind": "StringLiteral",
-      "offset": 6943,
+      "offset": 6867,
       "length": 10,
       "value": "\"RxSwift.ReplayMany\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Subjects\/ReplaySubject.swift",
       "kind": "StringLiteral",
-      "offset": 7309,
+      "offset": 7233,
       "length": 9,
       "value": "\"RxSwift.ReplayAll\""
     },
@@ -37877,7 +37996,7 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Schedulers\/VirtualTimeScheduler.swift",
       "kind": "IntegerLiteral",
-      "offset": 694,
+      "offset": 713,
       "length": 1,
       "value": "0"
     },
@@ -37933,28 +38052,28 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Take.swift",
       "kind": "StringLiteral",
-      "offset": 2398,
+      "offset": 2417,
       "length": 13,
       "value": "\"RxSwift.TakeCountSink\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Take.swift",
       "kind": "StringLiteral",
-      "offset": 3449,
+      "offset": 3468,
       "length": 9,
       "value": "\"RxSwift.TakeCount\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Take.swift",
       "kind": "StringLiteral",
-      "offset": 4185,
+      "offset": 4204,
       "length": 12,
       "value": "\"RxSwift.TakeTimeSink\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Take.swift",
       "kind": "StringLiteral",
-      "offset": 5582,
+      "offset": 5601,
       "length": 8,
       "value": "\"RxSwift.TakeTime\""
     },
@@ -38129,28 +38248,28 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Timeout.swift",
       "kind": "IntegerLiteral",
-      "offset": 2466,
+      "offset": 2485,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Timeout.swift",
       "kind": "BooleanLiteral",
-      "offset": 2495,
+      "offset": 2514,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Timeout.swift",
       "kind": "StringLiteral",
-      "offset": 2108,
+      "offset": 2127,
       "length": 11,
       "value": "\"RxSwift.TimeoutSink\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Timeout.swift",
       "kind": "StringLiteral",
-      "offset": 4696,
+      "offset": 4715,
       "length": 7,
       "value": "\"RxSwift.Timeout\""
     },
@@ -38703,7 +38822,7 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Traits\/PrimitiveSequence\/PrimitiveSequence.swift",
       "kind": "BooleanLiteral",
-      "offset": 13874,
+      "offset": 13893,
       "length": 5,
       "value": "false"
     },
@@ -38752,28 +38871,28 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Window.swift",
       "kind": "IntegerLiteral",
-      "offset": 1370,
+      "offset": 1389,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Window.swift",
       "kind": "IntegerLiteral",
-      "offset": 1399,
+      "offset": 1418,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Window.swift",
       "kind": "StringLiteral",
-      "offset": 983,
+      "offset": 1002,
       "length": 19,
       "value": "\"RxSwift.WindowTimeCountSink\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Window.swift",
       "kind": "StringLiteral",
-      "offset": 4639,
+      "offset": 4658,
       "length": 15,
       "value": "\"RxSwift.WindowTimeCount\""
     },
@@ -38878,21 +38997,21 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Debounce.swift",
       "kind": "IntegerLiteral",
-      "offset": 1212,
+      "offset": 1231,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Debounce.swift",
       "kind": "StringLiteral",
-      "offset": 898,
+      "offset": 917,
       "length": 12,
       "value": "\"RxSwift.DebounceSink\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Debounce.swift",
       "kind": "StringLiteral",
-      "offset": 2940,
+      "offset": 2959,
       "length": 8,
       "value": "\"RxSwift.Debounce\""
     },
@@ -38955,21 +39074,21 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Buffer.swift",
       "kind": "StringLiteral",
-      "offset": 1170,
+      "offset": 1189,
       "length": 15,
       "value": "\"RxSwift.BufferTimeCount\""
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Buffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 2444,
+      "offset": 2463,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Buffer.swift",
       "kind": "StringLiteral",
-      "offset": 2022,
+      "offset": 2041,
       "length": 19,
       "value": "\"RxSwift.BufferTimeCountSink\""
     },
@@ -39018,14 +39137,7 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Deferred.swift",
       "kind": "StringLiteral",
-      "offset": 878,
-      "length": 12,
-      "value": "\"RxSwift.DeferredSink\""
-    },
-    {
-      "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxSwift\/Observables\/Deferred.swift",
-      "kind": "StringLiteral",
-      "offset": 1905,
+      "offset": 1818,
       "length": 8,
       "value": "\"RxSwift.Deferred\""
     },

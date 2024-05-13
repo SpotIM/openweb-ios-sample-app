@@ -1,7 +1,7 @@
 framework module RxCocoa {
   umbrella header "RxCocoa.h"
-
   export *
+
   module * { export * }
 }
 
