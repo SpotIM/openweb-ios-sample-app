@@ -209,7 +209,7 @@ class OWUserMentionHelper {
             if let userMention = comment.userMentions[contentId],
                var mentionRange = originalText.nsRange(from: jsonRange) {
                 var jsonNSRange = mentionRange
-                let displayName = Metrics.mentionString + userMention.userName
+                let displayName = Metrics.mentionString + userMention.displayName
                 mentionRange.length = displayName.utf16.count
                 mentionRange.location += rangeLocationAccumulate
                 jsonNSRange.location += rangeLocationAccumulate
@@ -267,8 +267,8 @@ class OWUserMentionHelper {
     }
 
     static func addMockCommentWithUserMention(comment: inout OWComment) {
-        comment.userMentions["b4edd1995e6bdc7fc7bf3f6d95fcc97b"] = OWComment.Content.UserMention(id: "b4edd1995e6bdc7fc7bf3f6d95fcc97b", userId: "1234", userName: "Alon")
-        comment.userMentions["f42518e26df91e6af00fb62ce8a39a2f"] = OWComment.Content.UserMention(id: "f42518e26df91e6af00fb62ce8a39a2f", userId: "4567", userName: "Alon")
+        comment.userMentions["b4edd1995e6bdc7fc7bf3f6d95fcc97b"] = OWComment.Content.UserMention(id: "b4edd1995e6bdc7fc7bf3f6d95fcc97b", userId: "1234", displayName: "Alon")
+        comment.userMentions["f42518e26df91e6af00fb62ce8a39a2f"] = OWComment.Content.UserMention(id: "f42518e26df91e6af00fb62ce8a39a2f", userId: "4567", displayName: "Alon")
         let user1 = SPUser()
         user1.id = "1234"
         user1.userId  = "1234"
