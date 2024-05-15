@@ -189,7 +189,7 @@ extension OWComment {
     enum Content: Decodable, Equatable {
 
         enum CodingKeys: CodingKey { // swiftlint:disable:this nesting
-            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId, userId, userName
+            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId, userId, displayName
         }
 
         struct Text: Decodable, Equatable { // swiftlint:disable:this nesting
@@ -214,7 +214,7 @@ extension OWComment {
         struct UserMention: Decodable, Equatable { // swiftlint:disable:this nesting
             var id: String
             var userId: String
-            var userName: String
+            var displayName: String
         }
 
         case text(Text)
@@ -230,8 +230,8 @@ extension OWComment {
             case "user-mention":
                 let id = try container.decode(String.self, forKey: .id)
                 let userId = try container.decode(String.self, forKey: .userId)
-                let userName = try container.decode(String.self, forKey: .userName)
-                self = .userMention(UserMention(id: id, userId: userId, userName: userName))
+                let displayName = try container.decode(String.self, forKey: .displayName)
+                self = .userMention(UserMention(id: id, userId: userId, displayName: displayName))
             case "text":
                 let id = try container.decode(String.self, forKey: .id)
                 let text = try container.decode(String.self, forKey: .text)
