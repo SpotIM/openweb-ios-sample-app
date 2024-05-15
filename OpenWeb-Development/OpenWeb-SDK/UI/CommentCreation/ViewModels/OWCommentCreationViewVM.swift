@@ -129,14 +129,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
+    // swiftlint:disable large_tuple
     fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, OWCommentGif?, [String], OWUserMentionData)> = {
         Observable.combineLatest(_commentText,
                                  _commentImage,
-                                 _commentGif, _commentSelectedLabelIds,
+                                 _commentGif,
+                                 _commentSelectedLabelIds,
                                  _commentSelectedMentions) { commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions in
             return (commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions)
         }
     }()
+    // swiftlint:enable large_tuple
 
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>

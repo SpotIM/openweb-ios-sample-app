@@ -13,11 +13,7 @@ import RxSwift
 class OWCommentCreationContentView: UIView {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_content_id"
-        static let placeholderLabelIdentifier = "comment_creation_placeholder_label_id"
         static let prefixIdentifier = "comment_creation_content"
-
-        static let placeholderLabelTopOffset: CGFloat = 8.0
-        static let placeholderLabelLeadingOffset: CGFloat = 6.0
         static let horizontalOffset: CGFloat = 16.0
         static let verticalOffset: CGFloat = 12.0
         static let avatarSize: CGFloat = 40.0
@@ -69,12 +65,6 @@ class OWCommentCreationContentView: UIView {
             make.leading.equalTo(avatarView.OWSnp.trailing).offset(Metrics.avatarToInputSpacing)
             make.trailing.equalTo(scroll.contentLayoutGuide).offset(-Metrics.horizontalOffset)
             make.top.equalToSuperview().offset(Metrics.verticalOffset)
-        }
-        
-        scroll.addSubview(placeholderLabel)
-        placeholderLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(textInput.OWSnp.top)
-            make.leading.equalTo(textInput.OWSnp.leading).offset(Metrics.placeholderLabelLeadingOffset)
         }
 
         scroll.addSubview(imagePreview)
