@@ -96,6 +96,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
+    fileprivate lazy var _commentGif: Observable<OWCommentGif?> = {
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.gifPreviewVM.outputs.gifDataOutput
+        case .light:
+            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.gifPreviewVM.outputs.gifDataOutput
+        case .floatingKeyboard:
+            return Observable.just(nil)
+        }
+    }()
+
     fileprivate lazy var _commentSelectedLabelIds: Observable<[String]> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
@@ -118,12 +129,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, [String], OWUserMentionData)> = {
+    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, OWCommentGif?, [String], OWUserMentionData)> = {
         Observable.combineLatest(_commentText,
                                  _commentImage,
-                                 _commentSelectedLabelIds,
-                                 _commentSelectedMentions) { commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions in
-            return (commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions)
+                                 _commentGif, _commentSelectedLabelIds,
+                                 _commentSelectedMentions) { commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions in
+            return (commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions)
         }
     }()
 
@@ -152,23 +163,25 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
         return Observable.combineLatest(commentTextAfterTapObservable,
                                         _commentImage,
+                                        _commentGif,
                                         _commentSelectedLabelIds,
                                         _commentSelectedMentions)
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .commentCreationClosePage)
             })
-            .flatMap { [weak self] commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions -> Observable<Void> in
+            .flatMap { [weak self] commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions -> Observable<Void> in
                 guard let self = self else { return Observable.empty() }
                 let hasText = !commentText.isEmpty
                 let hasImage = commentImage != nil
+                let hasGif = commentGif != nil
                 let hasSelectedLabel = commentSelectedLabelIds.count > 0
-                guard hasText || hasImage || hasSelectedLabel else {
+                guard hasText || hasImage || hasGif || hasSelectedLabel else {
                     self.clearCachedCommentIfNeeded()
                     return Observable.just(())
                 }
 
                 self.cacheComment(commentContent: OWCommentCreationContent(text: commentText,
-                                                                           image: commentImage),
+                                                                           image: commentImage, gif: commentGif),
                                   commentLabels: commentSelectedLabelIds,
                                   commentUserMentions: commentSelectedMentions.mentions)
                 self.sendEvent(for: .commentCreationLeavePage)
@@ -431,9 +444,7 @@ fileprivate extension OWCommentCreationViewViewModel {
         Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
                          commentCreationRegularViewVm.outputs.dismissedToast,
                          commentCreationLightViewVm.outputs.dismissedToast)
-            .subscribe(onNext: { [weak self] in
-                self?.servicesProvider.toastNotificationService().clearCurrentToast()
-            })
+            .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
 
         servicesProvider.activeArticleService().updateStrategy(commentCreationData.article.articleInformationStrategy)
@@ -490,10 +501,11 @@ fileprivate extension OWCommentCreationViewViewModel {
             if replyToCommentId != nil {
                 let commentText = commentContent.0
                 let commentImage = commentContent.1
-                let commentSelectedLabelIds = commentContent.2
-                let commentUserMentions = commentContent.3.mentions
+                let commentGif = commentContent.2
+                let commentSelectedLabelIds = commentContent.3
+                let commentUserMentions = commentContent.4.mentions
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage, gif: commentGif),
                                   commentLabels: commentSelectedLabelIds,
                                   commentUserMentions: commentUserMentions)
             }
@@ -601,6 +613,26 @@ fileprivate extension OWCommentCreationViewViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        Observable.merge(
+            commentCreationRegularViewVm.outputs.footerViewModel.outputs.addGifTapped,
+            commentCreationLightViewVm.outputs.footerViewModel.outputs.addGifTapped
+        )
+        .flatMap { [weak self] _ -> Observable<OWGifPickerPresenterResponseType> in
+            guard let self = self else { return .empty() }
+            return self.servicesProvider.presenterService()
+                .showGifPicker(viewableMode: self.viewableMode)
+        }
+        .subscribe(onNext: { [weak self] response in
+            switch response {
+            case .mediaInfo(let data):
+                self?.commentCreationRegularViewVm.outputs.commentCreationContentVM.inputs.gifPicked.onNext(data)
+                self?.commentCreationLightViewVm.outputs.commentCreationContentVM.inputs.gifPicked.onNext(data)
+            case .cancled:
+                break
+            }
+        })
+        .disposed(by: disposeBag)
 
         servicesProvider
             .activeArticleService()

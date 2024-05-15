@@ -62,4 +62,8 @@ fileprivate extension CommentThreadSettingsVM {
     }
 }
 
-extension CommentThreadSettingsVM: SettingsGroupVMProtocol { }
+extension CommentThreadSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        openCommentIdSelected.onNext(OWCommentThreadSettings.defaultCommentId)
+    }
+}

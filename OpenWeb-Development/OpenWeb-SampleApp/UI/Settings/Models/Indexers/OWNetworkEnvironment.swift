@@ -7,15 +7,18 @@
 //
 
 import Foundation
+import OpenWebSDK
 
 enum OWNetworkEnvironment: Codable {
     case production
     case staging
+    case cluster1d
 
     var index: Int {
         switch self {
         case .production: return 0
         case .staging: return 1
+        case .cluster1d: return 2
         }
     }
 
@@ -29,8 +32,25 @@ enum OWNetworkEnvironment: Codable {
             self = .production
         case OWNetworkEnvironment.staging.index:
             self = .staging
+        case OWNetworkEnvironment.cluster1d.index:
+            self = .cluster1d
         default:
             self = OWNetworkEnvironment.default
         }
     }
 }
+
+#if BETA
+extension OWNetworkEnvironment {
+    var toSDKEnvironmentType: OWNetworkEnvironmentType {
+        switch self {
+        case .production:
+            return .production
+        case .staging:
+            return .staging
+        case .cluster1d:
+            return .cluster1d
+        }
+    }
+}
+#endif

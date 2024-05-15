@@ -45,4 +45,7 @@ fileprivate extension IAUSettingsVM {
     }
 }
 
-extension IAUSettingsVM: SettingsGroupVMProtocol { }
+extension IAUSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+    }
+}
