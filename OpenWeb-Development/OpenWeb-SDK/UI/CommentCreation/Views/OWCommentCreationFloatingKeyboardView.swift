@@ -18,8 +18,6 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerViewIdentifier = "comment_creation_floating_keyboard_header_view_id"
         static let headerCloseButtonIdentifier = "comment_creation_floating_keyboard_header_close_button_id"
         static let headerTitleLabelIdentifier = "comment_creation_floating_keyboard_header_title_label_id"
-        static let headerIconViewIdentifier = "comment_creation_floating_keyboard_header_icon_view_id"
-        static let userAvatarViewIdentifier = "comment_creation_floating_keyboard_user_avatar_view_id"
         static let closeButtonIdentifier = "comment_creation_floating_keyboard_close_button_id"
         static let ctaButtonIdentifier = "comment_creation_floating_keyboard_cta_button_id"
         static let toolbarIdentifier = "comment_creation_floating_keyboard_toolbar_view_id"
@@ -51,6 +49,9 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let trailingLandscapeMargin: CGFloat = 56.0
         static let leadingLandscapeMargin: CGFloat = 66.0
         static let errorToastBottomPadding: CGFloat = 8.0
+        static func headerIconViewIdentifier(commentType type: OWCommentCreationTypeInternal) -> String {
+            return "comment_creation_floating_keyboard_header_\(type.identifierDescription)_icon_view_id"
+        }
     }
 
     var toastView: OWToastView? = nil
@@ -243,12 +244,11 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         headerView.accessibilityIdentifier = Metrics.headerViewIdentifier
         headerCloseButton.accessibilityIdentifier = Metrics.headerCloseButtonIdentifier
         headerTitleLabel.accessibilityIdentifier = Metrics.headerTitleLabelIdentifier
-        headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier
-        userAvatarView.accessibilityIdentifier = Metrics.userAvatarViewIdentifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
         ctaButton.accessibilityIdentifier = Metrics.ctaButtonIdentifier
         toolbar?.accessibilityIdentifier = Metrics.toolbarIdentifier
         lineSeparator.accessibilityIdentifier = Metrics.lineSeparatorIdentifier
+        headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier(commentType: viewModel.outputs.commentType)
     }
 }
 

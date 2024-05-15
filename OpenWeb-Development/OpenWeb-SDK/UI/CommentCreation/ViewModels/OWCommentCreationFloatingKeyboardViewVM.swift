@@ -83,7 +83,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     var hideToast: Observable<Void> {
         return Observable.merge(displayToast.filter { $0 == nil }.voidify(),
-                                submitCommentInProgress.voidify())
+                                submitCommentInProgress.filter { $0 }.voidify())
             .asObservable()
     }
 
