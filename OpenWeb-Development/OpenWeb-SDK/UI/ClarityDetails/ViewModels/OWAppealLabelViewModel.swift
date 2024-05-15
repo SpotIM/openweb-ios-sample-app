@@ -199,15 +199,50 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     }
 
     fileprivate let commentId: OWCommentId
-    init(commentId: OWCommentId, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    fileprivate let clarityDetailsType: OWClarityDetailsType
+    init(commentId: OWCommentId,
+         clarityDetailsType: OWClarityDetailsType,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentId = commentId
+        self.clarityDetailsType = clarityDetailsType
 
-        fetchEligibleToAppeal()
+        setupObservers()
     }
+
+    // Show view according to config & appeal type
+    fileprivate lazy var shouldShowAppealView: Observable<Bool> = {
+        let configurationService = servicesProvider.spotConfigurationService()
+        return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
+            .map { [weak self] config -> Bool in
+                guard let self = self,
+                      let conversationConfig = config.conversation,
+                      conversationConfig.isAppealEnabled == true
+                else {
+                    return false
+                }
+
+                return self.clarityDetailsType == .rejected
+            }
+            .asObservable()
+    }()
 }
 
 fileprivate extension OWAppealLabelViewModel {
+    func setupObservers() {
+        shouldShowAppealView
+            .subscribe(onNext: { [weak self] shouldShow in
+                guard let self else { return }
+                if shouldShow {
+                    self.fetchEligibleToAppeal()
+                } else {
+                    self._viewType.onNext(.none)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
     func fetchEligibleToAppeal() {
         let viewTypeObservable = servicesProvider.networkAPI()
             .appeal

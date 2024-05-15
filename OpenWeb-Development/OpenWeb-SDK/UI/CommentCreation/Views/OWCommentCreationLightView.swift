@@ -13,6 +13,10 @@ import RxCocoa
 class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_light_view_id"
+        static let topContainerIdentifier = "top_container_view_id"
+        static let titleLabelIdentifier = "title_label_id"
+        static let closeButtonIdentifier = "close_button_id"
+        static let replyToLabelIdentifier = "reply_to_label_id"
 
         static let horizontalOffset: CGFloat = 16.0
         static let contentViewHorizontalLandscapeOffset: CGFloat = 66.0
@@ -133,6 +137,10 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastN
 
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+        self.topContainerView.accessibilityIdentifier = Metrics.topContainerIdentifier
+        self.titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
+        self.closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        self.replyToLabel.accessibilityIdentifier = Metrics.replyToLabelIdentifier
     }
 }
 
@@ -206,7 +214,7 @@ fileprivate extension OWCommentCreationLightView {
                 requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorToastBottomPadding
                 let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion,
                                                                                .dismiss: self.viewModel.inputs.dismissToast]
-                self.presentToast(requiredData: requiredData, completions: completions, disposeBag: disposeBag)
+                self.presentToast(requiredData: requiredData, completions: completions, disposeBag: self.disposeBag)
                 self.bringSubviewToFront(self.footerView)
             })
             .disposed(by: disposeBag)

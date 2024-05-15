@@ -76,7 +76,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
     var hideToast: Observable<Void> {
         return Observable.merge(displayToast.filter { $0 == nil }.voidify(),
-                                footerViewModel.outputs.ctaButtonLoading.voidify())
+                                footerViewModel.outputs.ctaButtonLoading.filter { $0 }.voidify())
             .asObservable()
     }
 
