@@ -930,8 +930,8 @@
 		9E4B4E6C2AADC75000F4425F /* OWErrorStateTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B4E6B2AADC75000F4425F /* OWErrorStateTypes.swift */; };
 		9E4B4E6E2AADE2E500F4425F /* OWErrorStateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B4E6D2AADE2E500F4425F /* OWErrorStateCell.swift */; };
 		9E4B4E702AADE74800F4425F /* OWErrorStateCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B4E6F2AADE74800F4425F /* OWErrorStateCellVM.swift */; };
-		9E53758C297841C000C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
-		9E53758E2978476900C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
 		9E57E72D2B71227B009E5913 /* OWFloatingKeyboardMainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E57E72C2B71227B009E5913 /* OWFloatingKeyboardMainContainerView.swift */; };
@@ -970,7 +970,6 @@
 		9EB427422A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB427412A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift */; };
 		9EBE4E742B8B71A500D836CF /* OWUserMentionEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E732B8B71A500D836CF /* OWUserMentionEndpoints.swift */; };
 		9EBE4E802B8CD38F00D836CF /* OWCoordinatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E7F2B8CD38F00D836CF /* OWCoordinatorData.swift */; };
-		9EBE4E862B98803300D836CF /* StringProtocol+OWExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E852B98803300D836CF /* StringProtocol+OWExtension.swift */; };
 		9EBE4E8C2B99ADB600D836CF /* OWTextViewReplaceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */; };
 		9EBE4E8E2B99C0AE00D836CF /* Range+OWExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */; };
 		9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2129AE0210001150DA /* CommentCreationSettingsView.swift */; };
@@ -2036,7 +2035,6 @@
 		9EB427412A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWAccessoryViewStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9EBE4E732B8B71A500D836CF /* OWUserMentionEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserMentionEndpoints.swift; sourceTree = "<group>"; };
 		9EBE4E7F2B8CD38F00D836CF /* OWCoordinatorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCoordinatorData.swift; sourceTree = "<group>"; };
-		9EBE4E852B98803300D836CF /* StringProtocol+OWExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringProtocol+OWExtension.swift"; sourceTree = "<group>"; };
 		9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTextViewReplaceData.swift; sourceTree = "<group>"; };
 		9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Range+OWExtension.swift"; sourceTree = "<group>"; };
 		9EBE5C2129AE0210001150DA /* CommentCreationSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCreationSettingsView.swift; sourceTree = "<group>"; };
@@ -4817,7 +4815,6 @@
 				8D18E5FF2AF11935005938A3 /* UINavigationBar+Extensions.swift */,
 				3D50D9112B163E0400FD3232 /* UIColor+Extensions.swift */,
 				8DCC87C82B6BAC0000E053A4 /* UIWindow+Utils.swift */,
-				9EBE4E852B98803300D836CF /* StringProtocol+OWExtension.swift */,
 				9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */,
 			);
 			path = Extensions;
@@ -7198,7 +7195,6 @@
 				164047A629E4206E001DD35B /* OWConversation.swift in Sources */,
 				3DDA9A63290808F600FE3B86 /* OWSkeletonShimmeringView.swift in Sources */,
 				3DB3B97F29F7DB4700C50192 /* OWTestingRedSecondLevelViewModel.swift in Sources */,
-				9EBE4E862B98803300D836CF /* StringProtocol+OWExtension.swift in Sources */,
 				248403A72ADE6F7600EAD59A /* OWLoginPromptView.swift in Sources */,
 				9EBE4E8E2B99C0AE00D836CF /* Range+OWExtension.swift in Sources */,
 				3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */,
