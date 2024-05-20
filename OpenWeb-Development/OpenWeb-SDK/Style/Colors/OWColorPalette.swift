@@ -44,10 +44,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
 
     func initiateColors() {
         // Initialize default colors
-
-        // swiftlint:disable self_capture_in_blocks
-        self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
+        self.lock.lock()
 
         colors.removeAll()
         for type in OWColor.OWType.allCases {
@@ -55,6 +52,11 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         }
         blockedForOverride.removeAll()
         let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
+
+        // We unlock here since straight after "colorsMapper.onNext(colorsRx)"
+        // Subscribers to colorsMapper will call "func color(type: themeStyle:)"
+        // And will be a recursive lock and crash
+        self.lock.unlock()
         colorsMapper.onNext(colorsRx)
     }
 
