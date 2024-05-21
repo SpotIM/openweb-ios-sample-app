@@ -55,7 +55,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
 
         // We unlock here since straight after "colorsMapper.onNext(colorsRx)"
         // Subscribers to colorsMapper will call "func color(type: themeStyle:)"
-        // And will be a recursive lock and crash
+        // And will cause a recursive lock and crash
         self.lock.unlock()
         colorsMapper.onNext(colorsRx)
     }
