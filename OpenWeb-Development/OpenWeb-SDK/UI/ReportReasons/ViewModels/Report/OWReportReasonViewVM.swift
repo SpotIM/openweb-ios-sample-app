@@ -45,7 +45,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
     var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> { get }
     var reportOffset: Observable<CGPoint> { get }
-    var reportReasonsMinimumAdditionalTextLength: Observable<Int?> { get }
+    var reportReasonsMinimumAdditionalTextLength: Observable<Int> { get }
 }
 
 protocol OWReportReasonViewViewModeling: AnyObject {
@@ -232,10 +232,10 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .share(replay: 1)
     }()
 
-    lazy var reportReasonsMinimumAdditionalTextLength: Observable<Int?> = {
+    lazy var reportReasonsMinimumAdditionalTextLength: Observable<Int> = {
         self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
-            .map { $0.shared?.reportReasonsMinimumAdditionalTextLength }
+            .map { $0.shared?.reportReasonsMinimumAdditionalTextLength ?? 0 }
             .asObservable()
             .share(replay: 1)
     }()
@@ -440,7 +440,7 @@ fileprivate extension OWReportReasonViewViewModel {
         Observable.combineLatest(selectedReason, textViewVM.outputs.textViewText)
             .withLatestFrom(reportReasonsMinimumAdditionalTextLength) { ($0.0, $0.1, $1) }
             .map { reportReason, text, reportReasonsMinimumAdditionalTextLength -> Bool in
-                let reportReasonMinimumCharecters = reportReasonsMinimumAdditionalTextLength ?? 0
+                let reportReasonMinimumCharecters = reportReasonsMinimumAdditionalTextLength
                 let minimumCharecters = reportReasonMinimumCharecters > 0 ? reportReasonMinimumCharecters : 1
                 return !reportReason.requiredAdditionalInfo || text.count >= minimumCharecters
             }

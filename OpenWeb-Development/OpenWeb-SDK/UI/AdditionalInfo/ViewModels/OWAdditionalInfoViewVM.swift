@@ -131,7 +131,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
          textViewMaxCharecters: Int = Metrics.defaultTextViewMaxCharecters,
          charectersLimitEnabled: Bool,
          isTextRequired: Observable<Bool>,
-         minimumTextLength: Observable<Int?>,
+         minimumTextLength: Observable<Int>,
          submitInProgress: Observable<Bool>,
          submitText: Observable<String>) {
         self.viewableMode = viewableMode
@@ -146,7 +146,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
 }
 
 fileprivate extension OWAdditionalInfoViewViewModel {
-    func setupObservers(minimumTextLength: Observable<Int?>, isTextRequired: Observable<Bool>, submitInProgress: Observable<Bool>, submitText: Observable<String>) {
+    func setupObservers(minimumTextLength: Observable<Int>, isTextRequired: Observable<Bool>, submitInProgress: Observable<Bool>, submitText: Observable<String>) {
         submitInProgress
             .bind(to: self.inputs.submitInProgress)
             .disposed(by: disposeBag)
@@ -155,7 +155,7 @@ fileprivate extension OWAdditionalInfoViewViewModel {
             .withLatestFrom(minimumTextLength) { ($0, $1) }
             .flatMap { [weak self] isTextRequired, minimumTextLength -> Observable<Bool> in
                 guard let self = self else { return .empty() }
-                var minimumTextLength = minimumTextLength ?? 0
+                var minimumTextLength = minimumTextLength
                 minimumTextLength = minimumTextLength > 0 ? minimumTextLength : 1
                 return self.textViewVM.outputs.textViewText.map {
                     isTextRequired && $0.count >= minimumTextLength || !isTextRequired
