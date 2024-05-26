@@ -115,7 +115,7 @@ fileprivate extension OWCommentThreadActionsView {
 
     func setupObservers() {
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
-            .subscribe(onNext: { [weak self] (style, colorMapper) -> Void in
+            .subscribe(onNext: { [weak self] (style, colorMapper) in
                 guard let self = self else { return }
                 if let owBrandColor = colorMapper[.brandColor] {
                     let brandColor = owBrandColor.color(forThemeStyle: style)
