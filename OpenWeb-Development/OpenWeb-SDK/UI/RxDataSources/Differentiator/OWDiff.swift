@@ -178,7 +178,7 @@ enum OWDiff {
                 return ContiguousArray<OWItemAssociatedData>(repeating: OWItemAssociatedData.initial, count: items.count)
             })
 
-            try initialIdentities.withUnsafeBufferPointer { (identitiesBuffer: UnsafeBufferPointer<OWIdentity>) -> Void in
+            try initialIdentities.withUnsafeBufferPointer { (identitiesBuffer: UnsafeBufferPointer<OWIdentity>) in
                 var dictionary: [OWOptimizedIdentity<OWIdentity>: Int] = Dictionary(minimumCapacity: totalInitialItems * 2)
 
                 for i in 0 ..< initialIdentities.count {

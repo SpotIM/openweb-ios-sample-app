@@ -111,7 +111,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
                 self._loginToPostClick.onNext()
             })
             .filter { !$0 } // Do not continue if authentication needed
-            .map { _ -> Void in () }
+            .map { _ in () }
     }
 
     var ctaEnabled = BehaviorSubject<Bool>(value: false)
