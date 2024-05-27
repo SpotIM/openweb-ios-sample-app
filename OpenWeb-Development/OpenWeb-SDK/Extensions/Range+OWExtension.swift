@@ -10,6 +10,7 @@ import Foundation
 
 extension Range {
     // swiftlint:disable operator_whitespace
+    // This checks if a range is congruent with another range
     static func ~=(lhs: Self, rhs: Self) -> Bool {
         rhs.clamped(to: lhs) == rhs
     }

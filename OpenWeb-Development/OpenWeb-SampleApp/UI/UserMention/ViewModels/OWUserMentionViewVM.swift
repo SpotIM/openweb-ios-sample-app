@@ -103,8 +103,8 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .asObservable()
     }()
 
-    fileprivate lazy var _users = BehaviorSubject<[OWUserMention]>(value: [])
-    fileprivate lazy var users: Observable<[OWUserMention]> = {
+    fileprivate lazy var _users = BehaviorSubject<[SPUser]>(value: [])
+    fileprivate lazy var users: Observable<[SPUser]> = {
         return _users
             .asObservable()
 
@@ -118,7 +118,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .asObservable()
     }
 
-    fileprivate lazy var getUsers: Observable<[OWUserMention]> = {
+    fileprivate lazy var getUsers: Observable<[SPUser]> = {
         return name
             .withLatestFrom(users) { ($0, $1) }
             .do(onNext: { [weak self] name, users in
@@ -130,10 +130,10 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             })
             .asObservable()
             .throttle(.milliseconds(Metrics.throttleGetUsers), scheduler: MainScheduler.instance)
-            .flatMapLatest { [weak self] name, _ -> Observable<[OWUserMention]> in
+            .flatMapLatest { [weak self] name, _ -> Observable<[SPUser]> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.networkAPI()
-                    .userMention
+                    .user
                     .getUsers(name: name, count: Metrics.usersCount)
                     .response
                     .materialize()
@@ -364,10 +364,10 @@ fileprivate extension OWUserMentionViewVM {
         } catch { }
     }
 
-    func atLeastOneContained(name: String, userMentions: [OWUserMention]) -> Bool {
+    func atLeastOneContained(name: String, userMentions: [SPUser]) -> Bool {
         guard !name.isEmpty else { return true }
         let name = name.lowercased()
-        let atLeastOneContained = userMentions.contains(where: { $0.displayName.lowercased().contains(name) || $0.userName.lowercased().contains(name) })
+        let atLeastOneContained = userMentions.contains(where: { ($0.displayName ?? "").lowercased().contains(name) || ($0.userName ?? "").lowercased().contains(name) })
         return atLeastOneContained
     }
 }

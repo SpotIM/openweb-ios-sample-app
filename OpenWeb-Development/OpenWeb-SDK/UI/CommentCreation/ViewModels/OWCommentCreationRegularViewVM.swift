@@ -183,7 +183,10 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         self.commentCreationData = commentCreationData
         self.commentType = commentCreationData.commentCreationType
         setupObservers()
-        setupInitialMentionsIfNeeded()
+        OWUserMentionHelper.setupInitialMentionsIfNeeded(userMentionVM: userMentionVM,
+                                                         commentCreationType: commentCreationData.commentCreationType,
+                                                         servicesProvider: servicesProvider,
+                                                         postId: postId)
     }
 }
 
@@ -248,24 +251,5 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
         closeButtonTap
             .bind(to: commentCreationContentVM.inputs.resignFirstResponder)
             .disposed(by: disposeBag)
-    }
-
-    func setupInitialMentionsIfNeeded() {
-        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
-        switch commentCreationData.commentCreationType {
-        case .comment:
-            guard let postId = postId,
-                  let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
-            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
-        case .replyToComment(originComment: let originComment):
-            guard let originCommentId = originComment.id,
-                  let postId = postId,
-                  let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)] else { return }
-            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
-        case .edit(comment: _):
-            guard let postId = postId,
-                  let commentCreationCache = commentsCacheService[.edit(postId: postId)] else { return }
-            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
-        }
     }
 }
