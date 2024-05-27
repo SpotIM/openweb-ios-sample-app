@@ -103,7 +103,7 @@ extension Reactive where Base: SegmentedControlSetting {
     }
 
     func titleForSegment(at index: Int) -> Binder<String?> {
-        return Binder(self.base.segmentedControl) { segmentedControl, title -> Void in
+        return Binder(self.base.segmentedControl) { segmentedControl, title in
             segmentedControl.setTitle(title, forSegmentAt: index)
         }
     }
