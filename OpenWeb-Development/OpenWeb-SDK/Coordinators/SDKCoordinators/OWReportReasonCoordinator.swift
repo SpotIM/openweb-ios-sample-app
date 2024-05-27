@@ -165,6 +165,7 @@ fileprivate extension OWReportReasonCoordinator {
                                                      textViewMaxCharecters: viewModel.outputs.textViewVM.outputs.textViewMaxCharecters,
                                                      charectersLimitEnabled: shouldShowCounter,
                                                      isTextRequired: viewModel.outputs.selectedReason.map { $0.requiredAdditionalInfo },
+                                                     minimumTextLength: viewModel.outputs.reportReasonsMinimumAdditionalTextLength,
                                                      submitInProgress: viewModel.outputs.submitInProgress,
                                                      submitText: viewModel.outputs.submitButtonText)
             }
