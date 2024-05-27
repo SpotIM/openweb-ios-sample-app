@@ -7950,6 +7950,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.3.0;
+				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
