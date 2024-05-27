@@ -15,6 +15,28 @@ class OWUserMentionHelper {
         static let jsonRegexPattern = "\\@\\{(.*?)\\}"
     }
 
+    static func setupInitialMentionsIfNeeded(userMentionVM: OWUserMentionViewViewModeling,
+                                             commentCreationType: OWCommentCreationTypeInternal,
+                                             servicesProvider: OWSharedServicesProviding,
+                                             postId: OWPostId?) {
+        let commentsCacheService = servicesProvider.commentsInMemoryCacheService()
+        switch commentCreationType {
+        case .comment:
+            guard let postId = postId,
+                  let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
+            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
+        case .replyToComment(originComment: let originComment):
+            guard let postId = postId,
+                  let originCommentId = originComment.id,
+                  let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)] else { return }
+            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
+        case .edit(comment: _):
+            guard let postId = postId,
+                  let commentCreationCache = commentsCacheService[.edit(postId: postId)] else { return }
+            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
+        }
+    }
+
     static func getUserMentionTextData(replaceData: OWTextViewReplaceData, text: String) -> OWUserMentionTextData {
         let utf8Range = replaceData.range
         let startIndex = text.utf16.index(text.utf16.startIndex, offsetBy: utf8Range.lowerBound)

@@ -82,7 +82,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     }
 
     init (
-        user: OWUserMention,
+        user: SPUser,
         imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
         sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageURLProvider = imageURLProvider

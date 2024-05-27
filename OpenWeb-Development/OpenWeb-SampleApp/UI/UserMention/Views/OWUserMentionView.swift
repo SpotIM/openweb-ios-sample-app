@@ -17,6 +17,7 @@ class OWUserMentionView: UIView {
         static let maxNumberOfCellsHeight = 2.7
         static let heightAnimationDuration: CGFloat = 0.2
         static let delayFrameChanged = 10
+        static let heightLowPriority = 250
     }
 
     fileprivate let viewModel: OWUserMentionViewViewModeling
@@ -76,7 +77,7 @@ fileprivate extension OWUserMentionView {
         self.apply(shadow: .standard, direction: .up)
 
         self.OWSnp.makeConstraints { make in
-            make.height.equalTo(0).priority(250)
+            make.height.equalTo(0).priority(Metrics.heightLowPriority)
         }
 
         self.addSubviews(tableView)
@@ -118,7 +119,7 @@ fileprivate extension OWUserMentionView {
                 let wantedHeight = CGFloat(cellsCount) * Metrics.rowHeight
                 let newHeight = min(maxHeight, wantedHeight)
                 self.OWSnp.updateConstraints { make in
-                    make.height.equalTo(newHeight).priority(250)
+                    make.height.equalTo(newHeight).priority(Metrics.heightLowPriority)
                 }
 
                 UIView.animate(withDuration: Metrics.heightAnimationDuration) {
