@@ -11,7 +11,6 @@ import UIKit
 import RxSwift
 
 protocol OWCommentCreationViewViewModelingInputs {
-
 }
 
 protocol OWCommentCreationViewViewModelingOutputs {

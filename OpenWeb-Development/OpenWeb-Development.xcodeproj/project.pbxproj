@@ -968,7 +968,6 @@
 		9EA0F84529AD12E2008FD7A6 /* ConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0F84429AD12E2008FD7A6 /* ConversationSettingsView.swift */; };
 		9EA319042B30766300DF1F54 /* OWScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA319032B30766300DF1F54 /* OWScheduler.swift */; };
 		9EB427422A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB427412A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift */; };
-		9EBE4E742B8B71A500D836CF /* OWUserMentionEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E732B8B71A500D836CF /* OWUserMentionEndpoints.swift */; };
 		9EBE4E802B8CD38F00D836CF /* OWCoordinatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E7F2B8CD38F00D836CF /* OWCoordinatorData.swift */; };
 		9EBE4E8C2B99ADB600D836CF /* OWTextViewReplaceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */; };
 		9EBE4E8E2B99C0AE00D836CF /* Range+OWExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */; };
@@ -2033,7 +2032,6 @@
 		9EA0F84429AD12E2008FD7A6 /* ConversationSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationSettingsView.swift; sourceTree = "<group>"; };
 		9EA319032B30766300DF1F54 /* OWScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWScheduler.swift; sourceTree = "<group>"; };
 		9EB427412A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWAccessoryViewStrategy+Extensions.swift"; sourceTree = "<group>"; };
-		9EBE4E732B8B71A500D836CF /* OWUserMentionEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserMentionEndpoints.swift; sourceTree = "<group>"; };
 		9EBE4E7F2B8CD38F00D836CF /* OWCoordinatorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCoordinatorData.swift; sourceTree = "<group>"; };
 		9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTextViewReplaceData.swift; sourceTree = "<group>"; };
 		9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Range+OWExtension.swift"; sourceTree = "<group>"; };
@@ -4286,7 +4284,6 @@
 				24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */,
 				9E3D65DA2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift */,
 				16BEFD4A2A4C71CB007A51D5 /* OWUserEndpoints.swift */,
-				9EBE4E732B8B71A500D836CF /* OWUserMentionEndpoints.swift */,
 				240DBE3C2B176CB5003DCAFB /* OWAppealEndpoints.swift */,
 			);
 			path = Endpoints;
@@ -6773,7 +6770,6 @@
 				9E0C605C2A823042001B8D5D /* OWTextViewData.swift in Sources */,
 				3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */,
 				3DB3B95429F4695F00C50192 /* OWTestingPlaygroundSettings.swift in Sources */,
-				9EBE4E742B8B71A500D836CF /* OWUserMentionEndpoints.swift in Sources */,
 				3DD72C70280EF84F00117946 /* OWHTTPHeaderRequestMiddleware.swift in Sources */,
 				8D358D5329C9C09E00E229A3 /* OWConversationTitleHeaderView.swift in Sources */,
 				3D611BAD28C746C5003960CE /* OWViewActionCallbackType.swift in Sources */,

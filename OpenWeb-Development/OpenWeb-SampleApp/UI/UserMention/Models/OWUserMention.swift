@@ -9,13 +9,5 @@
 import Foundation
 
 struct OWUserMentionResponse: Decodable {
-    let suggestions: [OWUserMention]?
-}
-
-struct OWUserMention: Decodable {
-    let id: String
-    let displayName: String
-    let imageId: String
-    let online: Bool
-    let userName: String
+    let suggestions: [SPUser]?
 }

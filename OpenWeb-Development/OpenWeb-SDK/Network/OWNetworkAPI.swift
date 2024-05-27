@@ -22,7 +22,6 @@ protocol OWNetworkAPIProtocol {
     var conversation: OWConversationAPI { get }
     var reportReason: OWReportReasonAPI { get }
     var failureReporter: OWFailureReportAPI { get }
-    var userMention: OWUserMentionAPI { get }
     var appeal: OWAppealAPI { get }
 }
 

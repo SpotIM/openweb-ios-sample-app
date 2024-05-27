@@ -70,7 +70,7 @@ internal struct OWComment: Decodable, Equatable {
     var text: Content.Text?
     var gif: Content.Animation?
     var image: Content.Image?
-    var userMentions: [String: Content.UserMention] = [:]
+    var userMentions: [OWUserId: Content.UserMention] = [:]
 
     // empty init
     init() {

@@ -45,20 +45,16 @@ class OWUserMentionCellViewModel: OWUserMentionCellViewModelingInputs,
             .asObservable()
     }
 
-    init(user: OWUserMention, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
-        self.id = user.id
-        self._userName.onNext(user.userName)
-        self._displayName.onNext(user.displayName)
+    init(user: SPUser, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+        self.id = user.id ?? "0"
+        self._userName.onNext(user.userName ?? "")
+        self._displayName.onNext(user.displayName ?? "")
         self.avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
     }
 }
 
 extension OWUserMentionCellViewModel {
     static func stub() -> OWUserMentionCellViewModeling {
-        return OWUserMentionCellViewModel(user: OWUserMention(id: "",
-                                                              displayName: "",
-                                                              imageId: "",
-                                                              online: false,
-                                                              userName: ""))
+        return OWUserMentionCellViewModel(user: SPUser())
     }
 }
