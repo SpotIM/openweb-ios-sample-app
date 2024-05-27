@@ -278,6 +278,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         }
 
         setupInitialTextAndTypeFromCacheIfNeeded()
+        OWUserMentionHelper.setupInitialMentionsIfNeeded(userMentionVM: userMentionVM,
+                                                         commentCreationType: commentCreationData.commentCreationType,
+                                                         servicesProvider: servicesProvider,
+                                                         postId: postId)
 
         // updating inout commentCreationData so that CommentCreationViewVM will have the updated type
         // after being changed in setupInitialTextAndTypeFromCacheIfNeeded
@@ -303,20 +307,17 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         case .comment:
             guard let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
             initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
-            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id,
                   let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
             else { return }
             initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
-            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         case .edit(comment: let comment):
             if case .edit = originalCommentType,
                let commentText = comment.text?.text {
                 initialText = commentText
             } else if let commentCreationCache = commentsCacheService[.edit(postId: postId)] {
                 initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
-                userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
             }
         }
     }
