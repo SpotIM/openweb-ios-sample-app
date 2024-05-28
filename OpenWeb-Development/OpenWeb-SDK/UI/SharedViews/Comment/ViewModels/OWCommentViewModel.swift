@@ -14,7 +14,6 @@ import UIKit
 protocol OWCommentViewModelingInputs {
     func update(comment: OWComment)
     func update(user: SPUser)
-    var tapMore: PublishSubject<OWUISource> { get }
 }
 
 protocol OWCommentViewModelingOutputs {
@@ -30,7 +29,6 @@ protocol OWCommentViewModelingOutputs {
     var heightChanged: Observable<Void> { get }
     var comment: OWComment { get }
     var user: SPUser { get }
-    var openMenu: Observable<([OWRxPresenterAction], OWUISource)> { get }
 }
 
 protocol OWCommentViewModeling {
@@ -153,54 +151,6 @@ class OWCommentViewModel: OWCommentViewModeling,
         comment = OWComment()
         user = SPUser()
         setupObservers()
-    }
-
-    var tapMore = PublishSubject<OWUISource>()
-    var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
-        tapMore
-            .flatMapLatest { [weak self] view -> Observable<([OWUserAction: Bool], UIView, SPUser)> in
-                guard let self = self else { return .empty() }
-                let actions: [OWUserAction] = [.deletingComment, .editingComment]
-                let authentication = self.sharedServiceProvider.authenticationManager()
-
-                return authentication.userHasAuthenticationLevel(for: actions)
-                    .take(1)
-                    .map { ($0, view, self.user) }
-            }
-            .withLatestFrom(_isCommentOfActiveUser) { ($0.0, $0.1, $0.2, $1) }
-            .map { actionsAuthenticationLevel, view, user, isLoggedInUserComment in
-                let allowDeletingComment = actionsAuthenticationLevel[.deletingComment] ?? false
-                let allowEditingComment = actionsAuthenticationLevel[.editingComment] ?? false
-
-                var optionsActions: [OWRxPresenterAction] = []
-                if (!isLoggedInUserComment) {
-                    optionsActions.append(OWRxPresenterAction(
-                        title: OWLocalizationManager.shared.localizedString(key: "Report"),
-                        type: OWCommentOptionsMenu.reportComment)
-                    )
-                }
-                if (allowEditingComment && isLoggedInUserComment) {
-                    optionsActions.append(OWRxPresenterAction(
-                        title: OWLocalizationManager.shared.localizedString(key: "Edit"),
-                        type: OWCommentOptionsMenu.editComment)
-                    )
-                }
-                if (allowDeletingComment && isLoggedInUserComment) {
-                    optionsActions.append(OWRxPresenterAction(
-                        title: OWLocalizationManager.shared.localizedString(key: "Delete"),
-                        type: OWCommentOptionsMenu.deleteComment)
-                    )
-                }
-                if (!isLoggedInUserComment && !user.isAdmin) {
-                    optionsActions.append(OWRxPresenterAction(
-                        title: OWLocalizationManager.shared.localizedString(key: "Mute"),
-                        type: OWCommentOptionsMenu.muteUser)
-                    )
-                }
-                return (optionsActions, view)
-            }
-            .unwrap()
-            .asObservable()
     }
 }
 

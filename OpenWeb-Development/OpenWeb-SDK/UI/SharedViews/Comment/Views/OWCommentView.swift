@@ -22,9 +22,6 @@ class OWCommentView: UIView {
         static let commentLabelTopPadding: CGFloat = 10.0
         static let messageContainerTopOffset: CGFloat = 4.0
         static let commentActionsTopPadding: CGFloat = 15.0
-        static let optionsImageInset: CGFloat = 22
-        static let optionButtonSize: CGFloat = 30
-        static let optionButtonIdentifier = "comment_header_option_button_id"
     }
 
     fileprivate lazy var commentStatusView: OWCommentStatusView = {
@@ -38,13 +35,8 @@ class OWCommentView: UIView {
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
-    fileprivate lazy var optionButton: UIButton = {
-        let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
-        let leftInset: CGFloat = OWLocalizationManager.shared.textAlignment == .left ? 0 : -InternalMetrics.optionsImageInset
-        let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -InternalMetrics.optionsImageInset
-        return UIButton()
-            .image(image, state: .normal)
-            .imageEdgeInsets(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset))
+    fileprivate lazy var commentOptionsView: OWCommentOptionsView = {
+        return OWCommentOptionsView()
     }()
     fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
         return OWCommentLabelsContainerView()
@@ -68,7 +60,6 @@ class OWCommentView: UIView {
     init() {
         super.init(frame: .zero)
         setupUI()
-        applyAccessibility()
     }
 
     func configure(with viewModel: OWCommentViewModeling) {
@@ -79,6 +70,7 @@ class OWCommentView: UIView {
         self.commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
         self.commentEngagementView.configure(with: viewModel.outputs.commentEngagementVM)
+        self.commentOptionsView.configure(with: viewModel.outputs.commentOptionsVM)
         self.setupObservers()
     }
 
@@ -86,7 +78,7 @@ class OWCommentView: UIView {
         commentHeaderView.prepareForReuse()
         commentLabelsContainerView.prepareForReuse()
         commentEngagementView.prepareForReuse()
-        self.optionButton.isHidden = false
+        commentOptionsView.prepareForReuse()
     }
 }
 
@@ -106,9 +98,8 @@ fileprivate extension OWCommentView {
             make.top.equalTo(commentStatusView.OWSnp.bottom)
         }
 
-        self.addSubview(optionButton)
-        optionButton.OWSnp.makeConstraints { make in
-            make.size.equalTo(InternalMetrics.optionButtonSize)
+        self.addSubview(commentOptionsView)
+        commentOptionsView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentStatusView.OWSnp.bottom)
             make.trailing.equalToSuperview()
         }
@@ -116,7 +107,7 @@ fileprivate extension OWCommentView {
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.trailing.equalTo(optionButton.OWSnp.leading)
+            make.trailing.equalTo(commentOptionsView.OWSnp.leading)
             make.top.equalTo(commentStatusView.OWSnp.bottom).offset(InternalMetrics.commentStatusBottomPadding)
             commentHeaderBottomConstraint = make.bottom.equalToSuperview().constraint
         }
@@ -143,7 +134,7 @@ fileprivate extension OWCommentView {
             make.top.equalTo(commentContentView.OWSnp.bottom).offset(InternalMetrics.commentActionsTopPadding)
         }
         self.bringSubviewToFront(blockingOpacityView)
-        self.bringSubviewToFront(optionButton)
+        self.bringSubviewToFront(commentOptionsView)
     }
 
     func setupObservers() {
@@ -157,7 +148,7 @@ fileprivate extension OWCommentView {
                 } else if (self.commentLabelsContainerView.superview == nil) {
                     self.setupCommentContentUI()
                 }
-                self.optionButton.isHidden = shouldBlockComment
+                self.commentOptionsView.isHidden = shouldBlockComment
             }).disposed(by: disposedBag)
 
         if let commentHeaderBottomConstraint = commentHeaderBottomConstraint {
@@ -184,28 +175,13 @@ fileprivate extension OWCommentView {
             .bind(to: blockingOpacityView.rx.isHidden)
             .disposed(by: disposedBag)
 
-        optionButton.rx.tap
-            .map { [weak self] in
-                return self?.optionButton
-            }
-            .unwrap()
-            .bind(to: viewModel.inputs.tapMore)
-            .disposed(by: disposedBag)
-
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
                 self.blockingOpacityView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.optionButton.image(UIImage(spNamed: "optionsIcon", supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposedBag)
-    }
-
-    func applyAccessibility() {
-        optionButton.accessibilityIdentifier = InternalMetrics.optionButtonIdentifier
-        optionButton.accessibilityTraits = .button
-        optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "OptionsMenu")
     }
 }
