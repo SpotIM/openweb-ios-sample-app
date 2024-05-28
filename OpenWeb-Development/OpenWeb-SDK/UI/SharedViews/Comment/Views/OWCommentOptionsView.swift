@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class OWCommentOptionsView: UIView {
     struct Metrics {
@@ -15,6 +16,9 @@ class OWCommentOptionsView: UIView {
         static let optionButtonSize: CGFloat = 30
         static let optionButtonIdentifier = "comment_header_option_button_id"
     }
+
+    fileprivate var viewModel: OWCommentOptionsViewModeling!
+    fileprivate var disposedBag = DisposeBag()
 
     fileprivate lazy var optionButton: UIButton = {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
@@ -35,7 +39,7 @@ class OWCommentOptionsView: UIView {
         applyAccessibility()
     }
 
-    func configure(with viewModel: OWCommentViewModeling) {
+    func configure(with viewModel: OWCommentOptionsViewModeling) {
         setupObservers()
     }
 
@@ -54,7 +58,22 @@ fileprivate extension OWCommentOptionsView {
     }
 
     func setupObservers() {
+        optionButton.rx.tap
+            .map { [weak self] in
+                return self?.optionButton
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.tapButton)
+            .disposed(by: disposedBag)
 
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+
+                self.optionButton.image(UIImage(spNamed: "optionsIcon", supportDarkMode: true), state: .normal)
+            })
+            .disposed(by: disposedBag)
     }
 
     func applyAccessibility() {
