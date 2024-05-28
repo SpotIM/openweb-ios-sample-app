@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		M7Idu8bVFYTSRL6IMx3ZkUiXm24=
+		icld5exbncx/kpaO3jz3wbKhZb4=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -15,7 +15,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ywavOLqpz5IctjwfuafpJkHRz/gz31mzXRD2aKykzyA=
+			d2+C5ksozsfiEYKMHGyFl5bMbXpyaaXGZo32ToCSPzY=
 			</data>
 		</dict>
 		<key>Headers/RxCocoa.h</key>
@@ -57,84 +57,84 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			iCyxZTK1miSCY1T0VvAMv6m0kf6RnNgjmmELroJOh4c=
+			ewSf2dsbzZ8sueedjsUm2d8xCyCxovFJThC83QIljrY=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/arm64-apple-macos.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			fxTtYnDsm4cJGd9+JoxuMAfqCuoVq3LcEP+JE8BGJgI=
+			kwCnJZLdY8u3F02Pv+hPi14l9iE4RqWQIYPwWU5750o=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/arm64-apple-macos.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ksKfExAKHsVgbbqOr5uE/jxx/DUBZRppsqWyKVhw7bA=
+			aFcyc6cMaSNTb9e4R3MSRfcenT9pfzkQZZYcSDqTsH0=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/arm64-apple-macos.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			fxTtYnDsm4cJGd9+JoxuMAfqCuoVq3LcEP+JE8BGJgI=
+			kwCnJZLdY8u3F02Pv+hPi14l9iE4RqWQIYPwWU5750o=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/arm64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			wCe+X9Rn1qKulZYzfDLxQpTYJ/c6VwqFBgUv9k0ZrPw=
+			KPCyPeW3VOAREcthpWRdWXn7f93cwRgX14fnPFdvZAs=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/x86_64-apple-macos.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			iCyxZTK1miSCY1T0VvAMv6m0kf6RnNgjmmELroJOh4c=
+			ewSf2dsbzZ8sueedjsUm2d8xCyCxovFJThC83QIljrY=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/x86_64-apple-macos.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			7P7IaX1uo3bqwn0skHWJ1O7UQ/rAE8FIeye0gBze8u0=
+			Pxogndd2gVowXmRFn/NwyhH4OK2ErmvlDZR6UbCMpRk=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/x86_64-apple-macos.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			esVMH716nvgvjkA3OXGFrssu9pDkqMFSTNgRAgizH8k=
+			ZDkJIcDFpR/UsY4LelaGfYhu3ke7QlDo8c7S5KT2tOg=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/x86_64-apple-macos.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			7P7IaX1uo3bqwn0skHWJ1O7UQ/rAE8FIeye0gBze8u0=
+			Pxogndd2gVowXmRFn/NwyhH4OK2ErmvlDZR6UbCMpRk=
 			</data>
 		</dict>
 		<key>Modules/RxCocoa.swiftmodule/x86_64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			SJWBJN03lS6xCOUmX91wobhCP/UGroei7sqG35BbqWM=
+			bLdH7zXHEbI+a4uKISuE6UwGxHy4yamFvvJrhuiHUb0=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			pp6l3SKcAtx51nwta23Iik2ercUwvqB0k6wpauMVQdo=
+			jQP7N/ynrCfjFDRzoPAYhEksnfcU44nLpYQ5Xc6wuIM=
 			</data>
 		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			meTYnfzjNQS6Ip1Wd1sQU9MY1qpzZAqyvoZWwSRFqow=
+			OKV/BWS6JWfl9whKXPC2F5rvH00oxF1SMOcFGBctOAY=
 			</data>
 		</dict>
 	</dict>

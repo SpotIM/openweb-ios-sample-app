@@ -87,7 +87,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -340,7 +340,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -603,7 +603,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -765,7 +765,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -811,7 +811,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -865,7 +865,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -911,7 +911,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -965,7 +965,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -1011,7 +1011,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {

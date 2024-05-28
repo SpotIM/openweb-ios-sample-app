@@ -456,7 +456,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -1157,6 +1157,12 @@
                 "sugared_genericSig": "<Self where Self : RxCocoa.HasPrefetchDataSource>",
                 "protocolReq": true,
                 "implicit": true,
+                "intro_iOS": "10.0",
+                "intro_tvOS": "10.0",
+                "declAttributes": [
+                  "Available",
+                  "Available"
+                ],
                 "reqNewWitnessTableEntry": true,
                 "accessorKind": "_modify"
               }
@@ -1235,12 +1241,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "() -> RxSwift.SchedulerType",
+                "printedName": "() -> any RxSwift.SchedulerType",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "SchedulerType",
-                    "printedName": "RxSwift.SchedulerType",
+                    "printedName": "any RxSwift.SchedulerType",
                     "usr": "s:7RxSwift13SchedulerTypeP"
                   },
                   {
@@ -1273,12 +1279,12 @@
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "() -> RxSwift.SchedulerType",
+                    "printedName": "() -> any RxSwift.SchedulerType",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "SchedulerType",
-                        "printedName": "RxSwift.SchedulerType",
+                        "printedName": "any RxSwift.SchedulerType",
                         "usr": "s:7RxSwift13SchedulerTypeP"
                       },
                       {
@@ -1312,7 +1318,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               },
               {
@@ -1362,12 +1368,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "() -> RxSwift.SchedulerType",
+                "printedName": "() -> any RxSwift.SchedulerType",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "SchedulerType",
-                    "printedName": "RxSwift.SchedulerType",
+                    "printedName": "any RxSwift.SchedulerType",
                     "usr": "s:7RxSwift13SchedulerTypeP"
                   },
                   {
@@ -1450,7 +1456,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -1471,7 +1477,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "SchedulerType",
-                    "printedName": "RxSwift.SchedulerType",
+                    "printedName": "any RxSwift.SchedulerType",
                     "usr": "s:7RxSwift13SchedulerTypeP"
                   }
                 ],
@@ -1688,12 +1694,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "AppKit.NSTextViewDelegate?",
+                "printedName": "(any AppKit.NSTextViewDelegate)?",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "NSTextViewDelegate",
-                    "printedName": "AppKit.NSTextViewDelegate",
+                    "printedName": "any AppKit.NSTextViewDelegate",
                     "usr": "c:objc(pl)NSTextViewDelegate"
                   }
                 ],
@@ -1731,12 +1737,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "AppKit.NSTextViewDelegate?",
+                "printedName": "(any AppKit.NSTextViewDelegate)?",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "NSTextViewDelegate",
-                    "printedName": "AppKit.NSTextViewDelegate",
+                    "printedName": "any AppKit.NSTextViewDelegate",
                     "usr": "c:objc(pl)NSTextViewDelegate"
                   }
                 ],
@@ -1795,8 +1801,8 @@
             "usr": "s:7RxCocoa0A21TextViewDelegateProxyC12parentObject08delegateF0ACSo06NSTextD0C_xmtcAA0eF0CyAGSo0jdE0_pGRbzAA0eF4TypeRzSoAJ_p0E0RtzAG06ParentH0Rtzlufc",
             "mangledName": "$s7RxCocoa0A21TextViewDelegateProxyC12parentObject08delegateF0ACSo06NSTextD0C_xmtcAA0eF0CyAGSo0jdE0_pGRbzAA0eF4TypeRzSoAJ_p0E0RtzAG06ParentH0Rtzlufc",
             "moduleName": "RxCocoa",
-            "genericSig": "<τ_0_0 where τ_0_0 : RxCocoa.DelegateProxy<AppKit.NSTextView, AppKit.NSTextViewDelegate>, τ_0_0 : RxCocoa.DelegateProxyType, τ_0_0.Delegate == AppKit.NSTextViewDelegate, τ_0_0.ParentObject == AppKit.NSTextView>",
-            "sugared_genericSig": "<Proxy where Proxy : RxCocoa.DelegateProxy<AppKit.NSTextView, AppKit.NSTextViewDelegate>, Proxy : RxCocoa.DelegateProxyType, Proxy.Delegate == AppKit.NSTextViewDelegate, Proxy.ParentObject == AppKit.NSTextView>",
+            "genericSig": "<τ_0_0 where τ_0_0 : RxCocoa.DelegateProxy<AppKit.NSTextView, any AppKit.NSTextViewDelegate>, τ_0_0 : RxCocoa.DelegateProxyType, τ_0_0.Delegate == any AppKit.NSTextViewDelegate, τ_0_0.ParentObject == AppKit.NSTextView>",
+            "sugared_genericSig": "<Proxy where Proxy : RxCocoa.DelegateProxy<AppKit.NSTextView, any AppKit.NSTextViewDelegate>, Proxy : RxCocoa.DelegateProxyType, Proxy.Delegate == any AppKit.NSTextViewDelegate, Proxy.ParentObject == AppKit.NSTextView>",
             "overriding": true,
             "implicit": true,
             "declAttributes": [
@@ -1817,7 +1823,7 @@
         "superclassUsr": "s:7RxCocoa13DelegateProxyC",
         "hasMissingDesignatedInitializers": true,
         "superclassNames": [
-          "RxCocoa.DelegateProxy<AppKit.NSTextView, AppKit.NSTextViewDelegate>",
+          "RxCocoa.DelegateProxy<AppKit.NSTextView, any AppKit.NSTextViewDelegate>",
           "RxCocoa._RXDelegateProxy",
           "ObjectiveC.NSObject"
         ],
@@ -1848,7 +1854,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "NSTextViewDelegate",
-                    "printedName": "AppKit.NSTextViewDelegate",
+                    "printedName": "any AppKit.NSTextViewDelegate",
                     "usr": "c:objc(pl)NSTextViewDelegate"
                   }
                 ]
@@ -2064,7 +2070,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -3418,12 +3424,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(RxCocoa.RxCocoaURLError.Type) -> (Swift.Error) -> RxCocoa.RxCocoaURLError",
+                "printedName": "(RxCocoa.RxCocoaURLError.Type) -> (any Swift.Error) -> RxCocoa.RxCocoaURLError",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Swift.Error) -> RxCocoa.RxCocoaURLError",
+                    "printedName": "(any Swift.Error) -> RxCocoa.RxCocoaURLError",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -3434,12 +3440,12 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "(error: Swift.Error)",
+                        "printedName": "(error: any Swift.Error)",
                         "children": [
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ]
@@ -4245,12 +4251,12 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(RxCocoa.RxCocoaError.Type) -> (Any, Any.Type) -> RxCocoa.RxCocoaError",
+                "printedName": "(RxCocoa.RxCocoaError.Type) -> (Any, any Any.Type) -> RxCocoa.RxCocoaError",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(Any, Any.Type) -> RxCocoa.RxCocoaError",
+                    "printedName": "(Any, any Any.Type) -> RxCocoa.RxCocoaError",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -4261,7 +4267,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "(object: Any, targetType: Any.Type)",
+                        "printedName": "(object: Any, targetType: any Any.Type)",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -4271,7 +4277,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "ExistentialMetatype",
-                            "printedName": "Any.Type",
+                            "printedName": "any Any.Type",
                             "children": [
                               {
                                 "kind": "TypeNominal",
@@ -6924,7 +6930,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -6946,7 +6952,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "SchedulerType",
-                    "printedName": "RxSwift.SchedulerType",
+                    "printedName": "any RxSwift.SchedulerType",
                     "usr": "s:7RxSwift13SchedulerTypeP"
                   }
                 ],
@@ -7117,7 +7123,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7155,7 +7161,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7193,7 +7199,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7239,7 +7245,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7293,7 +7299,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7339,7 +7345,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7514,7 +7520,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7634,7 +7640,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7737,7 +7743,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -7762,7 +7768,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7800,7 +7806,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7838,7 +7844,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7884,7 +7890,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7938,7 +7944,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -7984,7 +7990,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -8038,7 +8044,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -8084,7 +8090,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -8138,7 +8144,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -8258,7 +8264,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -8361,7 +8367,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               }
             ],
@@ -11663,12 +11669,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "AppKit.NSTextFieldDelegate?",
+                "printedName": "(any AppKit.NSTextFieldDelegate)?",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "NSTextFieldDelegate",
-                    "printedName": "AppKit.NSTextFieldDelegate",
+                    "printedName": "any AppKit.NSTextFieldDelegate",
                     "usr": "c:objc(pl)NSTextFieldDelegate"
                   }
                 ],
@@ -11706,12 +11712,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "AppKit.NSTextFieldDelegate?",
+                "printedName": "(any AppKit.NSTextFieldDelegate)?",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "NSTextFieldDelegate",
-                    "printedName": "AppKit.NSTextFieldDelegate",
+                    "printedName": "any AppKit.NSTextFieldDelegate",
                     "usr": "c:objc(pl)NSTextFieldDelegate"
                   }
                 ],
@@ -11770,8 +11776,8 @@
             "usr": "s:7RxCocoa0A22TextFieldDelegateProxyC12parentObject08delegateF0ACSo06NSTextD0C_xmtcAA0eF0CyAGSo0jdE0_pGRbzAA0eF4TypeRzSoAJ_p0E0RtzAG06ParentH0Rtzlufc",
             "mangledName": "$s7RxCocoa0A22TextFieldDelegateProxyC12parentObject08delegateF0ACSo06NSTextD0C_xmtcAA0eF0CyAGSo0jdE0_pGRbzAA0eF4TypeRzSoAJ_p0E0RtzAG06ParentH0Rtzlufc",
             "moduleName": "RxCocoa",
-            "genericSig": "<τ_0_0 where τ_0_0 : RxCocoa.DelegateProxy<AppKit.NSTextField, AppKit.NSTextFieldDelegate>, τ_0_0 : RxCocoa.DelegateProxyType, τ_0_0.Delegate == AppKit.NSTextFieldDelegate, τ_0_0.ParentObject == AppKit.NSTextField>",
-            "sugared_genericSig": "<Proxy where Proxy : RxCocoa.DelegateProxy<AppKit.NSTextField, AppKit.NSTextFieldDelegate>, Proxy : RxCocoa.DelegateProxyType, Proxy.Delegate == AppKit.NSTextFieldDelegate, Proxy.ParentObject == AppKit.NSTextField>",
+            "genericSig": "<τ_0_0 where τ_0_0 : RxCocoa.DelegateProxy<AppKit.NSTextField, any AppKit.NSTextFieldDelegate>, τ_0_0 : RxCocoa.DelegateProxyType, τ_0_0.Delegate == any AppKit.NSTextFieldDelegate, τ_0_0.ParentObject == AppKit.NSTextField>",
+            "sugared_genericSig": "<Proxy where Proxy : RxCocoa.DelegateProxy<AppKit.NSTextField, any AppKit.NSTextFieldDelegate>, Proxy : RxCocoa.DelegateProxyType, Proxy.Delegate == any AppKit.NSTextFieldDelegate, Proxy.ParentObject == AppKit.NSTextField>",
             "overriding": true,
             "implicit": true,
             "declAttributes": [
@@ -11792,7 +11798,7 @@
         "superclassUsr": "s:7RxCocoa13DelegateProxyC",
         "hasMissingDesignatedInitializers": true,
         "superclassNames": [
-          "RxCocoa.DelegateProxy<AppKit.NSTextField, AppKit.NSTextFieldDelegate>",
+          "RxCocoa.DelegateProxy<AppKit.NSTextField, any AppKit.NSTextFieldDelegate>",
           "RxCocoa._RXDelegateProxy",
           "ObjectiveC.NSObject"
         ],
@@ -11823,7 +11829,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "NSTextFieldDelegate",
-                    "printedName": "AppKit.NSTextFieldDelegate",
+                    "printedName": "any AppKit.NSTextFieldDelegate",
                     "usr": "c:objc(pl)NSTextFieldDelegate"
                   }
                 ]
@@ -11945,7 +11951,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "SchedulerType",
-                "printedName": "RxSwift.SchedulerType",
+                "printedName": "any RxSwift.SchedulerType",
                 "usr": "s:7RxSwift13SchedulerTypeP"
               }
             ],
@@ -11966,7 +11972,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "SchedulerType",
-                    "printedName": "RxSwift.SchedulerType",
+                    "printedName": "any RxSwift.SchedulerType",
                     "usr": "s:7RxSwift13SchedulerTypeP"
                   }
                 ],
@@ -12187,17 +12193,17 @@
         "conformances": [
           {
             "kind": "Conformance",
-            "name": "ObservableType",
-            "printedName": "ObservableType",
-            "usr": "s:7RxSwift14ObservableTypeP",
-            "mangledName": "$s7RxSwift14ObservableTypeP"
-          },
-          {
-            "kind": "Conformance",
             "name": "ObserverType",
             "printedName": "ObserverType",
             "usr": "s:7RxSwift12ObserverTypeP",
             "mangledName": "$s7RxSwift12ObserverTypeP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ObservableType",
+            "printedName": "ObservableType",
+            "usr": "s:7RxSwift14ObservableTypeP",
+            "mangledName": "$s7RxSwift14ObservableTypeP"
           },
           {
             "kind": "Conformance",
@@ -12262,7 +12268,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -12679,12 +12685,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "WebKit.WKNavigationDelegate?",
+                "printedName": "(any WebKit.WKNavigationDelegate)?",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "WKNavigationDelegate",
-                    "printedName": "WebKit.WKNavigationDelegate",
+                    "printedName": "any WebKit.WKNavigationDelegate",
                     "usr": "c:objc(pl)WKNavigationDelegate"
                   }
                 ],
@@ -12721,12 +12727,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "WebKit.WKNavigationDelegate?",
+                "printedName": "(any WebKit.WKNavigationDelegate)?",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "WKNavigationDelegate",
-                    "printedName": "WebKit.WKNavigationDelegate",
+                    "printedName": "any WebKit.WKNavigationDelegate",
                     "usr": "c:objc(pl)WKNavigationDelegate"
                   }
                 ],
@@ -12784,8 +12790,8 @@
             "usr": "s:7RxCocoa0A25WKNavigationDelegateProxyC12parentObject08delegateE0ACSo9WKWebViewC_xmtcAA0dE0CyAGSo0cD0_pGRbzAA0dE4TypeRzSoAJ_p0D0RtzAG06ParentG0Rtzlufc",
             "mangledName": "$s7RxCocoa0A25WKNavigationDelegateProxyC12parentObject08delegateE0ACSo9WKWebViewC_xmtcAA0dE0CyAGSo0cD0_pGRbzAA0dE4TypeRzSoAJ_p0D0RtzAG06ParentG0Rtzlufc",
             "moduleName": "RxCocoa",
-            "genericSig": "<τ_0_0 where τ_0_0 : RxCocoa.DelegateProxy<WebKit.WKWebView, WebKit.WKNavigationDelegate>, τ_0_0 : RxCocoa.DelegateProxyType, τ_0_0.Delegate == WebKit.WKNavigationDelegate, τ_0_0.ParentObject == WebKit.WKWebView>",
-            "sugared_genericSig": "<Proxy where Proxy : RxCocoa.DelegateProxy<WebKit.WKWebView, WebKit.WKNavigationDelegate>, Proxy : RxCocoa.DelegateProxyType, Proxy.Delegate == WebKit.WKNavigationDelegate, Proxy.ParentObject == WebKit.WKWebView>",
+            "genericSig": "<τ_0_0 where τ_0_0 : RxCocoa.DelegateProxy<WebKit.WKWebView, any WebKit.WKNavigationDelegate>, τ_0_0 : RxCocoa.DelegateProxyType, τ_0_0.Delegate == any WebKit.WKNavigationDelegate, τ_0_0.ParentObject == WebKit.WKWebView>",
+            "sugared_genericSig": "<Proxy where Proxy : RxCocoa.DelegateProxy<WebKit.WKWebView, any WebKit.WKNavigationDelegate>, Proxy : RxCocoa.DelegateProxyType, Proxy.Delegate == any WebKit.WKNavigationDelegate, Proxy.ParentObject == WebKit.WKWebView>",
             "overriding": true,
             "implicit": true,
             "declAttributes": [
@@ -12809,7 +12815,7 @@
         ],
         "superclassUsr": "s:7RxCocoa13DelegateProxyC",
         "superclassNames": [
-          "RxCocoa.DelegateProxy<WebKit.WKWebView, WebKit.WKNavigationDelegate>",
+          "RxCocoa.DelegateProxy<WebKit.WKWebView, any WebKit.WKNavigationDelegate>",
           "RxCocoa._RXDelegateProxy",
           "ObjectiveC.NSObject"
         ],
@@ -12840,7 +12846,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "WKNavigationDelegate",
-                    "printedName": "WebKit.WKNavigationDelegate",
+                    "printedName": "any WebKit.WKNavigationDelegate",
                     "usr": "c:objc(pl)WKNavigationDelegate"
                   }
                 ]
@@ -14044,7 +14050,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "DelegateProxy",
-                "printedName": "RxCocoa.DelegateProxy<AppKit.NSTextView, AppKit.NSTextViewDelegate>",
+                "printedName": "RxCocoa.DelegateProxy<AppKit.NSTextView, any AppKit.NSTextViewDelegate>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -14055,7 +14061,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "NSTextViewDelegate",
-                    "printedName": "AppKit.NSTextViewDelegate",
+                    "printedName": "any AppKit.NSTextViewDelegate",
                     "usr": "c:objc(pl)NSTextViewDelegate"
                   }
                 ],
@@ -14080,7 +14086,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "DelegateProxy",
-                    "printedName": "RxCocoa.DelegateProxy<AppKit.NSTextView, AppKit.NSTextViewDelegate>",
+                    "printedName": "RxCocoa.DelegateProxy<AppKit.NSTextView, any AppKit.NSTextViewDelegate>",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -14091,7 +14097,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "NSTextViewDelegate",
-                        "printedName": "AppKit.NSTextViewDelegate",
+                        "printedName": "any AppKit.NSTextViewDelegate",
                         "usr": "c:objc(pl)NSTextViewDelegate"
                       }
                     ],
@@ -14808,7 +14814,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "DelegateProxy",
-                "printedName": "RxCocoa.DelegateProxy<AppKit.NSTextField, AppKit.NSTextFieldDelegate>",
+                "printedName": "RxCocoa.DelegateProxy<AppKit.NSTextField, any AppKit.NSTextFieldDelegate>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -14819,7 +14825,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "NSTextFieldDelegate",
-                    "printedName": "AppKit.NSTextFieldDelegate",
+                    "printedName": "any AppKit.NSTextFieldDelegate",
                     "usr": "c:objc(pl)NSTextFieldDelegate"
                   }
                 ],
@@ -14844,7 +14850,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "DelegateProxy",
-                    "printedName": "RxCocoa.DelegateProxy<AppKit.NSTextField, AppKit.NSTextFieldDelegate>",
+                    "printedName": "RxCocoa.DelegateProxy<AppKit.NSTextField, any AppKit.NSTextFieldDelegate>",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -14855,7 +14861,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "NSTextFieldDelegate",
-                        "printedName": "AppKit.NSTextFieldDelegate",
+                        "printedName": "any AppKit.NSTextFieldDelegate",
                         "usr": "c:objc(pl)NSTextFieldDelegate"
                       }
                     ],
@@ -15621,7 +15627,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "DelegateProxy",
-                "printedName": "RxCocoa.DelegateProxy<WebKit.WKWebView, WebKit.WKNavigationDelegate>",
+                "printedName": "RxCocoa.DelegateProxy<WebKit.WKWebView, any WebKit.WKNavigationDelegate>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -15632,7 +15638,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "WKNavigationDelegate",
-                    "printedName": "WebKit.WKNavigationDelegate",
+                    "printedName": "any WebKit.WKNavigationDelegate",
                     "usr": "c:objc(pl)WKNavigationDelegate"
                   }
                 ],
@@ -15657,7 +15663,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "DelegateProxy",
-                    "printedName": "RxCocoa.DelegateProxy<WebKit.WKWebView, WebKit.WKNavigationDelegate>",
+                    "printedName": "RxCocoa.DelegateProxy<WebKit.WKWebView, any WebKit.WKNavigationDelegate>",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -15668,7 +15674,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "WKNavigationDelegate",
-                        "printedName": "WebKit.WKNavigationDelegate",
+                        "printedName": "any WebKit.WKNavigationDelegate",
                         "usr": "c:objc(pl)WKNavigationDelegate"
                       }
                     ],
@@ -15877,12 +15883,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Observable",
-                "printedName": "RxSwift.Observable<(WebKit.WKNavigation, Swift.Error)>",
+                "printedName": "RxSwift.Observable<(WebKit.WKNavigation, any Swift.Error)>",
                 "children": [
                   {
                     "kind": "TypeNominal",
                     "name": "Tuple",
-                    "printedName": "(WebKit.WKNavigation, Swift.Error)",
+                    "printedName": "(WebKit.WKNavigation, any Swift.Error)",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -15893,7 +15899,7 @@
                       {
                         "kind": "TypeNominal",
                         "name": "Error",
-                        "printedName": "Swift.Error",
+                        "printedName": "any Swift.Error",
                         "usr": "s:s5ErrorP"
                       }
                     ]
@@ -15920,12 +15926,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Observable",
-                    "printedName": "RxSwift.Observable<(WebKit.WKNavigation, Swift.Error)>",
+                    "printedName": "RxSwift.Observable<(WebKit.WKNavigation, any Swift.Error)>",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "Tuple",
-                        "printedName": "(WebKit.WKNavigation, Swift.Error)",
+                        "printedName": "(WebKit.WKNavigation, any Swift.Error)",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -15936,7 +15942,7 @@
                           {
                             "kind": "TypeNominal",
                             "name": "Error",
-                            "printedName": "Swift.Error",
+                            "printedName": "any Swift.Error",
                             "usr": "s:s5ErrorP"
                           }
                         ]
@@ -16186,7 +16192,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) -> RxCocoa.SharedSequence<RxCocoa.SignalSharingStrategy, τ_0_0.Element>",
+                "printedName": "(any Swift.Error) -> RxCocoa.SharedSequence<RxCocoa.SignalSharingStrategy, τ_0_0.Element>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -16210,7 +16216,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -16391,7 +16397,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) -> RxCocoa.SharedSequence<τ_1_0, τ_0_0.Element>",
+                "printedName": "(any Swift.Error) -> RxCocoa.SharedSequence<τ_1_0, τ_0_0.Element>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -16414,7 +16420,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -16560,7 +16566,7 @@
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(Swift.Error) -> RxCocoa.SharedSequence<RxCocoa.DriverSharingStrategy, τ_0_0.Element>",
+                "printedName": "(any Swift.Error) -> RxCocoa.SharedSequence<RxCocoa.DriverSharingStrategy, τ_0_0.Element>",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -16584,7 +16590,7 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Error",
-                    "printedName": "Swift.Error",
+                    "printedName": "any Swift.Error",
                     "usr": "s:s5ErrorP"
                   }
                 ]
@@ -16623,7 +16629,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -16661,7 +16667,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -16804,7 +16810,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -16846,7 +16852,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -16892,7 +16898,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -16946,7 +16952,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -16992,7 +16998,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -17046,7 +17052,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -17092,7 +17098,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -17615,7 +17621,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -17653,7 +17659,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -17796,7 +17802,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -17855,7 +17861,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "Disposable",
-                "printedName": "RxSwift.Disposable",
+                "printedName": "any RxSwift.Disposable",
                 "usr": "s:7RxSwift10DisposableP"
               },
               {
@@ -20780,7 +20786,7 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxCocoa\/Common\/DelegateProxyType.swift",
       "kind": "Dictionary",
-      "offset": 16551,
+      "offset": 16567,
       "length": 3,
       "value": "[]"
     },
@@ -21011,7 +21017,7 @@
     {
       "filePath": "\/Users\/shaimi\/Work\/OSS\/RxSwift\/RxCocoa\/Common\/ControlTarget.swift",
       "kind": "StringLiteral",
-      "offset": 430,
+      "offset": 462,
       "length": 13,
       "value": "\"RxCocoa.ControlTarget\""
     }
