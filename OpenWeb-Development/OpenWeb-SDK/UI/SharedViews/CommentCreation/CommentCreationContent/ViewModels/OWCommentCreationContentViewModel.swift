@@ -15,6 +15,7 @@ protocol OWCommentCreationContentViewModelingInputs {
     var becomeFirstResponder: PublishSubject<Void> { get }
     var resignFirstResponder: PublishSubject<Void> { get }
     var imagePicked: PublishSubject<UIImage> { get }
+    var gifPicked: PublishSubject<OWCommentGif> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
@@ -26,6 +27,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var becomeFirstResponderCalled: Observable<Void> { get }
     var resignFirstResponderCalled: Observable<Void> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
+    var gifPreviewVM: OWGifPreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
     var isValidatedContent: Observable<Bool> { get }
     var isInitialContentEdited: Observable<Bool> { get }
@@ -57,18 +59,23 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     var commentText = BehaviorSubject<String>(value: "")
     var imagePicked = PublishSubject<UIImage>()
+    var gifPicked = PublishSubject<OWCommentGif>()
 
     fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
     var commentContent: Observable<OWCommentCreationContent> {
-        Observable.combineLatest(commentTextOutput, _imageContent.asObservable())
-            .map { text, image in
-                OWCommentCreationContent(text: text, image: image)
+        Observable.combineLatest(commentTextOutput, _imageContent.asObservable(), gifPreviewVM.outputs.gifDataOutput)
+            .map { text, image, gif in
+                OWCommentCreationContent(text: text, image: image, gif: gif)
             }
     }
 
     lazy var imagePreviewVM: OWCommentCreationImagePreviewViewModeling = {
         return OWCommentCreationImagePreviewViewModel(servicesProvider: servicesProvider)
+    }()
+
+    lazy var gifPreviewVM: OWGifPreviewViewModeling = {
+        return OWGifPreviewViewModel(servicesProvider: servicesProvider)
     }()
 
     lazy var avatarViewVM: OWAvatarViewModeling = {
@@ -144,14 +151,16 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var isInitialContentEdited: Observable<Bool> {
         Observable.combineLatest(
             commentContent,
-            _imageContent
+            _imageContent,
+            gifPreviewVM.inputs.gifData
         )
-        .map { [weak self] commentContent, imageContent -> Bool in
+        .map { [weak self] commentContent, imageContent, gifContent -> Bool in
             guard let self = self else { return false }
 
             if case .edit(comment: let comment) = self.commentCreationType {
                 if comment.text?.text != commentContent.text ||
-                    comment.image?.imageId != imageContent?.imageId {
+                    comment.image?.imageId != imageContent?.imageId ||
+                    comment.gif?.originalUrl != gifContent?.originalUrl {
                     return true
                 }
             }
@@ -179,6 +188,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
         self.setupInitialTextIfNeeded()
         self.setupInitialImageIfNeeded()
+        self.setupInitialGifIfNeeded()
 
         setupObservers()
     }
@@ -254,6 +264,28 @@ fileprivate extension OWCommentCreationContentViewModel {
             .disposed(by: disposeBag)
     }
 
+    func setupInitialGifIfNeeded() {
+        let initialGif: OWCommentGif?
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+
+        switch commentCreationType {
+        case .comment:
+            guard let postId = postId else { return }
+            initialGif = commentsCacheService[.comment(postId: postId)]?.commentContent.gif
+        case .replyToComment(originComment: let originComment):
+            guard let postId = self.postId,
+                  let originCommentId = originComment.id
+            else { return }
+            initialGif = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.gif
+        case .edit(let comment):
+            initialGif = comment.gif
+        }
+
+        guard let initialGif = initialGif else { return }
+
+        gifPreviewVM.inputs.gifData.onNext(initialGif)
+    }
+
     func textValidatorTransformer(previousText: String, newText: String, charactersLimiter: Int) -> String {
         // Handle a state in which a user is trying to edit a text which is longer than the limiter
         if previousText.isEmpty && newText.count > charactersLimiter {
@@ -297,6 +329,8 @@ fileprivate extension OWCommentCreationContentViewModel {
         let imageWithCloudinarySignatureObservable = imagePicked
             .do(onNext: { [weak self] image in
                 guard let self = self else { return }
+                // Clean selected gif
+                self.gifPreviewVM.inputs.removeButtonTap.onNext()
                 self._imageContent.onNext(nil)
                 self.imagePreviewVM.inputs.image.onNext(image)
                 self.imagePreviewVM.inputs.isUploadingImage.onNext(true)
@@ -369,6 +403,14 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self._imageContent.onNext(imageContent)
             })
             .disposed(by: uploadImageDisposeBag)
+
+        gifPicked
+            .do(onNext: { [weak self] _ in
+                // Clean selected image
+                self?.imagePreviewVM.inputs.removeButtonTap.onNext()
+            })
+            .bind(to: gifPreviewVM.inputs.gifData)
+            .disposed(by: disposeBag)
     }
 }
 

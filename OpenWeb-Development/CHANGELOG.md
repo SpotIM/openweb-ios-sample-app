@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2024-05-21
+### Fixes
+- Fixed a recursive lock in some cases when initializing the SDK
+
+## [2.3.0] - 2024-05-13
+### Fixes
+- Upgraded to Signed RxSwift version 6.7
+- Include SDK code signing
+
+## [2.2.0] - 2024-04-17
+### Features
+- Project renaming to OpenWebSDK
+- Library name in SPM and Cocoapods is now OpenWebSDK
+- Apple Privacy Manifests
+- Toast notifications
+- Commenter Appeal
+
+### Fixes
+- Duplicated symbols issue
+- Visibility of pending and not published comments for different users roles
+- Default style Community Question is cut off from the left
+- The user is unable to update the comment by changing only the comment labels
+- Dark / Light mode issues
+- Pre Conversation error states issues
+- Conversation doesn't refresh when login via the Prompt Login
+- [Random issue] Like is not clickable
+- Comment Thread redirects to the original message after changes in thread
+- Rotating the module narrows
+- Question displaying depends on Guidelines config
+- Missing theme parameter for community guidelines
+- Memory Leaks
+- App crashes caused by OWColorPallette object
+
 ## [2.1.0] - 2024-02-20
 ### Features
 - Colors customization API
