@@ -15,12 +15,14 @@ struct SPConfigurationShared: Decodable {
     let votesType: OWVotesType
     let usePublisherUserProfile: Bool?
     let reportReasonsOptions: OWConfigurationReportReasonOptions?
+    let reportReasonsMinimumAdditionalTextLength: Int?
 
     enum CodingKeys: String, CodingKey {
         case usePublisherUserProfile = "useCustomUserProfile"
         case enableCommentLabels,
              commentLabels,
              votesType,
-             reportReasonsOptions
+             reportReasonsOptions,
+             reportReasonsMinimumAdditionalTextLength
     }
 }

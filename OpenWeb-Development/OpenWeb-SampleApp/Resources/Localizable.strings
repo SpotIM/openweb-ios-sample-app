@@ -51,6 +51,7 @@
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";
 "Settings" = "Settings";
+"ResetToDefaults" = "Reset To Defaults";
 "CommentCreationNewDesign" = "Comment creation new design";
 "ReadOnlyMode" = "Read only mode";
 "Default" = "Default";
@@ -137,3 +138,4 @@
 "Portrait" = "Portrait";
 "Production" = "Production";
 "Staging" = "Staging";
+"1DCluster" = "1D Cluster";

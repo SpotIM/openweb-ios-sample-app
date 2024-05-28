@@ -12,11 +12,13 @@ import Foundation
 public enum OWNetworkEnvironmentType {
     case production
     case staging
+    case cluster1d
 }
 #else
 enum OWNetworkEnvironmentType {
     case production
     case staging
+    case cluster1d
 }
 #endif
 

@@ -26,7 +26,6 @@ protocol OWClarityDetailsViewViewModelingOutputs {
     var topParagraphAttributedStringObservable: Observable<NSAttributedString> { get }
     var communityGuidelinesClickablePlaceholder: String { get }
     var communityGuidelinesClickObservable: Observable<URL> { get }
-    var shouldShowAppealView: Observable<Bool> { get }
     var appealLabelViewModel: OWAppealLabelViewModeling { get }
 }
 
@@ -63,24 +62,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     }
 
     lazy var appealLabelViewModel: OWAppealLabelViewModeling = {
-        OWAppealLabelViewModel(commentId: commentId)
-    }()
-
-    lazy var shouldShowAppealView: Observable<Bool> = {
-        let configurationService = servicesProvider.spotConfigurationService()
-        return configurationService.config(spotId: OWManager.manager.spotId)
-            .take(1)
-            .map { [weak self] config -> Bool in
-                guard let self = self,
-                      let conversationConfig = config.conversation,
-                      conversationConfig.isAppealEnabled == true
-                else {
-                    return false
-                }
-
-                return self.type == .rejected
-            }
-            .asObservable()
+        OWAppealLabelViewModel(commentId: commentId, clarityDetailsType: type)
     }()
 
     var communityGuidelinesClick = PublishSubject<Void>()

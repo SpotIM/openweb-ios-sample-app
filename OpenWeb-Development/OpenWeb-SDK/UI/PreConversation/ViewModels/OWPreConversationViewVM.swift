@@ -1530,9 +1530,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
 
         dismissToast
-            .subscribe(onNext: { [weak self] in
-                self?.servicesProvider.toastNotificationService().clearCurrentToast()
-            })
+            .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length

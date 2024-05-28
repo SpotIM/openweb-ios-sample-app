@@ -87,7 +87,10 @@ class TestAPIViewModel: TestAPIViewModeling,
                     return nil // no label for production
                 case .staging:
                     return NSLocalizedString("Staging", comment: "")
+                case .cluster1d:
+                    return NSLocalizedString("1DCluster", comment: "")
                 }
+
             }
             .map { envString in
                 guard let envString = envString else {
@@ -343,12 +346,7 @@ fileprivate extension TestAPIViewModel {
         #if BETA
         let env = UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
         var manager = OpenWeb.manager
-        switch env {
-        case .production:
-            manager.environment = .production
-        case .staging:
-            manager.environment = .staging
-        }
+        manager.environment = env.toSDKEnvironmentType
         #endif
     }
 }
