@@ -24,6 +24,7 @@
 		0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
 		0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
+		1608D5302C05EF4B00041D1E /* OWCommentOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1608D52F2C05EF4B00041D1E /* OWCommentOptionsView.swift */; };
 		160E42E22988103000EDC5A1 /* OWCommentThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E12988103000EDC5A1 /* OWCommentThreadView.swift */; };
 		160E42E42988103D00EDC5A1 /* OWCommentThreadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E32988103D00EDC5A1 /* OWCommentThreadVC.swift */; };
 		160E42E62988105100EDC5A1 /* OWCommentThreadViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E52988105100EDC5A1 /* OWCommentThreadViewVM.swift */; };
@@ -1075,6 +1076,7 @@
 		0E1125D72304BC29006B1489 /* Date+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+extensions.swift"; sourceTree = "<group>"; };
 		0E1125DD2304C127006B1489 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
+		1608D52F2C05EF4B00041D1E /* OWCommentOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentOptionsView.swift; sourceTree = "<group>"; };
 		160E42E12988103000EDC5A1 /* OWCommentThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadView.swift; sourceTree = "<group>"; };
 		160E42E32988103D00EDC5A1 /* OWCommentThreadVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadVC.swift; sourceTree = "<group>"; };
 		160E42E52988105100EDC5A1 /* OWCommentThreadViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadViewVM.swift; sourceTree = "<group>"; };
@@ -2518,6 +2520,7 @@
 				24EF864729CAE8D800327394 /* OWSubscriberIconView.swift */,
 				16D5A20229D1B72900914AD7 /* OWCommentThreadActionsView.swift */,
 				24D5897A2A8CA47C00F611F0 /* OWCommentStatusView.swift */,
+				1608D52F2C05EF4B00041D1E /* OWCommentOptionsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6929,6 +6932,7 @@
 				3DBFB50A2AE9BB94001105DA /* OWUserStatusAutomationVC.swift in Sources */,
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,
 				3DB1D5A12A785BEC0012388E /* OWStatusBarEnforcement.swift in Sources */,
+				1608D5302C05EF4B00041D1E /* OWCommentOptionsView.swift in Sources */,
 				9E36BFEF29F160E600478D06 /* OWReportReasonCoordinator.swift in Sources */,
 				9E36BFED29ED7E5F00478D06 /* OWRoundCheckBox.swift in Sources */,
 				3D611B9328C644B7003960CE /* OWArticleSettingsProtocol.swift in Sources */,
