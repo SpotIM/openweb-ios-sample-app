@@ -1619,7 +1619,7 @@ fileprivate extension OWConversationViewViewModel {
                 let openMenuClickObservable = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
                     let commentVm = commentCellVm.outputs.commentVM
 
-                    return commentVm.outputs.openMenu
+                    return commentVm.outputs.commentOptionsVM.outputs.openMenu
                         .map { ($0.0, $0.1, commentVm) }
                 }
                 return Observable.merge(openMenuClickObservable)
