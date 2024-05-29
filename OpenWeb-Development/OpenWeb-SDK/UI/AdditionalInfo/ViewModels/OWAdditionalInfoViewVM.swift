@@ -132,6 +132,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
          charectersLimitEnabled: Bool,
          showCharectersLimit: Bool,
          isTextRequired: Observable<Bool>,
+         minimumTextLength: Observable<Int>,
          submitInProgress: Observable<Bool>,
          submitText: Observable<String>) {
         self.viewableMode = viewableMode
@@ -142,21 +143,24 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
                                           showCharectersLimit: showCharectersLimit,
                                           isEditable: true)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
-        setupObservers(isTextRequired: isTextRequired, submitInProgress: submitInProgress, submitText: submitText)
+        setupObservers(minimumTextLength: minimumTextLength, isTextRequired: isTextRequired, submitInProgress: submitInProgress, submitText: submitText)
     }
 }
 
 fileprivate extension OWAdditionalInfoViewViewModel {
-    func setupObservers(isTextRequired: Observable<Bool>, submitInProgress: Observable<Bool>, submitText: Observable<String>) {
+    func setupObservers(minimumTextLength: Observable<Int>, isTextRequired: Observable<Bool>, submitInProgress: Observable<Bool>, submitText: Observable<String>) {
         submitInProgress
             .bind(to: self.inputs.submitInProgress)
             .disposed(by: disposeBag)
 
         isTextRequired
-            .flatMap { [weak self] isTextRequired -> Observable<Bool> in
+            .withLatestFrom(minimumTextLength) { ($0, $1) }
+            .flatMap { [weak self] isTextRequired, minimumTextLength -> Observable<Bool> in
                 guard let self = self else { return .empty() }
+                var minimumTextLength = minimumTextLength
+                minimumTextLength = minimumTextLength > 0 ? minimumTextLength : 1
                 return self.textViewVM.outputs.textViewText.map {
-                    isTextRequired && !$0.isEmpty || !isTextRequired
+                    isTextRequired && $0.count >= minimumTextLength || !isTextRequired
                 }
             }
             .bind(to: isSubmitEnabledChange)
