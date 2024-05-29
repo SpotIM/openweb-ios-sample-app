@@ -35,6 +35,9 @@ class OWCommentView: UIView {
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
+    fileprivate lazy var commentOptionsView: OWCommentOptionsView = {
+        return OWCommentOptionsView()
+    }()
     fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
         return OWCommentLabelsContainerView()
     }()
@@ -67,6 +70,7 @@ class OWCommentView: UIView {
         self.commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
         self.commentEngagementView.configure(with: viewModel.outputs.commentEngagementVM)
+        self.commentOptionsView.configure(with: viewModel.outputs.commentOptionsVM)
         self.setupObservers()
     }
 
@@ -74,6 +78,7 @@ class OWCommentView: UIView {
         commentHeaderView.prepareForReuse()
         commentLabelsContainerView.prepareForReuse()
         commentEngagementView.prepareForReuse()
+        commentOptionsView.prepareForReuse()
     }
 }
 
@@ -93,9 +98,16 @@ fileprivate extension OWCommentView {
             make.top.equalTo(commentStatusView.OWSnp.bottom)
         }
 
+        self.addSubview(commentOptionsView)
+        commentOptionsView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentStatusView.OWSnp.bottom)
+            make.trailing.equalToSuperview()
+        }
+
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalTo(commentOptionsView.OWSnp.leading)
             make.top.equalTo(commentStatusView.OWSnp.bottom).offset(InternalMetrics.commentStatusBottomPadding)
             commentHeaderBottomConstraint = make.bottom.equalToSuperview().constraint
         }
@@ -122,6 +134,7 @@ fileprivate extension OWCommentView {
             make.top.equalTo(commentContentView.OWSnp.bottom).offset(InternalMetrics.commentActionsTopPadding)
         }
         self.bringSubviewToFront(blockingOpacityView)
+        self.bringSubviewToFront(commentOptionsView)
     }
 
     func setupObservers() {
@@ -135,6 +148,7 @@ fileprivate extension OWCommentView {
                 } else if (self.commentLabelsContainerView.superview == nil) {
                     self.setupCommentContentUI()
                 }
+                self.commentOptionsView.isHidden = shouldBlockComment
             }).disposed(by: disposedBag)
 
         if let commentHeaderBottomConstraint = commentHeaderBottomConstraint {

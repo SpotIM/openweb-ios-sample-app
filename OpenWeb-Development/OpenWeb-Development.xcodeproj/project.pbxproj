@@ -24,6 +24,8 @@
 		0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
 		0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
+		1608D5302C05EF4B00041D1E /* OWCommentOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1608D52F2C05EF4B00041D1E /* OWCommentOptionsView.swift */; };
+		1608D5322C05F1B200041D1E /* OWCommentOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1608D5312C05F1B200041D1E /* OWCommentOptionsViewModel.swift */; };
 		160E42E22988103000EDC5A1 /* OWCommentThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E12988103000EDC5A1 /* OWCommentThreadView.swift */; };
 		160E42E42988103D00EDC5A1 /* OWCommentThreadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E32988103D00EDC5A1 /* OWCommentThreadVC.swift */; };
 		160E42E62988105100EDC5A1 /* OWCommentThreadViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E52988105100EDC5A1 /* OWCommentThreadViewVM.swift */; };
@@ -1088,6 +1090,8 @@
 		0E1125D72304BC29006B1489 /* Date+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+extensions.swift"; sourceTree = "<group>"; };
 		0E1125DD2304C127006B1489 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
+		1608D52F2C05EF4B00041D1E /* OWCommentOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentOptionsView.swift; sourceTree = "<group>"; };
+		1608D5312C05F1B200041D1E /* OWCommentOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentOptionsViewModel.swift; sourceTree = "<group>"; };
 		160E42E12988103000EDC5A1 /* OWCommentThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadView.swift; sourceTree = "<group>"; };
 		160E42E32988103D00EDC5A1 /* OWCommentThreadVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadVC.swift; sourceTree = "<group>"; };
 		160E42E52988105100EDC5A1 /* OWCommentThreadViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadViewVM.swift; sourceTree = "<group>"; };
@@ -2528,6 +2532,7 @@
 				24EF864929CAE8E500327394 /* OWSubscriberIconViewModel.swift */,
 				16D5A20429D1B73600914AD7 /* OWCommentThreadActionsViewModel.swift */,
 				24D5897C2A8CA49000F611F0 /* OWCommentStatusViewModel.swift */,
+				1608D5312C05F1B200041D1E /* OWCommentOptionsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -2544,6 +2549,7 @@
 				24EF864729CAE8D800327394 /* OWSubscriberIconView.swift */,
 				16D5A20229D1B72900914AD7 /* OWCommentThreadActionsView.swift */,
 				24D5897A2A8CA47C00F611F0 /* OWCommentStatusView.swift */,
+				1608D52F2C05EF4B00041D1E /* OWCommentOptionsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6739,6 +6745,7 @@
 				3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */,
 				9E0C605E2A839863001B8D5D /* OWCachedLastCommentType.swift in Sources */,
 				8D99C6892A13516400DAB542 /* OWConversationContentType.swift in Sources */,
+				1608D5322C05F1B200041D1E /* OWCommentOptionsViewModel.swift in Sources */,
 				8DE52F4A29E430F000D3985C /* OWPresentationalModeCompact.swift in Sources */,
 				9E57E72D2B71227B009E5913 /* OWFloatingKeyboardMainContainerView.swift in Sources */,
 				24E66A252A65564D00D5F4E9 /* OWAnalyticEventServerGeneralData.swift in Sources */,
@@ -7077,6 +7084,7 @@
 				3DBFB50A2AE9BB94001105DA /* OWUserStatusAutomationVC.swift in Sources */,
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,
 				3DB1D5A12A785BEC0012388E /* OWStatusBarEnforcement.swift in Sources */,
+				1608D5302C05EF4B00041D1E /* OWCommentOptionsView.swift in Sources */,
 				9E36BFEF29F160E600478D06 /* OWReportReasonCoordinator.swift in Sources */,
 				9E36BFED29ED7E5F00478D06 /* OWRoundCheckBox.swift in Sources */,
 				3D611B9328C644B7003960CE /* OWArticleSettingsProtocol.swift in Sources */,
@@ -7519,7 +7527,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -7565,7 +7573,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -7684,7 +7692,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -7730,7 +7738,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -7840,7 +7848,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -7886,7 +7894,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -7996,7 +8004,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -8042,7 +8050,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -8144,7 +8152,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -8312,7 +8320,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -8350,7 +8358,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -8437,7 +8445,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -8501,7 +8509,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
@@ -8565,7 +8573,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
@@ -8629,7 +8637,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
@@ -8693,7 +8701,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
@@ -8757,7 +8765,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
