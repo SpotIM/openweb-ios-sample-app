@@ -25,6 +25,7 @@ protocol OWPreConversationViewViewModelingInputs {
 
 protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
+    var filterTabsVM: OWFilterTabsViewViewModeling { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var loginPromptViewModel: OWLoginPromptViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
@@ -59,6 +60,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var displayToast: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
+    var shouldShowFilterTabsView: Observable<Bool> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -87,6 +89,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
+    let filterTabsVM: OWFilterTabsViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
@@ -434,6 +437,19 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             }
     }
 
+    // Show FilterTabsView according to conversationConfig isTabsEnabled
+    lazy var shouldShowFilterTabsView: Observable<Bool> = {
+        let configurationService = servicesProvider.spotConfigurationService()
+        return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
+            .map { [weak self] config -> Bool in
+                guard let self = self,
+                      let conversationConfig = config.conversation else { return false }
+                return conversationConfig.isTabsEnabled
+            }
+            .asObservable()
+    }()
+
     lazy var shouldAddContentTapRecognizer: Bool = {
         return isCompactMode
     }()
@@ -467,6 +483,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
             self.viewableMode = viewableMode
+            self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider)
             self.populateInitialUI()
             setupObservers()
 

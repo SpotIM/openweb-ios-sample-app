@@ -1,0 +1,22 @@
+//
+//  OWFilterTabObject.swift
+//  OpenWebSDK
+//
+//  Created by Refael Sommer on 03/06/2024.
+//  Copyright © 2024 OpenWeb. All rights reserved.
+//
+
+import Foundation
+
+class OWFilterTabObject {
+    let id: String
+    let count: Int
+    let name: String
+    var selected: Bool = false
+
+    init(id: String, count: Int, name: String) {
+        self.id = id
+        self.count = count
+        self.name = name
+    }
+}
