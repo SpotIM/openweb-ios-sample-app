@@ -9,12 +9,15 @@
 import Foundation
 import RxSwift
 
-protocol OWFilterTabsCollectionCellViewModelingInputs {}
+protocol OWFilterTabsCollectionCellViewModelingInputs {
+    var selected: BehaviorSubject<Bool> { get }
+}
 
 protocol OWFilterTabsCollectionCellViewModelingOutputs {
     var accessibilityPrefix: String { get }
     var isSelected: Observable<Bool> { get }
     var text: String { get }
+    var tabId: String { get }
 }
 
 protocol OWFilterTabsCollectionCellViewModeling {
@@ -28,23 +31,39 @@ class OWFilterTabsCollectionCellViewModel: OWFilterTabsCollectionCellViewModelin
     var inputs: OWFilterTabsCollectionCellViewModelingInputs { return self }
     var outputs: OWFilterTabsCollectionCellViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let model: OWFilterTabObject
 
     var accessibilityPrefix: String {
         model.name
     }
 
+    lazy var tabId: String = {
+        return model.id
+    }()
+
     lazy var text: String = {
         return model.name + (model.id == "all" ? "" : " (\(model.count))")
     }()
 
-    var _isSelected = BehaviorSubject<Bool>(value: false)
+    var selected = BehaviorSubject<Bool>(value: false)
     var isSelected: Observable<Bool> {
-        return _isSelected
+        return selected
             .asObservable()
     }
 
     init(model: OWFilterTabObject) {
         self.model = model
+    }
+}
+
+fileprivate extension OWFilterTabsCollectionCellViewModel {
+    func setupObservers() {
+        isSelected
+            .subscribe(onNext: { [weak self] isSelected in
+                guard let self = self else { return }
+                self.model.selected = isSelected
+            })
+            .disposed(by: disposeBag)
     }
 }

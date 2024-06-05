@@ -906,19 +906,24 @@ fileprivate extension OWConversationViewViewModel {
             .sortDictateService()
             .sortOption(perPostId: self.postId)
 
+        // Observable for the filter tabs
+        let filterTabsObservable = self.servicesProvider
+            .filterTabsDictateService()
+            .filterId(perPostId: self.postId)
+
         // Observable for the conversation network API
-        let conversationReadObservable = sortOptionObservable
+        let conversationReadObservable = Observable.combineLatest(sortOptionObservable, filterTabsObservable)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
-            .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
+            .flatMapLatest { [weak self] sortOption, filterTabsId -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .networkAPI()
                 .conversation
-                .conversationRead(mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
+                .conversationRead(mode: sortOption, filterTabId: filterTabsId, page: OWPaginationPage.first, parentId: "", offset: 0)
                 .response
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
                 .observe(on: self.conversationViewVMScheduler)
