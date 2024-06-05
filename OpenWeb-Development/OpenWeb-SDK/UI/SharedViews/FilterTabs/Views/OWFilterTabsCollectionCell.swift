@@ -12,29 +12,25 @@ import RxCocoa
 
 class OWFilterTabsCollectionCell: UICollectionViewCell {
     fileprivate struct Metrics {
-        static let margin: CGFloat = 5
+        static let margin: CGFloat = 10
+        static let cornerRadius: CGFloat = 3
+        static let numberOfLines = 1
         static let height: CGFloat = OWFilterTabsView.FilterTabsMetrics.itemsHeight
         static let accessibilitySurfix = "filter_tabs_collection_cell_id"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
-        let lbl = UILabel()
+        return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .textAlignment(.center)
-            .numberOfLines(1)
+            .numberOfLines(Metrics.numberOfLines)
             .adjustsFontSizeToFitWidth(false)
-        return lbl
+            .lineBreakMode(.byClipping)
     }()
 
-    fileprivate lazy var mainArea: UIView = {
-        let view = UIView()
-
-        view.addSubview(titleLabel)
-        titleLabel.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(Metrics.margin)
-        }
-
-        return view
+    fileprivate lazy var mainView: UIView = {
+        return UIView()
+            .corner(radius: Metrics.cornerRadius)
     }()
 
     fileprivate var disposeBag: DisposeBag!
@@ -42,8 +38,8 @@ class OWFilterTabsCollectionCell: UICollectionViewCell {
 
     func configure(with viewModel: OWFilterTabsCollectionCellViewModel) {
         self.viewModel = viewModel
-        self.updateAccessibility()
-        self.setupObservers()
+        updateAccessibility()
+        setupObservers()
         titleLabel.text(viewModel.text)
     }
 
@@ -63,14 +59,16 @@ class OWFilterTabsCollectionCell: UICollectionViewCell {
 
 fileprivate extension OWFilterTabsCollectionCell {
     func setupUI() {
-        contentView.addSubview(mainArea)
-        mainArea.OWSnp.makeConstraints { make in
+        contentView.addSubview(mainView)
+        mainView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.height.equalTo(Metrics.height)
         }
 
+        mainView.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
-            make.height.equalTo(OWFilterTabsView.FilterTabsMetrics.itemsHeight)
+            make.leading.trailing.equalToSuperview().inset(Metrics.margin)
+            make.top.bottom.equalToSuperview()
         }
     }
 
@@ -86,10 +84,10 @@ fileprivate extension OWFilterTabsCollectionCell {
             .subscribe(onNext: { [weak self] isSelected, currentStyle in
                 guard let self = self else { return }
                 if isSelected {
-                    self.mainArea.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                    self.mainView.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
                     self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: .dark)
                 } else {
-                    self.mainArea.backgroundColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
+                    self.mainView.backgroundColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
                     self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 }
             })

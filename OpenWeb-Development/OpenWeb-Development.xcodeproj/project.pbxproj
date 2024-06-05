@@ -941,6 +941,7 @@
 		9E5A05702C0DDEE600713B39 /* OWFilterTabsCollectionCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A056F2C0DDEE600713B39 /* OWFilterTabsCollectionCellVM.swift */; };
 		9E5A05722C0DDF7100713B39 /* OWFilterTabObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A05712C0DDF7100713B39 /* OWFilterTabObject.swift */; };
 		9E5A05742C0DEB2F00713B39 /* CollectionView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A05732C0DEB2F00713B39 /* CollectionView+Registration.swift */; };
+		9E5A05762C109B2000713B39 /* OWFilterTabsDictateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A05752C109B2000713B39 /* OWFilterTabsDictateService.swift */; };
 		9E726CCE2A4D728B0048A13D /* OWFailableWrapperDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E726CCD2A4D728B0048A13D /* OWFailableWrapperDecodable.swift */; };
 		9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */; };
 		9E73DAD529C85E640098EEC1 /* UILoggerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */; };
@@ -2018,6 +2019,7 @@
 		9E5A056F2C0DDEE600713B39 /* OWFilterTabsCollectionCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFilterTabsCollectionCellVM.swift; sourceTree = "<group>"; };
 		9E5A05712C0DDF7100713B39 /* OWFilterTabObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFilterTabObject.swift; sourceTree = "<group>"; };
 		9E5A05732C0DEB2F00713B39 /* CollectionView+Registration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CollectionView+Registration.swift"; sourceTree = "<group>"; };
+		9E5A05752C109B2000713B39 /* OWFilterTabsDictateService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWFilterTabsDictateService.swift; sourceTree = "<group>"; };
 		9E726CCD2A4D728B0048A13D /* OWFailableWrapperDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFailableWrapperDecodable.swift; sourceTree = "<group>"; };
 		9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerView.swift; sourceTree = "<group>"; };
 		9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerViewModel.swift; sourceTree = "<group>"; };
@@ -4870,6 +4872,7 @@
 				3D100D96286DDB6900AA4F85 /* OWSpotConfigurationService.swift */,
 				3D894A6E286B081D001A939C /* OWRealtimeService.swift */,
 				8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */,
+				9E5A05752C109B2000713B39 /* OWFilterTabsDictateService.swift */,
 				3DDCB29E29952D2900B8ED8E /* OWSortDictateService.swift */,
 				73B0DE8027A90EC4008EBCE7 /* OWSubscriberBadgeService.swift */,
 				3D263D0C29C395B70013C532 /* OWAuthorizationRecoveryService.swift */,
@@ -6740,6 +6743,7 @@
 				3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */,
 				8D0DB7172A9356A70014AD1B /* OWRealtimeTypingView.swift in Sources */,
 				168DC7D32873243E009A88B6 /* OWTypealiasesInternal.swift in Sources */,
+				9E5A05762C109B2000713B39 /* OWFilterTabsDictateService.swift in Sources */,
 				3D100D97286DDB6900AA4F85 /* OWSpotConfigurationService.swift in Sources */,
 				241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */,
 				9E0C60512A780246001B8D5D /* OWNavigationController.swift in Sources */,

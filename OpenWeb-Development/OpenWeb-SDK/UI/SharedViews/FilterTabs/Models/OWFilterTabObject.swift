@@ -19,4 +19,9 @@ class OWFilterTabObject {
         self.count = count
         self.name = name
     }
+
+    static var defaultTabId: OWFilterTabId {
+        // This will be returned as a default filter tab id
+        return "all"
+    }
 }

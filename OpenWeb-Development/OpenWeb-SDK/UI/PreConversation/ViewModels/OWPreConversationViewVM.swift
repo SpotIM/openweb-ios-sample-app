@@ -264,7 +264,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var openFullConversation: Observable<Void> {
         return Observable.merge(fullConversationTap,
                                 fullConversationCTATap,
-                                realtimeIndicationTapped)
+                                realtimeIndicationTapped,
+                                filterTabsVM.outputs.selectedTab.voidify())
             .asObservable()
     }
 

@@ -15,7 +15,7 @@ enum OWConversationEndpoints: OWEndpoints {
     }
 
     case conversationAsync(articleUrl: String)
-    case conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, childCount: Int?, parentId: String, messageId: String, offset: Int)
+    case conversationRead(mode: OWSortOption, filterTabId: OWFilterTabId?, page: OWPaginationPage, count: Int, childCount: Int?, parentId: String, messageId: String, offset: Int)
     case commentReport(id: String, parentId: String?)
     case commentPost(parameters: OWNetworkParameters)
     case commentShare(id: String, parentId: String?)
@@ -60,7 +60,7 @@ enum OWConversationEndpoints: OWEndpoints {
         switch self {
         case .conversationAsync(let articleUrl):
             return ["host_url": articleUrl]
-        case .conversationRead(let mode, let page, let count, let childCount, let parentId, let messageId, let offset):
+        case .conversationRead(let mode, let tabId, let page, let count, let childCount, let parentId, let messageId, let offset):
             var params: [String: Any] = [
                 "sort_by": mode.rawValue,
                 "offset": offset,
@@ -70,6 +70,10 @@ enum OWConversationEndpoints: OWEndpoints {
                 "extract_data": page == .first,
                 "depth": parentId.isEmpty ? Metrics.parentCommentDepth : Metrics.replyCommentDepth
             ]
+            if let tabId = tabId,
+               tabId != OWFilterTabObject.defaultTabId {
+                params["tab_id"] = tabId
+            }
             if let childCount = childCount {
                 params["child_count"] = childCount
             }
@@ -117,8 +121,10 @@ fileprivate struct OWConversationEndpointConst {
 
 protocol OWConversationAPI {
     func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable>
+    // swiftlint:disable function_parameter_count
     func conversationRead(
         mode: OWSortOption,
+        filterTabId: OWFilterTabId?,
         page: OWPaginationPage,
         count: Int,
         childCount: Int?,
@@ -126,6 +132,7 @@ protocol OWConversationAPI {
         messageId: String,
         offset: Int
     ) -> OWNetworkResponse<OWConversationReadRM>
+    // swiftlint:enable function_parameter_count
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
     func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<OWShareLink>
@@ -140,6 +147,7 @@ extension OWConversationAPI {
     // Better accesability to conversationRead
     func conversationRead(
         mode: OWSortOption,
+        filterTabId: OWFilterTabId? = nil,
         page: OWPaginationPage = .next,
         count: Int = OWConversationEndpointConst.PAGE_SIZE,
         childCount: Int? = nil,
@@ -147,7 +155,7 @@ extension OWConversationAPI {
         messageId: String = "",
         offset: Int = 0
     ) -> OWNetworkResponse<OWConversationReadRM> {
-        return conversationRead(mode: mode, page: page, count: count, childCount: childCount, parentId: parentId, messageId: messageId, offset: offset)
+        return conversationRead(mode: mode, filterTabId: filterTabId, page: page, count: count, childCount: childCount, parentId: parentId, messageId: messageId, offset: offset)
     }
 }
 
@@ -160,9 +168,10 @@ extension OWNetworkAPI: OWConversationAPI {
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-
+    // swiftlint:disable function_parameter_count
     func conversationRead(
         mode: OWSortOption,
+        filterTabId: OWFilterTabId?,
         page: OWPaginationPage,
         count: Int,
         childCount: Int?,
@@ -170,10 +179,18 @@ extension OWNetworkAPI: OWConversationAPI {
         messageId: String,
         offset: Int
     ) -> OWNetworkResponse<OWConversationReadRM> {
-        let endpoint = OWConversationEndpoints.conversationRead(mode: mode, page: page, count: count, childCount: childCount, parentId: parentId, messageId: messageId, offset: offset)
+        let endpoint = OWConversationEndpoints.conversationRead(mode: mode,
+                                                                filterTabId: filterTabId,
+                                                                page: page,
+                                                                count: count,
+                                                                childCount: childCount,
+                                                                parentId: parentId,
+                                                                messageId: messageId,
+                                                                offset: offset)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
+    // swiftlint:enable function_parameter_count
 
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable> {
         let endpoint = OWConversationEndpoints.commentReport(id: id, parentId: parentId)
