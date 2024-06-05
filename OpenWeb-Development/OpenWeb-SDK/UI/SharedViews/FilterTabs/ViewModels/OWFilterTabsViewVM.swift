@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWFilterTabsViewViewModelingInputs {
-    var selectTab: PublishSubject<OWFilterTabsCollectionCellViewModel> { get }
+    var selectTab: BehaviorSubject<OWFilterTabsCollectionCellViewModel?> { get }
 }
 
 protocol OWFilterTabsViewViewModelingOutputs {
@@ -36,9 +36,10 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
             .asObservable()
     }
 
-    var selectTab = PublishSubject<OWFilterTabsCollectionCellViewModel>()
+    var selectTab = BehaviorSubject<OWFilterTabsCollectionCellViewModel?>(value: nil)
     var selectedTab: Observable<OWFilterTabsCollectionCellViewModel> {
         return selectTab
+            .unwrap()
             .asObservable()
     }
 
@@ -59,6 +60,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
                 case .next(let filterTabsResponse):
 
                     return filterTabsResponse.tabs
+                        .filter { $0.count > 0 }
                         .map {
                             let model = OWFilterTabObject(id: $0.id, count: $0.count, name: $0.label)
                             return OWFilterTabsCollectionCellViewModel(model: model)
@@ -78,7 +80,28 @@ fileprivate extension OWFilterTabsViewViewModel {
     func setupObservers() {
         getTabs
             .observe(on: MainScheduler.instance)
+            .withLatestFrom(selectTab) { ($0, $1) }
+            .do(onNext: { filterTabVMs, selectedTabVm in
+                guard selectedTabVm == nil else { return }
+                filterTabVMs.first?.inputs.selected.onNext(true)
+            })
+            .map { $0.0 }
             .bind(to: _tabs)
+            .disposed(by: disposeBag)
+
+        selectedTab
+            .withLatestFrom(tabs) { ($0, $1) }
+            .subscribe(onNext: { [weak self] tabToSelectVM, tabsToUnselectVMs in
+                guard let self = self,
+                      let postId = OWManager.manager.postId else { return }
+                tabsToUnselectVMs.forEach { tabToUnselectVM in
+                    tabToUnselectVM.inputs.selected.onNext(false)
+                }
+                tabToSelectVM.inputs.selected.onNext(true)
+                self.servicesProvider
+                    .filterTabsDictateService()
+                    .update(filterTabId: tabToSelectVM.outputs.tabId, perPostId: postId)
+            })
             .disposed(by: disposeBag)
     }
 }
