@@ -36,6 +36,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
 
     var toastView: OWToastView? = nil
 
+    fileprivate lazy var filterTabsView: OWFilterTabsView = {
+        return OWFilterTabsView(viewModel: self.viewModel.outputs.filterTabsVM)
+    }()
+
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
             .enforceSemanticAttribute()
@@ -129,6 +133,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     fileprivate var loginPromptLandscapeConstraints: [OWConstraint] = []
     fileprivate var summaryPortraitLeadingConstraint: OWConstraint? = nil
     fileprivate var summaryLandscapeLeadingConstraint: OWConstraint? = nil
+    private var filterTabsHeightConstraint: OWConstraint?
 
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
@@ -214,10 +219,17 @@ fileprivate extension OWConversationView {
             loginPromptLandscapeConstraints.forEach { $0.activate() }
         }
 
+        self.addSubview(filterTabsView)
+        filterTabsView.OWSnp.makeConstraints { make in
+            make.top.equalTo(conversationSummaryView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            filterTabsHeightConstraint = make.height.equalTo(0).constraint
+        }
+
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(conversationSummaryView.OWSnp.bottom)
+            make.top.equalTo(filterTabsView.OWSnp.bottom)
             make.leading.trailing.equalToSuperviewSafeArea()
         }
 
@@ -267,6 +279,20 @@ fileprivate extension OWConversationView {
                 self?.dismissToast()
             })
             .disposed(by: disposeBag)
+
+        if let constraint = filterTabsHeightConstraint {
+            viewModel.outputs.shouldShowFilterTabsView
+                .map { !$0 }
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] isActive in
+                    guard let self = self else { return }
+                    constraint.rx.isActive.onNext(isActive)
+                    UIView.animate(withDuration: 0.2) {
+                        self.layoutSubviews()
+                    }
+                })
+                .disposed(by: disposeBag)
+        }
 
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)

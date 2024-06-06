@@ -16,6 +16,7 @@ protocol OWFilterTabsViewViewModelingInputs {
 protocol OWFilterTabsViewViewModelingOutputs {
     var tabs: Observable<[OWFilterTabsCollectionCellViewModel]> { get }
     var selectedTab: Observable<OWFilterTabsCollectionCellViewModel> { get }
+    var shouldShowFilterTabs: Observable<Bool> { get }
 }
 
 protocol OWFilterTabsViewViewModeling {
@@ -42,6 +43,12 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
             .unwrap()
             .asObservable()
     }
+
+    lazy var shouldShowFilterTabs: Observable<Bool> = {
+        return tabs
+            .map { $0.count < 1 }
+            .asObservable()
+    }()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
