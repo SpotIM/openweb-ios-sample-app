@@ -70,6 +70,8 @@ protocol OWConversationViewViewModelingOutputs {
     var hideToast: Observable<Void> { get }
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
     var tableViewHeightChanged: Observable<CGFloat> { get }
+    var filterTabsVM: OWFilterTabsViewViewModeling { get }
+    var shouldShowFilterTabsView: Observable<Bool> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -108,6 +110,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
     fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewVMQueue")
+
+    let filterTabsVM: OWFilterTabsViewViewModeling
 
     lazy var tableViewHeightChanged: Observable<CGFloat> = {
         tableViewSize
@@ -321,6 +325,18 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return communityGuidelinesCellViewModel.outputs
             .communityGuidelinesViewModel.outputs
             .shouldShowView
+    }()
+
+    // Show FilterTabsView according to conversationConfig isTabsEnabled
+    lazy var shouldShowFilterTabsView: Observable<Bool> = {
+        let configurationService = servicesProvider.spotConfigurationService()
+        return Observable.combineLatest(configurationService.config(spotId: OWManager.manager.spotId).take(1), filterTabsVM.outputs.shouldShowFilterTabs)
+            .map { [weak self] config, shouldShowFilterTabs -> Bool in
+                guard let self = self,
+                      let conversationConfig = config.conversation else { return false }
+                return conversationConfig.isTabsEnabled && shouldShowFilterTabs
+            }
+            .asObservable()
     }()
 
     fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
@@ -638,6 +654,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
+        self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider)
         self.setupObservers()
 
         sendEvent(for: .fullConversationViewed)
