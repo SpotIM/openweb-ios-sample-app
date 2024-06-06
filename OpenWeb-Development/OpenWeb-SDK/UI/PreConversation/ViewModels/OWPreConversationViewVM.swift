@@ -441,12 +441,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     // Show FilterTabsView according to conversationConfig isTabsEnabled
     lazy var shouldShowFilterTabsView: Observable<Bool> = {
         let configurationService = servicesProvider.spotConfigurationService()
-        return configurationService.config(spotId: OWManager.manager.spotId)
-            .take(1)
-            .map { [weak self] config -> Bool in
+        return Observable.combineLatest(configurationService.config(spotId: OWManager.manager.spotId).take(1), filterTabsVM.outputs.shouldShowFilterTabs)
+            .map { [weak self] config, shouldShowFilterTabs -> Bool in
                 guard let self = self,
                       let conversationConfig = config.conversation else { return false }
-                return conversationConfig.isTabsEnabled
+                return conversationConfig.isTabsEnabled && shouldShowFilterTabs
             }
             .asObservable()
     }()

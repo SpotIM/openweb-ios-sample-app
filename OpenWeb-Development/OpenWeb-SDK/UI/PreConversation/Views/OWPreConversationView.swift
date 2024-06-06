@@ -237,7 +237,7 @@ fileprivate extension OWPreConversationView {
             commentingCTAHeightConstraint = make.height.equalTo(0).constraint
         }
 
-        self.addSubviews(filterTabsView)
+        self.addSubview(filterTabsView)
         filterTabsView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentingCTAView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
@@ -409,7 +409,14 @@ fileprivate extension OWPreConversationView {
         if let constraint = filterTabsHeightConstraint {
             viewModel.outputs.shouldShowFilterTabsView
                 .map { !$0 }
-                .bind(to: constraint.rx.isActive)
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] isActive in
+                    guard let self = self else { return }
+                    constraint.rx.isActive.onNext(isActive)
+                    UIView.animate(withDuration: 0.2) {
+                        self.layoutSubviews()
+                    }
+                })
                 .disposed(by: disposeBag)
         }
 
