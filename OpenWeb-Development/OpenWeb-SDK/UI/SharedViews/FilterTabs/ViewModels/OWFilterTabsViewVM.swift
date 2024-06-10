@@ -11,12 +11,14 @@ import RxSwift
 
 protocol OWFilterTabsViewViewModelingInputs {
     var selectTab: BehaviorSubject<OWFilterTabsCollectionCellViewModel?> { get }
+    var setMinimumLeadingTrailingMargin: BehaviorSubject<CGFloat> { get }
 }
 
 protocol OWFilterTabsViewViewModelingOutputs {
     var tabs: Observable<[OWFilterTabsCollectionCellViewModel]> { get }
     var selectedTab: Observable<OWFilterTabsCollectionCellViewModel> { get }
     var shouldShowFilterTabs: Observable<Bool> { get }
+    var minimumLeadingTrailingMargin: Observable<CGFloat> { get }
 }
 
 protocol OWFilterTabsViewViewModeling {
@@ -30,6 +32,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
 
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let sourceType: OWViewSourceType
 
     var _tabs = BehaviorSubject<[OWFilterTabsCollectionCellViewModel]>(value: [])
     var tabs: Observable<[OWFilterTabsCollectionCellViewModel]> {
@@ -46,12 +49,20 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
 
     lazy var shouldShowFilterTabs: Observable<Bool> = {
         return tabs
-            .map { $0.count < 1 }
+            .map { $0.count > 1 }
             .asObservable()
     }()
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    var setMinimumLeadingTrailingMargin = BehaviorSubject<CGFloat>(value: 0)
+    var minimumLeadingTrailingMargin: Observable<CGFloat> {
+        return setMinimumLeadingTrailingMargin
+            .asObservable()
+    }
+
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         sourceType: OWViewSourceType) {
         self.servicesProvider = servicesProvider
+        self.sourceType = sourceType
         self.setupObservers()
     }
 
@@ -67,9 +78,9 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
                 case .next(let filterTabsResponse):
 
                     return filterTabsResponse.tabs
-                        .filter { $0.count > 0 }
+                        // .filter { $0.count > 0 }
                         .map {
-                            let model = OWFilterTabObject(id: $0.id, count: $0.count, name: $0.label)
+                            let model = OWFilterTabObject(id: $0.id, count: $0.count, name: $0.label, sortOptions: $0.sortOptions)
                             return OWFilterTabsCollectionCellViewModel(model: model)
                         }
                 case .error(_):
@@ -85,12 +96,26 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
 
 fileprivate extension OWFilterTabsViewViewModel {
     func setupObservers() {
+        guard let postId = OWManager.manager.postId else { return }
+        let serviceSelectedTabId = self.servicesProvider
+            .filterTabsDictateService()
+            .filterId(perPostId: postId)
+
         getTabs
             .observe(on: MainScheduler.instance)
-            .withLatestFrom(selectTab) { ($0, $1) }
-            .do(onNext: { filterTabVMs, selectedTabVm in
-                guard selectedTabVm == nil else { return }
-                filterTabVMs.first?.inputs.selected.onNext(true)
+            .withLatestFrom(serviceSelectedTabId) { ($0, $1) }
+            .withLatestFrom(selectTab) { ($0.0, $0.1, $1) }
+            .do(onNext: { [weak self] filterTabVMs, selectedTabId, selectedTabVM in
+                guard let self = self else { return }
+                if self.sourceType == .preConversation {
+                    if let firstTabVM = filterTabVMs.first {
+                        firstTabVM.inputs.selected.onNext(true)
+                    }
+                } else {
+                    guard let selectedTabVm = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) else { return }
+                    selectedTabVm.inputs.selected.onNext(true)
+                    self.selectTab.onNext(selectedTabVm)
+                }
             })
             .map { $0.0 }
             .bind(to: _tabs)
@@ -99,12 +124,13 @@ fileprivate extension OWFilterTabsViewViewModel {
         selectedTab
             .withLatestFrom(tabs) { ($0, $1) }
             .subscribe(onNext: { [weak self] tabToSelectVM, tabsToUnselectVMs in
-                guard let self = self,
-                      let postId = OWManager.manager.postId else { return }
-                tabsToUnselectVMs.forEach { tabToUnselectVM in
-                    tabToUnselectVM.inputs.selected.onNext(false)
+                guard let self = self else { return }
+                if self.sourceType != .preConversation {
+                    tabsToUnselectVMs.forEach { tabToUnselectVM in
+                        tabToUnselectVM.inputs.selected.onNext(false)
+                    }
+                    tabToSelectVM.inputs.selected.onNext(true)
                 }
-                tabToSelectVM.inputs.selected.onNext(true)
                 self.servicesProvider
                     .filterTabsDictateService()
                     .update(filterTabId: tabToSelectVM.outputs.tabId, perPostId: postId)
