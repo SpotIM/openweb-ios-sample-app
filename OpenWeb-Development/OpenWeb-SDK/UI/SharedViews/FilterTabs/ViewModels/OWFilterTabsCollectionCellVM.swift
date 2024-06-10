@@ -18,6 +18,7 @@ protocol OWFilterTabsCollectionCellViewModelingOutputs {
     var isSelected: Observable<Bool> { get }
     var text: String { get }
     var tabId: String { get }
+    var sortOptions: [String]? { get }
 }
 
 protocol OWFilterTabsCollectionCellViewModeling {
@@ -37,6 +38,10 @@ class OWFilterTabsCollectionCellViewModel: OWFilterTabsCollectionCellViewModelin
     var accessibilityPrefix: String {
         model.name
     }
+
+    lazy var sortOptions: [String]? = {
+        return model.sortOptions
+    }()
 
     lazy var tabId: String = {
         return model.id

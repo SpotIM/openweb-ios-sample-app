@@ -226,6 +226,8 @@ fileprivate extension OWConversationView {
             filterTabsHeightConstraint = make.height.equalTo(0).constraint
         }
 
+        self.viewModel.outputs.filterTabsVM.inputs.setMinimumLeadingTrailingMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
@@ -585,6 +587,8 @@ fileprivate extension OWConversationView {
                     self.commentingCTAView.OWSnp.updateConstraints { make in
                         make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: isLandscape))
                     }
+
+                    self.viewModel.outputs.filterTabsVM.inputs.setMinimumLeadingTrailingMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
                 }
             })
             .disposed(by: disposeBag)

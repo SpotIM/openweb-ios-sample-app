@@ -483,7 +483,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
             self.viewableMode = viewableMode
-            self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider)
+            self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider,
+                                                          sourceType: .preConversation)
             self.populateInitialUI()
             setupObservers()
 

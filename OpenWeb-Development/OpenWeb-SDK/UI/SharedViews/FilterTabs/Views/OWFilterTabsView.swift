@@ -58,7 +58,8 @@ fileprivate extension OWFilterTabsView {
 
         self.addSubviews(filterTabsCollection)
         filterTabsCollection.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(0)
         }
     }
 
@@ -89,6 +90,20 @@ fileprivate extension OWFilterTabsView {
         filterTabsCollection.rx.modelSelected(OWFilterTabsCollectionCellViewModel.self)
             .map { $0 as OWFilterTabsCollectionCellViewModel }
             .bind(to: viewModel.inputs.selectTab)
+            .disposed(by: disposeBag)
+
+        // Center collectionView content
+        filterTabsCollection.rx.observe(CGSize.self, #keyPath(UICollectionView.contentSize))
+            .unwrap()
+            .withLatestFrom(viewModel.outputs.minimumLeadingTrailingMargin) { ($0, $1) }
+            .subscribe(onNext: { [weak self] contentSize, minimumLeadingTrailingMargin in
+                guard let self = self else { return }
+                let maxWidth = self.frame.size.width
+                let horizontalMargins = max((maxWidth - contentSize.width) / 2, minimumLeadingTrailingMargin)
+                self.filterTabsCollection.OWSnp.updateConstraints { make in
+                    make.leading.trailing.equalToSuperview().inset(horizontalMargins)
+                }
+            })
             .disposed(by: disposeBag)
     }
 
