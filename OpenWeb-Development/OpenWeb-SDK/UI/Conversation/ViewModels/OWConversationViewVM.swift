@@ -654,7 +654,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
-        self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider)
+        self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider,
+                                                      sourceType: .conversation)
         self.setupObservers()
 
         sendEvent(for: .fullConversationViewed)
@@ -927,6 +928,23 @@ fileprivate extension OWConversationViewViewModel {
         let filterTabsObservable = self.servicesProvider
             .filterTabsDictateService()
             .filterId(perPostId: self.postId)
+
+        Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.selectedTab)
+            .map { $0.1 }
+            .subscribe(onNext: { [weak self] selectedTabVM in
+                let sortOptions = selectedTabVM.outputs.sortOptions?.map { OWSortOption(rawValue: $0) }.unwrap()
+                guard let self = self else { return }
+                guard let firstSortOption = sortOptions?.first else {
+                    self.servicesProvider
+                        .sortDictateService()
+                        .update(sortOption: .best, perPostId: self.postId)
+                    return
+                }
+                self.servicesProvider
+                    .sortDictateService()
+                    .update(sortOption: firstSortOption, perPostId: self.postId)
+            })
+            .disposed(by: disposeBag)
 
         // Observable for the conversation network API
         let conversationReadObservable = Observable.combineLatest(sortOptionObservable, filterTabsObservable)
@@ -1821,15 +1839,29 @@ fileprivate extension OWConversationViewViewModel {
                 self?.sendEvent(for: .sortByClicked(currentSort: currentSort))
             })
             .observe(on: MainScheduler.instance)
-            .flatMapLatest { [weak self] sender, currentSort -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
+            .withLatestFrom(filterTabsVM.outputs.selectedTab) { ($0.0, $0.1, $1) }
+            .flatMapLatest { [weak self] sender, currentSort, selectedTab -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
 
                 let sortDictateService = self.servicesProvider.sortDictateService()
-                let actions = [
-                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
-                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
-                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest)
-                    ]
+
+                let actions = {
+                    guard let sortOptions = selectedTab.outputs.sortOptions else {
+                        return [
+                            OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
+                            OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
+                            OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest)
+                        ]
+                    }
+
+                    return sortOptions.map { sortString -> OWRxPresenterAction? in
+                        if let sortOption = OWSortOption(rawValue: sortString) {
+                            return OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: sortOption), type: sortOption.sortMenu)
+                        }
+                        return nil
+                    }
+                    .unwrap()
+                }()
 
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)

@@ -71,7 +71,7 @@ enum OWConversationEndpoints: OWEndpoints {
                 "depth": parentId.isEmpty ? Metrics.parentCommentDepth : Metrics.replyCommentDepth
             ]
             if let tabId = tabId,
-               tabId != OWFilterTabObject.defaultTabId {
+               !OWFilterTabObject.networkExcludeIds.contains(tabId) {
                 params["tab_id"] = tabId
             }
             if let childCount = childCount {
