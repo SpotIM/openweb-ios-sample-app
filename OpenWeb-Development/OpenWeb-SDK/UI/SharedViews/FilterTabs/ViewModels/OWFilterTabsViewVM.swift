@@ -105,7 +105,7 @@ fileprivate extension OWFilterTabsViewViewModel {
             .observe(on: MainScheduler.instance)
             .withLatestFrom(serviceSelectedTabId) { ($0, $1) }
             .withLatestFrom(selectTab) { ($0.0, $0.1, $1) }
-            .do(onNext: { [weak self] filterTabVMs, selectedTabId, selectedTabVM in
+            .do(onNext: { [weak self] filterTabVMs, selectedTabId, _ in
                 guard let self = self else { return }
                 if self.sourceType == .preConversation {
                     if let firstTabVM = filterTabVMs.first {
