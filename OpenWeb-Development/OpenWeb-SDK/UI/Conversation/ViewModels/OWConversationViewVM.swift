@@ -27,6 +27,7 @@ protocol OWConversationViewViewModelingInputs {
     var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
     var dismissToast: PublishSubject<Void> { get }
+    var setFilterTabsHorizontalMargin: PublishSubject<CGFloat> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -72,6 +73,7 @@ protocol OWConversationViewViewModelingOutputs {
     var tableViewHeightChanged: Observable<CGFloat> { get }
     var filterTabsVM: OWFilterTabsViewViewModeling { get }
     var shouldShowFilterTabsView: Observable<Bool> { get }
+    var filterTabsHorizontalMargin: Observable<CGFloat> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -120,6 +122,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .distinctUntilChanged()
             .asObservable()
     }()
+
+    var setFilterTabsHorizontalMargin = PublishSubject<CGFloat>()
+    var filterTabsHorizontalMargin: Observable<CGFloat> {
+        return setFilterTabsHorizontalMargin
+            .asObservable()
+    }
 
     var tableViewSize = PublishSubject<CGSize>()
     lazy var tableViewSizeChanged: Observable<CGSize> = {
@@ -885,6 +893,10 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        filterTabsHorizontalMargin
+            .bind(to: filterTabsVM.inputs.setMinimumLeadingTrailingMargin)
+            .disposed(by: disposeBag)
+
         dismissToast
             .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
@@ -933,13 +945,30 @@ fileprivate extension OWConversationViewViewModel {
             .map { $0.1 }
             .subscribe(onNext: { [weak self] selectedTabVM in
                 let sortOptions = selectedTabVM.outputs.sortOptions?.map { OWSortOption(rawValue: $0) }.unwrap()
+                var showSortView = true
                 guard let self = self else { return }
                 guard let firstSortOption = sortOptions?.first else {
+                    // No sort options available, default sort options are used
+                    var sortOption: OWSortOption = .best
+                    switch selectedTabVM.outputs.tabId {
+                    case OWFilterTabObject.allNewestTabId:
+                        sortOption = .newest
+                        showSortView = false
+                    case OWFilterTabObject.allOldestTabId:
+                        sortOption = .oldest
+                        showSortView = false
+                    default:
+                        sortOption = .best
+                        showSortView = true
+                    }
                     self.servicesProvider
                         .sortDictateService()
-                        .update(sortOption: .best, perPostId: self.postId)
+                        .update(sortOption: sortOption, perPostId: self.postId)
+                    self.conversationSummaryViewModel.inputs.shouldShowSortView.onNext(showSortView)
                     return
                 }
+                showSortView = !(sortOptions != nil && (sortOptions?.isEmpty ?? false))
+                self.conversationSummaryViewModel.inputs.shouldShowSortView.onNext(showSortView)
                 self.servicesProvider
                     .sortDictateService()
                     .update(sortOption: firstSortOption, perPostId: self.postId)

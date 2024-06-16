@@ -53,6 +53,7 @@ class OWFilterTabsCollectionCell: UICollectionViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         titleLabel.text = ""
     }
 }

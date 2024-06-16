@@ -205,3 +205,12 @@
 "Close editor?" = "Close editor?";
 "Be the first to comment on this article." = "Sean los primeros en comentar";
 "This message was rejected." = "Este mensaje fue rechazado.";
+
+"All" = "Todo";
+"My Comments" = "Mis comentarios";
+"Featured" = "Destacado";
+"Most Discussed" = "Más comentado";
+"Popular" = "Popular";
+"Controversial" = "Controvertido";
+"Best rated" = "Best rated";
+"Worst rated" = "Worst rated";
