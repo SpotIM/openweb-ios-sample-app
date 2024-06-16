@@ -78,7 +78,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
                 case .next(let filterTabsResponse):
 
                     return filterTabsResponse.tabs
-                        // .filter { $0.count > 0 }
+                        .filter { $0.count > 0 }
                         .map {
                             let model = OWFilterTabObject(id: $0.id, count: $0.count, name: $0.label, sortOptions: $0.sortOptions)
                             return OWFilterTabsCollectionCellViewModel(model: model)

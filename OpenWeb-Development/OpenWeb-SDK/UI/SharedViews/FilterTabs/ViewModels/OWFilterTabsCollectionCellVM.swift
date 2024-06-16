@@ -18,6 +18,7 @@ protocol OWFilterTabsCollectionCellViewModelingOutputs {
     var isSelected: Observable<Bool> { get }
     var text: String { get }
     var tabId: String { get }
+    var isSelectedNonRx: Bool { get }
     var sortOptions: [String]? { get }
 }
 
@@ -47,8 +48,14 @@ class OWFilterTabsCollectionCellViewModel: OWFilterTabsCollectionCellViewModelin
         return model.id
     }()
 
+    var isSelectedNonRx: Bool {
+        return model.selected
+    }
+
     lazy var text: String = {
-        return model.name + (model.id == "all" ? "" : " (\(model.count))")
+        let localizedName = OWLocalizationManager.shared.localizedString(key: model.name)
+        let countString = model.id == "all" ? "" : " (\(model.count))"
+        return localizedName + countString
     }()
 
     var selected = BehaviorSubject<Bool>(value: false)
@@ -59,6 +66,7 @@ class OWFilterTabsCollectionCellViewModel: OWFilterTabsCollectionCellViewModelin
 
     init(model: OWFilterTabObject) {
         self.model = model
+        self.setupObservers()
     }
 }
 
