@@ -19,6 +19,7 @@ class OWFilterTabsView: UIView {
     fileprivate struct Metrics {
         static let identifier = "filter_tabs_view_id"
         static let height: CGFloat = 54
+        static let delayScrollToSelected = 10
     }
 
     fileprivate var viewModel: OWFilterTabsViewViewModeling
@@ -85,6 +86,18 @@ fileprivate extension OWFilterTabsView {
             .bind(to: filterTabsCollection.rx.items(cellIdentifier: OWFilterTabsCollectionCell.identifierName, cellType: OWFilterTabsCollectionCell.self)) { _, viewModel, cell in
                 cell.configure(with: viewModel)
             }
+            .disposed(by: disposeBag)
+
+        // Scroll to selected tab
+        viewModel.outputs.selectedTab
+            .delay(.milliseconds(Metrics.delayScrollToSelected), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
+            .withLatestFrom(viewModel.outputs.tabs) { ($0, $1) }
+            .subscribe(onNext: { [weak self] _, tabs in
+                guard let self = self,
+                      let index = tabs.firstIndex(where: { $0.outputs.isSelectedNonRx }) else { return }
+                self.filterTabsCollection.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredHorizontally, animated: true)
+            })
             .disposed(by: disposeBag)
 
         filterTabsCollection.rx.modelSelected(OWFilterTabsCollectionCellViewModel.self)
