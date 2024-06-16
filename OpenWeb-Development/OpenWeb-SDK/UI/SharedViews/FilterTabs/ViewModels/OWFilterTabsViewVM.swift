@@ -12,6 +12,7 @@ import RxSwift
 protocol OWFilterTabsViewViewModelingInputs {
     var selectTab: BehaviorSubject<OWFilterTabsCollectionCellViewModel?> { get }
     var setMinimumLeadingTrailingMargin: BehaviorSubject<CGFloat> { get }
+    var reloadTabs: PublishSubject<Void> { get }
 }
 
 protocol OWFilterTabsViewViewModelingOutputs {
@@ -33,6 +34,8 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let sourceType: OWViewSourceType
+
+    var reloadTabs = PublishSubject<Void>()
 
     var _tabs = BehaviorSubject<[OWFilterTabsCollectionCellViewModel]>(value: [])
     var tabs: Observable<[OWFilterTabsCollectionCellViewModel]> {
@@ -101,6 +104,25 @@ fileprivate extension OWFilterTabsViewViewModel {
             .filterTabsDictateService()
             .filterId(perPostId: postId)
 
+        reloadTabs
+            .flatMap { [weak self] _ -> Observable<[OWFilterTabsCollectionCellViewModel]> in
+                guard let self = self else { return .empty() }
+                return self.getTabs
+            }
+            .observe(on: MainScheduler.instance)
+            .withLatestFrom(serviceSelectedTabId) { ($0, $1) }
+            .subscribe(onNext: { [weak self] filterTabVMs, selectedTabId in
+                guard let self = self else { return }
+                self._tabs.onNext(filterTabVMs)
+                if self.sourceType != .preConversation,
+                   let selectedFilterTabVM = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) {
+                    self.selectTab.onNext(selectedFilterTabVM)
+                } else {
+                    filterTabVMs.first?.inputs.selected.onNext(true)
+                }
+            })
+            .disposed(by: disposeBag)
+
         getTabs
             .observe(on: MainScheduler.instance)
             .withLatestFrom(serviceSelectedTabId) { ($0, $1) }
@@ -118,7 +140,9 @@ fileprivate extension OWFilterTabsViewViewModel {
                 }
             })
             .map { $0.0 }
-            .bind(to: _tabs)
+            .subscribe(onNext: { [weak self] filterTabVMs in
+                self?._tabs.onNext(filterTabVMs)
+            })
             .disposed(by: disposeBag)
 
         selectedTab
