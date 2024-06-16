@@ -1035,6 +1035,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .refreshConversation:
                     self.dataSourceTransition = .reload
                     self._forceRefresh.onNext()
+                    self.filterTabsVM.inputs.reloadTabs.onNext()
                 }
             })
             .disposed(by: disposeBag)

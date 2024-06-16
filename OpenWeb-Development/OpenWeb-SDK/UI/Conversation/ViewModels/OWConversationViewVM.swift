@@ -2050,6 +2050,7 @@ fileprivate extension OWConversationViewViewModel {
                     case .refreshConversation:
                         self._dataSourceTransition.onNext(.reload)
                         self._forceRefresh.onNext()
+                        self.filterTabsVM.inputs.reloadTabs.onNext()
                     }
                 }
             })
