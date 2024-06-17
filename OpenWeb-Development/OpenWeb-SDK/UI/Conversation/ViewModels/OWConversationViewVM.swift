@@ -943,35 +943,28 @@ fileprivate extension OWConversationViewViewModel {
 
         Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.selectedTab)
             .map { $0.1 }
-            .subscribe(onNext: { [weak self] selectedTabVM in
+            .withLatestFrom(sortOptionObservable) { ($0, $1) }
+            .subscribe(onNext: { [weak self] selectedTabVM, selectedSortOption in
                 let sortOptions = selectedTabVM.outputs.sortOptions?.map { OWSortOption(rawValue: $0) }.unwrap()
                 var showSortView = true
                 guard let self = self else { return }
-                guard let firstSortOption = sortOptions?.first else {
+                guard let sortOptions = sortOptions else {
                     // No sort options available, default sort options are used
-                    var sortOption: OWSortOption = .best
-                    switch selectedTabVM.outputs.tabId {
-                    case OWFilterTabObject.allNewestTabId:
-                        sortOption = .newest
-                        showSortView = false
-                    case OWFilterTabObject.allOldestTabId:
-                        sortOption = .oldest
-                        showSortView = false
-                    default:
-                        sortOption = .best
-                        showSortView = true
-                    }
+                    self.servicesProvider
+                        .sortDictateService()
+                        .update(sortOption: selectedSortOption, perPostId: self.postId)
+                    self.conversationSummaryViewModel.inputs.shouldShowSortView.onNext(true)
+                    return
+                }
+                showSortView = !sortOptions.isEmpty
+                let currentSelectedSortExists = sortOptions.contains(where: { $0.rawValue == selectedSortOption.rawValue })
+                let sortOption = currentSelectedSortExists ? selectedSortOption : sortOptions.first
+                self.conversationSummaryViewModel.inputs.shouldShowSortView.onNext(showSortView)
+                if let sortOption = sortOption {
                     self.servicesProvider
                         .sortDictateService()
                         .update(sortOption: sortOption, perPostId: self.postId)
-                    self.conversationSummaryViewModel.inputs.shouldShowSortView.onNext(showSortView)
-                    return
                 }
-                showSortView = !(sortOptions != nil && (sortOptions?.isEmpty ?? false))
-                self.conversationSummaryViewModel.inputs.shouldShowSortView.onNext(showSortView)
-                self.servicesProvider
-                    .sortDictateService()
-                    .update(sortOption: firstSortOption, perPostId: self.postId)
             })
             .disposed(by: disposeBag)
 
