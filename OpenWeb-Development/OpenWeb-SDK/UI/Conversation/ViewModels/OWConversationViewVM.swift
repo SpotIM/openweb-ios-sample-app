@@ -1201,7 +1201,8 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(sortOptionObservable) { (commentPresentationData, sortOption) -> (OWCommentPresentationData, OWSortOption)  in
                 return (commentPresentationData, sortOption)
             }
-            .flatMap { [weak self] (commentPresentationData, sortOption) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
+            .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
+            .flatMap { [weak self] (commentPresentationData, sortOption, filterTabId) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 guard let self = self else { return .empty() }
 
                 let hasRepliesError = self.errorsLoadingReplies[commentPresentationData.id] != nil
@@ -1221,7 +1222,7 @@ fileprivate extension OWConversationViewViewModel {
                 return self.servicesProvider
                     .networkAPI()
                     .conversation
-                    .conversationRead(mode: sortOption, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
+                    .conversationRead(mode: sortOption, filterTabId: filterTabId, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
                     .response
                     .materialize()
                     .observe(on: self.conversationViewVMScheduler)
@@ -1325,12 +1326,13 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
-            .flatMap { [weak self] (sortOption, offset) -> Observable<Event<OWConversationReadRM>> in
+            .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
+            .flatMap { [weak self] (sortOption, offset, filterTabId) -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .networkAPI()
                 .conversation
-                .conversationRead(mode: sortOption, page: OWPaginationPage.next, parentId: "", offset: offset)
+                .conversationRead(mode: sortOption, filterTabId: filterTabId, page: OWPaginationPage.next, parentId: "", offset: offset)
                 .response
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
                 .observe(on: self.conversationViewVMScheduler)
