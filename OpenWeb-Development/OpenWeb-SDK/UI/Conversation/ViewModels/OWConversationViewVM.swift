@@ -1098,8 +1098,11 @@ fileprivate extension OWConversationViewViewModel {
         .disposed(by: disposeBag)
 
         // Set read only mode
+        // Backend does not respond with read only mode when using filter tabs
         conversationFetchedObservable
-            .map { $0.0 }
+            .withLatestFrom(filterTabsObservable) { ($0, $1) }
+            .filter { $1 == OWFilterTabObject.defaultTabId }
+            .map { $0.0.0 }
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
                 var isReadOnly: Bool = response.conversation?.readOnly ?? false
@@ -1152,9 +1155,12 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Binding to community question component
+        // Binding to community question component only when filter tabs is on "all"
+        // Backend does not respond with community questions when using filter tabs
         conversationFetchedObservable
-            .map { $0.0 }
+            .withLatestFrom(filterTabsObservable) { ($0, $1) }
+            .filter { $1 == OWFilterTabObject.defaultTabId }
+            .map { $0.0.0 }
             .bind(to: communityQuestionCellViewModel.outputs.communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
