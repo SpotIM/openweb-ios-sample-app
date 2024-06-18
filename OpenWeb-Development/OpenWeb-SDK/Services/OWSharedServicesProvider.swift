@@ -26,7 +26,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData>
     func lastCommentTypeInMemoryCacheService() -> OWCacheService<OWPostId, OWCachedLastCommentType>
-    func netwokAPI() -> OWNetworkAPIProtocol
+    func networkAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
     func keychain() -> OWKeychainProtocol
@@ -266,7 +266,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _lastCommentTypeInMemoryCacheService
     }
 
-    func netwokAPI() -> OWNetworkAPIProtocol {
+    func networkAPI() -> OWNetworkAPIProtocol {
         return _networkAPI
     }
 

@@ -34,6 +34,7 @@ protocol OWCommentCreationLightViewViewModelingOutputs {
     var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var dismissedToast: Observable<Void> { get }
+    var userMentionVM: OWUserMentionViewViewModeling { get }
 }
 
 protocol OWCommentCreationLightViewViewModeling {
@@ -52,6 +53,13 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+
+    lazy var userMentionVM: OWUserMentionViewViewModeling = {
+        return OWUserMentionViewVM(servicesProvider: servicesProvider)
+    }()
+
+    // This is used to prevent memory leak when binding textViewVM with userMentionVM
+    var cursorRangeChange = PublishSubject<Range<String.Index>>()
 
     var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
     var displayToastCalled: Observable<OWToastNotificationCombinedData> {
@@ -175,7 +183,12 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
         footerViewModel.outputs.performCtaAction
             .withLatestFrom(commentCreationContentVM.outputs.commentContent)
             .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
-            .map { OWCommentCreationCtaData(commentContent: $0, commentLabelIds: $1) }
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0.0, $0.1, $1) }
+            .map { commentContent, selectedLabelIds, mentionsData in
+                return OWCommentCreationCtaData(commentContent: commentContent,
+                                                commentLabelIds: selectedLabelIds,
+                                                commentUserMentions: mentionsData.mentions)
+            }
             .asObservable()
             .share()
     }()
@@ -186,11 +199,43 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
         self.commentCreationData = commentCreationData
         commentType = commentCreationData.commentCreationType
         setupObservers()
+        OWUserMentionHelper.setupInitialMentionsIfNeeded(userMentionVM: userMentionVM,
+                                                         commentCreationType: commentCreationData.commentCreationType,
+                                                         servicesProvider: servicesProvider,
+                                                         postId: postId)
     }
 }
 
 fileprivate extension OWCommentCreationLightViewViewModel {
     func setupObservers() {
+        commentCreationContentVM.outputs.textViewVM.outputs.replaceData
+            .bind(to: userMentionVM.inputs.replaceData)
+            .disposed(by: disposeBag)
+
+        commentCreationContentVM.outputs.textViewVM.outputs.textViewText
+            .bind(to: userMentionVM.inputs.textViewText)
+            .disposed(by: disposeBag)
+
+        commentCreationContentVM.outputs.textViewVM.outputs.cursorRange
+            .bind(to: cursorRangeChange)
+            .disposed(by: disposeBag)
+
+        cursorRangeChange
+            .bind(to: userMentionVM.inputs.cursorRange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.textChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.textExternalChange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.cursorRangeChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.cursorRangeExternalChange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.attributedTextChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.attributedTextChange)
+            .disposed(by: disposeBag)
+
         commentCreationContentVM.outputs.commentContent
             .map { $0.text.count }
             .unwrap()

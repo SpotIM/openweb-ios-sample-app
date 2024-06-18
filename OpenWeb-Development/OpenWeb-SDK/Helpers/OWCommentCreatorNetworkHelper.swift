@@ -88,6 +88,16 @@ fileprivate extension OWCommentCreatorNetworkHelper {
             ])
         }
 
+        if let userMentions = commentCreationData.commentUserMentions {
+            for userMention in userMentions {
+                content.append([
+                    "id": userMention.id,
+                    "type": "user-mention",
+                    "userId": userMention.userId
+                ])
+            }
+        }
+
         if let gifContent = commentCreationData.commentContent.gif {
             content.append([
                 "type": "animation",

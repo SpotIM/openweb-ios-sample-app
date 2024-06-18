@@ -70,6 +70,7 @@ internal struct OWComment: Decodable, Equatable {
     var text: Content.Text?
     var gif: Content.Animation?
     var image: Content.Image?
+    var userMentions: [OWUserId: Content.UserMention] = [:]
 
     // empty init
     init() {
@@ -125,6 +126,9 @@ internal struct OWComment: Decodable, Equatable {
 
                 case .animation(let animationContent):
                     self.gif = animationContent
+
+                case .userMention(let userMention):
+                    self.userMentions[userMention.id] = userMention
 
                 case .none:
                     break
@@ -186,7 +190,7 @@ extension OWComment {
     enum Content: Decodable, Equatable {
 
         enum CodingKeys: CodingKey { // swiftlint:disable:this nesting
-            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId, title, previewUrl
+            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId, userId, displayName, title, previewUrl
         }
 
         struct Text: Decodable, Equatable { // swiftlint:disable:this nesting
@@ -210,15 +214,27 @@ extension OWComment {
             var imageId: String
         }
 
+        struct UserMention: Decodable, Equatable { // swiftlint:disable:this nesting
+            var id: String
+            var userId: String
+            var displayName: String
+        }
+
         case text(Text)
         case animation(Animation)
         case image(Image)
+        case userMention(UserMention)
         case none
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let type = try? container.decode(String.self, forKey: .type)
             switch type {
+            case "user-mention":
+                let id = try container.decode(String.self, forKey: .id)
+                let userId = try container.decode(String.self, forKey: .userId)
+                let displayName = try container.decode(String.self, forKey: .displayName)
+                self = .userMention(UserMention(id: id, userId: userId, displayName: displayName))
             case "text":
                 let id = try container.decode(String.self, forKey: .id)
                 let text = try container.decode(String.self, forKey: .text)

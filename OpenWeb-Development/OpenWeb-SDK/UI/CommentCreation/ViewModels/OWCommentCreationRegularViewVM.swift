@@ -32,6 +32,7 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var dismissedToast: Observable<Void> { get }
+    var userMentionVM: OWUserMentionViewViewModeling { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -46,6 +47,13 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+
+    lazy var userMentionVM: OWUserMentionViewViewModeling = {
+        return OWUserMentionViewVM(servicesProvider: servicesProvider)
+    }()
+
+    // This is used to prevent memory leak when binding textViewVM with userMentionVM
+    var cursorRangeChange = PublishSubject<Range<String.Index>>()
 
     var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
     var displayToastCalled: Observable<OWToastNotificationCombinedData> {
@@ -159,22 +167,59 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         footerViewModel.outputs.performCtaAction
             .withLatestFrom(commentCreationContentVM.outputs.commentContent)
             .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
-            .map { OWCommentCreationCtaData(commentContent: $0, commentLabelIds: $1) }
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0.0, $0.1, $1) }
+            .map { commentContent, selectedLabelIds, mentionsData in
+                return OWCommentCreationCtaData(commentContent: commentContent,
+                                                commentLabelIds: selectedLabelIds,
+                                                commentUserMentions: mentionsData.mentions)
+            }
             .asObservable()
             .share()
     }()
 
-    init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentCreationData: OWCommentCreationRequiredData,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentCreationData = commentCreationData
-        commentType = commentCreationData.commentCreationType
+        self.commentType = commentCreationData.commentCreationType
         setupObservers()
+        OWUserMentionHelper.setupInitialMentionsIfNeeded(userMentionVM: userMentionVM,
+                                                         commentCreationType: commentCreationData.commentCreationType,
+                                                         servicesProvider: servicesProvider,
+                                                         postId: postId)
     }
 }
 
 fileprivate extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
+        commentCreationContentVM.outputs.textViewVM.outputs.replaceData
+            .bind(to: userMentionVM.inputs.replaceData)
+            .disposed(by: disposeBag)
+
+        commentCreationContentVM.outputs.textViewVM.outputs.textViewText
+            .bind(to: userMentionVM.inputs.textViewText)
+            .disposed(by: disposeBag)
+
+        commentCreationContentVM.outputs.textViewVM.outputs.cursorRange
+            .bind(to: cursorRangeChange)
+            .disposed(by: disposeBag)
+
+        cursorRangeChange
+            .bind(to: userMentionVM.inputs.cursorRange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.textChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.textExternalChange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.cursorRangeChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.cursorRangeExternalChange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.attributedTextChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.attributedTextChange)
+            .disposed(by: disposeBag)
+
         commentCreationContentVM.outputs.commentContent
             .map { $0.text.count }
             .unwrap()

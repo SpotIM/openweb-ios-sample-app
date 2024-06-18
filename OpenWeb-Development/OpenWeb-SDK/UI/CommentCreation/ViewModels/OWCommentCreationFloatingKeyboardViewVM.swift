@@ -26,7 +26,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
-    var popped: Observable<String> { get }
+    var popped: Observable<OWCommentCreationCtaData> { get }
     var commentType: OWCommentCreationTypeInternal { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var textViewVM: OWTextViewViewModeling { get }
@@ -37,16 +37,18 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var viewableMode: OWViewableMode { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
     var closedWithDelay: Observable<Void> { get }
-    var closedInstantly: Observable<String> { get }
+    var closedInstantly: Observable<OWCommentCreationCtaData> { get }
     var textBeforeClosedChanged: Observable<String> { get }
     var initialText: String { get }
     var resetTypeToNewCommentChanged: Observable<Void> { get }
     var loginToPostClick: Observable<Void> { get }
     var ctaButtonLoading: Observable<Bool> { get }
     var customizeSubmitButtonUI: Observable<UIButton> { get }
+    var userMentionVM: OWUserMentionViewViewModeling { get }
     var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var dismissedToast: Observable<Void> { get }
+    var textBeforeClosedWithMentions: Observable<String> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -63,6 +65,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
         static let ctaIconName = "sendCommentIcon"
         static let delayForDismiss: Int = 350 // ms
+        static let maxLandscapeLines = 1
     }
 
     var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
@@ -119,13 +122,17 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     }
 
     var closeInstantly = PublishSubject<String>()
-    var closedInstantly: Observable<String> {
+    var closedInstantly: Observable<OWCommentCreationCtaData> {
         return closeInstantly
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
+            .map { text, mentionsData in
+                return OWCommentCreationCtaData(commentContent: OWCommentCreationContent(text: text), commentLabelIds: [], commentUserMentions: mentionsData.mentions)
+            }
             .asObservable()
     }
 
     var pop = PublishSubject<Void>()
-    var popped: Observable<String> {
+    var popped: Observable<OWCommentCreationCtaData> {
         return pop
             .withLatestFrom(closedInstantly)
             .asObservable()
@@ -137,6 +144,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         return closeWithDelay
             .asObservable()
     }
+
+    // This is used to prevent memory leak when binding textViewVM with userMentionVM
+    var cursorRangeChange = PublishSubject<Range<String.Index>>()
 
     var submitCommentInProgress = BehaviorSubject<Bool>(value: false)
     var ctaButtonLoading: Observable<Bool> {
@@ -155,6 +165,19 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     var textBeforeClosedChange = BehaviorSubject<String>(value: "")
     var textBeforeClosedChanged: Observable<String> {
         return textBeforeClosedChange
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
+            .map { text, mentionsData -> String in
+                return OWUserMentionHelper.addUserMentionIds(to: text, mentions: mentionsData.mentions)
+            }
+            .asObservable()
+    }
+
+    var textBeforeClosedWithMentions: Observable<String> {
+        return textBeforeClosedChange
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
+            .map { text, mentionsData -> String in
+                return OWUserMentionHelper.addUserMentionDisplayNames(to: text, mentions: mentionsData.mentions)
+            }
             .asObservable()
     }
 
@@ -170,6 +193,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     }()
 
     let textViewVM: OWTextViewViewModeling
+    lazy var userMentionVM: OWUserMentionViewViewModeling = {
+        return OWUserMentionViewVM(servicesProvider: servicesProvider)
+    }()
 
     lazy var performCta: Observable<OWCommentCreationCtaData> = {
         return ctaTap
@@ -196,9 +222,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             })
             .filter { !$0 } // Do not continue if authentication needed 
             .withLatestFrom(textViewVM.outputs.textViewText)
-            .map { text -> OWCommentCreationCtaData in ()
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
+            .map { text, mentionsData -> OWCommentCreationCtaData in
                 let commentContent = OWCommentCreationContent(text: text)
-                return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [])
+                return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [], commentUserMentions: mentionsData.mentions)
             }
             .asObservable()
             .share()
@@ -234,13 +261,14 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         self.viewableMode = viewableMode
         self.imageURLProvider = imageURLProvider
         self.sharedServiceProvider = sharedServiceProvider
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
         let textViewData = OWTextViewData(placeholderText: Metrics.textViewPlaceholderText,
                                           charectersLimitEnabled: false,
+                                          showCharectersLimit: false,
                                           isEditable: true,
                                           isAutoExpandable: true,
-                                          hasSuggestionsBar: false)
+                                          hasSuggestionsBar: currentOrientation == .portrait)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
-
         // Setting accessoryViewStrategy
         let style = commentCreationData.settings.commentCreationSettings.style
         if case let OWCommentCreationStyle.floatingKeyboard(strategy) = style {
@@ -250,6 +278,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         }
 
         setupInitialTextAndTypeFromCacheIfNeeded()
+        OWUserMentionHelper.setupInitialMentionsIfNeeded(userMentionVM: userMentionVM,
+                                                         commentCreationType: commentCreationData.commentCreationType,
+                                                         servicesProvider: servicesProvider,
+                                                         postId: postId)
 
         // updating inout commentCreationData so that CommentCreationViewVM will have the updated type
         // after being changed in setupInitialTextAndTypeFromCacheIfNeeded
@@ -273,19 +305,19 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
         switch commentType {
         case .comment:
-            guard let text = commentsCacheService[.comment(postId: postId)]?.commentContent.text else { return }
-            initialText = text
+            guard let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id,
-                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.text
+                  let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
             else { return }
-            initialText = text
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
         case .edit(comment: let comment):
             if case .edit = originalCommentType,
                let commentText = comment.text?.text {
                 initialText = commentText
-            } else if let text = commentsCacheService[.edit(postId: postId)]?.commentContent.text {
-                initialText = text
+            } else if let commentCreationCache = commentsCacheService[.edit(postId: postId)] {
+                initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
             }
         }
     }
@@ -306,7 +338,48 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 }
 
 fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        OWSharedServicesProvider.shared.orientationService().orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                guard let self = self else { return }
+                let isPortrait = (currentOrientation == .portrait)
+                self.textViewVM.inputs.hasSuggestionsBarChange.onNext(isPortrait)
+
+                // We limit textView lines in landscape orientation
+                let maxLines = isPortrait ? OWTextViewViewModel.ExternalMetrics.maxNumberOfLines : Metrics.maxLandscapeLines
+                self.textViewVM.inputs.maxLinesChange.onNext(maxLines)
+            })
+            .disposed(by: disposeBag)
+
+        textViewVM.outputs.replaceData
+            .bind(to: userMentionVM.inputs.replaceData)
+            .disposed(by: disposeBag)
+
+        textViewVM.outputs.textViewText
+            .bind(to: userMentionVM.inputs.textViewText)
+            .disposed(by: disposeBag)
+
+        textViewVM.outputs.cursorRange
+            .bind(to: cursorRangeChange)
+            .disposed(by: disposeBag)
+
+        cursorRangeChange
+            .bind(to: userMentionVM.inputs.cursorRange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.textChanged
+            .bind(to: textViewVM.inputs.textExternalChange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.cursorRangeChanged
+            .bind(to: textViewVM.inputs.cursorRangeExternalChange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.attributedTextChanged
+            .bind(to: textViewVM.inputs.attributedTextChange)
+            .disposed(by: disposeBag)
+
         servicesProvider
             .authenticationManager()
             .activeUserAvailability
@@ -331,8 +404,24 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                 switch request {
                 case .manipulateUserInputText(let manipulationTextCompletion):
                     let manipulationTextModel = OWManipulateTextModel(text: currentText, cursorRange: currentSelectedRange)
-                    let newRequestedText = manipulationTextCompletion(.success(manipulationTextModel))
-                    self.textViewVM.inputs.textExternalChange.onNext(newRequestedText)
+                    let textToAppend = manipulationTextCompletion(.success(manipulationTextModel))
+                    var currentSelectedRange = currentSelectedRange
+                    if textToAppend.isEmpty {
+                        currentSelectedRange = currentText.startIndex..<currentText.endIndex
+                    }
+                    let textData = OWUserMentionTextData(text: currentText, cursorRange: currentSelectedRange, replacingText: textToAppend)
+                    let newRequestedText = currentText.replacingCharacters(in: currentSelectedRange, with: textToAppend)
+                    self.userMentionVM.inputs.textData.onNext(textData)
+                    self.textViewVM.inputs.textExternalChange.onNext(String(newRequestedText.utf16))
+                    if !textToAppend.isEmpty,
+                       var nsRange = currentText.nsRange(from: currentSelectedRange) {
+                        nsRange.location += textToAppend.utf16.count
+                        if let range = Range(nsRange, in: newRequestedText) {
+                            DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
+                                self?.textViewVM.inputs.cursorRangeExternalChange.onNext(range)
+                            }
+                        }
+                    }
                 }
             })
             .disposed(by: disposeBag)
