@@ -214,6 +214,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
                                           placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
                                           charectersLimitEnabled: false,
+                                          showCharectersLimit: false,
                                           isEditable: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         setupObservers()
@@ -349,7 +350,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 let userJustLoggedIn = result.2
                 self.setSubmitInProgress.onNext(true)
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .reportReason
                     .report(commentId: self.commentId,
                             parentId: self.parentId,

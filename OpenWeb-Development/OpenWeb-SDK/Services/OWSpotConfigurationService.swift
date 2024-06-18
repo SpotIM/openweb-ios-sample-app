@@ -76,7 +76,7 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
 fileprivate extension OWSpotConfigurationService {
     func fetchConfig(spotId: OWSpotId) {
         // Fetch from API
-        let api: OWConfigurationAPI = self.servicesProvider.netwokAPI().configuration
+        let api: OWConfigurationAPI = self.servicesProvider.networkAPI().configuration
 
         let disposeBag = DisposeBag()
         self.disposeBag = disposeBag

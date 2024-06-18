@@ -553,7 +553,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .flatMapLatest { [weak self] sortOption -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                .netwokAPI()
+                .networkAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.first)
                 .response
@@ -1247,7 +1247,7 @@ fileprivate extension OWPreConversationViewViewModel {
                       let commentId = comment.id
                 else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .commentDelete(id: commentId, parentId: comment.parentId)
                     .response
@@ -1350,7 +1350,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .user
                     .mute(userId: userId)
                     .response

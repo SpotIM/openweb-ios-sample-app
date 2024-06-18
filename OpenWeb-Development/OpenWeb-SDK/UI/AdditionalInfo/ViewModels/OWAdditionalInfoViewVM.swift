@@ -130,6 +130,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
          textViewText: String,
          textViewMaxCharecters: Int = Metrics.defaultTextViewMaxCharecters,
          charectersLimitEnabled: Bool,
+         showCharectersLimit: Bool,
          isTextRequired: Observable<Bool>,
          minimumTextLength: Observable<Int>,
          submitInProgress: Observable<Bool>,
@@ -139,6 +140,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
                                           placeholderText: placeholderText,
                                           textViewText: textViewText,
                                           charectersLimitEnabled: charectersLimitEnabled,
+                                          showCharectersLimit: showCharectersLimit,
                                           isEditable: true)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         setupObservers(minimumTextLength: minimumTextLength, isTextRequired: isTextRequired, submitInProgress: submitInProgress, submitText: submitText)

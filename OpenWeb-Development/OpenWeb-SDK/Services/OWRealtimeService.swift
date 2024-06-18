@@ -124,7 +124,7 @@ fileprivate extension OWRealtimeService {
             .observe(on: self.scheduler) // Do the rest of the Rx chain on this class scheduler
             .flatMap { [weak self] postId -> Observable<OWRealTime> in
                 guard let self = self else { return .empty() }
-                let api: OWRealtimeAPI = self.servicesProvider.netwokAPI().realtime
+                let api: OWRealtimeAPI = self.servicesProvider.networkAPI().realtime
                 // Fetch from API
                 return api.fetchData(fullConversationId: "\(OWManager.manager.spotId)_\(postId)")
                     .response

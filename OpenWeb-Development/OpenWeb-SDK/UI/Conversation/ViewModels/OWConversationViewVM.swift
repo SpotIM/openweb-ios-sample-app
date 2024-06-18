@@ -916,7 +916,7 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                .netwokAPI()
+                .networkAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
                 .response
@@ -1150,7 +1150,7 @@ fileprivate extension OWConversationViewViewModel {
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingMoreReplies(commentId: commentPresentationData.id))
 
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .conversationRead(mode: sortOption, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
                     .response
@@ -1259,7 +1259,7 @@ fileprivate extension OWConversationViewViewModel {
             .flatMap { [weak self] (sortOption, offset) -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                .netwokAPI()
+                .networkAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.next, parentId: "", offset: offset)
                 .response
@@ -2196,7 +2196,7 @@ fileprivate extension OWConversationViewViewModel {
                       let commentId = comment.id
                 else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .commentDelete(id: commentId, parentId: comment.parentId)
                     .response
@@ -2306,7 +2306,7 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .user
                     .mute(userId: userId)
                     .response
