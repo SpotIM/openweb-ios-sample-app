@@ -17,3 +17,9 @@ extension UITableViewCell: OWConfigurableCell {
         fatalError("configure(with viewModel:) has not been implemented, please override this method")
     }
 }
+
+extension UICollectionViewCell: OWConfigurableCell {
+    func configure(with viewModel: OWCellViewModel) {
+        fatalError("configure(with viewModel:) has not been implemented, please override this method")
+    }
+}

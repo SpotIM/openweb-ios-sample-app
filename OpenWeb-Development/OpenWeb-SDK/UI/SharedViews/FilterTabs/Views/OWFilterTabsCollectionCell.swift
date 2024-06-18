@@ -36,7 +36,8 @@ class OWFilterTabsCollectionCell: UICollectionViewCell {
     fileprivate var disposeBag: DisposeBag!
     fileprivate var viewModel: OWFilterTabsCollectionCellViewModel!
 
-    func configure(with viewModel: OWFilterTabsCollectionCellViewModel) {
+    override func configure(with viewModel: OWCellViewModel) {
+        guard let viewModel = viewModel as? OWFilterTabsCollectionCellViewModel else { return }
         self.viewModel = viewModel
         updateAccessibility()
         setupObservers()

@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+typealias FilterTabsDataSourceModel = OWAnimatableSectionModel<String, OWFilterTabsCellOption>
+
 protocol OWFilterTabsViewViewModelingInputs {
     var selectTab: BehaviorSubject<OWFilterTabsCollectionCellViewModel?> { get }
     var setMinimumLeadingTrailingMargin: BehaviorSubject<CGFloat> { get }
@@ -16,6 +18,7 @@ protocol OWFilterTabsViewViewModelingInputs {
 }
 
 protocol OWFilterTabsViewViewModelingOutputs {
+    var filterTabsDataSourceModel: Observable<[FilterTabsDataSourceModel]> { get }
     var tabs: Observable<[OWFilterTabsCollectionCellViewModel]> { get }
     var selectedTab: Observable<OWFilterTabsCollectionCellViewModel> { get }
     var shouldShowFilterTabs: Observable<Bool> { get }
@@ -31,11 +34,24 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     var inputs: OWFilterTabsViewViewModelingInputs { return self }
     var outputs: OWFilterTabsViewViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let numberOfSkeletons = 6
+    }
+
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let sourceType: OWViewSourceType
+    fileprivate let isLoading = BehaviorSubject<Bool>(value: true)
 
     var reloadTabs = PublishSubject<Void>()
+
+    var filterTabsDataSourceModel: Observable<[FilterTabsDataSourceModel]> {
+        return cellsViewModels
+            .map { items in
+                let section = FilterTabsDataSourceModel(model: "", items: items)
+                return [section]
+            }
+    }
 
     var _tabs = BehaviorSubject<[OWFilterTabsCollectionCellViewModel]>(value: [])
     var tabs: Observable<[OWFilterTabsCollectionCellViewModel]> {
@@ -46,12 +62,15 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     var selectTab = BehaviorSubject<OWFilterTabsCollectionCellViewModel?>(value: nil)
     var selectedTab: Observable<OWFilterTabsCollectionCellViewModel> {
         return selectTab
+            .withLatestFrom(isLoading) { ($0, $1) }
+            .filter { !$1 } // Only pass if not loading
+            .map { $0.0 }
             .unwrap()
             .asObservable()
     }
 
     lazy var shouldShowFilterTabs: Observable<Bool> = {
-        return tabs
+        return cellsViewModels
             .map { $0.count > 1 }
             .asObservable()
     }()
@@ -69,6 +88,28 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
         self.setupObservers()
     }
 
+    fileprivate var cellsViewModels: Observable<[OWFilterTabsCellOption]> {
+        return Observable.combineLatest(tabs, isLoading)
+            .flatMapLatest({ tabs, isLoading -> Observable<[OWFilterTabsCellOption]> in
+                if isLoading {
+                    let allFilterTabVM = OWFilterTabsCollectionCellViewModel.all()
+                    allFilterTabVM.inputs.selected.onNext(true)
+                    var skeletonVMs: [OWFilterTabsCellOption] = [OWFilterTabsCellOption.filterTab(viewModel: allFilterTabVM)]
+                    for _ in 1...Metrics.numberOfSkeletons {
+                        skeletonVMs.append(OWFilterTabsCellOption.filterTabSkeleton(viewModel: OWFilterTabsSkeletonCollectionCellVM()))
+                    }
+                    return Observable.just(skeletonVMs)
+                }
+                var viewModels: [OWFilterTabsCellOption] = []
+                for tab in tabs {
+                    let viewModel = OWFilterTabsCellOption.filterTab(viewModel: tab)
+                    viewModels.append(viewModel)
+                }
+                return Observable.just(viewModels)
+            })
+            .asObservable()
+    }
+
     fileprivate lazy var getTabs: Observable<[OWFilterTabsCollectionCellViewModel]> = {
         return self.servicesProvider
             .networkAPI()
@@ -76,10 +117,10 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
             .getTabs()
             .response
             .materialize()
-            .map { event in
+            .map { [weak self] event in
+                self?.isLoading.onNext(false)
                 switch event {
                 case .next(let filterTabsResponse):
-
                     return filterTabsResponse.tabs
                         .filter { $0.count > 0 }
                         .map {
@@ -118,7 +159,7 @@ fileprivate extension OWFilterTabsViewViewModel {
                 guard let self = self else { return }
                 self._tabs.onNext(filterTabVMs)
                 if self.sourceType != .preConversation,
-                   let selectedFilterTabVM = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) {
+                   let selectedFilterTabVM = filterTabVMs.first(where: { ($0.outputs.tabId == selectedTabId) }) {
                     self.selectTab.onNext(selectedFilterTabVM)
                 } else {
                     filterTabVMs.first?.inputs.selected.onNext(true)
