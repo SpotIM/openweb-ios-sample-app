@@ -14,6 +14,7 @@ import RxCocoa
 class OWFilterTabsView: UIView {
     struct FilterTabsMetrics {
         static let itemsHeight: CGFloat = 34
+        static let skeletonsWidth: CGFloat = 100
     }
 
     fileprivate struct Metrics {
@@ -25,7 +26,7 @@ class OWFilterTabsView: UIView {
     fileprivate var viewModel: OWFilterTabsViewViewModeling
     fileprivate var disposeBag = DisposeBag()
 
-    fileprivate lazy var filterTabsCollection: UICollectionView = {
+    fileprivate lazy var filterTabsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -44,6 +45,23 @@ class OWFilterTabsView: UIView {
         setupObservers()
     }
 
+    fileprivate lazy var filterTabsDataSource: OWRxCollectionViewSectionedAnimatedDataSource<FilterTabsDataSourceModel> = {
+        let dataSource = OWRxCollectionViewSectionedAnimatedDataSource<FilterTabsDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
+            return .reload
+        }, configureCell: { [weak self] _, collectionView, indexPath, item -> UICollectionViewCell in
+            guard let self = self else { return UICollectionViewCell() }
+            print("*** item = \(item.viewModel.self)")
+            let cell = collectionView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
+            cell.configure(with: item.viewModel)
+
+            return cell
+        })
+
+        let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
+        dataSource.animationConfiguration = animationConfiguration
+        return dataSource
+    }()
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -57,8 +75,8 @@ fileprivate extension OWFilterTabsView {
             make.height.equalTo(Metrics.height)
         }
 
-        self.addSubviews(filterTabsCollection)
-        filterTabsCollection.OWSnp.makeConstraints { make in
+        self.addSubviews(filterTabsCollectionView)
+        filterTabsCollectionView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(0)
         }
@@ -77,43 +95,43 @@ fileprivate extension OWFilterTabsView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                filterTabsCollection.reloadData()
+                filterTabsCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.tabs
+        viewModel.outputs.filterTabsDataSourceModel
             .observe(on: MainScheduler.instance)
-            .bind(to: filterTabsCollection.rx.items(cellIdentifier: OWFilterTabsCollectionCell.identifierName, cellType: OWFilterTabsCollectionCell.self)) { _, viewModel, cell in
-                cell.configure(with: viewModel)
-            }
+            .bind(to: filterTabsCollectionView.rx.items(dataSource: filterTabsDataSource))
             .disposed(by: disposeBag)
 
         // Scroll to selected tab
         viewModel.outputs.selectedTab
+            .voidify()
             .delay(.milliseconds(Metrics.delayScrollToSelected), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.instance)
-            .withLatestFrom(viewModel.outputs.tabs) { ($0, $1) }
-            .subscribe(onNext: { [weak self] _, tabs in
+            .withLatestFrom(viewModel.outputs.tabs)
+            .subscribe(onNext: { [weak self] tabs in
                 guard let self = self,
                       let index = tabs.firstIndex(where: { $0.outputs.isSelectedNonRx }) else { return }
-                self.filterTabsCollection.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredHorizontally, animated: true)
+                self.filterTabsCollectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredHorizontally, animated: true)
             })
             .disposed(by: disposeBag)
 
-        filterTabsCollection.rx.modelSelected(OWFilterTabsCollectionCellViewModel.self)
-            .map { $0 as OWFilterTabsCollectionCellViewModel }
+        filterTabsCollectionView.rx.modelSelected(OWFilterTabsCellOption.self)
+            .map { $0.viewModel as? OWFilterTabsCollectionCellViewModel }
+            .unwrap()
             .bind(to: viewModel.inputs.selectTab)
             .disposed(by: disposeBag)
 
         // Center collectionView content
-        filterTabsCollection.rx.observe(CGSize.self, #keyPath(UICollectionView.contentSize))
+        filterTabsCollectionView.rx.observe(CGSize.self, #keyPath(UICollectionView.contentSize))
             .unwrap()
             .withLatestFrom(viewModel.outputs.minimumLeadingTrailingMargin) { ($0, $1) }
             .subscribe(onNext: { [weak self] contentSize, minimumLeadingTrailingMargin in
                 guard let self = self else { return }
                 let maxWidth = self.frame.size.width
                 let horizontalMargins = max((maxWidth - contentSize.width) / 2, minimumLeadingTrailingMargin)
-                self.filterTabsCollection.OWSnp.updateConstraints { make in
+                self.filterTabsCollectionView.OWSnp.updateConstraints { make in
                     make.leading.trailing.equalToSuperview().inset(horizontalMargins)
                 }
             })

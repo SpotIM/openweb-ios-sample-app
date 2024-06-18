@@ -22,7 +22,7 @@ protocol OWFilterTabsCollectionCellViewModelingOutputs {
     var sortOptions: [String]? { get }
 }
 
-protocol OWFilterTabsCollectionCellViewModeling {
+protocol OWFilterTabsCollectionCellViewModeling: OWCellViewModel {
     var inputs: OWFilterTabsCollectionCellViewModelingInputs { get }
     var outputs: OWFilterTabsCollectionCellViewModelingOutputs { get }
 }
@@ -78,5 +78,21 @@ fileprivate extension OWFilterTabsCollectionCellViewModel {
                 self.model.selected = isSelected
             })
             .disposed(by: disposeBag)
+    }
+}
+
+extension OWFilterTabsCollectionCellViewModel {
+    static func stub() -> OWFilterTabsCollectionCellViewModel {
+        return OWFilterTabsCollectionCellViewModel(model: OWFilterTabObject(id: "",
+                                                                            count: 0,
+                                                                            name: "",
+                                                                            sortOptions: nil))
+    }
+
+    static func all() -> OWFilterTabsCollectionCellViewModel {
+        return OWFilterTabsCollectionCellViewModel(model: OWFilterTabObject(id: "all",
+                                                                            count: 1,
+                                                                            name: "All",
+                                                                            sortOptions: nil))
     }
 }
