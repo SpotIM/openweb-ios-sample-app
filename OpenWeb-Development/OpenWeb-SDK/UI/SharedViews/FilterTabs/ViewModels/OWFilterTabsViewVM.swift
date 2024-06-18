@@ -69,9 +69,21 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
             .asObservable()
     }
 
-    lazy var shouldShowFilterTabs: Observable<Bool> = {
+    fileprivate lazy var hasMoreThanOneTab: Observable<Bool> = {
         return cellsViewModels
             .map { $0.count > 1 }
+            .asObservable()
+    }()
+
+    // Show FilterTabsView according to conversationConfig isTabsEnabled and Tabs count
+    lazy var shouldShowFilterTabs: Observable<Bool> = {
+        let configurationService = servicesProvider.spotConfigurationService()
+        return Observable.combineLatest(configurationService.config(spotId: OWManager.manager.spotId).take(1), hasMoreThanOneTab)
+            .map { [weak self] config, shouldShowFilterTabs -> Bool in
+                guard let self = self,
+                      let conversationConfig = config.conversation else { return false }
+                return conversationConfig.isTabsEnabled && shouldShowFilterTabs
+            }
             .asObservable()
     }()
 

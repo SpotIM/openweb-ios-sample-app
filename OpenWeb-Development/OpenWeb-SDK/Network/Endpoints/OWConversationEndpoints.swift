@@ -70,8 +70,7 @@ enum OWConversationEndpoints: OWEndpoints {
                 "extract_data": page == .first,
                 "depth": parentId.isEmpty ? Metrics.parentCommentDepth : Metrics.replyCommentDepth
             ]
-            if let tabId = tabId,
-               !OWFilterTabObject.networkExcludeIds.contains(tabId) {
+            if let tabId = tabId {
                 params["tab_id"] = tabId
             }
             if let childCount = childCount {

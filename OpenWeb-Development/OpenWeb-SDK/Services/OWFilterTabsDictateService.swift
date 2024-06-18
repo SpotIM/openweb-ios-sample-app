@@ -34,7 +34,7 @@ class OWFilterTabsDictateService: OWFilterTabsDictateServicing {
         return mapper
             .take(1)
             .flatMap { mapping -> OWSkipAndMapping in
-                // 1. Check if we already have a sort option for the postId in the mapper
+                // 1. Check if we already have a filter tab id for the postId in the mapper
 
                 guard let _ = mapping[postId] else {
                     return Observable.just((false, mapping))
@@ -51,18 +51,18 @@ class OWFilterTabsDictateService: OWFilterTabsDictateServicing {
                 let mapping = skipAndMapper.1
 
                 if !shouldSkip {
-                    // We will inject to the mapper the required initial sorting from the server config
+                    // We will inject to the mapper the required initial filter tab id
                     self.inject(toPostId: postId, filterTabId: OWFilterTabObject.defaultTabId, fromOriginalMapping: mapping)
                 }
             })
             .flatMap { [weak self] _ -> Observable<[OWPostId: OWFilterTabId]> in
-                // 3. Returning sharedMapper after we sure there is a sort option for the postId
+                // 3. Returning sharedMapper after we sure there is a filter tab id for the postId
 
                 guard let self = self else { return .empty() }
                 return self.sharedMapper
             }
             .map { [weak self] mapping -> OWFilterTabId in
-                // 4. Mapping to the appropriate sort option per postId
+                // 4. Mapping to the appropriate filter tab id per postId
 
                 guard let self = self else { return OWFilterTabObject.defaultTabId }
                 guard let filterTabId = mapping[postId] else {

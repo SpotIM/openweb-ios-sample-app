@@ -64,7 +64,7 @@ fileprivate extension OWFilterTabsCollectionCell {
         contentView.addSubview(mainView)
         mainView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.height.equalTo(Metrics.height)
+            make.height.greaterThanOrEqualTo(Metrics.height)
         }
 
         mainView.addSubview(titleLabel)

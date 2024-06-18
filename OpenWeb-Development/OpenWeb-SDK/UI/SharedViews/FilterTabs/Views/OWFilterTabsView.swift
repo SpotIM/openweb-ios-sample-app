@@ -50,7 +50,6 @@ class OWFilterTabsView: UIView {
             return .reload
         }, configureCell: { [weak self] _, collectionView, indexPath, item -> UICollectionViewCell in
             guard let self = self else { return UICollectionViewCell() }
-            print("*** item = \(item.viewModel.self)")
             let cell = collectionView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             cell.configure(with: item.viewModel)
 
@@ -95,7 +94,7 @@ fileprivate extension OWFilterTabsView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                filterTabsCollectionView.reloadData()
+                self.filterTabsCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
 
