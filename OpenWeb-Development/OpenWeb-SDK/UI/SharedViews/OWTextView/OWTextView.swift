@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
+import NaturalLanguage
 
 class OWTextView: UIView {
     fileprivate struct Metrics {
@@ -28,12 +29,12 @@ class OWTextView: UIView {
         static let textViewFontSize: CGFloat = 15
         static let charectersFontSize: CGFloat = 13
         static let baseTextViewHeight: CGFloat = 30
-        static let maxNumberOfLines = 5
         static let expandAnimationDuration: CGFloat = 0.1
         static let heightConstraintPriority: CGFloat = 500
         static let didBeginEditDelay = 1
         static let delayTextViewTextChange = 5
         static let delayTextViewExpand = 10
+        static let didChangeSelectionDelay = 1
     }
 
     let viewModel: OWTextViewViewModeling
@@ -41,21 +42,21 @@ class OWTextView: UIView {
 
     fileprivate lazy var textView: UITextView = {
         let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
-        return UITextView()
-                .font(OWFontBook.shared.font(typography: .bodyText))
-                .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .textContainerInset(
-                    UIEdgeInsets(
-                        top: Metrics.textViewTopBottomPadding,
-                        left: Metrics.textViewLeadingTrailingPadding,
-                        bottom: Metrics.textViewTopBottomPadding,
-                        right: Metrics.textViewLeadingTrailingPadding
-                    )
+        let textView = UITextView()
+            .font(OWFontBook.shared.font(typography: .bodyText))
+            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .textContainerInset(
+                UIEdgeInsets(
+                    top: Metrics.textViewTopBottomPadding,
+                    left: Metrics.textViewLeadingTrailingPadding,
+                    bottom: Metrics.textViewTopBottomPadding,
+                    right: Metrics.textViewLeadingTrailingPadding
                 )
-                .enforceSemanticAttribute()
-                .spellCheckingType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
-                .autocorrectionType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
+            )
+            .isScrollEnabled(viewModel.outputs.scrollEnabled)
+            .enforceSemanticAttribute()
+        return textView
     }()
 
     fileprivate lazy var charectersCountLabel: UILabel = {
@@ -81,10 +82,21 @@ class OWTextView: UIView {
         setupViews()
         setupObservers()
         applyAccessibility(prefixId: prefixIdentifier)
+        textView.rx
+            .setDelegate(self)
+            .disposed(by: disposeBag)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension OWTextView: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let replaceData = OWTextViewReplaceData(text: text, originalText: textView.text, range: range)
+        viewModel.inputs.internalReplacedData.onNext(replaceData)
+        return true
     }
 }
 
@@ -97,11 +109,13 @@ fileprivate extension OWTextView {
     }
 
     func setupViews() {
-        self.layer.cornerRadius = Metrics.cornerRadius
-        self.layer.borderWidth = Metrics.borderWidth
-        self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
+        if viewModel.outputs.hasBorder {
+            self.layer.cornerRadius = Metrics.cornerRadius
+            self.layer.borderWidth = Metrics.borderWidth
+            self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
+        }
 
-        if viewModel.outputs.charectersLimitEnabled {
+        if viewModel.outputs.charectersLimitEnabled && viewModel.outputs.showCharectersLimit {
             self.addSubviews(charectersCountLabel)
             charectersCountLabel.OWSnp.makeConstraints { make in
                 make.trailing.equalToSuperview().inset(Metrics.charectersTrailingPadding)
@@ -111,7 +125,7 @@ fileprivate extension OWTextView {
 
         self.addSubviews(textView)
         textView.OWSnp.makeConstraints { make in
-            if viewModel.outputs.charectersLimitEnabled {
+            if viewModel.outputs.charectersLimitEnabled && viewModel.outputs.showCharectersLimit {
                 make.top.leading.trailing.equalToSuperview()
                 make.bottom.equalTo(charectersCountLabel.OWSnp.top)
             } else {
@@ -119,7 +133,7 @@ fileprivate extension OWTextView {
             }
             if viewModel.outputs.isAutoExpandable {
                 make.height.equalTo(textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
-                                                       maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
+                                                       maxLines: viewModel.outputs.maxLines)).priority(Metrics.heightConstraintPriority)
             }
         }
 
@@ -131,22 +145,113 @@ fileprivate extension OWTextView {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.maxLinesChanged
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let height = self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
+                                                     maxLines: self.viewModel.outputs.maxLines)
+                self.textView.OWSnp.updateConstraints { make in
+                    make.height.equalTo(height).priority(Metrics.heightConstraintPriority)
+                }
+                self.layoutIfNeeded()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.attributedTextChanged
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] attributedText in
+                guard let self = self else { return }
+                self.addAttributes(from: attributedText)
+            })
+            .disposed(by: disposeBag)
+
+        textView.rx.didChange
+            .withLatestFrom(viewModel.outputs.internalReplaceData)
+            .subscribe(onNext: { [weak self] replaceData in
+                guard let self = self,
+                      let originalText = replaceData.originalText,
+                      let replacedRange = Range(replaceData.range, in: originalText) else { return }
+                let afterReplacedText = originalText.replacingOccurrences(of: originalText[replacedRange], with: replaceData.text, range: replacedRange)
+                let currentText = self.textView.text
+                if let currentText = currentText,
+                   !(currentText.utf16.count == afterReplacedText.utf16.count &&
+                   replaceData.range.length == 0) {
+                    self.viewModel.inputs.replacedData.onNext(replaceData)
+                }
+                guard afterReplacedText != currentText else {
+                    return
+                }
+                // Since UITextView replaces a whitespace automatically if replacing range that before has a whitepace or removes a whitespace after range if the range start index (location) is 0 at the begining.
+                // So here we check for whitespaces after and before for both cases so that we send the real replace range.
+                let range = replaceData.range
+                let replaceText = replaceData.text
+                var rangeToSend = range
+                rangeToSend.location += range.location == 0 ? range.length : -1
+                rangeToSend.length = 1
+                if replaceText.isEmpty,
+                   let rangeIsSpace = Range(rangeToSend, in: originalText),
+                   originalText[rangeIsSpace] == " " {
+                    if rangeToSend.location > range.location {
+                        rangeToSend.location = range.location
+                    }
+
+                    if rangeToSend.length > 0 {
+                        let newReplaceData = OWTextViewReplaceData(text: "", originalText: nil, range: rangeToSend)
+                        self.viewModel.inputs.replacedData.onNext(newReplaceData)
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+
         textView.rx.didChangeSelection
-            .map { [weak self] _ -> Range<String.Index>? in
+            // delay so that textView.rx.text is updated with updated text
+            .delay(.microseconds(Metrics.didChangeSelectionDelay), scheduler: MainScheduler.instance)
+            .withLatestFrom(textView.rx.text)
+            .unwrap()
+            .map { [weak self] text -> Range<String.Index>? in
                 guard let self = self else { return nil }
-                return self.textView.text.range(from: self.textView.selectedRange)
+                return Range(self.textView.selectedRange, in: text)
             }
             .unwrap()
-            .bind(to: viewModel.inputs.cursorRangeChange)
+            .bind(to: viewModel.inputs.cursorRangeInternalChange)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.cursorRange
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] cursorRange in
+                guard let self = self,
+                      let range = self.textView.text?.nsRange(from: cursorRange) else { return }
+                let savedDelegate = self.textView.delegate
+                self.textView.delegate = nil // Fixes looping cursor range
+                self.textView.selectedRange = range
+                self.textView.delegate = savedDelegate // Return rx proxy delegate back again
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.cursorRangeExternalChanged
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] range in
+                guard let self = self,
+                      let nsRange = self.textView.text?.nsRange(from: range) else { return }
+                let savedDelegate = self.textView.delegate
+                self.textView.delegate = nil // Fixes looping cursor range
+                self.textView.selectedRange = nsRange
+                self.viewModel.inputs.cursorRangeInternalChange.onNext(range)
+                self.textView.delegate = savedDelegate // Return rx proxy delegate back again
+            })
             .disposed(by: disposeBag)
 
         textView.rx.text
+            // Skip first empty string from textView that deletes the initial text
+            .skip(1)
             .unwrap()
             .bind(to: viewModel.inputs.textInternalChange)
             .disposed(by: disposeBag)
 
         viewModel.outputs.textViewText
+            .observe(on: MainScheduler.instance)
             .bind(to: textView.rx.text)
             .disposed(by: disposeBag)
 
@@ -178,7 +283,7 @@ fileprivate extension OWTextView {
                             UIView.animate(withDuration: Metrics.expandAnimationDuration) {
                                 self.textView.OWSnp.updateConstraints { make in
                                     make.height.equalTo(self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
-                                                                                maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
+                                                                                maxLines: self.viewModel.outputs.maxLines)).priority(Metrics.heightConstraintPriority)
                                 }
                                 self.layoutIfNeeded()
                             }
@@ -218,11 +323,13 @@ fileprivate extension OWTextView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
+                if viewModel.outputs.hasBorder {
+                    self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
+                }
                 self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-                self.textView.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.textView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.textView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.textView.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -235,6 +342,77 @@ fileprivate extension OWTextView {
                 self.textViewPlaceholder.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.hasSuggestionsBarChanged
+            .withLatestFrom(viewModel.outputs.cursorRange) { ($0, $1) }
+            .subscribe(onNext: { [weak self] hasSuggestionsBar, selectedRange in
+                guard let self = self,
+                      let selecedNSRange = self.textView.text?.nsRange(from: selectedRange) else { return }
+                textView.spellCheckingType(hasSuggestionsBar ? .default : .no)
+                textView.autocorrectionType(hasSuggestionsBar ? .default : .no)
+
+                // Since the suggestions bar UI is not updated untill text changes
+                // We need to add and remove some text so it updates the UI
+                // 1 Stopping delegate so that no updates are sent out
+                // 2 Save attrubuted and regular text
+                // 3 Add a space to the current text
+                // 4 Remove the space
+                // 5 Set attributed text if exists
+                // 6 Set back the cursor range
+                // 7 Set back the textView's delegate
+                let savedDelegate = self.textView.delegate
+                self.textView.delegate = nil
+                let attributedText = self.textView.attributedText
+                let text = self.textView.text ?? ""
+                self.textView.text = text + " "
+                self.textView.text = text
+                if attributedText?.length ?? 0 > 0 {
+                    self.textView.attributedText = attributedText
+                }
+                self.textView.selectedRange = selecedNSRange
+                self.textView.delegate = savedDelegate // Return rx proxy delegate back again
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func detectedLanguage(for string: String) -> String? {
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(string)
+        guard let languageCode = recognizer.dominantLanguage?.rawValue else { return nil }
+        return languageCode
+    }
+
+    func addAttributes(from attributedText: NSAttributedString) {
+        guard let font = self.textView.font else { return }
+
+        let nsRange = NSRange(location: 0, length: attributedText.string.utf16.count)
+        let textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+
+        let updatedAttributedText = NSMutableAttributedString(string: attributedText.string)
+
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.baseWritingDirection =  NSMutableParagraphStyle.defaultWritingDirection(forLanguage: detectedLanguage(for: String(attributedText.string)))
+
+        updatedAttributedText.addAttribute(.font, value: font, range: nsRange)
+        updatedAttributedText.addAttribute(.foregroundColor, value: textColor, range: nsRange)
+
+        attributedText.enumerateAttributes(in: nsRange) { attributes, range, _ in
+            for key in attributes.keys {
+                if let value = attributes[key] {
+                    updatedAttributedText.addAttribute(key, value: value, range: range)
+                }
+            }
+        }
+
+        updatedAttributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: nsRange)
+
+        let savedDelegate = self.textView.delegate
+        self.textView.delegate = nil // Fixes looping cursor range
+        let savedSelectedRange = self.textView.selectedRange
+        self.textView.attributedText = updatedAttributedText
+        self.textView.selectedRange = savedSelectedRange
+        self.textView.delegate = savedDelegate // Return rx proxy delegate back again
     }
 }
 

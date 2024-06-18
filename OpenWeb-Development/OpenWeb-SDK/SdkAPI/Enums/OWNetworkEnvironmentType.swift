@@ -1,9 +1,9 @@
 //
 //  OWNetworkEnvironmentType.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 21/02/2024.
-//  Copyright © 2024 Spot.IM. All rights reserved.
+//  Copyright © 2024 OpenWeb. All rights reserved.
 //
 
 import Foundation
