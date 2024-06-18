@@ -58,7 +58,7 @@ fileprivate extension OWFilterTabsSkeletonCollectionCell {
         skelatonView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalTo(Metrics.width)
-            make.height.greaterThanOrEqualTo(Metrics.height)
+            make.height.equalTo(Metrics.height)
         }
     }
 
