@@ -83,16 +83,10 @@ fileprivate extension OWFilterTabsCollectionCellViewModel {
 
 extension OWFilterTabsCollectionCellViewModel {
     static func stub() -> OWFilterTabsCollectionCellViewModel {
-        return OWFilterTabsCollectionCellViewModel(model: OWFilterTabObject(id: "",
-                                                                            count: 0,
-                                                                            name: "",
-                                                                            sortOptions: nil))
+        return OWFilterTabsCollectionCellViewModel(model: OWFilterTabObject.defaultTab)
     }
 
     static func all() -> OWFilterTabsCollectionCellViewModel {
-        return OWFilterTabsCollectionCellViewModel(model: OWFilterTabObject(id: "all",
-                                                                            count: 1,
-                                                                            name: "All",
-                                                                            sortOptions: nil))
+        return OWFilterTabsCollectionCellViewModel(model: OWFilterTabObject.defaultTab)
     }
 }

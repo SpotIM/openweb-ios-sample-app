@@ -28,7 +28,7 @@ class OWFilterTabsSkeletonCollectionCell: UICollectionViewCell {
         view.addSubview(skeletonContentView)
         skeletonContentView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.height.equalTo(Metrics.height)
+            make.height.greaterThanOrEqualTo(Metrics.height)
         }
         return view
     }()
@@ -58,7 +58,7 @@ fileprivate extension OWFilterTabsSkeletonCollectionCell {
         skelatonView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalTo(Metrics.width)
-            make.height.equalTo(Metrics.height)
+            make.height.greaterThanOrEqualTo(Metrics.height)
         }
     }
 
