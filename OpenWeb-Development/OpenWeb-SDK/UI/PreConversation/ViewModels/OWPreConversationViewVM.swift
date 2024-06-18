@@ -438,16 +438,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             }
     }
 
-    // Show FilterTabsView according to conversationConfig isTabsEnabled
+    // Show FilterTabsView
     lazy var shouldShowFilterTabsView: Observable<Bool> = {
-        let configurationService = servicesProvider.spotConfigurationService()
-        return Observable.combineLatest(configurationService.config(spotId: OWManager.manager.spotId).take(1), filterTabsVM.outputs.shouldShowFilterTabs)
-            .map { [weak self] config, shouldShowFilterTabs -> Bool in
-                guard let self = self,
-                      let conversationConfig = config.conversation else { return false }
-                return conversationConfig.isTabsEnabled && shouldShowFilterTabs
-            }
-            .asObservable()
+        return filterTabsVM.outputs.shouldShowFilterTabs
     }()
 
     lazy var shouldAddContentTapRecognizer: Bool = {

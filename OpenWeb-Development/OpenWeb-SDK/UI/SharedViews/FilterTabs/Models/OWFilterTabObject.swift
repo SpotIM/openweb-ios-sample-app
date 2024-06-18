@@ -27,18 +27,7 @@ class OWFilterTabObject {
         return "all"
     }
 
-    static var allNewestTabId: OWFilterTabId {
-        // This will be returned as a default filter tab id
-        return "all_newest"
-    }
-
-    static var allOldestTabId: OWFilterTabId {
-        // This will be returned as a default filter tab id
-        return "all_oldest"
-    }
-
-    static var networkExcludeIds: [OWFilterTabId] {
-        // These ids will not be sent in conversation/read API
-        return ["all", "all_newest", "all_oldest"]
+    static var defaultTab: OWFilterTabObject {
+        return OWFilterTabObject(id: defaultTabId, count: 1, name: "All", sortOptions: nil)
     }
 }
