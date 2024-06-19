@@ -933,6 +933,21 @@ fileprivate extension OWConversationViewViewModel {
         let filterTabsObservable = self.servicesProvider
             .filterTabsDictateService()
             .filterId(perPostId: self.postId)
+            .share(replay: 1)
+
+        let _conversationReadWithoutFilterTabDone = BehaviorSubject<Bool>(value: false)
+        let conversationReadWithoutFilterTabDone: Observable<Bool> = {
+            return _conversationReadWithoutFilterTabDone
+                .asObservable()
+        }()
+        let _conversationReadWithoutFilterTab = BehaviorSubject<Bool>(value: true)
+        let conversationReadWithoutFilterTab = _conversationReadWithoutFilterTab
+            .withLatestFrom(filterTabsObservable) { ($0, $1) }
+            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0.0, $0.1, $1) }
+            .map { _, filterTabId, conversationReadWithoutFilterTabDone -> Bool in
+                return !conversationReadWithoutFilterTabDone && filterTabId != OWFilterTabObject.defaultTabId
+            }
+            .asObservable()
 
         Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.selectedTab)
             .map { $0.1 }
@@ -941,6 +956,8 @@ fileprivate extension OWConversationViewViewModel {
                 let sortOptions = selectedTabVM.outputs.sortOptions?.map { OWSortOption(rawValue: $0) }.unwrap()
                 var showSortView = true
                 guard let self = self else { return }
+                self._serverCommentsLoadingState.onNext(.loading(triggredBy: .filterTabChanged))
+                self._dataSourceTransition.onNext(.reload)
                 guard let sortOptions = sortOptions else {
                     // No sort options available, default sort options are used
                     self.servicesProvider
@@ -962,21 +979,25 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Observable for the conversation network API
-        let conversationReadObservable = Observable.combineLatest(sortOptionObservable, filterTabsObservable)
+        let conversationReadObservable = Observable.combineLatest(sortOptionObservable, filterTabsObservable, conversationReadWithoutFilterTab)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
-            .flatMapLatest { [weak self] sortOption, filterTabsId -> Observable<Event<OWConversationReadRM>> in
+            .flatMapLatest { [weak self] sortOption, filterTabsId, conversationReadWithoutFilterTab -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                .networkAPI()
-                .conversation
-                .conversationRead(mode: sortOption, filterTabId: filterTabsId, page: OWPaginationPage.first, parentId: "", offset: 0)
-                .response
-                .materialize() // Required to keep the final subscriber even if errors arrived from the network
-                .observe(on: self.conversationViewVMScheduler)
+                    .networkAPI()
+                    .conversation
+                    .conversationRead(mode: sortOption,
+                                      filterTabId: conversationReadWithoutFilterTab ? nil : filterTabsId,
+                                      page: OWPaginationPage.first,
+                                      parentId: "",
+                                      offset: 0)
+                    .response
+                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
+                    .observe(on: self.conversationViewVMScheduler)
             }
 
         let conversationFetchedObservable = Observable.merge(viewInitializedObservable,
@@ -1051,9 +1072,18 @@ fileprivate extension OWConversationViewViewModel {
         conversationFetchedObservable
             .map { $0.0 }
             .observe(on: conversationViewVMScheduler)
-            .subscribe(onNext: { [weak self] response in
+            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
+            .subscribe(onNext: { [weak self] response, conversationReadWithoutFilterTabDone in
+                // We do not want the comments to be inserted to the tableView if
+                // conversationReadWithoutFilterTab is true, since this is only for
+                // retreaving data that will not be retreaved when filterTabId is sent
+                // to conversation/read API
                 guard let self = self else { return }
-
+                guard conversationReadWithoutFilterTabDone else {
+                    _conversationReadWithoutFilterTabDone.onNext(true)
+                    _conversationReadWithoutFilterTab.onNext(false)
+                    return
+                }
                 self.cacheConversationRead(response: response)
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
                 self._commentsPresentationData.replaceAll(with: commentsPresentationData)
@@ -1072,6 +1102,15 @@ fileprivate extension OWConversationViewViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        let conversationFetchedWithAllData = conversationFetchedObservable
+            .withLatestFrom(conversationReadWithoutFilterTab) { ($0, $1) }
+            .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
+            .filter { _, conversationReadWithoutFilterTab, filterTabsId in
+                return (filterTabsId == OWFilterTabObject.defaultTabId || conversationReadWithoutFilterTab)
+            }
+            .map { $0.0.0 }
+            .asObservable()
 
         realtimeIndicationAnimationViewModel.outputs
             .realtimeIndicationViewModel.outputs
@@ -1099,10 +1138,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Set read only mode
         // Backend does not respond with read only mode when using filter tabs
-        conversationFetchedObservable
-            .withLatestFrom(filterTabsObservable) { ($0, $1) }
-            .filter { $1 == OWFilterTabObject.defaultTabId }
-            .map { $0.0.0 }
+        conversationFetchedWithAllData
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
                 var isReadOnly: Bool = response.conversation?.readOnly ?? false
@@ -1157,10 +1193,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Binding to community question component only when filter tabs is on "all"
         // Backend does not respond with community questions when using filter tabs
-        conversationFetchedObservable
-            .withLatestFrom(filterTabsObservable) { ($0, $1) }
-            .filter { $1 == OWFilterTabObject.defaultTabId }
-            .map { $0.0.0 }
+        conversationFetchedWithAllData
             .bind(to: communityQuestionCellViewModel.outputs.communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
