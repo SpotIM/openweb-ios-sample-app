@@ -1104,10 +1104,10 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         let conversationFetchedWithAllData = conversationFetchedObservable
-            .withLatestFrom(conversationReadWithoutFilterTab) { ($0, $1) }
+            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
             .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
-            .filter { _, conversationReadWithoutFilterTab, filterTabsId in
-                return (filterTabsId == OWFilterTabObject.defaultTabId || conversationReadWithoutFilterTab)
+            .filter { _, conversationReadWithoutFilterTabDone, filterTabsId in
+                return (filterTabsId == OWFilterTabObject.defaultTabId || !conversationReadWithoutFilterTabDone)
             }
             .map { $0.0.0 }
             .asObservable()
