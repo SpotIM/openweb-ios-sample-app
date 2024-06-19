@@ -980,6 +980,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = Observable.combineLatest(sortOptionObservable, filterTabsObservable, conversationReadWithoutFilterTab)
+            .debug("*** conversationReadObservable")
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.reload) // Block animations in the table view
@@ -1110,7 +1111,7 @@ fileprivate extension OWConversationViewViewModel {
                 return (filterTabsId == OWFilterTabObject.defaultTabId || !conversationReadWithoutFilterTabDone)
             }
             .map { $0.0.0 }
-            .asObservable()
+            .share()
 
         realtimeIndicationAnimationViewModel.outputs
             .realtimeIndicationViewModel.outputs
