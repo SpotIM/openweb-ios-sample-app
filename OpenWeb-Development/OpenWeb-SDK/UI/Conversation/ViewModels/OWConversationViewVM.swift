@@ -941,13 +941,22 @@ fileprivate extension OWConversationViewViewModel {
                 .asObservable()
         }()
         let _conversationReadWithoutFilterTab = BehaviorSubject<Bool>(value: true)
-        let conversationReadWithoutFilterTab = _conversationReadWithoutFilterTab
-            .withLatestFrom(filterTabsObservable) { ($0, $1) }
-            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0.0, $0.1, $1) }
+        let conversationReadWithoutFilterTab: Observable<Bool> = {
+            return Observable.combineLatest(_conversationReadWithoutFilterTab,
+                                            filterTabsObservable,
+                                            conversationReadWithoutFilterTabDone)
             .map { _, filterTabId, conversationReadWithoutFilterTabDone -> Bool in
                 return !conversationReadWithoutFilterTabDone && filterTabId != OWFilterTabObject.defaultTabId
             }
+            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
+            .do(onNext: { conversationReadWithoutFilterTab, conversationReadWithoutFilterTabDone in
+                if !conversationReadWithoutFilterTab && !conversationReadWithoutFilterTabDone {
+                    _conversationReadWithoutFilterTabDone.onNext(true)
+                }
+            })
+            .map { $0.0 }
             .asObservable()
+        }()
 
         Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.selectedTab)
             .map { $0.1 }
@@ -979,8 +988,9 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Observable for the conversation network API
-        let conversationReadObservable = Observable.combineLatest(sortOptionObservable, filterTabsObservable, conversationReadWithoutFilterTab)
-            .debug("*** conversationReadObservable")
+        let conversationReadObservable = Observable.combineLatest(sortOptionObservable,
+                                                                  filterTabsObservable,
+                                                                  conversationReadWithoutFilterTab)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.reload) // Block animations in the table view
