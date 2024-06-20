@@ -24,7 +24,8 @@ protocol OWConversationViewViewModelingInputs {
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
-    var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
+    var tableViewContentOffsetY: BehaviorSubject<CGFloat> { get }
+    var tableViewDragBeginContentOffsetY: BehaviorSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
     var dismissToast: PublishSubject<Void> { get }
     var setFilterTabsHorizontalMargin: PublishSubject<CGFloat> { get }
@@ -107,6 +108,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let collapsableTextLineLimit: Int = 4
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
+        static let filterTabsHideMinimumOffset: CGFloat = 50
     }
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
@@ -123,6 +125,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
+    fileprivate var scrollingDown = BehaviorSubject<Bool>(value: false)
+
     var setFilterTabsHorizontalMargin = PublishSubject<CGFloat>()
     var filterTabsHorizontalMargin: Observable<CGFloat> {
         return setFilterTabsHorizontalMargin
@@ -136,7 +140,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
-    var tableViewContentOffsetY = PublishSubject<CGFloat>()
+    var tableViewDragBeginContentOffsetY = BehaviorSubject<CGFloat>(value: 0)
+    fileprivate lazy var tableViewDragBeginContentOffsetYChanged: Observable<CGFloat> = {
+        tableViewDragBeginContentOffsetY
+            .asObservable()
+    }()
+
+    var tableViewContentOffsetY = BehaviorSubject<CGFloat>(value: 0)
     fileprivate lazy var tableViewContentOffsetYChanged: Observable<CGFloat> = {
         tableViewContentOffsetY
             .asObservable()
@@ -337,7 +347,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     // Show FilterTabsView
     lazy var shouldShowFilterTabsView: Observable<Bool> = {
-        return filterTabsVM.outputs.shouldShowFilterTabs
+        return Observable.combineLatest(filterTabsVM.outputs.shouldShowFilterTabs,
+                                        scrollingDown)
+        .withLatestFrom(tableViewContentOffsetYChanged) { ($0.0, $0.1, $1) }
+        .map { shouldShowFilterTabs, scrollingDown, tableViewContentOffsetY in
+            return shouldShowFilterTabs && (!scrollingDown || tableViewContentOffsetY < Metrics.filterTabsHideMinimumOffset)
+        }
+        .asObservable()
     }()
 
     fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
@@ -886,6 +902,14 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        tableViewContentOffsetYChanged
+            .withLatestFrom(tableViewDragBeginContentOffsetYChanged) { ($0, $1) }
+            .map { tableViewContentOffsetY, tableViewDragBeginY -> Bool in
+                return tableViewContentOffsetY > tableViewDragBeginY
+            }
+            .bind(to: scrollingDown)
+            .disposed(by: disposeBag)
+
         filterTabsHorizontalMargin
             .bind(to: filterTabsVM.inputs.setMinimumLeadingTrailingMargin)
             .disposed(by: disposeBag)

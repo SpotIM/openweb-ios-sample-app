@@ -20,7 +20,7 @@ class OWFilterTabsView: UIView {
     fileprivate struct Metrics {
         static let identifier = "filter_tabs_view_id"
         static let height: CGFloat = 54
-        static let delayScrollToSelected = 10
+        static let delayScrollToSelected = 50
     }
 
     fileprivate var viewModel: OWFilterTabsViewViewModeling
