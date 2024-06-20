@@ -36,6 +36,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
 
     fileprivate struct Metrics {
         static let numberOfSkeletons = 6
+        static let debounceCellViewModelsDuration = 10
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -72,6 +73,9 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     fileprivate lazy var hasMoreThanOneTab: Observable<Bool> = {
         return cellsViewModels
             .map { $0.count > 1 }
+            // This is to prevent animation hide and show for a moment when tabs are initialized
+            // There is a moment that there are no tabs and then they are filled in.
+            .debounce(.milliseconds(Metrics.debounceCellViewModelsDuration), scheduler: MainScheduler.instance)
             .asObservable()
     }()
 

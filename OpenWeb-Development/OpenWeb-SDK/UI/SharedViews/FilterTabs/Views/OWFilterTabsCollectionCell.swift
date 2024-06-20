@@ -21,7 +21,7 @@ class OWFilterTabsCollectionCell: UICollectionViewCell {
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(typography: .bodyText))
+            .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .textAlignment(.center)
             .numberOfLines(Metrics.numberOfLines)
             .adjustsFontSizeToFitWidth(false)

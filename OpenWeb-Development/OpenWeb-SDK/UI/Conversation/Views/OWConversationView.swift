@@ -30,6 +30,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let highlightBackgroundColorAlpha: Double = 0.2
         static let delayPullToRefreshDuration = 250
         static let identifier = "conversation_view_id"
+        static let animateHideShowFilterTabsDuration: CGFloat = 0.3
     }
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
@@ -221,11 +222,11 @@ fileprivate extension OWConversationView {
 
         self.addSubview(filterTabsView)
         filterTabsView.OWSnp.makeConstraints { make in
-            make.top.equalTo(conversationSummaryView.OWSnp.bottom)
+            make.top.equalTo(conversationSummaryView.OWSnp.bottom).offset(0)
             make.leading.trailing.equalToSuperview()
             filterTabsHeightConstraint = make.height.equalTo(0).constraint
         }
-
+        filterTabsView.superview?.sendSubviewToBack(filterTabsView)
         self.viewModel.inputs.setFilterTabsHorizontalMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
 
         // After building the other views, position the table view in the appropriate place
@@ -282,19 +283,25 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        if let constraint = filterTabsHeightConstraint {
-            viewModel.outputs.shouldShowFilterTabsView
-                .map { !$0 }
-                .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] isActive in
-                    guard let self = self else { return }
-                    constraint.rx.isActive.onNext(isActive)
-                    UIView.animate(withDuration: 0.2) {
-                        self.layoutSubviews()
-                    }
-                })
-                .disposed(by: disposeBag)
-        }
+        viewModel.outputs.shouldShowFilterTabsView
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] shouldShowFilterTabsView in
+                guard let self = self else { return }
+                if let filterTabsHeightConstraint = self.filterTabsHeightConstraint,
+                   filterTabsHeightConstraint.isActive,
+                   shouldShowFilterTabsView {
+                    filterTabsHeightConstraint.isActive = false
+                }
+                let filterTabsHeight = self.filterTabsView.frame.size.height
+                let offset: CGFloat = shouldShowFilterTabsView ? 0 : filterTabsHeight
+                self.filterTabsView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.conversationSummaryView.OWSnp.bottom).offset(-offset)
+                }
+                UIView.animate(withDuration: Metrics.animateHideShowFilterTabsDuration) {
+                    self.layoutSubviews()
+                }
+            })
+            .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
@@ -322,13 +329,21 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.tableViewSize)
             .disposed(by: disposeBag)
 
+        tableView.rx.willBeginDragging
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.inputs.tableViewDragBeginContentOffsetY.onNext(self.tableView.contentOffset.y)
+            })
+            .disposed(by: disposeBag)
+
         tableView.rx.observe(CGPoint.self, #keyPath(UITableView.contentOffset))
             .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
             .unwrap()
             .map { $0.y }
             .subscribe(onNext: { [weak self] value in
+                guard let self = self else { return }
                 OWScheduler.runOnMainThreadIfNeeded {
-                    self?.viewModel.inputs.tableViewContentOffsetY.onNext(value)
+                    self.viewModel.inputs.tableViewContentOffsetY.onNext(value)
                 }
             })
             .disposed(by: disposeBag)
@@ -592,6 +607,8 @@ fileprivate extension OWConversationView {
                 }
             })
             .disposed(by: disposeBag)
+
+        tableView
     }
     // swiftlint:enable function_body_length
 
