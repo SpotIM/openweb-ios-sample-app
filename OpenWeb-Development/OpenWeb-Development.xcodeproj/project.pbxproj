@@ -7527,7 +7527,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -7573,7 +7573,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -7692,7 +7692,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -7738,7 +7738,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -7848,7 +7848,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -7894,7 +7894,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -8004,7 +8004,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -8050,7 +8050,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -8106,7 +8106,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.2;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -8152,7 +8152,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
@@ -8320,7 +8320,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
@@ -8358,7 +8358,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -8445,7 +8445,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -8509,7 +8509,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
@@ -8573,7 +8573,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
@@ -8637,7 +8637,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
@@ -8701,7 +8701,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
@@ -8765,7 +8765,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebCoreTests;
