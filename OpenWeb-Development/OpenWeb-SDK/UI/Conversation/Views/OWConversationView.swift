@@ -161,6 +161,10 @@ fileprivate extension OWConversationView {
     func setupUI() {
         self.useAsThemeStyleInjector()
 
+        // Adding filter tabs first so it should hide under title details.
+        // Adding it later and sending it to back creates a bug with large titles.
+        self.addSubview(filterTabsView)
+
         let shouldShowTitleHeader = viewModel.outputs.shouldShowTitleHeader
         if shouldShowTitleHeader {
             self.addSubview(conversationTitleHeaderView)
@@ -220,13 +224,11 @@ fileprivate extension OWConversationView {
             loginPromptLandscapeConstraints.forEach { $0.activate() }
         }
 
-        self.addSubview(filterTabsView)
         filterTabsView.OWSnp.makeConstraints { make in
             make.top.equalTo(conversationSummaryView.OWSnp.bottom).offset(0)
             make.leading.trailing.equalToSuperview()
             filterTabsHeightConstraint = make.height.equalTo(0).constraint
         }
-        filterTabsView.superview?.sendSubviewToBack(filterTabsView)
         self.viewModel.inputs.setFilterTabsHorizontalMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
 
         // After building the other views, position the table view in the appropriate place
@@ -285,6 +287,7 @@ fileprivate extension OWConversationView {
 
         viewModel.outputs.shouldShowFilterTabsView
             .observe(on: MainScheduler.instance)
+            .distinctUntilChanged()
             .subscribe(onNext: { [weak self] shouldShowFilterTabsView in
                 guard let self = self else { return }
                 if let filterTabsHeightConstraint = self.filterTabsHeightConstraint,
@@ -330,10 +333,11 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         tableView.rx.willBeginDragging
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.viewModel.inputs.tableViewDragBeginContentOffsetY.onNext(self.tableView.contentOffset.y)
-            })
+            .map { [weak self] _ in
+                return self?.tableView.contentOffset.y
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.tableViewDragBeginContentOffsetY)
             .disposed(by: disposeBag)
 
         tableView.rx.observe(CGPoint.self, #keyPath(UITableView.contentOffset))
@@ -607,8 +611,6 @@ fileprivate extension OWConversationView {
                 }
             })
             .disposed(by: disposeBag)
-
-        tableView
     }
     // swiftlint:enable function_body_length
 
