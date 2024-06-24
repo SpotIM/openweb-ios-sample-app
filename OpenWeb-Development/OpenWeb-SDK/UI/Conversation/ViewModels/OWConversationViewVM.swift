@@ -975,8 +975,13 @@ fileprivate extension OWConversationViewViewModel {
         Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.selectedTab)
             .map { $0.1 }
             .withLatestFrom(sortOptionObservable) { ($0, $1) }
-            .subscribe(onNext: { [weak self] selectedTabVM, selectedSortOption in
-                let sortOptions = selectedTabVM.outputs.sortOptions?.map { OWSortOption(rawValue: $0) }.unwrap()
+            .subscribe(onNext: { [weak self] selectedTab, selectedSortOption in
+                let sortOptions = {
+                    if case OWFilterTabsSelectedTab.tab(let selectedTabVM) = selectedTab {
+                        return selectedTabVM.outputs.sortOptions?.map { OWSortOption(rawValue: $0) }.unwrap()
+                    }
+                    return nil
+                }()
                 var showSortView = true
                 guard let self = self else { return }
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: .filterTabChanged))
@@ -1935,7 +1940,8 @@ fileprivate extension OWConversationViewViewModel {
                 let sortDictateService = self.servicesProvider.sortDictateService()
 
                 let actions = {
-                    guard let sortOptions = selectedTab.outputs.sortOptions else {
+                    guard case OWFilterTabsSelectedTab.tab(let selectedTabVM) = selectedTab,
+                          let sortOptions = selectedTabVM.outputs.sortOptions else {
                         return [
                             OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
                             OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
@@ -2120,7 +2126,9 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(shouldShowFilterTabsView) { ($0, $1) }
             .withLatestFrom(filterTabsVM.outputs.selectedTab) { ($0.0, $0.1, $1) }
             .flatMap { [weak self] comments, shouldShowFilterTabsView, selectedFilterTab -> Observable<[OWComment]> in
-                guard shouldShowFilterTabsView && selectedFilterTab.outputs.tabId != OWFilterTabObject.defaultTabId
+                guard shouldShowFilterTabsView,
+                      case OWFilterTabsSelectedTab.tab(let selectedTabVM) = selectedFilterTab,
+                      selectedTabVM.outputs.tabId != OWFilterTabObject.defaultTabId
                 else {
                     return Observable.just(comments)
                 }

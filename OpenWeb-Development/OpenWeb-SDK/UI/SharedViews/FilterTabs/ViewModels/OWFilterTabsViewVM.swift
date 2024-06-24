@@ -12,7 +12,7 @@ import RxSwift
 typealias FilterTabsDataSourceModel = OWAnimatableSectionModel<String, OWFilterTabsCellOption>
 
 protocol OWFilterTabsViewViewModelingInputs {
-    var selectTab: BehaviorSubject<OWFilterTabsCollectionCellViewModel?> { get }
+    var selectTab: BehaviorSubject<OWFilterTabsSelectedTab> { get }
     var setMinimumLeadingTrailingMargin: BehaviorSubject<CGFloat> { get }
     var reloadTabs: PublishSubject<Void> { get }
     var selectTabAll: PublishSubject<Void> { get }
@@ -21,7 +21,7 @@ protocol OWFilterTabsViewViewModelingInputs {
 protocol OWFilterTabsViewViewModelingOutputs {
     var filterTabsDataSourceModel: Observable<[FilterTabsDataSourceModel]> { get }
     var tabs: Observable<[OWFilterTabsCollectionCellViewModel]> { get }
-    var selectedTab: Observable<OWFilterTabsCollectionCellViewModel> { get }
+    var selectedTab: Observable<OWFilterTabsSelectedTab> { get }
     var shouldShowFilterTabs: Observable<Bool> { get }
     var minimumLeadingTrailingMargin: Observable<CGFloat> { get }
 }
@@ -62,14 +62,13 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
             .asObservable()
     }
 
-    var selectTab = BehaviorSubject<OWFilterTabsCollectionCellViewModel?>(value: nil)
-    var selectedTab: Observable<OWFilterTabsCollectionCellViewModel> {
+    var selectTab = BehaviorSubject<OWFilterTabsSelectedTab>(value: .none)
+    var selectedTab: Observable<OWFilterTabsSelectedTab> {
         return selectTab
             .withLatestFrom(isLoading) { ($0, $1) }
             .filter { !$1 } // Only pass if not loading
             .map { $0.0 }
-            .unwrap()
-            .asObservable()
+            .share(replay: 1)
     }
 
     fileprivate lazy var hasMoreThanOneTab: Observable<Bool> = {
@@ -125,7 +124,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
                 }
                 return Observable.just(viewModels)
             })
-            .asObservable()
+            .share(replay: 1)
     }
 
     fileprivate lazy var getTabs: Observable<[OWFilterTabsCollectionCellViewModel]> = {
@@ -178,7 +177,7 @@ fileprivate extension OWFilterTabsViewViewModel {
                 self._tabs.onNext(filterTabVMs)
                 if self.sourceType != .preConversation,
                    let selectedFilterTabVM = filterTabVMs.first(where: { ($0.outputs.tabId == selectedTabId) }) {
-                    self.selectTab.onNext(selectedFilterTabVM)
+                    self.selectTab.onNext(OWFilterTabsSelectedTab.tab(selectedFilterTabVM))
                 } else {
                     filterTabVMs.first?.inputs.selected.onNext(true)
                 }
@@ -198,7 +197,7 @@ fileprivate extension OWFilterTabsViewViewModel {
                 } else {
                     guard let selectedTabVm = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) else { return }
                     selectedTabVm.inputs.selected.onNext(true)
-                    self.selectTab.onNext(selectedTabVm)
+                    self.selectTab.onNext(OWFilterTabsSelectedTab.tab(selectedTabVm))
                 }
             })
             .map { $0.0 }
@@ -209,17 +208,22 @@ fileprivate extension OWFilterTabsViewViewModel {
 
         selectedTab
             .withLatestFrom(tabs) { ($0, $1) }
-            .subscribe(onNext: { [weak self] tabToSelectVM, tabsToUnselectVMs in
+            .subscribe(onNext: { [weak self] tabToSelect, tabsToUnselectVMs in
                 guard let self = self else { return }
-                if self.sourceType != .preConversation {
-                    tabsToUnselectVMs.forEach { tabToUnselectVM in
-                        tabToUnselectVM.inputs.selected.onNext(false)
+                switch tabToSelect {
+                case .tab(let tabToSelectVM):
+                    if self.sourceType != .preConversation {
+                        tabsToUnselectVMs.forEach { tabToUnselectVM in
+                            tabToUnselectVM.inputs.selected.onNext(false)
+                        }
+                        tabToSelectVM.inputs.selected.onNext(true)
                     }
-                    tabToSelectVM.inputs.selected.onNext(true)
+                    self.servicesProvider
+                        .filterTabsDictateService()
+                        .update(filterTabId: tabToSelectVM.outputs.tabId, for: postId)
+                default:
+                    return
                 }
-                self.servicesProvider
-                    .filterTabsDictateService()
-                    .update(filterTabId: tabToSelectVM.outputs.tabId, for: postId)
             })
             .disposed(by: disposeBag)
 
@@ -229,6 +233,7 @@ fileprivate extension OWFilterTabsViewViewModel {
                 return tabs.first(where: { $0.outputs.tabId == OWFilterTabObject.defaultTabId })
             }
             .unwrap()
+            .map { return OWFilterTabsSelectedTab.tab($0) }
             .bind(to: selectTab)
             .disposed(by: disposeBag)
     }
