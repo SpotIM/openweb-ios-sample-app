@@ -131,7 +131,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     fileprivate lazy var getTabs: Observable<[OWFilterTabsCollectionCellViewModel]> = {
         return self.servicesProvider
             .networkAPI()
-            .filterTabs
+            .conversation
             .getTabs()
             .response
             .materialize()
@@ -219,7 +219,7 @@ fileprivate extension OWFilterTabsViewViewModel {
                 }
                 self.servicesProvider
                     .filterTabsDictateService()
-                    .update(filterTabId: tabToSelectVM.outputs.tabId, perPostId: postId)
+                    .update(filterTabId: tabToSelectVM.outputs.tabId, for: postId)
             })
             .disposed(by: disposeBag)
 

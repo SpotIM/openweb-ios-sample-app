@@ -154,7 +154,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
 
     private var tableViewHeightConstraint: OWConstraint?
     private var commentingCTAHeightConstraint: OWConstraint?
-    private var filterTabsHeightConstraint: OWConstraint?
+    fileprivate var filterTabsHeightConstraint: OWConstraint? = nil
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 

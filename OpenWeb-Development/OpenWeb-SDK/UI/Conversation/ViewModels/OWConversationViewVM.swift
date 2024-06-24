@@ -28,7 +28,6 @@ protocol OWConversationViewViewModelingInputs {
     var tableViewDragBeginContentOffsetY: BehaviorSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
     var dismissToast: PublishSubject<Void> { get }
-    var setFilterTabsHorizontalMargin: PublishSubject<CGFloat> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -74,7 +73,6 @@ protocol OWConversationViewViewModelingOutputs {
     var tableViewHeightChanged: Observable<CGFloat> { get }
     var filterTabsVM: OWFilterTabsViewViewModeling { get }
     var shouldShowFilterTabsView: Observable<Bool> { get }
-    var filterTabsHorizontalMargin: Observable<CGFloat> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -126,12 +124,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     fileprivate var scrollingDown = BehaviorSubject<Bool>(value: false)
-
-    var setFilterTabsHorizontalMargin = PublishSubject<CGFloat>()
-    var filterTabsHorizontalMargin: Observable<CGFloat> {
-        return setFilterTabsHorizontalMargin
-            .asObservable()
-    }
 
     var tableViewSize = PublishSubject<CGSize>()
     lazy var tableViewSizeChanged: Observable<CGSize> = {
@@ -912,10 +904,6 @@ fileprivate extension OWConversationViewViewModel {
             .bind(to: scrollingDown)
             .disposed(by: disposeBag)
 
-        filterTabsHorizontalMargin
-            .bind(to: filterTabsVM.inputs.setMinimumLeadingTrailingMargin)
-            .disposed(by: disposeBag)
-
         dismissToast
             .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
@@ -1132,7 +1120,6 @@ fileprivate extension OWConversationViewViewModel {
                 // Insert pending local comments after they where waiting for conversation read to finish
                 // This is used for filter tabs when the selected filter tab is not All
                 if let pendingLocalComments = pendingLocalComments {
-                    print("*** inserting pendingLocalComments")
                     self.pendingLocalComments.onNext(nil)
                     self._insertNewLocalComments.onNext(pendingLocalComments)
                 }
@@ -2135,7 +2122,6 @@ fileprivate extension OWConversationViewViewModel {
             .flatMap { [weak self] comments, shouldShowFilterTabsView, selectedFilterTab -> Observable<[OWComment]> in
                 guard shouldShowFilterTabsView && selectedFilterTab.outputs.tabId != OWFilterTabObject.defaultTabId
                 else {
-                    print("*** insert local comments")
                     return Observable.just(comments)
                 }
                 // Filter Tabs is on and not All selected, we need to move to All and then insert the new comments
@@ -2144,7 +2130,6 @@ fileprivate extension OWConversationViewViewModel {
                 self.pendingLocalComments.onNext(comments)
                 // Load conversation with filter tab All
                 self.filterTabsVM.inputs.selectTabAll.onNext()
-                print("*** selectTabAll")
                 return .empty()
             }
             .do(onNext: { [weak self] _ in
