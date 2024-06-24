@@ -15,6 +15,7 @@ protocol OWFilterTabsViewViewModelingInputs {
     var selectTab: BehaviorSubject<OWFilterTabsCollectionCellViewModel?> { get }
     var setMinimumLeadingTrailingMargin: BehaviorSubject<CGFloat> { get }
     var reloadTabs: PublishSubject<Void> { get }
+    var selectTabAll: PublishSubject<Void> { get }
 }
 
 protocol OWFilterTabsViewViewModelingOutputs {
@@ -45,6 +46,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     fileprivate let isLoading = BehaviorSubject<Bool>(value: true)
 
     var reloadTabs = PublishSubject<Void>()
+    var selectTabAll = PublishSubject<Void>()
 
     var filterTabsDataSourceModel: Observable<[FilterTabsDataSourceModel]> {
         return cellsViewModels
@@ -219,6 +221,15 @@ fileprivate extension OWFilterTabsViewViewModel {
                     .filterTabsDictateService()
                     .update(filterTabId: tabToSelectVM.outputs.tabId, perPostId: postId)
             })
+            .disposed(by: disposeBag)
+
+        selectTabAll
+            .withLatestFrom(tabs)
+            .map { tabs -> OWFilterTabsCollectionCellViewModel? in
+                return tabs.first(where: { $0.outputs.tabId == OWFilterTabObject.defaultTabId })
+            }
+            .unwrap()
+            .bind(to: selectTab)
             .disposed(by: disposeBag)
     }
 }
