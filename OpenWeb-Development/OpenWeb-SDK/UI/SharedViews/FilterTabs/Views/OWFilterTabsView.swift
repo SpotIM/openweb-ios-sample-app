@@ -117,8 +117,9 @@ fileprivate extension OWFilterTabsView {
             .disposed(by: disposeBag)
 
         filterTabsCollectionView.rx.modelSelected(OWFilterTabsCellOption.self)
-            .map { $0.viewModel as? OWFilterTabsCollectionCellViewModel }
+            .map { return $0.viewModel as? OWFilterTabsCollectionCellViewModel }
             .unwrap()
+            .map { return OWFilterTabsSelectedTab.tab($0) }
             .bind(to: viewModel.inputs.selectTab)
             .disposed(by: disposeBag)
 
