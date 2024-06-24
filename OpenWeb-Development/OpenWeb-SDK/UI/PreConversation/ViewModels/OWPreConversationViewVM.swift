@@ -1490,7 +1490,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         return nil
                     }
                 }
-                    .unwrap()
+                .unwrap()
 
                 return Observable.just(commentThreadActionsCellsVms)
             }
