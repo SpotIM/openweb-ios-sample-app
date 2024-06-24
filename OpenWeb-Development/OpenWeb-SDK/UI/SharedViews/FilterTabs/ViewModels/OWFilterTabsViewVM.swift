@@ -65,6 +65,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     var selectTab = BehaviorSubject<OWFilterTabsSelectedTab>(value: .none)
     var selectedTab: Observable<OWFilterTabsSelectedTab> {
         return selectTab
+            .distinctUntilChanged()
             .withLatestFrom(isLoading) { ($0, $1) }
             .filter { !$1 } // Only pass if not loading
             .map { $0.0 }
