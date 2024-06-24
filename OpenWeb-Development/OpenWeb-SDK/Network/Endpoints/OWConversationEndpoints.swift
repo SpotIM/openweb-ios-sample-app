@@ -24,6 +24,7 @@ enum OWConversationEndpoints: OWEndpoints {
     case commentRankChange(conversationId: String, operation: String, commentId: String)
     case commentsCounters(conversationIds: [String])
     case commentStatus(commentId: String)
+    case getTabs
 
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
@@ -38,6 +39,7 @@ enum OWConversationEndpoints: OWEndpoints {
         case .commentShare: return .post
         case .commentsCounters: return .post
         case .commentStatus: return .get
+        case .getTabs: return .get
         }
     }
 
@@ -52,6 +54,7 @@ enum OWConversationEndpoints: OWEndpoints {
         case .commentShare: return "/conversation/message/share"
         case .commentsCounters: return "/conversation/count"
         case .commentStatus(let commentId): return "/message/\(commentId)/status"
+        case .getTabs: return "/conversation/tab/metadata"
         }
     }
 
@@ -110,6 +113,8 @@ enum OWConversationEndpoints: OWEndpoints {
             return ["conversation_ids": conversationIds]
         case .commentStatus:
             return nil
+        case .getTabs:
+            return nil
         }
     }
 }
@@ -140,6 +145,7 @@ protocol OWConversationAPI {
     func commentRankChange(conversationId: String, operation: String, commentId: String) -> OWNetworkResponse<EmptyDecodable>
     func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<OWConversationCountersResponse>
     func commentStatus(commentId: String) -> OWNetworkResponse<OWCommentStatusResponse>
+    func getTabs() -> OWNetworkResponse<OWFilterTabsResponse>
 }
 
 extension OWConversationAPI {
@@ -235,6 +241,12 @@ extension OWNetworkAPI: OWConversationAPI {
 
     func commentStatus(commentId: String) -> OWNetworkResponse<OWCommentStatusResponse> {
         let endpoint = OWConversationEndpoints.commentStatus(commentId: commentId)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
+
+    func getTabs() -> OWNetworkResponse<OWFilterTabsResponse> {
+        let endpoint = OWConversationEndpoints.getTabs
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }

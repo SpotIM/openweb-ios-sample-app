@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWFilterTabsDictateServicing {
     func filterId(perPostId postId: OWPostId) -> Observable<OWFilterTabId>
-    func update(filterTabId: OWFilterTabId, perPostId postId: OWPostId)
+    func update(filterTabId: OWFilterTabId, for postId: OWPostId)
     func invalidateCache()
 }
 
@@ -77,7 +77,7 @@ class OWFilterTabsDictateService: OWFilterTabsDictateServicing {
             .distinctUntilChanged()
         }
 
-    func update(filterTabId: OWFilterTabId, perPostId postId: OWPostId) {
+    func update(filterTabId: OWFilterTabId, for postId: OWPostId) {
         _ = mapper
             .take(1)
             .subscribe(onNext: { [weak self] mapping in

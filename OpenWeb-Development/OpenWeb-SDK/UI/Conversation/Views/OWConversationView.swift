@@ -134,7 +134,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     fileprivate var loginPromptLandscapeConstraints: [OWConstraint] = []
     fileprivate var summaryPortraitLeadingConstraint: OWConstraint? = nil
     fileprivate var summaryLandscapeLeadingConstraint: OWConstraint? = nil
-    private var filterTabsHeightConstraint: OWConstraint?
+    fileprivate var filterTabsHeightConstraint: OWConstraint? = nil
 
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
@@ -229,7 +229,8 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperview()
             filterTabsHeightConstraint = make.height.equalTo(0).constraint
         }
-        self.viewModel.inputs.setFilterTabsHorizontalMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+        self.viewModel.outputs.filterTabsVM
+            .inputs.setMinimumLeadingTrailingMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
 
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
@@ -607,7 +608,8 @@ fileprivate extension OWConversationView {
                         make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: isLandscape))
                     }
 
-                    self.viewModel.inputs.setFilterTabsHorizontalMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+                    self.viewModel.outputs.filterTabsVM
+                        .inputs.setMinimumLeadingTrailingMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
                 }
             })
             .disposed(by: disposeBag)

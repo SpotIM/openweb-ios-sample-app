@@ -23,7 +23,6 @@ protocol OWNetworkAPIProtocol {
     var reportReason: OWReportReasonAPI { get }
     var failureReporter: OWFailureReportAPI { get }
     var appeal: OWAppealAPI { get }
-    var filterTabs: OWFilterTabsAPI { get }
 }
 
 struct OWNetworkResponse<T> {
