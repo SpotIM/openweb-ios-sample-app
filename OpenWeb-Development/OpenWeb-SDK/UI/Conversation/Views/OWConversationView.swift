@@ -287,22 +287,23 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowFilterTabsView
-            .observe(on: MainScheduler.instance)
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] shouldShowFilterTabsView in
-                guard let self = self else { return }
-                if let filterTabsHeightConstraint = self.filterTabsHeightConstraint,
-                   filterTabsHeightConstraint.isActive,
-                   shouldShowFilterTabsView {
-                    filterTabsHeightConstraint.isActive = false
-                }
-                let filterTabsHeight = self.filterTabsView.frame.size.height
-                let offset: CGFloat = shouldShowFilterTabsView ? 0 : filterTabsHeight
-                self.filterTabsView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.conversationSummaryView.OWSnp.bottom).offset(-offset)
-                }
-                UIView.animate(withDuration: Metrics.animateHideShowFilterTabsDuration) {
-                    self.layoutSubviews()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    if let filterTabsHeightConstraint = self.filterTabsHeightConstraint,
+                       filterTabsHeightConstraint.isActive,
+                       shouldShowFilterTabsView {
+                        filterTabsHeightConstraint.isActive = false
+                    }
+                    let filterTabsHeight = self.filterTabsView.frame.size.height
+                    let offset: CGFloat = shouldShowFilterTabsView ? 0 : filterTabsHeight
+                    self.filterTabsView.OWSnp.updateConstraints { make in
+                        make.top.equalTo(self.conversationSummaryView.OWSnp.bottom).offset(-offset)
+                    }
+                    UIView.animate(withDuration: Metrics.animateHideShowFilterTabsDuration) {
+                        self.layoutSubviews()
+                    }
                 }
             })
             .disposed(by: disposeBag)
