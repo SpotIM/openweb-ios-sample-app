@@ -356,6 +356,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         .asObservable()
     }()
 
+    fileprivate lazy var pendingLocalComments = BehaviorSubject<[OWComment]?>(value: nil)
+
     fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
@@ -1108,7 +1110,8 @@ fileprivate extension OWConversationViewViewModel {
             .map { $0.0 }
             .observe(on: conversationViewVMScheduler)
             .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
-            .subscribe(onNext: { [weak self] response, conversationReadWithoutFilterTabDone in
+            .withLatestFrom(pendingLocalComments) { ($0.0, $0.1, $1) }
+            .subscribe(onNext: { [weak self] response, conversationReadWithoutFilterTabDone, pendingLocalComments in
                 // We do not want the comments to be inserted to the tableView if
                 // conversationReadWithoutFilterTab is true, since this is only for
                 // retreaving data that will not be retreaved when filterTabId is sent
@@ -1125,6 +1128,14 @@ fileprivate extension OWConversationViewViewModel {
 
                 // Update loading state only after the presented comments are updated
                 self._serverCommentsLoadingState.onNext(.notLoading)
+
+                // Insert pending local comments after they where waiting for conversation read to finish
+                // This is used for filter tabs when the selected filter tab is not All
+                if let pendingLocalComments = pendingLocalComments {
+                    print("*** inserting pendingLocalComments")
+                    self.pendingLocalComments.onNext(nil)
+                    self._insertNewLocalComments.onNext(pendingLocalComments)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -2119,6 +2130,23 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         _insertNewLocalComments
+            .withLatestFrom(shouldShowFilterTabsView) { ($0, $1) }
+            .withLatestFrom(filterTabsVM.outputs.selectedTab) { ($0.0, $0.1, $1) }
+            .flatMap { [weak self] comments, shouldShowFilterTabsView, selectedFilterTab -> Observable<[OWComment]> in
+                guard shouldShowFilterTabsView && selectedFilterTab.outputs.tabId != OWFilterTabObject.defaultTabId
+                else {
+                    print("*** insert local comments")
+                    return Observable.just(comments)
+                }
+                // Filter Tabs is on and not All selected, we need to move to All and then insert the new comments
+                guard let self = self else { return .empty() }
+                // Save insert comments to pending
+                self.pendingLocalComments.onNext(comments)
+                // Load conversation with filter tab All
+                self.filterTabsVM.inputs.selectTabAll.onNext()
+                print("*** selectTabAll")
+                return .empty()
+            }
             .do(onNext: { [weak self] _ in
                 // scroll to top
                 guard let self = self else { return }
