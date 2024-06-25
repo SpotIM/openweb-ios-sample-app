@@ -972,7 +972,7 @@ fileprivate extension OWConversationViewViewModel {
             .asObservable()
         }()
 
-        Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.selectedTab)
+        Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.didSelectTab)
             .map { $0.1 }
             .withLatestFrom(sortOptionObservable) { ($0, $1) }
             .subscribe(onNext: { [weak self] selectedTab, selectedSortOption in
@@ -1933,7 +1933,7 @@ fileprivate extension OWConversationViewViewModel {
                 self?.sendEvent(for: .sortByClicked(currentSort: currentSort))
             })
             .observe(on: MainScheduler.instance)
-            .withLatestFrom(filterTabsVM.outputs.selectedTab) { ($0.0, $0.1, $1) }
+            .withLatestFrom(filterTabsVM.outputs.didSelectTab) { ($0.0, $0.1, $1) }
             .flatMapLatest { [weak self] sender, currentSort, selectedTab -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
 
