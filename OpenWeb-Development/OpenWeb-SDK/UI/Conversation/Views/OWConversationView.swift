@@ -30,11 +30,16 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let highlightBackgroundColorAlpha: Double = 0.2
         static let delayPullToRefreshDuration = 250
         static let identifier = "conversation_view_id"
+        static let animateHideShowFilterTabsDuration: CGFloat = 0.3
     }
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
 
     var toastView: OWToastView? = nil
+
+    fileprivate lazy var filterTabsView: OWFilterTabsView = {
+        return OWFilterTabsView(viewModel: self.viewModel.outputs.filterTabsVM)
+    }()
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
@@ -129,6 +134,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     fileprivate var loginPromptLandscapeConstraints: [OWConstraint] = []
     fileprivate var summaryPortraitLeadingConstraint: OWConstraint? = nil
     fileprivate var summaryLandscapeLeadingConstraint: OWConstraint? = nil
+    fileprivate var filterTabsHeightConstraint: OWConstraint? = nil
 
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
@@ -154,6 +160,10 @@ fileprivate extension OWConversationView {
 
     func setupUI() {
         self.useAsThemeStyleInjector()
+
+        // Adding filter tabs first so it should hide under title details.
+        // Adding it later and sending it to back creates a bug with large titles.
+        self.addSubview(filterTabsView)
 
         let shouldShowTitleHeader = viewModel.outputs.shouldShowTitleHeader
         if shouldShowTitleHeader {
@@ -214,10 +224,18 @@ fileprivate extension OWConversationView {
             loginPromptLandscapeConstraints.forEach { $0.activate() }
         }
 
+        filterTabsView.OWSnp.makeConstraints { make in
+            make.top.equalTo(conversationSummaryView.OWSnp.bottom).offset(0)
+            make.leading.trailing.equalToSuperview()
+            filterTabsHeightConstraint = make.height.equalTo(0).constraint
+        }
+        self.viewModel.outputs.filterTabsVM
+            .inputs.setMinimumLeadingTrailingMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(conversationSummaryView.OWSnp.bottom)
+            make.top.equalTo(filterTabsView.OWSnp.bottom)
             make.leading.trailing.equalToSuperviewSafeArea()
         }
 
@@ -268,6 +286,28 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.shouldShowFilterTabsView
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] shouldShowFilterTabsView in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    if let filterTabsHeightConstraint = self.filterTabsHeightConstraint,
+                       filterTabsHeightConstraint.isActive,
+                       shouldShowFilterTabsView {
+                        filterTabsHeightConstraint.isActive = false
+                    }
+                    let filterTabsHeight = self.filterTabsView.frame.size.height
+                    let offset: CGFloat = shouldShowFilterTabsView ? 0 : filterTabsHeight
+                    self.filterTabsView.OWSnp.updateConstraints { make in
+                        make.top.equalTo(self.conversationSummaryView.OWSnp.bottom).offset(-offset)
+                    }
+                    UIView.animate(withDuration: Metrics.animateHideShowFilterTabsDuration) {
+                        self.layoutSubviews()
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
@@ -294,13 +334,22 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.tableViewSize)
             .disposed(by: disposeBag)
 
+        tableView.rx.willBeginDragging
+            .map { [weak self] _ in
+                return self?.tableView.contentOffset.y
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.tableViewDragBeginContentOffsetY)
+            .disposed(by: disposeBag)
+
         tableView.rx.observe(CGPoint.self, #keyPath(UITableView.contentOffset))
             .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
             .unwrap()
             .map { $0.y }
             .subscribe(onNext: { [weak self] value in
+                guard let self = self else { return }
                 OWScheduler.runOnMainThreadIfNeeded {
-                    self?.viewModel.inputs.tableViewContentOffsetY.onNext(value)
+                    self.viewModel.inputs.tableViewContentOffsetY.onNext(value)
                 }
             })
             .disposed(by: disposeBag)
@@ -559,6 +608,9 @@ fileprivate extension OWConversationView {
                     self.commentingCTAView.OWSnp.updateConstraints { make in
                         make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: isLandscape))
                     }
+
+                    self.viewModel.outputs.filterTabsVM
+                        .inputs.setMinimumLeadingTrailingMargin.onNext(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
                 }
             })
             .disposed(by: disposeBag)
