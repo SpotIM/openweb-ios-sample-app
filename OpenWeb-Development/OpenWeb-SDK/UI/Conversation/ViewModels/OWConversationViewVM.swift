@@ -24,7 +24,8 @@ protocol OWConversationViewViewModelingInputs {
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
-    var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
+    var tableViewContentOffsetY: BehaviorSubject<CGFloat> { get }
+    var tableViewDragBeginContentOffsetY: BehaviorSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
     var dismissToast: PublishSubject<Void> { get }
 }
@@ -70,6 +71,8 @@ protocol OWConversationViewViewModelingOutputs {
     var hideToast: Observable<Void> { get }
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
     var tableViewHeightChanged: Observable<CGFloat> { get }
+    var filterTabsVM: OWFilterTabsViewViewModeling { get }
+    var shouldShowFilterTabsView: Observable<Bool> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -103,11 +106,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let collapsableTextLineLimit: Int = 4
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
+        static let filterTabsHideMinimumOffset: CGFloat = 50
     }
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
     fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewVMQueue")
+
+    let filterTabsVM: OWFilterTabsViewViewModeling
 
     lazy var tableViewHeightChanged: Observable<CGFloat> = {
         tableViewSize
@@ -117,6 +123,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
+    fileprivate var scrollingDown = BehaviorSubject<Bool>(value: false)
+
     var tableViewSize = PublishSubject<CGSize>()
     lazy var tableViewSizeChanged: Observable<CGSize> = {
         tableViewSize
@@ -124,7 +132,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
-    var tableViewContentOffsetY = PublishSubject<CGFloat>()
+    var tableViewDragBeginContentOffsetY = BehaviorSubject<CGFloat>(value: 0)
+    fileprivate lazy var tableViewDragBeginContentOffsetYChanged: Observable<CGFloat> = {
+        tableViewDragBeginContentOffsetY
+            .asObservable()
+    }()
+
+    var tableViewContentOffsetY = BehaviorSubject<CGFloat>(value: 0)
     fileprivate lazy var tableViewContentOffsetYChanged: Observable<CGFloat> = {
         tableViewContentOffsetY
             .asObservable()
@@ -322,6 +336,19 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .communityGuidelinesViewModel.outputs
             .shouldShowView
     }()
+
+    // Show FilterTabsView
+    lazy var shouldShowFilterTabsView: Observable<Bool> = {
+        return Observable.combineLatest(filterTabsVM.outputs.shouldShowFilterTabs,
+                                        scrollingDown)
+        .withLatestFrom(tableViewContentOffsetYChanged) { ($0.0, $0.1, $1) }
+        .map { shouldShowFilterTabs, scrollingDown, tableViewContentOffsetY in
+            return shouldShowFilterTabs && (!scrollingDown || tableViewContentOffsetY < Metrics.filterTabsHideMinimumOffset)
+        }
+        .asObservable()
+    }()
+
+    fileprivate lazy var pendingLocalComments = BehaviorSubject<[OWComment]?>(value: nil)
 
     fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
         return _commentsPresentationData
@@ -638,6 +665,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
+        self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider,
+                                                      sourceType: .conversation)
         self.setupObservers()
 
         sendEvent(for: .fullConversationViewed)
@@ -867,6 +896,14 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        tableViewContentOffsetYChanged
+            .withLatestFrom(tableViewDragBeginContentOffsetYChanged) { ($0, $1) }
+            .map { tableViewContentOffsetY, tableViewDragBeginY -> Bool in
+                return tableViewContentOffsetY > tableViewDragBeginY
+            }
+            .bind(to: scrollingDown)
+            .disposed(by: disposeBag)
+
         dismissToast
             .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
@@ -906,22 +943,91 @@ fileprivate extension OWConversationViewViewModel {
             .sortDictateService()
             .sortOption(perPostId: self.postId)
 
+        // Observable for the filter tabs
+        let filterTabsObservable = self.servicesProvider
+            .filterTabsDictateService()
+            .filterId(perPostId: self.postId)
+            .share(replay: 1)
+
+        let _conversationReadWithoutFilterTabDone = BehaviorSubject<Bool>(value: false)
+        let conversationReadWithoutFilterTabDone: Observable<Bool> = {
+            return _conversationReadWithoutFilterTabDone
+                .asObservable()
+        }()
+        let _conversationReadWithoutFilterTab = BehaviorSubject<Bool>(value: true)
+        let conversationReadWithoutFilterTab: Observable<Bool> = {
+            return Observable.combineLatest(_conversationReadWithoutFilterTab,
+                                            filterTabsObservable,
+                                            conversationReadWithoutFilterTabDone)
+            .map { _, filterTabId, conversationReadWithoutFilterTabDone -> Bool in
+                return !conversationReadWithoutFilterTabDone && filterTabId != OWFilterTabObject.defaultTabId
+            }
+            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
+            .do(onNext: { conversationReadWithoutFilterTab, conversationReadWithoutFilterTabDone in
+                if !conversationReadWithoutFilterTab && !conversationReadWithoutFilterTabDone {
+                    _conversationReadWithoutFilterTabDone.onNext(true)
+                }
+            })
+            .map { $0.0 }
+            .asObservable()
+        }()
+
+        Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.selectedTab)
+            .map { $0.1 }
+            .withLatestFrom(sortOptionObservable) { ($0, $1) }
+            .subscribe(onNext: { [weak self] selectedTab, selectedSortOption in
+                let sortOptions = {
+                    if case OWFilterTabsSelectedTab.tab(let selectedTabVM) = selectedTab {
+                        return selectedTabVM.outputs.sortOptions?.map { OWSortOption(rawValue: $0) }.unwrap()
+                    }
+                    return nil
+                }()
+                var showSortView = true
+                guard let self = self else { return }
+                self._serverCommentsLoadingState.onNext(.loading(triggredBy: .filterTabChanged))
+                self._dataSourceTransition.onNext(.reload)
+                guard let sortOptions = sortOptions else {
+                    // No sort options available, default sort options are used
+                    self.servicesProvider
+                        .sortDictateService()
+                        .update(sortOption: selectedSortOption, perPostId: self.postId)
+                    self.conversationSummaryViewModel.inputs.shouldShowSortView.onNext(true)
+                    return
+                }
+                showSortView = !sortOptions.isEmpty
+                let currentSelectedSortExists = sortOptions.contains(where: { $0.rawValue == selectedSortOption.rawValue })
+                let sortOption = currentSelectedSortExists ? selectedSortOption : sortOptions.first
+                self.conversationSummaryViewModel.inputs.shouldShowSortView.onNext(showSortView)
+                if let sortOption = sortOption {
+                    self.servicesProvider
+                        .sortDictateService()
+                        .update(sortOption: sortOption, perPostId: self.postId)
+                }
+            })
+            .disposed(by: disposeBag)
+
         // Observable for the conversation network API
-        let conversationReadObservable = sortOptionObservable
+        let conversationReadObservable = Observable.combineLatest(sortOptionObservable,
+                                                                  filterTabsObservable,
+                                                                  conversationReadWithoutFilterTab)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
-            .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
+            .flatMapLatest { [weak self] sortOption, filterTabsId, conversationReadWithoutFilterTab -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                .networkAPI()
-                .conversation
-                .conversationRead(mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
-                .response
-                .materialize() // Required to keep the final subscriber even if errors arrived from the network
-                .observe(on: self.conversationViewVMScheduler)
+                    .networkAPI()
+                    .conversation
+                    .conversationRead(mode: sortOption,
+                                      filterTabId: conversationReadWithoutFilterTab ? nil : filterTabsId,
+                                      page: OWPaginationPage.first,
+                                      parentId: "",
+                                      offset: 0)
+                    .response
+                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
+                    .observe(on: self.conversationViewVMScheduler)
             }
 
         let conversationFetchedObservable = Observable.merge(viewInitializedObservable,
@@ -996,15 +1102,32 @@ fileprivate extension OWConversationViewViewModel {
         conversationFetchedObservable
             .map { $0.0 }
             .observe(on: conversationViewVMScheduler)
-            .subscribe(onNext: { [weak self] response in
+            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
+            .withLatestFrom(pendingLocalComments) { ($0.0, $0.1, $1) }
+            .subscribe(onNext: { [weak self] response, conversationReadWithoutFilterTabDone, pendingLocalComments in
+                // We do not want the comments to be inserted to the tableView if
+                // conversationReadWithoutFilterTab is true, since this is only for
+                // retreaving data that will not be retreaved when filterTabId is sent
+                // to conversation/read API
                 guard let self = self else { return }
-
+                guard conversationReadWithoutFilterTabDone else {
+                    _conversationReadWithoutFilterTabDone.onNext(true)
+                    _conversationReadWithoutFilterTab.onNext(false)
+                    return
+                }
                 self.cacheConversationRead(response: response)
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
                 self._commentsPresentationData.replaceAll(with: commentsPresentationData)
 
                 // Update loading state only after the presented comments are updated
                 self._serverCommentsLoadingState.onNext(.notLoading)
+
+                // Insert pending local comments after they where waiting for conversation read to finish
+                // This is used for filter tabs when the selected filter tab is not All
+                if let pendingLocalComments = pendingLocalComments {
+                    self.pendingLocalComments.onNext(nil)
+                    self._insertNewLocalComments.onNext(pendingLocalComments)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1017,6 +1140,15 @@ fileprivate extension OWConversationViewViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        let conversationFetchedWithAllData = conversationFetchedObservable
+            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
+            .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
+            .filter { _, conversationReadWithoutFilterTabDone, filterTabsId in
+                return (filterTabsId == OWFilterTabObject.defaultTabId || !conversationReadWithoutFilterTabDone)
+            }
+            .map { $0.0.0 }
+            .share()
 
         realtimeIndicationAnimationViewModel.outputs
             .realtimeIndicationViewModel.outputs
@@ -1043,8 +1175,8 @@ fileprivate extension OWConversationViewViewModel {
         .disposed(by: disposeBag)
 
         // Set read only mode
-        conversationFetchedObservable
-            .map { $0.0 }
+        // Backend does not respond with read only mode when using filter tabs
+        conversationFetchedWithAllData
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
                 var isReadOnly: Bool = response.conversation?.readOnly ?? false
@@ -1097,9 +1229,9 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Binding to community question component
-        conversationFetchedObservable
-            .map { $0.0 }
+        // Binding to community question component only when filter tabs is on "all"
+        // Backend does not respond with community questions when using filter tabs
+        conversationFetchedWithAllData
             .bind(to: communityQuestionCellViewModel.outputs.communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
@@ -1132,7 +1264,8 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(sortOptionObservable) { (commentPresentationData, sortOption) -> (OWCommentPresentationData, OWSortOption)  in
                 return (commentPresentationData, sortOption)
             }
-            .flatMap { [weak self] (commentPresentationData, sortOption) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
+            .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
+            .flatMap { [weak self] (commentPresentationData, sortOption, filterTabId) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 guard let self = self else { return .empty() }
 
                 let hasRepliesError = self.errorsLoadingReplies[commentPresentationData.id] != nil
@@ -1152,7 +1285,7 @@ fileprivate extension OWConversationViewViewModel {
                 return self.servicesProvider
                     .networkAPI()
                     .conversation
-                    .conversationRead(mode: sortOption, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
+                    .conversationRead(mode: sortOption, filterTabId: filterTabId, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
                     .response
                     .materialize()
                     .observe(on: self.conversationViewVMScheduler)
@@ -1256,12 +1389,13 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
-            .flatMap { [weak self] (sortOption, offset) -> Observable<Event<OWConversationReadRM>> in
+            .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
+            .flatMap { [weak self] (sortOption, offset, filterTabId) -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .networkAPI()
                 .conversation
-                .conversationRead(mode: sortOption, page: OWPaginationPage.next, parentId: "", offset: offset)
+                .conversationRead(mode: sortOption, filterTabId: filterTabId, page: OWPaginationPage.next, parentId: "", offset: offset)
                 .response
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
                 .observe(on: self.conversationViewVMScheduler)
@@ -1799,15 +1933,30 @@ fileprivate extension OWConversationViewViewModel {
                 self?.sendEvent(for: .sortByClicked(currentSort: currentSort))
             })
             .observe(on: MainScheduler.instance)
-            .flatMapLatest { [weak self] sender, currentSort -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
+            .withLatestFrom(filterTabsVM.outputs.selectedTab) { ($0.0, $0.1, $1) }
+            .flatMapLatest { [weak self] sender, currentSort, selectedTab -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
 
                 let sortDictateService = self.servicesProvider.sortDictateService()
-                let actions = [
-                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
-                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
-                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest)
-                    ]
+
+                let actions = {
+                    guard case OWFilterTabsSelectedTab.tab(let selectedTabVM) = selectedTab,
+                          let sortOptions = selectedTabVM.outputs.sortOptions else {
+                        return [
+                            OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
+                            OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
+                            OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest)
+                        ]
+                    }
+
+                    return sortOptions.map { sortString -> OWRxPresenterAction? in
+                        if let sortOption = OWSortOption(rawValue: sortString) {
+                            return OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: sortOption), type: sortOption.sortMenu)
+                        }
+                        return nil
+                    }
+                    .unwrap()
+                }()
 
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
@@ -1967,12 +2116,30 @@ fileprivate extension OWConversationViewViewModel {
                     case .refreshConversation:
                         self._dataSourceTransition.onNext(.reload)
                         self._forceRefresh.onNext()
+                        self.filterTabsVM.inputs.reloadTabs.onNext()
                     }
                 }
             })
             .disposed(by: disposeBag)
 
         _insertNewLocalComments
+            .withLatestFrom(shouldShowFilterTabsView) { ($0, $1) }
+            .withLatestFrom(filterTabsVM.outputs.selectedTab) { ($0.0, $0.1, $1) }
+            .flatMap { [weak self] comments, shouldShowFilterTabsView, selectedFilterTab -> Observable<[OWComment]> in
+                guard shouldShowFilterTabsView,
+                      case OWFilterTabsSelectedTab.tab(let selectedTabVM) = selectedFilterTab,
+                      selectedTabVM.outputs.tabId != OWFilterTabObject.defaultTabId
+                else {
+                    return Observable.just(comments)
+                }
+                // Filter Tabs is on and not All selected, we need to move to All and then insert the new comments
+                guard let self = self else { return .empty() }
+                // Save insert comments to pending
+                self.pendingLocalComments.onNext(comments)
+                // Load conversation with filter tab All
+                self.filterTabsVM.inputs.selectTabAll.onNext()
+                return .empty()
+            }
             .do(onNext: { [weak self] _ in
                 // scroll to top
                 guard let self = self else { return }

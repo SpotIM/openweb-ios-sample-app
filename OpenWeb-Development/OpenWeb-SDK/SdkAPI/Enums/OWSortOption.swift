@@ -12,4 +12,15 @@ public enum OWSortOption: String {
     case best
     case newest
     case oldest
+
+    internal var sortMenu: OWSortMenu {
+        switch self {
+        case .best:
+            return .sortBest
+        case .newest:
+            return .sortNewest
+        case .oldest:
+            return .sortOldest
+        }
+    }
 }
