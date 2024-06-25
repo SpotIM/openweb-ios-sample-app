@@ -78,6 +78,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
             }
         }()
         return selectedTabObservable
+            .filter { $0 != .none }
             .withLatestFrom(isLoading) { ($0, $1) }
             .filter { !$1 } // Only pass if not loading
             .map { $0.0 }
