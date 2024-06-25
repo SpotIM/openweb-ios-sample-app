@@ -104,7 +104,7 @@ fileprivate extension OWFilterTabsView {
             .disposed(by: disposeBag)
 
         // Scroll to selected tab
-        viewModel.outputs.selectedTab
+        viewModel.outputs.didSelectTab
             .voidify()
             .delay(.milliseconds(Metrics.delayScrollToSelected), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.instance)
