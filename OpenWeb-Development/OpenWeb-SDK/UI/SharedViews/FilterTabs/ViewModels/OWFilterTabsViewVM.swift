@@ -21,6 +21,7 @@ protocol OWFilterTabsViewViewModelingInputs {
 protocol OWFilterTabsViewViewModelingOutputs {
     var filterTabsDataSourceModel: Observable<[FilterTabsDataSourceModel]> { get }
     var tabs: Observable<[OWFilterTabsCollectionCellViewModel]> { get }
+    var didSelectTab: Observable<OWFilterTabsSelectedTab> { get }
     var selectedTab: Observable<OWFilterTabsSelectedTab> { get }
     var shouldShowFilterTabs: Observable<Bool> { get }
     var minimumLeadingTrailingMargin: Observable<CGFloat> { get }
@@ -64,6 +65,10 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
 
     var selectTab = BehaviorSubject<OWFilterTabsSelectedTab>(value: .none)
     var selectedTab: Observable<OWFilterTabsSelectedTab> {
+        return selectTab
+            .asObservable()
+    }
+    var didSelectTab: Observable<OWFilterTabsSelectedTab> {
         let selectedTabObservable = {
             if sourceType == .conversation {
                 return selectTab
@@ -214,7 +219,7 @@ fileprivate extension OWFilterTabsViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        selectedTab
+        didSelectTab
             .withLatestFrom(tabs) { ($0, $1) }
             .subscribe(onNext: { [weak self] tabToSelect, tabsToUnselectVMs in
                 guard let self = self else { return }

@@ -289,6 +289,7 @@ fileprivate extension OWCommentTextViewModel {
     }
 
     func addUserMentions(text: inout NSMutableAttributedString, style: OWThemeStyle, comment: OWComment) {
+        guard OWUserMentionHelper.mentionsEnabled else { return }
         let userMentions = OWUserMentionHelper.filterUserMentions(in: text.string, userMentions: userMentions, readMoreRange: readMoreRange)
         for userMention in userMentions {
             if let profileURL = self.serviceProvider.profileService().getProfileURL(userId: userMention.userId) {
