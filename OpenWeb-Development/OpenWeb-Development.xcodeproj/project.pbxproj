@@ -950,6 +950,8 @@
 		9E73DAE229C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE129C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift */; };
 		9E73DAE429C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE329C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift */; };
 		9E7C52432C29BFD6006B9B93 /* OWFilterTabsSelectedTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7C52422C29BFD6006B9B93 /* OWFilterTabsSelectedTab.swift */; };
+		9E7C52442C2B10A3006B9B93 /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; };
+		9E7C52452C2B10C2006B9B93 /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; };
 		9E7D5B0C2A0A775800F1707C /* CommentThreadSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7D5B0B2A0A775800F1707C /* CommentThreadSettingsView.swift */; };
 		9E7D5B0E2A0A777900F1707C /* CommentThreadSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7D5B0D2A0A777900F1707C /* CommentThreadSettingsVM.swift */; };
 		9E7D5B102A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7D5B0F2A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift */; };
@@ -2147,6 +2149,7 @@
 				44C8789423608BC100E0E662 /* OpenWebSDK.framework in Frameworks */,
 				9E3C3EB22BEBBD02001B1B6C /* RxCocoa.xcframework in Frameworks */,
 				9E3C3EA82BEBBA30001B1B6C /* RxRelay.xcframework in Frameworks */,
+				9E7C52442C2B10A3006B9B93 /* GiphyUISDK.xcframework in Frameworks */,
 				16D6E36546234861B3674AB9 /* Pods_OpenWeb_SampleApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2159,6 +2162,7 @@
 				9E3C3EBB2BEBBD3C001B1B6C /* RxCocoa.xcframework in Frameworks */,
 				F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */,
 				9E3C3EBD2BEBBD3D001B1B6C /* RxRelay.xcframework in Frameworks */,
+				9E7C52452C2B10C2006B9B93 /* GiphyUISDK.xcframework in Frameworks */,
 				6A54FC935F56EDE135184008 /* Pods_OpenWebSDKTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
