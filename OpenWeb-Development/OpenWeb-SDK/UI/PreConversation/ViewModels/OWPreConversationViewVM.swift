@@ -25,6 +25,7 @@ protocol OWPreConversationViewViewModelingInputs {
 
 protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
+    var filterTabsVM: OWFilterTabsViewViewModeling { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var loginPromptViewModel: OWLoginPromptViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
@@ -59,6 +60,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var displayToast: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
+    var shouldShowFilterTabsView: Observable<Bool> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -87,6 +89,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
+    let filterTabsVM: OWFilterTabsViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
@@ -258,10 +261,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }()
 
+    var filterTabOpenConversation: Observable<Void> {
+        return filterTabsVM.outputs.selectedTab
+            .voidify()
+            .asObservable()
+    }
+
     var openFullConversation: Observable<Void> {
         return Observable.merge(fullConversationTap,
                                 fullConversationCTATap,
-                                realtimeIndicationTapped)
+                                realtimeIndicationTapped,
+                                filterTabOpenConversation)
             .asObservable()
     }
 
@@ -434,6 +444,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             }
     }
 
+    // Show FilterTabsView
+    lazy var shouldShowFilterTabsView: Observable<Bool> = {
+        return filterTabsVM.outputs.shouldShowFilterTabs
+    }()
+
     lazy var shouldAddContentTapRecognizer: Bool = {
         return isCompactMode
     }()
@@ -467,6 +482,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
             self.viewableMode = viewableMode
+            self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider,
+                                                          sourceType: .preConversation)
             self.populateInitialUI()
             setupObservers()
 
@@ -1017,6 +1034,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .refreshConversation:
                     self.dataSourceTransition = .reload
                     self._forceRefresh.onNext()
+                    self.filterTabsVM.inputs.reloadTabs.onNext()
                 }
             })
             .disposed(by: disposeBag)
@@ -1472,7 +1490,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         return nil
                     }
                 }
-                    .unwrap()
+                .unwrap()
 
                 return Observable.just(commentThreadActionsCellsVms)
             }

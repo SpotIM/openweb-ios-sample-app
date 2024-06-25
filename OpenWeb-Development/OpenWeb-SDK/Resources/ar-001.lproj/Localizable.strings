@@ -206,3 +206,12 @@
 "Close editor?" = "Close editor?";
 "This message was rejected." = "تم رفض هذا التعليق";
 "Be the first to comment on this article." = "كن أول من يعلق...";
+
+"All" = "الكل";
+"My Comments" = "تعليقاتي";
+"Featured" = "متميز";
+"Most Discussed" = "الأكثر مناقشة";
+"Popular" = "الشائع";
+"Controversial" = "مثيرة للجدل";
+"Best rated" = "الأفضل تقييماً";
+"Worst rated" = "الأسوأ تقييماً";

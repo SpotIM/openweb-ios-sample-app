@@ -48,6 +48,10 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
         return OWLoginPromptView(with: self.viewModel.outputs.loginPromptViewModel)
     }()
 
+    fileprivate lazy var filterTabsView: OWFilterTabsView = {
+        return OWFilterTabsView(viewModel: self.viewModel.outputs.filterTabsVM)
+    }()
+
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
         return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
     }()
@@ -150,6 +154,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
 
     private var tableViewHeightConstraint: OWConstraint?
     private var commentingCTAHeightConstraint: OWConstraint?
+    fileprivate var filterTabsHeightConstraint: OWConstraint? = nil
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -232,9 +237,16 @@ fileprivate extension OWPreConversationView {
             commentingCTAHeightConstraint = make.height.equalTo(0).constraint
         }
 
+        self.addSubview(filterTabsView)
+        filterTabsView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentingCTAView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            filterTabsHeightConstraint = make.height.equalTo(0).constraint
+        }
+
         self.addSubview(errorStateView)
         errorStateView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentingCTAView.OWSnp.bottom).offset(Metrics.tableViewTopPedding)
+            make.top.equalTo(filterTabsView.OWSnp.bottom).offset(Metrics.tableViewTopPedding)
             make.leading.trailing.equalToSuperview()
             errorStateZeroHeightConstraint = make.height.equalTo(0).constraint
         }
@@ -391,6 +403,20 @@ fileprivate extension OWPreConversationView {
             viewModel.outputs.shouldShowCommentingCTAView
                 .map { !$0 }
                 .bind(to: constraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
+        if let constraint = filterTabsHeightConstraint {
+            viewModel.outputs.shouldShowFilterTabsView
+                .map { !$0 }
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] isActive in
+                    guard let self = self else { return }
+                    constraint.rx.isActive.onNext(isActive)
+                    UIView.animate(withDuration: 0.2) {
+                        self.layoutSubviews()
+                    }
+                })
                 .disposed(by: disposeBag)
         }
 

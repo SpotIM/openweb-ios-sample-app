@@ -157,6 +157,11 @@ fileprivate extension OWConversationSummaryView {
                 self.commentsCountLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.showSortView
+            .map { !$0 }
+            .bind(to: conversationSortView.rx.isHidden)
+            .disposed(by: disposeBag)
     }
 
     func updateCustomUI() {
