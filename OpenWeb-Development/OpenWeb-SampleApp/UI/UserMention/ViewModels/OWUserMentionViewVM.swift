@@ -197,6 +197,8 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 fileprivate extension OWUserMentionViewVM {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        guard OWUserMentionHelper.mentionsEnabled else { return }
+
         viewFrameChanged
             .subscribe(onNext: { [weak self] viewFrame in
                 self?.viewFrame = viewFrame

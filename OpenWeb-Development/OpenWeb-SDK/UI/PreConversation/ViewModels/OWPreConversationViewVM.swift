@@ -262,7 +262,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }()
 
     var filterTabOpenConversation: Observable<Void> {
-        return filterTabsVM.outputs.selectedTab
+        return filterTabsVM.outputs.didSelectTab
             .skip(1)
             .voidify()
             .asObservable()

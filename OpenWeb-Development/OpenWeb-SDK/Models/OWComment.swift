@@ -231,6 +231,10 @@ extension OWComment {
             let type = try? container.decode(String.self, forKey: .type)
             switch type {
             case "user-mention":
+                guard OWUserMentionHelper.mentionsEnabled else {
+                    self = .none
+                    return
+                }
                 let id = try container.decode(String.self, forKey: .id)
                 let userId = try container.decode(String.self, forKey: .userId)
                 let displayName = try container.decode(String.self, forKey: .displayName)
