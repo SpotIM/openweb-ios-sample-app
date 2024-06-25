@@ -9,6 +9,8 @@
 import Foundation
 
 class OWUserMentionHelper {
+    static var mentionsEnabled = false
+
     fileprivate struct Metrics {
         static let mentionString = "@"
         static let mentionCharecter: Character = "@"
@@ -19,6 +21,7 @@ class OWUserMentionHelper {
                                              commentCreationType: OWCommentCreationTypeInternal,
                                              servicesProvider: OWSharedServicesProviding,
                                              postId: OWPostId?) {
+        guard OWUserMentionHelper.mentionsEnabled else { return }
         let commentsCacheService = servicesProvider.commentsInMemoryCacheService()
         switch commentCreationType {
         case .comment:
@@ -47,6 +50,7 @@ class OWUserMentionHelper {
     }
 
     static func updateMentionRanges(with textData: OWUserMentionTextData, mentionsData: OWUserMentionData) -> OWUserMentionTextData? {
+        guard OWUserMentionHelper.mentionsEnabled else { return nil }
         guard let replacingText = textData.replacingText,
               let cursorRange = textData.text.nsRange(from: textData.cursorRange) else { return nil }
         var mentions: [OWUserMentionObject] = mentionsData.mentions.filter { cursorRange.location >= $0.range.location + $0.range.length }
@@ -157,6 +161,7 @@ class OWUserMentionHelper {
     }
 
     static func addUserMention(to mentionsData: OWUserMentionData, textData: OWUserMentionTextData, id: String, displayName: String, randomGenerator: OWRandomGeneratorProtocol) {
+        guard OWUserMentionHelper.mentionsEnabled else { return }
         let textToCursor = textData.textToCursor
         let mentionDisplayText = Metrics.mentionString + displayName
         guard let indexOfMention = textToCursor.lastIndex(of: Metrics.mentionCharecter) else { return }
@@ -187,6 +192,7 @@ class OWUserMentionHelper {
 
     static func getUserMentionTextDataAfterTapped(mentionsData: OWUserMentionData,
                                                   textAfterMention: String) -> OWUserMentionTextData? {
+        guard OWUserMentionHelper.mentionsEnabled else { return nil }
         guard let tappedMentionString = mentionsData.tappedMentionString
         else { return nil }
         let tappedMentionWithSpace = tappedMentionString + " "
@@ -199,6 +205,7 @@ class OWUserMentionHelper {
     }
 
     static func addUserMentionIds(to text: String, mentions: [OWUserMentionObject]) -> String {
+        guard OWUserMentionHelper.mentionsEnabled else { return text }
         var text = text
         var rangeLocationAccumulate = 0
         for mention in mentions {
@@ -212,6 +219,7 @@ class OWUserMentionHelper {
     }
 
     static func addUserMentionDisplayNames(to text: String, mentions: [OWUserMentionObject]?) -> String {
+        guard OWUserMentionHelper.mentionsEnabled else { return text }
         guard let mentions = mentions else { return text }
         var text = text
         for mention in mentions {
@@ -222,6 +230,7 @@ class OWUserMentionHelper {
 
     /// This function creates an array of OWUserMentionObjects and also inserts the user mentions display names - @JohnSmith into the OWComment text instead of the user mention content json ids @{"id"="xxxxxxxxxx"} found in the comment text
     @discardableResult static func createUserMentions(from comment: inout OWComment) -> [OWUserMentionObject] {
+        guard OWUserMentionHelper.mentionsEnabled else { return [] }
         guard var text = comment.text?.text else { return [] }
         let jsonRanges = parseJsonsInText(text: text)
         var userMentions: [OWUserMentionObject] = []
@@ -248,6 +257,7 @@ class OWUserMentionHelper {
 
     // Parsing jsons @{} in text with comment content ids
     fileprivate static func parseJsonsInText(text: String) -> [(String, Range<String.Index>)] {
+        guard OWUserMentionHelper.mentionsEnabled else { return [] }
         var results = [(String, Range<String.Index>)]()
         do {
             let regex = try NSRegularExpression(pattern: Metrics.jsonRegexPattern, options: [])
@@ -272,6 +282,7 @@ class OWUserMentionHelper {
     }
 
     static func filterUserMentions(in text: String, userMentions: [OWUserMentionObject], readMoreRange: NSRange?) -> [OWUserMentionObject] {
+        guard OWUserMentionHelper.mentionsEnabled else { return [] }
         guard let readMoreRange = readMoreRange else { return userMentions }
         let utf16Count = text.utf16.count
         var filtered = userMentions.filter { $0.range.location <= utf16Count }
