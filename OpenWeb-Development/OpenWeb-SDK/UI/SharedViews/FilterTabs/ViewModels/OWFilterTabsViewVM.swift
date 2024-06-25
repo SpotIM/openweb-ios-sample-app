@@ -64,12 +64,19 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
 
     var selectTab = BehaviorSubject<OWFilterTabsSelectedTab>(value: .none)
     var selectedTab: Observable<OWFilterTabsSelectedTab> {
-        return selectTab
-            .distinctUntilChanged()
+        let selectedTabObservable = {
+            if sourceType == .conversation {
+                return selectTab
+                    .distinctUntilChanged()
+            } else {
+                return selectTab
+            }
+        }()
+        return selectedTabObservable
             .withLatestFrom(isLoading) { ($0, $1) }
             .filter { !$1 } // Only pass if not loading
             .map { $0.0 }
-            .share(replay: 1)
+            .asObservable()
     }
 
     fileprivate lazy var hasMoreThanOneTab: Observable<Bool> = {
@@ -125,7 +132,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
                 }
                 return Observable.just(viewModels)
             })
-            .share(replay: 1)
+            .asObservable()
     }
 
     fileprivate lazy var getTabs: Observable<[OWFilterTabsCollectionCellViewModel]> = {
