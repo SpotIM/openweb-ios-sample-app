@@ -262,7 +262,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }()
 
     var filterTabOpenConversation: Observable<Void> {
-        return filterTabsVM.outputs.selectedTab
+        return filterTabsVM.outputs.didSelectTab
             .skip(1)
             .voidify()
             .asObservable()
@@ -447,6 +447,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     // Show FilterTabsView
     lazy var shouldShowFilterTabsView: Observable<Bool> = {
+        guard preConversationStyle != .ctaButtonOnly else { return Observable.just(false) }
         return filterTabsVM.outputs.shouldShowFilterTabs
     }()
 
