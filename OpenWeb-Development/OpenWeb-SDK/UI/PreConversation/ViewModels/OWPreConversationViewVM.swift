@@ -1520,6 +1520,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     break
                 }
             })
+            .disposed(by: disposeBag)
 
         // Actions after internet connection restored
         servicesProvider
