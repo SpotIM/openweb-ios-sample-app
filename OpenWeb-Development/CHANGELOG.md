@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.2] - 2024-06-26
+### New Features:
+- Introduced filter tabs, allowing for tailored user experiences.
+- Allow partners to choose minimum characters for reported comments.
+### Bug Fixes and Improvements:
+- Enhanced stability during authentication processes, preventing crashes related to SDK initialization.
+- Resolved a specific crash reported by customers, enhancing reliability.
+- Fixed issues related to archiving apps with previous SDK versions, ensuring error-free publication using CocoaPods.
+- SPM package size is now much lighter improving download time.
+
 ## [2.3.1] - 2024-05-21
 ### Fixes
 - Fixed a recursive lock in some cases when initializing the SDK
