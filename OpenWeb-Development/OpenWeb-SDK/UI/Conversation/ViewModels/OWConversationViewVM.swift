@@ -107,6 +107,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
         static let filterTabsHideMinimumOffset: CGFloat = 50
+        static let delayConversationReadWithFilterTab = 10
     }
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
@@ -952,6 +953,7 @@ fileprivate extension OWConversationViewViewModel {
         let _conversationReadWithoutFilterTabDone = BehaviorSubject<Bool>(value: false)
         let conversationReadWithoutFilterTabDone: Observable<Bool> = {
             return _conversationReadWithoutFilterTabDone
+                .delay(.milliseconds(Metrics.delayConversationReadWithFilterTab), scheduler: MainScheduler.instance)
                 .asObservable()
         }()
         let _conversationReadWithoutFilterTab = BehaviorSubject<Bool>(value: true)
@@ -1115,6 +1117,7 @@ fileprivate extension OWConversationViewViewModel {
                     _conversationReadWithoutFilterTab.onNext(false)
                     return
                 }
+
                 self.cacheConversationRead(response: response)
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
                 self._commentsPresentationData.replaceAll(with: commentsPresentationData)
@@ -1713,6 +1716,9 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
+            .withLatestFrom(serverCommentsLoadingState) { ($0, $1) }
+            .filter { $1 == .notLoading }
+            .map { $0.0 }
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.conversationHasNext
