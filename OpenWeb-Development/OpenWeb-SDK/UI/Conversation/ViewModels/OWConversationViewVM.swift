@@ -949,6 +949,13 @@ fileprivate extension OWConversationViewViewModel {
             .filterId(perPostId: self.postId)
             .share(replay: 1)
 
+        filterTabsObservable
+            .skip(1)
+            .subscribe(onNext: { [weak self] _ in
+                self?._serverCommentsLoadingState.onNext(.loading(triggredBy: .filterTabChanged))
+            })
+            .disposed(by: disposeBag)
+
         let _conversationReadWithoutFilterTabDone = BehaviorSubject<Bool>(value: false)
         let conversationReadWithoutFilterTabDone: Observable<Bool> = {
             return _conversationReadWithoutFilterTabDone
@@ -973,7 +980,6 @@ fileprivate extension OWConversationViewViewModel {
         }()
 
         Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.didSelectTab)
-            .skip(1)
             .map { $0.1 }
             .withLatestFrom(sortOptionObservable) { ($0, $1) }
             .subscribe(onNext: { [weak self] selectedTab, selectedSortOption in
@@ -985,7 +991,6 @@ fileprivate extension OWConversationViewViewModel {
                 }()
                 var showSortView = true
                 guard let self = self else { return }
-                self._serverCommentsLoadingState.onNext(.loading(triggredBy: .filterTabChanged))
                 self._dataSourceTransition.onNext(.reload)
                 guard let sortOptions = sortOptions else {
                     // No sort options available, default sort options are used
