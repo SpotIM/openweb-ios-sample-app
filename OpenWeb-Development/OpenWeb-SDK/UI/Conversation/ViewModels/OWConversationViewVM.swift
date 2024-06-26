@@ -107,7 +107,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
         static let filterTabsHideMinimumOffset: CGFloat = 50
-        static let delayConversationReadWithFilterTab = 10
     }
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
@@ -953,7 +952,6 @@ fileprivate extension OWConversationViewViewModel {
         let _conversationReadWithoutFilterTabDone = BehaviorSubject<Bool>(value: false)
         let conversationReadWithoutFilterTabDone: Observable<Bool> = {
             return _conversationReadWithoutFilterTabDone
-                .delay(.milliseconds(Metrics.delayConversationReadWithFilterTab), scheduler: MainScheduler.instance)
                 .asObservable()
         }()
         let _conversationReadWithoutFilterTab = BehaviorSubject<Bool>(value: true)
@@ -975,6 +973,7 @@ fileprivate extension OWConversationViewViewModel {
         }()
 
         Observable.combineLatest(filterTabsObservable, filterTabsVM.outputs.didSelectTab)
+            .skip(1)
             .map { $0.1 }
             .withLatestFrom(sortOptionObservable) { ($0, $1) }
             .subscribe(onNext: { [weak self] selectedTab, selectedSortOption in
@@ -1090,6 +1089,9 @@ fileprivate extension OWConversationViewViewModel {
 
         // Each time the whole conversation loaded with new data except the first time
         conversationFetchedObservable
+            .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
+            .filter { $0.1 }
+            .map { $0.0 }
             .skip(1)
             .map { $0.1 }
             .subscribe(onNext: { [weak self] originalLoadingTriggeredReason in
@@ -1103,9 +1105,9 @@ fileprivate extension OWConversationViewViewModel {
         // first load comments / refresh comments / sorted changed / try again after error
         conversationFetchedObservable
             .map { $0.0 }
-            .observe(on: conversationViewVMScheduler)
             .withLatestFrom(conversationReadWithoutFilterTabDone) { ($0, $1) }
             .withLatestFrom(pendingLocalComments) { ($0.0, $0.1, $1) }
+            .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] response, conversationReadWithoutFilterTabDone, pendingLocalComments in
                 // We do not want the comments to be inserted to the tableView if
                 // conversationReadWithoutFilterTab is true, since this is only for
