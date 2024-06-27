@@ -33,9 +33,10 @@ class OWUserMentionHelper {
                   let originCommentId = originComment.id,
                   let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)] else { return }
             userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
-        case .edit(comment: _):
+        case .edit(comment: let comment):
             guard let postId = postId,
-                  let commentCreationCache = commentsCacheService[.edit(postId: postId)] else { return }
+                  let commentId = comment.id,
+                  let commentCreationCache = commentsCacheService[.edit(postId: postId, commentId: commentId)] else { return }
             userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         }
     }
