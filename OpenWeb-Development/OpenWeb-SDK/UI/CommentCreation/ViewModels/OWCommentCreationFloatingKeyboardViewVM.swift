@@ -316,7 +316,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             if case .edit = originalCommentType,
                let commentText = comment.text?.text {
                 initialText = commentText
-            } else if let commentCreationCache = commentsCacheService[.edit(postId: postId)] {
+            } else if let commentId = comment.id,
+                      let commentCreationCache = commentsCacheService[.edit(postId: postId, commentId: commentId)] {
                 initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
             }
         }
