@@ -189,12 +189,7 @@ fileprivate extension OWFilterTabsViewViewModel {
             .subscribe(onNext: { [weak self] filterTabVMs, selectedTabId in
                 guard let self = self else { return }
                 self._tabs.onNext(filterTabVMs)
-                if self.sourceType != .preConversation,
-                   let selectedFilterTabVM = filterTabVMs.first(where: { ($0.outputs.tabId == selectedTabId) }) {
-                    self.selectTab.onNext(OWFilterTabsSelectedTab.tab(selectedFilterTabVM))
-                } else {
-                    filterTabVMs.first?.inputs.selected.onNext(true)
-                }
+                self.selectTab(filterTabVMs: filterTabVMs, selectedTabId: selectedTabId)
             })
             .disposed(by: disposeBag)
 
@@ -204,15 +199,7 @@ fileprivate extension OWFilterTabsViewViewModel {
             .withLatestFrom(selectTab) { ($0.0, $0.1, $1) }
             .do(onNext: { [weak self] filterTabVMs, selectedTabId, _ in
                 guard let self = self else { return }
-                if self.sourceType == .preConversation {
-                    if let firstTabVM = filterTabVMs.first {
-                        firstTabVM.inputs.selected.onNext(true)
-                    }
-                } else {
-                    guard let selectedTabVm = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) else { return }
-                    selectedTabVm.inputs.selected.onNext(true)
-                    self.selectTab.onNext(OWFilterTabsSelectedTab.tab(selectedTabVm))
-                }
+                self.selectTab(filterTabVMs: filterTabVMs, selectedTabId: selectedTabId)
             })
             .map { $0.0 }
             .subscribe(onNext: { [weak self] filterTabVMs in
@@ -251,5 +238,17 @@ fileprivate extension OWFilterTabsViewViewModel {
             .bind(to: selectTab)
             .disposed(by: disposeBag)
     }
-}
+
+    func selectTab(filterTabVMs: [OWFilterTabsCollectionCellViewModel], selectedTabId: OWFilterTabId) {
+        if self.sourceType == .preConversation {
+            if let firstTabVM = filterTabVMs.first {
+                firstTabVM.inputs.selected.onNext(true)
+            }
+        } else {
+            guard let selectedTabVm = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) else { return }
+            selectedTabVm.inputs.selected.onNext(true)
+            self.selectTab.onNext(OWFilterTabsSelectedTab.tab(selectedTabVm))
+        }
+    }
+ }
 
