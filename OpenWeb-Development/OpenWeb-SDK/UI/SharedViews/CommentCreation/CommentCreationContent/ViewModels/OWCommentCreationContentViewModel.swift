@@ -186,7 +186,8 @@ fileprivate extension OWCommentCreationContentViewModel {
                 initialText = commentText
             }
             if let postId = postId,
-               let commentCreationCache = commentsCacheService[.edit(postId: postId)] {
+               let commentId = comment.id,
+               let commentCreationCache = commentsCacheService[.edit(postId: postId, commentId: commentId)] {
                 initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
             }
         }
