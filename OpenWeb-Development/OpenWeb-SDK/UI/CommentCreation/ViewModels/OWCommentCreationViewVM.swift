@@ -339,8 +339,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 case .replyToComment(originComment: let originComment):
                     guard let originCommentId = originComment.id else { return }
                     commentCacheService.remove(forKey: .reply(postId: self.postId, commentId: originCommentId))
-                case .edit:
-                    commentCacheService.remove(forKey: .edit(postId: self.postId))
+                case .edit(comment: let comment):
+                    guard let commentId = comment.id else { return }
+                    commentCacheService.remove(forKey: .edit(postId: self.postId, commentId: commentId))
                 }
             })
             .withLatestFrom(self.servicesProvider.authenticationManager().activeUserAvailability) { ($0.0, $0.1, $1) }
@@ -686,12 +687,12 @@ fileprivate extension OWCommentCreationViewViewModel {
         switch commentCreationData.commentCreationType {
         case .comment:
             commentsCacheService[.comment(postId: self.postId)] = commentData
-            commentsCacheService.remove(forKey: .edit(postId: self.postId))
         case .replyToComment(let originComment):
             guard let originCommentId = originComment.id else { return }
             commentsCacheService[.reply(postId: self.postId, commentId: originCommentId)] = commentData
-        case .edit:
-            commentsCacheService[.edit(postId: self.postId)] = commentData
+        case .edit(comment: let comment):
+            guard let commentId = comment.id else { return }
+            commentsCacheService[.edit(postId: self.postId, commentId: commentId)] = commentData
         }
     }
 
@@ -703,8 +704,9 @@ fileprivate extension OWCommentCreationViewViewModel {
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id else { return }
             commentsCacheService.remove(forKey: .reply(postId: self.postId, commentId: originCommentId))
-        case .edit:
-            break
+        case .edit(comment: let comment):
+            guard let commentId = comment.id else { return }
+            commentsCacheService.remove(forKey: .edit(postId: self.postId, commentId: commentId))
         }
     }
 
