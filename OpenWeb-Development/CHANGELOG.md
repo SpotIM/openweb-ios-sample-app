@@ -7,13 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.2] - 2024-06-26
 ### New Features:
-- Introduced filter tabs, allowing for tailored user experiences.
-- Allow partners to choose minimum characters for reported comments.
+- We have introduced new filter tabs to improve conversation organization and user experience.
+- Partners can now set a minimum character requirement for reports on comments.
+
 ### Bug Fixes and Improvements:
-- Enhanced stability during authentication processes, preventing crashes related to SDK initialization.
-- Resolved a specific crash reported by customers, enhancing reliability.
-- Fixed issues related to archiving apps with previous SDK versions, ensuring error-free publication using CocoaPods.
-- SPM package size is now much lighter improving download time.
+- Authentication processes have enhanced stability, preventing crashes related to SDK initialization.
+- A specific crash reported by customers has been resolved, enhancing overall reliability.
+- Issues related to archiving apps with previous SDK versions have been fixed, ensuring error-free publication using CocoaPods.
+- SPM package size is now significantly lighter, improving download time.
 
 ## [2.3.1] - 2024-05-21
 ### Fixes
