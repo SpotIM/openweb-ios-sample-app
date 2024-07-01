@@ -9,6 +9,7 @@
 import Foundation
 
 internal typealias OWCommentImage = OWComment.Content.Image
+internal typealias OWCommentGif = OWComment.Content.Animation
 
 internal struct OWComment: Decodable, Equatable {
 
@@ -69,6 +70,7 @@ internal struct OWComment: Decodable, Equatable {
     var text: Content.Text?
     var gif: Content.Animation?
     var image: Content.Image?
+    var userMentions: [OWUserId: Content.UserMention] = [:]
 
     // empty init
     init() {
@@ -124,6 +126,9 @@ internal struct OWComment: Decodable, Equatable {
 
                 case .animation(let animationContent):
                     self.gif = animationContent
+
+                case .userMention(let userMention):
+                    self.userMentions[userMention.id] = userMention
 
                 case .none:
                     break
@@ -185,7 +190,7 @@ extension OWComment {
     enum Content: Decodable, Equatable {
 
         enum CodingKeys: CodingKey { // swiftlint:disable:this nesting
-            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId
+            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId, userId, displayName, title, previewUrl
         }
 
         struct Text: Decodable, Equatable { // swiftlint:disable:this nesting
@@ -199,6 +204,8 @@ extension OWComment {
             var originalWidth: Int
             var originalHeight: Int
             var originalUrl: String
+            var title: String?
+            var previewUrl: String?
         }
 
         struct Image: Decodable, Equatable { // swiftlint:disable:this nesting
@@ -207,15 +214,31 @@ extension OWComment {
             var imageId: String
         }
 
+        struct UserMention: Decodable, Equatable { // swiftlint:disable:this nesting
+            var id: String
+            var userId: String
+            var displayName: String
+        }
+
         case text(Text)
         case animation(Animation)
         case image(Image)
+        case userMention(UserMention)
         case none
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let type = try? container.decode(String.self, forKey: .type)
             switch type {
+            case "user-mention":
+                guard OWUserMentionHelper.mentionsEnabled else {
+                    self = .none
+                    return
+                }
+                let id = try container.decode(String.self, forKey: .id)
+                let userId = try container.decode(String.self, forKey: .userId)
+                let displayName = try container.decode(String.self, forKey: .displayName)
+                self = .userMention(UserMention(id: id, userId: userId, displayName: displayName))
             case "text":
                 let id = try container.decode(String.self, forKey: .id)
                 let text = try container.decode(String.self, forKey: .text)
@@ -226,11 +249,15 @@ extension OWComment {
                 let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
                 let originalUrl = try container.decode(String.self, forKey: .originalUrl)
-                self = .animation(Animation( previewWidth: previewWidth,
-                                             previewHeight: previewHeight,
-                                             originalWidth: originalWidth,
-                                             originalHeight: originalHeight,
-                                             originalUrl: originalUrl))
+                let title = try? container.decode(String.self, forKey: .title)
+                let previewUrl = try? container.decode(String.self, forKey: .previewUrl)
+                self = .animation(Animation(previewWidth: previewWidth,
+                                            previewHeight: previewHeight,
+                                            originalWidth: originalWidth,
+                                            originalHeight: originalHeight,
+                                            originalUrl: originalUrl,
+                                            title: title,
+                                            previewUrl: previewUrl))
             case "image":
                 let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)

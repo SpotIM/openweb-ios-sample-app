@@ -205,3 +205,12 @@
 "Close editor?" = "Close editor?";
 "This message was rejected." = "Esta mensagem foi rejeitada.";
 "Be the first to comment on this article." = "Seja a primeira pessoa a comentar este artigo.";
+
+"All" = "Todos";
+"My Comments" = "Os Meus Comentários";
+"Featured" = "Em Destaque";
+"Most Discussed" = "Mais Discutido";
+"Popular" = "Popular";
+"Controversial" = "Controverso";
+"Best rated" = "Com melhor classificação";
+"Worst rated" = "Com pior classificação";

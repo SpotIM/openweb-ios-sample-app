@@ -21,6 +21,7 @@ protocol OWPresenterServicing {
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
+    func showGifPicker(viewableMode: OWViewableMode) -> Observable<OWGifPickerPresenterResponseType>
 }
 
 extension OWPresenterServicing {
@@ -36,8 +37,10 @@ extension OWPresenterServicing {
 }
 
 class OWPresenterService: OWPresenterServicing {
+    fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
 
-    init() {
+    init(sharedServicesProvider: OWSharedServicesProviding) {
+        self.sharedServicesProvider = sharedServicesProvider
         RxImagePickerDelegateProxy.register { RxImagePickerDelegateProxy(imagePicker: $0) }
     }
 
@@ -115,6 +118,26 @@ class OWPresenterService: OWPresenterServicing {
             mediaTypes: mediaTypes,
             sourceType: sourceType
         )
+    }
+
+    func showGifPicker(viewableMode: OWViewableMode) -> Observable<OWGifPickerPresenterResponseType> {
+        let gifService = sharedServicesProvider.gifService()
+        guard let presenterVC = getPresenterVC(for: viewableMode),
+              let giphyVC = gifService.gifSelectionVC()
+        else { return .empty() }
+
+        presenterVC.present(giphyVC, animated: true)
+
+        let pickerCanceled = gifService.didCancel
+            .map { OWGifPickerPresenterResponseType.cancled }
+
+        let didSelectMedia = gifService.didSelectMedia
+            .map { OWGifPickerPresenterResponseType.mediaInfo($0) }
+
+        return Observable.merge(pickerCanceled, didSelectMedia)
+            .do(onNext: { _ in
+                giphyVC.dismiss(animated: true, completion: nil)
+            })
     }
 }
 

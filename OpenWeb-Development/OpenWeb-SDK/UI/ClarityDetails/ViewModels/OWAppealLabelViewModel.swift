@@ -244,7 +244,7 @@ fileprivate extension OWAppealLabelViewModel {
     }
 
     func fetchEligibleToAppeal() {
-        let viewTypeObservable = servicesProvider.netwokAPI()
+        let viewTypeObservable = servicesProvider.networkAPI()
             .appeal
             .isEligibleToAppeal(commentId: commentId)
             .response
@@ -266,7 +266,7 @@ fileprivate extension OWAppealLabelViewModel {
             }
             .unwrap()
 
-        let reasonsObservables = servicesProvider.netwokAPI()
+        let reasonsObservables = servicesProvider.networkAPI()
             .appeal
             .getAppealOptions()
             .response

@@ -12,3 +12,5 @@ import Foundation
 public typealias OWSpotId = String
 public typealias OWPostId = String
 public typealias OWCommentId = String
+public typealias OWUserId = String
+public typealias OWFilterTabId = String

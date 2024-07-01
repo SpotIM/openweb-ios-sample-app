@@ -11,24 +11,21 @@ import UIKit
 import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
-    var commentText: BehaviorSubject<String> { get }
     var becomeFirstResponder: PublishSubject<Void> { get }
     var resignFirstResponder: PublishSubject<Void> { get }
     var imagePicked: PublishSubject<UIImage> { get }
+    var gifPicked: PublishSubject<OWCommentGif> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
-    var commentTextOutput: Observable<String> { get }
     var commentImageOutput: Observable<OWCommentImage?> { get }
-    var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
-    var placeholderText: Observable<String> { get }
-    var becomeFirstResponderCalled: Observable<Void> { get }
-    var resignFirstResponderCalled: Observable<Void> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
+    var gifPreviewVM: OWGifPreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
     var isValidatedContent: Observable<Bool> { get }
     var isInitialContentEdited: Observable<Bool> { get }
+    var textViewVM: OWTextViewViewModeling { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -55,20 +52,24 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     fileprivate lazy var postId = OWManager.manager.postId
 
-    var commentText = BehaviorSubject<String>(value: "")
     var imagePicked = PublishSubject<UIImage>()
+    var gifPicked = PublishSubject<OWCommentGif>()
 
     fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
     var commentContent: Observable<OWCommentCreationContent> {
-        Observable.combineLatest(commentTextOutput, _imageContent.asObservable())
-            .map { text, image in
-                OWCommentCreationContent(text: text, image: image)
+        Observable.combineLatest(textViewVM.outputs.textViewText, _imageContent.asObservable(), gifPreviewVM.outputs.gifDataOutput)
+            .map { text, image, gif in
+                OWCommentCreationContent(text: text, image: image, gif: gif)
             }
     }
 
     lazy var imagePreviewVM: OWCommentCreationImagePreviewViewModeling = {
         return OWCommentCreationImagePreviewViewModel(servicesProvider: servicesProvider)
+    }()
+
+    lazy var gifPreviewVM: OWGifPreviewViewModeling = {
+        return OWGifPreviewViewModel(servicesProvider: servicesProvider)
     }()
 
     lazy var avatarViewVM: OWAvatarViewModeling = {
@@ -93,65 +94,27 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             .startWith(nil)
     }()
 
-    var commentTextOutput: Observable<String> {
-        commentText
-            .asObservable()
-            .withLatestFrom(_commentTextCharactersLimit) { ($0, $1) }
-            .scan(("", nil)) { [weak self] previous, newTuple -> (String, Int?) in
-                // Handle characters limit for comment text
-                guard let self = self else { return previous }
-                guard let limiter = newTuple.1 else { return newTuple }
-                let previousText = previous.0
-                let newText = newTuple.0
-
-                let adjustedText = self.textValidatorTransformer(previousText: previousText, newText: newText, charactersLimiter: limiter)
-                return (adjustedText, limiter)
-            }
-            .map { $0.0 }
-    }
-
     var commentImageOutput: Observable<OWCommentImage?> {
         _imageContent
             .asObservable()
     }
 
-    var showPlaceholder: Observable<Bool> {
-        commentTextOutput
-            .map { $0.count == 0 }
-    }
-
-    var placeholderText: Observable<String> {
-        switch commentCreationType {
-        case .replyToComment:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "TypeYourReply"))
-        default:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
-        }
-    }
-
     var becomeFirstResponder = PublishSubject<Void>()
-    var becomeFirstResponderCalled: Observable<Void> {
-        return becomeFirstResponder
-            .asObservable()
-    }
-
     var resignFirstResponder = PublishSubject<Void>()
-    var resignFirstResponderCalled: Observable<Void> {
-        return resignFirstResponder
-            .asObservable()
-    }
 
     var isInitialContentEdited: Observable<Bool> {
         Observable.combineLatest(
             commentContent,
-            _imageContent
+            _imageContent,
+            gifPreviewVM.inputs.gifData
         )
-        .map { [weak self] commentContent, imageContent -> Bool in
+        .map { [weak self] commentContent, imageContent, gifContent -> Bool in
             guard let self = self else { return false }
 
             if case .edit(comment: let comment) = self.commentCreationType {
                 if comment.text?.text != commentContent.text ||
-                    comment.image?.imageId != imageContent?.imageId {
+                    comment.image?.imageId != imageContent?.imageId ||
+                    comment.gif?.originalUrl != gifContent?.originalUrl {
                     return true
                 }
             }
@@ -170,15 +133,35 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         }
     }
 
+    let textViewVM: OWTextViewViewModeling
+
     init(commentCreationType: OWCommentCreationTypeInternal,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.servicesProvider = servicesProvider
         self.imageURLProvider = imageURLProvider
         self.commentCreationType = commentCreationType
-
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+        let placeholderText = {
+            switch commentCreationType {
+            case .replyToComment:
+                return OWLocalizationManager.shared.localizedString(key: "TypeYourReply")
+            default:
+                return OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
+            }
+        }()
+        let textViewData = OWTextViewData(placeholderText: placeholderText,
+                                          charectersLimitEnabled: false,
+                                          showCharectersLimit: false,
+                                          isEditable: true,
+                                          isAutoExpandable: false,
+                                          hasSuggestionsBar: currentOrientation == .portrait,
+                                          isScrollEnabled: false,
+                                          hasBorder: false)
+        self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         self.setupInitialTextIfNeeded()
         self.setupInitialImageIfNeeded()
+        self.setupInitialGifIfNeeded()
 
         setupObservers()
     }
@@ -190,21 +173,27 @@ fileprivate extension OWCommentCreationContentViewModel {
         var initialText: String? = nil
         switch commentCreationType {
         case .comment:
-            guard let postId = self.postId else { return }
-            initialText = commentsCacheService[.comment(postId: postId)]?.commentContent.text
+            guard let postId = self.postId,
+                  let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,
-                  let originCommentId = originComment.id
-            else { return }
-            initialText = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.text
+                  let originCommentId = originComment.id,
+                  let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)] else { return }
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
         case .edit(comment: let comment):
             if let commentText = comment.text?.text {
                 initialText = commentText
             }
+            if let postId = postId,
+               let commentId = comment.id,
+               let commentCreationCache = commentsCacheService[.edit(postId: postId, commentId: commentId)] {
+                initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
+            }
         }
 
         if let text = initialText {
-            self.inputs.commentText.onNext(text)
+            textViewVM.inputs.textExternalChange.onNext(text)
         }
     }
 
@@ -254,6 +243,28 @@ fileprivate extension OWCommentCreationContentViewModel {
             .disposed(by: disposeBag)
     }
 
+    func setupInitialGifIfNeeded() {
+        let initialGif: OWCommentGif?
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+
+        switch commentCreationType {
+        case .comment:
+            guard let postId = postId else { return }
+            initialGif = commentsCacheService[.comment(postId: postId)]?.commentContent.gif
+        case .replyToComment(originComment: let originComment):
+            guard let postId = self.postId,
+                  let originCommentId = originComment.id
+            else { return }
+            initialGif = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.gif
+        case .edit(let comment):
+            initialGif = comment.gif
+        }
+
+        guard let initialGif = initialGif else { return }
+
+        gifPreviewVM.inputs.gifData.onNext(initialGif)
+    }
+
     func textValidatorTransformer(previousText: String, newText: String, charactersLimiter: Int) -> String {
         // Handle a state in which a user is trying to edit a text which is longer than the limiter
         if previousText.isEmpty && newText.count > charactersLimiter {
@@ -291,12 +302,40 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self.imagePreviewVM.inputs.isUploadingImage.onNext(false)
             })
             .disposed(by: disposeBag)
+
+        _commentTextCharactersLimit
+            .subscribe(onNext: { [weak self] limit in
+                guard let self = self else { return }
+                let limit = limit ?? 0
+                self.textViewVM.inputs.textViewMaxCharectersChange.onNext(limit)
+                self.textViewVM.inputs.charectarsLimitEnabledChange.onNext(limit > 0)
+            })
+            .disposed(by: disposeBag)
+
+        becomeFirstResponder
+            .map { 0 }
+            .bind(to: textViewVM.inputs.becomeFirstResponderCallWithDelay)
+            .disposed(by: disposeBag)
+
+        resignFirstResponder
+            .bind(to: textViewVM.inputs.resignFirstResponderCall)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.orientationService().orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                guard let self = self else { return }
+                let isSuggestionBarEnabled = (currentOrientation == .portrait)
+                self.textViewVM.inputs.hasSuggestionsBarChange.onNext(isSuggestionBarEnabled)
+            })
+            .disposed(by: disposeBag)
     }
 
     func setupImageObserver() {
         let imageWithCloudinarySignatureObservable = imagePicked
             .do(onNext: { [weak self] image in
                 guard let self = self else { return }
+                // Clean selected gif
+                self.gifPreviewVM.inputs.removeButtonTap.onNext()
                 self._imageContent.onNext(nil)
                 self.imagePreviewVM.inputs.image.onNext(image)
                 self.imagePreviewVM.inputs.isUploadingImage.onNext(true)
@@ -306,7 +345,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 let imageId = UUID().uuidString
                 let timestamp = String(format: "%.3f", NSDate().timeIntervalSince1970)
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .images
                     .login(publicId: imageId, timestamp: timestamp)
                     .response
@@ -331,7 +370,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                       let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
                 else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .images
                     .upload(
                         signature: cloudinarySignature,
@@ -369,6 +408,14 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self._imageContent.onNext(imageContent)
             })
             .disposed(by: uploadImageDisposeBag)
+
+        gifPicked
+            .do(onNext: { [weak self] _ in
+                // Clean selected image
+                self?.imagePreviewVM.inputs.removeButtonTap.onNext()
+            })
+            .bind(to: gifPreviewVM.inputs.gifData)
+            .disposed(by: disposeBag)
     }
 }
 

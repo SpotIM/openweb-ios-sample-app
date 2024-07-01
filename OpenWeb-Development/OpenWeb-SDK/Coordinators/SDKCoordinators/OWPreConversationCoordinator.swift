@@ -76,7 +76,7 @@ fileprivate extension OWPreConversationCoordinator {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 switch self.preConversationData.presentationalStyle {
-                case .present(style: let style):
+                case .present(style: _):
                     router.dismiss(animated: true, completion: nil)
                 default:
                     break

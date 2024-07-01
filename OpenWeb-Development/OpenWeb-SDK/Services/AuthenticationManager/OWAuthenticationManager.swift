@@ -263,7 +263,7 @@ extension OWAuthenticationManager {
             .take(1) // Here we are simply waiting for the config first / ensuring such exist for the specific spotId
             .flatMap { [weak self] _ -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
-                let user = self.servicesProvider.netwokAPI().user
+                let user = self.servicesProvider.networkAPI().user
                 return user
                     .userData()
                     .response
@@ -321,7 +321,7 @@ extension OWAuthenticationManager {
     }
 
     func logout() -> Observable<Void> {
-        let networkAuthentication = servicesProvider.netwokAPI().authentication
+        let networkAuthentication = servicesProvider.networkAPI().authentication
 
         return networkAuthentication
             .logout()
@@ -367,7 +367,7 @@ extension OWAuthenticationManager {
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 // 2. Login (usually will provide a guest user))
-                let networkAuthentication = self.servicesProvider.netwokAPI().authentication
+                let networkAuthentication = self.servicesProvider.networkAPI().authentication
                 return networkAuthentication
                     .login()
                     .response
@@ -386,7 +386,7 @@ extension OWAuthenticationManager {
                 guard let self = self else { return .empty() }
                 // 2. Start SSO
                 guard let authorization = self._networkCredentials.authorization else { return .error(OWError.ssoStart)}
-                let networkAuthentication = self.servicesProvider.netwokAPI().authentication
+                let networkAuthentication = self.servicesProvider.networkAPI().authentication
                 return networkAuthentication
                     .ssoStart(secret: authorization)
                     .response
@@ -408,7 +408,7 @@ extension OWAuthenticationManager {
             .flatMapLatest { [weak self] _ -> Observable<OWSSOCompletionResponse> in
                 guard let self = self else { return .empty() }
                 // 2. Proceed with SSO complete
-                let networkAuthentication = self.servicesProvider.netwokAPI().authentication
+                let networkAuthentication = self.servicesProvider.networkAPI().authentication
                 return networkAuthentication
                     .ssoComplete(codeB: codeB)
                     .response
@@ -441,7 +441,7 @@ extension OWAuthenticationManager {
             .flatMap { [weak self] _ -> Observable<OWSSOProviderResponse> in
                 guard let self = self else { return .empty() }
                 // 2. Proceed with SSO complete
-                let networkAuthentication = self.servicesProvider.netwokAPI().authentication
+                let networkAuthentication = self.servicesProvider.networkAPI().authentication
                 return networkAuthentication
                     .ssoAuthenticate(withProvider: provider, token: token)
                     .response

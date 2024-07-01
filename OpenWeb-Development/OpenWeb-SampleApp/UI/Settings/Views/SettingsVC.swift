@@ -13,8 +13,11 @@ class SettingsVC: UIViewController {
 
     fileprivate struct Metrics {
         static let identifier = "settings_vc_id"
+        static let resetButtonId = "settings_reset_button_id"
         static let verticalOffset: CGFloat = 40
         static let verticalBetweenSettingViewsOffset: CGFloat = 80
+        static let resetButtonHeight: CGFloat = 50
+        static let resetButtonVerticalPadding: CGFloat = 20
     }
 
     fileprivate lazy var scrollView: UIScrollView = {
@@ -22,6 +25,11 @@ class SettingsVC: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
+    }()
+
+    fileprivate lazy var resetButton: UIButton = {
+        return NSLocalizedString("ResetToDefaults", comment: "")
+            .blueRoundedButton
     }()
 
     fileprivate lazy var settingViews: [UIView] = {
@@ -35,6 +43,7 @@ class SettingsVC: UIViewController {
     init(viewModel: SettingsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        setupObservers()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -55,6 +64,7 @@ class SettingsVC: UIViewController {
 fileprivate extension SettingsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
+        resetButton.accessibilityIdentifier = Metrics.resetButtonId
     }
 
     func setupViews() {
@@ -63,10 +73,17 @@ fileprivate extension SettingsVC {
 
         title = viewModel.outputs.title
 
+        view.addSubview(resetButton)
+        resetButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().inset(Metrics.resetButtonVerticalPadding)
+            make.height.equalTo(Metrics.resetButtonHeight)
+        }
+
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(resetButton.snp.top).offset(-Metrics.resetButtonVerticalPadding)
             make.top.equalToSuperview()
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
@@ -109,7 +126,7 @@ fileprivate extension SettingsVC {
                     let expandedKeyboardHeight = notification.keyboardSize?.height,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
-                self.scrollView.snp.updateConstraints { make in
+                self.resetButton.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-expandedKeyboardHeight)
                 }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
@@ -131,8 +148,8 @@ fileprivate extension SettingsVC {
             .voidify()
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.scrollView.snp.updateConstraints { make in
-                    make.bottom.equalToSuperview()
+                self.resetButton.snp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(-Metrics.resetButtonVerticalPadding)
                 }
             })
             .disposed(by: disposeBag)
@@ -144,5 +161,11 @@ fileprivate extension SettingsVC {
             let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
             scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - self.view.frame.height / 3), animated: true)
         }
+    }
+
+    func setupObservers() {
+        resetButton.rx.tap
+            .bind(to: viewModel.inputs.resetToDefaultTap)
+            .disposed(by: disposeBag)
     }
 }

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 protocol OWTextViewViewModelingInputs {
     // becomeFirstResponderCallWithDelay has int milliseconds for delaying the keyboard
@@ -20,7 +21,13 @@ protocol OWTextViewViewModelingInputs {
     var textViewCharectersCount: BehaviorSubject<Int> { get }
     var textViewMaxCharectersChange: PublishSubject<Int> { get }
     var charectarsLimitEnabledChange: PublishSubject<Bool> { get }
-    var cursorRangeChange: BehaviorSubject<Range<String.Index>> { get }
+    var hasSuggestionsBarChange: BehaviorSubject<Bool> { get }
+    var cursorRangeExternalChange: PublishSubject<Range<String.Index>?> { get }
+    var cursorRangeInternalChange: PublishSubject<Range<String.Index>?> { get }
+    var replacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
+    var internalReplacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
+    var attributedTextChange: BehaviorSubject<NSAttributedString?> { get }
+    var maxLinesChange: PublishSubject<Int> { get }
 }
 
 protocol OWTextViewViewModelingOutputs {
@@ -34,9 +41,18 @@ protocol OWTextViewViewModelingOutputs {
     var hidePlaceholder: Observable<Bool> { get }
     var textViewText: Observable<String> { get }
     var charectersLimitEnabled: Bool { get }
+    var showCharectersLimit: Bool { get }
     var isAutoExpandable: Bool { get }
-    var hasSuggestionsBar: Bool { get }
     var cursorRange: Observable<Range<String.Index>> { get }
+    var replaceData: Observable<OWTextViewReplaceData> { get }
+    var internalReplaceData: Observable<OWTextViewReplaceData> { get }
+    var attributedTextChanged: Observable<NSAttributedString> { get }
+    var cursorRangeExternalChanged: Observable<Range<String.Index>> { get }
+    var hasSuggestionsBarChanged: Observable<Bool> { get }
+    var scrollEnabled: Bool { get }
+    var hasBorder: Bool { get }
+    var maxLines: Int { get }
+    var maxLinesChanged: Observable<Void> { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -45,18 +61,38 @@ protocol OWTextViewViewModeling {
 }
 
 class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingOutputs, OWTextViewViewModeling {
-
     var inputs: OWTextViewViewModelingInputs { return self }
     var outputs: OWTextViewViewModelingOutputs { return self }
+
+    struct ExternalMetrics {
+        static let maxNumberOfLines = 5
+    }
+
     fileprivate let disposeBag = DisposeBag()
 
+    let hasBorder: Bool
     let isEditable: Bool
     let isAutoExpandable: Bool
-    let hasSuggestionsBar: Bool
+    let scrollEnabled: Bool
     var textViewMaxCharecters: Int
     var textViewMaxCharectersChange = PublishSubject<Int>()
 
-    var charectersLimitEnabled = true
+    var hasSuggestionsBarChange = BehaviorSubject<Bool>(value: false)
+    var hasSuggestionsBarChanged: Observable<Bool> {
+        return hasSuggestionsBarChange
+            .asObservable()
+    }
+
+    var maxLinesChange = PublishSubject<Int>()
+    var maxLinesChanged: Observable<Void> {
+        return maxLinesChange
+            .voidify()
+            .asObservable()
+    }
+    var maxLines: Int = ExternalMetrics.maxNumberOfLines
+
+    var charectersLimitEnabled: Bool
+    let showCharectersLimit: Bool
     var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
     // becomeFirstResponderCall has int milliseconds for delaying the keyboard
@@ -75,6 +111,20 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var resignFirstResponderCalled: Observable<Void> {
         return resignFirstResponderCall
             .asObservable()
+    }
+
+    var internalReplacedData = BehaviorSubject<OWTextViewReplaceData?>(value: nil)
+    var internalReplaceData: Observable<OWTextViewReplaceData> {
+        return internalReplacedData
+            .asObservable()
+            .unwrap()
+    }
+
+    var replacedData = BehaviorSubject<OWTextViewReplaceData?>(value: nil)
+    var replaceData: Observable<OWTextViewReplaceData> {
+        return replacedData
+            .asObservable()
+            .unwrap()
     }
 
     var textViewTap = PublishSubject<Void>()
@@ -98,17 +148,27 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
                 .asObservable()
     }
 
-    var _textViewText: BehaviorSubject<String>
+    var cursorRangeExternalChange = PublishSubject<Range<String.Index>?>()
+    var cursorRangeExternalChanged: Observable<Range<String.Index>> {
+        return cursorRangeExternalChange
+            // Prevent first cursor change that comes from the textView itself
+            .skip(1)
+            .unwrap()
+            .asObservable()
+    }
+    var cursorRangeInternalChange = PublishSubject<Range<String.Index>?>()
 
-    lazy var cursorRangeChange = BehaviorSubject<Range<String.Index>>(value: "".range(from: NSRange(location: 0, length: 0))!)
+    var _cursorRange = BehaviorSubject<Range<String.Index>?>(value: Range(NSRange(location: 0, length: 0), in: ""))
     var cursorRange: Observable<Range<String.Index>> {
-        return cursorRangeChange
+        return _cursorRange
+            .unwrap()
             .asObservable()
     }
 
     var textExternalChange = PublishSubject<String>()
     var textInternalChange = PublishSubject<String>()
 
+    var _textViewText: BehaviorSubject<String>
     var textViewText: Observable<String> {
         return _textViewText
             .asObservable()
@@ -119,20 +179,36 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
             .map { $0 > 0 }
     }
 
+    lazy var attributedTextChange = BehaviorSubject<NSAttributedString?>(value: nil)
+    lazy var attributedTextChanged: Observable<NSAttributedString> = {
+        return attributedTextChange
+            .unwrap()
+            .asObservable()
+    }()
+
     init(textViewData: OWTextViewData) {
         self.textViewMaxCharecters = textViewData.textViewMaxCharecters
         self.placeholderTextChange = BehaviorSubject(value: textViewData.placeholderText)
         self._textViewText = BehaviorSubject(value: textViewData.textViewText)
         self.isEditable = textViewData.isEditable
         self.charectersLimitEnabled = textViewData.charectersLimitEnabled
+        self.showCharectersLimit = textViewData.showCharectersLimit
         self.isAutoExpandable = textViewData.isAutoExpandable
-        self.hasSuggestionsBar = textViewData.hasSuggestionsBar
+        self.hasSuggestionsBarChange.onNext(textViewData.hasSuggestionsBar)
+        self.scrollEnabled = textViewData.isScrollEnabled
+        self.hasBorder = textViewData.hasBorder
         self.setupObservers()
     }
 }
 
 fileprivate extension OWTextViewViewModel {
     func setupObservers() {
+        maxLinesChange
+            .subscribe(onNext: { [weak self] maxLines in
+                self?.maxLines = maxLines
+            })
+            .disposed(by: disposeBag)
+
         textViewMaxCharectersChange
             .subscribe(onNext: { [weak self] limit in
                 guard let self = self else { return }
@@ -175,5 +251,21 @@ fileprivate extension OWTextViewViewModel {
             .bind(to: _textViewText)
             .disposed(by: disposeBag)
 
+        let cursorRangeInternalChangeObservable = cursorRangeInternalChange
+            .unwrap()
+            .flatMap { [weak self] internalRange -> Observable<Range<String.Index>?> in
+                guard let self = self else { return .empty() }
+                return self.cursorRange
+                    .take(1)
+                    .filter { internalRange != $0 }
+                    .map { _ -> Range<String.Index>? in
+                        return internalRange
+                    }
+            }
+
+        cursorRangeInternalChangeObservable
+            .unwrap()
+            .bind(to: _cursorRange)
+            .disposed(by: disposeBag)
     }
 }

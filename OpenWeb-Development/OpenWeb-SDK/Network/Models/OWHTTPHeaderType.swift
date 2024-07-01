@@ -23,4 +23,5 @@ enum OWHTTPHeaderType: String {
     case pageViewId = "x-spotim-page-view-id"
     case openWebToken = "x-openweb-token"
     case guid = "x-guid"
+    case host = "Host"
 }

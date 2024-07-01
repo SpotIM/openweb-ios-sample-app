@@ -21,7 +21,6 @@ struct OWConfigurationReportReasonOptions: Codable {
         if let failableReasons = try values.decodeIfPresent([OWFailableWrapperDecodable<OWReportReason>].self, forKey: .reportReasons) {
             reasons = failableReasons.map { $0.wrappedValue }.unwrap()
         }
-
         reportReasons = reasons
     }
 }

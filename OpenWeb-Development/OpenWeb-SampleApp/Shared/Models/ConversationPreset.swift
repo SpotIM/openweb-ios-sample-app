@@ -32,9 +32,12 @@ extension ConversationPreset {
         return demoConversationPreset
 
     #else
-        return demoConversationPreset + [ConversationPreset(displayName: "FOX News",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_ANQXRpqH",
-                                                                                                            postId: "urn:uri:base64:3cb1232f-b7ea-5546-81a5-395a75a27b1b")),
+        return demoConversationPreset + [ConversationPreset(displayName: "Mail Online (MOL)",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_jhHPoiRK",
+                                                                                                            postId: "13019781")),
+                                         ConversationPreset(displayName: "FOX News",
+                                                                                             conversationDataModel: SDKConversationDataModel(spotId: "sp_ANQXRpqH",
+                                                                                                                                             postId: "urn:uri:base64:3cb1232f-b7ea-5546-81a5-395a75a27b1b")),
                                          ConversationPreset(displayName: "Yahoo",
                                                             conversationDataModel: SDKConversationDataModel(spotId: "sp_Rba9aFpG",
                                                                                                             postId: "finmb$24937"),

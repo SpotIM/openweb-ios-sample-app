@@ -16,11 +16,9 @@ class OWCommentHeaderView: UIView {
         static let avatarSideSize: CGFloat = 36.0
         static let avatarImageViewTrailingOffset: CGFloat = 8.0
         static let subscriberVerticalPadding: CGFloat = 7
-        static let optionButtonSize: CGFloat = 30
         static let badgeHorizontalInset: CGFloat = 4
         static let commentReasonLabelFontSize: CGFloat = 17
         static let commentReasonLabelLineSpacing: CGFloat = 3.5
-        static let optionsImageInset: CGFloat = 22
         static let badgeTagContainerMinWidth: CGFloat = 25
 
         static let identifier = "comment_header_view_id"
@@ -30,7 +28,6 @@ class OWCommentHeaderView: UIView {
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
         static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
         static let dateLabelIdentifier = "comment_header_date_label_id"
-        static let optionButtonIdentifier = "comment_header_option_button_id"
         static let hiddenMessageLabelIdentifier = "comment_header_hidden_message_label_id"
     }
 
@@ -97,15 +94,6 @@ class OWCommentHeaderView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var optionButton: UIButton = {
-        let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
-        let leftInset: CGFloat =  OWLocalizationManager.shared.textAlignment == .left ? 0 : -Metrics.optionsImageInset
-        let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -Metrics.optionsImageInset
-        return UIButton()
-            .image(image, state: .normal)
-            .imageEdgeInsets(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset))
-    }()
-
     fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
         return UILabel()
             .isHidden(true)
@@ -138,7 +126,6 @@ class OWCommentHeaderView: UIView {
     func prepareForReuse() {
         self.seperatorBetweenSubtitleAndDateLabel.isHidden = false
         self.dateLabel.isHidden = false
-        self.optionButton.isHidden = false
         self.userNameLabel.isHidden = false
         self.subtitleLabel.isHidden = false
         self.subscriberBadgeView.isHidden = false
@@ -171,18 +158,11 @@ fileprivate extension OWCommentHeaderView {
             make.leading.equalTo(userNameLabel.OWSnp.trailing)
         }
 
-        addSubview(optionButton)
-        optionButton.OWSnp.makeConstraints { make in
-            make.size.equalTo(Metrics.optionButtonSize)
-            make.centerY.equalTo(userNameLabel)
-            make.trailing.equalToSuperview()
-        }
-
         addSubview(badgeTagContainer)
         badgeTagContainer.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
             make.leading.equalTo(subscriberBadgeView.OWSnp.trailing).offset(Metrics.subscriberVerticalPadding)
-            make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
+            make.trailing.lessThanOrEqualToSuperview()
         }
 
         badgeTagContainer.addSubview(badgeTagLabel)
@@ -209,7 +189,7 @@ fileprivate extension OWCommentHeaderView {
         dateLabel.OWSnp.makeConstraints { make in
             make.top.bottom.equalTo(subtitleLabel)
             make.leading.equalTo(seperatorBetweenSubtitleAndDateLabel.OWSnp.trailing)
-            make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
+            make.trailing.lessThanOrEqualToSuperview()
         }
 
         addSubview(hiddenCommentReasonLabel)
@@ -253,14 +233,6 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: dateLabel.rx.text)
             .disposed(by: disposeBag)
 
-        optionButton.rx.tap
-            .map { [weak self] in
-                return self?.optionButton
-            }
-            .unwrap()
-            .bind(to: viewModel.inputs.tapMore)
-            .disposed(by: disposeBag)
-
         viewModel.outputs.shouldShowSubtitleSeperator
             .map { !$0 }
             .bind(to: seperatorBetweenSubtitleAndDateLabel.rx.isHidden)
@@ -286,7 +258,6 @@ fileprivate extension OWCommentHeaderView {
                     guard let self = self else { return }
 
                     self.dateLabel.isHidden = isHiddenMessage
-                    self.optionButton.isHidden = isHiddenMessage
                     self.subscriberBadgeView.isHidden = isHiddenMessage
                     self.userNameLabel.isHidden = isHiddenMessage
                     self.subtitleLabel.isHidden = isHiddenMessage
@@ -317,7 +288,6 @@ fileprivate extension OWCommentHeaderView {
                 self.seperatorBetweenSubtitleAndDateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.dateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-                self.optionButton.image(UIImage(spNamed: "optionsIcon", supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
 
@@ -358,9 +328,6 @@ fileprivate extension OWCommentHeaderView {
         badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
-        optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
-        optionButton.accessibilityTraits = .button
-        optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "OptionsMenu")
         hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.hiddenMessageLabelIdentifier
         subtitleLabel.accessibilityIdentifier = Metrics.userNameSubtitleLabelIdentifier
     }

@@ -51,6 +51,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 
     var labelClickIndex = PublishSubject<Int>()
 
+    fileprivate var userMentions: [OWUserMentionObject]
     fileprivate var readMoreRange: NSRange? = nil
     fileprivate var availableUrlsRange: OWRangeURLsMapper
     fileprivate var serviceProvider: OWSharedServicesProviding
@@ -61,11 +62,16 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         self.serviceProvider = serviceProvider
         self.collapsableTextLineLimit = collapsableTextLineLimit
         self.availableUrlsRange = [:]
+        var comment = comment
+        self.userMentions = OWUserMentionHelper.createUserMentions(from: &comment)
         _comment.onNext(comment)
         setupObservers()
     }
 
     func update(comment: OWComment) {
+        var comment = comment
+        userMentions.removeAll()
+        userMentions.append(contentsOf: OWUserMentionHelper.createUserMentions(from: &comment))
         _comment.onNext(comment)
     }
 
@@ -133,9 +139,13 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 return (attString, style)
             }
             .unwrap()
-            .map { [weak self] (attString, style) in
-                guard var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
-                self?.locateURLsInText(text: &res, style: style)
+            .withLatestFrom(comment) { ($0.0, $0.1, $1) }
+            .map { [weak self] attString, style, comment in
+                guard let self = self,
+                      var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
+                self.availableUrlsRange.removeAll()
+                self.locateURLsInText(text: &res, style: style)
+                self.addUserMentions(text: &res, style: style, comment: comment)
                 return res
             }
             .distinctUntilChanged()
@@ -259,7 +269,6 @@ fileprivate extension OWCommentTextViewModel {
 
     func locateURLsInText(text: inout NSMutableAttributedString, style: OWThemeStyle) {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
-        var activeURLs: OWRangeURLsMapper = [:]
         if let detector = try? NSDataDetector(types: linkType.rawValue) {
             let rawText = text.string
             let matches = detector.matches(
@@ -273,11 +282,22 @@ fileprivate extension OWCommentTextViewModel {
                     text.addAttributes([
                         .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style),
                         .underlineStyle: NSUnderlineStyle.single.rawValue], range: match.range)
-                        activeURLs[match.range] = urlMatch
+                    availableUrlsRange[match.range] = urlMatch
                 }
             }
         }
-        self.availableUrlsRange = activeURLs
+    }
+
+    func addUserMentions(text: inout NSMutableAttributedString, style: OWThemeStyle, comment: OWComment) {
+        guard OWUserMentionHelper.mentionsEnabled else { return }
+        let userMentions = OWUserMentionHelper.filterUserMentions(in: text.string, userMentions: userMentions, readMoreRange: readMoreRange)
+        for userMention in userMentions {
+            if let profileURL = self.serviceProvider.profileService().getProfileURL(userId: userMention.userId) {
+                text.addAttributes([
+                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)], range: userMention.range)
+                availableUrlsRange[userMention.range] = profileURL
+            }
+        }
     }
 
     func isUrlSchemeValid(for url: URL) -> Bool {

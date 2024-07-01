@@ -13,6 +13,10 @@ import RxCocoa
 class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_light_view_id"
+        static let topContainerIdentifier = "top_container_view_id"
+        static let titleLabelIdentifier = "title_label_id"
+        static let closeButtonIdentifier = "close_button_id"
+        static let replyToLabelIdentifier = "reply_to_label_id"
 
         static let horizontalOffset: CGFloat = 16.0
         static let contentViewHorizontalLandscapeOffset: CGFloat = 66.0
@@ -104,6 +108,10 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastN
         return OWCommentCreationFooterView(with: self.viewModel.outputs.footerViewModel)
     }()
 
+    fileprivate lazy var userMentionView: OWUserMentionView = {
+        return OWUserMentionView(viewModel: viewModel.outputs.userMentionVM)
+    }()
+
     fileprivate var replyToLabelHeightConstraint: OWConstraint? = nil
     fileprivate var replySnippetHeightConstraint: OWConstraint? = nil
     fileprivate var commentLabelsContainerHeightConstraint: OWConstraint? = nil
@@ -129,6 +137,10 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastN
 
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+        self.topContainerView.accessibilityIdentifier = Metrics.topContainerIdentifier
+        self.titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
+        self.closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        self.replyToLabel.accessibilityIdentifier = Metrics.replyToLabelIdentifier
     }
 }
 
@@ -184,6 +196,13 @@ fileprivate extension OWCommentCreationLightView {
             make.leading.trailing.equalToSuperviewSafeArea().inset(0)
             make.top.equalTo(viewModel.outputs.shouldShowReplySnippet ? replySnippetView.OWSnp.bottom : topContainerView.OWSnp.bottom)
             make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
+        }
+
+        self.addSubview(userMentionView)
+        userMentionView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperviewSafeArea()
+            make.bottom.equalTo(footerView.OWSnp.top)
+            make.top.greaterThanOrEqualTo(contentView.OWSnp.top)
         }
     }
 

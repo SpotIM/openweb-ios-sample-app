@@ -18,8 +18,6 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerViewIdentifier = "comment_creation_floating_keyboard_header_view_id"
         static let headerCloseButtonIdentifier = "comment_creation_floating_keyboard_header_close_button_id"
         static let headerTitleLabelIdentifier = "comment_creation_floating_keyboard_header_title_label_id"
-        static let headerIconViewIdentifier = "comment_creation_floating_keyboard_header_icon_view_id"
-        static let userAvatarViewIdentifier = "comment_creation_floating_keyboard_user_avatar_view_id"
         static let closeButtonIdentifier = "comment_creation_floating_keyboard_close_button_id"
         static let ctaButtonIdentifier = "comment_creation_floating_keyboard_cta_button_id"
         static let toolbarIdentifier = "comment_creation_floating_keyboard_toolbar_view_id"
@@ -51,6 +49,9 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let trailingLandscapeMargin: CGFloat = 56.0
         static let leadingLandscapeMargin: CGFloat = 66.0
         static let errorToastBottomPadding: CGFloat = 8.0
+        static func headerIconViewIdentifier(commentType type: OWCommentCreationTypeInternal) -> String {
+            return "comment_creation_floating_keyboard_header_\(type.identifierDescription)_icon_view_id"
+        }
     }
 
     var toastView: OWToastView? = nil
@@ -61,6 +62,10 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
     fileprivate lazy var mainContainer: OWFloatingKeyboardMainContainerView = {
         return OWFloatingKeyboardMainContainerView(frame: .zero)
             .backgroundColor(.clear)
+    }()
+
+    fileprivate lazy var userMentionView: OWUserMentionView = {
+        return OWUserMentionView(viewModel: viewModel.outputs.userMentionVM)
     }()
 
     fileprivate lazy var underFooterView: UIView = {
@@ -239,12 +244,11 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         headerView.accessibilityIdentifier = Metrics.headerViewIdentifier
         headerCloseButton.accessibilityIdentifier = Metrics.headerCloseButtonIdentifier
         headerTitleLabel.accessibilityIdentifier = Metrics.headerTitleLabelIdentifier
-        headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier
-        userAvatarView.accessibilityIdentifier = Metrics.userAvatarViewIdentifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
         ctaButton.accessibilityIdentifier = Metrics.ctaButtonIdentifier
         toolbar?.accessibilityIdentifier = Metrics.toolbarIdentifier
         lineSeparator.accessibilityIdentifier = Metrics.lineSeparatorIdentifier
+        headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier(commentType: viewModel.outputs.commentType)
     }
 }
 
@@ -334,6 +338,21 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(mainContainer.OWSnp.bottom)
             make.height.equalTo(Metrics.underFooterHeight)
+        }
+
+        var topView: UIView {
+            switch viewModel.outputs.commentType {
+            case .comment:
+                return footerView
+            case .edit, .replyToComment:
+                return headerView
+            }
+        }
+        mainContainer.addSubview(userMentionView)
+        userMentionView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperviewSafeArea()
+            make.bottom.equalTo(topView.OWSnp.top)
+            make.top.greaterThanOrEqualTo(mainContainer.OWSnp.top)
         }
     }
 
@@ -510,8 +529,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         // keyboard will show
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
-            .withLatestFrom(viewModel.outputs.textBeforeClosedChanged) { ($0, $1) }
-            .subscribe(onNext: { [weak self] (notification, textBeforeClosed) in
+            .withLatestFrom(viewModel.outputs.textBeforeClosedWithMentions) { ($0, $1) }
+            .subscribe(onNext: { [weak self] notification, textBeforeClosed in
                 guard
                    let self = self,
                    let expandedKeyboardHeight = notification.keyboardSize?.height,
@@ -575,11 +594,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .notification(UIResponder.keyboardWillHideNotification)
             .withLatestFrom(viewModel.outputs.textViewVM.outputs.textViewText) { ($0, $1) }
             .withLatestFrom(viewModel.outputs.ctaButtonLoading) { ($0.0, $0.1, $1) }
-            .subscribe(onNext: { [weak self] (notification, textViewText, isSendingComment) in
+            .subscribe(onNext: { [weak self] notification, textViewText, isSendingComment  in
                 guard
                     let self = self,
-                    let animationDuration = notification.keyboardAnimationDuration
-                    else { return }
+                    let animationDuration = notification.keyboardAnimationDuration else { return }
 
                 self.viewModel.inputs.textBeforeClosedChange.onNext(isSendingComment ? "" : textViewText)
                 self.viewModel.outputs.textViewVM.inputs.textExternalChange.onNext("")

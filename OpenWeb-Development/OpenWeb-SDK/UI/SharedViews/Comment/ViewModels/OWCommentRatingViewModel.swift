@@ -237,7 +237,7 @@ fileprivate extension OWCommentRatingViewModel {
                 else { return .empty() }
 
                 return self.sharedServiceProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .commentRankChange(conversationId: "\(OWManager.manager.spotId)_\(postId)", operation: operation, commentId: self.commentId)
                     .response

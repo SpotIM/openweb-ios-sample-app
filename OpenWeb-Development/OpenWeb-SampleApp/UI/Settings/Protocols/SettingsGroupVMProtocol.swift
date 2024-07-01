@@ -8,5 +8,7 @@
 
 import Foundation
 
-protocol SettingsGroupVMProtocol { }
+protocol SettingsGroupVMProtocol {
+    func resetToDefault()
+}
 

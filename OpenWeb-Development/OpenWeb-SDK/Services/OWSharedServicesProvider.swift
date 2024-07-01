@@ -26,7 +26,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData>
     func lastCommentTypeInMemoryCacheService() -> OWCacheService<OWPostId, OWCachedLastCommentType>
-    func netwokAPI() -> OWNetworkAPIProtocol
+    func networkAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
     func keychain() -> OWKeychainProtocol
@@ -39,6 +39,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing
     func timeMeasuringService() -> OWTimeMeasuringServicing
     func sortDictateService() -> OWSortDictateServicing
+    func filterTabsDictateService() -> OWFilterTabsDictateServicing
     func authenticationManager() -> OWAuthenticationManagerProtocol
     func blockerServicing() -> OWBlockerServicing
     func commentsService() -> OWCommentsServicing
@@ -58,6 +59,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
     func conversationSizeService() -> OWConversationSizeServicing
+    func gifService() -> OWGifServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -83,6 +85,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _conversationSizeService: OWConversationSizeServicing = {
         return OWConversationSizeService()
+    }()
+
+    fileprivate lazy var _gifService: OWGifServicing = {
+        return OWGifService(sharedServicesProvider: self)
     }()
 
     fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
@@ -161,6 +167,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWSortDictateService(servicesProvider: self)
     }()
 
+    fileprivate lazy var _filterTabsDictateService: OWFilterTabsDictateServicing = {
+        return OWFilterTabsDictateService(servicesProvider: self)
+    }()
+
     fileprivate lazy var _authenticationManager: OWAuthenticationManagerProtocol = {
         return OWAuthenticationManager(servicesProvider: self)
     }()
@@ -182,7 +192,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _presenterService: OWPresenterServicing = {
-        return OWPresenterService()
+        return OWPresenterService(sharedServicesProvider: self)
     }()
 
     fileprivate lazy var _commentCreationRequestsService: OWCommentCreationRequestsServicing = {
@@ -261,7 +271,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _lastCommentTypeInMemoryCacheService
     }
 
-    func netwokAPI() -> OWNetworkAPIProtocol {
+    func networkAPI() -> OWNetworkAPIProtocol {
         return _networkAPI
     }
 
@@ -311,6 +321,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func sortDictateService() -> OWSortDictateServicing {
         return _sortDictateService
+    }
+
+    func filterTabsDictateService() -> OWFilterTabsDictateServicing {
+        return _filterTabsDictateService
     }
 
     func authenticationManager() -> OWAuthenticationManagerProtocol {
@@ -387,6 +401,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func conversationSizeService() -> OWConversationSizeServicing {
         return _conversationSizeService
+    }
+
+    func gifService() -> OWGifServicing {
+        return _gifService
     }
 }
 

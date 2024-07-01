@@ -64,7 +64,7 @@ fileprivate extension OWCommentStatusUpdaterService {
         guard let commentId = comment.id else { return .empty() }
 
         return self.servicesProvider
-            .netwokAPI()
+            .networkAPI()
             .conversation
             .commentStatus(commentId: commentId)
             .response

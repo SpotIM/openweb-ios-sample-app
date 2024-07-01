@@ -12,6 +12,7 @@ import RxSwift
 
 protocol OWConversationSummaryViewModelingInputs {
     var triggerCustomizeCounterLabelUI: PublishSubject<UILabel> { get }
+    var shouldShowSortView: BehaviorSubject<Bool> { get }
 }
 
 protocol OWConversationSummaryViewModelingOutputs {
@@ -19,6 +20,7 @@ protocol OWConversationSummaryViewModelingOutputs {
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
     var conversationSortVM: OWConversationSortViewModeling { get }
     var commentsCount: Observable<String> { get }
+    var showSortView: Observable<Bool> { get }
 }
 
 protocol OWConversationSummaryViewModeling {
@@ -41,6 +43,12 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
     var customizeCounterLabelUI: Observable<UILabel> {
         return _triggerCustomizeCounterLabelUI
             .unwrap()
+            .asObservable()
+    }
+
+    var shouldShowSortView = BehaviorSubject<Bool>(value: false)
+    var showSortView: Observable<Bool> {
+        return shouldShowSortView
             .asObservable()
     }
 
