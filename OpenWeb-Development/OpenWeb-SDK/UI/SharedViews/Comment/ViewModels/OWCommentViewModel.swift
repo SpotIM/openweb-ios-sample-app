@@ -22,6 +22,7 @@ protocol OWCommentViewModelingOutputs {
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var contentVM: OWCommentContentViewModeling { get }
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
+    var commentOptionsVM: OWCommentOptionsViewModeling { get }
     var shouldHideCommentContent: Observable<Bool> { get }
     var shouldShowCommentStatus: Observable<Bool> { get }
     var showBlockingLayoutView: Observable<Bool> { get }
@@ -50,6 +51,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
     var contentVM: OWCommentContentViewModeling
     var commentEngagementVM: OWCommentEngagementViewModeling
+    var commentOptionsVM: OWCommentOptionsViewModeling
     var comment: OWComment
     var user: SPUser
     var activeUserId: String?
@@ -120,6 +122,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         self.user = user
 
         commentHeaderVM.inputs.update(user: user)
+        commentOptionsVM.inputs.update(user: user)
     }
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -131,6 +134,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
+        commentOptionsVM = OWCommentOptionsViewModel(data: data)
         comment = data.comment
         user = data.user
         setupObservers()
@@ -143,6 +147,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
         commentStatusVM = OWCommentStatusViewModel(status: .none, commentId: "")
+        commentOptionsVM = OWCommentOptionsViewModel()
         comment = OWComment()
         user = SPUser()
         setupObservers()
@@ -165,6 +170,10 @@ fileprivate extension OWCommentViewModel {
 
         _isCommentOfActiveUser
             .bind(to: commentStatusVM.inputs.isCommentOfActiveUser)
+            .disposed(by: disposedBag)
+
+        _isCommentOfActiveUser
+            .bind(to: commentOptionsVM.inputs.isCommentOfActiveUser)
             .disposed(by: disposedBag)
 
         commentHeaderVM.outputs.shouldShowHiddenCommentMessage

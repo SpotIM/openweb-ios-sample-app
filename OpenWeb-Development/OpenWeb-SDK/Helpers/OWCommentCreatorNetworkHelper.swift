@@ -88,6 +88,29 @@ fileprivate extension OWCommentCreatorNetworkHelper {
             ])
         }
 
+        if let userMentions = commentCreationData.commentUserMentions {
+            for userMention in userMentions {
+                content.append([
+                    "id": userMention.id,
+                    "type": "user-mention",
+                    "userId": userMention.userId
+                ])
+            }
+        }
+
+        if let gifContent = commentCreationData.commentContent.gif {
+            content.append([
+                "type": "animation",
+                "originalUrl": gifContent.originalUrl,
+                "originalWidth": gifContent.originalWidth,
+                "originalHeight": gifContent.originalHeight,
+                "previewWidth": gifContent.previewWidth,
+                "previewHeight": gifContent.previewHeight,
+                "title": gifContent.title ?? "",
+                "previewUrl": gifContent.previewUrl ?? gifContent.originalUrl
+            ])
+        }
+
         return content
     }
 }

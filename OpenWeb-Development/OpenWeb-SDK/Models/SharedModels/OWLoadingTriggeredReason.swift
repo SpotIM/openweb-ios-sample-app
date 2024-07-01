@@ -12,6 +12,7 @@ enum OWLoadingTriggeredReason {
     case initialLoading
     case pullToRefresh
     case sortingChanged
+    case filterTabChanged
     case tryAgainAfterError
     case forceRefresh
 }

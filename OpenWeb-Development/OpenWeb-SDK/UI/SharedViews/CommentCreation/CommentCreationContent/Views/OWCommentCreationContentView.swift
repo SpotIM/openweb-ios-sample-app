@@ -13,15 +13,12 @@ import RxSwift
 class OWCommentCreationContentView: UIView {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_content_id"
-        static let placeholderLabelIdentifier = "comment_creation_placeholder_label_id"
-        static let textInputIdentifier = "comment_creation_content_text_id"
-
-        static let placeholderLabelTopOffset: CGFloat = 8.0
-        static let placeholderLabelLeadingOffset: CGFloat = 6.0
+        static let prefixIdentifier = "comment_creation_content"
         static let horizontalOffset: CGFloat = 16.0
         static let verticalOffset: CGFloat = 12.0
         static let avatarSize: CGFloat = 40.0
         static let avatarToInputSpacing: CGFloat = 13.0
+        static let becomeFirstResponderDelay = 0 // miliseconds
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -31,29 +28,19 @@ class OWCommentCreationContentView: UIView {
         return OWAvatarView()
     }()
 
-    fileprivate lazy var placeholderLabel: UILabel = {
-        return UILabel()
-            .font(OWFontBook.shared.font(typography: .bodyText))
-            .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
-    }()
-
-    fileprivate lazy var textInput: UITextView = {
-        var textView = UITextView()
-            .backgroundColor(.clear)
-            .font(OWFontBook.shared.font(typography: .bodyText))
-            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .textAlignment(OWLocalizationManager.shared.textAlignment)
-            .textContainerInset(.zero)
-            .tintColor(OWColorPalette.shared.color(type: .cursorColor, themeStyle: .light))
-            .isScrollEnabled(false)
-
-        textView.becomeFirstResponder()
-
+    fileprivate lazy var textInput: OWTextView = {
+        let textView = OWTextView(viewModel: viewModel.outputs.textViewVM,
+                          prefixIdentifier: Metrics.prefixIdentifier)
+        textView.layer.borderColor = UIColor.clear.cgColor
         return textView
     }()
 
     fileprivate lazy var imagePreview: OWCommentCreationImagePreviewView = {
         return OWCommentCreationImagePreviewView(with: viewModel.outputs.imagePreviewVM)
+    }()
+
+    fileprivate lazy var gifPreview: OWGifPreviewView = {
+        return OWGifPreviewView(with: viewModel.outputs.gifPreviewVM)
     }()
 
     fileprivate lazy var scrollView: UIScrollView = {
@@ -80,17 +67,18 @@ class OWCommentCreationContentView: UIView {
             make.top.equalToSuperview().offset(Metrics.verticalOffset)
         }
 
-        scroll.addSubview(placeholderLabel)
-        placeholderLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(textInput.OWSnp.top)
-            make.leading.equalTo(textInput.OWSnp.leading).offset(Metrics.placeholderLabelLeadingOffset)
-        }
-
-        scroll.addSubviews(imagePreview)
+        scroll.addSubview(imagePreview)
         imagePreview.OWSnp.makeConstraints { make in
             make.top.equalTo(textInput.OWSnp.bottom).offset(Metrics.verticalOffset)
             make.top.greaterThanOrEqualTo(avatarView.OWSnp.bottom).offset(Metrics.verticalOffset)
-            make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+            make.bottom.lessThanOrEqualToSuperview().offset(-Metrics.verticalOffset)
+            make.leading.trailing.equalTo(scroll.contentLayoutGuide).inset(Metrics.horizontalOffset)
+        }
+
+        scroll.addSubview(gifPreview)
+        gifPreview.OWSnp.makeConstraints { make in
+            make.top.equalTo(imagePreview.OWSnp.top)
+            make.bottom.lessThanOrEqualToSuperview().offset(-Metrics.verticalOffset)
             make.leading.trailing.equalTo(scroll.contentLayoutGuide).inset(Metrics.horizontalOffset)
         }
 
@@ -104,8 +92,9 @@ class OWCommentCreationContentView: UIView {
         avatarView.configure(with: viewModel.outputs.avatarViewVM)
 
         setupUI()
-        setupObservers()
         applyAccessibility()
+
+        viewModel.outputs.textViewVM.inputs.becomeFirstResponderCallWithDelay.onNext(Metrics.becomeFirstResponderDelay)
     }
 
     required init?(coder: NSCoder) {
@@ -123,64 +112,7 @@ fileprivate extension OWCommentCreationContentView {
         }
     }
 
-    func setupObservers() {
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-                self.textInput.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
-                self.textInput.tintColor = OWColorPalette.shared.color(type: .cursorColor, themeStyle: currentStyle)
-                self.placeholderLabel.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
-
-        viewModel.outputs.commentTextOutput
-            .bind(to: textInput.rx.text)
-            .disposed(by: disposeBag)
-
-        textInput.rx.didChange
-            .map { [weak self] _ in
-                guard let self = self else { return "" }
-                return self.textInput.text
-            }
-            .bind(to: viewModel.inputs.commentText)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.showPlaceholder
-            .map { !$0 }
-            .bind(to: placeholderLabel.rx.isHidden)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.placeholderText
-            .bind(to: placeholderLabel.rx.text)
-            .disposed(by: disposeBag)
-
-        OWSharedServicesProvider.shared.appLifeCycle()
-            .didChangeContentSizeCategory
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.placeholderLabel.font = OWFontBook.shared.font(typography: .bodyText)
-                self.textInput.font = OWFontBook.shared.font(typography: .bodyText)
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.becomeFirstResponderCalled
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.textInput.becomeFirstResponder()
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.resignFirstResponderCalled
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.textInput.resignFirstResponder()
-            })
-            .disposed(by: disposeBag)
-    }
-
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        self.placeholderLabel.accessibilityIdentifier = Metrics.placeholderLabelIdentifier
-        self.textInput.accessibilityIdentifier = Metrics.textInputIdentifier
     }
 }

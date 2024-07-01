@@ -3,7 +3,7 @@
 //  Spot-IM.Development
 //
 //  Created by  Nogah Melamed on 21/02/2024.
-//  Copyright © 2024 Spot.IM. All rights reserved.
+//  Copyright © 2024 OpenWeb. All rights reserved.
 //
 
 import Foundation
@@ -48,11 +48,12 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     lazy var networkEnvironmentSettings: [String] = {
         let _prod = NSLocalizedString("Production", comment: "")
         let _staging = NSLocalizedString("Staging", comment: "")
+        let _cluster1d = NSLocalizedString("1DCluster", comment: "")
 
-        return [_prod, _staging]
+        return [_prod, _staging, _cluster1d]
     }()
 
-    var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: 0)
+    var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: OWNetworkEnvironment.default.index)
 
     var networkEnvironmentIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
@@ -87,4 +88,8 @@ fileprivate extension NetworkSettingsVM {
     }
 }
 
-extension NetworkSettingsVM: SettingsGroupVMProtocol { }
+extension NetworkSettingsVM: SettingsGroupVMProtocol {
+    func resetToDefault() {
+        networkEnvironmentSelectedIndex.onNext(OWNetworkEnvironment.default.index)
+    }
+}
