@@ -664,7 +664,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMap { [weak self] data -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                .netwokAPI()
+                .networkAPI()
                 .conversation
                 .conversationRead(mode: .newest, page: OWPaginationPage.first, childCount: 5, messageId: data.commentId)
                 .response
@@ -846,7 +846,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingMoreReplies(commentId: commentPresentationData.id))
 
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .conversationRead(mode: .best, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
                     .response
@@ -1382,9 +1382,8 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
                 let openMenuClickObservable = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
                     let commentVm = commentCellVm.outputs.commentVM
-                    let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
-                    return commentHeaderVm.outputs.openMenu
+                    return commentVm.outputs.commentOptionsVM.outputs.openMenu
                         .map { ($0.0, $0.1, commentVm) }
                 }
                 return Observable.merge(openMenuClickObservable)
@@ -1521,7 +1520,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                       let commentId = comment.id
                 else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .commentDelete(id: commentId, parentId: comment.parentId)
                     .response
@@ -1698,7 +1697,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .user
                     .mute(userId: userId)
                     .response

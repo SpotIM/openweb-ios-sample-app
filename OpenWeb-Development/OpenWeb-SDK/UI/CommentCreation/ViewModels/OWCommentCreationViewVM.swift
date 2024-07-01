@@ -11,7 +11,6 @@ import UIKit
 import RxSwift
 
 protocol OWCommentCreationViewViewModelingInputs {
-
 }
 
 protocol OWCommentCreationViewViewModelingOutputs {
@@ -77,9 +76,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate lazy var _commentText: Observable<String> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
-            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
+            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText
         case .light:
-            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
+            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.outputs.textBeforeClosedChanged
         }
@@ -96,6 +95,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
+    fileprivate lazy var _commentGif: Observable<OWCommentGif?> = {
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.gifPreviewVM.outputs.gifDataOutput
+        case .light:
+            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.gifPreviewVM.outputs.gifDataOutput
+        case .floatingKeyboard:
+            return Observable.just(nil)
+        }
+    }()
+
     fileprivate lazy var _commentSelectedLabelIds: Observable<[String]> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
@@ -107,28 +117,45 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, [String])> = {
-        Observable.combineLatest(_commentText, _commentImage, _commentSelectedLabelIds) { commentText, commentImage, commentSelectedLabelIds in
-            return (commentText, commentImage, commentSelectedLabelIds)
+    fileprivate lazy var _commentSelectedMentions: Observable<OWUserMentionData> = {
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            return commentCreationRegularViewVm.outputs.userMentionVM.outputs.mentionsData
+        case .light:
+            return commentCreationLightViewVm.outputs.userMentionVM.outputs.mentionsData
+        case .floatingKeyboard:
+            return commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.outputs.mentionsData
         }
     }()
+
+    // swiftlint:disable large_tuple
+    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, OWCommentGif?, [String], OWUserMentionData)> = {
+        Observable.combineLatest(_commentText,
+                                 _commentImage,
+                                 _commentGif,
+                                 _commentSelectedLabelIds,
+                                 _commentSelectedMentions) { commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions in
+            return (commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions)
+        }
+    }()
+    // swiftlint:enable large_tuple
 
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             commentTextAfterTapObservable = commentCreationRegularViewVm.inputs.closeButtonTap
-                .withLatestFrom(commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
+                .withLatestFrom(commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText)
         case .light:
             commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
-                .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
+                .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText)
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.outputs.popped
-                .do(onNext: { [weak self] commentText in
+                .do(onNext: { [weak self] commentData in
                     guard let self = self else { return }
-                    let hasText = !commentText.isEmpty
+                    let hasText = !commentData.commentContent.text.isEmpty
                     if hasText {
-                        self.cacheComment(commentContent: OWCommentCreationContent(text: commentText), commentLabels: nil)
+                        self.cacheComment(commentContent: commentData.commentContent, commentLabels: nil, commentUserMentions: commentData.commentUserMentions)
                     } else {
                         self.clearCachedCommentIfNeeded()
                     }
@@ -138,22 +165,27 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
         return Observable.combineLatest(commentTextAfterTapObservable,
                                         _commentImage,
-                                        _commentSelectedLabelIds)
+                                        _commentGif,
+                                        _commentSelectedLabelIds,
+                                        _commentSelectedMentions)
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .commentCreationClosePage)
             })
-            .flatMap { [weak self] commentText, commentImage, commentSelectedLabelIds -> Observable<Void> in
+            .flatMap { [weak self] commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions -> Observable<Void> in
                 guard let self = self else { return Observable.empty() }
                 let hasText = !commentText.isEmpty
                 let hasImage = commentImage != nil
+                let hasGif = commentGif != nil
                 let hasSelectedLabel = commentSelectedLabelIds.count > 0
-                guard hasText || hasImage || hasSelectedLabel else {
+                guard hasText || hasImage || hasGif || hasSelectedLabel else {
                     self.clearCachedCommentIfNeeded()
                     return Observable.just(())
                 }
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
-                                  commentLabels: commentSelectedLabelIds)
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText,
+                                                                           image: commentImage, gif: commentGif),
+                                  commentLabels: commentSelectedLabelIds,
+                                  commentUserMentions: commentSelectedMentions.mentions)
                 self.sendEvent(for: .commentCreationLeavePage)
                 return Observable.just(())
             }
@@ -186,9 +218,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
          viewableMode: OWViewableMode) {
         self.originCommentCreationData = commentCreationData
         self.commentCreatorNetworkHelper = commentCreatorNetworkHelper
-        self.commentCreationData = commentCreationData
         self.servicesProvider = servicesProvider
         self.viewableMode = viewableMode
+        var commentCreationData = commentCreationData
+        let userMentions = OWCommentCreationViewViewModel.addDisplayUserMentions(to: &commentCreationData)
+        self.commentCreationData = commentCreationData
+        self.addInitialUserMentions(userMentions: userMentions)
         setupObservers()
     }
 
@@ -217,6 +252,14 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     self.sendEvent(for: .postReplyClicked(replyToCommentId: originComment.id ?? ""))
                 }
             })
+            .map { [weak self] commentCreationData -> OWCommentCreationCtaData in
+                // Here we add the user mention ids into the text (Each @user is changed to {"id":"xxxxx-xxxxx..."}
+                guard let userMentions = commentCreationData.commentUserMentions else { return commentCreationData }
+                var commentCreationData = commentCreationData
+                let textWithMentions = OWUserMentionHelper.addUserMentionIds(to: commentCreationData.commentContent.text, mentions: userMentions)
+                commentCreationData.commentContent.text = textWithMentions
+                return commentCreationData
+            }
             .map { [weak self] commentCreationData -> (OWCommentCreationCtaData, OWNetworkParameters)? in
                 // 1 - get create comment request params
                 guard let self = self else { return nil }
@@ -237,7 +280,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 // 2 - perform create comment request
                 guard let self = self else { return .empty() }
 
-                let conversationApi = self.servicesProvider.netwokAPI().conversation
+                let conversationApi = self.servicesProvider.networkAPI().conversation
 
                 let commentNetworkResponse: OWNetworkResponse<OWComment>
                 switch self.commentCreationData.commentCreationType {
@@ -296,8 +339,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 case .replyToComment(originComment: let originComment):
                     guard let originCommentId = originComment.id else { return }
                     commentCacheService.remove(forKey: .reply(postId: self.postId, commentId: originCommentId))
-                case .edit:
-                    commentCacheService.remove(forKey: .edit(postId: self.postId))
+                case .edit(comment: let comment):
+                    guard let commentId = comment.id else { return }
+                    commentCacheService.remove(forKey: .edit(postId: self.postId, commentId: commentId))
                 }
             })
             .withLatestFrom(self.servicesProvider.authenticationManager().activeUserAvailability) { ($0.0, $0.1, $1) }
@@ -369,6 +413,35 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 }
 
 fileprivate extension OWCommentCreationViewViewModel {
+    static func addDisplayUserMentions(to commentCreationData: inout OWCommentCreationRequiredData) -> [OWUserMentionObject]? {
+        switch commentCreationData.commentCreationType {
+        case .edit(comment: let comment):
+            var comment = comment
+            let userMentionObjects = OWUserMentionHelper.createUserMentions(from: &comment)
+            commentCreationData.commentCreationType = .edit(comment: comment)
+            return userMentionObjects
+        case .replyToComment(let originComment):
+            var originComment = originComment
+            let userMentionObjects = OWUserMentionHelper.createUserMentions(from: &originComment)
+            commentCreationData.commentCreationType = .replyToComment(originComment: originComment)
+            return userMentionObjects
+        case .comment:
+            break
+        }
+        return nil
+    }
+
+    func addInitialUserMentions(userMentions: [OWUserMentionObject]?) {
+        guard let userMentions = userMentions else { return }
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            commentCreationRegularViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+        case .light:
+            commentCreationLightViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+        case .floatingKeyboard(accessoryViewStrategy: _):
+            commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+        }
+    }
     // swiftlint:disable function_body_length
     func setupObservers() {
         Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
@@ -431,10 +504,13 @@ fileprivate extension OWCommentCreationViewViewModel {
             if replyToCommentId != nil {
                 let commentText = commentContent.0
                 let commentImage = commentContent.1
-                let commentSelectedLabelIds = commentContent.2
+                let commentGif = commentContent.2
+                let commentSelectedLabelIds = commentContent.3
+                let commentUserMentions = commentContent.4.mentions
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
-                                  commentLabels: commentSelectedLabelIds)
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage, gif: commentGif),
+                                  commentLabels: commentSelectedLabelIds,
+                                  commentUserMentions: commentUserMentions)
             }
         })
         .subscribe(onNext: { [weak self] replyToCommentId, _ in
@@ -541,6 +617,26 @@ fileprivate extension OWCommentCreationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        Observable.merge(
+            commentCreationRegularViewVm.outputs.footerViewModel.outputs.addGifTapped,
+            commentCreationLightViewVm.outputs.footerViewModel.outputs.addGifTapped
+        )
+        .flatMap { [weak self] _ -> Observable<OWGifPickerPresenterResponseType> in
+            guard let self = self else { return .empty() }
+            return self.servicesProvider.presenterService()
+                .showGifPicker(viewableMode: self.viewableMode)
+        }
+        .subscribe(onNext: { [weak self] response in
+            switch response {
+            case .mediaInfo(let data):
+                self?.commentCreationRegularViewVm.outputs.commentCreationContentVM.inputs.gifPicked.onNext(data)
+                self?.commentCreationLightViewVm.outputs.commentCreationContentVM.inputs.gifPicked.onNext(data)
+            case .cancled:
+                break
+            }
+        })
+        .disposed(by: disposeBag)
+
         servicesProvider
             .activeArticleService()
             .articleExtraData
@@ -582,21 +678,21 @@ fileprivate extension OWCommentCreationViewViewModel {
             .disposed(by: disposeBag)
     }
 
-    func cacheComment(commentContent: OWCommentCreationContent, commentLabels: [String]?) {
+    func cacheComment(commentContent: OWCommentCreationContent, commentLabels: [String]?, commentUserMentions: [OWUserMentionObject]?) {
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
 
         let commentLabels = commentLabels ?? [String]()
-        let commentData = OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: commentLabels)
+        let commentData = OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: commentLabels, commentUserMentions: commentUserMentions)
 
         switch commentCreationData.commentCreationType {
         case .comment:
             commentsCacheService[.comment(postId: self.postId)] = commentData
-            commentsCacheService.remove(forKey: .edit(postId: self.postId))
         case .replyToComment(let originComment):
             guard let originCommentId = originComment.id else { return }
             commentsCacheService[.reply(postId: self.postId, commentId: originCommentId)] = commentData
-        case .edit:
-            commentsCacheService[.edit(postId: self.postId)] = commentData
+        case .edit(comment: let comment):
+            guard let commentId = comment.id else { return }
+            commentsCacheService[.edit(postId: self.postId, commentId: commentId)] = commentData
         }
     }
 
@@ -608,8 +704,9 @@ fileprivate extension OWCommentCreationViewViewModel {
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id else { return }
             commentsCacheService.remove(forKey: .reply(postId: self.postId, commentId: originCommentId))
-        case .edit:
-            break
+        case .edit(comment: let comment):
+            guard let commentId = comment.id else { return }
+            commentsCacheService.remove(forKey: .edit(postId: self.postId, commentId: commentId))
         }
     }
 

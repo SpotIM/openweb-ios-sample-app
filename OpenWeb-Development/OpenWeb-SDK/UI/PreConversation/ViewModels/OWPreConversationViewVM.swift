@@ -25,6 +25,7 @@ protocol OWPreConversationViewViewModelingInputs {
 
 protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
+    var filterTabsVM: OWFilterTabsViewViewModeling { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var loginPromptViewModel: OWLoginPromptViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
@@ -59,6 +60,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var displayToast: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
+    var shouldShowFilterTabsView: Observable<Bool> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -87,6 +89,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
+    let filterTabsVM: OWFilterTabsViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
@@ -258,10 +261,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }()
 
+    var filterTabOpenConversation: Observable<Void> {
+        return filterTabsVM.outputs.didSelectTab
+            .voidify()
+            .asObservable()
+    }
+
     var openFullConversation: Observable<Void> {
         return Observable.merge(fullConversationTap,
                                 fullConversationCTATap,
-                                realtimeIndicationTapped)
+                                realtimeIndicationTapped,
+                                filterTabOpenConversation)
             .asObservable()
     }
 
@@ -434,6 +444,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             }
     }
 
+    // Show FilterTabsView
+    lazy var shouldShowFilterTabsView: Observable<Bool> = {
+        guard preConversationStyle != .ctaButtonOnly else { return Observable.just(false) }
+        return filterTabsVM.outputs.shouldShowFilterTabs
+    }()
+
     lazy var shouldAddContentTapRecognizer: Bool = {
         return isCompactMode
     }()
@@ -467,6 +483,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
             self.viewableMode = viewableMode
+            self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider,
+                                                          sourceType: .preConversation)
             self.populateInitialUI()
             setupObservers()
 
@@ -553,7 +571,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .flatMapLatest { [weak self] sortOption -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                .netwokAPI()
+                .networkAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.first)
                 .response
@@ -1017,6 +1035,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .refreshConversation:
                     self.dataSourceTransition = .reload
                     self._forceRefresh.onNext()
+                    self.filterTabsVM.inputs.reloadTabs.onNext()
                 }
             })
             .disposed(by: disposeBag)
@@ -1058,9 +1077,8 @@ fileprivate extension OWPreConversationViewViewModel {
             .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
                 let openMenuClickObservable = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
                     let commentVm = commentCellVm.outputs.commentVM
-                    let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
-                    return commentHeaderVm.outputs.openMenu
+                    return commentVm.outputs.commentOptionsVM.outputs.openMenu
                         .map { ($0.0, $0.1, commentVm) }
                 }
                 return Observable.merge(openMenuClickObservable)
@@ -1248,7 +1266,7 @@ fileprivate extension OWPreConversationViewViewModel {
                       let commentId = comment.id
                 else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .commentDelete(id: commentId, parentId: comment.parentId)
                     .response
@@ -1351,7 +1369,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .user
                     .mute(userId: userId)
                     .response
@@ -1473,7 +1491,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         return nil
                     }
                 }
-                    .unwrap()
+                .unwrap()
 
                 return Observable.just(commentThreadActionsCellsVms)
             }
@@ -1502,6 +1520,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     break
                 }
             })
+            .disposed(by: disposeBag)
 
         // Actions after internet connection restored
         servicesProvider

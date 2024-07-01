@@ -45,6 +45,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
     var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> { get }
     var reportOffset: Observable<CGPoint> { get }
+    var reportReasonsMinimumAdditionalTextLength: Observable<Int> { get }
 }
 
 protocol OWReportReasonViewViewModeling: AnyObject {
@@ -213,6 +214,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
                                           placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
                                           charectersLimitEnabled: false,
+                                          showCharectersLimit: false,
                                           isEditable: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         setupObservers()
@@ -227,6 +229,14 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .config(spotId: OWManager.manager.spotId)
             .map { $0.shared?.reportReasonsOptions?.reportReasons }
             .unwrap()
+            .asObservable()
+            .share(replay: 1)
+    }()
+
+    lazy var reportReasonsMinimumAdditionalTextLength: Observable<Int> = {
+        self.servicesProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { $0.shared?.reportReasonsMinimumAdditionalTextLength ?? 0 }
             .asObservable()
             .share(replay: 1)
     }()
@@ -340,7 +350,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 let userJustLoggedIn = result.2
                 self.setSubmitInProgress.onNext(true)
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .reportReason
                     .report(commentId: self.commentId,
                             parentId: self.parentId,
@@ -429,8 +439,11 @@ fileprivate extension OWReportReasonViewViewModel {
             .disposed(by: disposeBag)
 
         Observable.combineLatest(selectedReason, textViewVM.outputs.textViewText)
-            .map { reportReason, text -> Bool in
-                return !reportReason.requiredAdditionalInfo || text.count > 0
+            .withLatestFrom(reportReasonsMinimumAdditionalTextLength) { ($0.0, $0.1, $1) }
+            .map { reportReason, text, reportReasonsMinimumAdditionalTextLength -> Bool in
+                let reportReasonMinimumCharecters = reportReasonsMinimumAdditionalTextLength
+                let minimumCharecters = reportReasonMinimumCharecters > 0 ? reportReasonMinimumCharecters : 1
+                return !reportReason.requiredAdditionalInfo || text.count >= minimumCharecters
             }
             .bind(to: isSubmitEnabledChange)
             .disposed(by: disposeBag)

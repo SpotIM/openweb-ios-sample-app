@@ -230,3 +230,12 @@
 "Close editor?" = "Close editor?";
 "Be the first to comment on this article." = "Be the first to comment on this article.";
 "This message was rejected." = "This message was rejected.";
+
+"All" = "All";
+"My Comments" = "My Comments";
+"Featured" = "Featured";
+"Most Discussed" = "Most Discussed";
+"Popular" = "Popular";
+"Controversial" = "Controversial";
+"Best rated" = "Best rated";
+"Worst rated" = "Worst rated";

@@ -69,7 +69,7 @@ fileprivate extension OWActiveArticleService {
             .flatMap { [weak self] _ -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
+                    .networkAPI()
                     .conversation
                     .conversationRead(mode: .default, page: .first)
                     .response

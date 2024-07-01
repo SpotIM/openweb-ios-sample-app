@@ -136,7 +136,9 @@ fileprivate extension OWCommenterAppealCoordinator {
                                                      textViewText: textViewText,
                                                      textViewMaxCharecters: viewModel.outputs.textViewVM.outputs.textViewMaxCharecters,
                                                      charectersLimitEnabled: true,
+                                                     showCharectersLimit: true,
                                                      isTextRequired: viewModel.outputs.selectedReason.map { $0.requiredAdditionalInfo },
+                                                     minimumTextLength: Observable.just(0),
                                                      submitInProgress: viewModel.outputs.submitInProgress,
                                                      submitText: viewModel.outputs.submitButtonText)
             }
