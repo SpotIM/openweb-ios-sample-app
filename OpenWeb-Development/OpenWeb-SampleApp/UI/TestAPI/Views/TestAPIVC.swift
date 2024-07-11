@@ -479,6 +479,11 @@ fileprivate extension TestAPIVC {
         viewModel.outputs.envLabelString
             .bind(to: envLabel.rx.text)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.isEnvLabelVisible
+            .map { !$0 }
+            .bind(to: envLabel.rx.isHidden)
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 
