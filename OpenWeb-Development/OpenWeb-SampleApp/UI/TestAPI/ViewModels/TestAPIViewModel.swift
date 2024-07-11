@@ -43,6 +43,7 @@ protocol TestAPIViewModelingOutputs {
     var selectedSpotId: Observable<OWSpotId> { get }
     var selectedPostId: Observable<OWPostId> { get }
     var envLabelString: Observable<String> { get }
+    var isEnvLabelVisible: Observable<Bool> { get }
 }
 
 protocol TestAPIViewModeling {
@@ -75,6 +76,23 @@ class TestAPIViewModel: TestAPIViewModeling,
     let authenticationTapped = PublishSubject<Void>()
     let doneSelectPresetTapped = PublishSubject<Void>()
     let viewWillAppear = PublishSubject<Void>()
+
+    fileprivate lazy var isBetaConfiguration: Bool = {
+    #if BETA
+        return true
+        #else
+        return false
+    #endif
+    }()
+
+    fileprivate lazy var isBetaConfigurationSubject: BehaviorSubject<Bool> = {
+        return BehaviorSubject(value: isBetaConfiguration)
+    }()
+
+    var isEnvLabelVisible: Observable<Bool> {
+        return isBetaConfigurationSubject
+            .asObservable()
+    }
 
     var envLabelString: Observable<String> {
         return viewWillAppear
