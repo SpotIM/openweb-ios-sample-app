@@ -51,7 +51,7 @@
 "DontUnderstandGuidelinesAppealTitle" = "No entiendo las directrices de la comunidad";
 "DownVoteButton" = "Down vote button";
 "Edit" = "Editar";
-"EditComment" = "Editar un comentario"
+"EditComment" = "Editar un comentario";
 "Edited" = " (Editado)";
 "EditingComment" = "Editando comentario";
 "EmptyConversation" = "Empieza la conversación y comparte tu opinión y tus ideas con la comunidad.";
@@ -191,7 +191,7 @@
 "Reporting this comment will send it for review and hide it from your view" = "Al reportar este comentario, será enviado a revisión y ocultado de usted.";
 "Retry" = "Intente Nuevamente";
 "Staff" = "Personal";
-"Text copied to clipboard" ="El texto fue copiado al portapapeles";
+"Text copied to clipboard" = "El texto fue copiado al portapapeles";
 "The Internet connection appears to be offline." = "Parece que estamos experimentando algunos problemas de conectividad.";
 "The text you entered might be deleted if not published." = "Su texto puede ser borrado de no haber sido publicado.";
 "Typing" = "Escribiendo ahora";
