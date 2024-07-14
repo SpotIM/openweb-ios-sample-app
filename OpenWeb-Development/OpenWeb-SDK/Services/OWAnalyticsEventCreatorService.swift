@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 protocol OWAnalyticsEventCreatorServicing {
-    func analyticsEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWAnalyticSourceType) -> OWAnalyticEvent
+    func analyticEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWAnalyticSourceType) -> OWAnalyticEvent
     func serverAnalyticEvent(from event: OWAnalyticEvent) -> OWAnalyticEventServer
 }
 
@@ -28,33 +28,41 @@ class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
         setupObservers()
     }
 
-    func analyticsEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWAnalyticSourceType) -> OWAnalyticEvent {
+    func analyticEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWAnalyticSourceType) -> OWAnalyticEvent {
+        let generalDataDynamicPart = OWAnalyticEventGeneralDataDynamicPart(spotId: OWManager.manager.spotId,
+                                                                           postId: OWManager.manager.postId ?? "",
+                                                                           pageViewId: servicesProvider.pageViewIdHolder().pageViewId,
+                                                                           userStatus: userStatus,
+                                                                           userId: userId,
+                                                                           guid: servicesProvider.authenticationManager().networkCredentials.guid ?? "",
+                                                                           articleUrl: articleUrl,
+                                                                           layoutStyle: layoutStyle)
+
         return OWAnalyticEvent(
             type: type,
             timestamp: Date().timeIntervalSince1970 * 1000,
-            articleUrl: articleUrl,
-            layoutStyle: layoutStyle,
-            component: component
+            component: component,
+            generalDataDynamicPart: generalDataDynamicPart
         )
     }
 
     func serverAnalyticEvent(from event: OWAnalyticEvent) -> OWAnalyticEventServer {
         let generalData = OWAnalyticEventServerGeneralData(
-            spotId: OWManager.manager.spotId,
-            postId: OWManager.manager.postId ?? "",
-            articleUrl: event.articleUrl,
-            pageViewId: servicesProvider.pageViewIdHolder().pageViewId,
-            userStatus: userStatus,
-            userId: userId,
+            spotId: event.generalDataDynamicPart.spotId,
+            postId: event.generalDataDynamicPart.postId,
+            articleUrl: event.generalDataDynamicPart.articleUrl,
+            pageViewId: event.generalDataDynamicPart.pageViewId,
+            userStatus: event.generalDataDynamicPart.userStatus,
+            userId: event.generalDataDynamicPart.userId,
             deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "",
-            guid: servicesProvider.authenticationManager().networkCredentials.guid ?? "",
+            guid: event.generalDataDynamicPart.guid,
             platform: "ios_phone",
             platformVersion: UIDevice.current.systemVersion,
             sdkVersion: OWSettingsWrapper.sdkVersion() ?? "",
             hostAppVersion: Bundle.main.shortVersion ?? "",
             hostAppScheme: Bundle.main.bundleIdentifier ?? "",
             deviceType: UIDevice.current.deviceName(),
-            layoutStyle: event.layoutStyle.rawValue
+            layoutStyle: event.generalDataDynamicPart.layoutStyle.rawValue
         )
 
         return OWAnalyticEventServer(
