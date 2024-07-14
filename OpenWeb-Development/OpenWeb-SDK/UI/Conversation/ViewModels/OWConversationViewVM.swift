@@ -899,7 +899,7 @@ fileprivate extension OWConversationViewViewModel {
         tableViewContentOffsetYChanged
             .withLatestFrom(tableViewDragBeginContentOffsetYChanged) { ($0, $1) }
             .map { tableViewContentOffsetY, tableViewDragBeginY -> Bool in
-                            return tableViewContentOffsetY > tableViewDragBeginY
+                return tableViewContentOffsetY > tableViewDragBeginY
             }
             .bind(to: scrollingDown)
             .disposed(by: disposeBag)
