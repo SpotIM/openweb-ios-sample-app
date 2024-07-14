@@ -18,7 +18,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
-        static let throttleObserveTableViewDuration = 50
+        static let throttleObserveTableViewDuration = 500
         static let scrolledToTopDelay = 300
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
         static let loginPromptOrientationChangeAnimationDuration: CGFloat = 0.3
