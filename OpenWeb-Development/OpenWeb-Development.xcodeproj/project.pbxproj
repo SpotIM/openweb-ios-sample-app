@@ -2010,6 +2010,7 @@
 		9E4163BE29F6C9C700819BC2 /* OWCancelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCancelView.swift; sourceTree = "<group>"; };
 		9E4163C229F6CA0900819BC2 /* OWCancelViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCancelViewVM.swift; sourceTree = "<group>"; };
 		9E4163C429F6CEC700819BC2 /* OWSubmittedViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubmittedViewVM.swift; sourceTree = "<group>"; };
+		9E4AF57A2C3FCF00006A85F1 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9E4B4E5F2AA604D100F4425F /* OWProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWProfileService.swift; sourceTree = "<group>"; };
 		9E4B4E612AA61DEF00F4425F /* OWOpenProfileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOpenProfileData.swift; sourceTree = "<group>"; };
 		9E4B4E642AADB4AA00F4425F /* OWErrorStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWErrorStateView.swift; sourceTree = "<group>"; };
@@ -6314,6 +6315,7 @@
 				"pt-PT",
 				"ar-001",
 				fr,
+				nl,
 			);
 			mainGroup = 5D697A3222B65106001AD556;
 			productRefGroup = 5D697A3C22B65106001AD556 /* Products */;
@@ -7521,6 +7523,7 @@
 				6D92BDEF24C98258005E3683 /* pt-PT */,
 				6D92BDF024C988B8005E3683 /* ar-001 */,
 				3D76FAE2283CD1B700DB18F6 /* fr */,
+				9E4AF57A2C3FCF00006A85F1 /* nl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
