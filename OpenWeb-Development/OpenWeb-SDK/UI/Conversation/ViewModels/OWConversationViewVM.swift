@@ -898,13 +898,8 @@ fileprivate extension OWConversationViewViewModel {
     func setupObservers() {
         tableViewContentOffsetYChanged
             .withLatestFrom(tableViewDragBeginContentOffsetYChanged) { ($0, $1) }
-            .withLatestFrom(scrollingDown) { ($0.0, $0.1, $1) }
-            .map { tableViewContentOffsetY, tableViewDragBeginY, scrollingDown -> Bool in
-                if scrollingDown {
-                    return tableViewContentOffsetY >= tableViewDragBeginY
-                } else {
-                    return tableViewContentOffsetY > tableViewDragBeginY
-                }
+            .map { tableViewContentOffsetY, tableViewDragBeginY -> Bool in
+                            return tableViewContentOffsetY > tableViewDragBeginY
             }
             .bind(to: scrollingDown)
             .disposed(by: disposeBag)
