@@ -466,7 +466,7 @@ fileprivate extension OWReportReasonViewViewModel {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return servicesProvider
             .analyticsEventCreatorService()
-            .analyticsEvent(
+            .analyticEvent(
                 for: eventType,
                 articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: presentationalMode),

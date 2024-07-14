@@ -272,7 +272,7 @@ fileprivate extension OWClarityDetailsViewVM {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return servicesProvider
             .analyticsEventCreatorService()
-            .analyticsEvent(
+            .analyticEvent(
                 for: eventType,
                 articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: self.presentationalMode),
