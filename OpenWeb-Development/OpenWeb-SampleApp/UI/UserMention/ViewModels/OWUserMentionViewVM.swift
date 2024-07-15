@@ -120,6 +120,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     fileprivate lazy var getUsers: Observable<[SPUser]> = {
         return name
+            .filter { !$0.isEmpty }
             .withLatestFrom(users) { ($0, $1) }
             .do(onNext: { [weak self] name, users in
                 guard let self = self else { return }
@@ -154,6 +155,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
                     }
                     .unwrap()
             }
+            .share()
     }()
 
     fileprivate lazy var cellsViewModels: Observable<[OWUserMentionsCellOption]> = {
