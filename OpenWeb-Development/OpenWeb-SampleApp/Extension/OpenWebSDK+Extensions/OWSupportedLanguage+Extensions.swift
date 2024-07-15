@@ -28,6 +28,8 @@ extension OWSupportedLanguage {
             return "Portoguese"
         case .french:
             return "French"
+        case .dutch:
+            return "Dutch"
         default:
             return "English"
         }
@@ -47,6 +49,8 @@ extension OWSupportedLanguage {
             self = OWSupportedLanguage.portuguese
         case OWSupportedLanguage.french.languageName:
             self = OWSupportedLanguage.french
+        case OWSupportedLanguage.dutch.languageName:
+            self = OWSupportedLanguage.dutch
         default:
             self = OWSupportedLanguage.english
         }
@@ -59,5 +63,6 @@ extension OWSupportedLanguage {
         case spanish
         case portuguese
         case french
+        case dutch
     }
 }

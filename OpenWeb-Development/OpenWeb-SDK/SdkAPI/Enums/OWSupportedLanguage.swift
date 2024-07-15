@@ -15,4 +15,5 @@ public enum OWSupportedLanguage: String, Codable, CaseIterable {
     case spanish = "es"
     case portuguese = "pt"
     case french = "fr"
+    case dutch = "nl"
 }
