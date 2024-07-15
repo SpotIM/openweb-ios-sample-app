@@ -29,6 +29,8 @@ extension OWSupportedLanguage {
             return "pt-PT"
         case .french:
             return "fr"
+        case .dutch:
+            return "nl"
         }
     }
 
