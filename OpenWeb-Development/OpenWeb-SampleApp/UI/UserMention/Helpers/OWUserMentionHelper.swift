@@ -9,7 +9,7 @@
 import Foundation
 
 class OWUserMentionHelper {
-    static var mentionsEnabled = false
+    static var mentionsEnabled = true
 
     fileprivate struct Metrics {
         static let mentionString = "@"
