@@ -34,7 +34,7 @@ class OWTextView: UIView {
         static let didBeginEditDelay = 1
         static let delayTextViewTextChange = 5
         static let delayTextViewExpand = 10
-        static let didChangeSelectionDelay = 1
+        static let didChangeSelectionDelay = 15
     }
 
     let viewModel: OWTextViewViewModeling
@@ -95,7 +95,9 @@ class OWTextView: UIView {
 extension OWTextView: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let replaceData = OWTextViewReplaceData(text: text, originalText: textView.text, range: range)
-        viewModel.inputs.internalReplacedData.onNext(replaceData)
+        if !text.isEmpty || (text.utf16.count + range.location + range.length) < textView.text.utf16.count {
+            viewModel.inputs.internalReplacedData.onNext(replaceData)
+        }
         return true
     }
 }
@@ -177,7 +179,8 @@ fileprivate extension OWTextView {
                 let currentText = self.textView.text
                 if let currentText = currentText,
                    !(currentText.utf16.count == afterReplacedText.utf16.count &&
-                   replaceData.range.length == 0) {
+                     replaceData.range.length == 0),
+                   !replaceData.text.isEmpty || (replaceData.text.utf16.count + replaceData.range.location + replaceData.range.length) < currentText.utf16.count {
                     self.viewModel.inputs.replacedData.onNext(replaceData)
                 }
                 guard afterReplacedText != currentText else {
@@ -207,7 +210,7 @@ fileprivate extension OWTextView {
 
         textView.rx.didChangeSelection
             // delay so that textView.rx.text is updated with updated text
-            .delay(.microseconds(Metrics.didChangeSelectionDelay), scheduler: MainScheduler.instance)
+            .delay(.milliseconds(Metrics.didChangeSelectionDelay), scheduler: MainScheduler.instance)
             .withLatestFrom(textView.rx.text)
             .unwrap()
             .map { [weak self] text -> Range<String.Index>? in
