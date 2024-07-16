@@ -218,8 +218,8 @@ fileprivate extension OWUserMentionViewVM {
         replaceData
             .withLatestFrom(textViewText) { ($0, $1) }
             .subscribe(onNext: { [weak self] replaceData, text in
-                guard let self = self else { return }
-                let textData = OWUserMentionHelper.getUserMentionTextData(replaceData: replaceData, text: text)
+                guard let self = self,
+                      let textData = OWUserMentionHelper.getUserMentionTextData(replaceData: replaceData, text: text) else { return }
                 self.textData.onNext(textData)
             })
             .disposed(by: disposeBag)

@@ -41,13 +41,16 @@ class OWUserMentionHelper {
         }
     }
 
-    static func getUserMentionTextData(replaceData: OWTextViewReplaceData, text: String) -> OWUserMentionTextData {
+    static func getUserMentionTextData(replaceData: OWTextViewReplaceData, text: String) -> OWUserMentionTextData? {
         let utf8Range = replaceData.range
-        let startIndex = text.utf16.index(text.utf16.startIndex, offsetBy: utf8Range.lowerBound)
-        let endIndex = text.utf16.index(startIndex, offsetBy: utf8Range.length)
-        let stringRange = startIndex..<endIndex
-        let textData = OWUserMentionTextData(text: text, cursorRange: stringRange, replacingText: replaceData.text)
-        return textData
+        if !replaceData.text.isEmpty || replaceData.text.utf16.count + utf8Range.location + utf8Range.length < text.utf16.count {
+            let startIndex = text.utf16.index(text.utf16.startIndex, offsetBy: utf8Range.lowerBound)
+            let endIndex = text.utf16.index(startIndex, offsetBy: utf8Range.length)
+            let stringRange = startIndex..<endIndex
+            let textData = OWUserMentionTextData(text: text, cursorRange: stringRange, replacingText: replaceData.text)
+            return textData
+        }
+        return nil
     }
 
     static func updateMentionRanges(with textData: OWUserMentionTextData, mentionsData: OWUserMentionData) -> OWUserMentionTextData? {
@@ -147,13 +150,16 @@ class OWUserMentionHelper {
         let brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
         for mention in mentionsData.mentions {
-            attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
-                                        value: brandColor,
-                                        range: mention.range)
+            if (mention.range.location + mention.range.length) < attributedText.length {
+                attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
+                                            value: brandColor,
+                                            range: mention.range)
+            }
         }
 
         if let currentMentionRange = currentMentionRange,
-           let range = textViewText.nsRange(from: currentMentionRange) {
+           let range = textViewText.nsRange(from: currentMentionRange),
+           (range.location + range.length) < attributedText.length {
             attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
                                         value: brandColor,
                                         range: range)
