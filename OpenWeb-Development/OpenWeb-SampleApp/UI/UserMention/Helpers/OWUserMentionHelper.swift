@@ -159,7 +159,7 @@ class OWUserMentionHelper {
 
         if let currentMentionRange = currentMentionRange,
            let range = textViewText.nsRange(from: currentMentionRange),
-           (range.location + range.length) < attributedText.length {
+           (range.location + range.length) <= attributedText.length {
             attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
                                         value: brandColor,
                                         range: range)
