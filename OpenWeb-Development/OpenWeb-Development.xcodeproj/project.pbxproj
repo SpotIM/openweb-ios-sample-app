@@ -3900,7 +3900,9 @@
 		3D754F992C47E1B200283367 /* RequiredEmbeddedAtSDK */ = {
 			isa = PBXGroup;
 			children = (
-				24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */,
+				3D754FC72C47E79900283367 /* RxCocoa.xcframework */,
+				3D754FC62C47E79800283367 /* RxRelay.xcframework */,
+				3D754FC82C47E79A00283367 /* RxSwift.xcframework */,
 			);
 			path = RequiredEmbeddedAtSDK;
 			sourceTree = "<group>";
@@ -3908,9 +3910,7 @@
 		3D754F9A2C47E21200283367 /* NonRequiredEmbeddedAtSampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				3D754FC72C47E79900283367 /* RxCocoa.xcframework */,
-				3D754FC62C47E79800283367 /* RxRelay.xcframework */,
-				3D754FC82C47E79A00283367 /* RxSwift.xcframework */,
+				24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */,
 			);
 			path = NonRequiredEmbeddedAtSampleApp;
 			sourceTree = "<group>";
