@@ -443,7 +443,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             case .floatingKeyboard(accessoryViewStrategy: _):
                 commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
             }
-        case .replyToComment(originComment: let originComment):
+        case .replyToComment:
             break
         }
     }
