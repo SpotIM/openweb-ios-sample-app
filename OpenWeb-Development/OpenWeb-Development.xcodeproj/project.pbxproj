@@ -943,7 +943,6 @@
 		9E73DAE229C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE129C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift */; };
 		9E73DAE429C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE329C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift */; };
 		9E7C52432C29BFD6006B9B93 /* OWFilterTabsSelectedTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7C52422C29BFD6006B9B93 /* OWFilterTabsSelectedTab.swift */; };
-		9E7C52452C2B10C2006B9B93 /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; };
 		9E7C52462C2B156A006B9B93 /* GiphyConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E8BA7E32C0339F2009C2164 /* GiphyConfiguration.plist */; };
 		9E7C52472C2B156B006B9B93 /* GiphyConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E8BA7E32C0339F2009C2164 /* GiphyConfiguration.plist */; };
 		9E7C52482C2B15B3006B9B93 /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; };
@@ -2163,7 +2162,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */,
-				9E7C52452C2B10C2006B9B93 /* GiphyUISDK.xcframework in Frameworks */,
 				6A54FC935F56EDE135184008 /* Pods_OpenWebSDKTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
