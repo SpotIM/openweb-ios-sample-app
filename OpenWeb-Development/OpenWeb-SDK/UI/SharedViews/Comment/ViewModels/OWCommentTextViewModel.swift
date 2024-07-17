@@ -293,7 +293,7 @@ fileprivate extension OWCommentTextViewModel {
         let userMentions = OWUserMentionHelper.filterUserMentions(in: text.string, userMentions: userMentions, readMoreRange: readMoreRange)
         for userMention in userMentions {
             if let profileURL = self.serviceProvider.profileService().getProfileURL(userId: userMention.userId),
-               (userMention.range.location + userMention.range.length) < text.length {
+               (userMention.range.location + userMention.range.length) <= text.length {
                 text.addAttributes([
                     .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)], range: userMention.range)
                 availableUrlsRange[userMention.range] = profileURL

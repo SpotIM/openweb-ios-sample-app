@@ -41,9 +41,15 @@ class OWUserMentionHelper {
         }
     }
 
+    static func replaceTextWithRangeIsInBounds(of text: String, replaceText: String, range: NSRange) -> Bool {
+        return (replaceText.isEmpty && (range.location + range.length) <= text.utf16.count) ||
+        (replaceText.utf16.count + range.location + range.length < text.utf16.count) ||
+        (range.length == 0 && range.location <= text.utf16.count)
+    }
+
     static func getUserMentionTextData(replaceData: OWTextViewReplaceData, text: String) -> OWUserMentionTextData? {
         let utf8Range = replaceData.range
-        if !replaceData.text.isEmpty || replaceData.text.utf16.count + utf8Range.location + utf8Range.length < text.utf16.count {
+        if replaceTextWithRangeIsInBounds(of: text, replaceText: replaceData.text, range: utf8Range) {
             let startIndex = text.utf16.index(text.utf16.startIndex, offsetBy: utf8Range.lowerBound)
             let endIndex = text.utf16.index(startIndex, offsetBy: utf8Range.length)
             let stringRange = startIndex..<endIndex
@@ -150,7 +156,7 @@ class OWUserMentionHelper {
         let brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
         for mention in mentionsData.mentions {
-            if (mention.range.location + mention.range.length) < attributedText.length {
+            if (mention.range.location + mention.range.length) <= attributedText.length {
                 attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
                                             value: brandColor,
                                             range: mention.range)
@@ -158,8 +164,7 @@ class OWUserMentionHelper {
         }
 
         if let currentMentionRange = currentMentionRange,
-           let range = textViewText.nsRange(from: currentMentionRange),
-           (range.location + range.length) <= attributedText.length {
+           let range = textViewText.nsRange(from: currentMentionRange) {
             attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
                                         value: brandColor,
                                         range: range)
