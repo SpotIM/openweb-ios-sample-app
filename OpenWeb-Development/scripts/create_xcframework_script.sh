@@ -20,7 +20,7 @@ RELEASE_DIR="${SRCROOT}/Release/"
 
 
 
-
+# 3
 # If remnants from a previous build exist, delete them.
 if [ -d "${SRCROOT}/build" ]; then
 rm -rf "${SRCROOT}/build"
@@ -32,8 +32,8 @@ fi
 
 mkdir "${SRCROOT}/Release"
 
-# https://medium.com/@er.mayursharma14/how-to-create-xcframework-855817f854cf
 
+# 4
 # Build the framework for device and for simulator (using
 # all needed architectures).
 xcodebuild archive -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -configuration "${CONFIGURATION}" -destination="iOS" -sdk iphonesimulator SKIP_INSTALL=NO SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO BUILD_LIBRARY_FOR_DISTRIBUTION=YES -archivePath "${BUILD_DIR}/Release-iphonesimulator"
@@ -43,56 +43,22 @@ xcodebuild archive -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -configura
 
 ls -l "${BUILD_DIR}/"
 
-# https://developer.apple.com/forums/thread/655768
 
-# First, get all the UUID filepaths for BCSymbolMaps, because these are randomly generated and need to be individually added as the `-debug-symbols` parameter. The dSYM path is always the same so that one is manually added
-#echo "XCFramework: Generating IPHONE BCSymbolMap paths..."
-#IPHONE_BCSYMBOLMAP_PATHS=(${BUILD_DIR}/Release-iphoneos.xcarchive/BCSymbolMaps/*)
-#IPHONE_BCSYMBOLMAP_COMMANDS=""
-#for path in "${IPHONE_BCSYMBOLMAP_PATHS[@]}"; do
-#  IPHONE_BCSYMBOLMAP_COMMANDS="$IPHONE_BCSYMBOLMAP_COMMANDS -debug-symbols $path "
-#  echo $IPHONE_BCSYMBOLMAP_COMMANDS
-#done
-#
-#echo "XCFramework: Generating IPHONE BCSymbolMap paths... --> Done"
-
+# 5
 echo "Creating XCFramework..."
 
 # XCFramework with debug symbols - see https://pspdfkit.com/blog/2021/advances-in-xcframeworks/#built-in-support-for-bcsymbolmaps-and-dsyms
 xcodebuild -create-xcframework \
     -framework "${SRCROOT}/build/Release-iphoneos.xcarchive/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework" \
     -debug-symbols "${SRCROOT}/build/Release-iphoneos.xcarchive/dSYMs/${FRAMEWORK_NAME}.framework.dSYM" \
-    $IPHONE_BCSYMBOLMAP_COMMANDS \
     -framework "${SRCROOT}/build/Release-iphonesimulator.xcarchive/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework" \
     -debug-symbols "${SRCROOT}/build/Release-iphonesimulator.xcarchive/dSYMs/${FRAMEWORK_NAME}.framework.dSYM" \
     -output "${RELEASE_DIR}/${FRAMEWORK_NAME}.xcframework"
 
-xcodebuild -create-xcframework \
-    -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxSwift.xcframework/ios-arm64/RxSwift.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxSwift.xcframework/ios-arm64/dSYMs/RxSwift.framework.dSYM" \
-    -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxSwift.xcframework/ios-arm64_x86_64-simulator/RxSwift.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxSwift.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxSwift.framework.dSYM" \
-    -output "${RELEASE_DIR}/OWRxSwift.xcframework"
-
-xcodebuild -create-xcframework \
-    -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxRelay.xcframework/ios-arm64/RxRelay.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxRelay.xcframework/ios-arm64/dSYMs/RxRelay.framework.dSYM" \
-    -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxRelay.xcframework/ios-arm64_x86_64-simulator/RxRelay.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxRelay.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxRelay.framework.dSYM" \
-    -output "${RELEASE_DIR}/OWRxRelay.xcframework"
-
-xcodebuild -create-xcframework \
-    -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxCocoa.xcframework/ios-arm64/RxCocoa.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxCocoa.xcframework/ios-arm64/dSYMs/RxCocoa.framework.dSYM" \
-    -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxCocoa.xcframework/ios-arm64_x86_64-simulator/RxCocoa.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxCocoa.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxCocoa.framework.dSYM" \
-    -output "${RELEASE_DIR}/OWRxCocoa.xcframework"
-
-echo "Creating XCFrameworks... --> Done"
+echo "Creating XCFramework... --> Done"
 
 
-
-# 9
+# 6
 # Delete the most recent build.
 if [ -d "${SRCROOT}/build" ]; then
 rm -rf "${SRCROOT}/build"
