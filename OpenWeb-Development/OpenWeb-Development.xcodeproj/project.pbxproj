@@ -300,6 +300,11 @@
 		24F611DB2AD5757500BAA574 /* OWOpenProfileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F611DA2AD5757500BAA574 /* OWOpenProfileType.swift */; };
 		24F828D02B8C60F900BFD159 /* OWToastCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828CF2B8C60F900BFD159 /* OWToastCompletion.swift */; };
 		24F828D62B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */; };
+		3D0169712C4FB43C00391A4B /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D01696D2C4FB3FE00391A4B /* RxCocoa.xcframework */; };
+		3D0169732C4FB43E00391A4B /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D01696B2C4FB3F500391A4B /* RxRelay.xcframework */; };
+		3D0169742C4FB43E00391A4B /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D01696B2C4FB3F500391A4B /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3D0169752C4FB43F00391A4B /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D01696F2C4FB40800391A4B /* RxSwift.xcframework */; };
+		3D0169762C4FB43F00391A4B /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D01696F2C4FB40800391A4B /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */; };
 		3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05C287598F800E6F1AC /* OWConversationView.swift */; };
 		3D08E05F2875994300E6F1AC /* OWConversationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05E2875994300E6F1AC /* OWConversationVC.swift */; };
@@ -509,12 +514,6 @@
 		3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C0728524A40007420AD /* UIImage+URL.swift */; };
 		3D754F982C43D9CF00283367 /* OWAnalyticEventGeneralDataDynamicPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D754F972C43D9CF00283367 /* OWAnalyticEventGeneralDataDynamicPart.swift */; };
 		3D754F9B2C47E25A00283367 /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; };
-		3D754FD82C48034800283367 /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D754FD42C48034500283367 /* RxCocoa.xcframework */; };
-		3D754FD92C48034800283367 /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D754FD42C48034500283367 /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3D754FDA2C48034A00283367 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D754FD22C48034400283367 /* RxRelay.xcframework */; };
-		3D754FDB2C48034A00283367 /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D754FD22C48034400283367 /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3D754FDC2C48034B00283367 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D754FD32C48034400283367 /* RxSwift.xcframework */; };
-		3D754FDD2C48034B00283367 /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D754FD32C48034400283367 /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D7B1C822BBD6A4E0098C4CF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3D7B1C812BBD6A4E0098C4CF /* PrivacyInfo.xcprivacy */; };
 		3D7E3D692888499D00DDBE0B /* OWHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D682888499D00DDBE0B /* OWHelpers.swift */; };
 		3D7E3D6B288849EC00DDBE0B /* OWAdditionalConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6A288849EC00DDBE0B /* OWAdditionalConfiguration.swift */; };
@@ -1082,9 +1081,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3D754FDD2C48034B00283367 /* RxSwift.xcframework in Embed Frameworks */,
-				3D754FD92C48034800283367 /* RxCocoa.xcframework in Embed Frameworks */,
-				3D754FDB2C48034A00283367 /* RxRelay.xcframework in Embed Frameworks */,
+				3D0169762C4FB43F00391A4B /* RxSwift.xcframework in Embed Frameworks */,
+				3D0169742C4FB43E00391A4B /* RxRelay.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1387,6 +1385,9 @@
 		24F828D12B8F14AB00BFD159 /* OWGifService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWGifService.swift; sourceTree = "<group>"; };
 		24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWGifPickerPresenterResponseType.swift; sourceTree = "<group>"; };
 		3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
+		3D01696B2C4FB3F500391A4B /* RxRelay.xcframework */ = {isa = PBXFileReference; expectedSignature = "SelfSigned:BD802E794C8ABDDA4C3F5D92B3E4C4FBFAE4734410B9AD73442EF1CEB0276140"; lastKnownFileType = wrapper.xcframework; path = RxRelay.xcframework; sourceTree = "<group>"; };
+		3D01696D2C4FB3FE00391A4B /* RxCocoa.xcframework */ = {isa = PBXFileReference; expectedSignature = "SelfSigned:BD802E794C8ABDDA4C3F5D92B3E4C4FBFAE4734410B9AD73442EF1CEB0276140"; lastKnownFileType = wrapper.xcframework; path = RxCocoa.xcframework; sourceTree = "<group>"; };
+		3D01696F2C4FB40800391A4B /* RxSwift.xcframework */ = {isa = PBXFileReference; expectedSignature = "SelfSigned:BD802E794C8ABDDA4C3F5D92B3E4C4FBFAE4734410B9AD73442EF1CEB0276140"; lastKnownFileType = wrapper.xcframework; path = RxSwift.xcframework; sourceTree = "<group>"; };
 		3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCoordinator.swift; sourceTree = "<group>"; };
 		3D08E05C287598F800E6F1AC /* OWConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationView.swift; sourceTree = "<group>"; };
 		3D08E05E2875994300E6F1AC /* OWConversationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationVC.swift; sourceTree = "<group>"; };
@@ -2139,10 +2140,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D754FDA2C48034A00283367 /* RxRelay.xcframework in Frameworks */,
-				3D754FDC2C48034B00283367 /* RxSwift.xcframework in Frameworks */,
-				3D754FD82C48034800283367 /* RxCocoa.xcframework in Frameworks */,
 				24ED932C2BB457420090D1FF /* GiphyUISDK.xcframework in Frameworks */,
+				3D0169752C4FB43F00391A4B /* RxSwift.xcframework in Frameworks */,
+				3D0169732C4FB43E00391A4B /* RxRelay.xcframework in Frameworks */,
+				3D0169712C4FB43C00391A4B /* RxCocoa.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3178,6 +3179,40 @@
 				24F611D72AD5577600BAA574 /* OWBadgesKeys.swift */,
 			);
 			path = models;
+			sourceTree = "<group>";
+		};
+		3D0169242C4FB05800391A4B /* Vendros */ = {
+			isa = PBXGroup;
+			children = (
+				3D01694C2C4FB21F00391A4B /* RxSwift */,
+				3D0169272C4FB08400391A4B /* RxRelay */,
+				3D0169262C4FB07500391A4B /* RxCocoa */,
+			);
+			path = Vendros;
+			sourceTree = "<group>";
+		};
+		3D0169262C4FB07500391A4B /* RxCocoa */ = {
+			isa = PBXGroup;
+			children = (
+				3D01696D2C4FB3FE00391A4B /* RxCocoa.xcframework */,
+			);
+			path = RxCocoa;
+			sourceTree = "<group>";
+		};
+		3D0169272C4FB08400391A4B /* RxRelay */ = {
+			isa = PBXGroup;
+			children = (
+				3D01696B2C4FB3F500391A4B /* RxRelay.xcframework */,
+			);
+			path = RxRelay;
+			sourceTree = "<group>";
+		};
+		3D01694C2C4FB21F00391A4B /* RxSwift */ = {
+			isa = PBXGroup;
+			children = (
+				3D01696F2C4FB40800391A4B /* RxSwift.xcframework */,
+			);
+			path = RxSwift;
 			sourceTree = "<group>";
 		};
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
@@ -4968,6 +5003,7 @@
 		44C8788E23608BC100E0E662 /* OpenWeb-SDK */ = {
 			isa = PBXGroup;
 			children = (
+				3D0169242C4FB05800391A4B /* Vendros */,
 				3D20A2D627A803F2003F8513 /* SdkAPI */,
 				3D08E0652875BA3300E6F1AC /* Manager */,
 				4454182923685153001D0ED0 /* Coordinators */,
@@ -7675,6 +7711,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -7689,7 +7734,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PUBLIC_DEMO_APP";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -7840,6 +7885,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -7854,7 +7908,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG BETA AUTOMATION";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7996,6 +8050,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -8010,7 +8073,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "BETA AUTOMATION";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8152,6 +8215,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -8166,7 +8238,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PUBLIC_DEMO_APP;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8208,6 +8280,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -8222,7 +8303,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8254,6 +8335,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -8268,7 +8358,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";

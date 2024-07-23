@@ -59,7 +59,7 @@ ls -l "${BUILD_DIR}/"
 echo "Creating XCFramework..."
 
 # XCFramework with debug symbols - see https://pspdfkit.com/blog/2021/advances-in-xcframeworks/#built-in-support-for-bcsymbolmaps-and-dsyms
-xcodebuild -create-xcframework -allow-internal-distribution \
+xcodebuild -create-xcframework \
     -framework "${SRCROOT}/build/Release-iphoneos.xcarchive/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework" \
     -debug-symbols "${SRCROOT}/build/Release-iphoneos.xcarchive/dSYMs/${FRAMEWORK_NAME}.framework.dSYM" \
     $IPHONE_BCSYMBOLMAP_COMMANDS \
@@ -67,26 +67,26 @@ xcodebuild -create-xcframework -allow-internal-distribution \
     -debug-symbols "${SRCROOT}/build/Release-iphonesimulator.xcarchive/dSYMs/${FRAMEWORK_NAME}.framework.dSYM" \
     -output "${RELEASE_DIR}/${FRAMEWORK_NAME}.xcframework"
 
-xcodebuild -create-xcframework -allow-internal-distribution \
+xcodebuild -create-xcframework \
     -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxSwift.xcframework/ios-arm64/RxSwift.framework" \
     -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxSwift.xcframework/ios-arm64/dSYMs/RxSwift.framework.dSYM" \
     -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxSwift.xcframework/ios-arm64_x86_64-simulator/RxSwift.framework" \
     -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxSwift.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxSwift.framework.dSYM" \
-    -output "${RELEASE_DIR}/RxSwift.xcframework"
+    -output "${RELEASE_DIR}/OWRxSwift.xcframework"
 
-xcodebuild -create-xcframework -allow-internal-distribution \
+xcodebuild -create-xcframework \
     -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxRelay.xcframework/ios-arm64/RxRelay.framework" \
     -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxRelay.xcframework/ios-arm64/dSYMs/RxRelay.framework.dSYM" \
     -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxRelay.xcframework/ios-arm64_x86_64-simulator/RxRelay.framework" \
     -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxRelay.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxRelay.framework.dSYM" \
-    -output "${RELEASE_DIR}/RxRelay.xcframework"
+    -output "${RELEASE_DIR}/OWRxRelay.xcframework"
 
-xcodebuild -create-xcframework -allow-internal-distribution \
+xcodebuild -create-xcframework \
     -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxCocoa.xcframework/ios-arm64/RxCocoa.framework" \
     -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxCocoa.xcframework/ios-arm64/dSYMs/RxCocoa.framework.dSYM" \
     -framework "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxCocoa.xcframework/ios-arm64_x86_64-simulator/RxCocoa.framework" \
     -debug-symbols "${SRCROOT}/Vendor-Frameworks/RequiredEmbeddedAtSDK/RxCocoa.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxCocoa.framework.dSYM" \
-    -output "${RELEASE_DIR}/RxCocoa.xcframework"
+    -output "${RELEASE_DIR}/OWRxCocoa.xcframework"
 
 echo "Creating XCFrameworks... --> Done"
 
