@@ -40,7 +40,9 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
         switch commentCreationType {
         case .edit(let comment):
             if let parentId = comment.parentId,
-               let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
+               var parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
+                // Adding here the display names of mentions within theparent comment text
+                OWUserMentionHelper.createUserMentions(from: &parentComment)
                 replyToComment = parentComment
             }
         case .replyToComment(let originComment):
