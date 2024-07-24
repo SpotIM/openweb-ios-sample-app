@@ -66,34 +66,34 @@ echo "Creating XCFramework... --> Done"
 # After so, put those "light" RX ".xcframework"s with "OW" prefix at the vendor frameworks repo:
 # https://github.com/SpotIM/openweb-ios-vendor-frameworks
 
-xcodebuild -create-xcframework \
-    -framework "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64/RxSwift.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64/dSYMs/RxSwift.framework.dSYM" \
-    -framework "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64_x86_64-simulator/RxSwift.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxSwift.framework.dSYM" \
-    -output "${RELEASE_DIR}/OWRxSwift.xcframework"
-
-xcodebuild -create-xcframework \
-    -framework "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64/RxRelay.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64/dSYMs/RxRelay.framework.dSYM" \
-    -framework "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64_x86_64-simulator/RxRelay.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxRelay.framework.dSYM" \
-    -output "${RELEASE_DIR}/OWRxRelay.xcframework"
-
-xcodebuild -create-xcframework \
-    -framework "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64/RxCocoa.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64/dSYMs/RxCocoa.framework.dSYM" \
-    -framework "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64_x86_64-simulator/RxCocoa.framework" \
-    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxCocoa.framework.dSYM" \
-    -output "${RELEASE_DIR}/OWRxCocoa.xcframework"
-
-# Sign those "OW" RX ".xcframework"s
-codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxSwift.xcframework"
-codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxRelay.xcframework"
-codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxCocoa.xcframework"
-
-
-echo "Creating OW prefix light RX XCFrameworks... --> Done"
+#xcodebuild -create-xcframework \
+#    -framework "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64/RxSwift.framework" \
+#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64/dSYMs/RxSwift.framework.dSYM" \
+#    -framework "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64_x86_64-simulator/RxSwift.framework" \
+#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxSwift.framework.dSYM" \
+#    -output "${RELEASE_DIR}/OWRxSwift.xcframework"
+#
+#xcodebuild -create-xcframework \
+#    -framework "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64/RxRelay.framework" \
+#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64/dSYMs/RxRelay.framework.dSYM" \
+#    -framework "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64_x86_64-simulator/RxRelay.framework" \
+#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxRelay.framework.dSYM" \
+#    -output "${RELEASE_DIR}/OWRxRelay.xcframework"
+#
+#xcodebuild -create-xcframework \
+#    -framework "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64/RxCocoa.framework" \
+#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64/dSYMs/RxCocoa.framework.dSYM" \
+#    -framework "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64_x86_64-simulator/RxCocoa.framework" \
+#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxCocoa.framework.dSYM" \
+#    -output "${RELEASE_DIR}/OWRxCocoa.xcframework"
+#
+## Sign those "OW" RX ".xcframework"s
+#codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxSwift.xcframework"
+#codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxRelay.xcframework"
+#codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxCocoa.xcframework"
+#
+#
+#echo "Creating OW prefix light RX XCFrameworks... --> Done"
 
 
 # 7
