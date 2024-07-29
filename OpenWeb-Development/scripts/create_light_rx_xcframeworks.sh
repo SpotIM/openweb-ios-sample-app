@@ -1,7 +1,3 @@
-#https://stackoverflow.com/questions/35655698/how-to-archive-an-app-that-includes-a-custom-framework/35703033#35703033
-
-# Merge Script
-
 # 1
 # Set bash script to exit immediately if any commands fail.
 set -e
@@ -14,31 +10,6 @@ SRCROOT=`pwd`
 VENDOR_FRAMEWORKS_DIR="${SRCROOT}/Vendor-Frameworks"
 LIGHT_RX_XCFRAMEWORK_DIR="${SRCROOT}/Release/LightRxFrameworks"
 PRODUCTS=(RxSwift RxRelay RxCocoa)
-RX_SWIFT_CHECKSUM=``
-RX_RELAY_CHECKSUM=``
-RX_COCOA_CHECKSUM=``
-
-setChecksum() {
-    case $1 in
-    "RxSwift")
-    RX_SWIFT_CHECKSUM=$2;;
-    "RxRelay")
-    RX_RELAY_CHECKSUM=$2;;
-    "RxCocoa")
-    RX_COCOA_CHECKSUM=$2;;
-    esac
-}
-
-getChecksum() {
-    case $1 in
-    "RxSwift")
-    echo ${RX_SWIFT_CHECKSUM};;
-    "RxRelay")
-    echo ${RX_RELAY_CHECKSUM};;
-    "RxCocoa")
-    echo ${RX_COCOA_CHECKSUM};;
-    esac
-}
 
 
 # 3
@@ -83,26 +54,3 @@ for product in ${PRODUCTS[@]}; do
 done
 
 echo "Created light zip RX XCFrameworks... --> Done"
-
-
-# 6
-# Compute checksum for the zip XCFrameworks
-cd ${LIGHT_RX_XCFRAMEWORK_DIR} # Already in this folder, just bullet-proof if previous step removed
-touch "Package.swift"
-#swift package compute-checksum RxSwift.xcframework.zip
-for product in ${PRODUCTS[@]}; do
-    PROJECT_NAME="$product"
-    checksum=`swift package compute-checksum ${PROJECT_NAME}.xcframework.zip`
-    printf "\nChecksum for binary ${PROJECT_NAME}.xcframework.zip is:\n${checksum}\n\n"
-    setChecksum "$PROJECT_NAME" "$checksum"
-done
-rm "Package.swift"
-
-
-# 7 [TODO]
-# Open a PR at [url] to update the new zip xcframeworks
-# checksum=$(getChecksum "$PROJECT_NAME" "$checksum")
-
-
-# 8 [TODO]
-# Open a PR at [url] to update the checksums for the new zip xcframeworks
