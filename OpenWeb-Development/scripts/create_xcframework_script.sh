@@ -58,45 +58,7 @@ codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OpenWebSDK.xcframework"
 
 echo "Creating XCFramework... --> Done"
 
-
-# 6 (Optional)
-# Create a "light" version of all RX dependencies as ".xcframework"s
-# This is necessary for SPM.
-# We shouldn't have the original RX ".xcframework"s in our project. Bring those temprarily from RX github repo, only when building a new "light" version of them
-# After so, put those "light" RX ".xcframework"s with "OW" prefix at the vendor frameworks repo:
-# https://github.com/SpotIM/openweb-ios-vendor-frameworks
-
-#xcodebuild -create-xcframework \
-#    -framework "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64/RxSwift.framework" \
-#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64/dSYMs/RxSwift.framework.dSYM" \
-#    -framework "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64_x86_64-simulator/RxSwift.framework" \
-#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxSwift.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxSwift.framework.dSYM" \
-#    -output "${RELEASE_DIR}/OWRxSwift.xcframework"
-#
-#xcodebuild -create-xcframework \
-#    -framework "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64/RxRelay.framework" \
-#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64/dSYMs/RxRelay.framework.dSYM" \
-#    -framework "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64_x86_64-simulator/RxRelay.framework" \
-#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxRelay.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxRelay.framework.dSYM" \
-#    -output "${RELEASE_DIR}/OWRxRelay.xcframework"
-#
-#xcodebuild -create-xcframework \
-#    -framework "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64/RxCocoa.framework" \
-#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64/dSYMs/RxCocoa.framework.dSYM" \
-#    -framework "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64_x86_64-simulator/RxCocoa.framework" \
-#    -debug-symbols "${SRCROOT}/Vendor-Frameworks/RxCocoa.xcframework/ios-arm64_x86_64-simulator/dSYMs/RxCocoa.framework.dSYM" \
-#    -output "${RELEASE_DIR}/OWRxCocoa.xcframework"
-#
-## Sign those "OW" RX ".xcframework"s
-#codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxSwift.xcframework"
-#codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxRelay.xcframework"
-#codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OWRxCocoa.xcframework"
-#
-#
-#echo "Creating OW prefix light RX XCFrameworks... --> Done"
-
-
-# 7
+# 6
 # Delete the most recent build.
 if [ -d "${SRCROOT}/build" ]; then
 rm -rf "${SRCROOT}/build"
