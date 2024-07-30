@@ -1,4 +1,5 @@
 # This script should be run only after "create_light_rx_xcframeworks.sh" script
+# Accept a version parm which will be the version in which the xcframeworks.zip(s) will be uploaded to github artifacts at "git@github.com:SpotIM/openweb-ios-vendor-frameworks.git"
 
 # 1
 # Set bash script to exit immediately if any commands fail.
@@ -17,6 +18,8 @@ RX_COCOA_CHECKSUM=``
 git config credential.helper 'cache --timeout=120'
 git config --global user.email "ios-dev@openweb.com"
 git config --global user.name "OpenWeb Mobile bot"
+RELEASE_VERSION=$1
+RELEASE_TAG="Version ${RELEASE_VERSION}"
 
 setChecksum() {
     case $1 in
@@ -70,9 +73,10 @@ rm "Package.swift"
 
 
 # 5
-# Open a PR at [url] to update the new zip xcframeworks
+# Create a tag at "openweb-ios-vendor-frameworks.git" with the new zip xcframeworks
 git clone git@github.com:SpotIM/openweb-ios-vendor-frameworks.git
 cd openweb-ios-vendor-frameworks/Vendor-Frameworks/
+git checkout -b $RELEASE_TAG
 echo "Trying to remove the old RX xcframework.zip(s)"
 for product in ${PRODUCTS[@]}; do
     PROJECT_NAME="$product"
@@ -90,7 +94,10 @@ done
 git status
 git add .
 git status
-git commit -m "Update RX xcframework.zip(s)"
+git commit -m "Update RX xcframework.zip(s)to tag $RELEASE_TAG"
+git tag $RELEASE_TAG
+git push origin --tags
+
 
 # TODO open PR instead
 #git tag $RELEASE_VERSION
