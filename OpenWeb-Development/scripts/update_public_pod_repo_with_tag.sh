@@ -6,8 +6,7 @@ TAG="$RELEASE_VERSION-xcode$XCODE_VERSION"
 
 git clone git@github.com:SpotIM/openweb-ios-sdk-pod.git
 cd openweb-ios-sdk-pod
-#git checkout -b $TAG
-git checkout -b "testing-integration-$TAG"
+git checkout -b $TAG
 echo "remove the old xcframework"
 rm -fr OpenWebSDK.xcframework
 ls -l
@@ -26,4 +25,5 @@ git config --global user.email "ios-dev@openweb.com"
 git config --global user.name "OpenWeb Mobile bot via CircleCI"
 git commit -m "CircleCI update OpenWebSDK.xcframework to tag $TAG"
 
-git push origin "testing-integration-$TAG"
+git tag $TAG
+git push origin --tags
