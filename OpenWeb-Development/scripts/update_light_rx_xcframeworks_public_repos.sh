@@ -14,6 +14,9 @@ PRODUCTS=(RxSwift RxRelay RxCocoa)
 RX_SWIFT_CHECKSUM=``
 RX_RELAY_CHECKSUM=``
 RX_COCOA_CHECKSUM=``
+git config credential.helper 'cache --timeout=120'
+git config --global user.email "ios-dev@openweb.com"
+git config --global user.name "OpenWeb Mobile bot"
 
 setChecksum() {
     case $1 in
@@ -37,7 +40,22 @@ getChecksum() {
     esac
 }
 
+
 # 3
+# Validate that "light" RX xcframeworks(s) exist at "Release/LightRxFrameworks" path
+for product in ${PRODUCTS[@]}; do
+    PROJECT_NAME="$product"
+
+    xcframeworkZipPath="${LIGHT_RX_XCFRAMEWORK_DIR}/${PROJECT_NAME}.xcframework.zip"
+        if [ ! -e ${xcframeworkZipPath} ]; then
+        echo "${PROJECT_NAME}.xcframework.zip is missing at ${LIGHT_RX_XCFRAMEWORK_DIR} path"
+        echo "Failure to update RX light frameworks zip(s) in public repos - terminating script"
+        exit 1
+    fi
+done
+
+
+# 4
 # Compute checksum for the zip XCFrameworks
 cd ${LIGHT_RX_XCFRAMEWORK_DIR}
 touch "Package.swift"
@@ -51,10 +69,34 @@ done
 rm "Package.swift"
 
 
-# 4 [TODO]
+# 5
 # Open a PR at [url] to update the new zip xcframeworks
+git clone git@github.com:SpotIM/openweb-ios-vendor-frameworks.git
+cd openweb-ios-vendor-frameworks/Vendor-Frameworks/
+echo "Trying to remove the old RX xcframework.zip(s)"
+for product in ${PRODUCTS[@]}; do
+    PROJECT_NAME="$product"
+    if [ -e ${PROJECT_NAME}.xcframework.zip ]; then
+        rm -fr ${PROJECT_NAME}.xcframework.zip
+        echo "Removed ${PROJECT_NAME}.xcframework.zip"
+    fi
+done
+echo "Add the new RX xcframework.zip(s)"
+for product in ${PRODUCTS[@]}; do
+    PROJECT_NAME="$product"
+    cp -r ../../${PROJECT_NAME}.xcframework.zip ${PROJECT_NAME}.xcframework.zip
+    echo "Added ${PROJECT_NAME}.xcframework.zip"
+done
+git status
+git add .
+git status
+git commit -m "Update RX xcframework.zip(s)"
 
+# TODO open PR instead
+#git tag $RELEASE_VERSION
+#git push origin master
+#git push origin --tags
 
-# 5 [TODO]
+# 6 [TODO]
 # Open a PR at [url] to update the checksums for the new zip xcframeworks
 # checksum=$(getChecksum "$PROJECT_NAME" "$checksum")

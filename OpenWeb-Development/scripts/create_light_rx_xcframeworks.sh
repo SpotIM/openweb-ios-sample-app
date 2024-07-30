@@ -1,3 +1,5 @@
+# Original RX xcframeworks(s) should be placed at "/Vendor-Frameworks" path in order for this script to run properly
+
 # 1
 # Set bash script to exit immediately if any commands fail.
 set -e
@@ -21,6 +23,21 @@ mkdir ${LIGHT_RX_XCFRAMEWORK_DIR}
 
 
 # 4
+# Validate that original RX xcframeworks(s) exist at "/Vendor-Frameworks" path
+for product in ${PRODUCTS[@]}; do
+    PROJECT_NAME="$product"
+
+    xcframeworkPath="${VENDOR_FRAMEWORKS_DIR}/${PROJECT_NAME}.xcframework"
+        if [ ! -e ${xcframeworkPath} ]; then
+        rm -rf ${LIGHT_RX_XCFRAMEWORK_DIR}
+        echo "${PROJECT_NAME}.xcframework is missing at ${VENDOR_FRAMEWORKS_DIR} path"
+        echo "Failure to create RX frameworks - terminating script"
+        exit 1
+    fi
+done
+
+
+# 5
 # Create a "light" version of all RX dependencies as ".zip" of ".xcframework"s
 # This is necessary for SPM.
 # We shouldn't have the original RX ".xcframework"s in our project.
@@ -43,7 +60,7 @@ done
 echo "Created light RX XCFrameworks... --> Done"
 
 
-# 5
+# 6
 # Create zip binary files which includes the XCFrameworks
 cd ${LIGHT_RX_XCFRAMEWORK_DIR}
 for product in ${PRODUCTS[@]}; do
