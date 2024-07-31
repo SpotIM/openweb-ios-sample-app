@@ -194,7 +194,7 @@ fileprivate extension OWFilterTabsViewViewModel {
             .disposed(by: disposeBag)
 
         shouldShowFilterTabs
-            .take(1)
+            .distinctUntilChanged()
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<[OWFilterTabsCollectionCellViewModel]> in
                 guard let self = self else { return .empty() }
