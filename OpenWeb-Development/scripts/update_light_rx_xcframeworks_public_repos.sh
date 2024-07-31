@@ -1,5 +1,5 @@
 # This script should be run only after "create_light_rx_xcframeworks.sh" script
-# Accept a version parm which will be the version in which the xcframeworks.zip(s) will be uploaded to github artifacts at "git@github.com:SpotIM/openweb-ios-vendor-frameworks.git"
+# Accept a version parm which will be the version in which the xcframeworks.zip(s) will be uploaded to github "Assets" at "https://github.com/SpotIM/openweb-ios-vendor-frameworks"
 
 # 1
 # Set bash script to exit immediately if any commands fail.
@@ -19,7 +19,8 @@ git config credential.helper 'cache --timeout=120'
 git config --global user.email "ios-dev@openweb.com"
 git config --global user.name "OpenWeb Mobile bot"
 RELEASE_VERSION=$1
-RELEASE_TAG="Version ${RELEASE_VERSION}"
+RELEASE_TAG="Version-${RELEASE_VERSION}"
+NEW_CHECKSUM_BRANCH="update-checksum-version-${RELEASE_VERSION}"
 
 setChecksum() {
     case $1 in
@@ -73,8 +74,10 @@ rm "Package.swift"
 
 
 # 5
-# Create a tag at "openweb-ios-vendor-frameworks.git" with the new zip xcframeworks
+# Create a tag at "openweb-ios-vendor-frameworks.git" with the new xcframeworks zips
+# This tag will trigger a github action at "openweb-ios-vendor-frameworks.git", which will create a release with the xcframeworks zips files as part of the "Assets"
 git clone git@github.com:SpotIM/openweb-ios-vendor-frameworks.git
+cd ${LIGHT_RX_XCFRAMEWORK_DIR} # Just as a "bullet-proof" step
 cd openweb-ios-vendor-frameworks/Vendor-Frameworks/
 git checkout -b $RELEASE_TAG
 echo "Trying to remove the old RX xcframework.zip(s)"
@@ -94,16 +97,67 @@ done
 git status
 git add .
 git status
-git commit -m "Update RX xcframework.zip(s)to tag $RELEASE_TAG"
+git commit -m "Update xcframework.zip(s) to version $RELEASE_VERSION"
 git tag $RELEASE_TAG
 git push origin --tags
+# Cleanups
+cd ${LIGHT_RX_XCFRAMEWORK_DIR}
+rm -fr "openweb-ios-vendor-frameworks"
 
 
-# TODO open PR instead
-#git tag $RELEASE_VERSION
-#git push origin master
-#git push origin --tags
+# 6
+# Create a branch at git repo "https://github.com/SpotIM/openweb-ios-sdk-pod" with an updated checksum for each RX remote "*.xcframework.zip" file
+cd ${LIGHT_RX_XCFRAMEWORK_DIR} # Just as a "bullet-proof" step
+ git clone git@github.com:SpotIM/openweb-ios-sdk-pod.git
+cd "openweb-ios-sdk-pod"
+git checkout -b $NEW_CHECKSUM_BRANCH
+VENDORS_VERSION_OLD="let version.*"
+VENDORS_VERSION_NEW="let version = \"$RELEASE_VERSION\""
 
-# 6 [TODO]
-# Open a PR at [url] to update the checksums for the new zip xcframeworks
-# checksum=$(getChecksum "$PROJECT_NAME" "$checksum")
+# Update the "version" in the Package.swift file
+sed -i "" "s|$VENDORS_VERSION_OLD|$VENDORS_VERSION_NEW|g" Package.swift
+
+# Update Rx xcframeworks checksum(s) in the Package.swift file
+for product in ${PRODUCTS[@]}; do
+    PROJECT_NAME="$product"
+    RX_MATCH="\"$PROJECT_NAME\":.*"
+    tmpChecksum=$(getChecksum "$PROJECT_NAME")
+    RX_CHECKSUM_REPLACMENT="\"$PROJECT_NAME\": \"$tmpChecksum\","
+    if [ $PROJECT_NAME = "RxRelay" ]; then
+    # ReRelay is the last element in the checksum mapper at "Package.swift" file, so remove the last ","
+        RX_CHECKSUM_REPLACMENT=${RX_CHECKSUM_REPLACMENT%,}
+    fi
+    printf "checksum replacment for $PROJECT_NAME will be:\n$RX_CHECKSUM_REPLACMENT"
+    sed -i "" "s|$RX_MATCH|$RX_CHECKSUM_REPLACMENT|g" Package.swift
+done
+
+git status
+git add .
+git status
+git commit -m "Update checksum(s) to vendors xcframeworks version $RELEASE_VERSION"
+git push --set-upstream origin $NEW_CHECKSUM_BRANCH
+
+
+# 7
+# Create a PR at git repo "https://github.com/SpotIM/openweb-ios-sdk-pod" for the branch we created above
+generate_post_data()
+{
+  cat <<EOF
+{
+  "title": "Update checksum for release version $RELEASE_VERSION",
+  "body": "Updated vendros xcframeworks checksum for release version $RELEASE_VERSION",
+  "head": "$NEW_CHECKSUM_BRANCH",
+  "base": "master"
+}
+EOF
+}
+
+curl -X POST \
+  https://api.github.com/repos/SpotIM/openweb-ios-sdk-pod/pulls \
+  -i -u "ios-dev-openweb:$GITHUB_OPENWEB_USER_TOKEN" \
+  -H 'Accept: application/vnd.github.v3+json' \
+  -d "$(generate_post_data)"
+
+# Cleanups
+cd ${LIGHT_RX_XCFRAMEWORK_DIR}
+rm -fr "openweb-ios-sdk-pod"

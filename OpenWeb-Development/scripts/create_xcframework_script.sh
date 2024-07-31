@@ -53,10 +53,11 @@ xcodebuild -create-xcframework \
     -debug-symbols "${SRCROOT}/build/Release-iphonesimulator.xcarchive/dSYMs/${FRAMEWORK_NAME}.framework.dSYM" \
     -output "${RELEASE_DIR}/${FRAMEWORK_NAME}.xcframework"
 
-# Sign those "OW" RX ".xcframework"s
+# Sign OpenWebSDK .xcframework
 codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OpenWebSDK.xcframework"
 
 echo "Creating XCFramework... --> Done"
+
 
 # 6
 # Delete the most recent build.
