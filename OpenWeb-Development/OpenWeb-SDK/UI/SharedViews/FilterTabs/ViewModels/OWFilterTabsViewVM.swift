@@ -193,7 +193,13 @@ fileprivate extension OWFilterTabsViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        getTabs
+        shouldShowFilterTabs
+            .take(1)
+            .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<[OWFilterTabsCollectionCellViewModel]> in
+                guard let self = self else { return .empty() }
+                return self.getTabs
+            }
             .observe(on: MainScheduler.instance)
             .withLatestFrom(serviceSelectedTabId) { ($0, $1) }
             .withLatestFrom(selectTab) { ($0.0, $0.1, $1) }
