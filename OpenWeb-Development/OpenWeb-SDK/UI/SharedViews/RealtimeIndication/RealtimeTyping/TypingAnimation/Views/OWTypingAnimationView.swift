@@ -9,6 +9,10 @@
 import UIKit
 import RxSwift
 
+enum TypeCastingError: Error {
+    case invalidType
+}
+
 class OWTypingAnimationView: UIView {
     struct Metrics {
         static let verticalPositionOffsetDivisor: CGFloat = 4
@@ -79,17 +83,33 @@ class OWTypingAnimationView: UIView {
             dotLayer.removeAnimation(forKey: Metrics.typingLayerAnimationIdentifier)
         }
     }
+
+    func castToInt(_ value: Any?) throws -> Int {
+        if let intValue = value as? Int {
+            return intValue
+        } else {
+            throw TypeCastingError.invalidType
+        }
+    }
 }
 
 extension OWTypingAnimationView: CAAnimationDelegate {
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        if let dotIndex = anim.value(forKey: Metrics.typingAnimationIndexKey) as? Int, dotIndex < dotLayers.count - 1 {
-            animateDot(at: dotIndex + 1)
-        } else {
-            // Start from the first dot after a short delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-                self?.animateDot(at: 0)
+        do {
+            let dotIndex = anim.value(forKey: Metrics.typingAnimationIndexKey)
+            let dotIndexCasted = try castToInt(dotIndex)
+            if dotIndexCasted < dotLayers.count - 1 {
+                animateDot(at: dotIndexCasted + 1)
+            } else {
+                // Start from the first dot after a short delay
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                    self?.animateDot(at: 0)
+                }
             }
+        } catch TypeCastingError.invalidType {
+            print("OWTypingAnimationView Error: The value is not of type Int.")
+        } catch {
+            print("OWTypingAnimationView An unexpected error occurred: \(error).")
         }
     }
 }
