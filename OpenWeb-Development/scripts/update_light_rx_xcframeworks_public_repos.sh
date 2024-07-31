@@ -22,6 +22,10 @@ RELEASE_VERSION=$1
 RELEASE_TAG="Version-${RELEASE_VERSION}"
 NEW_CHECKSUM_BRANCH="update-checksum-version-${RELEASE_VERSION}"
 
+# Improtant: When using locally, you should provide `GITHUB_OPENWEB_USER_TOKEN` as in the CI environment
+# Left blank here for security reasons
+#GITHUB_OPENWEB_USER_TOKEN=""
+
 setChecksum() {
     case $1 in
     "RxSwift")
