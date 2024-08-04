@@ -9,7 +9,7 @@
 import Foundation
 
 class OWUserMentionHelper {
-    static var mentionsEnabled = false
+    static var mentionsEnabled = true
 
     fileprivate struct Metrics {
         static let mentionString = "@"
@@ -41,13 +41,22 @@ class OWUserMentionHelper {
         }
     }
 
-    static func getUserMentionTextData(replaceData: OWTextViewReplaceData, text: String) -> OWUserMentionTextData {
+    static func replaceTextWithRangeIsInBounds(of text: String, replaceText: String, range: NSRange) -> Bool {
+        return (replaceText.isEmpty && (range.location + range.length) <= text.utf16.count) ||
+        (replaceText.utf16.count + range.location + range.length < text.utf16.count) ||
+        (range.length == 0 && range.location <= text.utf16.count)
+    }
+
+    static func getUserMentionTextData(replaceData: OWTextViewReplaceData, text: String) -> OWUserMentionTextData? {
         let utf8Range = replaceData.range
-        let startIndex = text.utf16.index(text.utf16.startIndex, offsetBy: utf8Range.lowerBound)
-        let endIndex = text.utf16.index(startIndex, offsetBy: utf8Range.length)
-        let stringRange = startIndex..<endIndex
-        let textData = OWUserMentionTextData(text: text, cursorRange: stringRange, replacingText: replaceData.text)
-        return textData
+        if replaceTextWithRangeIsInBounds(of: text, replaceText: replaceData.text, range: utf8Range) {
+            let startIndex = text.utf16.index(text.utf16.startIndex, offsetBy: utf8Range.lowerBound)
+            let endIndex = text.utf16.index(startIndex, offsetBy: utf8Range.length)
+            let stringRange = startIndex..<endIndex
+            let textData = OWUserMentionTextData(text: text, cursorRange: stringRange, replacingText: replaceData.text)
+            return textData
+        }
+        return nil
     }
 
     static func updateMentionRanges(with textData: OWUserMentionTextData, mentionsData: OWUserMentionData) -> OWUserMentionTextData? {
@@ -147,9 +156,11 @@ class OWUserMentionHelper {
         let brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
         for mention in mentionsData.mentions {
-            attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
-                                        value: brandColor,
-                                        range: mention.range)
+            if (mention.range.location + mention.range.length) <= attributedText.length {
+                attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
+                                            value: brandColor,
+                                            range: mention.range)
+            }
         }
 
         if let currentMentionRange = currentMentionRange,
