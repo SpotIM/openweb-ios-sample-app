@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -94,7 +94,6 @@
 		16D5A20529D1B73600914AD7 /* OWCommentThreadActionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D5A20429D1B73600914AD7 /* OWCommentThreadActionsViewModel.swift */; };
 		16D5A20829D457AA00914AD7 /* OWCommentThreadActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D5A20729D457AA00914AD7 /* OWCommentThreadActionCell.swift */; };
 		16D5A20C29D457CC00914AD7 /* OWCommentThreadActionsCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D5A20B29D457CC00914AD7 /* OWCommentThreadActionsCellViewModel.swift */; };
-		16D6E36546234861B3674AB9 /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D990A28F53FE39BE1F29E9A3 /* Pods_OpenWeb_SampleApp.framework */; };
 		16D8D4A828C633EA00895FCB /* OWCommentCreationViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4A728C633EA00895FCB /* OWCommentCreationViewVM.swift */; };
 		16D8D4AA28C633F800895FCB /* OWCommentCreationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */; };
 		16D8D4B228C645F400895FCB /* OWCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */; };
@@ -300,6 +299,8 @@
 		24F611DB2AD5757500BAA574 /* OWOpenProfileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F611DA2AD5757500BAA574 /* OWOpenProfileType.swift */; };
 		24F828D02B8C60F900BFD159 /* OWToastCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828CF2B8C60F900BFD159 /* OWToastCompletion.swift */; };
 		24F828D62B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */; };
+		2EE6559280D523AC782FC3C9 /* Pods_OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */; };
+		3361A1AE3A23C3CE64FF21A2 /* Pods_OpenWebSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */; };
 		3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */; };
 		3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05C287598F800E6F1AC /* OWConversationView.swift */; };
 		3D08E05F2875994300E6F1AC /* OWConversationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05E2875994300E6F1AC /* OWConversationVC.swift */; };
@@ -508,6 +509,7 @@
 		3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C052852482D007420AD /* UIImageView+URL.swift */; };
 		3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C0728524A40007420AD /* UIImage+URL.swift */; };
 		3D754F982C43D9CF00283367 /* OWAnalyticEventGeneralDataDynamicPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D754F972C43D9CF00283367 /* OWAnalyticEventGeneralDataDynamicPart.swift */; };
+		3D754F9B2C47E25A00283367 /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; };
 		3D7B1C822BBD6A4E0098C4CF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3D7B1C812BBD6A4E0098C4CF /* PrivacyInfo.xcprivacy */; };
 		3D7E3D692888499D00DDBE0B /* OWHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D682888499D00DDBE0B /* OWHelpers.swift */; };
 		3D7E3D6B288849EC00DDBE0B /* OWAdditionalConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6A288849EC00DDBE0B /* OWAdditionalConfiguration.swift */; };
@@ -775,7 +777,6 @@
 		5D697A4122B65106001AD556 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		5D697A4622B65108001AD556 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
 		5D909AB62397E1D400FF51AD /* Demo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Demo.storyboard */; };
-		6A54FC935F56EDE135184008 /* Pods_OpenWebSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3BBDFB8456F316D6170CEC1 /* Pods_OpenWebSDKTests.framework */; };
 		6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */; };
 		73B0DE8127A90EC4008EBCE7 /* OWSubscriberBadgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B0DE8027A90EC4008EBCE7 /* OWSubscriberBadgeService.swift */; };
 		73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */; };
@@ -902,21 +903,6 @@
 		9E3B8B7F2A025145006BB207 /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B7E2A025145006BB207 /* UILabel+Extensions.swift */; };
 		9E3B8B812A0272CE006BB207 /* String+OWExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B802A0272CE006BB207 /* String+OWExtensions.swift */; };
 		9E3B8B832A02826C006BB207 /* NSMutableAttributedString+OWExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B822A02826C006BB207 /* NSMutableAttributedString+OWExtensions.swift */; };
-		9E3C3EA82BEBBA30001B1B6C /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */; };
-		9E3C3EA92BEBBA30001B1B6C /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9E3C3EAA2BEBBA31001B1B6C /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; };
-		9E3C3EAB2BEBBA31001B1B6C /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9E3C3EB22BEBBD02001B1B6C /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; };
-		9E3C3EB32BEBBD02001B1B6C /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9E3C3EB42BEBBD17001B1B6C /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		9E3C3EB72BEBBD19001B1B6C /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		9E3C3EB92BEBBD1A001B1B6C /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		9E3C3EBB2BEBBD3C001B1B6C /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; };
-		9E3C3EBC2BEBBD3C001B1B6C /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9E3C3EBD2BEBBD3D001B1B6C /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */; };
-		9E3C3EBE2BEBBD3D001B1B6C /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9E3C3EBF2BEBBD3F001B1B6C /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; };
-		9E3C3EC02BEBBD3F001B1B6C /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9E3D65DB2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3D65DA2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift */; };
 		9E4163BD29F6C9BB00819BC2 /* OWCancelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BC29F6C9BB00819BC2 /* OWCancelVC.swift */; };
 		9E4163BF29F6C9C700819BC2 /* OWCancelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BE29F6C9C700819BC2 /* OWCancelView.swift */; };
@@ -949,7 +935,6 @@
 		9E73DAE229C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE129C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift */; };
 		9E73DAE429C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE329C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift */; };
 		9E7C52432C29BFD6006B9B93 /* OWFilterTabsSelectedTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7C52422C29BFD6006B9B93 /* OWFilterTabsSelectedTab.swift */; };
-		9E7C52452C2B10C2006B9B93 /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; };
 		9E7C52462C2B156A006B9B93 /* GiphyConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E8BA7E32C0339F2009C2164 /* GiphyConfiguration.plist */; };
 		9E7C52472C2B156B006B9B93 /* GiphyConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E8BA7E32C0339F2009C2164 /* GiphyConfiguration.plist */; };
 		9E7C52482C2B15B3006B9B93 /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; };
@@ -1035,6 +1020,7 @@
 		9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77C297E84F100814648 /* PickerSetting.swift */; };
 		9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77D297E84F100814648 /* TextFieldSetting.swift */; };
 		9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE780297E851400814648 /* UIColor+Extensions.swift */; };
+		C845579BC5CD16EE9C77E2EF /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32F867F548AC35AC191C783B /* Pods_OpenWeb_SampleApp.framework */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
 		F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */; };
@@ -1077,9 +1063,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9E3C3EC02BEBBD3F001B1B6C /* RxSwift.xcframework in Embed Frameworks */,
-				9E3C3EBC2BEBBD3C001B1B6C /* RxCocoa.xcframework in Embed Frameworks */,
-				9E3C3EBE2BEBBD3D001B1B6C /* RxRelay.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1090,9 +1073,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9E3C3EA92BEBBA30001B1B6C /* RxRelay.xcframework in Embed Frameworks */,
-				9E3C3EB32BEBBD02001B1B6C /* RxCocoa.xcframework in Embed Frameworks */,
-				9E3C3EAB2BEBBA31001B1B6C /* RxSwift.xcframework in Embed Frameworks */,
 				44C8789523608BC100E0E662 /* OpenWebSDK.framework in Embed Frameworks */,
 				9E7C52492C2B15B3006B9B93 /* GiphyUISDK.xcframework in Embed Frameworks */,
 			);
@@ -1102,10 +1082,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		033E5962A63FA4F4B5CF2E2F /* Pods-Shared-OpenWeb-SampleApp.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		06F053FB7DA563D6B522039D /* Pods-OpenWeb-SampleApp.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.public.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.public.xcconfig"; sourceTree = "<group>"; };
+		086A411DF7932B4542D13064 /* Pods-OpenWebSDK.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.internal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.internal.xcconfig"; sourceTree = "<group>"; };
 		0E1125D72304BC29006B1489 /* Date+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+extensions.swift"; sourceTree = "<group>"; };
 		0E1125DD2304C127006B1489 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
+		0F5F0E486DB3D9F532EB16A0 /* Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		133F93A08504745B0BB2D928 /* Pods-Shared-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		1608D52F2C05EF4B00041D1E /* OWCommentOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentOptionsView.swift; sourceTree = "<group>"; };
 		1608D5312C05F1B200041D1E /* OWCommentOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentOptionsViewModel.swift; sourceTree = "<group>"; };
 		160E42E12988103000EDC5A1 /* OWCommentThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadView.swift; sourceTree = "<group>"; };
@@ -1196,6 +1180,8 @@
 		16F8A7452A922C680023B96B /* OWCommentCreationImagePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationImagePreviewView.swift; sourceTree = "<group>"; };
 		16F8A7472A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationImagePreviewViewModel.swift; sourceTree = "<group>"; };
 		16F8A74A2A93AF680023B96B /* OWCommentCreationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationContent.swift; sourceTree = "<group>"; };
+		1AF45D96E33A5B5C236A46BC /* Pods-Shared-OpenWebSDKTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.beta.xcconfig"; sourceTree = "<group>"; };
+		232820FD5EB04EAF2F142596 /* Pods-Shared-OpenWeb-SampleApp.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.public.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.public.xcconfig"; sourceTree = "<group>"; };
 		2405BA3C2A398FD900986B52 /* OWMenuSelectionEncapsulationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMenuSelectionEncapsulationView.swift; sourceTree = "<group>"; };
 		2409CE422A94A806007701FA /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		2409CE442A94B7A1007701FA /* OWClarityDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsVC.swift; sourceTree = "<group>"; };
@@ -1384,6 +1370,8 @@
 		24F828CF2B8C60F900BFD159 /* OWToastCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWToastCompletion.swift; sourceTree = "<group>"; };
 		24F828D12B8F14AB00BFD159 /* OWGifService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWGifService.swift; sourceTree = "<group>"; };
 		24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWGifPickerPresenterResponseType.swift; sourceTree = "<group>"; };
+		2CC69106E0D8187B462460E3 /* Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
+		32F867F548AC35AC191C783B /* Pods_OpenWeb_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWeb_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCoordinator.swift; sourceTree = "<group>"; };
 		3D08E05C287598F800E6F1AC /* OWConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationView.swift; sourceTree = "<group>"; };
@@ -1536,6 +1524,7 @@
 		3D451B7929C788AF00CB3BE6 /* OWRouteringMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouteringMode.swift; sourceTree = "<group>"; };
 		3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRenewerService.swift; sourceTree = "<group>"; };
 		3D4A949E29C74C050087D143 /* OWAuthenticationRecoveryResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRecoveryResult.swift; sourceTree = "<group>"; };
+		3D4C321BC227EF1517971E69 /* Pods-Shared-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3D5058AF2AB1D5A7006CECFA /* OWLoadingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoadingState.swift; sourceTree = "<group>"; };
 		3D5058B12AB1D5DC006CECFA /* OWLoadingTriggeredReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoadingTriggeredReason.swift; sourceTree = "<group>"; };
 		3D50D8E62B1608BD00FD3232 /* OWCommentThreadCellOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentThreadCellOption.swift; sourceTree = "<group>"; };
@@ -1859,13 +1848,19 @@
 		44C8788D23608BC100E0E662 /* OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44C879DF23608E3600E0E662 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44F0FD252369EEBC003525E0 /* SPAdsConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdsConfiguration.swift; sourceTree = "<group>"; };
+		49F73A60F2F59A47C297CDCE /* Pods-Shared-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		595DD9D22C230615BA017425 /* Pods-OpenWeb-SampleApp.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		5963A75F8191A381031939C6 /* Pods-OpenWebSDK.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		5D00B74322E9B7A600EFC1B0 /* DemoUserAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoUserAuthentication.swift; sourceTree = "<group>"; };
 		5D697A3B22B65106001AD556 /* OpenWeb-SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWeb-SampleApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D697A3E22B65106001AD556 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D697A4022B65106001AD556 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5D697A4522B65108001AD556 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D697A4A22B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5E8B87F580F233E1658DA16C /* Pods-Shared-OpenWebSDKTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
+		63B1383AE30465CDDD046528 /* Pods-Shared-OpenWeb-SampleApp.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		66983D6D252F8903AB630788 /* Pods-Shared-OpenWeb-SampleApp.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.beta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.beta.xcconfig"; sourceTree = "<group>"; };
+		6AD88E67F8531F65F140E53D /* Pods-OpenWebSDK.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		6D430DE824C70EF0008A469A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConversationCounters.swift; sourceTree = "<group>"; };
 		6D92BDEF24C98258005E3683 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1873,8 +1868,10 @@
 		6DA75C92238D61D100FBDF19 /* Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Demo.storyboard; sourceTree = "<group>"; };
 		73B0DE8027A90EC4008EBCE7 /* OWSubscriberBadgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberBadgeService.swift; sourceTree = "<group>"; };
 		73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberBadgeConfiguration.swift; sourceTree = "<group>"; };
+		77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83DC33300C7255F0970EB637 /* Pods-OpenWeb-SampleApp.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		8440B9FFAE5F98CEA71A7D03 /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
+		874F2EDF6E51FB58E23D0C08 /* Pods-OpenWebSDK.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		8D05B44C2B1497C700354380 /* OWOrientationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOrientationService.swift; sourceTree = "<group>"; };
 		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
 		8D0DB7142A923D710014AD1B /* OWRealtimeIndicatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeIndicatorState.swift; sourceTree = "<group>"; };
@@ -1939,6 +1936,7 @@
 		8DBC167B2A4D8E740010759E /* OWNavigationCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationCustomizableElement.swift; sourceTree = "<group>"; };
 		8DBC16802A55B8B40010759E /* OWLanguageStrategyIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLanguageStrategyIndexer.swift; sourceTree = "<group>"; };
 		8DBC16872A5D45610010759E /* OWFontTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontTypography.swift; sourceTree = "<group>"; };
+		8DBCC8A8AAEAFD1CDE891F88 /* Pods-OpenWebSDK.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.public.xcconfig"; sourceTree = "<group>"; };
 		8DC708E72A838789004B3C9E /* OWRealTimeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTimeData.swift; sourceTree = "<group>"; };
 		8DC708EA2A8387E3004B3C9E /* OWRealTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTime.swift; sourceTree = "<group>"; };
 		8DCA78982B835E8600A24A25 /* OWItalicLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWItalicLabel.swift; sourceTree = "<group>"; };
@@ -1974,6 +1972,8 @@
 		8DFA37832AA869EB00430031 /* OWConversationSpacing+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWConversationSpacing+Extensions.swift"; sourceTree = "<group>"; };
 		96876C7165E3521828B9902D /* Pods-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		9767D2C57B135F9C70D371B1 /* Pods-OpenWebSDKTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
+		9A9372C9C3EC60CD8F4362D7 /* Pods-OpenWebSDK.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.beta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.beta.xcconfig"; sourceTree = "<group>"; };
+		9B311A87A16095711C65460F /* Pods-Shared-OpenWebSDKTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.internal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.internal.xcconfig"; sourceTree = "<group>"; };
 		9E019E7A2B334B5B00A947CB /* OWConversationSizeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSizeService.swift; sourceTree = "<group>"; };
 		9E0C604A2A780245001B8D5D /* OWScreenPopStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPopStyle.swift; sourceTree = "<group>"; };
 		9E0C604B2A780245001B8D5D /* OWNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWNavigationController.swift; sourceTree = "<group>"; };
@@ -2000,9 +2000,6 @@
 		9E3B8B7E2A025145006BB207 /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		9E3B8B802A0272CE006BB207 /* String+OWExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+OWExtensions.swift"; sourceTree = "<group>"; };
 		9E3B8B822A02826C006BB207 /* NSMutableAttributedString+OWExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+OWExtensions.swift"; sourceTree = "<group>"; };
-		9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */ = {isa = PBXFileReference; expectedSignature = "SelfSigned:BD802E794C8ABDDA4C3F5D92B3E4C4FBFAE4734410B9AD73442EF1CEB0276140"; lastKnownFileType = wrapper.xcframework; path = RxRelay.xcframework; sourceTree = "<group>"; };
-		9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */ = {isa = PBXFileReference; expectedSignature = "SelfSigned:BD802E794C8ABDDA4C3F5D92B3E4C4FBFAE4734410B9AD73442EF1CEB0276140"; lastKnownFileType = wrapper.xcframework; path = RxCocoa.xcframework; sourceTree = "<group>"; };
-		9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */ = {isa = PBXFileReference; expectedSignature = "SelfSigned:BD802E794C8ABDDA4C3F5D92B3E4C4FBFAE4734410B9AD73442EF1CEB0276140"; lastKnownFileType = wrapper.xcframework; path = RxSwift.xcframework; sourceTree = "<group>"; };
 		9E3D65DA2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonEndpoints.swift; sourceTree = "<group>"; };
 		9E4163BC29F6C9BB00819BC2 /* OWCancelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCancelVC.swift; sourceTree = "<group>"; };
 		9E4163BE29F6C9C700819BC2 /* OWCancelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCancelView.swift; sourceTree = "<group>"; };
@@ -2116,10 +2113,9 @@
 		9EFFE77D297E84F100814648 /* TextFieldSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSetting.swift; sourceTree = "<group>"; };
 		9EFFE780297E851400814648 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		A180B1575E260C0F3627E1FD /* Pods-OpenWeb-SampleApp.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.beta.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.beta.xcconfig"; sourceTree = "<group>"; };
+		ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
-		D990A28F53FE39BE1F29E9A3 /* Pods_OpenWeb_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWeb_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
-		E3BBDFB8456F316D6170CEC1 /* Pods_OpenWebSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E685AC2925C97DC4008FECDB /* GoogleAdsV7Provider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAdsV7Provider.swift; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsTests.swift; sourceTree = "<group>"; };
@@ -2137,10 +2133,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E3C3EB92BEBBD1A001B1B6C /* RxSwift.xcframework in Frameworks */,
-				9E3C3EB72BEBBD19001B1B6C /* RxRelay.xcframework in Frameworks */,
 				24ED932C2BB457420090D1FF /* GiphyUISDK.xcframework in Frameworks */,
-				9E3C3EB42BEBBD17001B1B6C /* RxCocoa.xcframework in Frameworks */,
+				2EE6559280D523AC782FC3C9 /* Pods_OpenWebSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2148,12 +2142,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E3C3EAA2BEBBA31001B1B6C /* RxSwift.xcframework in Frameworks */,
 				44C8789423608BC100E0E662 /* OpenWebSDK.framework in Frameworks */,
-				9E3C3EB22BEBBD02001B1B6C /* RxCocoa.xcframework in Frameworks */,
-				9E3C3EA82BEBBA30001B1B6C /* RxRelay.xcframework in Frameworks */,
 				9E7C52482C2B15B3006B9B93 /* GiphyUISDK.xcframework in Frameworks */,
-				16D6E36546234861B3674AB9 /* Pods_OpenWeb_SampleApp.framework in Frameworks */,
+				3D754F9B2C47E25A00283367 /* GiphyUISDK.xcframework in Frameworks */,
+				C845579BC5CD16EE9C77E2EF /* Pods_OpenWeb_SampleApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2161,12 +2153,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E3C3EBF2BEBBD3F001B1B6C /* RxSwift.xcframework in Frameworks */,
-				9E3C3EBB2BEBBD3C001B1B6C /* RxCocoa.xcframework in Frameworks */,
 				F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */,
-				9E3C3EBD2BEBBD3D001B1B6C /* RxRelay.xcframework in Frameworks */,
-				9E7C52452C2B10C2006B9B93 /* GiphyUISDK.xcframework in Frameworks */,
-				6A54FC935F56EDE135184008 /* Pods_OpenWebSDKTests.framework in Frameworks */,
+				3361A1AE3A23C3CE64FF21A2 /* Pods_OpenWebSDKTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2590,9 +2578,6 @@
 		16EA82822B8CDC8A004D6FF2 /* Vendor-Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9E3C3EA12BEBBA1C001B1B6C /* RxCocoa.xcframework */,
-				9E3C3EA02BEBBA1C001B1B6C /* RxRelay.xcframework */,
-				9E3C3EA22BEBBA1D001B1B6C /* RxSwift.xcframework */,
 				24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */,
 			);
 			path = "Vendor-Frameworks";
@@ -5046,8 +5031,9 @@
 		5D697A6A22B6586C001AD556 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D990A28F53FE39BE1F29E9A3 /* Pods_OpenWeb_SampleApp.framework */,
-				E3BBDFB8456F316D6170CEC1 /* Pods_OpenWebSDKTests.framework */,
+				32F867F548AC35AC191C783B /* Pods_OpenWeb_SampleApp.framework */,
+				77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */,
+				ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -6171,6 +6157,24 @@
 				9767D2C57B135F9C70D371B1 /* Pods-OpenWebSDKTests.releaseinternal.xcconfig */,
 				B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */,
 				3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */,
+				3D4C321BC227EF1517971E69 /* Pods-Shared-OpenWeb-SampleApp.internal.xcconfig */,
+				66983D6D252F8903AB630788 /* Pods-Shared-OpenWeb-SampleApp.beta.xcconfig */,
+				232820FD5EB04EAF2F142596 /* Pods-Shared-OpenWeb-SampleApp.public.xcconfig */,
+				033E5962A63FA4F4B5CF2E2F /* Pods-Shared-OpenWeb-SampleApp.releaseinternal.xcconfig */,
+				63B1383AE30465CDDD046528 /* Pods-Shared-OpenWeb-SampleApp.releasebeta.xcconfig */,
+				2CC69106E0D8187B462460E3 /* Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig */,
+				9B311A87A16095711C65460F /* Pods-Shared-OpenWebSDKTests.internal.xcconfig */,
+				1AF45D96E33A5B5C236A46BC /* Pods-Shared-OpenWebSDKTests.beta.xcconfig */,
+				133F93A08504745B0BB2D928 /* Pods-Shared-OpenWebSDKTests.public.xcconfig */,
+				5E8B87F580F233E1658DA16C /* Pods-Shared-OpenWebSDKTests.releaseinternal.xcconfig */,
+				0F5F0E486DB3D9F532EB16A0 /* Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig */,
+				49F73A60F2F59A47C297CDCE /* Pods-Shared-OpenWebSDKTests.releasepublic.xcconfig */,
+				086A411DF7932B4542D13064 /* Pods-OpenWebSDK.internal.xcconfig */,
+				9A9372C9C3EC60CD8F4362D7 /* Pods-OpenWebSDK.beta.xcconfig */,
+				8DBCC8A8AAEAFD1CDE891F88 /* Pods-OpenWebSDK.public.xcconfig */,
+				5963A75F8191A381031939C6 /* Pods-OpenWebSDK.releaseinternal.xcconfig */,
+				6AD88E67F8531F65F140E53D /* Pods-OpenWebSDK.releasebeta.xcconfig */,
+				874F2EDF6E51FB58E23D0C08 /* Pods-OpenWebSDK.releasepublic.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -6221,6 +6225,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 44C8789623608BC100E0E662 /* Build configuration list for PBXNativeTarget "OpenWebSDK" */;
 			buildPhases = (
+				CDEC31B81FD324334EA6AB09 /* [CP] Check Pods Manifest.lock */,
 				44C8788823608BC100E0E662 /* Headers */,
 				44C8788923608BC100E0E662 /* Sources */,
 				44C8788A23608BC100E0E662 /* Frameworks */,
@@ -6493,6 +6498,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CDEC31B81FD324334EA6AB09 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenWebSDK-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -7636,6 +7663,7 @@
 		};
 		3D09249628A9464F00183082 /* Public */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8DBCC8A8AAEAFD1CDE891F88 /* Pods-OpenWebSDK.public.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -7657,6 +7685,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -7671,7 +7708,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PUBLIC_DEMO_APP";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -7801,6 +7838,7 @@
 		};
 		3D611B7328BF8F42003960CE /* Beta */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A9372C9C3EC60CD8F4362D7 /* Pods-OpenWebSDK.beta.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -7822,6 +7860,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -7836,7 +7883,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG BETA AUTOMATION";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7957,6 +8004,7 @@
 		};
 		3D674E04298C54030049960D /* ReleaseBeta */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6AD88E67F8531F65F140E53D /* Pods-OpenWebSDK.releasebeta.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -7978,6 +8026,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -7992,7 +8049,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "BETA AUTOMATION";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8113,6 +8170,7 @@
 		};
 		3D674E09298C541A0049960D /* ReleasePublic */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 874F2EDF6E51FB58E23D0C08 /* Pods-OpenWebSDK.releasepublic.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -8134,6 +8192,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -8148,7 +8215,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PUBLIC_DEMO_APP;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8169,6 +8236,7 @@
 		};
 		44C8789723608BC100E0E662 /* Internal */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 086A411DF7932B4542D13064 /* Pods-OpenWebSDK.internal.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -8190,6 +8258,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -8204,7 +8281,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8215,6 +8292,7 @@
 		};
 		44C8789823608BC100E0E662 /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5963A75F8191A381031939C6 /* Pods-OpenWebSDK.releaseinternal.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -8236,6 +8314,15 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
+					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -8250,7 +8337,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
