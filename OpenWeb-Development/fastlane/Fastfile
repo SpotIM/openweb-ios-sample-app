@@ -74,11 +74,10 @@ platform :ios do
       build: true
     )
 
-  # We are signing the xcframework via the script file
-  # Left it here for referance
-  #  sign_xcframework(
-  #    file: "../Release/OpenWebSDK.xcframework"
-  #  )
+   Left it here for referance
+    sign_xcframework(
+      file: "../Release/OpenWebSDK.xcframework"
+    )
   end
 
   desc "Build release ipa"
