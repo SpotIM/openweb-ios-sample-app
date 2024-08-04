@@ -34,7 +34,7 @@ class OWTextView: UIView {
         static let didBeginEditDelay = 1
         static let delayTextViewTextChange = 5
         static let delayTextViewExpand = 10
-        static let didChangeSelectionDelay = 1
+        static let didChangeSelectionDelay = 10
     }
 
     let viewModel: OWTextViewViewModeling
@@ -177,7 +177,7 @@ fileprivate extension OWTextView {
                 let currentText = self.textView.text
                 if let currentText = currentText,
                    !(currentText.utf16.count == afterReplacedText.utf16.count &&
-                   replaceData.range.length == 0) {
+                     replaceData.range.length == 0) {
                     self.viewModel.inputs.replacedData.onNext(replaceData)
                 }
                 guard afterReplacedText != currentText else {
@@ -205,14 +205,17 @@ fileprivate extension OWTextView {
             })
             .disposed(by: disposeBag)
 
+        var firstSelectRangeDone = false
         textView.rx.didChangeSelection
             // delay so that textView.rx.text is updated with updated text
-            .delay(.microseconds(Metrics.didChangeSelectionDelay), scheduler: MainScheduler.instance)
-            .withLatestFrom(textView.rx.text)
-            .unwrap()
-            .map { [weak self] text -> Range<String.Index>? in
+            .delay(.milliseconds(Metrics.didChangeSelectionDelay), scheduler: MainScheduler.instance)
+            .map { [weak self] _ -> Range<String.Index>? in
                 guard let self = self else { return nil }
-                return Range(self.textView.selectedRange, in: text)
+                if !firstSelectRangeDone {
+                    firstSelectRangeDone = true
+                    return Range(NSRange(location: self.textView.text.count, length: 0), in: self.textView.text)
+                }
+                return Range(self.textView.selectedRange, in: self.textView.text)
             }
             .unwrap()
             .bind(to: viewModel.inputs.cursorRangeInternalChange)

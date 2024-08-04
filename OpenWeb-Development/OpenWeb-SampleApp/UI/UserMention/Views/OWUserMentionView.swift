@@ -100,6 +100,9 @@ fileprivate extension OWUserMentionView {
 
         viewModel.outputs.userMentionsDataSourceSections
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                self?.tableView.setContentOffset(.zero, animated: true)
+            })
             .bind(to: tableView.rx.items(dataSource: userMentionsDataSource))
             .disposed(by: disposeBag)
 
