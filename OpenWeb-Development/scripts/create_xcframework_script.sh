@@ -54,7 +54,8 @@ xcodebuild -create-xcframework \
     -output "${RELEASE_DIR}/${FRAMEWORK_NAME}.xcframework"
 
 # Sign OpenWebSDK .xcframework
-codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OpenWebSDK.xcframework"
+# Keeping this part to sign .xcframework when creating locally, however we sign it with "match" tool at the fastlane script
+# codesign -v --sign "Spot.IM Ltd" "${RELEASE_DIR}/OpenWebSDK.xcframework"
 
 echo "Creating XCFramework... --> Done"
 
