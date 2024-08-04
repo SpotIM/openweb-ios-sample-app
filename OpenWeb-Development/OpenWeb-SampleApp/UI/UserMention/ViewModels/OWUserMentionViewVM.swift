@@ -120,6 +120,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     fileprivate lazy var getUsers: Observable<[SPUser]> = {
         return name
+            .filter { !$0.isEmpty }
             .withLatestFrom(users) { ($0, $1) }
             .do(onNext: { [weak self] name, users in
                 guard let self = self else { return }
@@ -154,6 +155,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
                     }
                     .unwrap()
             }
+            .share()
     }()
 
     fileprivate lazy var cellsViewModels: Observable<[OWUserMentionsCellOption]> = {
@@ -216,8 +218,8 @@ fileprivate extension OWUserMentionViewVM {
         replaceData
             .withLatestFrom(textViewText) { ($0, $1) }
             .subscribe(onNext: { [weak self] replaceData, text in
-                guard let self = self else { return }
-                let textData = OWUserMentionHelper.getUserMentionTextData(replaceData: replaceData, text: text)
+                guard let self = self,
+                      let textData = OWUserMentionHelper.getUserMentionTextData(replaceData: replaceData, text: text) else { return }
                 self.textData.onNext(textData)
             })
             .disposed(by: disposeBag)
