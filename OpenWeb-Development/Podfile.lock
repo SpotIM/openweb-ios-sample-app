@@ -91,6 +91,12 @@ PODS:
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
   - Quick (5.0.1)
+  - RxCocoa (6.7.0):
+    - RxRelay (= 6.7.0)
+    - RxSwift (= 6.7.0)
+  - RxRelay (6.7.0):
+    - RxSwift (= 6.7.0)
+  - RxSwift (6.7.0)
   - SnapKit (5.6.0)
 
 DEPENDENCIES:
@@ -99,6 +105,9 @@ DEPENDENCIES:
   - Google-Mobile-Ads-SDK (= 8.0)
   - Nimble (~> 10.0.0)
   - Quick (~> 5.0.1)
+  - RxCocoa (= 6.7.0)
+  - RxRelay (= 6.7.0)
+  - RxSwift (= 6.7.0)
   - SnapKit (~> 5.6.0)
 
 SPEC REPOS:
@@ -121,6 +130,9 @@ SPEC REPOS:
     - PromisesObjC
     - PromisesSwift
     - Quick
+    - RxCocoa
+    - RxRelay
+    - RxSwift
     - SnapKit
 
 SPEC CHECKSUMS:
@@ -142,8 +154,11 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
+  RxCocoa: fb0aefb9e7229c8ab057acde714136d19117f102
+  RxRelay: 5d39f4d8da150ad47a71b9ce11915e3eae2a8f4d
+  RxSwift: 6ee35684dc3f7a63938758f4b7708199517dfa97
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 3c623f4fe6486acd7fef9eccaefa5f594dee4a28
+PODFILE CHECKSUM: 5e1f905e2c67cbe1de527d73a50537e664b3c4a1
 
 COCOAPODS: 1.14.2
