@@ -103,6 +103,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
                       let conversationConfig = config.conversation else { return false }
                 return conversationConfig.isTabsEnabled && shouldShowFilterTabs
             }
+            .distinctUntilChanged()
             .asObservable()
     }()
 
@@ -194,7 +195,6 @@ fileprivate extension OWFilterTabsViewViewModel {
             .disposed(by: disposeBag)
 
         shouldShowFilterTabs
-            .distinctUntilChanged()
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<[OWFilterTabsCollectionCellViewModel]> in
                 guard let self = self else { return .empty() }
