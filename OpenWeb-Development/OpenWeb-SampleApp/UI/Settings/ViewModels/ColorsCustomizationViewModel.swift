@@ -50,7 +50,9 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             ThemeColorItem(title: "Primary Border", initialColor: initialColorTheme.primaryBorderColor),
             ThemeColorItem(title: "Secondary Border", initialColor: initialColorTheme.secondaryBorderColor),
             ThemeColorItem(title: "Loader", initialColor: initialColorTheme.loaderColor),
-            ThemeColorItem(title: "Brand Color", initialColor: initialColorTheme.brandColor)
+            ThemeColorItem(title: "Brand Color", initialColor: initialColorTheme.brandColor),
+            ThemeColorItem(title: "Vote Up Color", initialColor: initialColorTheme.voteUpColor),
+            ThemeColorItem(title: "Vote Down Color", initialColor: initialColorTheme.voteDownColor)
         ]
     }()
 
