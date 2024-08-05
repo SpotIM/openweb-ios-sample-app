@@ -156,6 +156,8 @@ fileprivate extension OWCustomizationsLayer {
         setColor(color: theme.primaryBorderColor, type: .borderColor2)
         setColor(color: theme.secondaryBorderColor, type: .borderColor1)
         setColor(color: theme.loaderColor, type: .loaderColor)
+        setColor(color: theme.voteUpColor, type: .voteUpColor)
+        setColor(color: theme.voteDownColor, type: .voteDownColor)
         // Preventing brand from changing later on from the server
         if let brandColor = theme.brandColor {
             setColor(color: brandColor, type: .brandColor)

@@ -25,6 +25,8 @@ public struct OWTheme {
     public let secondaryBorderColor: OWColor?
     public let loaderColor: OWColor?
     public let brandColor: OWColor?
+    public let voteUpColor: OWColor?
+    public let voteDownColor: OWColor?
 
     public init(skeletonColor: OWColor? = nil,
                 skeletonShimmeringColor: OWColor? = nil,
@@ -41,7 +43,9 @@ public struct OWTheme {
                 primaryBorderColor: OWColor? = nil,
                 secondaryBorderColor: OWColor? = nil,
                 loaderColor: OWColor? = nil,
-                brandColor: OWColor? = nil
+                brandColor: OWColor? = nil,
+                voteUpColor: OWColor? = nil,
+                voteDownColor: OWColor? = nil
     ) {
         self.skeletonColor = skeletonColor
         self.skeletonShimmeringColor = skeletonShimmeringColor
@@ -59,5 +63,7 @@ public struct OWTheme {
         self.secondaryBorderColor = secondaryBorderColor
         self.loaderColor = loaderColor
         self.brandColor = brandColor
+        self.voteUpColor = voteUpColor
+        self.voteDownColor = voteDownColor
     }
 }
