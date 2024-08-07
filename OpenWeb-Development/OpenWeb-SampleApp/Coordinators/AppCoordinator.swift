@@ -1,0 +1,69 @@
+//
+//  AppCoordinator.swift
+//  OpenWeb-iOS-SDK-Demo
+//
+//  Created by Alon Haiut on 29/11/2021.
+//
+
+import RxSwift
+import OpenWebSDK
+import UIKit
+import GoogleMobileAds
+import FirebaseCore
+
+class AppCoordinator: BaseCoordinator<Void> {
+
+    fileprivate let window: UIWindow
+    fileprivate var router: Routering!
+    init(window: UIWindow) {
+        self.window = window
+    }
+
+    override func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<Void> {
+        initialSetup()
+
+        let mainPageCoordinator = MainPageCoordinator(router: router)
+
+        return coordinate(to: mainPageCoordinator, deepLinkOptions: deepLinkOptions)
+    }
+}
+
+fileprivate extension AppCoordinator {
+    func initialSetup() {
+        initialVendorsSetup()
+        initialDataSetup()
+        initialUIAppearance()
+    }
+    
+
+    func initialVendorsSetup() {
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+
+        #if !(DEBUG)
+        FirebaseApp.configure()
+        #endif
+    }
+
+    func initialDataSetup() {
+        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldShowOpenFullConversation)
+        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack)
+        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldOpenComment)
+    }
+
+    func initialUIAppearance() {
+        let navigation = UINavigationController()
+        let navBar = navigation.navigationBar
+        navBar.tintColor = ColorPalette.shared.color(type: .blackish)
+//        let appearance = UINavigationBarAppearance()
+//        appearance.configureWithOpaqueBackground()
+//        appearance.backgroundColor = .white
+//        appearance.titleTextAttributes = [.foregroundColor: ColorPalette.blackish]
+//        appearance.largeTitleTextAttributes = [.foregroundColor: ColorPalette.blackish]
+//        navBar.standardAppearance = appearance
+
+        window.rootViewController = navigation
+        window.makeKeyAndVisible()
+        router = Router(navigationController: navigation)
+    }
+}
+
