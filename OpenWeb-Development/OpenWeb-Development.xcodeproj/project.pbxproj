@@ -74,7 +74,6 @@
 		166CCCB42A3A10FB00C7143F /* OWAdditionalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCB32A3A10FB00C7143F /* OWAdditionalSettings.swift */; };
 		166CCCB72A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCB62A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift */; };
 		168DC7D32873243E009A88B6 /* OWTypealiasesInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168DC7D22873243E009A88B6 /* OWTypealiasesInternal.swift */; };
-		168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */; };
 		169B39E22B0E427E005350E4 /* OWCommentThreadPerformActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169B39E12B0E427E005350E4 /* OWCommentThreadPerformActionType.swift */; };
 		169D58E227D11925009936F3 /* OWVotesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169D58E127D11924009936F3 /* OWVotesType.swift */; };
 		16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A642601188100A7B3F6 /* URL+QueryParams.swift */; };
@@ -1159,7 +1158,6 @@
 		16D5A20429D1B73600914AD7 /* OWCommentThreadActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadActionsViewModel.swift; sourceTree = "<group>"; };
 		16D5A20729D457AA00914AD7 /* OWCommentThreadActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadActionCell.swift; sourceTree = "<group>"; };
 		16D5A20B29D457CC00914AD7 /* OWCommentThreadActionsCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadActionsCellViewModel.swift; sourceTree = "<group>"; };
-		16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAdsProvider.swift; sourceTree = "<group>"; };
 		16D8D4A728C633EA00895FCB /* OWCommentCreationViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationViewVM.swift; sourceTree = "<group>"; };
 		16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationVM.swift; sourceTree = "<group>"; };
 		16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentViewModel.swift; sourceTree = "<group>"; };
@@ -2116,7 +2114,6 @@
 		ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
-		E685AC2925C97DC4008FECDB /* GoogleAdsV7Provider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAdsV7Provider.swift; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsTests.swift; sourceTree = "<group>"; };
 		F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringServiceTests.swift; sourceTree = "<group>"; };
@@ -2181,8 +2178,6 @@
 				9E7D5B0F2A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift */,
 				9EEBF66D2A431E3900315EB0 /* UIView+Extensions.swift */,
 				3D301BE92A8E89DC0012B526 /* UIViewController+LargeTitles.swift */,
-				241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */,
-				241F72002B458D34007619AC /* OWColor+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -4107,7 +4102,6 @@
 		3DB3D189282A55DA008654CF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E685AC2825C97DB5008FECDB /* SpotImAdsProvider - keeping that for reference */,
 				3DB3D18A282A5624008654CF /* DLog.swift */,
 			);
 			path = Helpers;
@@ -4969,6 +4963,7 @@
 			isa = PBXGroup;
 			children = (
 				5D697A4022B65106001AD556 /* ViewController.swift */,
+				8DCBE8812950687600C8677C /* Shared */,
 				240D6E862AB96C0900EB70FA /* ConversationCountersNew */,
 				3D1D24802A4ACD7B00692E2A /* ToolbarFloatingCommentCreation */,
 				3DCAE3E929D07A58005B9189 /* Errors */,
@@ -5016,7 +5011,6 @@
 		5D697A3D22B65106001AD556 /* OpenWeb-SampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				8DCBE8812950687600C8677C /* Shared */,
 				3DB3D18C282A5B3A008654CF /* Lifecycle */,
 				3D29A2DA283BA421002BE318 /* Services */,
 				5D4943B72302CA8C00AA7541 /* UI */,
@@ -5914,6 +5908,8 @@
 		9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */,
+				241F72002B458D34007619AC /* OWColor+Extensions.swift */,
 				9E7F283D29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift */,
 				9E7F283A29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift */,
 				9EA0F83529A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift */,
@@ -6131,15 +6127,6 @@
 				3DDA9A3928F5916100FE3B86 /* Roboto */,
 			);
 			path = Fonts;
-			sourceTree = "<group>";
-		};
-		E685AC2825C97DB5008FECDB /* SpotImAdsProvider - keeping that for reference */ = {
-			isa = PBXGroup;
-			children = (
-				E685AC2925C97DC4008FECDB /* GoogleAdsV7Provider.swift */,
-				16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */,
-			);
-			path = "SpotImAdsProvider - keeping that for reference";
 			sourceTree = "<group>";
 		};
 		F6D45AB80C879EE6B5C01DA4 /* Pods */ = {
@@ -7365,7 +7352,6 @@
 				9E73DAE229C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift in Sources */,
 				3D1D24872A4ACE0C00692E2A /* ToolbarElementAction.swift in Sources */,
 				8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */,
-				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
 				3DDE1D8729C9913F00F7F8D5 /* SilentSSOAuthenticationNewAPI.swift in Sources */,
 				9E7D5B0E2A0A777900F1707C /* CommentThreadSettingsVM.swift in Sources */,
 				9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */,
