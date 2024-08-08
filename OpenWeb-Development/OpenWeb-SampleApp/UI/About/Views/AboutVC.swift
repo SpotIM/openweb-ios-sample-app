@@ -22,14 +22,17 @@ class AboutVC: UIViewController {
 
     fileprivate lazy var aboutTextView: UITextView = {
         let textView = UITextView()
+            .font(FontBook.secondaryHeadingMedium)
+            .textColor(ColorPalette.shared.color(type: .blackish))
 
         return textView
     }()
 
     fileprivate lazy var allRightsReservedLbl: UILabel = {
         return UILabel()
-            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
+            .textColor(ColorPalette.shared.color(type: .darkGrey))
             .font(FontBook.paragraphBold)
+            .textAlignment(.center)
     }()
 
     init(viewModel: AboutViewModeling) {
@@ -39,11 +42,6 @@ class AboutVC: UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
     override func loadView() {
@@ -56,10 +54,6 @@ class AboutVC: UIViewController {
         super.viewDidLoad()
         setupObservers()
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        applyLargeTitlesIfNeeded()
-    }
 }
 
 fileprivate extension AboutVC {
@@ -71,8 +65,7 @@ fileprivate extension AboutVC {
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-
-        applyLargeTitlesIfNeeded()
+        self.navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(aboutTextView)
         view.addSubview(allRightsReservedLbl)
@@ -80,7 +73,7 @@ fileprivate extension AboutVC {
         aboutTextView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalMargin)
-            make.bottom.lessThanOrEqualTo(allRightsReservedLbl).offset(-Metrics.verticalMargin)
+            make.bottom.equalTo(allRightsReservedLbl.snp.top).offset(-Metrics.verticalMargin)
         }
 
         allRightsReservedLbl.snp.makeConstraints { make in
