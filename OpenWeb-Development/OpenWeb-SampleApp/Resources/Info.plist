@@ -50,9 +50,7 @@
 		<string>Roboto-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>$(MAIN_STORY_BOARD)</string>
+	<string></string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

@@ -169,9 +169,6 @@ class TestAPIVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        // Re-setuping navigation controller colors to be set by the regular OS theme mode
-        setupNavControllerUI()
         viewModel.inputs.viewWillAppear.onNext()
     }
 
@@ -486,37 +483,6 @@ fileprivate extension TestAPIVC {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
-
-    func setupNavControllerUI() {
-        let navController = self.navigationController
-
-        let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
-        navController?.navigationBar.tintColor = ColorPalette.shared.color(type: .text)
-
-        // Setup Title font
-        let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18, weight: .bold),
-            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text)
-        ]
-
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = navigationBarBackgroundColor
-            appearance.titleTextAttributes = navigationTitleTextAttributes
-
-            // Setup Back button
-            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
-            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-            appearance.backButtonAppearance = backButtonAppearance
-
-            navController?.navigationBar.standardAppearance = appearance
-            navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
-        } else {
-            navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
-            navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-        }
-    }
 }
 
 fileprivate extension TestAPIVC {

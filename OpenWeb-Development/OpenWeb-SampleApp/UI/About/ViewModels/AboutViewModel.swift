@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import UIKit
-import RxSwift
-import OpenWebSDK
 
 protocol AboutViewModelingInputs { }
 
