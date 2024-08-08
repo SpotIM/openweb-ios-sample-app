@@ -22,15 +22,15 @@ class FontBook {
     static let primaryHeadingMedium = font(with: .medium, size: 30)
     static let primaryHeadingLight = font(with: .light, size: 30)
 
-    static let mainHeading = font(with: .regular, size: 20)
+    static let mainHeading = font(with: .regular, size: 24)
     static let mainHeadingBold = font(with: .bold, size: 24)
     static let mainHeadingMedium = font(with: .medium, size: 24)
     static let mainHeadingLight = font(with: .light, size: 24)
 
-    static let secondaryHeading = font(with: .regular, size: 20)
-    static let secondaryHeadingBold = font(with: .bold, size: 20)
-    static let secondaryHeadingMedium = font(with: .medium, size: 20)
-    static let secondaryHeadingLight = font(with: .light, size: 20)
+    static let secondaryHeading = font(with: .regular, size: 18)
+    static let secondaryHeadingBold = font(with: .bold, size: 18)
+    static let secondaryHeadingMedium = font(with: .medium, size: 18)
+    static let secondaryHeadingLight = font(with: .light, size: 18)
 
     static let paragraph = font(with: .regular, size: 16)
     static let paragraphBold = font(with: .bold, size: 16)

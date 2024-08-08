@@ -51,16 +51,7 @@ fileprivate extension AppCoordinator {
     }
 
     func initialUIAppearance() {
-        let navigation = UINavigationController()
-        let navBar = navigation.navigationBar
-        navBar.tintColor = ColorPalette.shared.color(type: .blackish)
-//        let appearance = UINavigationBarAppearance()
-//        appearance.configureWithOpaqueBackground()
-//        appearance.backgroundColor = .white
-//        appearance.titleTextAttributes = [.foregroundColor: ColorPalette.blackish]
-//        appearance.largeTitleTextAttributes = [.foregroundColor: ColorPalette.blackish]
-//        navBar.standardAppearance = appearance
-
+        let navigation = SampleAppNavigationController.shared
         window.rootViewController = navigation
         window.makeKeyAndVisible()
         router = Router(navigationController: navigation)
