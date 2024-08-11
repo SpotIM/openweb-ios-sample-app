@@ -34,7 +34,6 @@ fileprivate extension AppCoordinator {
         initialDataSetup()
         initialUIAppearance()
     }
-    
 
     func initialVendorsSetup() {
         GADMobileAds.sharedInstance().start(completionHandler: nil)
