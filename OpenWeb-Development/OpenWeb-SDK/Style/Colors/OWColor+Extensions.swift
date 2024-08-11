@@ -68,7 +68,7 @@ extension OWColor {
         case voteUpSelectedColor
         case voteDownSelectedColor
 
-        var `default`: OWColor? {
+        var `default`: OWColor {
             switch self {
             case .skeletonColor:
                 return OWColor(lightColor: UIColor(red: 210.0/255.0, green: 210.0/255.0, blue: 210.0/255.0, alpha: 1.0),
@@ -168,9 +168,9 @@ extension OWColor {
                 return OWColor(lightColor: OWDesignColors.L5,
                                darkColor: OWDesignColors.D3)
             case .voteUpSelectedColor:
-                return nil
+                return OWColor.OWType.brandColor.default
             case .voteDownSelectedColor:
-                return nil
+                return OWColor.OWType.brandColor.default
             }
         }
 
