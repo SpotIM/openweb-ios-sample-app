@@ -350,39 +350,12 @@ fileprivate extension TestAPIVC {
             .bind(to: viewModel.inputs.uiFlowsTapped)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openUIFlows
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let uiFlowsVM = UIFlowsViewModel(dataModel: dataModel)
-                let uiFlowsVC = UIFlowsVC(viewModel: uiFlowsVM)
-                self.navigationController?.pushViewController(uiFlowsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
         btnUIViews.rx.tap
             .bind(to: viewModel.inputs.uiViewsTapped)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openUIViews
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let uiViewsVM = UIViewsViewModel(dataModel: dataModel)
-                let uiViewsVC = UIViewsVC(viewModel: uiViewsVM)
-                self.navigationController?.pushViewController(uiViewsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
         btnMiscellaneous.rx.tap
             .bind(to: viewModel.inputs.miscellaneousTapped)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.openMiscellaneous
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let miscellaneousVM = MiscellaneousViewModel(dataModel: dataModel)
-                let miscellaneousVC = MiscellaneousVC(viewModel: miscellaneousVM)
-                self.navigationController?.pushViewController(miscellaneousVC, animated: true)
-            })
             .disposed(by: disposeBag)
 
         btnTestingPlayground.rx.tap

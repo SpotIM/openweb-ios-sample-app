@@ -17,7 +17,8 @@ class AuthenticationPlaygroundCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<Void> {
+    override func start(deepLinkOptions: DeepLinkOptions? = nil,
+                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         let authenticationPlaygroundVM: AuthenticationPlaygroundViewModeling = AuthenticationPlaygroundViewModel()
         let authenticationPlaygroundVC = AuthenticationPlaygroundVC(viewModel: authenticationPlaygroundVM)
 

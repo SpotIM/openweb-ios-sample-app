@@ -17,7 +17,8 @@ class SettingsCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<Void> {
+    override func start(deepLinkOptions: DeepLinkOptions? = nil,
+                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         let settingsVM: SettingsViewModeling = SettingsViewModel(settingViewTypes: SettingsGroupType.all)
         let settingsVC = SettingsVC(viewModel: settingsVM)
 

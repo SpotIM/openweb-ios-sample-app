@@ -39,9 +39,11 @@ class BaseCoordinator<ResultType> {
     // 2. Calls method `start()` on that coordinator.
     // 3. On the `onNext:` of returning observable of method `start()` removes coordinator from the dictionary.
     func coordinate<T>(to coordinator: BaseCoordinator<T>,
-                       deepLinkOptions: DeepLinkOptions? = nil) -> Observable<T> {
+                       deepLinkOptions: DeepLinkOptions? = nil,
+                       coordinatorData: CoordinatorData? = nil) -> Observable<T> {
         store(coordinator: coordinator)
-        return coordinator.start(deepLinkOptions: deepLinkOptions)
+        return coordinator.start(deepLinkOptions: deepLinkOptions,
+                                 coordinatorData: coordinatorData)
             .do(onNext: { [weak self, weak coordinator] _ in
                 guard let self = self,
                     let coord = coordinator else { return }
@@ -50,7 +52,8 @@ class BaseCoordinator<ResultType> {
     }
 
     // Starts job of the coordinator.
-    func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<ResultType> {
+    func start(deepLinkOptions: DeepLinkOptions? = nil,
+               coordinatorData: CoordinatorData? = nil) -> Observable<ResultType> {
         fatalError("Start method should be implemented.")
     }
 

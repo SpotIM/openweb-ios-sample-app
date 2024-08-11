@@ -17,7 +17,8 @@ class AboutCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<Void> {
+    override func start(deepLinkOptions: DeepLinkOptions? = nil,
+                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         let aboutVM: AboutViewModeling = AboutViewModel()
         let aboutVC = AboutVC(viewModel: aboutVM)
 

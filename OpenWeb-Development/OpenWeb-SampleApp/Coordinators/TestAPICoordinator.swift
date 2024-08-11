@@ -17,7 +17,8 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<Void> {
+    override func start(deepLinkOptions: DeepLinkOptions? = nil,
+                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         let testAPIVM: TestAPIViewModeling = TestAPIViewModel()
         let testAPIVC = TestAPIVC(viewModel: testAPIVM)
 
@@ -33,7 +34,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
                     animated: shouldAnimate,
                     completion: vcPopped)
 
-        // Define deep links variables
+        // 1. Define deep links variables
         let deepLinkSettingsScreen = BehaviorSubject<Void?>(value: nil)
         var deepLinkToSettings: Observable<Void> {
             return deepLinkSettingsScreen
@@ -41,7 +42,6 @@ class TestAPICoordinator: BaseCoordinator<Void> {
                 .asObservable()
         }
 
-        // Define deep links variables
         let deepLinkAuthenticationScreen = BehaviorSubject<Void?>(value: nil)
         var deepLinkToAuthentication: Observable<Void> {
             return deepLinkAuthenticationScreen
@@ -49,7 +49,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
                 .asObservable()
         }
 
-        // Define childs coordinators
+        // 2. Define childs coordinators
         let settingsCoordinator = Observable.merge(testAPIVM.outputs.openSettings.map { nil },
                                                 deepLinkToSettings.map { deepLinkOptions})
             .flatMap { [weak self] deepLink -> Observable<Void> in
@@ -61,7 +61,6 @@ class TestAPICoordinator: BaseCoordinator<Void> {
                 return .never()
             }
 
-        // Define childs coordinators
         let authenticationPlaygroundCoordinator = Observable.merge(testAPIVM.outputs.openAuthentication.map { nil },
                                                                    deepLinkToAuthentication.map { deepLinkOptions})
             .flatMap { [weak self] deepLink -> Observable<Void> in
@@ -73,7 +72,40 @@ class TestAPICoordinator: BaseCoordinator<Void> {
                 return .never()
             }
 
-        // Perfoem deep link if such
+        let flowsCoordinator = testAPIVM.outputs.openUIFlows
+            .flatMap { [weak self] dataModel -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
+                let coordinator = UIFlowsCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> Observable<Void> in
+                return .never()
+            }
+
+        let viewsCoordinator = testAPIVM.outputs.openUIViews
+            .flatMap { [weak self] dataModel -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
+                let coordinator = UIViewsCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> Observable<Void> in
+                return .never()
+            }
+
+        let miscellaneousCoordinator = testAPIVM.outputs.openMiscellaneous
+            .flatMap { [weak self] dataModel -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
+                let coordinator = MiscellaneousCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> Observable<Void> in
+                return .never()
+            }
+
+        // 3. Perfoem deep link if such
         if let deepLink = deepLinkOptions {
             switch deepLink {
             case .settings:
@@ -85,6 +117,11 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             }
         }
 
-        return Observable.merge(vcPopped.asObservable(), authenticationPlaygroundCoordinator, settingsCoordinator)
+        return Observable.merge(vcPopped.asObservable(),
+                                authenticationPlaygroundCoordinator,
+                                settingsCoordinator,
+                                flowsCoordinator,
+                                viewsCoordinator,
+                                miscellaneousCoordinator)
     }
 }
