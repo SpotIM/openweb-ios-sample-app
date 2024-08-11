@@ -43,6 +43,15 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
 
 fileprivate extension UIFlowsCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: UIFlowsViewModeling) {
-
+        viewModel.outputs.openMockArticleScreen
+            .subscribe(onNext: { [weak self] settings in
+                guard let self = self else { return }
+                let mockArticleFlowsVM = MockArticleFlowsViewModel(actionSettings: settings)
+                let mockArticleFlowsVC = MockArticleFlowsVC(viewModel: mockArticleFlowsVM)
+                self.router.push(mockArticleFlowsVC,
+                            animated: true,
+                            completion: nil)
+            })
+            .disposed(by: disposeBag)
     }
 }

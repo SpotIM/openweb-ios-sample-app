@@ -43,6 +43,15 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
 
 fileprivate extension MiscellaneousCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MiscellaneousViewModeling) {
-
+        viewModel.outputs.openConversationCounters
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                let conversationCounterVM = ConversationCountersNewAPIViewModel()
+                let conversationCounterVC = ConversationCountersNewAPIVC(viewModel: conversationCounterVM)
+                self.router.push(conversationCounterVC,
+                            animated: true,
+                            completion: nil)
+            })
+            .disposed(by: disposeBag)
     }
 }
