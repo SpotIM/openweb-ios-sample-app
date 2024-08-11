@@ -25,7 +25,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 
         var shouldAnimate = true
         if let deepLink = deepLinkOptions,
-           deepLink == .testAPI || deepLink == .settings {
+           deepLink == .testAPI || deepLink == .settings || deepLink == .authenticationPlayground {
             shouldAnimate = false
         }
 
@@ -37,6 +37,14 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         let deepLinkSettingsScreen = BehaviorSubject<Void?>(value: nil)
         var deepLinkToSettings: Observable<Void> {
             return deepLinkSettingsScreen
+                .unwrap()
+                .asObservable()
+        }
+
+        // Define deep links variables
+        let deepLinkAuthenticationScreen = BehaviorSubject<Void?>(value: nil)
+        var deepLinkToAuthentication: Observable<Void> {
+            return deepLinkAuthenticationScreen
                 .unwrap()
                 .asObservable()
         }
@@ -53,16 +61,30 @@ class TestAPICoordinator: BaseCoordinator<Void> {
                 return .never()
             }
 
+        // Define childs coordinators
+        let authenticationPlaygroundCoordinator = Observable.merge(testAPIVM.outputs.openAuthentication.map { nil },
+                                                                   deepLinkToAuthentication.map { deepLinkOptions})
+            .flatMap { [weak self] deepLink -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let coordinator = AuthenticationPlaygroundCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
+            }
+            .flatMap { _ -> Observable<Void> in
+                return .never()
+            }
+
         // Perfoem deep link if such
         if let deepLink = deepLinkOptions {
             switch deepLink {
             case .settings:
                 deepLinkSettingsScreen.onNext(())
+            case .authenticationPlayground:
+                deepLinkAuthenticationScreen.onNext(())
             default:
                 break
             }
         }
 
-        return Observable.merge(vcPopped.asObservable(), settingsCoordinator)
+        return Observable.merge(vcPopped.asObservable(), authenticationPlaygroundCoordinator, settingsCoordinator)
     }
 }

@@ -59,7 +59,7 @@ class MainPageCoordinator: BaseCoordinator<Void> {
             switch deepLink {
             case .about:
                 deepLinkAboutScreen.onNext(())
-            case .testAPI, .settings:
+            case .testAPI, .settings, .authenticationPlayground:
                 deepLinkTestAPIScreen.onNext(())
             }
         }
