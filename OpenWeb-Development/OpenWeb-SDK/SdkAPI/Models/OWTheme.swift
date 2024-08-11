@@ -25,8 +25,10 @@ public struct OWTheme {
     public let secondaryBorderColor: OWColor?
     public let loaderColor: OWColor?
     public let brandColor: OWColor?
-    public let voteUpColor: OWColor?
-    public let voteDownColor: OWColor?
+    public let voteUpUnselectedColor: OWColor?
+    public let voteDownUnselectedColor: OWColor?
+    public let voteUpSelectedColor: OWColor?
+    public let voteDownSelectedColor: OWColor?
 
     public init(skeletonColor: OWColor? = nil,
                 skeletonShimmeringColor: OWColor? = nil,
@@ -44,8 +46,10 @@ public struct OWTheme {
                 secondaryBorderColor: OWColor? = nil,
                 loaderColor: OWColor? = nil,
                 brandColor: OWColor? = nil,
-                voteUpColor: OWColor? = nil,
-                voteDownColor: OWColor? = nil
+                voteUpUnselectedColor: OWColor? = nil,
+                voteDownUnselectedColor: OWColor? = nil,
+                voteUpSelectedColor: OWColor? = nil,
+                voteDownSelectedColor: OWColor? = nil
     ) {
         self.skeletonColor = skeletonColor
         self.skeletonShimmeringColor = skeletonShimmeringColor
@@ -63,7 +67,9 @@ public struct OWTheme {
         self.secondaryBorderColor = secondaryBorderColor
         self.loaderColor = loaderColor
         self.brandColor = brandColor
-        self.voteUpColor = voteUpColor
-        self.voteDownColor = voteDownColor
+        self.voteUpUnselectedColor = voteUpUnselectedColor
+        self.voteDownUnselectedColor = voteDownUnselectedColor
+        self.voteUpSelectedColor = voteUpSelectedColor
+        self.voteDownSelectedColor = voteDownSelectedColor
     }
 }

@@ -156,8 +156,10 @@ fileprivate extension OWCustomizationsLayer {
         setColor(color: theme.primaryBorderColor, type: .borderColor2)
         setColor(color: theme.secondaryBorderColor, type: .borderColor1)
         setColor(color: theme.loaderColor, type: .loaderColor)
-        setColor(color: theme.voteUpColor, type: .voteUpColor)
-        setColor(color: theme.voteDownColor, type: .voteDownColor)
+        setColor(color: theme.voteUpUnselectedColor, type: .voteUpUnselectedColor)
+        setColor(color: theme.voteDownUnselectedColor, type: .voteDownUnselectedColor)
+        setColor(color: theme.voteUpSelectedColor, type: .voteUpSelectedColor)
+        setColor(color: theme.voteDownSelectedColor, type: .voteDownSelectedColor)
         // Preventing brand from changing later on from the server
         if let brandColor = theme.brandColor {
             setColor(color: brandColor, type: .brandColor)
@@ -166,7 +168,7 @@ fileprivate extension OWCustomizationsLayer {
     }
 
     func setColor(color: OWColor?, type: OWColor.OWType) {
-        guard let color = color else { return }
+        guard var color = color else { return }
         OWColorPalette.shared.setColor(color.lightColor, forType: type, forThemeStyle: .light)
         OWColorPalette.shared.setColor(color.darkColor, forType: type, forThemeStyle: .dark)
     }
