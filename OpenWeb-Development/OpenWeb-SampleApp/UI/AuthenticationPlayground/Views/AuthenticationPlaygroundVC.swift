@@ -319,6 +319,10 @@ fileprivate extension AuthenticationPlaygroundVC {
             .bind(to: viewModel.inputs.closeClick)
             .disposed(by: disposeBag)
 
+        /*
+         Responding to VC dismissed here and not at the Coordinator layer because this screen is a "mock" screen for
+         autentication for the SDK. Therefore it's easier to dismiss it simply from here here, at least for now.
+         */
         viewModel.outputs.dismissVC
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
