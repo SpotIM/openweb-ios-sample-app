@@ -17,7 +17,8 @@ class MainPageCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<Void> {
+    override func start(deepLinkOptions: DeepLinkOptions? = nil,
+                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         let mainPageVM: MainPageViewModeling = MainPageViewModel()
         let mainPageVC = MainPageVC(viewModel: mainPageVM)
         router.setRoot(mainPageVC)
