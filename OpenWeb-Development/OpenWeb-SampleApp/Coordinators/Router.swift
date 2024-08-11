@@ -81,9 +81,11 @@ class Router: NSObject, Routering {
 extension Router: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         // Ensure the view controller is popping
+        // swiftlint:disable line_length
         guard let poppedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from), !navigationController.viewControllers.contains(poppedViewController) else {
             return
         }
+        // swiftlint:enable line_length
         runCompletion(for: poppedViewController)
     }
 }

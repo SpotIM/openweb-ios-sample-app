@@ -19,7 +19,8 @@ class AppCoordinator: BaseCoordinator<Void> {
         self.window = window
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<Void> {
+    override func start(deepLinkOptions: DeepLinkOptions? = nil,
+                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         initialSetup()
 
         let mainPageCoordinator = MainPageCoordinator(router: router)
