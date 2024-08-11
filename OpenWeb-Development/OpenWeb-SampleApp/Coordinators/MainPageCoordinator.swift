@@ -22,19 +22,47 @@ class MainPageCoordinator: BaseCoordinator<Void> {
         let mainPageVC = MainPageVC(viewModel: mainPageVM)
         router.setRoot(mainPageVC)
 
-        let aboutCoordinator = mainPageVM.outputs.showAbout
-            .flatMap { [weak self] _ -> Observable<Void> in
+        // Define deep links variables
+        let deepLinkAboutScreen = BehaviorSubject<Void?>(value: nil)
+        var deepLinkToAbout: Observable<Void> {
+            return deepLinkAboutScreen
+                .unwrap()
+                .asObservable()
+        }
+
+        let deepLinkTestAPIScreen = BehaviorSubject<Void?>(value: nil)
+        var deepLinkToTestAPI: Observable<Void> {
+            return deepLinkTestAPIScreen
+                .unwrap()
+                .asObservable()
+        }
+
+        // Define childs coordinators
+        let aboutCoordinator = Observable.merge(mainPageVM.outputs.showAbout.map { nil },
+                                                deepLinkToAbout.map { deepLinkOptions})
+            .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let coordinator = AboutCoordinator(router: self.router)
-                return self.coordinate(to: coordinator)
+                return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
 
-        let testAPICoordinator = mainPageVM.outputs.testAPI
-            .flatMap { [weak self] _ -> Observable<Void> in
+        let testAPICoordinator = Observable.merge(mainPageVM.outputs.testAPI.map { nil },
+                                                  deepLinkToTestAPI.map { deepLinkOptions})
+            .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let coordinator = TestAPICoordinator(router: self.router)
-                return self.coordinate(to: coordinator)
+                return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
+
+        // Perfoem deep link if such
+        if let deepLink = deepLinkOptions {
+            switch deepLink {
+            case .about:
+                deepLinkAboutScreen.onNext(())
+            case .testAPI, .settings:
+                deepLinkTestAPIScreen.onNext(())
+            }
+        }
 
         return Observable.merge(aboutCoordinator, testAPICoordinator)
             .flatMap { _ -> Observable<Void> in

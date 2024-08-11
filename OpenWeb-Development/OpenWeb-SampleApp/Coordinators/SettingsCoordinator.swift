@@ -1,15 +1,15 @@
 //
-//  AboutCoordinator.swift
+//  SettingsCoordinator.swift
 //  OpenWeb-SampleApp
 //
-//  Created by Alon Haiut on 07/08/2024.
+//  Created by Alon Haiut on 11/08/2024.
 //  Copyright © 2024 OpenWeb. All rights reserved.
 //
 
 import Foundation
 import RxSwift
 
-class AboutCoordinator: BaseCoordinator<Void> {
+class SettingsCoordinator: BaseCoordinator<Void> {
 
     fileprivate let router: Routering
 
@@ -18,17 +18,17 @@ class AboutCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil) -> Observable<Void> {
-        let aboutVM: AboutViewModeling = AboutViewModel()
-        let aboutVC = AboutVC(viewModel: aboutVM)
-
-        var shouldAnimate = true
-        if let deepLink = deepLinkOptions, deepLink == .about {
-            shouldAnimate = false
-        }
+        let settingsVM: SettingsViewModeling = SettingsViewModel(settingViewTypes: SettingsGroupType.all)
+        let settingsVC = SettingsVC(viewModel: settingsVM)
 
         let vcPopped = PublishSubject<Void>()
 
-        router.push(aboutVC,
+        var shouldAnimate = true
+        if let deepLink = deepLinkOptions, deepLink == .settings {
+            shouldAnimate = false
+        }
+
+        router.push(settingsVC,
                     animated: shouldAnimate,
                     completion: vcPopped)
 
