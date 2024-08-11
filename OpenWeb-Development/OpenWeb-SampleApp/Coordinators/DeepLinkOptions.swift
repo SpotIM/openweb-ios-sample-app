@@ -11,4 +11,5 @@ enum DeepLinkOptions {
     case about
     case testAPI
     case settings
+    case authenticationPlayground
 }

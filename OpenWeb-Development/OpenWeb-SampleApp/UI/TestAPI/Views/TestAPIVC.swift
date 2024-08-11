@@ -423,15 +423,6 @@ fileprivate extension TestAPIVC {
             .bind(to: viewModel.inputs.authenticationTapped)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openAuthentication
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let authenticationVM = AuthenticationPlaygroundViewModel()
-                let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
-                self.navigationController?.pushViewController(authenticationVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
         // Bind select preset
         viewModel.outputs.shouldShowSelectPreset
             .skip(1)

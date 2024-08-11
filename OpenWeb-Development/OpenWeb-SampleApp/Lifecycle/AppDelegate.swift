@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // No need to dispose, as we are taking only one and this observable should also never end
         _ = appCoordinator
-            .start(deepLinkOptions: .settings)
+            .start(deepLinkOptions: nil)
             .take(1)
             .subscribe()
 
