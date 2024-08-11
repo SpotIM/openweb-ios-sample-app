@@ -27,7 +27,6 @@ protocol OWCommentRatingViewModelingOutputs {
     var votingUpImages: Observable<OWVotingImages> { get }
     var votingDownImages: Observable<OWVotingImages> { get }
     var rankChangeTriggered: Observable<SPRankChange> { get }
-    var votesPosition: Observable<OWVotesPosition> { get }
 }
 
 protocol OWCommentRatingViewModeling {
@@ -63,17 +62,6 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             }
             .asObservable()
     }
-
-    lazy var votesPosition: Observable<OWVotesPosition> = {
-        self.sharedServiceProvider.spotConfigurationService()
-            .config(spotId: OWManager.manager.spotId)
-            .map { config -> OWVotesPosition in
-                guard let sharedConfig = config.shared
-                else { return .default }
-                return sharedConfig.votesPosition ?? .default
-            }
-            .asObservable()
-    }()
 
     var rankChangeTriggered: Observable<SPRankChange> {
         let rankUpTriggeredObservable = tapRankUp

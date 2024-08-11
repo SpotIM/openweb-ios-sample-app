@@ -26,11 +26,11 @@ internal class SPAnimatedButton: UIButton {
         }
     }
 
-    var brandColor: UIColor! {
+    var selectedColor: UIColor! {
         didSet {
-            lineColor = brandColor
-            circleColor = brandColor
-            imageColorOn = brandColor
+            lineColor = selectedColor
+            circleColor = selectedColor
+            imageColorOn = selectedColor
         }
     }
 

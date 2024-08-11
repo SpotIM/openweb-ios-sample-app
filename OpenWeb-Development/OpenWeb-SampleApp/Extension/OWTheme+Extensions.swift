@@ -27,8 +27,10 @@ extension OWTheme: Codable {
         case secondaryBorderColor
         case loaderColor
         case brandColor
-        case voteUpColor
-        case voteDownColor
+        case voteUpUnselectedColor
+        case voteDownUnselectedColor
+        case voteUpSelectedColor
+        case voteDownSelectedColor
     }
 
     public init(from decoder: Decoder) throws {
@@ -51,8 +53,10 @@ extension OWTheme: Codable {
             secondaryBorderColor: try? values.decode(OWColor?.self, forKey: .secondaryBorderColor),
             loaderColor: try? values.decode(OWColor?.self, forKey: .loaderColor),
             brandColor: try? values.decode(OWColor?.self, forKey: .brandColor),
-            voteUpColor: try? values.decode(OWColor?.self, forKey: .voteUpColor),
-            voteDownColor: try? values.decode(OWColor?.self, forKey: .voteDownColor))
+            voteUpUnselectedColor: try? values.decode(OWColor?.self, forKey: .voteUpUnselectedColor),
+            voteDownUnselectedColor: try? values.decode(OWColor?.self, forKey: .voteDownUnselectedColor),
+            voteUpSelectedColor: try? values.decode(OWColor?.self, forKey: .voteUpSelectedColor),
+            voteDownSelectedColor: try? values.decode(OWColor?.self, forKey: .voteDownSelectedColor))
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -74,7 +78,9 @@ extension OWTheme: Codable {
         try container.encode(secondaryBorderColor, forKey: .secondaryBorderColor)
         try container.encode(loaderColor, forKey: .loaderColor)
         try container.encode(brandColor, forKey: .brandColor)
-        try container.encode(voteUpColor, forKey: .voteUpColor)
-        try container.encode(voteDownColor, forKey: .voteDownColor)
+        try container.encode(voteUpUnselectedColor, forKey: .voteUpUnselectedColor)
+        try container.encode(voteDownUnselectedColor, forKey: .voteDownUnselectedColor)
+        try container.encode(voteUpSelectedColor, forKey: .voteUpSelectedColor)
+        try container.encode(voteDownSelectedColor, forKey: .voteDownSelectedColor)
     }
 }

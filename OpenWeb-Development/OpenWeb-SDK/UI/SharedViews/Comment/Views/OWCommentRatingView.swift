@@ -37,8 +37,6 @@ class OWCommentRatingView: UIView {
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
         let button = SPAnimatedButton(frame: frame)
             .hugContent(axis: .horizontal)
-        button.imageColorOff = OWColorPalette.shared.color(type: .voteUpColor, themeStyle: .light)
-        button.brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)
         return button
     }()
 
@@ -46,25 +44,23 @@ class OWCommentRatingView: UIView {
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
         let button = SPAnimatedButton(frame: frame)
             .hugContent(axis: .horizontal)
-        button.imageColorOff = OWColorPalette.shared.color(type: .voteDownColor, themeStyle: .light)
-        button.brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)
         return button
     }()
 
     fileprivate lazy var rankUpLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(OWFontBook.shared.font(typography: .footnoteText))
+            .font(OWFontBook.shared.font(typography: .footnoteContext))
             .hugContent(axis: .horizontal)
-            .textColor(OWColorPalette.shared.color(type: .voteUpColor, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .voteUpUnselectedColor, themeStyle: .light))
     }()
 
     fileprivate lazy var rankDownLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(OWFontBook.shared.font(typography: .footnoteText))
+            .font(OWFontBook.shared.font(typography: .footnoteContext))
             .hugContent(axis: .horizontal)
-            .textColor(OWColorPalette.shared.color(type: .voteDownColor, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .voteDownUnselectedColor, themeStyle: .light))
     }()
 
     fileprivate lazy var seperetorView: UIView = {
@@ -203,24 +199,14 @@ fileprivate extension OWCommentRatingView {
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] currentStyle in
+            .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
-                self.rankUpButton.imageColorOff = OWColorPalette.shared.color(type: .voteUpColor, themeStyle: currentStyle)
-                self.rankDownButton.imageColorOff = OWColorPalette.shared.color(type: .voteDownColor, themeStyle: currentStyle)
-                self.rankUpLabel.textColor = OWColorPalette.shared.color(type: .voteUpColor, themeStyle: currentStyle)
-                self.rankDownLabel.textColor = OWColorPalette.shared.color(type: .voteDownColor, themeStyle: currentStyle)
-            })
-            .disposed(by: disposeBag)
-
-        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
-            .subscribe(onNext: { [weak self] (style, colorMapper) in
-                guard let self = self else { return }
-
-                if let owBrandColor = colorMapper[.brandColor] {
-                    let brandColor = owBrandColor.color(forThemeStyle: style)
-                    self.rankUpButton.brandColor = brandColor
-                    self.rankDownButton.brandColor = brandColor
-                }
+                self.rankUpButton.selectedColor = OWColorPalette.shared.color(type: .voteUpSelectedColor, themeStyle: style)
+                self.rankDownButton.selectedColor = OWColorPalette.shared.color(type: .voteDownSelectedColor, themeStyle: style)
+                self.rankUpButton.imageColorOff = OWColorPalette.shared.color(type: .voteUpUnselectedColor, themeStyle: style)
+                self.rankDownButton.imageColorOff = OWColorPalette.shared.color(type: .voteDownUnselectedColor, themeStyle: style)
+                self.rankUpLabel.textColor(OWColorPalette.shared.color(type: .voteUpUnselectedColor, themeStyle: style))
+                self.rankDownLabel.textColor(OWColorPalette.shared.color(type: .voteDownUnselectedColor, themeStyle: style))
             })
             .disposed(by: disposeBag)
 
@@ -228,8 +214,8 @@ fileprivate extension OWCommentRatingView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.rankUpLabel.font = OWFontBook.shared.font(typography: .footnoteText)
-                self.rankDownLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.rankUpLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
+                self.rankDownLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
             })
             .disposed(by: disposeBag)
     }
