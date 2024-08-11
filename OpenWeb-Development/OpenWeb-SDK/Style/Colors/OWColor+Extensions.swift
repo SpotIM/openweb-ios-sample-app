@@ -63,10 +63,12 @@ extension OWColor {
         case loaderColor
         /// Light: G4, Dark: DM/G4
         case errorColor
-        case voteUpColor
-        case voteDownColor
+        case voteUpUnselectedColor
+        case voteDownUnselectedColor
+        case voteUpSelectedColor
+        case voteDownSelectedColor
 
-        var `default`: OWColor {
+        var `default`: OWColor? {
             switch self {
             case .skeletonColor:
                 return OWColor(lightColor: UIColor(red: 210.0/255.0, green: 210.0/255.0, blue: 210.0/255.0, alpha: 1.0),
@@ -159,12 +161,16 @@ extension OWColor {
             case .errorColor:
                 return OWColor(lightColor: OWDesignColors.G4,
                                darkColor: OWDesignColors.DMG4)
-            case .voteUpColor:
+            case .voteUpUnselectedColor:
                 return OWColor(lightColor: OWDesignColors.L5,
                                darkColor: OWDesignColors.D3)
-            case .voteDownColor:
+            case .voteDownUnselectedColor:
                 return OWColor(lightColor: OWDesignColors.L5,
                                darkColor: OWDesignColors.D3)
+            case .voteUpSelectedColor:
+                return nil
+            case .voteDownSelectedColor:
+                return nil
             }
         }
 

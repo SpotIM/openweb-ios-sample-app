@@ -23,6 +23,8 @@ protocol OWCommentEngagementViewModelingOutputs {
     var replyClickedOutput: Observable<Void> { get }
     var shareCommentUrl: Observable<URL> { get }
     var showReplyButton: Observable<Bool> { get }
+    var votesPosition: Observable<OWVotesPosition> { get }
+    var shareButtonStyle: Observable<OWShareButtonStyle> { get }
 }
 
 protocol OWCommentEngagementViewModeling {
@@ -80,6 +82,26 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .map { !$0 }
             .asObservable()
     }
+
+    lazy var votesPosition: Observable<OWVotesPosition> = {
+        self.sharedServiceProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { config -> OWVotesPosition in
+                guard let sharedConfig = config.shared
+                else { return .default }
+                return sharedConfig.votesPosition
+            }
+            .asObservable()
+    }()
+
+    lazy var shareButtonStyle: Observable<OWShareButtonStyle> = {
+        self.sharedServiceProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { config -> OWShareButtonStyle in
+                return config.mobileSdk.shareButtonStyle
+            }
+            .asObservable()
+    }()
 
     init(comment: OWComment, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
