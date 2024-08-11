@@ -48,7 +48,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
 
         colors.removeAll()
         for type in OWColor.OWType.allCases {
-            colors[type] = type.default ?? OWColor.OWType.brandColor.default
+            colors[type] = type.default
         }
         blockedForOverride.removeAll()
         let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
