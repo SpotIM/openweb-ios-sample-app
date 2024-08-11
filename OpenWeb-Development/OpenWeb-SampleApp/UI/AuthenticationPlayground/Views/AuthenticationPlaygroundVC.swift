@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import SnapKit
 
-class AuthenticationPlaygroundNewAPIVC: UIViewController {
+class AuthenticationPlaygroundVC: UIViewController {
     fileprivate struct Metrics {
         static let identifier = "authentication_playground_new_api_vc_id"
         static let switchInitializeSDKIdentifier = "initialize_sdk"
@@ -25,7 +25,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
         static let btnPadding: CGFloat = 12
     }
 
-    fileprivate let viewModel: AuthenticationPlaygroundNewAPIViewModeling
+    fileprivate let viewModel: AuthenticationPlaygroundViewModeling
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var scrollView: UIScrollView = {
@@ -100,7 +100,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
         return closeButton
     }()
 
-    init(viewModel: AuthenticationPlaygroundNewAPIViewModeling = AuthenticationPlaygroundNewAPIViewModel()) {
+    init(viewModel: AuthenticationPlaygroundViewModeling = AuthenticationPlaygroundViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -138,7 +138,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
     }
 }
 
-fileprivate extension AuthenticationPlaygroundNewAPIVC {
+fileprivate extension AuthenticationPlaygroundVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
     }

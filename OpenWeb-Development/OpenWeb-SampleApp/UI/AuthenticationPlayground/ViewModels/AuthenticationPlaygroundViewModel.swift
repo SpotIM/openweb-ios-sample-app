@@ -11,7 +11,7 @@ import RxSwift
 import Alamofire
 import OpenWebSDK
 
-protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
+protocol AuthenticationPlaygroundViewModelingInputs {
     var selectedGenericSSOOptionIndex: PublishSubject<Int> { get }
     var selectedThirdPartySSOOptionIndex: PublishSubject<Int> { get }
     var logoutPressed: PublishSubject<Void> { get }
@@ -23,7 +23,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
     var closeClick: PublishSubject<Void> { get }
 }
 
-protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
+protocol AuthenticationPlaygroundViewModelingOutputs {
     var title: String { get }
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> { get }
     var thirdPartySSOOptions: Observable<[ThirdPartySSOAuthentication]> { get }
@@ -34,16 +34,16 @@ protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
     var dismissed: Observable<Void> { get }
 }
 
-protocol AuthenticationPlaygroundNewAPIViewModeling {
-    var inputs: AuthenticationPlaygroundNewAPIViewModelingInputs { get }
-    var outputs: AuthenticationPlaygroundNewAPIViewModelingOutputs { get }
+protocol AuthenticationPlaygroundViewModeling {
+    var inputs: AuthenticationPlaygroundViewModelingInputs { get }
+    var outputs: AuthenticationPlaygroundViewModelingOutputs { get }
 }
 
-class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIViewModeling,
-                                                AuthenticationPlaygroundNewAPIViewModelingInputs,
-                                                AuthenticationPlaygroundNewAPIViewModelingOutputs {
-    var inputs: AuthenticationPlaygroundNewAPIViewModelingInputs { return self }
-    var outputs: AuthenticationPlaygroundNewAPIViewModelingOutputs { return self }
+class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
+                                                AuthenticationPlaygroundViewModelingInputs,
+                                                AuthenticationPlaygroundViewModelingOutputs {
+    var inputs: AuthenticationPlaygroundViewModelingInputs { return self }
+    var outputs: AuthenticationPlaygroundViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
         static let delayUntilDismissVC = 500 // milliseconds
@@ -140,7 +140,7 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
     }
 }
 
-fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
+fileprivate extension AuthenticationPlaygroundViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Different generic SSO selected

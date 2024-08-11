@@ -423,20 +423,11 @@ fileprivate extension TestAPIVC {
             .bind(to: viewModel.inputs.authenticationTapped)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openSettings
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let settingsVM = SettingsViewModel(settingViewTypes: SettingsGroupType.all)
-                let settingsVC = SettingsVC(viewModel: settingsVM)
-                self.navigationController?.pushViewController(settingsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
         viewModel.outputs.openAuthentication
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                let authenticationVM = AuthenticationPlaygroundNewAPIViewModel()
-                let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
+                let authenticationVM = AuthenticationPlaygroundViewModel()
+                let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
                 self.navigationController?.pushViewController(authenticationVC, animated: true)
             })
             .disposed(by: disposeBag)

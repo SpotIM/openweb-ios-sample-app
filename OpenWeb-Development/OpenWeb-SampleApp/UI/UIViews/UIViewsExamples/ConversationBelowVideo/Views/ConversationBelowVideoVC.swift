@@ -284,8 +284,8 @@ fileprivate extension ConversationBelowVideoVC {
                 guard let self = self else { return Observable.empty() }
                 let spotId = result.0
                 let completion = result.1
-                let authenticationVM = AuthenticationPlaygroundNewAPIViewModel(filterBySpotId: spotId)
-                let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
+                let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: spotId)
+                let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
                 self.navigationController?.present(authenticationVC, animated: true)
 
                 return authenticationVM.outputs.dismissed

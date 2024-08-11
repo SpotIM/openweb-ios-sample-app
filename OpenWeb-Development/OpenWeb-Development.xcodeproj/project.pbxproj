@@ -420,6 +420,7 @@
 		3D26B5B628CDDFBA00A1DAD2 /* OWCommentCreationSettingsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B528CDDFBA00A1DAD2 /* OWCommentCreationSettingsBuilder.swift */; };
 		3D26B5B828CE026000A1DAD2 /* OWCoordinatorResultProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B728CE026000A1DAD2 /* OWCoordinatorResultProtocol.swift */; };
 		3D26B5BE28CE492A00A1DAD2 /* OWModalPresentationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */; };
+		3D2AD2762C68D73000FF93EA /* SettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AD2752C68D73000FF93EA /* SettingsCoordinator.swift */; };
 		3D301BDA2A823D530012B526 /* OWThemeStyleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */; };
 		3D301BDC2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */; };
 		3D301BDE2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BDD2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift */; };
@@ -471,8 +472,8 @@
 		3D50D9202B16533500FD3232 /* OWLabelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D91F2B16533500FD3232 /* OWLabelState.swift */; };
 		3D50D9222B1653D400FD3232 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9212B1653D400FD3232 /* NSAttributedString+Extensions.swift */; };
 		3D50D9292B16568200FD3232 /* GenericSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9282B16568200FD3232 /* GenericSSOAuthentication.swift */; };
-		3D50D92F2B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D92C2B1656BB00FD3232 /* AuthenticationPlaygroundNewAPIVC.swift */; };
-		3D50D9302B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D92E2B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
+		3D50D92F2B1656BC00FD3232 /* AuthenticationPlaygroundVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D92C2B1656BB00FD3232 /* AuthenticationPlaygroundVC.swift */; };
+		3D50D9302B1656BC00FD3232 /* AuthenticationPlaygroundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D92E2B1656BC00FD3232 /* AuthenticationPlaygroundViewModel.swift */; };
 		3D50D9322B1656F800FD3232 /* UserAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9312B1656F800FD3232 /* UserAuthentication.swift */; };
 		3D50D9352B16575A00FD3232 /* AuthenticationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9332B16575A00FD3232 /* AuthenticationStatus.swift */; };
 		3D50D9382B1657F500FD3232 /* AuthenticationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9372B1657F500FD3232 /* AuthenticationError.swift */; };
@@ -1501,6 +1502,7 @@
 		3D26B5B528CDDFBA00A1DAD2 /* OWCommentCreationSettingsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSettingsBuilder.swift; sourceTree = "<group>"; };
 		3D26B5B728CE026000A1DAD2 /* OWCoordinatorResultProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCoordinatorResultProtocol.swift; sourceTree = "<group>"; };
 		3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWModalPresentationStyle.swift; sourceTree = "<group>"; };
+		3D2AD2752C68D73000FF93EA /* SettingsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCoordinator.swift; sourceTree = "<group>"; };
 		3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleServiceTests.swift; sourceTree = "<group>"; };
 		3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycleTests.swift; sourceTree = "<group>"; };
 		3D301BDD2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationControllerCustomizer.swift; sourceTree = "<group>"; };
@@ -1552,8 +1554,8 @@
 		3D50D91F2B16533500FD3232 /* OWLabelState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLabelState.swift; sourceTree = "<group>"; };
 		3D50D9212B1653D400FD3232 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		3D50D9282B16568200FD3232 /* GenericSSOAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericSSOAuthentication.swift; sourceTree = "<group>"; };
-		3D50D92C2B1656BB00FD3232 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
-		3D50D92E2B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
+		3D50D92C2B1656BB00FD3232 /* AuthenticationPlaygroundVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundVC.swift; sourceTree = "<group>"; };
+		3D50D92E2B1656BC00FD3232 /* AuthenticationPlaygroundViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundViewModel.swift; sourceTree = "<group>"; };
 		3D50D9312B1656F800FD3232 /* UserAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAuthentication.swift; sourceTree = "<group>"; };
 		3D50D9332B16575A00FD3232 /* AuthenticationStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationStatus.swift; sourceTree = "<group>"; };
 		3D50D9372B1657F500FD3232 /* AuthenticationError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationError.swift; sourceTree = "<group>"; };
@@ -3715,7 +3717,7 @@
 		3D50D92B2B1656BB00FD3232 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3D50D92C2B1656BB00FD3232 /* AuthenticationPlaygroundNewAPIVC.swift */,
+				3D50D92C2B1656BB00FD3232 /* AuthenticationPlaygroundVC.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3723,7 +3725,7 @@
 		3D50D92D2B1656BC00FD3232 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				3D50D92E2B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift */,
+				3D50D92E2B1656BC00FD3232 /* AuthenticationPlaygroundViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -3910,6 +3912,7 @@
 				3D6E669A2C637C2800F6C1BF /* MainPageCoordinator.swift */,
 				3D6E669C2C637D2700F6C1BF /* AboutCoordinator.swift */,
 				3D6E669E2C637D3C00F6C1BF /* TestAPICoordinator.swift */,
+				3D2AD2752C68D73000FF93EA /* SettingsCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -5053,7 +5056,7 @@
 				3D1D24802A4ACD7B00692E2A /* ToolbarFloatingCommentCreation */,
 				3DCAE3E929D07A58005B9189 /* Errors */,
 				9E73DACF29C85E270098EEC1 /* Logger */,
-				9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */,
+				9E53759529784D9100C85983 /* AuthenticationPlayground */,
 				3D611B7528BFA8B1003960CE /* TestAPI */,
 				3D611B8028C4D88F003960CE /* MockArticleFlows */,
 				9E73DAD929C8B7360098EEC1 /* MockArticleIndependentViews */,
@@ -5821,14 +5824,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */ = {
+		9E53759529784D9100C85983 /* AuthenticationPlayground */ = {
 			isa = PBXGroup;
 			children = (
 				3D50D9272B16566600FD3232 /* Models */,
 				3D50D92D2B1656BC00FD3232 /* ViewModels */,
 				3D50D92B2B1656BB00FD3232 /* Views */,
 			);
-			path = AuthenticationPlaygroundNew;
+			path = AuthenticationPlayground;
 			sourceTree = "<group>";
 		};
 		9E5A13BE2A41A1EF00C0FFED /* OWTextView */ = {
@@ -7482,7 +7485,7 @@
 				9EBE5C2A29AE141E001150DA /* OWPreConversationStyle+Extensions.swift in Sources */,
 				9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */,
 				9EEBF66C2A431A7E00315EB0 /* Notification+Keyboard.swift in Sources */,
-				3D50D92F2B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */,
+				3D50D92F2B1656BC00FD3232 /* AuthenticationPlaygroundVC.swift in Sources */,
 				8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */,
 				9EB427422A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift in Sources */,
 				243ED2AD2B4155D90036E71D /* ColorsCustomizationVC.swift in Sources */,
@@ -7502,7 +7505,8 @@
 				3D611B7928BFA906003960CE /* TestAPIVC.swift in Sources */,
 				9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */,
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
-				3D50D9302B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
+				3D2AD2762C68D73000FF93EA /* SettingsCoordinator.swift in Sources */,
+				3D50D9302B1656BC00FD3232 /* AuthenticationPlaygroundViewModel.swift in Sources */,
 				241F71F92B42ADA5007619AC /* ColorSelectionItemCell.swift in Sources */,
 				243010D52B173E7A00150823 /* ThirdPartySSOAuthentication.swift in Sources */,
 				8D7662C52A6FC5EF008152BE /* OWLanguageStrategyIndexer.swift in Sources */,
