@@ -334,6 +334,7 @@ fileprivate extension MockArticleFlowsViewModel {
             let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: OpenWeb.manager.spotId)
             let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
 
+            // Here we intentionally perform direct `navigation controller` methods, instead of doing so in the coordinators layer, to demonstrate how one would interact with OpenWeb SDK in a simple way
             switch routeringMode {
             case .flow(let navController):
                 navController.pushViewController(authenticationVC, animated: true)
