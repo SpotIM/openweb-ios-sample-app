@@ -542,6 +542,11 @@
 		3DA1DEA62C69119500EBFA7D /* UIViewsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEA52C69119500EBFA7D /* UIViewsCoordinator.swift */; };
 		3DA1DEA82C69138300EBFA7D /* CoordinatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEA72C69138300EBFA7D /* CoordinatorData.swift */; };
 		3DA1DEAA2C69168800EBFA7D /* MiscellaneousCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEA92C69168800EBFA7D /* MiscellaneousCoordinator.swift */; };
+		3DA1DEAC2C6A0E0B00EBFA7D /* MockArticleFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEAB2C6A0E0B00EBFA7D /* MockArticleFlowCoordinator.swift */; };
+		3DA1DEAE2C6A105800EBFA7D /* MockArticleIndependentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEAD2C6A105800EBFA7D /* MockArticleIndependentCoordinator.swift */; };
+		3DA1DEB02C6A11C000EBFA7D /* ViewsExamplesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEAF2C6A11C000EBFA7D /* ViewsExamplesCoordinator.swift */; };
+		3DA1DEB22C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEB12C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift */; };
+		3DA1DEB42C6A1B2E00EBFA7D /* AutomationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEB32C6A1B2E00EBFA7D /* AutomationCoordinator.swift */; };
 		3DA263FE2951BE6500688FFF /* OWNetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA263FD2951BE6500688FFF /* OWNetworkError.swift */; };
 		3DA264002951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA263FF2951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift */; };
 		3DA264022951E32E00688FFF /* OWNetworkCachedResponseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA264012951E32E00688FFF /* OWNetworkCachedResponseHandler.swift */; };
@@ -1629,6 +1634,11 @@
 		3DA1DEA52C69119500EBFA7D /* UIViewsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsCoordinator.swift; sourceTree = "<group>"; };
 		3DA1DEA72C69138300EBFA7D /* CoordinatorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorData.swift; sourceTree = "<group>"; };
 		3DA1DEA92C69168800EBFA7D /* MiscellaneousCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscellaneousCoordinator.swift; sourceTree = "<group>"; };
+		3DA1DEAB2C6A0E0B00EBFA7D /* MockArticleFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockArticleFlowCoordinator.swift; sourceTree = "<group>"; };
+		3DA1DEAD2C6A105800EBFA7D /* MockArticleIndependentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockArticleIndependentCoordinator.swift; sourceTree = "<group>"; };
+		3DA1DEAF2C6A11C000EBFA7D /* ViewsExamplesCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewsExamplesCoordinator.swift; sourceTree = "<group>"; };
+		3DA1DEB12C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingPlaygroundCoordinator.swift; sourceTree = "<group>"; };
+		3DA1DEB32C6A1B2E00EBFA7D /* AutomationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomationCoordinator.swift; sourceTree = "<group>"; };
 		3DA263FD2951BE6500688FFF /* OWNetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkError.swift; sourceTree = "<group>"; };
 		3DA263FF2951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAuthenticationInterceptor.swift; sourceTree = "<group>"; };
 		3DA264012951E32E00688FFF /* OWNetworkCachedResponseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkCachedResponseHandler.swift; sourceTree = "<group>"; };
@@ -3928,6 +3938,11 @@
 				3DA1DEA32C69118700EBFA7D /* UIFlowsCoordinator.swift */,
 				3DA1DEA52C69119500EBFA7D /* UIViewsCoordinator.swift */,
 				3DA1DEA92C69168800EBFA7D /* MiscellaneousCoordinator.swift */,
+				3DA1DEB12C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift */,
+				3DA1DEB32C6A1B2E00EBFA7D /* AutomationCoordinator.swift */,
+				3DA1DEAB2C6A0E0B00EBFA7D /* MockArticleFlowCoordinator.swift */,
+				3DA1DEAD2C6A105800EBFA7D /* MockArticleIndependentCoordinator.swift */,
+				3DA1DEAF2C6A11C000EBFA7D /* ViewsExamplesCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -7479,6 +7494,7 @@
 				241F71FB2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift in Sources */,
 				3D6E66AA2C637E0600F6C1BF /* AboutVC.swift in Sources */,
 				3DB3D19B282AFEB4008654CF /* ColorPalette.swift in Sources */,
+				3DA1DEB42C6A1B2E00EBFA7D /* AutomationCoordinator.swift in Sources */,
 				3DB1D5A32A785C880012388E /* OWStatusBarEnforcement+Extensions.swift in Sources */,
 				3D611B8C28C4EE10003960CE /* MockArticleFlowsVC.swift in Sources */,
 				9EBE5C2C29AE16B1001150DA /* OWConversationStyle+Extensions.swift in Sources */,
@@ -7527,6 +7543,7 @@
 				3D2AD2762C68D73000FF93EA /* SettingsCoordinator.swift in Sources */,
 				3D50D9302B1656BC00FD3232 /* AuthenticationPlaygroundViewModel.swift in Sources */,
 				241F71F92B42ADA5007619AC /* ColorSelectionItemCell.swift in Sources */,
+				3DA1DEAE2C6A105800EBFA7D /* MockArticleIndependentCoordinator.swift in Sources */,
 				243010D52B173E7A00150823 /* ThirdPartySSOAuthentication.swift in Sources */,
 				8D7662C52A6FC5EF008152BE /* OWLanguageStrategyIndexer.swift in Sources */,
 				3D1D248B2A4AF3C400692E2A /* CommentCreationToolbarViewModel.swift in Sources */,
@@ -7542,6 +7559,7 @@
 				9EA0F83F29ACBA9C008FD7A6 /* PreConversationSettingsView.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
 				9EC33FCE29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift in Sources */,
+				3DA1DEB22C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift in Sources */,
 				9E7D5B102A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift in Sources */,
 				3DCAE3F629D31042005B9189 /* CommonCreatorService.swift in Sources */,
 				8D99C69A2A233CC700DAB542 /* ElementsCustomizationCreatorService.swift in Sources */,
@@ -7554,6 +7572,7 @@
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
 				9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */,
 				9EBE5C2829AE082C001150DA /* IAUSettingsView.swift in Sources */,
+				3DA1DEAC2C6A0E0B00EBFA7D /* MockArticleFlowCoordinator.swift in Sources */,
 				24C614492AC405D00037BA53 /* ClarityDetailsSettingsVM.swift in Sources */,
 				3D1D24852A4ACDC000692E2A /* ToolbarElementModel.swift in Sources */,
 				9EA0F84529AD12E2008FD7A6 /* ConversationSettingsView.swift in Sources */,
@@ -7561,6 +7580,7 @@
 				9E7F283629B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift in Sources */,
 				3DE476E12ABC214F00093D09 /* ConversationBelowVideoVC.swift in Sources */,
 				8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */,
+				3DA1DEB02C6A11C000EBFA7D /* ViewsExamplesCoordinator.swift in Sources */,
 				241F72012B458D34007619AC /* OWColor+Extensions.swift in Sources */,
 				3DB3D192282A82B4008654CF /* Array+Unwrap.swift in Sources */,
 				3D6E66972C63793C00F6C1BF /* Presentable.swift in Sources */,

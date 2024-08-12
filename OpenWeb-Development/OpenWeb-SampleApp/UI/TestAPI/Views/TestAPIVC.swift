@@ -366,28 +366,6 @@ fileprivate extension TestAPIVC {
             .bind(to: viewModel.inputs.automationTapped)
             .disposed(by: disposeBag)
 
-#if BETA
-        viewModel.outputs.openTestingPlayground
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let testingPlaygroundVM = TestingPlaygroundViewModel(dataModel: dataModel)
-                let testingPlaygroundVC = TestingPlaygroundVC(viewModel: testingPlaygroundVM)
-                self.navigationController?.pushViewController(testingPlaygroundVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-#endif
-
-#if AUTOMATION
-        viewModel.outputs.openAutomation
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let automationVM = AutomationViewModel(dataModel: dataModel)
-                let automationVC = AutomationVC(viewModel: automationVM)
-                self.navigationController?.pushViewController(automationVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-#endif
-
         settingsBarItem.rx.tap
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
