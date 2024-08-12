@@ -10,6 +10,7 @@ import Foundation
 import OpenWebSDK
 
 enum SettingsGroupType {
+    case sampleApp
     case general
     case preConversation
     case conversation
@@ -21,9 +22,9 @@ enum SettingsGroupType {
 
     static var all: [SettingsGroupType] {
         #if BETA
-        return [.general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau, .network]
+        return [.sampleApp, .general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau, .network]
         #else
-        return [.general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau]
+        return [.sampleApp, .general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau]
         #endif
     }
 }
@@ -31,6 +32,8 @@ enum SettingsGroupType {
 extension SettingsGroupType {
     func createAppropriateVM(userDefaultsProvider: UserDefaultsProviderProtocol, manager: OWManagerProtocol) -> SettingsGroupVMProtocol {
         switch self {
+        case .sampleApp:
+            return SampleAppSettingsVM(userDefaultsProvider: userDefaultsProvider)
         case .general:
             return GeneralSettingsVM(userDefaultsProvider: userDefaultsProvider, manager: manager)
         case .preConversation:

@@ -48,7 +48,7 @@ class MainPageVC: UIViewController {
     }()
 
     fileprivate lazy var testAPIBtn: UIButton = {
-        return NSLocalizedString("testAPI", comment: "").blueRoundedButton
+        return NSLocalizedString("TestAPI", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var logoImgView: UIImageView = {
