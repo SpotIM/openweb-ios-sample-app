@@ -9,10 +9,6 @@
 import UIKit
 import RxSwift
 
-enum TypeCastingError: Error {
-    case invalidType
-}
-
 class OWTypingAnimationView: UIView {
     struct Metrics {
         static let verticalPositionOffsetDivisor: CGFloat = 4
@@ -88,7 +84,7 @@ class OWTypingAnimationView: UIView {
         if let intValue = value as? Int {
             return intValue
         } else {
-            throw TypeCastingError.invalidType
+            throw OWTypeCastingError.invalidType
         }
     }
 }
@@ -106,7 +102,7 @@ extension OWTypingAnimationView: CAAnimationDelegate {
                     self?.animateDot(at: 0)
                 }
             }
-        } catch TypeCastingError.invalidType {
+        } catch OWTypeCastingError.invalidType {
             print("OWTypingAnimationView Error: The value is not of type Int.")
         } catch {
             print("OWTypingAnimationView An unexpected error occurred: \(error).")
