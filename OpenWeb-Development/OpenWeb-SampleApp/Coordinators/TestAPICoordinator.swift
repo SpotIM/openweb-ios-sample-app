@@ -17,6 +17,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
+    // swiftlint:disable function_body_length
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
                         coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         let testAPIVM: TestAPIViewModeling = TestAPIViewModel()

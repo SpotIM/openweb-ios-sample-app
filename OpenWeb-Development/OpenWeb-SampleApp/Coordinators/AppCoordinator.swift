@@ -15,8 +15,12 @@ class AppCoordinator: BaseCoordinator<Void> {
 
     fileprivate let window: UIWindow
     fileprivate var router: Routering!
-    init(window: UIWindow) {
+    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+
+    init(window: UIWindow,
+         userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.window = window
+        self.userDefaultsProvider = userDefaultsProvider
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
@@ -26,6 +30,12 @@ class AppCoordinator: BaseCoordinator<Void> {
         let mainPageCoordinator = MainPageCoordinator(router: router)
 
         return coordinate(to: mainPageCoordinator, deepLinkOptions: deepLinkOptions)
+    }
+
+    func deeplinkOption() -> DeepLinkOptions? {
+        let deeplink = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption, defaultValue: .none)
+
+        return deeplink.toDeepLinkOptions
     }
 }
 

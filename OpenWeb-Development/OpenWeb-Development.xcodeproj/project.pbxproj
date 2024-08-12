@@ -547,6 +547,9 @@
 		3DA1DEB02C6A11C000EBFA7D /* ViewsExamplesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEAF2C6A11C000EBFA7D /* ViewsExamplesCoordinator.swift */; };
 		3DA1DEB22C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEB12C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift */; };
 		3DA1DEB42C6A1B2E00EBFA7D /* AutomationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEB32C6A1B2E00EBFA7D /* AutomationCoordinator.swift */; };
+		3DA1DEB62C6A36EE00EBFA7D /* SampleAppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEB52C6A36EE00EBFA7D /* SampleAppSettingsView.swift */; };
+		3DA1DEB82C6A534A00EBFA7D /* SampleAppSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEB72C6A534A00EBFA7D /* SampleAppSettingsVM.swift */; };
+		3DA1DEBB2C6A5A5200EBFA7D /* SampleAppDeeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEBA2C6A5A5200EBFA7D /* SampleAppDeeplink.swift */; };
 		3DA263FE2951BE6500688FFF /* OWNetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA263FD2951BE6500688FFF /* OWNetworkError.swift */; };
 		3DA264002951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA263FF2951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift */; };
 		3DA264022951E32E00688FFF /* OWNetworkCachedResponseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA264012951E32E00688FFF /* OWNetworkCachedResponseHandler.swift */; };
@@ -1639,6 +1642,9 @@
 		3DA1DEAF2C6A11C000EBFA7D /* ViewsExamplesCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewsExamplesCoordinator.swift; sourceTree = "<group>"; };
 		3DA1DEB12C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingPlaygroundCoordinator.swift; sourceTree = "<group>"; };
 		3DA1DEB32C6A1B2E00EBFA7D /* AutomationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomationCoordinator.swift; sourceTree = "<group>"; };
+		3DA1DEB52C6A36EE00EBFA7D /* SampleAppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAppSettingsView.swift; sourceTree = "<group>"; };
+		3DA1DEB72C6A534A00EBFA7D /* SampleAppSettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAppSettingsVM.swift; sourceTree = "<group>"; };
+		3DA1DEBA2C6A5A5200EBFA7D /* SampleAppDeeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAppDeeplink.swift; sourceTree = "<group>"; };
 		3DA263FD2951BE6500688FFF /* OWNetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkError.swift; sourceTree = "<group>"; };
 		3DA263FF2951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAuthenticationInterceptor.swift; sourceTree = "<group>"; };
 		3DA264012951E32E00688FFF /* OWNetworkCachedResponseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkCachedResponseHandler.swift; sourceTree = "<group>"; };
@@ -4007,6 +4013,14 @@
 			path = InternalLayers;
 			sourceTree = "<group>";
 		};
+		3DA1DEB92C6A5A3600EBFA7D /* SampleAppRelated */ = {
+			isa = PBXGroup;
+			children = (
+				3DA1DEBA2C6A5A5200EBFA7D /* SampleAppDeeplink.swift */,
+			);
+			path = SampleAppRelated;
+			sourceTree = "<group>";
+		};
 		3DA263FC2950CB0B00688FFF /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
@@ -5652,6 +5666,7 @@
 			isa = PBXGroup;
 			children = (
 				8DCBE87E2950597100C8677C /* SettingsViewModel.swift */,
+				3DA1DEB72C6A534A00EBFA7D /* SampleAppSettingsVM.swift */,
 				9EA0F83C29ABEF41008FD7A6 /* GeneralSettingsVM.swift */,
 				9EA0F84029ACBC2C008FD7A6 /* PreConversationSettingsVM.swift */,
 				9EA0F84229AD11C3008FD7A6 /* ConversationSettingsVM.swift */,
@@ -5670,6 +5685,7 @@
 			isa = PBXGroup;
 			children = (
 				8DCBE87C2950594A00C8677C /* SettingsVC.swift */,
+				3DA1DEB52C6A36EE00EBFA7D /* SampleAppSettingsView.swift */,
 				9EA0F83A29ABED06008FD7A6 /* GeneralSettingsView.swift */,
 				9EA0F83E29ACBA9C008FD7A6 /* PreConversationSettingsView.swift */,
 				9EA0F84429AD12E2008FD7A6 /* ConversationSettingsView.swift */,
@@ -6056,6 +6072,7 @@
 		9EA0F83729AB7A97008FD7A6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3DA1DEB92C6A5A3600EBFA7D /* SampleAppRelated */,
 				8DBC16822A55B8BA0010759E /* Indexers */,
 				9EA0F83829AB7AA8008FD7A6 /* SettingsGroupType.swift */,
 				9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */,
@@ -7488,6 +7505,7 @@
 				2435B82F2B85F05B002F9422 /* OWNetworkEnvironment.swift in Sources */,
 				24ECB4A22A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift in Sources */,
 				9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */,
+				3DA1DEB82C6A534A00EBFA7D /* SampleAppSettingsVM.swift in Sources */,
 				8D7662C22A6D1824008152BE /* OWConversationStyleIndexer.swift in Sources */,
 				9EC33FD229CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift in Sources */,
 				9EC33FD129CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift in Sources */,
@@ -7520,6 +7538,7 @@
 				9EEBF66C2A431A7E00315EB0 /* Notification+Keyboard.swift in Sources */,
 				3D50D92F2B1656BC00FD3232 /* AuthenticationPlaygroundVC.swift in Sources */,
 				8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */,
+				3DA1DEB62C6A36EE00EBFA7D /* SampleAppSettingsView.swift in Sources */,
 				9EB427422A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift in Sources */,
 				243ED2AD2B4155D90036E71D /* ColorsCustomizationVC.swift in Sources */,
 				8DBC167A2A406C290010759E /* OWArticleHeaderStyle+Extensions.swift in Sources */,
@@ -7569,6 +7588,7 @@
 				8D7662C02A6D170E008152BE /* OWFontGroupFamilyIndexer.swift in Sources */,
 				240D6E8A2AB96E5000EB70FA /* ConversationCountersNewAPIVC.swift in Sources */,
 				3D1D24892A4AF22500692E2A /* CommentCreationToolbar.swift in Sources */,
+				3DA1DEBB2C6A5A5200EBFA7D /* SampleAppDeeplink.swift in Sources */,
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
 				9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */,
 				9EBE5C2829AE082C001150DA /* IAUSettingsView.swift in Sources */,
