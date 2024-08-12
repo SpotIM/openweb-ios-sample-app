@@ -76,6 +76,7 @@
 "ConversationSettings" = "Conversation:";
 "CommentCreationSettings" = "Comment Creation:";
 "IAUSettings" = "IAU:";
+"SampleAppSettings" = "Sample App:";
 "Regular" = "Regular";
 "Compact" = "Compact";
 "CTAButtonOnly" = "Button Only";
@@ -142,8 +143,9 @@
 "About" = "About";
 "AboutText" = "About text of OpenWeb iOS SampleApp, to be continued...";
 "allRightsReserved" = "OpenWeb, all rights reserved";
-"testAPI" = "Test API";
 "SampleApp" = "Sample App";
 "Vesrion" = "Vesrion";
 "Build" = "Build";
 "WelcomeDescription" = "Welcome to OpenWeb iOS SampleApp!\nThis application demonstrate the integration of OpenWeb iOS SDK.\nThere are many settings which can be adjusted to show the capabilities of the SDK.";
+"Deeplink" = "Deeplink";
+"Authentication" = "Authentication";
