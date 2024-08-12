@@ -113,6 +113,22 @@ fileprivate extension OWSpotConfigurationService {
            let color = UIColor.color(from: brandColorHex) {
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .light)
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .dark)
+
+            // Comments votes selected use the brand color if not customized.
+            OWColorPalette.shared.setColor(color, forType: .voteUpSelectedColor, forThemeStyle: .light)
+            OWColorPalette.shared.setColor(color, forType: .voteUpSelectedColor, forThemeStyle: .dark)
+
+            OWColorPalette.shared.setColor(color, forType: .voteDownSelectedColor, forThemeStyle: .light)
+            OWColorPalette.shared.setColor(color, forType: .voteDownSelectedColor, forThemeStyle: .dark)
+
+            OWColorPalette.shared.setColor(color, forType: .voteUpUnselectedColor, forThemeStyle: .light)
+            OWColorPalette.shared.setColor(color, forType: .voteUpUnselectedColor, forThemeStyle: .dark)
+
+            OWColorPalette.shared.setColor(color, forType: .voteDownUnselectedColor, forThemeStyle: .light)
+            OWColorPalette.shared.setColor(color, forType: .voteDownUnselectedColor, forThemeStyle: .dark)
+
+            OWColorPalette.shared.setColor(color, forType: .voteDownUnselectedColor, forThemeStyle: .light)
+            OWColorPalette.shared.setColor(color, forType: .voteDownUnselectedColor, forThemeStyle: .dark)
         }
     }
 }

@@ -165,6 +165,23 @@ fileprivate extension OWCustomizationsLayer {
             setColor(color: brandColor, type: .brandColor)
             OWColorPalette.shared.blockForOverride(color: .brandColor)
         }
+
+        // Preventing votes from changing to brandColor later on from the server
+        if let voteUpSelectedColor = theme.voteUpSelectedColor {
+            OWColorPalette.shared.blockForOverride(color: .voteUpSelectedColor)
+        }
+
+        if let voteDownSelectedColor = theme.voteDownSelectedColor {
+            OWColorPalette.shared.blockForOverride(color: .voteDownSelectedColor)
+        }
+
+        if let voteUpUnselectedColor = theme.voteUpUnselectedColor {
+            OWColorPalette.shared.blockForOverride(color: .voteUpUnselectedColor)
+        }
+
+        if let voteDownUnselectedColor = theme.voteDownUnselectedColor {
+            OWColorPalette.shared.blockForOverride(color: .voteDownUnselectedColor)
+        }
     }
 
     func setColor(color: OWColor?, type: OWColor.OWType) {
