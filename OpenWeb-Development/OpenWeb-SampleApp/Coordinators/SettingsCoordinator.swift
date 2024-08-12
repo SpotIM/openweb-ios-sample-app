@@ -19,7 +19,13 @@ class SettingsCoordinator: BaseCoordinator<Void> {
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
                         coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
-        let settingsVM: SettingsViewModeling = SettingsViewModel(settingViewTypes: SettingsGroupType.all)
+
+        guard let data = coordinatorData,
+              case CoordinatorData.settingsScreen(let settingsGroups) = data else {
+            fatalError("SettingsCoordinator requires coordinatorData from `CoordinatorData.settingsScreen` type")
+        }
+
+        let settingsVM: SettingsViewModeling = SettingsViewModel(settingViewTypes: settingsGroups)
         let settingsVC = SettingsVC(viewModel: settingsVM)
 
         let vcPopped = PublishSubject<Void>()

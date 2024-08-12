@@ -55,7 +55,9 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let coordinator = SettingsCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
+                return self.coordinate(to: coordinator,
+                                       deepLinkOptions: deepLink,
+                                       coordinatorData: .settingsScreen(data: SettingsGroupType.all))
             }
             .flatMap { _ -> Observable<Void> in
                 return .never()
@@ -105,6 +107,32 @@ class TestAPICoordinator: BaseCoordinator<Void> {
                 return .never()
             }
 
+#if BETA
+        let testingPlauygroundCoordinator = testAPIVM.outputs.openTestingPlayground
+            .flatMap { [weak self] dataModel -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
+                let coordinator = TestingPlaygroundCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> Observable<Void> in
+                return .never()
+            }
+#endif
+
+#if AUTOMATION
+        let automationCoordinator = testAPIVM.outputs.openAutomation
+            .flatMap { [weak self] dataModel -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
+                let coordinator = AutomationCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> Observable<Void> in
+                return .never()
+            }
+#endif
+
         // 3. Perfoem deep link if such
         if let deepLink = deepLinkOptions {
             switch deepLink {
@@ -117,11 +145,21 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             }
         }
 
-        return Observable.merge(vcPopped.asObservable(),
-                                authenticationPlaygroundCoordinator,
-                                settingsCoordinator,
-                                flowsCoordinator,
-                                viewsCoordinator,
-                                miscellaneousCoordinator)
+        var observables: [Observable<Void>] = [vcPopped.asObservable(),
+                                               authenticationPlaygroundCoordinator,
+                                               settingsCoordinator,
+                                               flowsCoordinator,
+                                               viewsCoordinator,
+                                               miscellaneousCoordinator]
+
+#if BETA
+        observables.append(testingPlauygroundCoordinator)
+#endif
+
+#if AUTOMATION
+        observables.append(automationCoordinator)
+#endif
+
+        return Observable.merge(observables)
     }
 }
