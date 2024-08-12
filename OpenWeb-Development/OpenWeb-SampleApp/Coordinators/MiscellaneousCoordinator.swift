@@ -22,7 +22,7 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
-            fatalError("UIFlowsCoordinator requires coordinatorData from `CoordinatorData.conversationDataModel` type")
+            fatalError("MiscellaneousCoordinator requires coordinatorData from `CoordinatorData.conversationDataModel` type")
         }
 
         let miscellaneousVM: MiscellaneousViewModeling = MiscellaneousViewModel(dataModel: conversationDataModel)

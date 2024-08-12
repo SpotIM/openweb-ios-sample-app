@@ -30,28 +30,22 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
 
         let vcPopped = PublishSubject<Void>()
 
-        setupCoordinatorInternalNavigation(viewModel: flowsVM)
-
         router.push(flowsVC,
                     animated: true,
                     completion: vcPopped)
 
-        return vcPopped
-            .asObservable()
-    }
-}
+        let mockArticleFlowCoordinator = flowsVM.outputs.openMockArticleScreen
+            .flatMap { [weak self] dataModel -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
+                let coordinator = MockArticleFlowCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> Observable<Void> in
+                return .never()
+            }
 
-fileprivate extension UIFlowsCoordinator {
-    func setupCoordinatorInternalNavigation(viewModel: UIFlowsViewModeling) {
-        viewModel.outputs.openMockArticleScreen
-            .subscribe(onNext: { [weak self] settings in
-                guard let self = self else { return }
-                let mockArticleFlowsVM = MockArticleFlowsViewModel(actionSettings: settings)
-                let mockArticleFlowsVC = MockArticleFlowsVC(viewModel: mockArticleFlowsVM)
-                self.router.push(mockArticleFlowsVC,
-                            animated: true,
-                            completion: nil)
-            })
-            .disposed(by: disposeBag)
+        return Observable.merge(vcPopped.asObservable(),
+                                mockArticleFlowCoordinator)
     }
 }
