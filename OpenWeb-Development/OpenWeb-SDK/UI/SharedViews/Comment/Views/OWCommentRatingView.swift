@@ -210,9 +210,9 @@ fileprivate extension OWCommentRatingView {
             })
             .disposed(by: disposeBag)
 
-        let setLabelsFont = { [weak self] in
+        let setLabelsFont = { [weak self] (commentActionsFontStyle: OWCommentActionsFontStyle) in
             guard let self = self else { return }
-            switch viewModel.outputs.commentActionsFontStyle {
+            switch commentActionsFontStyle {
             case .default:
                 self.rankUpLabel.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.rankDownLabel.font = OWFontBook.shared.font(typography: .footnoteText)
@@ -222,12 +222,17 @@ fileprivate extension OWCommentRatingView {
             }
         }
 
-        setLabelsFont()
+        viewModel.outputs.commentActionsFontStyle
+            .subscribe(onNext: { commentActionsFontStyle in
+                setLabelsFont(commentActionsFontStyle)
+            })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
-            .subscribe(onNext: { _ in
-                setLabelsFont()
+            .withLatestFrom(viewModel.outputs.commentActionsFontStyle)
+            .subscribe(onNext: { commentActionsFontStyle in
+                setLabelsFont(commentActionsFontStyle)
             })
             .disposed(by: disposeBag)
     }

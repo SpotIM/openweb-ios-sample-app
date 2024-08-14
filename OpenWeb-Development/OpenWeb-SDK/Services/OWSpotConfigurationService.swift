@@ -120,15 +120,6 @@ fileprivate extension OWSpotConfigurationService {
 
             OWColorPalette.shared.setColor(color, forType: .voteDownSelectedColor, forThemeStyle: .light)
             OWColorPalette.shared.setColor(color, forType: .voteDownSelectedColor, forThemeStyle: .dark)
-
-            OWColorPalette.shared.setColor(color, forType: .voteUpUnselectedColor, forThemeStyle: .light)
-            OWColorPalette.shared.setColor(color, forType: .voteUpUnselectedColor, forThemeStyle: .dark)
-
-            OWColorPalette.shared.setColor(color, forType: .voteDownUnselectedColor, forThemeStyle: .light)
-            OWColorPalette.shared.setColor(color, forType: .voteDownUnselectedColor, forThemeStyle: .dark)
-
-            OWColorPalette.shared.setColor(color, forType: .voteDownUnselectedColor, forThemeStyle: .light)
-            OWColorPalette.shared.setColor(color, forType: .voteDownUnselectedColor, forThemeStyle: .dark)
         }
     }
 }

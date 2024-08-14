@@ -25,8 +25,8 @@ protocol OWCommentEngagementViewModelingOutputs {
     var showReplyButton: Observable<Bool> { get }
     var votesPosition: Observable<OWVotesPosition> { get }
     var shareButtonStyle: Observable<OWShareButtonStyle> { get }
-    var commentActionsFontStyle: OWCommentActionsFontStyle { get }
-    var commentActionsColor: OWCommentActionsColor { get }
+    var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> { get }
+    var commentActionsColor: Observable<OWCommentActionsColor> { get }
 }
 
 protocol OWCommentEngagementViewModeling {
@@ -96,12 +96,12 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }()
 
-    lazy var commentActionsColor: OWCommentActionsColor = {
-        self.customizationsLayer.commentActions.color
+    lazy var commentActionsColor: Observable<OWCommentActionsColor> = {
+        return Observable.just(self.customizationsLayer.commentActions.color)
     }()
 
-    lazy var commentActionsFontStyle: OWCommentActionsFontStyle = {
-        self.customizationsLayer.commentActions.fontStyle
+    lazy var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> = {
+        return Observable.just(self.customizationsLayer.commentActions.fontStyle)
     }()
 
     lazy var shareButtonStyle: Observable<OWShareButtonStyle> = {
