@@ -210,12 +210,24 @@ fileprivate extension OWCommentRatingView {
             })
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.appLifeCycle()
-            .didChangeContentSizeCategory
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+        let setLabelsFont = { [weak self] in
+            guard let self = self else { return }
+            switch viewModel.outputs.commentActionsFontStyle {
+            case .default:
+                self.rankUpLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.rankDownLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+            case .semiBold:
                 self.rankUpLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
                 self.rankDownLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
+            }
+        }
+
+        setLabelsFont()
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { _ in
+                setLabelsFont()
             })
             .disposed(by: disposeBag)
     }

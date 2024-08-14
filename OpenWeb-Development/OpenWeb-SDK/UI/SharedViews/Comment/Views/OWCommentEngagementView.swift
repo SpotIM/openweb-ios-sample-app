@@ -34,8 +34,6 @@ class OWCommentEngagementView: UIView {
     fileprivate lazy var replyButton: UIButton = {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
-            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
-            .font(OWFontBook.shared.font(typography: .footnoteContext))
             .wrapContent()
     }()
 
@@ -59,8 +57,6 @@ class OWCommentEngagementView: UIView {
         return UIButton()
             .hugContent(axis: .horizontal)
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
-            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
-            .font(OWFontBook.shared.font(typography: .footnoteContext))
     }()
 
     override init(frame: CGRect) {
@@ -200,19 +196,37 @@ fileprivate extension OWCommentEngagementView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle), for: .normal)
-                self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle), for: .normal)
                 self.replyDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.votingDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
-                self.shareButton.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                switch self.viewModel.outputs.commentActionsColor {
+                case .default:
+                    self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
+                    self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
+                case .brandColor:
+                    self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle), for: .normal)
+                    self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle), for: .normal)
+                    self.shareButton.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                }
             }).disposed(by: disposeBag)
+
+        let setButtonsFont = { [weak self] in
+            guard let self = self else { return }
+            switch viewModel.outputs.commentActionsFontStyle {
+            case .default:
+                self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.shareButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
+            case .semiBold:
+                self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteContext)
+                self.shareButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteContext)
+            }
+        }
+
+        setButtonsFont()
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteContext)
-                self.shareButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteContext)
+            .subscribe(onNext: { _ in
+                setButtonsFont()
             })
             .disposed(by: disposeBag)
     }
