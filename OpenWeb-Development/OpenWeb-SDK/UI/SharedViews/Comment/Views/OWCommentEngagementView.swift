@@ -144,7 +144,6 @@ fileprivate extension OWCommentEngagementView {
                     self.shareButton
                         .setTitle(nil, state: .normal)
                         .setImage(UIImage(spNamed: "shareButtonIcon"), for: .normal)
-                    self.shareButton.tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
                 }
             })
             .disposed(by: disposeBag)
@@ -194,11 +193,12 @@ fileprivate extension OWCommentEngagementView {
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] currentStyle in
+            .withLatestFrom(viewModel.outputs.commentActionsColor) { ($0, $1) }
+            .subscribe(onNext: { [weak self] currentStyle, commentActionsColor in
                 guard let self = self else { return }
                 self.replyDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.votingDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
-                switch self.viewModel.outputs.commentActionsColor {
+                switch commentActionsColor {
                 case .default:
                     self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
                     self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
@@ -209,9 +209,9 @@ fileprivate extension OWCommentEngagementView {
                 }
             }).disposed(by: disposeBag)
 
-        let setButtonsFont = { [weak self] in
+        let setButtonsFont = { [weak self] (commentActionsFontStyle: OWCommentActionsFontStyle) in
             guard let self = self else { return }
-            switch viewModel.outputs.commentActionsFontStyle {
+            switch commentActionsFontStyle {
             case .default:
                 self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.shareButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
@@ -221,12 +221,17 @@ fileprivate extension OWCommentEngagementView {
             }
         }
 
-        setButtonsFont()
+        viewModel.outputs.commentActionsFontStyle
+            .subscribe(onNext: { commentActionsFontStyle in
+                setButtonsFont(commentActionsFontStyle)
+            })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
-            .subscribe(onNext: { _ in
-                setButtonsFont()
+            .withLatestFrom(viewModel.outputs.commentActionsFontStyle)
+            .subscribe(onNext: { commentActionsFontStyle in
+                setButtonsFont(commentActionsFontStyle)
             })
             .disposed(by: disposeBag)
     }
