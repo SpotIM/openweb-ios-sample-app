@@ -15,7 +15,6 @@ protocol OWCustomizationsInternalProtocol {
 }
 
 class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol {
-
     fileprivate struct Metrics {
         static let maxCustomizableElementCallbacksNumber: Int = 10
     }
@@ -50,6 +49,15 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
             _themeEnforcement = newEnforcement
             sendEvent(for: .configureThemeEnforcement(enforcement: newEnforcement))
             sharedServicesProvider.themeStyleService().setEnforcement(enforcement: _themeEnforcement)
+        }
+    }
+
+    var commentActions: OWCommentActionsCustomizations {
+        get {
+            return _commentActions
+        }
+        set(newCommentActions) {
+            _commentActions = newCommentActions
         }
     }
 
@@ -114,6 +122,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
 
     fileprivate var _fontFamily: OWFontGroupFamily = .default
     fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
+    fileprivate var _commentActions: OWCommentActionsCustomizations = OWCommentActions()
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
     fileprivate var _statusBarEnforcement: OWStatusBarEnforcement = .matchTheme
     fileprivate var _navigationBarEnforcement: OWNavigationBarEnforcement = .style(.largeTitles)

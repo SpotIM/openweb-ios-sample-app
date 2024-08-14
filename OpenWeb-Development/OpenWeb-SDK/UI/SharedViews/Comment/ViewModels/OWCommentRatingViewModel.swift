@@ -27,6 +27,7 @@ protocol OWCommentRatingViewModelingOutputs {
     var votingUpImages: Observable<OWVotingImages> { get }
     var votingDownImages: Observable<OWVotingImages> { get }
     var rankChangeTriggered: Observable<SPRankChange> { get }
+    var commentActionsFontStyle: OWCommentActionsFontStyle { get }
 }
 
 protocol OWCommentRatingViewModeling {
@@ -63,6 +64,10 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .asObservable()
     }
 
+    lazy var commentActionsFontStyle: OWCommentActionsFontStyle = {
+        return self.customizationsLayer.commentActions.fontStyle
+    }()
+
     var rankChangeTriggered: Observable<SPRankChange> {
         let rankUpTriggeredObservable = tapRankUp
             .withLatestFrom(_rankedByUser.unwrap())
@@ -85,13 +90,21 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 
     fileprivate let commentId: String
 
-    init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
         self.sharedServiceProvider = sharedServiceProvider
+        self.customizationsLayer = customizationsLayer
         commentId = ""
     }
 
-    init(model: OWCommentVotingModel, commentId: String, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    fileprivate let customizationsLayer: OWCustomizations
+
+    init(model: OWCommentVotingModel,
+         commentId: String,
+         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
         self.sharedServiceProvider = sharedServiceProvider
+        self.customizationsLayer = customizationsLayer
         _rankUp.onNext(model.rankUpCount)
         _rankDown.onNext(model.rankDownCount)
         _rankedByUser.onNext(model.rankedByUserValue)
