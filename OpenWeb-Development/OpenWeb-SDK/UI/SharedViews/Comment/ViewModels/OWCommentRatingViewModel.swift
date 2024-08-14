@@ -27,7 +27,7 @@ protocol OWCommentRatingViewModelingOutputs {
     var votingUpImages: Observable<OWVotingImages> { get }
     var votingDownImages: Observable<OWVotingImages> { get }
     var rankChangeTriggered: Observable<SPRankChange> { get }
-    var commentActionsFontStyle: OWCommentActionsFontStyle { get }
+    var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> { get }
 }
 
 protocol OWCommentRatingViewModeling {
@@ -64,8 +64,8 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .asObservable()
     }
 
-    lazy var commentActionsFontStyle: OWCommentActionsFontStyle = {
-        return self.customizationsLayer.commentActions.fontStyle
+    lazy var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> = {
+        return Observable.just(self.customizationsLayer.commentActions.fontStyle)
     }()
 
     var rankChangeTriggered: Observable<SPRankChange> {

@@ -165,10 +165,6 @@ fileprivate extension OWCustomizationsLayer {
         setColor(color: theme.primaryBorderColor, type: .borderColor2)
         setColor(color: theme.secondaryBorderColor, type: .borderColor1)
         setColor(color: theme.loaderColor, type: .loaderColor)
-        setColor(color: theme.voteUpUnselectedColor, type: .voteUpUnselectedColor)
-        setColor(color: theme.voteDownUnselectedColor, type: .voteDownUnselectedColor)
-        setColor(color: theme.voteUpSelectedColor, type: .voteUpSelectedColor)
-        setColor(color: theme.voteDownSelectedColor, type: .voteDownSelectedColor)
         // Preventing brand from changing later on from the server
         if let brandColor = theme.brandColor {
             setColor(color: brandColor, type: .brandColor)
@@ -177,18 +173,22 @@ fileprivate extension OWCustomizationsLayer {
 
         // Preventing votes from changing to brandColor later on from the server
         if let voteUpSelectedColor = theme.voteUpSelectedColor {
+            setColor(color: voteUpSelectedColor, type: .voteUpSelectedColor)
             OWColorPalette.shared.blockForOverride(color: .voteUpSelectedColor)
         }
 
         if let voteDownSelectedColor = theme.voteDownSelectedColor {
+            setColor(color: voteDownSelectedColor, type: .voteDownSelectedColor)
             OWColorPalette.shared.blockForOverride(color: .voteDownSelectedColor)
         }
 
         if let voteUpUnselectedColor = theme.voteUpUnselectedColor {
+            setColor(color: voteUpUnselectedColor, type: .voteUpUnselectedColor)
             OWColorPalette.shared.blockForOverride(color: .voteUpUnselectedColor)
         }
 
         if let voteDownUnselectedColor = theme.voteDownUnselectedColor {
+            setColor(color: voteDownUnselectedColor, type: .voteDownUnselectedColor)
             OWColorPalette.shared.blockForOverride(color: .voteDownUnselectedColor)
         }
     }
