@@ -9,6 +9,9 @@
 import Foundation
 import RxSwift
 import OpenWebSDK
+#if !PUBLIC_DEMO_APP
+import OpenWeb_SampleApp_Internal_Configs
+#endif
 
 protocol TestAPIViewModelingInputs {
     var enteredSpotId: PublishSubject<OWSpotId> { get }
@@ -58,8 +61,13 @@ class TestAPIViewModel: TestAPIViewModeling,
     var outputs: TestAPIViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
-        static let preFilledSpotId: String = "sp_eCIlROSD"
-        static let preFilledPostId: String = "sdk1"
+        #if PUBLIC_DEMO_APP
+        static let preFilledSpotId: String = ConversationPreset.publicMainPreset().conversationDataModel.spotId
+        static let preFilledPostId: String = ConversationPreset.publicMainPreset().conversationDataModel.postId
+        #else
+        static let preFilledSpotId: String = DevelopmentConversationPreset.demoSpot().conversationDataModel.spotId
+        static let preFilledPostId: String = DevelopmentConversationPreset.demoSpot().conversationDataModel.postId
+        #endif
     }
 
     fileprivate let disposeBag = DisposeBag()

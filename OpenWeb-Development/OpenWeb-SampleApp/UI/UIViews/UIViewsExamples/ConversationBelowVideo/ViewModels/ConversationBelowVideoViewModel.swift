@@ -9,6 +9,9 @@
 import UIKit
 import RxSwift
 import OpenWebSDK
+#if !PUBLIC_DEMO_APP
+import OpenWeb_SampleApp_Internal_Configs
+#endif
 
 protocol ConversationBelowVideoViewModelingInputs {}
 
@@ -208,7 +211,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     // Providing `renewSSO` callback
     fileprivate lazy var  renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
         guard let self = self else { return }
-        let demoSpotId = ConversationPreset.demoSpot().conversationDataModel.spotId
+        #if !PUBLIC_DEMO_APP
+        let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
         if OpenWeb.manager.spotId == demoSpotId,
            let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
             _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
@@ -224,6 +228,9 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
             completion()
         }
+        #else
+        DLog("`renewSSOCallback` triggered")
+        #endif
     }
 
     init(postId: OWPostId,
