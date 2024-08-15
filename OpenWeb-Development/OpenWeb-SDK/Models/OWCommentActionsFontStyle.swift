@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum OWCommentActionsFontStyle: String, Decodable {
-    case `default`
+public enum OWCommentActionsFontStyle: Int, Codable {
+    case `default` = 0
     case semiBold
 }

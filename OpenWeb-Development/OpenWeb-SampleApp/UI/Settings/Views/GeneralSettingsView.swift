@@ -30,6 +30,8 @@ class GeneralSettingsView: UIView {
         static let textFieldArticleSectionIdentifier = "article_section"
         static let segmentedLanguageStrategyIdentifier = "language_strategy"
         static let segmentedLocaleStrategyIdentifier = "locale_strategy"
+        static let segmentedCommentActionsColorIdentifier = "comment_actions_color"
+        static let segmentedCommentActionsFontStyleIdentifier = "comment_actions_font_style"
         static let pickerLanguageCodeIdentifier = "language_code"
         static let loginPromptSwitchIdentifier = "login_prompt"
         static let verticalOffset: CGFloat = 40
@@ -219,6 +221,24 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
+    fileprivate lazy var segmentedCommentActionsColor: SegmentedControlSetting = {
+        let title = viewModel.outputs.commentActionsColorTitle
+        let items = viewModel.outputs.commentActionsColorSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedCommentActionsColorIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var segmentedCommentActionsFontStyle: SegmentedControlSetting = {
+        let title = viewModel.outputs.commentActionsFontStyleTitle
+        let items = viewModel.outputs.commentActionsFontStyleSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedCommentActionsFontStyleIdentifier,
+                                       items: items)
+    }()
+
     fileprivate let viewModel: GeneralSettingsViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -272,6 +292,8 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedLocaleStrategy)
         stackView.addArrangedSubview(showLoginPromptSwitch)
         stackView.addArrangedSubview(segmentedOrientationEnforcement)
+        stackView.addArrangedSubview(segmentedCommentActionsColor)
+        stackView.addArrangedSubview(segmentedCommentActionsFontStyle)
     }
 
     // swiftlint:disable function_body_length
@@ -289,6 +311,16 @@ fileprivate extension GeneralSettingsView {
         viewModel.outputs.orientationEnforcement
             .map { $0.index }
             .bind(to: segmentedOrientationEnforcement.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.commentActionsColor
+            .map { $0.rawValue }
+            .bind(to: segmentedCommentActionsColor.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.commentActionsFontStyle
+            .map { $0.rawValue }
+            .bind(to: segmentedCommentActionsFontStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.elementsCustomizationStyleIndex
@@ -352,6 +384,18 @@ fileprivate extension GeneralSettingsView {
         segmentedOrientationEnforcement.rx.selectedSegmentIndex
             .map { OWOrientationEnforcement.orientationEnforcement(fromIndex: $0) }
             .bind(to: viewModel.inputs.orientationSelectedEnforcement)
+            .disposed(by: disposeBag)
+
+        segmentedCommentActionsColor.rx.selectedSegmentIndex
+            .map { OWCommentActionsColor(rawValue: $0) }
+            .unwrap()
+            .bind(to: viewModel.inputs.commentActionsColorSelected)
+            .disposed(by: disposeBag)
+
+        segmentedCommentActionsFontStyle.rx.selectedSegmentIndex
+            .map { OWCommentActionsFontStyle(rawValue: $0) }
+            .unwrap()
+            .bind(to: viewModel.inputs.commentActionsFontStyleSelected)
             .disposed(by: disposeBag)
 
         segmentedElementsCustomizationStyle.rx.selectedSegmentIndex
