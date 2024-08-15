@@ -179,9 +179,9 @@ platform :ios do
   desc "Upload debug symbols to Crashlytics"
   lane :upload_debug_symbols_to_crashlytics do |options|
     upload_symbols_to_crashlytics(
-        gsp_path: "./OpenWeb-SampleApp/Resources/GoogleService-Info.plist",
+        gsp_path: "./OpenWeb-SampleApp-Internal-Configs/Resources/GoogleService-Info.plist",
         binary_path: './scripts/upload-symbols',
-        dsym_path: "./OpenWeb-SampleApp.app.dSYM.zip"
+        dsym_path: "./OpenWeb-SampleApp/OpenWeb-SampleApp.app.dSYM.zip"
     )
   end
 
@@ -219,6 +219,7 @@ platform :ios do
   desc "Set build to specific number"
   lane :set_build do |options|
     increment_build_number(build_number: options[:build])
+        increment_build_number(build_number: options[:build], xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
   end
 
   private_lane :sign_xcframework do |options|
