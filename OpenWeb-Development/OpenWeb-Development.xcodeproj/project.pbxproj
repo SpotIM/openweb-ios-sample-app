@@ -554,6 +554,18 @@
 		3DA1DED12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DA1DEC32C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3DA1DEE02C6CCB8B00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1DEC12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */; };
 		3DA1DEE12C6CCB8B00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1DEC12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3DA1DEE62C6DE53300EBFA7D /* DevelopmentConversationPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEE52C6DE53300EBFA7D /* DevelopmentConversationPreset.swift */; };
+		3DA1DEEA2C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEE92C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift */; };
+		3DA1DEED2C6DEA8000EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEEC2C6DEA8000EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift */; };
+		3DA1DEEF2C6DEA9600EBFA7D /* DevelopmentConversationPreset+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEEE2C6DEA9600EBFA7D /* DevelopmentConversationPreset+Extensions.swift */; };
+		3DA1DEF22C6DF11600EBFA7D /* DevelopmentCommentThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEF12C6DF11600EBFA7D /* DevelopmentCommentThread.swift */; };
+		3DA1DEF62C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEF52C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift */; };
+		3DA1DEF82C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEF72C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift */; };
+		3DA1DEFA2C6DF45F00EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEF92C6DF45F00EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift */; };
+		3DA1DEFC2C6DF47700EBFA7D /* DevelopmentUserAuthentication+Extensions .swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEFB2C6DF47700EBFA7D /* DevelopmentUserAuthentication+Extensions .swift */; };
+		3DA1DEFF2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEFE2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift */; };
+		3DA1DF042C6DF6B800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DF032C6DF6B800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift */; };
+		3DA1DF052C6DF7E800EBFA7D /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 		3DA263FE2951BE6500688FFF /* OWNetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA263FD2951BE6500688FFF /* OWNetworkError.swift */; };
 		3DA264002951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA263FF2951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift */; };
 		3DA264022951E32E00688FFF /* OWNetworkCachedResponseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA264012951E32E00688FFF /* OWNetworkCachedResponseHandler.swift */; };
@@ -1072,6 +1084,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 3DA1DEC02C6CCB0300EBFA7D;
 			remoteInfo = "OpenWeb-SampleApp-Internal-Configs";
+		};
+		3DA1DF072C6DF7E800EBFA7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 44C8788C23608BC100E0E662;
+			remoteInfo = OpenWebSDK;
 		};
 		44C8789223608BC100E0E662 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1660,6 +1679,17 @@
 		3DA1DEC12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DA1DEC32C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenWeb_SampleApp_Internal_Configs.h; sourceTree = "<group>"; };
 		3DA1DEC42C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = OpenWeb_SampleApp_Internal_Configs.docc; sourceTree = "<group>"; };
+		3DA1DEE52C6DE53300EBFA7D /* DevelopmentConversationPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentConversationPreset.swift; sourceTree = "<group>"; };
+		3DA1DEE92C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentSDKConversationDataModel.swift; sourceTree = "<group>"; };
+		3DA1DEEC2C6DEA8000EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DevelopmentSDKConversationDataModel+Extensions.swift"; sourceTree = "<group>"; };
+		3DA1DEEE2C6DEA9600EBFA7D /* DevelopmentConversationPreset+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DevelopmentConversationPreset+Extensions.swift"; sourceTree = "<group>"; };
+		3DA1DEF12C6DF11600EBFA7D /* DevelopmentCommentThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentCommentThread.swift; sourceTree = "<group>"; };
+		3DA1DEF52C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentGenericSSOAuthentication.swift; sourceTree = "<group>"; };
+		3DA1DEF72C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentUserAuthentication.swift; sourceTree = "<group>"; };
+		3DA1DEF92C6DF45F00EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DevelopmentGenericSSOAuthentication+Extensions.swift"; sourceTree = "<group>"; };
+		3DA1DEFB2C6DF47700EBFA7D /* DevelopmentUserAuthentication+Extensions .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DevelopmentUserAuthentication+Extensions .swift"; sourceTree = "<group>"; };
+		3DA1DEFE2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentThirdPartySSOAuthentication.swift; sourceTree = "<group>"; };
+		3DA1DF032C6DF6B800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DevelopmentThirdPartySSOAuthentication+Extensions.swift"; sourceTree = "<group>"; };
 		3DA263FD2951BE6500688FFF /* OWNetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkError.swift; sourceTree = "<group>"; };
 		3DA263FF2951C35B00688FFF /* OWNetworkAuthenticationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAuthenticationInterceptor.swift; sourceTree = "<group>"; };
 		3DA264012951E32E00688FFF /* OWNetworkCachedResponseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkCachedResponseHandler.swift; sourceTree = "<group>"; };
@@ -2191,6 +2221,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DA1DF052C6DF7E800EBFA7D /* OpenWebSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2230,6 +2261,7 @@
 		0E1125DC2304BC48006B1489 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				3DA1DEEB2C6DEA5E00EBFA7D /* SampleAppInternalConfigs */,
 				9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */,
 				9EEBF66B2A431A7E00315EB0 /* Notification+Keyboard.swift */,
 				9EFFE780297E851400814648 /* UIColor+Extensions.swift */,
@@ -4047,6 +4079,10 @@
 		3DA1DEC22C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */ = {
 			isa = PBXGroup;
 			children = (
+				3DA1DEFD2C6DF58500EBFA7D /* DevelopmentThirdPartySSOAuthentication */,
+				3DA1DEF42C6DF31900EBFA7D /* DevelopmentGenericSSOAuthentication */,
+				3DA1DEE72C6DE92D00EBFA7D /* DevelopmentConversationPreset */,
+				3DA1DEF32C6DF17200EBFA7D /* DevelopmentVariousSettings */,
 				3DA1DEE42C6CCBE700EBFA7D /* Resources */,
 			);
 			path = "OpenWeb-SampleApp-Internal-Configs";
@@ -4059,6 +4095,52 @@
 				3DA1DEC42C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		3DA1DEE72C6DE92D00EBFA7D /* DevelopmentConversationPreset */ = {
+			isa = PBXGroup;
+			children = (
+				3DA1DEE52C6DE53300EBFA7D /* DevelopmentConversationPreset.swift */,
+				3DA1DEE92C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift */,
+			);
+			path = DevelopmentConversationPreset;
+			sourceTree = "<group>";
+		};
+		3DA1DEEB2C6DEA5E00EBFA7D /* SampleAppInternalConfigs */ = {
+			isa = PBXGroup;
+			children = (
+				3DA1DEEC2C6DEA8000EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift */,
+				3DA1DEEE2C6DEA9600EBFA7D /* DevelopmentConversationPreset+Extensions.swift */,
+				3DA1DEFB2C6DF47700EBFA7D /* DevelopmentUserAuthentication+Extensions .swift */,
+				3DA1DEF92C6DF45F00EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift */,
+				3DA1DF032C6DF6B800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift */,
+			);
+			path = SampleAppInternalConfigs;
+			sourceTree = "<group>";
+		};
+		3DA1DEF32C6DF17200EBFA7D /* DevelopmentVariousSettings */ = {
+			isa = PBXGroup;
+			children = (
+				3DA1DEF12C6DF11600EBFA7D /* DevelopmentCommentThread.swift */,
+			);
+			path = DevelopmentVariousSettings;
+			sourceTree = "<group>";
+		};
+		3DA1DEF42C6DF31900EBFA7D /* DevelopmentGenericSSOAuthentication */ = {
+			isa = PBXGroup;
+			children = (
+				3DA1DEF52C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift */,
+				3DA1DEF72C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift */,
+			);
+			path = DevelopmentGenericSSOAuthentication;
+			sourceTree = "<group>";
+		};
+		3DA1DEFD2C6DF58500EBFA7D /* DevelopmentThirdPartySSOAuthentication */ = {
+			isa = PBXGroup;
+			children = (
+				3DA1DEFE2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift */,
+			);
+			path = DevelopmentThirdPartySSOAuthentication;
 			sourceTree = "<group>";
 		};
 		3DA263FC2950CB0B00688FFF /* Infrastructure */ = {
@@ -6403,6 +6485,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3DA1DF082C6DF7E800EBFA7D /* PBXTargetDependency */,
 			);
 			name = "OpenWeb-SampleApp-Internal-Configs";
 			productName = "OpenWeb-SampleApp-Internal-Configs";
@@ -6728,6 +6811,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DA1DEC52C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc in Sources */,
+				3DA1DEE62C6DE53300EBFA7D /* DevelopmentConversationPreset.swift in Sources */,
+				3DA1DEF82C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift in Sources */,
+				3DA1DEFF2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift in Sources */,
+				3DA1DEF62C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift in Sources */,
+				3DA1DEEA2C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift in Sources */,
+				3DA1DEF22C6DF11600EBFA7D /* DevelopmentCommentThread.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7576,6 +7665,7 @@
 				3DDE1D8729C9913F00F7F8D5 /* SilentSSOAuthenticationNewAPI.swift in Sources */,
 				9E7D5B0E2A0A777900F1707C /* CommentThreadSettingsVM.swift in Sources */,
 				9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */,
+				3DA1DEEF2C6DEA9600EBFA7D /* DevelopmentConversationPreset+Extensions.swift in Sources */,
 				3DE476DA2ABC1E6800093D09 /* UIViewsExamplesViewModel.swift in Sources */,
 				9EBE5C2429AE0304001150DA /* CommentCreationSettingsVM.swift in Sources */,
 				9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */,
@@ -7590,6 +7680,7 @@
 				9EBE5C3029AE29B3001150DA /* OWFontGroupFamily+Extensions.swift in Sources */,
 				3D6E66A52C637DB600F6C1BF /* MainPageVC.swift in Sources */,
 				248403A22ADE50C900EAD59A /* OWOrientationEnforcement+Extensions.swift in Sources */,
+				3DA1DEFA2C6DF45F00EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift in Sources */,
 				2435B82F2B85F05B002F9422 /* OWNetworkEnvironment.swift in Sources */,
 				24ECB4A22A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift in Sources */,
 				9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */,
@@ -7627,6 +7718,7 @@
 				3D50D92F2B1656BC00FD3232 /* AuthenticationPlaygroundVC.swift in Sources */,
 				8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */,
 				3DA1DEB62C6A36EE00EBFA7D /* SampleAppSettingsView.swift in Sources */,
+				3DA1DF042C6DF6B800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift in Sources */,
 				9EB427422A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift in Sources */,
 				243ED2AD2B4155D90036E71D /* ColorsCustomizationVC.swift in Sources */,
 				8DBC167A2A406C290010759E /* OWArticleHeaderStyle+Extensions.swift in Sources */,
@@ -7648,6 +7740,7 @@
 				9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */,
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
 				3D2AD2762C68D73000FF93EA /* SettingsCoordinator.swift in Sources */,
+				3DA1DEFC2C6DF47700EBFA7D /* DevelopmentUserAuthentication+Extensions .swift in Sources */,
 				3D50D9302B1656BC00FD3232 /* AuthenticationPlaygroundViewModel.swift in Sources */,
 				241F71F92B42ADA5007619AC /* ColorSelectionItemCell.swift in Sources */,
 				3DA1DEAE2C6A105800EBFA7D /* MockArticleIndependentCoordinator.swift in Sources */,
@@ -7665,6 +7758,7 @@
 				3DE476D82ABC1E5700093D09 /* UIViewsExamplesVC.swift in Sources */,
 				9EA0F83F29ACBA9C008FD7A6 /* PreConversationSettingsView.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
+				3DA1DEED2C6DEA8000EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift in Sources */,
 				9EC33FCE29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift in Sources */,
 				3DA1DEB22C6A179700EBFA7D /* TestingPlaygroundCoordinator.swift in Sources */,
 				9E7D5B102A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift in Sources */,
@@ -7757,6 +7851,11 @@
 			isa = PBXTargetDependency;
 			target = 3DA1DEC02C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */;
 			targetProxy = 3DA1DEE22C6CCB8B00EBFA7D /* PBXContainerItemProxy */;
+		};
+		3DA1DF082C6DF7E800EBFA7D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 44C8788C23608BC100E0E662 /* OpenWebSDK */;
+			targetProxy = 3DA1DF072C6DF7E800EBFA7D /* PBXContainerItemProxy */;
 		};
 		44C8789323608BC100E0E662 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -7859,8 +7958,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 06F053FB7DA563D6B522039D /* Pods-OpenWeb-SampleApp.public.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -8034,8 +8134,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A180B1575E260C0F3627E1FD /* Pods-OpenWeb-SampleApp.beta.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -8202,8 +8303,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 595DD9D22C230615BA017425 /* Pods-OpenWeb-SampleApp.releasebeta.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
@@ -8368,8 +8470,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8440B9FFAE5F98CEA71A7D03 /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
@@ -9229,8 +9332,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 96876C7165E3521828B9902D /* Pods-OpenWeb-SampleApp.internal.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -9269,8 +9373,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 83DC33300C7255F0970EB637 /* Pods-OpenWeb-SampleApp.releaseinternal.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";

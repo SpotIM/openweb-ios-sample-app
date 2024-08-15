@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if !PUBLIC_DEMO_APP
+    import OpenWeb_SampleApp_Internal_Configs
+#endif
 
 struct ConversationPreset {
     let displayName: String
@@ -18,56 +21,25 @@ struct ConversationPreset {
 extension ConversationPreset {
     static let mockModels = Self.createMockModels()
 
-    static func demoSpot() -> ConversationPreset {
-        return ConversationPreset(displayName: "Demo Spot",
-                                  conversationDataModel: SDKConversationDataModel(spotId: "sp_eCIlROSD",
-                                                                                  postId: "sdk1"))
+    static func publicMainPreset() -> ConversationPreset {
+        // TODO: Return a dedicated "main demo" preset for public Sample App preset
+        return ConversationPreset(displayName: "Demo Spot - Public",
+                                              conversationDataModel: SDKConversationDataModel(spotId: "sp_eCIlROSD",
+                                                                                              postId: "sdk1"))
+    }
+
+    static func publicPresets() -> [ConversationPreset] {
+        // TODO: Add more presets
+        return [publicMainPreset()]
     }
 
     static func createMockModels() -> [ConversationPreset] {
 
-        let demoConversationPreset = [demoSpot()]
-
     #if PUBLIC_DEMO_APP
-        return demoConversationPreset
-
+        return publicPresets()
     #else
-        return demoConversationPreset + [ConversationPreset(displayName: "Mail Online (MOL)",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_jhHPoiRK",
-                                                                                                            postId: "13019781")),
-                                         ConversationPreset(displayName: "FOX News",
-                                                                                             conversationDataModel: SDKConversationDataModel(spotId: "sp_ANQXRpqH",
-                                                                                                                                             postId: "urn:uri:base64:3cb1232f-b7ea-5546-81a5-395a75a27b1b")),
-                                         ConversationPreset(displayName: "Yahoo",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_Rba9aFpG",
-                                                                                                            postId: "finmb$24937"),
-                                                            section: "stock"),
-                                         ConversationPreset(displayName: "Ynet",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_AJXaDckj",
-                                                                                                            postId: "S19Z20aTU")),
-                                         ConversationPreset(displayName: "DailyMotion - Staging",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_srsgdH9A",
-                                                                                                            postId: "x8ick9b")),
-                                         ConversationPreset(displayName: "DailyMotion - beta",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_ToLXXNEQ",
-                                                                                                            postId: "x8cpf62")),
-                                         ConversationPreset(displayName: "DailyMotion - Prod",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_ybZYQUfH",
-                                                                                                            postId: "x8jj55n")),
-                                         ConversationPreset(displayName: "mobile SSO",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSSO",
-                                                                                                            postId: "sdk1")),
-                                         ConversationPreset(displayName: "mobile Guest",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileGuest",
-                                                                                                            postId: "sdk1"),
-                                                            section: "other_section"),
-                                         ConversationPreset(displayName: "mobile Social",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSocial",
-                                                                                                            postId: "sdk1")),
-                                         ConversationPreset(displayName: "mobile Social Guest",
-                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSocialGuest",
-                                                                                                            postId: "sdk1"))]
-
+        let developmentPresets = DevelopmentConversationPreset.developmentPresets().map { $0.toConversationPreset() }
+        return publicPresets()+developmentPresets
     #endif
     }
 }

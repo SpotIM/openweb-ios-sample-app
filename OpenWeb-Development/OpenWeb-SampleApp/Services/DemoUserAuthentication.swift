@@ -13,7 +13,7 @@ import OpenWebSDK
 internal class DemoUserAuthentication {
 
     /*
-     Using a mock sso server for the demo login which is valid in our demo spot `sp_eCIlROSD`.
+     Using a mock sso server for the demo login which is valid in our demo spots.
      Base URL defined as it is in `demo-publisher` github repository.
      The actual server responses arriving and implemented in `sso-mock-server` github repository.
      */
