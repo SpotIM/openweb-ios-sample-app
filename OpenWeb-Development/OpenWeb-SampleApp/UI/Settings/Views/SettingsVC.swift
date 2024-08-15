@@ -107,16 +107,20 @@ fileprivate extension SettingsVC {
                 previousView = settingsView
             }
         }
+    }
 
-        if let generalSettingsVM = viewModel.outputs.settingsVMs.first(where: { $0 is GeneralSettingsViewModeling }) as? GeneralSettingsViewModeling {
-            generalSettingsVM.outputs.openColorsCustomizationScreen
-                .subscribe(onNext: { [weak self] vc in
-                    guard let self = self else { return }
-                    // TODO: Move that into a dedicated coordinator
-                    self.navigationController?.pushViewController(vc, animated: true)
-                })
-                .disposed(by: disposeBag)
+    func scrollToView(toView: UIView) {
+        if let origin = toView.superview {
+            // Get the Y position of your child view
+            let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
+            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - self.view.frame.height / 3), animated: true)
         }
+    }
+
+    func setupObservers() {
+        resetButton.rx.tap
+            .bind(to: viewModel.inputs.resetToDefaultTap)
+            .disposed(by: disposeBag)
 
         // keyboard will show
         NotificationCenter.default.rx
@@ -153,20 +157,6 @@ fileprivate extension SettingsVC {
                     make.bottom.equalToSuperview().offset(-Metrics.resetButtonVerticalPadding)
                 }
             })
-            .disposed(by: disposeBag)
-    }
-
-    func scrollToView(toView: UIView) {
-        if let origin = toView.superview {
-            // Get the Y position of your child view
-            let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
-            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - self.view.frame.height / 3), animated: true)
-        }
-    }
-
-    func setupObservers() {
-        resetButton.rx.tap
-            .bind(to: viewModel.inputs.resetToDefaultTap)
             .disposed(by: disposeBag)
     }
 }
