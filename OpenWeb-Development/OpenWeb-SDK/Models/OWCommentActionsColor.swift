@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum OWCommentActionsColor: String, Decodable {
-    case `default`
+public enum OWCommentActionsColor: Int, Codable {
+    case `default` = 0
     case brandColor
 }
