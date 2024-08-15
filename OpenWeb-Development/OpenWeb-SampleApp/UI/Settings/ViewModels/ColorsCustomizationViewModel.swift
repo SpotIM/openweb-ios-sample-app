@@ -51,10 +51,10 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             ThemeColorItem(title: "Secondary Border", initialColor: initialColorTheme.secondaryBorderColor),
             ThemeColorItem(title: "Loader", initialColor: initialColorTheme.loaderColor),
             ThemeColorItem(title: "Brand Color", initialColor: initialColorTheme.brandColor),
-            ThemeColorItem(title: "Vote Up Unselected Color", initialColor: initialColorTheme.voteUpUnselectedColor),
-            ThemeColorItem(title: "Vote Down Unselected Color", initialColor: initialColorTheme.voteDownUnselectedColor),
-            ThemeColorItem(title: "Vote Up Selected Color", initialColor: initialColorTheme.voteUpSelectedColor),
-            ThemeColorItem(title: "Vote Down Selected Color", initialColor: initialColorTheme.voteDownSelectedColor)
+            ThemeColorItem(title: "Vote Up Unselected", initialColor: initialColorTheme.voteUpUnselectedColor),
+            ThemeColorItem(title: "Vote Down Unselected", initialColor: initialColorTheme.voteDownUnselectedColor),
+            ThemeColorItem(title: "Vote Up Selected", initialColor: initialColorTheme.voteUpSelectedColor),
+            ThemeColorItem(title: "Vote Down Selected", initialColor: initialColorTheme.voteDownSelectedColor)
         ]
     }()
 

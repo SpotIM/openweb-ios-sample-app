@@ -114,6 +114,8 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case orientationEnforcement = "orientationEnforcement"
         case selectedSpotId = "selectedSpotId"
         case selectedPostId = "selectedPostId"
+        case commentActionsColor = "commentActionsColor"
+        case commentActionsFontStyle = "commentActionsFontStyle"
     }
 }
 
@@ -199,6 +201,10 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the current spot id"
         case .selectedPostId:
             return "Key which stores the current post id"
+        case .commentActionsColor:
+            return "Key which stores the comment action's color"
+        case .commentActionsFontStyle:
+            return "Key which stores the comment action's font style"
         }
     }
 }
