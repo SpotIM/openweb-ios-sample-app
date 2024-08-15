@@ -114,6 +114,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case orientationEnforcement = "orientationEnforcement"
         case selectedSpotId = "selectedSpotId"
         case selectedPostId = "selectedPostId"
+        case deeplinkOption = "deeplinkOption"
     }
 }
 
@@ -199,6 +200,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the current spot id"
         case .selectedPostId:
             return "Key which stores the current post id"
+        case .deeplinkOption:
+            return "Key which stores the SampleApp deeplink option"
         }
     }
 }

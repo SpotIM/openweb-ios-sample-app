@@ -93,13 +93,5 @@ fileprivate extension UIViewsExamplesVC {
         btnConversationBelowVideo.rx.tap
             .bind(to: viewModel.inputs.conversationBelowVideoTapped)
             .disposed(by: disposeBag)
-
-        viewModel.outputs.openConversationBelowVideo
-            .subscribe(onNext: { [weak self] postId in
-                let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
-                let conversationBelowVideoVC = ConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
-                self?.navigationController?.pushViewController(conversationBelowVideoVC, animated: true)
-            })
-            .disposed(by: disposeBag)
     }
 }

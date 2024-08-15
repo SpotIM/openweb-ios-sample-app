@@ -207,21 +207,5 @@ fileprivate extension UIViewsVC {
         btnExamples.rx.tap
             .bind(to: viewModel.inputs.examplesTapped)
             .disposed(by: disposeBag)
-
-        viewModel.outputs.openMockArticleScreen
-            .subscribe(onNext: { [weak self] settings in
-                let mockArticleIndependentViewsVM = MockArticleIndependentViewsViewModel(actionSettings: settings)
-                let mockArticleIndependentViewsVC = MockArticleIndependentViewsVC(viewModel: mockArticleIndependentViewsVM)
-                self?.navigationController?.pushViewController(mockArticleIndependentViewsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.openExamplesScreen
-            .subscribe(onNext: { [weak self] postId in
-                let viewsExamplesVM = UIViewsExamplesViewModel(postId: postId)
-                let viewsExamplesVC = UIViewsExamplesVC(viewModel: viewsExamplesVM)
-                self?.navigationController?.pushViewController(viewsExamplesVC, animated: true)
-            })
-            .disposed(by: disposeBag)
     }
 }
