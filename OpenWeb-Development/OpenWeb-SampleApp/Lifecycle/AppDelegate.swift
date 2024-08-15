@@ -7,26 +7,30 @@
 //
 
 import UIKit
-import OpenWebSDK
-import GoogleMobileAds
-import FirebaseCore
+import RxSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var appCoordinator: AppCoordinator!
+    var userDefaultsProvider: UserDefaultsProviderProtocol!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
 
-        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldShowOpenFullConversation)
-        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack)
-        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldOpenComment)
+        window = UIWindow(frame: UIScreen.main.bounds)
+        appCoordinator = AppCoordinator(window: window!)
+        userDefaultsProvider = UserDefaultsProvider.shared
+        // Retrieve deep link from the settings of such was set
+        let deeplink = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption,
+                                                defaultValue: .none)
 
-        #if !(DEBUG)
-        FirebaseApp.configure()
-        #endif
+        // No need to dispose, as we are taking only one and this observable should also never end
+        _ = appCoordinator
+            .start(deepLinkOptions: deeplink.toDeepLinkOptions)
+            .take(1)
+            .subscribe()
 
         return true
     }

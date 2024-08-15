@@ -244,13 +244,5 @@ fileprivate extension UIFlowsVC {
                 return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
             .bind(to: viewModel.inputs.commentThreadTapped)
             .disposed(by: disposeBag)
-
-        viewModel.outputs.openMockArticleScreen
-            .subscribe(onNext: { [weak self] settings in
-                let mockArticleFlowsVM = MockArticleFlowsViewModel(actionSettings: settings)
-                let mockArticleFlowsVC = MockArticleFlowsVC(viewModel: mockArticleFlowsVM)
-                self?.navigationController?.pushViewController(mockArticleFlowsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
     }
 }
