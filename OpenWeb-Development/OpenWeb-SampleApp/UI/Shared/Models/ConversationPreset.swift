@@ -21,6 +21,15 @@ struct ConversationPreset {
 extension ConversationPreset {
     static let mockModels = Self.createMockModels()
 
+    static func createMockModels() -> [ConversationPreset] {
+    #if PUBLIC_DEMO_APP
+        return publicPresets()
+    #else
+        let developmentPresets = DevelopmentConversationPreset.developmentPresets().map { $0.toConversationPreset() }
+        return publicPresets()+developmentPresets
+    #endif
+    }
+
     static func publicMainPreset() -> ConversationPreset {
         // TODO: Return a dedicated "main demo" preset for public Sample App preset
         return ConversationPreset(displayName: "Demo Spot - Public",
@@ -28,19 +37,9 @@ extension ConversationPreset {
                                                                                               postId: "sdk1"))
     }
 
-    static func publicPresets() -> [ConversationPreset] {
+    fileprivate static func publicPresets() -> [ConversationPreset] {
         // TODO: Add more presets
         return [publicMainPreset()]
-    }
-
-    static func createMockModels() -> [ConversationPreset] {
-
-    #if PUBLIC_DEMO_APP
-        return publicPresets()
-    #else
-        let developmentPresets = DevelopmentConversationPreset.developmentPresets().map { $0.toConversationPreset() }
-        return publicPresets()+developmentPresets
-    #endif
     }
 }
 // swiftlint:enable line_length
