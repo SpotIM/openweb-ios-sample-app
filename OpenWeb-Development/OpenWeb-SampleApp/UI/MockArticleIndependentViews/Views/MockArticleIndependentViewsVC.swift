@@ -118,15 +118,6 @@ fileprivate extension MockArticleIndependentViewsVC {
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openSettings
-            .subscribe(onNext: { [weak self] settingsType in
-                guard let self = self else { return }
-                let settingsVM = SettingsViewModel(settingViewTypes: [settingsType])
-                let settingsVC = SettingsVC(viewModel: settingsVM)
-                self.navigationController?.pushViewController(settingsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
         viewModel.outputs.showComponent
             .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }

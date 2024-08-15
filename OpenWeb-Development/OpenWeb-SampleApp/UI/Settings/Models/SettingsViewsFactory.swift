@@ -14,6 +14,8 @@ class SettingsViewsFactory {
         // We can be sure that in every case it is the one we are casting to, so we force unwrap safely
         // swiftlint:disable force_cast
         switch settingsVM.self {
+        case is SampleAppSettingsVM:
+            return SampleAppSettingsView(viewModel: settingsVM as! SampleAppSettingsVM)
         case is GeneralSettingsVM:
             return GeneralSettingsView(viewModel: settingsVM as! GeneralSettingsVM)
         case is PreConversationSettingsVM:

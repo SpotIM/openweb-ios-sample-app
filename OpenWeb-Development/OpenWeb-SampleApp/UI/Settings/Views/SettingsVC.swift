@@ -112,6 +112,7 @@ fileprivate extension SettingsVC {
             generalSettingsVM.outputs.openColorsCustomizationScreen
                 .subscribe(onNext: { [weak self] vc in
                     guard let self = self else { return }
+                    // TODO: Move that into a dedicated coordinator
                     self.navigationController?.pushViewController(vc, animated: true)
                 })
                 .disposed(by: disposeBag)

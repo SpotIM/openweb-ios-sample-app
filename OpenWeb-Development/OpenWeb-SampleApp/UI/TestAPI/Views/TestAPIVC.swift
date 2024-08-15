@@ -169,9 +169,6 @@ class TestAPIVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        // Re-setuping navigation controller colors to be set by the regular OS theme mode
-        setupNavControllerUI()
         viewModel.inputs.viewWillAppear.onNext()
     }
 
@@ -353,39 +350,12 @@ fileprivate extension TestAPIVC {
             .bind(to: viewModel.inputs.uiFlowsTapped)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openUIFlows
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let uiFlowsVM = UIFlowsViewModel(dataModel: dataModel)
-                let uiFlowsVC = UIFlowsVC(viewModel: uiFlowsVM)
-                self.navigationController?.pushViewController(uiFlowsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
         btnUIViews.rx.tap
             .bind(to: viewModel.inputs.uiViewsTapped)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openUIViews
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let uiViewsVM = UIViewsViewModel(dataModel: dataModel)
-                let uiViewsVC = UIViewsVC(viewModel: uiViewsVM)
-                self.navigationController?.pushViewController(uiViewsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
         btnMiscellaneous.rx.tap
             .bind(to: viewModel.inputs.miscellaneousTapped)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.openMiscellaneous
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let miscellaneousVM = MiscellaneousViewModel(dataModel: dataModel)
-                let miscellaneousVC = MiscellaneousVC(viewModel: miscellaneousVM)
-                self.navigationController?.pushViewController(miscellaneousVC, animated: true)
-            })
             .disposed(by: disposeBag)
 
         btnTestingPlayground.rx.tap
@@ -396,52 +366,12 @@ fileprivate extension TestAPIVC {
             .bind(to: viewModel.inputs.automationTapped)
             .disposed(by: disposeBag)
 
-#if BETA
-        viewModel.outputs.openTestingPlayground
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let testingPlaygroundVM = TestingPlaygroundViewModel(dataModel: dataModel)
-                let testingPlaygroundVC = TestingPlaygroundVC(viewModel: testingPlaygroundVM)
-                self.navigationController?.pushViewController(testingPlaygroundVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-#endif
-
-#if AUTOMATION
-        viewModel.outputs.openAutomation
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
-                let automationVM = AutomationViewModel(dataModel: dataModel)
-                let automationVC = AutomationVC(viewModel: automationVM)
-                self.navigationController?.pushViewController(automationVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-#endif
-
         settingsBarItem.rx.tap
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
 
         authBarItem.rx.tap
             .bind(to: viewModel.inputs.authenticationTapped)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.openSettings
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let settingsVM = SettingsViewModel(settingViewTypes: SettingsGroupType.all)
-                let settingsVC = SettingsVC(viewModel: settingsVM)
-                self.navigationController?.pushViewController(settingsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.openAuthentication
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let authenticationVM = AuthenticationPlaygroundNewAPIViewModel()
-                let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
-                self.navigationController?.pushViewController(authenticationVC, animated: true)
-            })
             .disposed(by: disposeBag)
 
         // Bind select preset
@@ -486,37 +416,6 @@ fileprivate extension TestAPIVC {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
-
-    func setupNavControllerUI() {
-        let navController = self.navigationController
-
-        let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
-        navController?.navigationBar.tintColor = ColorPalette.shared.color(type: .text)
-
-        // Setup Title font
-        let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18, weight: .bold),
-            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text)
-        ]
-
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = navigationBarBackgroundColor
-            appearance.titleTextAttributes = navigationTitleTextAttributes
-
-            // Setup Back button
-            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
-            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-            appearance.backButtonAppearance = backButtonAppearance
-
-            navController?.navigationBar.standardAppearance = appearance
-            navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
-        } else {
-            navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
-            navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-        }
-    }
 }
 
 fileprivate extension TestAPIVC {
