@@ -204,7 +204,6 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .disposed(by: disposeBag)
 
-        // TODO change to new API
         // Generic SSO authentication started
         genericSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
@@ -303,7 +302,6 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             .subscribe()
             .disposed(by: disposeBag)
 
-        // TODO change to new API
         // Third-party SSO authentication started
         thirdPartySSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
