@@ -62,8 +62,6 @@ fileprivate extension CommentCreationToolbarViewModel {
                     let action = cellViewModel.outputs.action
                     switch (result, action) {
                     case (.success(let manipulateTextModel), .append(let textToAppend)):
-                        let userTextInput = manipulateTextModel.text
-                        let range = manipulateTextModel.cursorRange
                         return textToAppend
                     case (.success(_), .removeAll):
                         return ""
