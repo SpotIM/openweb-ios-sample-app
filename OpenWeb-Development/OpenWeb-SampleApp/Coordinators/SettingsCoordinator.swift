@@ -35,11 +35,28 @@ class SettingsCoordinator: BaseCoordinator<Void> {
             shouldAnimate = false
         }
 
+        setupCoordinatorInternalNavigation(viewModel: settingsVM)
+
         router.push(settingsVC,
                     animated: shouldAnimate,
                     completion: vcPopped)
 
         return vcPopped
             .asObservable()
+    }
+}
+
+fileprivate extension SettingsCoordinator {
+    func setupCoordinatorInternalNavigation(viewModel: SettingsViewModeling) {
+        if let generalSettingsVM = viewModel.outputs.settingsVMs.first(where: { $0 is GeneralSettingsViewModeling }) as? GeneralSettingsViewModeling {
+            generalSettingsVM.outputs.openColorsCustomizationScreen
+                .subscribe(onNext: { [weak self] colorsCustomizationVC in
+                    guard let self = self else { return }
+                    self.router.push(colorsCustomizationVC,
+                                     animated: true,
+                                     completion: nil)
+                })
+                .disposed(by: disposeBag)
+        }
     }
 }
