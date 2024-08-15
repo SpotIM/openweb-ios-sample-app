@@ -140,7 +140,6 @@ fileprivate extension MockArticleIndependentViewsVC {
                 case .clarityDetails:
                     self.handleClarityDetailsPresentation()
                 default:
-                    // TODO: Implement for supported types
                     break
                 }
             })

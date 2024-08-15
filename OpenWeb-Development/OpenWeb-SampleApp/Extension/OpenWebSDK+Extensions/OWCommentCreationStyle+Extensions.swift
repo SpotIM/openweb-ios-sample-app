@@ -17,7 +17,6 @@ extension OWCommentCreationStyle {
         case OWCommentCreationStyleIndexer.light.index: return .light
         case OWCommentCreationStyleIndexer.floatingKeyboard.index:
             let toolbar = commonCreatorService.commentCreationFloatingBottomToolbar().1
-            // TODO: Add in the settings screen an option to select our customized bottom toolbar or none
             return .floatingKeyboard(accessoryViewStrategy: .bottomToolbar(toolbar: toolbar))
         default: return .regular
         }
