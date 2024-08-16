@@ -202,6 +202,7 @@ fileprivate extension OWCommentEngagementView {
                 case .default:
                     self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
                     self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
+                    self.shareButton.tintColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 case .brandColor:
                     self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle), for: .normal)
                     self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle), for: .normal)
