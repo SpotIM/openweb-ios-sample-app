@@ -215,7 +215,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.internal.xcconfig"; path = "../openweb-ios-sample-app/Pods/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3D11D91F2C722BD3003794C6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; };
 		3DA1DF132C6E200300EBFA7D /* OpenWeb-SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWeb-SampleApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DA1E4E52C6E221800EBFA7D /* OWAccessoryViewStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWAccessoryViewStrategy+Extensions.swift"; sourceTree = "<group>"; };
@@ -403,12 +402,7 @@
 		3DA1E6D02C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DA1E6D12C6E299A00EBFA7D /* OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DA1E6D72C6E29B600EBFA7D /* GiphyUISDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GiphyUISDK.xcframework; path = "../Vendor-Frameworks/GiphyUISDK.xcframework"; sourceTree = "<group>"; };
-		49275B8B9F306D027D4385D7 /* Pods-OpenWeb-SampleApp.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.beta.xcconfig"; path = "../openweb-ios-sample-app/Pods/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.beta.xcconfig"; sourceTree = "<group>"; };
 		79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWeb_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		848D05A62E8E58EC0D6D0D41 /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "../openweb-ios-sample-app/Pods/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
-		8C415B3F6B78213DDE6D8B0D /* Pods-OpenWeb-SampleApp.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasebeta.xcconfig"; path = "../openweb-ios-sample-app/Pods/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasebeta.xcconfig"; sourceTree = "<group>"; };
-		D814DA2AF7AA9338F34E5D7F /* Pods-OpenWeb-SampleApp.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releaseinternal.xcconfig"; path = "../openweb-ios-sample-app/Pods/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releaseinternal.xcconfig"; sourceTree = "<group>"; };
-		DC3435E48547944AFCF7CE91 /* Pods-OpenWeb-SampleApp.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.public.xcconfig"; path = "../openweb-ios-sample-app/Pods/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.public.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -431,7 +425,6 @@
 			children = (
 				3DA1DF152C6E200300EBFA7D /* OpenWeb-SampleApp */,
 				3DA1DF142C6E200300EBFA7D /* Products */,
-				DA4279E9B3BECB2805C3FA00 /* Pods */,
 				F8EE71FFA740F7552CE3A9AF /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -1258,20 +1251,6 @@
 			path = Style;
 			sourceTree = "<group>";
 		};
-		DA4279E9B3BECB2805C3FA00 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */,
-				49275B8B9F306D027D4385D7 /* Pods-OpenWeb-SampleApp.beta.xcconfig */,
-				DC3435E48547944AFCF7CE91 /* Pods-OpenWeb-SampleApp.public.xcconfig */,
-				D814DA2AF7AA9338F34E5D7F /* Pods-OpenWeb-SampleApp.releaseinternal.xcconfig */,
-				8C415B3F6B78213DDE6D8B0D /* Pods-OpenWeb-SampleApp.releasebeta.xcconfig */,
-				848D05A62E8E58EC0D6D0D41 /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */,
-			);
-			name = Pods;
-			path = ../Pods;
-			sourceTree = "<group>";
-		};
 		F8EE71FFA740F7552CE3A9AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1672,7 +1651,6 @@
 		};
 		3DA1DF292C6E200400EBFA7D /* Internal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1765,7 +1743,6 @@
 		};
 		3DA1E6C62C6E24A900EBFA7D /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D814DA2AF7AA9338F34E5D7F /* Pods-OpenWeb-SampleApp.releaseinternal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1866,7 +1843,6 @@
 		};
 		3DA1E6C82C6E24CA00EBFA7D /* Beta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49275B8B9F306D027D4385D7 /* Pods-OpenWeb-SampleApp.beta.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1968,7 +1944,6 @@
 		};
 		3DA1E6CA2C6E24D100EBFA7D /* Public */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DC3435E48547944AFCF7CE91 /* Pods-OpenWeb-SampleApp.public.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2062,7 +2037,6 @@
 		};
 		3DA1E6CC2C6E24F400EBFA7D /* ReleaseBeta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8C415B3F6B78213DDE6D8B0D /* Pods-OpenWeb-SampleApp.releasebeta.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2156,7 +2130,6 @@
 		};
 		3DA1E6CE2C6E24FE00EBFA7D /* ReleasePublic */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 848D05A62E8E58EC0D6D0D41 /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
