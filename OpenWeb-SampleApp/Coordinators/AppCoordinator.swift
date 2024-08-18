@@ -8,7 +8,6 @@
 import RxSwift
 import OpenWebSDK
 import UIKit
-import GoogleMobileAds
 import FirebaseCore
 
 class AppCoordinator: BaseCoordinator<Void> {
@@ -38,8 +37,6 @@ fileprivate extension AppCoordinator {
     }
 
     func initialVendorsSetup() {
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
-
         #if !(DEBUG)
         FirebaseApp.configure()
         #endif
