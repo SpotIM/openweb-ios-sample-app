@@ -445,24 +445,16 @@
 		3DA1DF152C6E200300EBFA7D /* OpenWeb-SampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				3DA1E5342C6E221800EBFA7D /* Coordinators */,
-				3DA1E5132C6E221800EBFA7D /* Extension */,
-				3DA1E4E42C6E221800EBFA7D /* fastlane */,
-				3DA1E5382C6E221800EBFA7D /* Helpers */,
 				3DA1E5362C6E221800EBFA7D /* Lifecycle */,
-				3DA1E5202C6E221800EBFA7D /* Resources */,
-				3DA1E5FC2C6E221800EBFA7D /* Services */,
-				3DA1E6012C6E221800EBFA7D /* Style */,
+				3DA1E5342C6E221800EBFA7D /* Coordinators */,
 				3DA1E5F42C6E221800EBFA7D /* UI */,
+				3DA1E5FC2C6E221800EBFA7D /* Services */,
+				3DA1E5132C6E221800EBFA7D /* Extension */,
+				3DA1E5382C6E221800EBFA7D /* Helpers */,
+				3DA1E6012C6E221800EBFA7D /* Style */,
+				3DA1E5202C6E221800EBFA7D /* Resources */,
 			);
 			path = "OpenWeb-SampleApp";
-			sourceTree = "<group>";
-		};
-		3DA1E4E42C6E221800EBFA7D /* fastlane */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = fastlane;
 			sourceTree = "<group>";
 		};
 		3DA1E4FC2C6E221800EBFA7D /* OpenWebSDK+Extensions */ = {
