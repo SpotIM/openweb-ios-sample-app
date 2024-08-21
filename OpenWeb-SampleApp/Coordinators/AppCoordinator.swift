@@ -10,6 +10,9 @@ import OpenWebSDK
 import UIKit
 import GoogleMobileAds
 import FirebaseCore
+#if !PUBLIC_DEMO_APP
+    import OpenWeb_SampleApp_Internal_Configs
+#endif
 
 class AppCoordinator: BaseCoordinator<Void> {
 
@@ -40,9 +43,14 @@ fileprivate extension AppCoordinator {
     func initialVendorsSetup() {
         GADMobileAds.sharedInstance().start(completionHandler: nil)
 
-        #if !(DEBUG)
-        FirebaseApp.configure()
-        #endif
+#if !(DEBUG) && !PUBLIC_DEMO_APP
+        if let firebaseFilePath = Bundle.openWebInternalConfigs
+            .path(forResource: "GoogleService-Info", ofType: "plist"),
+           let firebaseOptions = FirebaseOptions(contentsOfFile: firebaseFilePath) {
+
+            FirebaseApp.configure(options: firebaseOptions)
+        }
+#endif
     }
 
     func initialDataSetup() {
