@@ -169,6 +169,7 @@ class TestAPIVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         viewModel.inputs.viewWillAppear.onNext()
     }
 
