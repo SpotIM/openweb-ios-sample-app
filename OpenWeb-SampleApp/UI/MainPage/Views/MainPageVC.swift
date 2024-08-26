@@ -13,16 +13,18 @@ import RxCocoa
 
 class MainPageVC: UIViewController {
     fileprivate struct Metrics {
-        static let verticalMargin: CGFloat = 20
-        static let horizontalMargin: CGFloat = 40
+        static let verticalMargin: CGFloat = 40
+        static let horizontalMargin: CGFloat = 20
         static let identifier = "main_page_vc_id"
         static let logoIdentifier = "open_web_logo_id"
+        static let sampleAppImageIdentifier = "sample_app_image_id"
         static let welcomeTextIdentifier = "welcome_text_id"
+        static let descriptionTextIdentifier = "description_text_id"
         static let versionIdentifier = "version_text_id"
         static let buildIdentifier = "build_text_id"
-        static let testAPIButtonIdentifier = "test_api_btn_id"
-        static let aboutBarButtonIdentifier = "about_bar_btn_id"
-        static let buttonHeight: CGFloat = 50
+        static let exploreButtonIdentifier = "test_api_btn_id" // identifier as before for QA automation tests to work
+        static let aboutBarButtonIdentifier = "about_btn_id"
+        static let buttonHeight: CGFloat = 40
     }
 
     fileprivate let viewModel: MainPageViewModeling
@@ -31,37 +33,52 @@ class MainPageVC: UIViewController {
     fileprivate lazy var welcomeLbl: UILabel = {
         return UILabel()
             .numberOfLines(0)
-            .textColor(ColorPalette.shared.color(type: .blackish))
-            .font(FontBook.paragraphMedium)
+            .textColor(ColorAsset.L6.color)
+            .font(FontBook.mainHeadingBold)
+            .textAlignment(.center)
+    }()
+
+    fileprivate lazy var descriptionLbl: UILabel = {
+        return UILabel()
+            .numberOfLines(0)
+            .textColor(ColorAsset.L6.color)
+            .font(FontBook.paragraph)
+            .textAlignment(.center)
     }()
 
     fileprivate lazy var versionLbl: UILabel = {
         return UILabel()
-            .textColor(ColorPalette.shared.color(type: .darkGrey))
+            .textColor(ColorAsset.L5.color)
             .font(FontBook.helper)
     }()
 
     fileprivate lazy var buildLbl: UILabel = {
         return UILabel()
-            .textColor(ColorPalette.shared.color(type: .darkGrey))
+            .textColor(ColorAsset.L5.color)
             .font(FontBook.helper)
     }()
 
-    fileprivate lazy var testAPIBtn: UIButton = {
-        return NSLocalizedString("TestAPI", comment: "").blueRoundedButton
+    fileprivate lazy var exploreAPIBtn: UIButton = {
+        return NSLocalizedString("Explore", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var logoImgView: UIImageView = {
         return UIImageView()
-            .image(UIImage(named: "spot_logo")!)
+            .image(UIImage(named: "openWebLogo")!)
             .contentMode(.scaleAspectFit)
     }()
 
-    fileprivate lazy var aboutBarBtnItem: UIBarButtonItem = {
-        return UIBarButtonItem(image: UIImage(named: "infoIcon"),
-                               style: .plain,
-                               target: nil,
-                               action: nil)
+    fileprivate lazy var sampleAppImgView: UIImageView = {
+        return UIImageView()
+            .image(UIImage(named: "sampleApp-illustration")!)
+            .contentMode(.scaleAspectFit)
+    }()
+
+    fileprivate lazy var aboutBtn: UIButton = {
+        let img = UIImage(named: "info-circle")!
+        let button = UIButton()
+        button.setImage(img, for: .normal)
+        return button
     }()
 
     init(viewModel: MainPageViewModeling) {
@@ -81,8 +98,12 @@ class MainPageVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItems = [aboutBarBtnItem]
         setupObservers()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }
 
@@ -92,44 +113,65 @@ fileprivate extension MainPageVC {
         versionLbl.accessibilityIdentifier = Metrics.versionIdentifier
         buildLbl.accessibilityIdentifier = Metrics.buildIdentifier
         welcomeLbl.accessibilityIdentifier = Metrics.welcomeTextIdentifier
+        descriptionLbl.accessibilityIdentifier = Metrics.descriptionTextIdentifier
         logoImgView.accessibilityIdentifier = Metrics.logoIdentifier
-        aboutBarBtnItem.accessibilityIdentifier = Metrics.aboutBarButtonIdentifier
+        sampleAppImgView.accessibilityIdentifier = Metrics.sampleAppImageIdentifier
+        aboutBtn.accessibilityIdentifier = Metrics.aboutBarButtonIdentifier
     }
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
+        view.addSubview(logoImgView)
+        view.addSubview(aboutBtn)
+        view.addSubview(welcomeLbl)
+        view.addSubview(sampleAppImgView)
+        view.addSubview(descriptionLbl)
+        view.addSubview(exploreAPIBtn)
         view.addSubview(versionLbl)
         view.addSubview(buildLbl)
-        view.addSubview(welcomeLbl)
-        view.addSubview(logoImgView)
-        view.addSubview(testAPIBtn)
-
-        versionLbl.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin/2)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
-        }
-
-        buildLbl.snp.makeConstraints { make in
-            make.top.equalTo(versionLbl.snp.bottom).offset(Metrics.verticalMargin/4)
-            make.leading.equalTo(versionLbl.snp.leading)
-        }
 
         logoImgView.snp.makeConstraints { make in
-            make.top.equalTo(buildLbl.snp.bottom).offset(Metrics.verticalMargin)
-            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
+            make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
+        }
+
+        aboutBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalMargin)
         }
 
         welcomeLbl.snp.makeConstraints { make in
-            make.top.equalTo(logoImgView.snp.bottom).offset(Metrics.verticalMargin*2)
+            make.top.equalTo(logoImgView.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalMargin)
         }
 
-        testAPIBtn.snp.makeConstraints { make in
-            make.top.equalTo(welcomeLbl.snp.bottom).offset(Metrics.verticalMargin*2)
+        sampleAppImgView.snp.makeConstraints { make in
+            make.top.equalTo(welcomeLbl.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalMargin)
+            make.centerX.equalToSuperview()
+        }
+
+        descriptionLbl.snp.makeConstraints { make in
+            make.top.equalTo(sampleAppImgView.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalMargin)
+        }
+
+        exploreAPIBtn.snp.makeConstraints { make in
+            make.top.equalTo(descriptionLbl.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalMargin)
             make.height.equalTo(Metrics.buttonHeight)
+        }
+
+        versionLbl.snp.makeConstraints { make in
+            make.top.equalTo(exploreAPIBtn.snp.bottom).offset(Metrics.verticalMargin)
+            make.centerX.equalToSuperview()
+        }
+
+        buildLbl.snp.makeConstraints { make in
+            make.top.equalTo(versionLbl.snp.bottom)
+            make.centerX.equalToSuperview()
             make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide)
         }
     }
@@ -137,16 +179,17 @@ fileprivate extension MainPageVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
+        welcomeLbl.text = viewModel.outputs.welcomeText
+        descriptionLbl.text = viewModel.outputs.descriptionText
         versionLbl.text = viewModel.outputs.versionText
         buildLbl.text = viewModel.outputs.buildText
-        welcomeLbl.text = viewModel.outputs.welcomeText
 
-        testAPIBtn.rx.tap
-            .bind(to: viewModel.inputs.testAPITapped)
+        aboutBtn.rx.tap
+            .bind(to: viewModel.inputs.aboutTapped)
             .disposed(by: disposeBag)
 
-        aboutBarBtnItem.rx.tap
-            .bind(to: viewModel.inputs.aboutTapped)
+        exploreAPIBtn.rx.tap
+            .bind(to: viewModel.inputs.testAPITapped)
             .disposed(by: disposeBag)
     }
 }

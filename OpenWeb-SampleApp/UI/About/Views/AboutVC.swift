@@ -22,16 +22,16 @@ class AboutVC: UIViewController {
 
     fileprivate lazy var aboutTextView: UITextView = {
         let textView = UITextView()
-            .font(FontBook.secondaryHeadingMedium)
-            .textColor(ColorPalette.shared.color(type: .blackish))
+            .font(FontBook.paragraphMedium)
+            .textColor(ColorAsset.L6.color)
 
         return textView
     }()
 
     fileprivate lazy var allRightsReservedLbl: UILabel = {
         return UILabel()
-            .textColor(ColorPalette.shared.color(type: .darkGrey))
-            .font(FontBook.paragraphBold)
+            .textColor(ColorAsset.L4.color)
+            .font(FontBook.helper)
             .textAlignment(.center)
     }()
 
@@ -53,6 +53,11 @@ class AboutVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupObservers()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
 }
 
