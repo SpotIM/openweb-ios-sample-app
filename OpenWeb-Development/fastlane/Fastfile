@@ -188,7 +188,7 @@ platform :ios do
   # Excpect parameter `version`
   desc "Set version in xcode target and project plists"
   lane :set_version do |options|
-    increment_version_number(version_number: options[:version]) # Set a specific version number
+    increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-Development.xcodeproj")
     increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
     # Set version inside OpenWebSettings plist
     update_plist(
@@ -218,7 +218,7 @@ platform :ios do
   # This method used for internal testing. Decided to keep it here for convenient. Excpect parameter `build`.
   desc "Set build to specific number"
   lane :set_build do |options|
-    increment_build_number(build_number: options[:build])
+    increment_build_number(build_number: options[:build], xcodeproj: "./OpenWeb-Development.xcodeproj")
     increment_build_number(build_number: options[:build], xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
   end
 
