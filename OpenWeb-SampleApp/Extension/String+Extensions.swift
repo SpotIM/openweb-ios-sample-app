@@ -46,8 +46,8 @@ extension String {
             .button
             .adjustsFontSizeToFitWidth
             .backgroundColor(color)
-            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
-            .corner(radius: 16)
+            .textColor(ColorPalette.shared.color(type: .white))
+            .corner(radius: 5)
             .withHorizontalPadding(10)
             .font(FontBook.paragraphBold)
     }
