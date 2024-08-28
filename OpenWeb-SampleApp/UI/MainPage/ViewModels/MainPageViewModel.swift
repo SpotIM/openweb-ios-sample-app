@@ -19,6 +19,7 @@ protocol MainPageViewModelingOutputs {
     var versionText: String { get }
     var buildText: String { get }
     var welcomeText: String { get }
+    var descriptionText: String { get }
     var showAbout: Observable<Void> { get }
     var testAPI: Observable<Void> { get }
 }
@@ -37,7 +38,11 @@ class MainPageViewModel: MainPageViewModeling, MainPageViewModelingInputs, MainP
     }()
 
     lazy var welcomeText: String = {
-        return NSLocalizedString("WelcomeDescription", comment: "")
+        return NSLocalizedString("WelcomeText", comment: "")
+    }()
+
+    lazy var descriptionText: String = {
+        return NSLocalizedString("DescriptionText", comment: "")
     }()
 
     lazy var versionText: String = {
@@ -46,7 +51,7 @@ class MainPageViewModel: MainPageViewModeling, MainPageViewModelingInputs, MainP
             versionNumber = version
         }
 
-        return "\(NSLocalizedString("Vesrion", comment: "")): \(versionNumber)"
+        return "v \(versionNumber)"
     }()
 
     lazy var buildText: String = {

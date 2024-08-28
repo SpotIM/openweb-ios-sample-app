@@ -38,6 +38,6 @@ class AboutViewModel: AboutViewModeling, AboutViewModelingInputs, AboutViewModel
         let calendar = Calendar.current
         let year = calendar.component(.year, from: date)
         let allRightsReserved = NSLocalizedString("allRightsReserved", comment: "")
-        return "© \(year) \(allRightsReserved)"
+        return String(format: allRightsReserved, "\(year)")
     }()
 }

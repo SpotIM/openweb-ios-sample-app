@@ -49,7 +49,7 @@ struct ColorModel {
                                    darkThemeColor: .white)
                 }
             case .blue:
-                return ColorModel(color: UIColor(r: 0, g: 161, b: 229))
+                return ColorModel(color: UIColor(r: 39, g: 120, b: 206))
             case .blackish:
                 return ColorModel(color: UIColor(r: 51, g: 51, b: 51))
             case .darkGrey:
