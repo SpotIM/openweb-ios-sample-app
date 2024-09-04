@@ -118,6 +118,10 @@
 "ArticleHeaderStyle" = "Article header style";
 "ArticleInformationStrategy" = "Article information strategy";
 "OrientationEnforcement" = "Orientation Enforcement";
+"BrandColor" = "Brand Color";
+"SemiBold" = "Semi Bold";
+"CommentActionsColor" = "Comment Actions Color:";
+"CommentActionsFontStyle" = "Comment Actions Font Style:";
 "Automation" = "Automation";
 "Fonts" = "Fonts";
 "UserInformation" = "User information";
