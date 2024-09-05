@@ -151,19 +151,21 @@ fileprivate extension OWCommentEngagementView {
         viewModel.outputs.votesPosition
             .subscribe(onNext: { [weak self] position in
                 guard let self = self else { return }
-                switch position {
-                case .default:
-                    self.votingDotDivider.isHidden = false
-                    self.shareLeadingWithReplyConstraint?.isActive = false
-                    self.shareLeadingWithVotingConstraint?.isActive = true
-                    self.votingLeadingConstraint?.isActive = true
-                    self.votingTrailingConstraint?.isActive = false
-                case .endBottom:
-                    self.votingDotDivider.isHidden = true
-                    self.shareLeadingWithReplyConstraint?.isActive = true
-                    self.shareLeadingWithVotingConstraint?.isActive = false
-                    self.votingLeadingConstraint?.isActive = false
-                    self.votingTrailingConstraint?.isActive = true
+                OWScheduler.runOnMainThreadIfNeeded {
+                    switch position {
+                    case .default:
+                        self.votingDotDivider.isHidden = false
+                        self.shareLeadingWithReplyConstraint?.isActive = false
+                        self.shareLeadingWithVotingConstraint?.isActive = true
+                        self.votingLeadingConstraint?.isActive = true
+                        self.votingTrailingConstraint?.isActive = false
+                    case .endBottom:
+                        self.votingDotDivider.isHidden = true
+                        self.shareLeadingWithReplyConstraint?.isActive = true
+                        self.shareLeadingWithVotingConstraint?.isActive = false
+                        self.votingLeadingConstraint?.isActive = false
+                        self.votingTrailingConstraint?.isActive = true
+                    }
                 }
             })
             .disposed(by: disposeBag)
