@@ -117,6 +117,7 @@ fileprivate extension MainPageVC {
         logoImgView.accessibilityIdentifier = Metrics.logoIdentifier
         sampleAppImgView.accessibilityIdentifier = Metrics.sampleAppImageIdentifier
         aboutBtn.accessibilityIdentifier = Metrics.aboutBarButtonIdentifier
+        exploreAPIBtn.accessibilityIdentifier = Metrics.exploreButtonIdentifier
     }
 
     func setupViews() {
