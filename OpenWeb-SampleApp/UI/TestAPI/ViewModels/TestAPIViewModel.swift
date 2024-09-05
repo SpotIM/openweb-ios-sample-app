@@ -351,7 +351,8 @@ fileprivate extension TestAPIViewModel {
         helpers.orientationEnforcement = UserDefaultsProvider.shared.get(key: .orientationEnforcement, defaultValue: OWOrientationEnforcement.default)
         var authentication = OpenWeb.manager.authentication
         authentication.shouldDisplayLoginPrompt = UserDefaultsProvider.shared.get(key: .showLoginPrompt, defaultValue: false)
-
+        customizations.commentActions.color = UserDefaultsProvider.shared.get(key: .commentActionsColor, defaultValue: OWCommentActionsColor.default)
+        customizations.commentActions.fontStyle = UserDefaultsProvider.shared.get(key: .commentActionsFontStyle, defaultValue: OWCommentActionsFontStyle.default)
         ElementsCustomizationCreatorService.addElementsCustomization()
         ColorCustomizationService.setColorCustomization()
 
