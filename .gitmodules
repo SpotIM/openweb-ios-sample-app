@@ -1,4 +1,7 @@
 [submodule "OpenWeb-Development/openweb-ios-sample-app"]
 	path = OpenWeb-Development/OpenWeb-SampleApp
-	url = https://github.com/SpotIM/openweb-ios-sample-app
+	url = git@github.com:SpotIM/openweb-ios-sample-app.git
 	branch = develop
+[submodule "OpenWeb-Development/OpenWeb-Development/OpenWeb-SampleApp"]
+	path = OpenWeb-Development/OpenWeb-Development/OpenWeb-SampleApp
+	url = git@github.com:SpotIM/openweb-ios-sample-app.git
