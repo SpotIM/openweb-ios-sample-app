@@ -23,6 +23,10 @@ protocol OWCommentEngagementViewModelingOutputs {
     var replyClickedOutput: Observable<Void> { get }
     var shareCommentUrl: Observable<URL> { get }
     var showReplyButton: Observable<Bool> { get }
+    var votesPosition: Observable<OWVotesPosition> { get }
+    var shareButtonStyle: Observable<OWShareButtonStyle> { get }
+    var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> { get }
+    var commentActionsColor: Observable<OWCommentActionsColor> { get }
 }
 
 protocol OWCommentEngagementViewModeling {
@@ -81,8 +85,41 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }
 
-    init(comment: OWComment, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    lazy var votesPosition: Observable<OWVotesPosition> = {
+        self.sharedServiceProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { config -> OWVotesPosition in
+                guard let sharedConfig = config.shared
+                else { return .default }
+                return sharedConfig.votesPosition
+            }
+            .asObservable()
+    }()
+
+    lazy var commentActionsColor: Observable<OWCommentActionsColor> = {
+        return Observable.just(self.customizationsLayer.commentActions.color)
+    }()
+
+    lazy var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> = {
+        return Observable.just(self.customizationsLayer.commentActions.fontStyle)
+    }()
+
+    lazy var shareButtonStyle: Observable<OWShareButtonStyle> = {
+        self.sharedServiceProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { config -> OWShareButtonStyle in
+                return config.mobileSdk.shareButtonStyle
+            }
+            .asObservable()
+    }()
+
+    fileprivate let customizationsLayer: OWCustomizations
+
+    init(comment: OWComment,
+         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
         self.sharedServiceProvider = sharedServiceProvider
+        self.customizationsLayer = customizationsLayer
         self.commentId = comment.id ?? ""
         self.parentCommentId = comment.parentId
         let rank = comment.rank ?? OWComment.Rank()
@@ -103,8 +140,10 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
         votingVM.inputs.update(for: votingModel)
     }
 
-    init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
         self.sharedServiceProvider = sharedServiceProvider
+        self.customizationsLayer = customizationsLayer
         self.votingVM = OWCommentRatingViewModel()
         self.commentId = ""
         self.parentCommentId = nil
