@@ -31,18 +31,18 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
     fileprivate let router: OWRoutering!
     fileprivate let commentCreationData: OWCommentCreationRequiredData
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentCreation)
+        return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .commentCreation)
     }()
     fileprivate lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .commentCreation)
     }()
 
-    init(router: OWRoutering! = nil, commentCreationData: OWCommentCreationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil, commentCreationData: OWCommentCreationRequiredData, viewActionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.commentCreationData = commentCreationData
-        self.actionsCallbacks = actionsCallbacks
+        self.viewActionsCallbacks = viewActionsCallbacks
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
@@ -158,7 +158,7 @@ fileprivate extension OWCommentCreationCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+        guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let userLoggedInWhileReplyingToComment = viewModel.outputs.userJustLoggedIn
             .map { [weak self] in
