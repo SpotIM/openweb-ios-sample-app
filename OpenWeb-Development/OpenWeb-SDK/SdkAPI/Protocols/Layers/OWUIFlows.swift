@@ -42,17 +42,19 @@ public protocol OWUIFlows {
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol,
-                           callbacks: OWViewActionsCallbacks,
+                           callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWDefaultCompletion)
 #endif
 
 #if AUTOMATION
     func fonts(presentationalMode: OWPresentationalMode,
                additionalSettings: OWAutomationSettingsProtocol,
+               callbacks: OWViewActionsCallbacks?,
                completion: @escaping OWDefaultCompletion)
 
     func userStatus(presentationalMode: OWPresentationalMode,
                     additionalSettings: OWAutomationSettingsProtocol,
+                    callbacks: OWViewActionsCallbacks?,
                     completion: @escaping OWDefaultCompletion)
 #endif
 }

@@ -247,7 +247,7 @@ extension OWUILayer {
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
-                           callbacks: OWViewActionsCallbacks,
+                           callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWDefaultCompletion) {
 
         prepareForNewFlow()
@@ -288,6 +288,7 @@ extension OWUILayer {
 #if AUTOMATION
     func fonts(presentationalMode: OWPresentationalMode,
                additionalSettings: OWAutomationSettingsProtocol,
+               callbacks: OWViewActionsCallbacks?,
                completion: @escaping OWDefaultCompletion) {
 
         prepareForNewFlow()
@@ -316,6 +317,7 @@ extension OWUILayer {
 
     func userStatus(presentationalMode: OWPresentationalMode,
                     additionalSettings: OWAutomationSettingsProtocol,
+                    callbacks: OWViewActionsCallbacks?,
                     completion: @escaping OWDefaultCompletion) {
 
         prepareForNewFlow()
@@ -668,7 +670,7 @@ extension OWUILayer {
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
-                           callbacks: OWViewActionsCallbacks,
+                           callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWViewCompletion) {
 
         setPostId(postId: postId) { result in
