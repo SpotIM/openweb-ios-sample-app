@@ -13,21 +13,21 @@ public protocol OWUIFlows {
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol,
-                         callbacks: OWViewActionsCallbacks?,
+                         callbacks: OWFlowActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWAdditionalSettingsProtocol,
-                      callbacks: OWViewActionsCallbacks?,
+                      callbacks: OWFlowActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion)
 
     func commentCreation(postId: OWPostId,
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol,
-                         callbacks: OWViewActionsCallbacks?,
+                         callbacks: OWFlowActionsCallbacks?,
                          completion: @escaping OWDefaultCompletion)
 
     func commentThread(postId: OWPostId,
@@ -35,26 +35,24 @@ public protocol OWUIFlows {
                        commentId: OWCommentId,
                        presentationalMode: OWPresentationalMode,
                        additionalSettings: OWAdditionalSettingsProtocol,
-                       callbacks: OWViewActionsCallbacks?,
+                       callbacks: OWFlowActionsCallbacks?,
                        completion: @escaping OWDefaultCompletion)
 
 #if BETA
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol,
-                           callbacks: OWViewActionsCallbacks?,
+                           callbacks: OWViewActionsCallbacks,
                            completion: @escaping OWDefaultCompletion)
 #endif
 
 #if AUTOMATION
     func fonts(presentationalMode: OWPresentationalMode,
                additionalSettings: OWAutomationSettingsProtocol,
-               callbacks: OWViewActionsCallbacks?,
                completion: @escaping OWDefaultCompletion)
 
     func userStatus(presentationalMode: OWPresentationalMode,
                     additionalSettings: OWAutomationSettingsProtocol,
-                    callbacks: OWViewActionsCallbacks?,
                     completion: @escaping OWDefaultCompletion)
 #endif
 }

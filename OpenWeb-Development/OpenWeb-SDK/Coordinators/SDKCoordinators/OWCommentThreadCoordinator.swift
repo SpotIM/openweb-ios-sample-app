@@ -29,11 +29,11 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
     fileprivate let router: OWRoutering!
     fileprivate let commentThreadData: OWCommentThreadRequiredData
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
+        return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .commentThread)
     }()
     fileprivate lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .commentThread)
@@ -41,11 +41,11 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
     init(router: OWRoutering! = nil,
          commentThreadData: OWCommentThreadRequiredData,
-         actionsCallbacks: OWViewActionsCallbacks?,
+         viewActionsCallbacks: OWViewActionsCallbacks?,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.router = router
         self.commentThreadData = commentThreadData
-        self.actionsCallbacks = actionsCallbacks
+        self.viewActionsCallbacks = viewActionsCallbacks
         self.servicesProvider = servicesProvider
     }
 
@@ -83,7 +83,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                                                                         presentationalStyle: self.commentThreadData.presentationalStyle)
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                               commentCreationData: commentCreationData,
-                                                                              actionsCallbacks: self.actionsCallbacks)
+                                                                              viewActionsCallbacks: self.viewActionsCallbacks)
                 return self.coordinate(to: commentCreationCoordinator)
             }
             .do(onNext: { result in
@@ -127,7 +127,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 guard let self = self else { return .empty() }
                 let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
                                                                         router: self.router,
-                                                                        actionsCallbacks: self.actionsCallbacks,
+                                                                        viewActionsCallbacks: self.viewActionsCallbacks,
                                                                         presentationalMode: self.commentThreadData.presentationalStyle)
                 return self.coordinate(to: reportReasonCoordinator)
             }
@@ -160,7 +160,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 guard let self = self else { return .empty() }
                 let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
-                                                                            actionsCallbacks: self.actionsCallbacks,
+                                                                            viewActionsCallbacks: self.viewActionsCallbacks,
                                                                             presentationalMode: self.commentThreadData.presentationalStyle)
                 return self.coordinate(to: clarityDetailsCoordinator)
             }
@@ -197,7 +197,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                                                  title: title)
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                    options: options,
-                                                                   actionsCallbacks: self.actionsCallbacks)
+                                                                   viewActionsCallbacks: self.viewActionsCallbacks)
                 return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
@@ -230,7 +230,7 @@ fileprivate extension OWCommentThreadCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewModeling) {
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+        guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
     }
 
     func setupObservers(forViewModel viewModel: OWCommentThreadViewViewModeling) {
@@ -248,7 +248,7 @@ fileprivate extension OWCommentThreadCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+        guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         // Close Comment Thread
         let closeCommentThread = viewModel
