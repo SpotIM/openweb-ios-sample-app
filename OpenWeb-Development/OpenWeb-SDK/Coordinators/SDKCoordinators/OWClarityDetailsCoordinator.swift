@@ -31,20 +31,20 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
     fileprivate let data: OWClarityDetailsRequireData
     fileprivate let router: OWRoutering?
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .clarityDetails)
+        return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .clarityDetails)
     }()
 
     let presentationalMode: OWPresentationalModeCompact
 
     init(data: OWClarityDetailsRequireData,
          router: OWRoutering? = nil,
-         actionsCallbacks: OWViewActionsCallbacks?,
+         viewActionsCallbacks: OWViewActionsCallbacks?,
          presentationalMode: OWPresentationalModeCompact = .none) {
         self.data = data
         self.router = router
-        self.actionsCallbacks = actionsCallbacks
+        self.viewActionsCallbacks = viewActionsCallbacks
         self.presentationalMode = presentationalMode
     }
 
@@ -107,7 +107,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                                                  title: title)
                 let safariCoordinator = OWWebTabCoordinator(router: router,
                                                                options: options,
-                                                               actionsCallbacks: self.actionsCallbacks)
+                                                               viewActionsCallbacks: self.viewActionsCallbacks)
                 return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { result in
@@ -140,7 +140,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
                 let appealCoordinator = OWCommenterAppealCoordinator(router: router,
                                                                      appealData: data,
-                                                                     actionsCallbacks: self.actionsCallbacks)
+                                                                     viewActionsCallbacks: self.viewActionsCallbacks)
                 return self.coordinate(to: appealCoordinator, coordinatorData: nil)
             }
             .flatMap { [weak self] result -> Observable<OWClarityDetailsCoordinatorResult> in
@@ -170,7 +170,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 fileprivate extension OWClarityDetailsCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWClarityDetailsViewViewModeling) {
         // MARK: General (Used for both Flow and Independent)
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+        guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let dismissView = viewModel.outputs.dismissView
             .map { OWViewActionCallbackType.closeClarityDetails }

@@ -27,10 +27,11 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
     fileprivate var router: OWRoutering!
     fileprivate let preConversationData: OWPreConversationRequiredData
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let flowActionsCallbacks: OWFlowActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .preConversation)
+        return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .preConversation)
     }()
     fileprivate lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .preConversation)
@@ -38,11 +39,13 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
 
     init(router: OWRoutering! = nil,
          preConversationData: OWPreConversationRequiredData,
-         actionsCallbacks: OWViewActionsCallbacks?,
+         viewActionsCallbacks: OWViewActionsCallbacks? = nil,
+         flowActionsCallbacks: OWFlowActionsCallbacks? = nil,
          viewableMode: OWViewableMode) {
         self.router = router
         self.preConversationData = preConversationData
-        self.actionsCallbacks = actionsCallbacks
+        self.viewActionsCallbacks = viewActionsCallbacks
+        self.flowActionsCallbacks = flowActionsCallbacks
         self.viewableMode = viewableMode
     }
 
@@ -152,7 +155,8 @@ fileprivate extension OWPreConversationCoordinator {
                                                                   presentationalStyle: self.preConversationData.presentationalStyle)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
                                                                         conversationData: conversationData,
-                                                                        actionsCallbacks: self.actionsCallbacks)
+                                                                        viewActionsCallbacks: self.viewActionsCallbacks,
+                                                                        flowActionsCallbacks: self.flowActionsCallbacks)
                 return self.coordinate(to: conversationCoordinator, coordinatorData: coordinatorData)
             }
             .do(onNext: { [weak self] coordinatorResult in
@@ -194,7 +198,7 @@ fileprivate extension OWPreConversationCoordinator {
                                                  title: title)
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                    options: options,
-                                                                   actionsCallbacks: self.actionsCallbacks)
+                                                                   viewActionsCallbacks: self.viewActionsCallbacks)
                 return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { [weak self] coordinatorResult in
@@ -213,7 +217,7 @@ fileprivate extension OWPreConversationCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+        guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let contentPressed = viewModel.outputs.openFullConversation
             .map { OWViewActionCallbackType.contentPressed }

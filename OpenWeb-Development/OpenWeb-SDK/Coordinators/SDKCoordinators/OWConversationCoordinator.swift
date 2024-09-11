@@ -28,12 +28,16 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
     fileprivate let router: OWRoutering!
     fileprivate let conversationData: OWConversationRequiredData
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let viewActionCallbacks: OWViewActionsCallbacks?
+    fileprivate let flowActionCallbacks: OWFlowActionsCallbacks?
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .conversation)
+        return OWViewActionsService(viewActionsCallbacks: viewActionCallbacks, viewSourceType: .conversation)
     }()
+    fileprivate lazy var flowActionsService: OWFlowActionsServicing = {
+            return OWFlowActionsService(flowActionsCallbacks: flowActionCallbacks, viewSourceType: .conversation)
+        }()
     fileprivate lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .conversation)
     }()
@@ -46,11 +50,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
-         actionsCallbacks: OWViewActionsCallbacks?,
+         viewActionsCallbacks: OWViewActionsCallbacks?,
+         flowActionsCallbacks: OWFlowActionsCallbacks?,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.router = router
         self.conversationData = conversationData
-        self.actionsCallbacks = actionsCallbacks
+        self.viewActionCallbacks = viewActionsCallbacks
+        self.flowActionCallbacks = flowActionsCallbacks
         self.servicesProvider = servicesProvider
     }
 
@@ -142,7 +148,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     case .commentCreation(let commentCreationData):
                         let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                                       commentCreationData: commentCreationData,
-                                                                                      actionsCallbacks: self.actionsCallbacks)
+                                                                                      viewActionsCallbacks: self.viewActionCallbacks)
                         return self.coordinate(to: commentCreationCoordinator, coordinatorData: coordinatorData)
                     default:
                         return .empty()
@@ -189,7 +195,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return .empty() }
                 let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
                                                                         router: self.router,
-                                                                        actionsCallbacks: self.actionsCallbacks,
+                                                                        viewActionsCallbacks: self.viewActionCallbacks,
                                                                         presentationalMode: self.conversationData.presentationalStyle)
                 return self.coordinate(to: reportReasonCoordinator)
             }
@@ -229,7 +235,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return .empty() }
                 let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
-                                                                            actionsCallbacks: self.actionsCallbacks)
+                                                                            viewActionsCallbacks: self.viewActionCallbacks)
                 return self.coordinate(to: clarityDetailsCoordinator)
             }
             .do(onNext: { coordinatorResult in
@@ -275,7 +281,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return .empty() }
                 let commentThreadCoordinator = OWCommentThreadCoordinator(router: self.router,
                                                                           commentThreadData: commentThreadData,
-                                                                          actionsCallbacks: self.actionsCallbacks)
+                                                                          viewActionsCallbacks: self.viewActionCallbacks)
                 return self.coordinate(to: commentThreadCoordinator)
             }
             .do(onNext: { result in
@@ -332,7 +338,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                                                  title: title)
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                             options: options,
-                                                            actionsCallbacks: self.actionsCallbacks)
+                                                            viewActionsCallbacks: self.viewActionCallbacks)
                 return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { result in
@@ -402,7 +408,7 @@ fileprivate extension OWConversationCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+        guard viewActionCallbacks != nil else { return } // Make sure actions callbacks are available/provided
     }
 
     func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
@@ -412,7 +418,7 @@ fileprivate extension OWConversationCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+        guard viewActionCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let actionsCallbacksNotifier = self.servicesProvider.actionsCallbacksNotifier()
 
