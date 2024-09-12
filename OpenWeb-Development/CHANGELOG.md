@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Feature
 - The iOS SDK employs a new seamless integration with SPM and Cocoapods, eliminating the need to clone and copy the Vendor-Frameworks directory.
 
+## [2.3.3] - 2024-07-15
+### New Language:
+- Added Dutch language
+
 ## [2.3.2] - 2024-06-26
 ### New Features:
 - We have introduced new filter tabs to improve conversation organization and user experience.
