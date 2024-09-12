@@ -69,7 +69,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let conversationPopped = PublishSubject<Void>()
 
         setupObservers(forViewModel: conversationVM)
-        setupViewActionsCallbacks(forViewModel: conversationVM)
+        setupFlowActionsCallbacks(forViewModel: conversationVM)
 
         let deepLinkToCommentCreation = BehaviorSubject<OWCoordinatorData?>(value: nil)
         let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
@@ -407,8 +407,24 @@ fileprivate extension OWConversationCoordinator {
         setupCustomizationElements(forViewModel: viewModel)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
-        guard viewActionCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+    func setupFlowActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
+        guard flowActionCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let conversationDismissed = viewModel
+            .outputs.conversationIsDismissed
+            .map { OWFlowActionCallbackType.conversationDismissed }
+
+        let closeConversationPressed = viewModel
+            .outputs.closeConversation
+            .map { OWFlowActionCallbackType.conversationDismissed }
+
+        Observable.merge(
+            conversationDismissed,
+            closeConversationPressed)
+            .subscribe { [weak self] viewActionType in
+                self?.flowActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
     }
 
     func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
