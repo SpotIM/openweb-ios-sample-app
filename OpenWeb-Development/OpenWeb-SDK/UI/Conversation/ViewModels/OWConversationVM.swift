@@ -18,6 +18,7 @@ protocol OWConversationViewModelingInputs {
     var viewDidLoad: PublishSubject<Void> { get }
     var closeConversationTapped: PublishSubject<Void> { get }
     var changeIsLargeTitleDisplay: PublishSubject<Bool> { get }
+    var conversationDismissed: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewModelingOutputs {
@@ -30,6 +31,7 @@ protocol OWConversationViewModelingOutputs {
     var closeConversation: Observable<Void> { get }
     var isLargeTitleDisplay: Observable<Bool> { get }
     var title: String { get }
+    var conversationIsDismissed: Observable<Void> { get }
 }
 
 protocol OWConversationViewModeling {
@@ -102,6 +104,11 @@ class OWConversationViewModel: OWConversationViewModeling,
     var closeConversationTapped = PublishSubject<Void>()
     var closeConversation: Observable<Void> {
         return closeConversationTapped.asObservable()
+    }
+
+    var conversationDismissed = PublishSubject<Void>()
+    var conversationIsDismissed: Observable<Void> {
+        return conversationDismissed.asObservable()
     }
 
     fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
