@@ -753,7 +753,7 @@ fileprivate extension OWUILayer {
     func event(for eventType: OWAnalyticEventType, presentationalStyle: OWPresentationalModeCompact) -> OWAnalyticEvent {
         return servicesProvider
             .analyticsEventCreatorService()
-            .analyticsEvent(
+            .analyticEvent(
                 for: eventType,
                 articleUrl: "",
                 layoutStyle: OWLayoutStyle(from: presentationalStyle),
