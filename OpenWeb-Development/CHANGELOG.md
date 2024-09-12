@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2024-09-11
+### New Features:
+- We have introduced user mentions, users can mention others in their comments.
+- New optional comment actions customizations.
+
+### Bug Fixes and Improvements:
+- In some cases first added comment in conversation was not updated in pre conversation.
+- Sorting menu is now working with colors from OWTheme.
+- Filter tabs improvements.
+
+## [2.4.0] - 2024-08-04
+### Feature
+- The iOS SDK employs a new seamless integration with SPM and Cocoapods, eliminating the need to clone and copy the Vendor-Frameworks directory.
+
 ## [2.3.3] - 2024-07-15
 ### New Language:
 - Added Dutch language

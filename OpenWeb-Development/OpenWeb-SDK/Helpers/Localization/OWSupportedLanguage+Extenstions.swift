@@ -25,12 +25,32 @@ extension OWSupportedLanguage {
             return "ar-001"
         case .spanish:
             return "es"
-        case .portuguese:
+        case .portuguesePortugal:
             return "pt-PT"
         case .french:
             return "fr"
         case .dutch:
             return "nl"
+        case .german:
+            return "de"
+        case .hungarian:
+            return "hu"
+        case .indonesian:
+            return "id"
+        case .italian:
+            return "it"
+        case .japanese:
+            return "ja"
+        case .korean:
+            return "ko"
+        case .portugueseBrazil:
+            return "pt-BR"
+        case .thai:
+            return "th"
+        case .turkish:
+            return "tr"
+        case .vietnamese:
+            return "vi"
         }
     }
 

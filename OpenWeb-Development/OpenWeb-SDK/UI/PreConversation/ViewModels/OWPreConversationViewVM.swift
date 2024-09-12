@@ -1024,9 +1024,11 @@ fileprivate extension OWPreConversationViewViewModel {
                         !commentCellsVms.contains(where: { $0.outputs.commentVM.outputs.comment.id == commentVm.commentVM.outputs.comment.id })
                     }
                     guard !filteredCommentsVms.isEmpty else { return }
-                    viewModels.insert(contentsOf: filteredCommentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }, at: 0)
+                    let preConversationOptions = filteredCommentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }
+                    viewModels.insert(contentsOf: preConversationOptions, at: 0)
                     let numOfComments = self.preConversationStyle.numberOfComments
                     self._cellsViewModels.replaceAll(with: Array(viewModels.prefix(numOfComments)))
+                    self.isEmpty.onNext(preConversationOptions.count == 0)
                 case let .update(commentId, withComment):
                     self._updateLocalComment.onNext((withComment, commentId))
                 case .insertReply:
@@ -1576,7 +1578,7 @@ fileprivate extension OWPreConversationViewViewModel {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return servicesProvider
             .analyticsEventCreatorService()
-            .analyticsEvent(
+            .analyticEvent(
                 for: eventType,
                 articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),

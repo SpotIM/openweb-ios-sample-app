@@ -9,6 +9,7 @@
 import Foundation
 
 public protocol OWCustomizations {
+    var commentActions: OWCommentActionsCustomizations { get set }
     var fontFamily: OWFontGroupFamily { get set }
     var sorting: OWSortingCustomizations { get }
     var themeEnforcement: OWThemeStyleEnforcement { get set }

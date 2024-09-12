@@ -69,6 +69,8 @@ commands:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init --remote
 
       - *define_var_release_version
 
@@ -124,6 +126,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init --remote
 
       - run:
           name: Building both .ipa and .app files to Amazon s3
@@ -135,6 +139,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init --remote
 
       - *define_var_core_version
 
@@ -195,6 +201,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init --remote
 
       - *define_var_core_version
 
@@ -261,11 +269,15 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init --remote
+
       - run:
           name: Bash
           command: |
             pwd
             ls -l
+
       - run:
           name: start default build
           command: |
@@ -311,6 +323,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init --remote
 
       - *define_var_release_version
 
@@ -382,6 +396,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init --remote
 
       - *define_var_release_version
 
