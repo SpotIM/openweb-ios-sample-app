@@ -71,6 +71,12 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
             .asObservable()
     }
 
+    fileprivate let loggerViewTitle: String
+
+    lazy var loggerViewModel: UILoggerViewModeling = {
+        return UILoggerViewModel(title: loggerViewTitle)
+    }()
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
@@ -81,6 +87,19 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
         _actionSettings.onNext(actionSettings)
+
+        switch actionSettings.actionType {
+
+        case .preConversation:
+            loggerViewTitle = "Pre conversation logger"
+        case .fullConversation:
+            loggerViewTitle = "Conversation logger"
+        case .commentCreation:
+            loggerViewTitle = "Comment creation logger"
+        case .commentThread:
+            loggerViewTitle = "Comment thread logger"
+        }
+
         setupObservers()
     }
 
@@ -191,11 +210,17 @@ fileprivate extension MockArticleFlowsViewModel {
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
+                let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                    guard let self = self else { return }
+                    let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                    self.loggerViewModel.inputs.log(text: log)
+                }
+
                 flows.preConversation(postId: postId,
                                    article: article,
                                    presentationalMode: presentationalMode,
                                    additionalSettings: additionalSettings,
-                                   callbacks: nil,
+                                   callbacks: actionsCallbacks,
                                    completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
@@ -230,11 +255,17 @@ fileprivate extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: manager.spotId)
 
+                let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                    guard let self = self else { return }
+                    let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                    self.loggerViewModel.inputs.log(text: log)
+                }
+
                 flows.conversation(postId: postId,
                                    article: article,
                                    presentationalMode: presentationalMode,
                                    additionalSettings: additionalSettings,
-                                   callbacks: nil,
+                                   callbacks: actionsCallbacks,
                                    completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
