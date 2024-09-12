@@ -432,16 +432,22 @@ fileprivate extension OWCommentCreationViewViewModel {
     }
 
     func addInitialUserMentions(userMentions: [OWUserMentionObject]?) {
-        guard let userMentions = userMentions else { return }
-        switch commentCreationData.settings.commentCreationSettings.style {
-        case .regular:
-            commentCreationRegularViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
-        case .light:
-            commentCreationLightViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
-        case .floatingKeyboard(accessoryViewStrategy: _):
-            commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+        switch self.commentType {
+        case .comment, .edit:
+            guard let userMentions = userMentions else { return }
+            switch commentCreationData.settings.commentCreationSettings.style {
+            case .regular:
+                commentCreationRegularViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+            case .light:
+                commentCreationLightViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+            case .floatingKeyboard(accessoryViewStrategy: _):
+                commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
+            }
+        case .replyToComment:
+            break
         }
     }
+
     // swiftlint:disable function_body_length
     func setupObservers() {
         Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
@@ -713,7 +719,7 @@ fileprivate extension OWCommentCreationViewViewModel {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return servicesProvider
             .analyticsEventCreatorService()
-            .analyticsEvent(
+            .analyticEvent(
                 for: eventType,
                 articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),

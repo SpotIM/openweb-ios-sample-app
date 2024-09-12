@@ -45,7 +45,7 @@ fileprivate extension OWSortingCustomizer {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return sharedServicesProvider
             .analyticsEventCreatorService()
-            .analyticsEvent(
+            .analyticEvent(
                 for: eventType,
                 articleUrl: "",
                 layoutStyle: .none,

@@ -115,7 +115,7 @@ fileprivate extension OWHelpersLayer {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return sharedServicesProvider
             .analyticsEventCreatorService()
-            .analyticsEvent(
+            .analyticEvent(
                 for: eventType,
                 articleUrl: "",
                 layoutStyle: .none,
