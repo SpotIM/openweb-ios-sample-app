@@ -30,6 +30,9 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
     fileprivate let flowActionsCallbacks: OWFlowActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
+    fileprivate lazy var flowActionsService: OWFlowActionsServicing = {
+        return OWFlowActionsService(flowActionsCallbacks: flowActionsCallbacks, viewSourceType: .preConversation)
+    }()
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .preConversation)
     }()
@@ -60,8 +63,14 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
         setupObservers(forViewModel: preConversationViewVM)
-
-        setupViewActionsCallbacks(forViewModel: preConversationViewVM)
+        switch viewableMode {
+        case .partOfFlow:
+            setupFlowActionsCallbacks(forViewModel: preConversationViewVM)
+        case .independent:
+            setupViewActionsCallbacks(forViewModel: preConversationViewVM)
+        default:
+            break
+        }
 
         let viewObservable: Observable<OWShowable> = Observable.just(preConversationView)
             .map { $0 as OWShowable}
@@ -78,7 +87,7 @@ fileprivate extension OWPreConversationCoordinator {
         dismissInitialVC
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                switch self.preConversationData.presentationalStyle {
+                switch self.preConversationData.presentationalMode {
                 case .present(style: _):
                     router.dismiss(animated: true, completion: nil)
                 default:
@@ -100,7 +109,7 @@ fileprivate extension OWPreConversationCoordinator {
                 let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article,
                                                                         settings: self.preConversationData.settings,
                                                                         commentCreationType: type,
-                                                                        presentationalStyle: self.preConversationData.presentationalStyle)
+                                                                        presentationalStyle: self.preConversationData.presentationalMode)
                 return OWCoordinatorData(deepLink: .commentCreation(commentCreationData: commentCreationData),
                                          source: .preConversation)
             }
@@ -119,7 +128,7 @@ fileprivate extension OWPreConversationCoordinator {
                 let commentThreadData = OWCommentThreadRequiredData(article: self.preConversationData.article,
                                                    settings: newAdditionalSettings,
                                                    commentId: commentId,
-                                                   presentationalStyle: self.preConversationData.presentationalStyle)
+                                                   presentationalMode: self.preConversationData.presentationalMode)
                 return OWCoordinatorData(deepLink: .commentThread(commentThreadData: commentThreadData))
             }
 
@@ -152,7 +161,7 @@ fileprivate extension OWPreConversationCoordinator {
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
                                                                   settings: self.preConversationData.settings,
-                                                                  presentationalStyle: self.preConversationData.presentationalStyle)
+                                                                  presentationalMode: self.preConversationData.presentationalMode)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
                                                                         conversationData: conversationData,
                                                                         viewActionsCallbacks: self.viewActionsCallbacks,
@@ -214,6 +223,32 @@ fileprivate extension OWPreConversationCoordinator {
             .disposed(by: disposeBag)
 
         setupCustomizationElements(forViewModel: viewModel)
+    }
+
+    func setupFlowActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
+        guard flowActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let openPublisherProfile = viewModel.outputs.openProfile
+            .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
+                guard let self = self else { return nil }
+                switch openProfileType {
+                case .publisherProfile(let ssoPublisherId, let type):
+                    let presentationMode = self.preConversationData.presentationalMode.presentationalMode
+                    return OWFlowActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId,
+                                                                         type: type,
+                                                                         presentationalMode: presentationMode)
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .asObservable()
+
+        Observable.merge(openPublisherProfile)
+            .subscribe(onNext: { [weak self] flowActionType in
+                self?.flowActionsService.append(flowAction: flowActionType)
+            })
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {

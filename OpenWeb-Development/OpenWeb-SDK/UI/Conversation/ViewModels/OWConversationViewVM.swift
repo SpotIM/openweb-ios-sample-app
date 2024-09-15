@@ -295,7 +295,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     lazy var loginPromptViewModel: OWLoginPromptViewModeling = {
         let alignmentStyle: OWLoginPromptAlignmentStyle
-        if case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle {
+        if case OWPresentationalModeCompact.present(_) = conversationData.presentationalMode {
             alignmentStyle = .leftWithoutSeperator
         } else {
             alignmentStyle = .center
@@ -2639,7 +2639,7 @@ fileprivate extension OWConversationViewViewModel {
             .analyticEvent(
                 for: eventType,
                 articleUrl: articleUrl,
-                layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
+                layoutStyle: OWLayoutStyle(from: conversationData.presentationalMode),
                 component: .conversation)
     }
 

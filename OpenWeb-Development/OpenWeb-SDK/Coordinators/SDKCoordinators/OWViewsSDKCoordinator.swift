@@ -107,7 +107,8 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
                 guard let self = self else { return .empty() }
                 let commentThreadCoordinator = OWCommentThreadCoordinator(commentThreadData: commentThreadData,
-                                                                          viewActionsCallbacks: viewCallbacks)
+                                                                          viewActionsCallbacks: viewCallbacks,
+                                                                          flowActionsCallbacks: nil)
                 self.store(coordinator: commentThreadCoordinator)
                 return commentThreadCoordinator.showableComponent()
             }
