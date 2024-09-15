@@ -16,7 +16,7 @@ import RxSwift
 */
 
 protocol OWFlowActionsServicing {
-    func append(viewAction: OWFlowActionCallbackType)
+    func append(flowAction: OWFlowActionCallbackType)
 }
 
 class OWFlowActionsService: OWFlowActionsServicing {
@@ -35,8 +35,8 @@ class OWFlowActionsService: OWFlowActionsServicing {
         self.viewSourceType = viewSourceType
     }
 
-    func append(viewAction: OWFlowActionCallbackType) {
-        queue.insert(viewAction)
+    func append(flowAction: OWFlowActionCallbackType) {
+        queue.insert(flowAction)
         setupBlockerServiceObservers()
     }
 }
