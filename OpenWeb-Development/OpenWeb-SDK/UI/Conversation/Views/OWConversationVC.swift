@@ -52,10 +52,6 @@ class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
         viewModel.inputs.viewDidLoad.onNext()
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        viewModel.inputs.conversationDismissed.onNext()
-    }
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }

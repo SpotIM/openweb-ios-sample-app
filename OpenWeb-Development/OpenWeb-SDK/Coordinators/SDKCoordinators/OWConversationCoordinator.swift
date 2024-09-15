@@ -48,6 +48,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         static let delayCommentThreadAfterReport: CGFloat = 0.5
     }
 
+    fileprivate let conversationPopped = PublishSubject<Void>()
+
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          viewActionsCallbacks: OWViewActionsCallbacks?,
@@ -66,7 +68,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData,
                                                                                  viewableMode: viewableMode)
         let conversationVC = OWConversationVC(viewModel: conversationVM)
-        let conversationPopped = PublishSubject<Void>()
 
         setupObservers(forViewModel: conversationVM)
         setupFlowActionsCallbacks(forViewModel: conversationVM)
@@ -411,8 +412,7 @@ fileprivate extension OWConversationCoordinator {
     func setupFlowActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
         guard flowActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
-        let conversationDismissed = viewModel
-            .outputs.conversationIsDismissed
+        let conversationDismissed = conversationPopped
             .map { OWFlowActionCallbackType.conversationDismissed }
 
         let closeConversationPressed = viewModel
