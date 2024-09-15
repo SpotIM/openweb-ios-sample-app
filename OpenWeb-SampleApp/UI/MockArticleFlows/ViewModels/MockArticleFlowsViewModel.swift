@@ -301,11 +301,17 @@ fileprivate extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
+                let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                    guard let self = self else { return }
+                    let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                    self.loggerViewModel.inputs.log(text: log)
+                }
+
                 flows.commentCreation(postId: postId,
                                       article: article,
                                       presentationalMode: presentationalMode,
                                       additionalSettings: additionalSettings,
-                                      callbacks: nil,
+                                      callbacks: actionsCallbacks,
                                       completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
@@ -341,12 +347,18 @@ fileprivate extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
+                let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                    guard let self = self else { return }
+                    let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                    self.loggerViewModel.inputs.log(text: log)
+                }
+
                 flows.commentThread(postId: postId,
                                     article: article,
                                     commentId: self.commonCreatorService.commentThreadCommentId(),
                                     presentationalMode: presentationalMode,
                                     additionalSettings: additionalSettings,
-                                    callbacks: nil,
+                                    callbacks: actionsCallbacks,
                                     completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
