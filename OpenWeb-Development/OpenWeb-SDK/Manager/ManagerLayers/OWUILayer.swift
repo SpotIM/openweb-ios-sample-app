@@ -71,7 +71,7 @@ extension OWUILayer {
 
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings,
-                                                                presentationalStyle: presentationalMode.style)
+                                                                presentationalMode: presentationalMode.style)
 
         flowsSdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
                                                 presentationalMode: presentationalMode,
@@ -113,7 +113,7 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: presentationalMode.style)
+                                                          presentationalMode: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startConversationFlow(conversationData: conversationData,
                                                  presentationalMode: presentationalMode,
@@ -160,7 +160,7 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: presentationalMode.style)
+                                                          presentationalMode: presentationalMode.style)
         let commentCreationData = OWCommentCreationRequiredData(article: article,
                                                                 settings: additionalSettings,
                                                                 commentCreationType: .comment,
@@ -213,11 +213,11 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: presentationalMode.style)
+                                                          presentationalMode: presentationalMode.style)
         let commentThreadData = OWCommentThreadRequiredData(article: article,
                                                             settings: additionalSettings,
                                                             commentId: commentId,
-                                                            presentationalStyle: presentationalMode.style)
+                                                            presentationalMode: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,
@@ -367,7 +367,7 @@ extension OWUILayer {
 
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings,
-                                                                presentationalStyle: .none)
+                                                                presentationalMode: .none)
 
         _ = viewsSdkCoordinator.preConversationView(preConversationData: preConversationData,
                                                 viewCallbacks: callbacks)
@@ -405,7 +405,7 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: .none)
+                                                          presentationalMode: .none)
 
         _ = viewsSdkCoordinator.conversationView(conversationData: conversationData,
                                                 viewCallbacks: callbacks)
@@ -513,7 +513,7 @@ extension OWUILayer {
             article: article,
             settings: additionalSettings,
             commentId: commentId,
-            presentationalStyle: .none
+            presentationalMode: .none
         )
 
         _ = viewsSdkCoordinator.commentThreadView(commentThreadData: commentThreadData, viewCallbacks: callbacks)

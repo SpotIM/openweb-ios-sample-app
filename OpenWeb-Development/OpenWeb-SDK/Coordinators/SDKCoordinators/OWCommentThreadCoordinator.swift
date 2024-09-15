@@ -30,10 +30,14 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     fileprivate let router: OWRoutering!
     fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let flowActionsCallbacks: OWFlowActionsCallbacks?
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .commentThread)
+    }()
+    fileprivate lazy var flowActionsService: OWFlowActionsServicing = {
+        return OWFlowActionsService(flowActionsCallbacks: flowActionsCallbacks, viewSourceType: .commentThread)
     }()
     fileprivate lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .commentThread)
@@ -42,10 +46,12 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     init(router: OWRoutering! = nil,
          commentThreadData: OWCommentThreadRequiredData,
          viewActionsCallbacks: OWViewActionsCallbacks?,
+         flowActionsCallbacks: OWFlowActionsCallbacks?,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.router = router
         self.commentThreadData = commentThreadData
         self.viewActionsCallbacks = viewActionsCallbacks
+        self.flowActionsCallbacks = flowActionsCallbacks
         self.servicesProvider = servicesProvider
     }
 
@@ -63,7 +69,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                     popCompletion: commentThreadPopped)
 
         setupObservers(forViewModel: commentThreadVM)
-        setupViewActionsCallbacks(forViewModel: commentThreadVM)
+        setupFlowActionsCallbacks(forViewModel: commentThreadVM)
 
         let commentThreadPoppedObservable = commentThreadPopped
             .map { OWCommentThreadCoordinatorResult.popped }
@@ -80,7 +86,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article,
                                                                         settings: self.commentThreadData.settings,
                                                                         commentCreationType: commentCreationType,
-                                                                        presentationalStyle: self.commentThreadData.presentationalStyle)
+                                                                        presentationalStyle: self.commentThreadData.presentationalMode)
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                               commentCreationData: commentCreationData,
                                                                               viewActionsCallbacks: self.viewActionsCallbacks)
@@ -128,7 +134,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
                                                                         router: self.router,
                                                                         viewActionsCallbacks: self.viewActionsCallbacks,
-                                                                        presentationalMode: self.commentThreadData.presentationalStyle)
+                                                                        presentationalMode: self.commentThreadData.presentationalMode)
                 return self.coordinate(to: reportReasonCoordinator)
             }
             .do(onNext: { coordinatorResult in
@@ -161,7 +167,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
                                                                             viewActionsCallbacks: self.viewActionsCallbacks,
-                                                                            presentationalMode: self.commentThreadData.presentationalStyle)
+                                                                            presentationalMode: self.commentThreadData.presentationalMode)
                 return self.coordinate(to: clarityDetailsCoordinator)
             }
             .do(onNext: { coordinatorResult in
@@ -229,8 +235,30 @@ fileprivate extension OWCommentThreadCoordinator {
         setupObservers(forViewModel: viewModel.outputs.commentThreadViewVM)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewModeling) {
-        guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+    func setupFlowActionsCallbacks(forViewModel viewModel: OWCommentThreadViewModeling) {
+        guard flowActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let openPublisherProfile = viewModel.outputs.commentThreadViewVM.outputs.openProfile
+            .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
+                guard let self = self else { return nil }
+                switch(openProfileType) {
+                case .publisherProfile(let ssoPublisherId, let type):
+                    let presentationMode = self.commentThreadData.presentationalMode.presentationalMode
+                    return OWFlowActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId,
+                                                                         type: type,
+                                                                         presentationalMode: presentationMode)
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .asObservable()
+
+        Observable.merge(openPublisherProfile)
+            .subscribe { [weak self] flowActionType in
+                self?.flowActionsService.append(flowAction: flowActionType)
+            }
+            .disposed(by: disposeBag)
     }
 
     func setupObservers(forViewModel viewModel: OWCommentThreadViewViewModeling) {
