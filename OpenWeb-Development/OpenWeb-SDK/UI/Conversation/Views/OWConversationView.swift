@@ -287,7 +287,6 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowFilterTabsView
-            .distinctUntilChanged()
             .subscribe(onNext: { [weak self] shouldShowFilterTabsView in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
