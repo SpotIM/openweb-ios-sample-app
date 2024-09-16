@@ -27,8 +27,10 @@ class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate var blockedEvents = BehaviorSubject<[String]>(value: [])
     fileprivate let analyticsEventCreatorService: OWAnalyticsEventCreatorServicing
     fileprivate let analyticsLayer: OWAnalyticsInternalProtocol
+    fileprivate let appendEventsPublisher = PublishSubject<[OWAnalyticEvent]>()
+    fileprivate let removeAllPublisher = PublishSubject<Void>()
 
-    fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
+    fileprivate let eventActionsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
     fileprivate let disposeBag = DisposeBag()
 
     // swiftlint:disable force_cast
@@ -58,7 +60,7 @@ class OWAnalyticsService: OWAnalyticsServicing {
                 analyticsLayer.triggerBICallback(biEvent)
             }
         }
-        analyticsEvents.append(contentsOf: events)
+        appendEventsPublisher.onNext(events)
     }
 
     func spotChanged(spotId: OWSpotId) {
@@ -102,7 +104,7 @@ fileprivate extension OWAnalyticsService {
             }
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.analyticsEvents.removeAll()
+                self.removeAllPublisher.onNext()
             }, onError: { error in
                 OWSharedServicesProvider.shared.logger().log(level: .error, "flushEvents error \(error.localizedDescription)")
             })
@@ -121,6 +123,22 @@ fileprivate extension OWAnalyticsService {
 // Rx
 fileprivate extension OWAnalyticsService {
     func setupObservers() {
+        // Appending events
+        appendEventsPublisher
+            .observe(on: eventActionsQueue)
+            .subscribe(onNext: { [weak self] events in
+                self?.analyticsEvents.append(contentsOf: events)
+            })
+            .disposed(by: disposeBag)
+
+        // Removing all events
+        removeAllPublisher
+            .observe(on: eventActionsQueue)
+            .subscribe(onNext: { [weak self] _ in
+                self?.analyticsEvents.removeAll()
+            })
+            .disposed(by: disposeBag)
+
         let backgroundObservable = appLifeCycle.didEnterBackground
             .filter { [weak self] in
                 guard let self = self else { return false }
@@ -136,7 +154,7 @@ fileprivate extension OWAnalyticsService {
             .voidify()
 
         Observable.merge(backgroundObservable, maxEventObservable)
-            .observe(on: flushEventsQueue)
+            .observe(on: eventActionsQueue)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.flushEvents()
