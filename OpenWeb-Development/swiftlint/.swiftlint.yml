@@ -67,6 +67,7 @@ included: # paths to include during linting. `excluded` paths are still ignored.
   - ../OpenWeb-SampleApp
   - ../OpenWeb-SDK
   - ../OpenWeb-SDKTests
+  - ../OpenWeb-SampleApp-Internal-Configs
 
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - ../Pods
