@@ -251,7 +251,7 @@ fileprivate extension OWFilterTabsViewViewModel {
                 firstTabVM.inputs.selected.onNext(true)
             }
         } else {
-            guard let selectedTabVm = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) else { return }
+            guard let selectedTabVm = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) ?? filterTabVMs.first else { return }
             selectedTabVm.inputs.selected.onNext(true)
             self.selectTab.onNext(OWFilterTabsSelectedTab.tab(selectedTabVm))
         }
