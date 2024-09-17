@@ -179,7 +179,7 @@ platform :ios do
   desc "Upload debug symbols to Crashlytics"
   lane :upload_debug_symbols_to_crashlytics do |options|
     upload_symbols_to_crashlytics(
-        gsp_path: "./OpenWeb-SampleApp/Resources/GoogleService-Info.plist",
+        gsp_path: "./OpenWeb-SampleApp-Internal-Configs/Resources/GoogleService-Info.plist",
         binary_path: './scripts/upload-symbols',
         dsym_path: "./OpenWeb-SampleApp.app.dSYM.zip"
     )
@@ -188,8 +188,8 @@ platform :ios do
   # Excpect parameter `version`
   desc "Set version in xcode target and project plists"
   lane :set_version do |options|
-    increment_version_number(version_number: options[:version]) # Set a specific version number
-    increment_version_number_in_xcodeproj(version_number: options[:version])
+    increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-Development.xcodeproj")
+    increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
     # Set version inside OpenWebSettings plist
     update_plist(
         plist_path: "OpenWeb-SDK/Resources/OpenWebSettings.plist",
@@ -206,19 +206,20 @@ platform :ios do
     puts current_build_number
     if current_build_number.to_i < options[:build_low].to_i || current_build_number.to_i >= options[:build_high].to_i
       puts "Set build number to lower range which is #{options[:build_low]}"
-      increment_build_number(build_number: options[:build_low])
+      set_build(build: options[:build_low])
     else
       # Increment build by one
       new_build_number = current_build_number.to_i + 1
       puts "Set build number to #{new_build_number}"
-      increment_build_number(build_number: new_build_number)
+      set_build(build: new_build_number)
     end
   end
 
   # This method used for internal testing. Decided to keep it here for convenient. Excpect parameter `build`.
   desc "Set build to specific number"
   lane :set_build do |options|
-    increment_build_number(build_number: options[:build])
+    increment_build_number(build_number: options[:build], xcodeproj: "./OpenWeb-Development.xcodeproj")
+    increment_build_number(build_number: options[:build], xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
   end
 
   private_lane :sign_xcframework do |options|
