@@ -17,6 +17,7 @@ import RxSwift
 
 protocol OWFlowActionsServicing {
     func append(flowAction: OWFlowActionCallbackType)
+    var serviceQueueEmpty: Observable<Void> { get }
 }
 
 class OWFlowActionsService: OWFlowActionsServicing {
@@ -26,6 +27,12 @@ class OWFlowActionsService: OWFlowActionsServicing {
     fileprivate let viewSourceType: OWViewSourceType
     fileprivate let queue = OWQueue<OWFlowActionCallbackType>(duplicationStrategy: .replaceDuplicates)
     fileprivate var disposeBag: DisposeBag?
+
+    fileprivate var _serviceQueueEmpty = PublishSubject<Void>()
+    var serviceQueueEmpty: Observable<Void> {
+        return _serviceQueueEmpty
+            .asObservable()
+    }
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          flowActionsCallbacks: OWFlowActionsCallbacks?,
@@ -65,6 +72,7 @@ fileprivate extension OWFlowActionsService {
                   let action = self.queue.popFirst() {
                 self.flowActionsCallbacks?(action, self.viewSourceType, postId)
             }
+            _serviceQueueEmpty.onNext()
         }
     }
 }
