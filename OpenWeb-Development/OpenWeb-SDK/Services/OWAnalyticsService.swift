@@ -30,7 +30,7 @@ class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate let appendEventsPublisher = PublishSubject<[OWAnalyticEvent]>()
     fileprivate let removeAllPublisher = PublishSubject<Void>()
 
-    fileprivate let eventActionsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
+    fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
     fileprivate let disposeBag = DisposeBag()
 
     // swiftlint:disable force_cast
@@ -126,7 +126,7 @@ fileprivate extension OWAnalyticsService {
     func setupObservers() {
         // Appending events
         appendEventsPublisher
-            .observe(on: eventActionsQueue)
+            .observe(on: flushEventsQueue)
             .subscribe(onNext: { [weak self] events in
                 self?.analyticsEvents.append(contentsOf: events)
             })
@@ -134,7 +134,7 @@ fileprivate extension OWAnalyticsService {
 
         // Removing all events
         removeAllPublisher
-            .observe(on: eventActionsQueue)
+            .observe(on: flushEventsQueue)
             .subscribe(onNext: { [weak self] _ in
                 self?.analyticsEvents.removeAll()
             })
@@ -155,7 +155,7 @@ fileprivate extension OWAnalyticsService {
             .voidify()
 
         Observable.merge(backgroundObservable, maxEventObservable)
-            .observe(on: eventActionsQueue)
+            .observe(on: flushEventsQueue)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.flushEvents()
