@@ -29,4 +29,5 @@ struct SPConfigurationSDKStatus: Decodable {
     let shouldShowReportReasonsCounter: Bool?
     let reportReasonsCounterMaxLength: Int?
     let postGifEnabled: Bool
+    let shareButtonStyle: OWShareButtonStyle
 }

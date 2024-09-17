@@ -15,7 +15,6 @@ protocol OWCustomizationsInternalProtocol {
 }
 
 class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol {
-
     fileprivate struct Metrics {
         static let maxCustomizableElementCallbacksNumber: Int = 10
     }
@@ -50,6 +49,15 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
             _themeEnforcement = newEnforcement
             sendEvent(for: .configureThemeEnforcement(enforcement: newEnforcement))
             sharedServicesProvider.themeStyleService().setEnforcement(enforcement: _themeEnforcement)
+        }
+    }
+
+    var commentActions: OWCommentActionsCustomizations {
+        get {
+            return _commentActions
+        }
+        set(newCommentActions) {
+            _commentActions = newCommentActions
         }
     }
 
@@ -114,6 +122,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
 
     fileprivate var _fontFamily: OWFontGroupFamily = .default
     fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
+    fileprivate var _commentActions: OWCommentActionsCustomizations = OWCommentActions()
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
     fileprivate var _statusBarEnforcement: OWStatusBarEnforcement = .matchTheme
     fileprivate var _navigationBarEnforcement: OWNavigationBarEnforcement = .style(.largeTitles)
@@ -148,6 +157,7 @@ fileprivate extension OWCustomizationsLayer {
         setColor(color: theme.primaryTextColor, type: .textColor4)
         setColor(color: theme.secondaryTextColor, type: .textColor3)
         setColor(color: theme.tertiaryTextColor, type: .textColor2)
+        setColor(color: theme.tertiaryTextColor, type: .textColor5)
         setColor(color: theme.primaryBackgroundColor, type: .backgroundColor2)
         setColor(color: theme.secondaryBackgroundColor, type: .backgroundColor4)
         setColor(color: theme.tertiaryBackgroundColor, type: .backgroundColor5)
@@ -159,6 +169,27 @@ fileprivate extension OWCustomizationsLayer {
         if let brandColor = theme.brandColor {
             setColor(color: brandColor, type: .brandColor)
             OWColorPalette.shared.blockForOverride(color: .brandColor)
+        }
+
+        // Preventing votes from changing to brandColor later on from the server
+        if let voteUpSelectedColor = theme.voteUpSelectedColor {
+            setColor(color: voteUpSelectedColor, type: .voteUpSelectedColor)
+            OWColorPalette.shared.blockForOverride(color: .voteUpSelectedColor)
+        }
+
+        if let voteDownSelectedColor = theme.voteDownSelectedColor {
+            setColor(color: voteDownSelectedColor, type: .voteDownSelectedColor)
+            OWColorPalette.shared.blockForOverride(color: .voteDownSelectedColor)
+        }
+
+        if let voteUpUnselectedColor = theme.voteUpUnselectedColor {
+            setColor(color: voteUpUnselectedColor, type: .voteUpUnselectedColor)
+            OWColorPalette.shared.blockForOverride(color: .voteUpUnselectedColor)
+        }
+
+        if let voteDownUnselectedColor = theme.voteDownUnselectedColor {
+            setColor(color: voteDownUnselectedColor, type: .voteDownUnselectedColor)
+            OWColorPalette.shared.blockForOverride(color: .voteDownUnselectedColor)
         }
     }
 
