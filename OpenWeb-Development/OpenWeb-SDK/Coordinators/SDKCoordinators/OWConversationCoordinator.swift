@@ -372,6 +372,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 else { return }
                 self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: postId)
             })
+            .flatMap { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                guard self.viewableMode == .partOfFlow else {
+                    return Observable.just(())
+                }
+                return flowActionsService.serviceQueueEmpty
+            }
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
