@@ -75,6 +75,7 @@ fileprivate extension OWAnalyticsService {
         let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.networkAPI().analytics
 
         _ = Observable.just(())
+            .observe(on: flushEventsQueue)
             .flatMap { [weak self] _ -> Observable<[OWAnalyticEvent]> in
                 guard let self = self else { return .empty()}
                 return self.analyticsEvents
