@@ -13,6 +13,7 @@ struct SPConfigurationShared: Decodable {
     let enableCommentLabels: Bool?
     let commentLabels: Dictionary<String, SPCommentLabelsSectionConfiguration>?
     let votesType: OWVotesType
+    let votesPosition: OWVotesPosition
     let usePublisherUserProfile: Bool?
     let reportReasonsOptions: OWConfigurationReportReasonOptions?
     let reportReasonsMinimumAdditionalTextLength: Int?
@@ -22,6 +23,7 @@ struct SPConfigurationShared: Decodable {
         case enableCommentLabels,
              commentLabels,
              votesType,
+             votesPosition,
              reportReasonsOptions,
              reportReasonsMinimumAdditionalTextLength
     }

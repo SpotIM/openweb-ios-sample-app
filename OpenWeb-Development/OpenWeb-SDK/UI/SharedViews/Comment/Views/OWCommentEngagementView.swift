@@ -15,6 +15,7 @@ class OWCommentEngagementView: UIView {
     fileprivate struct Metrics {
         static let baseOffset: CGFloat = 14
         static let dotDividerSize: CGFloat = 3
+        static let shareButtonSize: CGFloat = 24
 
         static let identifier = "comment_actions_view_id"
         static let replyButtonIdentifier = "comment_actions_view_reply_button_id"
@@ -25,12 +26,14 @@ class OWCommentEngagementView: UIView {
     fileprivate var disposeBag: DisposeBag = DisposeBag()
 
     fileprivate var replyZeroWidthConstraint: OWConstraint? = nil
+    fileprivate var votingTrailingConstraint: OWConstraint? = nil
+    fileprivate var votingLeadingConstraint: OWConstraint? = nil
+    fileprivate var shareLeadingWithVotingConstraint: OWConstraint? = nil
+    fileprivate var shareLeadingWithReplyConstraint: OWConstraint? = nil
 
     fileprivate lazy var replyButton: UIButton = {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
-            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(OWFontBook.shared.font(typography: .footnoteText))
             .wrapContent()
     }()
 
@@ -52,10 +55,8 @@ class OWCommentEngagementView: UIView {
 
     fileprivate lazy var shareButton: UIButton = {
         return UIButton()
+            .hugContent(axis: .horizontal)
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
-            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(OWFontBook.shared.font(typography: .footnoteText))
-            .wrapContent()
     }()
 
     override init(frame: CGRect) {
@@ -106,8 +107,11 @@ fileprivate extension OWCommentEngagementView {
 
         votingView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.equalTo(replyDotDivider.OWSnp.trailing).offset(Metrics.baseOffset)
+            votingLeadingConstraint = make.leading.equalTo(replyDotDivider.OWSnp.trailing).offset(Metrics.baseOffset).constraint
+            votingTrailingConstraint = make.trailing.equalToSuperview().constraint
         }
+        votingLeadingConstraint?.isActive = true
+        votingTrailingConstraint?.isActive = false
 
         self.addSubview(votingDotDivider)
         votingDotDivider.OWSnp.makeConstraints { make in
@@ -119,12 +123,53 @@ fileprivate extension OWCommentEngagementView {
         self.addSubview(shareButton)
         shareButton.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.equalTo(votingDotDivider.OWSnp.trailing).offset(Metrics.baseOffset)
+            shareLeadingWithVotingConstraint = make.leading.equalTo(votingDotDivider.OWSnp.trailing).offset(Metrics.baseOffset).constraint
+            shareLeadingWithReplyConstraint = make.leading.equalTo(replyDotDivider.OWSnp.trailing).offset(Metrics.baseOffset).constraint
             make.trailing.lessThanOrEqualToSuperview()
         }
+        shareLeadingWithReplyConstraint?.isActive = false
+        shareLeadingWithVotingConstraint?.isActive = true
     }
 
     func setupObservers() {
+        viewModel.outputs.shareButtonStyle
+            .subscribe(onNext: { [weak self] shareButtonStyle in
+                guard let self = self else { return }
+                switch shareButtonStyle {
+                case .text:
+                    self.shareButton
+                        .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
+                        .setImage(nil, for: .normal)
+                case .icon:
+                    self.shareButton
+                        .setTitle(nil, state: .normal)
+                        .setImage(UIImage(spNamed: "shareButtonIcon"), for: .normal)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.votesPosition
+            .subscribe(onNext: { [weak self] position in
+                guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    switch position {
+                    case .default:
+                        self.votingDotDivider.isHidden = false
+                        self.shareLeadingWithReplyConstraint?.isActive = false
+                        self.shareLeadingWithVotingConstraint?.isActive = true
+                        self.votingLeadingConstraint?.isActive = true
+                        self.votingTrailingConstraint?.isActive = false
+                    case .endBottom:
+                        self.votingDotDivider.isHidden = true
+                        self.shareLeadingWithReplyConstraint?.isActive = true
+                        self.shareLeadingWithVotingConstraint?.isActive = false
+                        self.votingLeadingConstraint?.isActive = false
+                        self.votingTrailingConstraint?.isActive = true
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+
         replyButton.rx.tap
             .bind(to: viewModel.inputs.replyClicked)
             .disposed(by: disposeBag)
@@ -144,28 +189,52 @@ fileprivate extension OWCommentEngagementView {
                     make.size.equalTo(showReply ? Metrics.dotDividerSize : 0)
                     make.leading.equalTo(self.replyButton.OWSnp.trailing).offset(showReply ? Metrics.baseOffset : 0)
                 }
-                self.votingView.OWSnp.updateConstraints { make in
-                    make.leading.equalTo(self.replyDotDivider.OWSnp.trailing).offset(showReply ? Metrics.baseOffset : 0)
-                }
+                shareLeadingWithReplyConstraint?.update(offset: (showReply ? Metrics.baseOffset : 0))
             })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] currentStyle in
+            .withLatestFrom(viewModel.outputs.commentActionsColor) { ($0, $1) }
+            .subscribe(onNext: { [weak self] currentStyle, commentActionsColor in
                 guard let self = self else { return }
-                self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
-                self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
                 self.replyDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.votingDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
+                switch commentActionsColor {
+                case .default:
+                    self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
+                    self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
+                    self.shareButton.tintColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                case .brandColor:
+                    self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle), for: .normal)
+                    self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle), for: .normal)
+                    self.shareButton.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                }
             }).disposed(by: disposeBag)
+
+        let setButtonsFont = { [weak self] (commentActionsFontStyle: OWCommentActionsFontStyle) in
+            guard let self = self else { return }
+            switch commentActionsFontStyle {
+            case .default:
+                self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.shareButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
+            case .semiBold:
+                self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteContext)
+                self.shareButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteContext)
+            }
+        }
+
+        viewModel.outputs.commentActionsFontStyle
+            .subscribe(onNext: { commentActionsFontStyle in
+                setButtonsFont(commentActionsFontStyle)
+            })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
-                self.shareButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
+            .withLatestFrom(viewModel.outputs.commentActionsFontStyle)
+            .subscribe(onNext: { commentActionsFontStyle in
+                setButtonsFont(commentActionsFontStyle)
             })
             .disposed(by: disposeBag)
     }
