@@ -13,16 +13,5 @@ public enum OWFlowActionCallbackType: Codable {
     case conversationDismissed
 }
 
-extension OWFlowActionCallbackType: Equatable {
-    public static func == (lhs: OWFlowActionCallbackType, rhs: OWFlowActionCallbackType) -> Bool {
-        switch (lhs, rhs) {
-        case (let .openPublisherProfile(lhsId, lhsType, lhsPresentationalMode), let .openPublisherProfile(rhsId, rhsType, rhsPresentationalMode)):
-            return lhsId == rhsId && lhsType == rhsType && lhsPresentationalMode == rhsPresentationalMode
-        case (.conversationDismissed, .conversationDismissed):
-            return true
-        default:
-            return false
-        }
-    }
-}
+extension OWFlowActionCallbackType: Equatable {}
 
