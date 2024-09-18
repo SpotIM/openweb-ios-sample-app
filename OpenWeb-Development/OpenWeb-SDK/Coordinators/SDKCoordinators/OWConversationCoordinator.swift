@@ -49,6 +49,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     }
 
     fileprivate let conversationPopped = PublishSubject<Void>()
+    fileprivate var conversationVC: OWConversationVC?
 
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
@@ -68,6 +69,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData,
                                                                                  viewableMode: viewableMode)
         let conversationVC = OWConversationVC(viewModel: conversationVM)
+        self.conversationVC = conversationVC
 
         setupObservers(forViewModel: conversationVM)
         setupFlowActionsCallbacks(forViewModel: conversationVM)
@@ -426,21 +428,13 @@ fileprivate extension OWConversationCoordinator {
             .outputs.closeConversation
             .map { OWFlowActionCallbackType.conversationDismissed }
 
-        let openPublisherProfile = Observable.merge(
-            viewModel.outputs.conversationViewVM.outputs.openProfile,
-            viewModel.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile
-        )
+        let openPublisherProfile = Observable.merge(viewModel.outputs.conversationViewVM.outputs.openProfile,
+                                                    viewModel.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile)
             .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
                 guard let self = self else { return nil }
-                switch(openProfileType) {
-                case .publisherProfile(let ssoPublisherId, let type):
-                    let presentationMode = self.conversationData.presentationalMode.presentationalMode
-                    return OWFlowActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId,
-                                                                         type: type,
-                                                                         presentationalMode: presentationMode)
-                default:
-                    return nil
-                }
+                return self.flowActionsService.getOpenProfileActionCallback(for: self.conversationVC,
+                                                                            openProfileType: openProfileType,
+                                                                            presentationalModeCompact: self.conversationData.presentationalMode)
             }
             .unwrap()
             .asObservable()

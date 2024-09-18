@@ -13,15 +13,4 @@ enum OWPresentationalModeCompact: Codable {
     case present(style: OWModalPresentationStyle)
     case push
     case none
-
-    var presentationalMode: OWPresentationalMode {
-        switch self {
-        case .present(style: let style):
-            return OWPresentationalMode.present(viewController: UIViewController(), style: style)
-        case .push:
-            return OWPresentationalMode.push(navigationController: UINavigationController())
-        case .none:
-            return OWPresentationalMode.push(navigationController: UINavigationController())
-        }
-    }
 }
