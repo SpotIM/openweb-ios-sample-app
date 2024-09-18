@@ -43,6 +43,8 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         return OWCustomizationsService(viewSourceType: .commentThread)
     }()
 
+    fileprivate var commentThreadVC: OWCommentThreadVC?
+
     init(router: OWRoutering! = nil,
          commentThreadData: OWCommentThreadRequiredData,
          viewActionsCallbacks: OWViewActionsCallbacks?,
@@ -60,6 +62,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         viewableMode = .partOfFlow
         let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
         let commentThreadVC = OWCommentThreadVC(viewModel: commentThreadVM)
+        self.commentThreadVC = commentThreadVC
 
         let commentThreadPopped = PublishSubject<Void>()
 
@@ -241,15 +244,9 @@ fileprivate extension OWCommentThreadCoordinator {
         let openPublisherProfile = viewModel.outputs.commentThreadViewVM.outputs.openProfile
             .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
                 guard let self = self else { return nil }
-                switch(openProfileType) {
-                case .publisherProfile(let ssoPublisherId, let type):
-                    let presentationMode = self.commentThreadData.presentationalMode.presentationalMode
-                    return OWFlowActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId,
-                                                                         type: type,
-                                                                         presentationalMode: presentationMode)
-                default:
-                    return nil
-                }
+                return self.flowActionsService.getOpenProfileActionCallback(for: self.commentThreadVC,
+                                                                            openProfileType: openProfileType,
+                                                                            presentationalModeCompact: self.commentThreadData.presentationalMode)
             }
             .unwrap()
             .asObservable()

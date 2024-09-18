@@ -231,15 +231,9 @@ fileprivate extension OWPreConversationCoordinator {
         let openPublisherProfile = viewModel.outputs.openProfile
             .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
                 guard let self = self else { return nil }
-                switch openProfileType {
-                case .publisherProfile(let ssoPublisherId, let type):
-                    let presentationMode = self.preConversationData.presentationalMode.presentationalMode
-                    return OWFlowActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId,
-                                                                         type: type,
-                                                                         presentationalMode: presentationMode)
-                default:
-                    return nil
-                }
+                return self.flowActionsService.getOpenProfileActionCallback(for: self.router.navigationController?.viewControllers.last,
+                                                                            openProfileType: openProfileType,
+                                                                            presentationalModeCompact: self.preConversationData.presentationalMode)
             }
             .unwrap()
             .asObservable()
