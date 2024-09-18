@@ -18,6 +18,7 @@ import UIKit
 
 protocol OWFlowActionsServicing {
     func append(flowAction: OWFlowActionCallbackType)
+    // This is used to tell the coordinator that all events where sent to publisher before the coordinator is deallocated
     var serviceQueueEmpty: Observable<Void> { get }
     func getOpenProfileActionCallback(for viewController: UIViewController?,
                                       openProfileType: OWOpenProfileType,
