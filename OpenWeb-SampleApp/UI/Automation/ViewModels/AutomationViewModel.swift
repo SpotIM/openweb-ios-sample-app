@@ -102,6 +102,7 @@ fileprivate extension AutomationViewModel {
 
                 flows.userStatus(presentationalMode: OWPresentationalMode.push(navigationController: navigationController),
                                         additionalSettings: OWAutomationSettings(),
+                                        callbacks: nil,
                                         completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
