@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 /*
  This service will be held by each coordinator (multiple services from this type are allowed).
@@ -18,6 +19,9 @@ import RxSwift
 protocol OWFlowActionsServicing {
     func append(flowAction: OWFlowActionCallbackType)
     var serviceQueueEmpty: Observable<Void> { get }
+    func getOpenProfileActionCallback(for viewController: UIViewController?,
+                                      openProfileType: OWOpenProfileType,
+                                      presentationalModeCompact: OWPresentationalModeCompact) -> OWFlowActionCallbackType?
 }
 
 class OWFlowActionsService: OWFlowActionsServicing {
@@ -45,6 +49,30 @@ class OWFlowActionsService: OWFlowActionsServicing {
     func append(flowAction: OWFlowActionCallbackType) {
         queue.insert(flowAction)
         setupBlockerServiceObservers()
+    }
+
+    func getOpenProfileActionCallback(for viewController: UIViewController?,
+                                      openProfileType: OWOpenProfileType,
+                                      presentationalModeCompact: OWPresentationalModeCompact) -> OWFlowActionCallbackType? {
+        guard let viewController = viewController else { return nil }
+        switch(openProfileType) {
+        case .publisherProfile(let ssoPublisherId, let type):
+            let presentationMode: OWPresentationalMode? = {
+                switch presentationalModeCompact {
+                case .present(style: let style):
+                    return OWPresentationalMode.present(viewController: viewController, style: style)
+                case .push, .none:
+                    guard let navigationController = viewController.navigationController else { return nil }
+                    return OWPresentationalMode.push(navigationController: navigationController)
+                }
+            }()
+            guard let presentationMode = presentationMode else { return nil }
+            return OWFlowActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId,
+                                                                 type: type,
+                                                                 presentationalMode: presentationMode)
+        default:
+            return nil
+        }
     }
 }
 
