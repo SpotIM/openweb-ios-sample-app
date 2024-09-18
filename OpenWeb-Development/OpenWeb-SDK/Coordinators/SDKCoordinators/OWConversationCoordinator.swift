@@ -432,7 +432,7 @@ fileprivate extension OWConversationCoordinator {
                                                     viewModel.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile)
             .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
                 guard let self = self else { return nil }
-                return self.flowActionsService.getOpenProfileActionCallback(for: self.conversationVC,
+                return self.flowActionsService.getOpenProfileActionCallback(for: self.conversationVC?.navigationController,
                                                                             openProfileType: openProfileType,
                                                                             presentationalModeCompact: self.conversationData.presentationalMode)
             }

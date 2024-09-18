@@ -20,7 +20,7 @@ protocol OWFlowActionsServicing {
     func append(flowAction: OWFlowActionCallbackType)
     // This is used to tell the coordinator that all events where sent to publisher before the coordinator is deallocated
     var serviceQueueEmpty: Observable<Void> { get }
-    func getOpenProfileActionCallback(for viewController: UIViewController?,
+    func getOpenProfileActionCallback(for navigationController: UINavigationController?,
                                       openProfileType: OWOpenProfileType,
                                       presentationalModeCompact: OWPresentationalModeCompact) -> OWFlowActionCallbackType?
 }
@@ -52,18 +52,18 @@ class OWFlowActionsService: OWFlowActionsServicing {
         setupBlockerServiceObservers()
     }
 
-    func getOpenProfileActionCallback(for viewController: UIViewController?,
+    func getOpenProfileActionCallback(for navigationController: UINavigationController?,
                                       openProfileType: OWOpenProfileType,
                                       presentationalModeCompact: OWPresentationalModeCompact) -> OWFlowActionCallbackType? {
-        guard let viewController = viewController else { return nil }
+        guard let navigationController = navigationController else { return nil }
         switch(openProfileType) {
         case .publisherProfile(let ssoPublisherId, let type):
             let presentationMode: OWPresentationalMode? = {
                 switch presentationalModeCompact {
                 case .present(style: let style):
+                    guard let viewController = navigationController.viewControllers.last else { return nil }
                     return OWPresentationalMode.present(viewController: viewController, style: style)
                 case .push, .none:
-                    guard let navigationController = viewController.navigationController else { return nil }
                     return OWPresentationalMode.push(navigationController: navigationController)
                 }
             }()
