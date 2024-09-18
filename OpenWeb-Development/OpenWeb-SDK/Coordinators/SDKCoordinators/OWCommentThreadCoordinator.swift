@@ -244,7 +244,7 @@ fileprivate extension OWCommentThreadCoordinator {
         let openPublisherProfile = viewModel.outputs.commentThreadViewVM.outputs.openProfile
             .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
                 guard let self = self else { return nil }
-                return self.flowActionsService.getOpenProfileActionCallback(for: self.commentThreadVC,
+                return self.flowActionsService.getOpenProfileActionCallback(for: self.commentThreadVC?.navigationController,
                                                                             openProfileType: openProfileType,
                                                                             presentationalModeCompact: self.commentThreadData.presentationalMode)
             }
