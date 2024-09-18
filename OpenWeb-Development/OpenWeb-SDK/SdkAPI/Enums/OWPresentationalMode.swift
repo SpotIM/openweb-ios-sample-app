@@ -8,6 +8,9 @@
 
 import UIKit
 
+// OWPresentationalMode is Codable since we insert cases
+// into OWQueue implemented in OWFlowActionsService
+// OWQueue requires it to be Codable
 public enum OWPresentationalMode: Codable {
     case present(viewController: UIViewController, style: OWModalPresentationStyle = .pageSheet)
     case push(navigationController: UINavigationController)
