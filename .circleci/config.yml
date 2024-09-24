@@ -162,7 +162,7 @@ jobs:
             git branch validate/spm/sdk/$CORE_VERSION
             git checkout validate/spm/sdk/$CORE_VERSION
             git status
-            sed -i '' "/kind = exactVersion;/,/};/ s/version = \"[^\"]*\";/version = \"$CORE_VERSION\";/" OpenWeb-iOS-SDK-Demo.xcodeproj/project.pbxproj
+            sed -i '' -E "/repositoryURL = \"https:\/\/github.com\/SpotIM\/openweb-ios-sdk-pod.git\"/,/version/s/version = [0-9]+\.[0-9]+\.[0-9]+;/version = $CORE_VERSION;/g" OpenWeb-iOS-SDK-Demo.xcodeproj/project.pbxproj
             git add .
             git commit -m "validate spm with version '$CORE_VERSION'"
 
@@ -183,7 +183,7 @@ jobs:
             bundle exec fastlane build
 
       - run:
-          name: Create a pull request on Github for validating cocoapods integration
+          name: Create a pull request on Github for validating SPM integration
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             git push origin validate/spm/sdk/$CORE_VERSION
