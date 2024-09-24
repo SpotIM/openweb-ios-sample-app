@@ -75,15 +75,23 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
 
     func setColor(_ color: UIColor, forType type: OWColor.OWType, forThemeStyle themeStyle: OWThemeStyle) {
         // swiftlint:disable self_capture_in_blocks
-        self.lock.lock(); defer { self.lock.unlock() }
+        self.lock.lock()
         // swiftlint:enable self_capture_in_blocks
-
         guard var encapsulateColor = colors[type],
               !blockedForOverride.contains(type)
-        else { return }
+        else {
+            self.lock.unlock()
+            return
+        }
 
         encapsulateColor.setColor(color, forThemeStyle: themeStyle)
         colors[type] = encapsulateColor // We are working with structs here, so we need to re set the encapsulated color for this key
+
+        // We unlock here since straight after "colorsMapper.onNext(colorsRx)"
+        // Subscribers to colorsMapper will call "func color(type: themeStyle:)"
+        // And will cause a recursive lock and crash
+        self.lock.unlock()
+
         if (type.shouldUpdateRxObservable) {
             let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
             colorsMapper.onNext(colorsRx)

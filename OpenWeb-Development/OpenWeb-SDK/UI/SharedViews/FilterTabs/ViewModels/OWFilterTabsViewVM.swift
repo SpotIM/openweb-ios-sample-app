@@ -103,6 +103,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
                       let conversationConfig = config.conversation else { return false }
                 return conversationConfig.isTabsEnabled && shouldShowFilterTabs
             }
+            .distinctUntilChanged()
             .asObservable()
     }()
 
@@ -193,7 +194,12 @@ fileprivate extension OWFilterTabsViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        getTabs
+        shouldShowFilterTabs
+            .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<[OWFilterTabsCollectionCellViewModel]> in
+                guard let self = self else { return .empty() }
+                return self.getTabs
+            }
             .observe(on: MainScheduler.instance)
             .withLatestFrom(serviceSelectedTabId) { ($0, $1) }
             .withLatestFrom(selectTab) { ($0.0, $0.1, $1) }
@@ -245,7 +251,7 @@ fileprivate extension OWFilterTabsViewViewModel {
                 firstTabVM.inputs.selected.onNext(true)
             }
         } else {
-            guard let selectedTabVm = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) else { return }
+            guard let selectedTabVm = filterTabVMs.first(where: { $0.outputs.tabId == selectedTabId }) ?? filterTabVMs.first else { return }
             selectedTabVm.inputs.selected.onNext(true)
             self.selectTab.onNext(OWFilterTabsSelectedTab.tab(selectedTabVm))
         }
