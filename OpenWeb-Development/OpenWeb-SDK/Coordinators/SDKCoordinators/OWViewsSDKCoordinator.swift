@@ -24,7 +24,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
     }
 
     func preConversationView(preConversationData: OWPreConversationRequiredData,
-                             callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+                             viewCallbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
 
         return Observable.just(())
             .observe(on: MainScheduler.instance)
@@ -40,7 +40,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
                 guard let self = self else { return .empty() }
                 let preConversationCoordinator = OWPreConversationCoordinator(preConversationData: preConversationData,
-                                                                              actionsCallbacks: callbacks,
+                                                                              viewActionsCallbacks: viewCallbacks,
                                                                               viewableMode: .independent)
                 self.store(coordinator: preConversationCoordinator)
                 return preConversationCoordinator.showableComponent()
@@ -48,7 +48,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
     }
 
     func conversationView(conversationData: OWConversationRequiredData,
-                          callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+                          viewCallbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -63,14 +63,15 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
                 guard let self = self else { return .empty() }
                 let conversationCoordinator = OWConversationCoordinator(conversationData: conversationData,
-                                                                              actionsCallbacks: callbacks)
+                                                                        viewActionsCallbacks: viewCallbacks,
+                                                                        flowActionsCallbacks: nil)
                 self.store(coordinator: conversationCoordinator)
                 return conversationCoordinator.showableComponent()
             }
     }
 
     func commentCreationView(commentCreationData: OWCommentCreationRequiredData,
-                             callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+                             viewCallbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -84,14 +85,14 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
                 guard let self = self else { return .empty() }
                 let commentCreationCoordinator = OWCommentCreationCoordinator(commentCreationData: commentCreationData,
-                                                                           actionsCallbacks: callbacks)
+                                                                           viewActionsCallbacks: viewCallbacks)
                 self.store(coordinator: commentCreationCoordinator)
                 return commentCreationCoordinator.showableComponent()
             }
     }
 
     func commentThreadView(commentThreadData: OWCommentThreadRequiredData,
-                           callbacks: OWViewActionsCallbacks?
+                           viewCallbacks: OWViewActionsCallbacks?
     ) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
@@ -106,14 +107,15 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
                 guard let self = self else { return .empty() }
                 let commentThreadCoordinator = OWCommentThreadCoordinator(commentThreadData: commentThreadData,
-                                                                          actionsCallbacks: callbacks)
+                                                                          viewActionsCallbacks: viewCallbacks,
+                                                                          flowActionsCallbacks: nil)
                 self.store(coordinator: commentThreadCoordinator)
                 return commentThreadCoordinator.showableComponent()
             }
     }
 
     func reportReasonView(reportData: OWReportReasonsRequiredData,
-                          callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+                          viewCallbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -127,14 +129,14 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
                     guard let self = self else { return .empty() }
                     let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
-                                                                            actionsCallbacks: callbacks)
+                                                                            viewActionsCallbacks: viewCallbacks)
                     self.store(coordinator: reportReasonCoordinator)
                     return reportReasonCoordinator.showableComponent()
                 }
     }
 
     func clarityDetailsView(data: OWClarityDetailsRequireData,
-                            callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+                            viewCallbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -147,7 +149,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
                     guard let self = self else { return .empty() }
-                    let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data, actionsCallbacks: callbacks)
+                    let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data, viewActionsCallbacks: viewCallbacks)
 
                     self.store(coordinator: clarityDetailsCoordinator)
                     return clarityDetailsCoordinator.showableComponent()
@@ -155,7 +157,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
     }
 
     func commenterAppealView(appealData: OWAppealRequiredData,
-                             callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+                             viewCallbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -164,14 +166,14 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
                     guard let self = self else { return .empty() }
-                    let commenterAppealCoordinator = OWCommenterAppealCoordinator(appealData: appealData, actionsCallbacks: callbacks)
+                    let commenterAppealCoordinator = OWCommenterAppealCoordinator(appealData: appealData, viewActionsCallbacks: viewCallbacks)
 
                     self.store(coordinator: commenterAppealCoordinator)
                     return commenterAppealCoordinator.showableComponent()
                 }
     }
 
-    func webTabView(tabOptions: OWWebTabOptions, callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+    func webTabView(tabOptions: OWWebTabOptions, viewCallbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -184,7 +186,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
                     guard let self = self else { return .empty() }
-                    let webTabCoordinator = OWWebTabCoordinator(options: tabOptions, actionsCallbacks: callbacks)
+                    let webTabCoordinator = OWWebTabCoordinator(options: tabOptions, viewActionsCallbacks: viewCallbacks)
 
                     self.store(coordinator: webTabCoordinator)
                     return webTabCoordinator.showableComponent()
@@ -192,8 +194,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
     }
 
 #if BETA
-    func testingPlaygroundView(testingPlaygroundData: OWTestingPlaygroundRequiredData,
-                               callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+    func testingPlaygroundView(testingPlaygroundData: OWTestingPlaygroundRequiredData) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -206,8 +207,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
                     guard let self = self else { return .empty() }
-                    let testingPlaygroundCoordinator = OWTestingPlaygroundCoordinator(testingPlaygroundData: testingPlaygroundData,
-                                                                                      actionsCallbacks: callbacks)
+                    let testingPlaygroundCoordinator = OWTestingPlaygroundCoordinator(testingPlaygroundData: testingPlaygroundData)
                     self.store(coordinator: testingPlaygroundCoordinator)
                     return testingPlaygroundCoordinator.showableComponent()
                 }
