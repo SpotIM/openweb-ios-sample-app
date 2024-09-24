@@ -53,7 +53,7 @@ extension OWUILayer {
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
-                         callbacks: OWViewActionsCallbacks? = nil,
+                         callbacks: OWFlowActionsCallbacks? = nil,
                          completion: @escaping OWViewCompletion) {
         guard validateSpotIdExist(completion: completion) else { return }
 
@@ -71,11 +71,11 @@ extension OWUILayer {
 
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings,
-                                                                presentationalStyle: presentationalMode.style)
+                                                                presentationalMode: presentationalMode.style)
 
         flowsSdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
                                                 presentationalMode: presentationalMode,
-                                                callbacks: callbacks)
+                                                flowCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
             guard let self = self else { return }
@@ -95,7 +95,7 @@ extension OWUILayer {
                       article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
-                      callbacks: OWViewActionsCallbacks? = nil,
+                      callbacks: OWFlowActionsCallbacks? = nil,
                       completion: @escaping OWDefaultCompletion) {
         guard validateSpotIdExist(completion: completion) else { return }
 
@@ -113,11 +113,11 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: presentationalMode.style)
+                                                          presentationalMode: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startConversationFlow(conversationData: conversationData,
                                                  presentationalMode: presentationalMode,
-                                                 callbacks: callbacks)
+                                                 flowCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
             guard let self = self else { return }
@@ -142,7 +142,7 @@ extension OWUILayer {
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
-                         callbacks: OWViewActionsCallbacks? = nil,
+                         callbacks: OWFlowActionsCallbacks? = nil,
                          completion: @escaping OWDefaultCompletion) {
         guard validateSpotIdExist(completion: completion) else { return }
 
@@ -160,7 +160,7 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: presentationalMode.style)
+                                                          presentationalMode: presentationalMode.style)
         let commentCreationData = OWCommentCreationRequiredData(article: article,
                                                                 settings: additionalSettings,
                                                                 commentCreationType: .comment,
@@ -169,7 +169,7 @@ extension OWUILayer {
         _ = flowsSdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
                                                     commentCreationData: commentCreationData,
                                                     presentationalMode: presentationalMode,
-                                                    callbacks: callbacks)
+                                                    flowCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
             guard let self = self else { return }
@@ -195,7 +195,7 @@ extension OWUILayer {
                        commentId: OWCommentId,
                        presentationalMode: OWPresentationalMode,
                        additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
-                       callbacks: OWViewActionsCallbacks? = nil,
+                       callbacks: OWFlowActionsCallbacks? = nil,
                        completion: @escaping OWDefaultCompletion) {
         guard validateSpotIdExist(completion: completion) else { return }
 
@@ -213,16 +213,16 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: presentationalMode.style)
+                                                          presentationalMode: presentationalMode.style)
         let commentThreadData = OWCommentThreadRequiredData(article: article,
                                                             settings: additionalSettings,
                                                             commentId: commentId,
-                                                            presentationalStyle: presentationalMode.style)
+                                                            presentationalMode: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,
                                                     presentationalMode: presentationalMode,
-                                                    callbacks: callbacks)
+                                                    flowCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
             guard let self = self else { return }
@@ -265,8 +265,7 @@ extension OWUILayer {
         let testingPlaygroundData = OWTestingPlaygroundRequiredData(settings: additionalSettings)
 
         _ = flowsSdkCoordinator.startTestingPlaygroundFlow(testingPlaygroundData: testingPlaygroundData,
-                                                           presentationalMode: presentationalMode,
-                                                           callbacks: callbacks)
+                                                           presentationalMode: presentationalMode)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
             self?.setActiveRouter(for: .partOfFlow)
@@ -289,7 +288,7 @@ extension OWUILayer {
 #if AUTOMATION
     func fonts(presentationalMode: OWPresentationalMode,
                additionalSettings: OWAutomationSettingsProtocol,
-               callbacks: OWViewActionsCallbacks? = nil,
+               callbacks: OWViewActionsCallbacks?,
                completion: @escaping OWDefaultCompletion) {
 
         prepareForNewFlow()
@@ -297,8 +296,7 @@ extension OWUILayer {
         let automationData = OWAutomationRequiredData(settings: additionalSettings)
 
         _ = flowsSdkCoordinator.startFontsFlow(automationData: automationData,
-                                                           presentationalMode: presentationalMode,
-                                                           callbacks: callbacks)
+                                                           presentationalMode: presentationalMode)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
             self?.setActiveRouter(for: .partOfFlow)
@@ -327,8 +325,7 @@ extension OWUILayer {
         let automationData = OWAutomationRequiredData(settings: additionalSettings)
 
         _ = flowsSdkCoordinator.startUserStatusFlow(automationData: automationData,
-                                                           presentationalMode: presentationalMode,
-                                                           callbacks: callbacks)
+                                                           presentationalMode: presentationalMode)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
             self?.setActiveRouter(for: .partOfFlow)
@@ -370,10 +367,10 @@ extension OWUILayer {
 
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings,
-                                                                presentationalStyle: .none)
+                                                                presentationalMode: .none)
 
         _ = viewsSdkCoordinator.preConversationView(preConversationData: preConversationData,
-                                                callbacks: callbacks)
+                                                viewCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
@@ -408,10 +405,10 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: .none)
+                                                          presentationalMode: .none)
 
         _ = viewsSdkCoordinator.conversationView(conversationData: conversationData,
-                                                callbacks: callbacks)
+                                                viewCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
@@ -478,7 +475,7 @@ extension OWUILayer {
         )
 
         _ = viewsSdkCoordinator.commentCreationView(commentCreationData: commentCreationData,
-                                                    callbacks: callbacks)
+                                                    viewCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
@@ -516,10 +513,10 @@ extension OWUILayer {
             article: article,
             settings: additionalSettings,
             commentId: commentId,
-            presentationalStyle: .none
+            presentationalMode: .none
         )
 
-        _ = viewsSdkCoordinator.commentThreadView(commentThreadData: commentThreadData, callbacks: callbacks)
+        _ = viewsSdkCoordinator.commentThreadView(commentThreadData: commentThreadData, viewCallbacks: callbacks)
             .observe(on: MainScheduler.asyncInstance)
             .take(1)
             .do(onNext: { [weak self] _ in
@@ -557,7 +554,7 @@ extension OWUILayer {
                                                           parentId: parentId)
 
         _ = viewsSdkCoordinator.reportReasonView(reportData: reportReasonData,
-                                                 callbacks: callbacks)
+                                                 viewCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
@@ -590,7 +587,7 @@ extension OWUILayer {
             }
         }
 
-        _ = viewsSdkCoordinator.clarityDetailsView(data: OWClarityDetailsRequireData(commentId: commentId, type: type), callbacks: callbacks)
+        _ = viewsSdkCoordinator.clarityDetailsView(data: OWClarityDetailsRequireData(commentId: commentId, type: type), viewCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
@@ -622,7 +619,7 @@ extension OWUILayer {
             }
         }
 
-        _ = viewsSdkCoordinator.commenterAppealView(appealData: data, callbacks: callbacks)
+        _ = viewsSdkCoordinator.commenterAppealView(appealData: data, viewCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
@@ -655,7 +652,7 @@ extension OWUILayer {
             }
         }
 
-        _ = viewsSdkCoordinator.webTabView(tabOptions: tabOptions, callbacks: callbacks)
+        _ = viewsSdkCoordinator.webTabView(tabOptions: tabOptions, viewCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
@@ -673,7 +670,7 @@ extension OWUILayer {
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
-                           callbacks: OWViewActionsCallbacks?,
+                           callbacks: OWViewActionsCallbacks? = nil,
                            completion: @escaping OWViewCompletion) {
 
         setPostId(postId: postId) { result in
@@ -688,8 +685,7 @@ extension OWUILayer {
 
         let testingPlaygroundData = OWTestingPlaygroundRequiredData(settings: additionalSettings)
 
-        _ = viewsSdkCoordinator.testingPlaygroundView(testingPlaygroundData: testingPlaygroundData,
-                                                callbacks: callbacks)
+        _ = viewsSdkCoordinator.testingPlaygroundView(testingPlaygroundData: testingPlaygroundData)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
