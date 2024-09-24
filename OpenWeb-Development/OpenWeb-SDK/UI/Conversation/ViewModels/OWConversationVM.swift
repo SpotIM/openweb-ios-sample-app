@@ -79,7 +79,7 @@ class OWConversationViewModel: OWConversationViewModeling,
     }()
 
     var shouldShowCloseButton: Bool {
-        guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle else { return false }
+        guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalMode else { return false }
         return true
     }
 

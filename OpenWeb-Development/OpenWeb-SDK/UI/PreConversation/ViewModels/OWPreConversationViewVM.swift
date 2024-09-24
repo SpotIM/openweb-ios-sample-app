@@ -1581,7 +1581,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .analyticEvent(
                 for: eventType,
                 articleUrl: articleUrl,
-                layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),
+                layoutStyle: OWLayoutStyle(from: preConversationData.presentationalMode),
                 component: .preConversation)
     }
 

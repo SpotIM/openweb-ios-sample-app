@@ -1866,7 +1866,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .analyticEvent(
                 for: eventType,
                 articleUrl: articleUrl,
-                layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
+                layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalMode),
                 component: .commentCreation)
     }
 

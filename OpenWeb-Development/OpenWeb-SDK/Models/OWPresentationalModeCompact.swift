@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import UIKit
 
-enum OWPresentationalModeCompact {
+enum OWPresentationalModeCompact: Codable {
     case present(style: OWModalPresentationStyle)
     case push
     case none

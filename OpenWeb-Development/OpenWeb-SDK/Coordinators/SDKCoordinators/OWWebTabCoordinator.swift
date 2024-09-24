@@ -27,16 +27,16 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
 
     fileprivate let router: OWRoutering?
     fileprivate let options: OWWebTabOptions
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .webView)
+        return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .webView)
     }()
 
-    init(router: OWRoutering? = nil, options: OWWebTabOptions, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering? = nil, options: OWWebTabOptions, viewActionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.options = options
-        self.actionsCallbacks = actionsCallbacks // TODO: handle actions callbacks?
+        self.viewActionsCallbacks = viewActionsCallbacks // TODO: handle actions callbacks?
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWWebTabCoordinatorResult> {
