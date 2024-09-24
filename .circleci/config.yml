@@ -43,7 +43,7 @@ references:
         echo "export S3_UPLOAD_PATH=$(cut -d '/' -f2- \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $S3_UPLOAD_PATH
 
-  define: &xcode_latest_official_version "15.3.0"
+  define: &xcode_latest_official_version "16.0.0"
 
 commands:
   swiftlint:
