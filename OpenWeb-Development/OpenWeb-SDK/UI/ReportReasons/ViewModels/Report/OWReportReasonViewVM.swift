@@ -43,7 +43,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
-    var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> { get }
+    var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> { get } // Bool is true if userJustLoggedIn
     var reportOffset: Observable<CGPoint> { get }
     var reportReasonsMinimumAdditionalTextLength: Observable<Int> { get }
 }
@@ -459,6 +459,14 @@ private extension OWReportReasonViewViewModel {
         learnMoreTapped
             .subscribe(onNext: { [weak self] _ in
                 self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
+
+        reportReasonSubmittedSuccessfully
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                sendEvent(for: .reportMessageSubmitSuccess(commentId: commentId)) // TODO: check for super
             })
             .disposed(by: disposeBag)
     }
