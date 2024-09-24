@@ -247,7 +247,7 @@ extension OWUILayer {
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
-                           callbacks: OWViewActionsCallbacks?,
+                           callbacks: OWViewActionsCallbacks? = nil,
                            completion: @escaping OWDefaultCompletion) {
 
         prepareForNewFlow()
@@ -670,7 +670,7 @@ extension OWUILayer {
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
-                           callbacks: OWViewActionsCallbacks?,
+                           callbacks: OWViewActionsCallbacks? = nil,
                            completion: @escaping OWViewCompletion) {
 
         setPostId(postId: postId) { result in
