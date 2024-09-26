@@ -1,5 +1,7 @@
 only_rules: # only the specified rules will be applied, and all other rules will be ignored.
+  - attribute_name_spacing
   - block_based_kvo
+  - class_delegate_protocol
   - closing_brace
   - closure_parameter_position
   - colon
@@ -8,6 +10,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - compiler_protocol_init
   - computed_accessors_order
   - discouraged_direct_init
+  - duplicate_conditions
   - duplicate_enum_cases
   - duplicate_imports
   - duplicated_key_in_dictionary_literal
@@ -19,6 +22,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - function_parameter_count
   - generic_type_name
   - implicit_getter
+  - invalid_swiftlint_command
   - is_disjoint
   - leading_whitespace
   - legacy_cggeometry_functions
@@ -29,12 +33,19 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - legacy_random
   - mark
   - nesting
+  - no_fallthrough_only
   - no_space_in_method_call
+  - ns_number_init_as_function_reference
+  - nsobject_prefer_isequal
   - opening_brace
   - operator_whitespace
+  - orphaned_doc_comment
+  - prefer_type_checking
+  - private_unit_test
   - protocol_property_accessors_order
   - reduce_boolean
   - redundant_discardable_let
+  - redundant_objc_attribute
   - redundant_set_access_control
   - redundant_string_enum_value
   - redundant_void_return
@@ -42,6 +53,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - self_in_property_initialization
   - shorthand_operator
   - statement_position
+  - static_over_final_class
   - trailing_comma
   - trailing_semicolon
   - trailing_whitespace
@@ -50,6 +62,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - unneeded_break_in_switch
   - unused_closure_parameter
   - unused_control_flow_label
+  - unused_enumerated
   - unused_setter_value
   - vertical_parameter_alignment
   - vertical_whitespace
