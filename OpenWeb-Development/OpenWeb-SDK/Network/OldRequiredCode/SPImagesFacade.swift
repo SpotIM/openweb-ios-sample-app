@@ -11,17 +11,6 @@ import UIKit
 
 internal typealias OWUploadImageResponse = CloudinaryUploadResponse
 
-internal protocol SPImageProvider {
-
-    var avatarSize: CGSize? { get set }
-    func imageURL(with id: String?, size: CGSize?) -> URL?
-
-    @discardableResult
-    func image(from url: URL?, size: CGSize?, completion: @escaping ImageLoadingCompletion) -> OWNetworkDataRequest?
-
-    func uploadImage(imageData: String, imageId: String, completion: @escaping ImageUploadCompletionHandler)
-}
-
 internal class SPSignResponse: Decodable {
     let signature: String
 }
