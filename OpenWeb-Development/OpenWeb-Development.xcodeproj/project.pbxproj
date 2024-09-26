@@ -800,7 +800,6 @@
 		9E36BFEB29ED353A00478D06 /* OWReportReasonVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEA29ED353A00478D06 /* OWReportReasonVM.swift */; };
 		9E36BFED29ED7E5F00478D06 /* OWRoundCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */; };
 		9E36BFEF29F160E600478D06 /* OWReportReasonCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEE29F160E600478D06 /* OWReportReasonCoordinator.swift */; };
-		9E36BFF129F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */; };
 		9E3B8B6929FFB944006BB207 /* OWAdditionalInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B6829FFB944006BB207 /* OWAdditionalInfoView.swift */; };
 		9E3B8B6B29FFB95B006BB207 /* OWAdditionalInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B6A29FFB95B006BB207 /* OWAdditionalInfoVC.swift */; };
 		9E3B8B6D29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B6C29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift */; };
@@ -1722,7 +1721,6 @@
 		9E36BFEA29ED353A00478D06 /* OWReportReasonVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonVM.swift; sourceTree = "<group>"; };
 		9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRoundCheckBox.swift; sourceTree = "<group>"; };
 		9E36BFEE29F160E600478D06 /* OWReportReasonCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonCoordinator.swift; sourceTree = "<group>"; };
-		9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonSettingsProtocol.swift; sourceTree = "<group>"; };
 		9E3B8B6829FFB944006BB207 /* OWAdditionalInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalInfoView.swift; sourceTree = "<group>"; };
 		9E3B8B6A29FFB95B006BB207 /* OWAdditionalInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalInfoVC.swift; sourceTree = "<group>"; };
 		9E3B8B6C29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalInfoViewVM.swift; sourceTree = "<group>"; };
@@ -3325,7 +3323,6 @@
 				3D611BB428C8AAF4003960CE /* OWCommentCreationSettingsProtocol.swift */,
 				161270DA29ACD9EF001F9715 /* OWCommentThreadSettingsProtocol.swift */,
 				3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */,
-				9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */,
 				3DB3B95129F468D000C50192 /* OWTestingPlaygroundSettingsProtocol.swift */,
 				3DBFB4EC2AE9514B001105DA /* OWAutomationSettingsProtocol.swift */,
 			);
@@ -5521,7 +5518,6 @@
 			files = (
 				3D7F28BA2998FA3B00E9E69E /* OWInitialSortStrategy.swift in Sources */,
 				24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */,
-				9E36BFF129F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift in Sources */,
 				9ED2E58129EBFF3B00B39A00 /* OWReportReasonType.swift in Sources */,
 				3DDA9A88291A5E1F00FE3B86 /* OWThemeStyle.swift in Sources */,
 				3D754F982C43D9CF00283367 /* OWAnalyticEventGeneralDataDynamicPart.swift in Sources */,
