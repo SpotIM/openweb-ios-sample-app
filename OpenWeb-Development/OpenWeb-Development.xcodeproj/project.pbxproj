@@ -670,7 +670,6 @@
 		3DFC32E628917942005F1C5A /* OWCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32E528917942005F1C5A /* OWCellViewModel.swift */; };
 		4416C658237ABE3D00D3F7B9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4416C65A237ABE3D00D3F7B9 /* Localizable.strings */; };
 		445417A6236850C0001D0ED0 /* SPAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4454179E236850C0001D0ED0 /* SPAssets.xcassets */; };
-		445417F623685144001D0ED0 /* String+Sizes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B023685144001D0ED0 /* String+Sizes.swift */; };
 		445417F823685144001D0ED0 /* Notification+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B223685144001D0ED0 /* Notification+Keyboard.swift */; };
 		445417F923685144001D0ED0 /* UIView+Roundings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B323685144001D0ED0 /* UIView+Roundings.swift */; };
 		445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B423685144001D0ED0 /* UIView+Utils.swift */; };
@@ -1576,7 +1575,6 @@
 		4416C659237ABE3D00D3F7B9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4416C65B237ABE4700D3F7B9 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4454179E236850C0001D0ED0 /* SPAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SPAssets.xcassets; sourceTree = "<group>"; };
-		445417B023685144001D0ED0 /* String+Sizes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Sizes.swift"; sourceTree = "<group>"; };
 		445417B223685144001D0ED0 /* Notification+Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+Keyboard.swift"; sourceTree = "<group>"; };
 		445417B323685144001D0ED0 /* UIView+Roundings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Roundings.swift"; sourceTree = "<group>"; };
 		445417B423685144001D0ED0 /* UIView+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Utils.swift"; sourceTree = "<group>"; };
@@ -4303,7 +4301,6 @@
 				3D50D8EA2B1614DF00FD3232 /* UIImageView+SPExtensions.swift */,
 				4454186B23685154001D0ED0 /* Bundle+SPExtensions.swift */,
 				16A12A642601188100A7B3F6 /* URL+QueryParams.swift */,
-				445417B023685144001D0ED0 /* String+Sizes.swift */,
 				445417B223685144001D0ED0 /* Notification+Keyboard.swift */,
 				445417B323685144001D0ED0 /* UIView+Roundings.swift */,
 				445417B623685144001D0ED0 /* UIBarButton+UIImage.swift */,
@@ -6128,7 +6125,6 @@
 				1616555E2A531518004EBF6F /* OWCommentCreationFooterViewModel.swift in Sources */,
 				9EBE4E802B8CD38F00D836CF /* OWCoordinatorData.swift in Sources */,
 				3DFA6BA129216F200047E313 /* OWSSOStartHandler.swift in Sources */,
-				445417F623685144001D0ED0 /* String+Sizes.swift in Sources */,
 				3DEAA57829A23B5C0043D73E /* OWFontGroupFamily.swift in Sources */,
 				24D74ADE2A67C01200F454D5 /* OWCommentCreationStyle+Analytics.swift in Sources */,
 				3DF941822A559F5700A687BD /* OWReportReasonsRequiredData.swift in Sources */,
