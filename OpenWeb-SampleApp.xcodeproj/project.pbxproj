@@ -1299,7 +1299,6 @@
 				3DA1DF112C6E200300EBFA7D /* Resources */,
 				3DA1E6D62C6E299A00EBFA7D /* Embed Frameworks */,
 				6196B358536E7D6AEE637AB1 /* [CP] Embed Pods Frameworks */,
-				3DA1E6CF2C6E279A00EBFA7D /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -1363,25 +1362,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3DA1E6CF2C6E279A00EBFA7D /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    swiftlint lint --config ../swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
-		};
 		6196B358536E7D6AEE637AB1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
