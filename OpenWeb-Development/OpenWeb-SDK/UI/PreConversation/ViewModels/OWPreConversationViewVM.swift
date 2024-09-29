@@ -858,7 +858,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<OWComment> in
+            .flatMapLatest { commentCellsVms -> Observable<OWComment> in
                 let replyClickOutputObservable: [Observable<OWComment>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
