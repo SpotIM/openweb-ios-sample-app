@@ -8,6 +8,10 @@
 
 import Foundation
 
+public enum OWParserError: Error {
+    case generalParseError
+}
+
 class OWVersion: Decodable {
     fileprivate let major: Int
     fileprivate let minor: Int
