@@ -17,7 +17,7 @@ protocol OWRawableKey<T> {
 class OWRxHelperKey<T: Codable>: OWRawableKey {
     var rawValue: String
 
-    init<T>(key: any OWRawableKey<T>) {
+    init(key: any OWRawableKey) {
         self.rawValue = key.rawValue
     }
 }
