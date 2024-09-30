@@ -96,7 +96,6 @@ fileprivate extension OWCommunityGuidelinesView {
                 make.top.equalToSuperview().inset(self.viewModel.outputs.spacing.top)
                 make.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
-                self.heightConstraint = make.height.equalTo(0).constraint
             }
 
             guidelinesContainer.addSubview(guidelinesIcon)
@@ -119,8 +118,11 @@ fileprivate extension OWCommunityGuidelinesView {
                 make.top.equalToSuperview().inset(self.viewModel.outputs.spacing.top)
                 make.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
-                self.heightConstraint = make.height.equalTo(0).constraint
             }
+        }
+
+        self.OWSnp.makeConstraints { make in
+            heightConstraint = make.height.equalTo(0).constraint
         }
     }
 
