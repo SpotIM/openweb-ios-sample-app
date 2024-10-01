@@ -46,8 +46,8 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             .asObservable()
     }
 
-    fileprivate var _appealReasons = PublishSubject<Array<OWAppealReason>>()
-    fileprivate var appealReasons: Observable<Array<OWAppealReason>> {
+    fileprivate var _appealReasons = PublishSubject<[OWAppealReason]>()
+    fileprivate var appealReasons: Observable<[OWAppealReason]> {
         _appealReasons
             .asObservable()
     }

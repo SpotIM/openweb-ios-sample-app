@@ -93,11 +93,11 @@ private func descriptionForAttribute(_ attribute: OWLayoutAttribute) -> String {
     }
 }
 
-private func conditionalOptional<T>(from object: Optional<T>) -> Optional<T> {
+private func conditionalOptional<T>(from object: T?) -> T? {
     return object
 }
 
-private func conditionalOptional<T>(from object: T) -> Optional<T> {
+private func conditionalOptional<T>(from object: T) -> T? {
     return Optional.some(object)
 }
 

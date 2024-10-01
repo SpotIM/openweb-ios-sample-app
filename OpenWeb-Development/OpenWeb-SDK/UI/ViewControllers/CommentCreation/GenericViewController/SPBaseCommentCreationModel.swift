@@ -47,7 +47,7 @@ class SPBaseCommentCreationModel: CommentStateable {
         (sectionCommentLabelsConfig, commentLabelsSection) = getLabelsSectionConfig(commentLabelsConfig: commentLabelsConfig)
     }
 
-    private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> (SPCommentLabelsSectionConfiguration?, String?) {
+    private func getLabelsSectionConfig(commentLabelsConfig: [String: SPCommentLabelsSectionConfiguration]) -> (SPCommentLabelsSectionConfiguration?, String?) {
         var sectionLabelsConfig: SPCommentLabelsSectionConfiguration?
         var commentLabelsSection: String?
         // here we want to match the article section to the commentLabelsConfig section (if exists) - if not, we will take the default.

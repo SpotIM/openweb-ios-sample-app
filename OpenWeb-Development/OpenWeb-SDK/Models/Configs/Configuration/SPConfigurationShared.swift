@@ -11,7 +11,7 @@ import Foundation
 struct SPConfigurationShared: Decodable {
 
     let enableCommentLabels: Bool?
-    let commentLabels: Dictionary<String, SPCommentLabelsSectionConfiguration>?
+    let commentLabels: [String: SPCommentLabelsSectionConfiguration]?
     let votesType: OWVotesType
     let votesPosition: OWVotesPosition
     let usePublisherUserProfile: Bool?

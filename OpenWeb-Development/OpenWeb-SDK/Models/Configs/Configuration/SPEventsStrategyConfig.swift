@@ -10,7 +10,7 @@ import Foundation
 
 struct SPEventsStrategyConfig: Decodable {
     let blockVersionsEqualOrPrevious: OWVersion?
-    let blockEventsByVersionMapper: Dictionary<OWVersion, [String]>
+    let blockEventsByVersionMapper: [OWVersion: [String]]
 
     enum CodingKeys: String, CodingKey {
         case blockVersionsEqualOrPrevious, blockEventsByVersion
