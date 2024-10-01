@@ -587,7 +587,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     .materialize() // Required to keep the final subscriber even if errors arrived from the network
                     .map { ($0, loadingTriggeredReason) }
             }
-            .flatMapLatest({ [weak self] (event, loadingTriggeredReason) -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
+            .flatMapLatest({ [weak self] event, loadingTriggeredReason -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return .empty() }
                 let timeToLoadInitialComments = self.servicesProvider.timeMeasuringService()
@@ -1085,11 +1085,11 @@ fileprivate extension OWPreConversationViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            .do(onNext: { [weak self] (_, _, commentVm) in
+            .do(onNext: { [weak self] _, _, commentVm in
                 self?.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
             .observe(on: MainScheduler.instance)
-            .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
+            .flatMapLatest { [weak self] actions, sender, commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)

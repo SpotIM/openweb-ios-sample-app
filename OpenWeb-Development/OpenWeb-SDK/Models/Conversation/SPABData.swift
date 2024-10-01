@@ -33,7 +33,7 @@ struct OWAbTests: Decodable {
     }
 
     func getActiveTests() -> [SPABData] {
-        return tests.filter { (testData) -> Bool in
+        return tests.filter { testData -> Bool in
             activeTests.contains(testData.testName)
         }
     }

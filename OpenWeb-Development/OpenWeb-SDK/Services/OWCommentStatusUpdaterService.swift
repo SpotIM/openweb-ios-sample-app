@@ -110,7 +110,7 @@ fileprivate extension OWCommentStatusUpdaterService {
                     .map { ($0, comment) }
             }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] (status, comment) in
+            .subscribe(onNext: { [weak self] status, comment in
                 guard let self = self,
                       let commentId = comment.id
                 else { return }

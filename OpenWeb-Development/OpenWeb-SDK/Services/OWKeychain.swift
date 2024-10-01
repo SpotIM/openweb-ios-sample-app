@@ -200,7 +200,7 @@ extension OWKeychain {
 
 fileprivate extension Reactive where Base: OWKeychain {
     func setValues<T>(key: OWKeychain.OWKey<T>) -> Binder<T> {
-        return base.rxHelper.binder(key: OWRxHelperKey<T>(key: key)) { (value) in
+        return base.rxHelper.binder(key: OWRxHelperKey<T>(key: key)) { value in
             base.save(value: value, forKey: key)
         }
     }

@@ -91,7 +91,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             self.userInput,
             self.shouldBlockAvatar.asObservable()
         )
-            .flatMapLatest { [weak self] (user, shouldBlockAvatar) -> Observable<URL?> in
+            .flatMapLatest { [weak self] user, shouldBlockAvatar -> Observable<URL?> in
                 guard let self = self,
                       let user = user,
                       let imageId = user.imageId,

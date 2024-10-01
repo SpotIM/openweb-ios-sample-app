@@ -1064,7 +1064,7 @@ fileprivate extension OWConversationViewViewModel {
                 return conversationReadObservable
                     .map { ($0, loadingTriggeredReason) }
             }
-            .flatMapLatest({ [weak self] (event, loadingTriggeredReason) -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
+            .flatMapLatest({ [weak self] event, loadingTriggeredReason -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return .empty() }
                 let timeToLoadInitialComments = self.servicesProvider.timeMeasuringService()
@@ -1289,11 +1289,11 @@ fileprivate extension OWConversationViewViewModel {
             .asObservable()
 
         let loadMoreRepliesReadObservable = Observable.merge(_loadMoreReplies, tryAgainAfterLoadingMoreRepliesError)
-            .withLatestFrom(sortOptionObservable) { (commentPresentationData, sortOption) -> (OWCommentPresentationData, OWSortOption)  in
+            .withLatestFrom(sortOptionObservable) { commentPresentationData, sortOption -> (OWCommentPresentationData, OWSortOption)  in
                 return (commentPresentationData, sortOption)
             }
             .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
-            .flatMap { [weak self] (commentPresentationData, sortOption, filterTabId) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
+            .flatMap { [weak self] commentPresentationData, sortOption, filterTabId -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 guard let self = self else { return .empty() }
 
                 let hasRepliesError = self.errorsLoadingReplies[commentPresentationData.id] != nil
@@ -1321,11 +1321,11 @@ fileprivate extension OWConversationViewViewModel {
             }
 
         let loadMoreRepliesReadUpdated = loadMoreRepliesReadObservable
-            .do(onNext: { [weak self] (commentPresentationData, _) in
+            .do(onNext: { [weak self] commentPresentationData, _ in
                 guard let self = self else { return }
                 self.errorsLoadingReplies.removeValue(forKey: commentPresentationData.id)
             })
-            .flatMapLatest({ [weak self] (commentPresentationData, event) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
+            .flatMapLatest({ [weak self] commentPresentationData, event -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 // Add delay if end time for load more replies is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just((commentPresentationData, event)) }
                 let timeToLoadMoreReplies = self.servicesProvider.timeMeasuringService()
@@ -1338,7 +1338,7 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.just((commentPresentationData, event))
             })
-            .map { (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?, Bool)? in
+            .map { commentPresentationData, event -> (OWCommentPresentationData, OWConversationReadRM?, Bool)? in
                 guard event != nil else {
                     // We didn't have to fetch new data - the event is nil
                     return (commentPresentationData, nil, false)
@@ -1358,7 +1358,7 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
 
         loadMoreRepliesReadUpdated
-            .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
+            .subscribe(onNext: { [weak self] commentPresentationData, response, shouldShowErrorLoadingReplies in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.animated)
                 if shouldShowErrorLoadingReplies {
@@ -1414,11 +1414,11 @@ fileprivate extension OWConversationViewViewModel {
         // fetch more comments
         let loadMoreCommentsReadObservable = Observable.merge(_loadMoreComments, tryAgainAfterLoadingMoreError)
             .observe(on: conversationViewVMScheduler)
-            .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
+            .withLatestFrom(sortOptionObservable) { offset, sortOption -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
             .withLatestFrom(filterTabsObservable) { ($0.0, $0.1, $1) }
-            .flatMap { [weak self] (sortOption, offset, filterTabId) -> Observable<Event<OWConversationReadRM>> in
+            .flatMap { [weak self] sortOption, offset, filterTabId -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .networkAPI()
@@ -1534,7 +1534,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Responding to errorState cell with tableViewHeight change
         Observable.combineLatest(cellsViewModels, tableViewHeightChanged)
-            .flatMapLatest { (cellsVms, tableViewHeight) -> Observable<Void> in
+            .flatMapLatest { cellsVms, tableViewHeight -> Observable<Void> in
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { cellVM in
                     if case.conversationErrorState(let errorStateCellViewModeling) = cellVM {
                         let errorStateVM = errorStateCellViewModeling.outputs.errorStateViewModel
@@ -1700,11 +1700,11 @@ fileprivate extension OWConversationViewViewModel {
         // Reload OWCommentThreadActionsCell at index
         loadMoreRepliesReadUpdated
             .delay(.milliseconds(Metrics.delayUpdateTableAfterLoadedReplies), scheduler: conversationViewVMScheduler)
-            .map { (commentPresentationData, _, _) -> OWCommentPresentationData in
+            .map { commentPresentationData, _, _ -> OWCommentPresentationData in
                 return commentPresentationData
             }
             .withLatestFrom(cellsViewModels) { ($0, $1) }
-            .map { (commentPresentationData, cellsViewModels) -> (OWConversationCellOption, Int)? in
+            .map { commentPresentationData, cellsViewModels -> (OWConversationCellOption, Int)? in
                 let cellOption = cellsViewModels.first(where: {
                     guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
                     return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
@@ -1717,11 +1717,11 @@ fileprivate extension OWConversationViewViewModel {
                 return (cellOption, cellIndex)
             }
             .unwrap()
-            .do(onNext: { (cellOption, _) in
+            .do(onNext: { cellOption, _ in
                 guard let viewModel = cellOption.viewModel as? OWCommentThreadActionsCellViewModel else { return }
                 viewModel.outputs.commentActionsVM.inputs.isLoading.onNext(false)
             })
-            .map { (_, cellIndex) -> Int in
+            .map { _, cellIndex -> Int in
                 return cellIndex
             }
             .bind(to: _reloadCellIndex)
@@ -1750,7 +1750,7 @@ fileprivate extension OWConversationViewViewModel {
             }
             .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
             .filter { !$1 }
-            .map { (willDisplayCellEvent, _) -> Int in
+            .map { willDisplayCellEvent, _ -> Int in
                 return willDisplayCellEvent.indexPath.row
             }
             .withLatestFrom(_commentsPresentationData.rx_elements()) { rowIndex, presentationData -> Int? in
@@ -1789,12 +1789,12 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            .do(onNext: { [weak self] (_, _, commentVm) in
+            .do(onNext: { [weak self] _, _, commentVm in
                 guard let self = self else { return }
                 self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
             .observe(on: MainScheduler.instance)
-            .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
+            .flatMapLatest { [weak self] actions, sender, commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
@@ -1837,7 +1837,7 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(statusObservable)
             }
-            .subscribe(onNext: { [weak self] (status, commentId) in
+            .subscribe(onNext: { [weak self] status, commentId in
                 switch status {
                 case .rejected:
                     self?.sendEvent(for: .rejectedCommentNoticeView(commentId: commentId))

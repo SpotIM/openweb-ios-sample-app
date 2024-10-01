@@ -109,7 +109,7 @@ fileprivate extension OWConversationEmptyStateView {
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
                                  viewModel.outputs.iconName)
         .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { [weak self] (currentStyle, iconName) in
+        .subscribe(onNext: { [weak self] currentStyle, iconName in
             guard let self = self else { return }
 
             self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)

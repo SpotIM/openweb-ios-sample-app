@@ -184,7 +184,7 @@ fileprivate extension OWCommenterAppealView {
 
         // TableView binding
         viewModel.outputs.appealCellViewModels
-            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWAppealCell.self.identifierName, cellType: OWAppealCell.self)) { (_, viewModel, cell) in
+            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWAppealCell.self.identifierName, cellType: OWAppealCell.self)) { _, viewModel, cell in
                 cell.configure(with: viewModel)
             }
             .disposed(by: disposeBag)

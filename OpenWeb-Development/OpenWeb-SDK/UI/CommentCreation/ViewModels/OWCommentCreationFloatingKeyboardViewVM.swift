@@ -400,7 +400,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
         commentCreationRequestsService.newRequest
             .withLatestFrom(textViewVM.outputs.textViewText) { ($0, $1) }
             .withLatestFrom(textViewVM.outputs.cursorRange) { ($0.0, $0.1, $1) }
-            .subscribe(onNext: { [weak self] (request, currentText, currentSelectedRange) in
+            .subscribe(onNext: { [weak self] request, currentText, currentSelectedRange in
                 guard let self = self else { return }
                 switch request {
                 case .manipulateUserInputText(let manipulationTextCompletion):

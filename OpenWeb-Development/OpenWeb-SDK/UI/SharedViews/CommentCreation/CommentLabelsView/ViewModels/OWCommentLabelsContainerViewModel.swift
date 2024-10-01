@@ -195,7 +195,7 @@ fileprivate extension OWCommentLabelsContainerViewModel {
             }
             .withLatestFrom(_commentLabelsSection) { ($0.0, $0.1, $1) }
             .withLatestFrom(_selectedLabelIds) { ($0.0, $0.1, $0.2, $1) }
-            .subscribe(onNext: { [weak self] (state, settings, sectionSettings, selectedLabelIds) in
+            .subscribe(onNext: { [weak self] state, settings, sectionSettings, selectedLabelIds in
                 guard let self = self,
                       let sectionSettings = sectionSettings
                 else { return }
