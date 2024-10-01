@@ -53,19 +53,21 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     private lazy var accessibilityMapper: [OWWeakEncapsulation<UILabel>: String] = {
-        let mapper: [OWWeakEncapsulation<UILabel>: String] = [OWWeakEncapsulation(value: titleSmall): Metrics.titleSmallIdentifier,
-                                                                        OWWeakEncapsulation(value: titleLarge): Metrics.titleLargeIdentifier,
-                                                                        OWWeakEncapsulation(value: titleMedium): Metrics.titleMediumIdentifier,
-                                                                        OWWeakEncapsulation(value: bodyText): Metrics.bodyTextIdentifier,
-                                                                        OWWeakEncapsulation(value: bodyInteraction): Metrics.bodyInteractionIdentifier,
-                                                                        OWWeakEncapsulation(value: bodyContext): Metrics.bodyContextIdentifier,
-                                                                        OWWeakEncapsulation(value: bodySpecial): Metrics.bodySpecialIdentifier,
-                                                                        OWWeakEncapsulation(value: footnoteText): Metrics.footnoteTextIdentifier,
-                                                                        OWWeakEncapsulation(value: footnoteLink): Metrics.footnoteLinkIdentifier,
-                                                                        OWWeakEncapsulation(value: footnoteContext): Metrics.footnoteContextIdentifier,
-                                                                        OWWeakEncapsulation(value: footnoteSpecial): Metrics.footnoteSpecialIdentifier,
-                                                                        OWWeakEncapsulation(value: metaText): Metrics.metaTextIdentifier,
-                                                                        OWWeakEncapsulation(value: infoCaption): Metrics.infoTextIdentifier]
+        let mapper: [OWWeakEncapsulation<UILabel>: String] = [
+            OWWeakEncapsulation(value: titleSmall): Metrics.titleSmallIdentifier,
+            OWWeakEncapsulation(value: titleLarge): Metrics.titleLargeIdentifier,
+            OWWeakEncapsulation(value: titleMedium): Metrics.titleMediumIdentifier,
+            OWWeakEncapsulation(value: bodyText): Metrics.bodyTextIdentifier,
+            OWWeakEncapsulation(value: bodyInteraction): Metrics.bodyInteractionIdentifier,
+            OWWeakEncapsulation(value: bodyContext): Metrics.bodyContextIdentifier,
+            OWWeakEncapsulation(value: bodySpecial): Metrics.bodySpecialIdentifier,
+            OWWeakEncapsulation(value: footnoteText): Metrics.footnoteTextIdentifier,
+            OWWeakEncapsulation(value: footnoteLink): Metrics.footnoteLinkIdentifier,
+            OWWeakEncapsulation(value: footnoteContext): Metrics.footnoteContextIdentifier,
+            OWWeakEncapsulation(value: footnoteSpecial): Metrics.footnoteSpecialIdentifier,
+            OWWeakEncapsulation(value: metaText): Metrics.metaTextIdentifier,
+            OWWeakEncapsulation(value: infoCaption): Metrics.infoTextIdentifier
+        ]
         return mapper
     }()
 
