@@ -56,7 +56,7 @@ private extension CommentCreationToolbarViewModel {
     func setupObservers() {
         modelSelected
             .subscribe(onNext: { [weak self] cellViewModel in
-                guard let self = self,
+                guard let self,
                       let settings = self.commentCreationSettings else { return }
                 settings.request(.manipulateUserInputText(completion: { result in
                     let action = cellViewModel.outputs.action

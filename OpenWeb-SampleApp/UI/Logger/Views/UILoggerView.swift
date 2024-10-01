@@ -89,7 +89,7 @@ private extension UILoggerView {
             .throttle(.milliseconds(Metrics.delayScrollToBottom), scheduler: MainScheduler.asyncInstance)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.scrollTextViewToBottom(textView: self.loggerTextView)
             })
             .disposed(by: disposeBag)

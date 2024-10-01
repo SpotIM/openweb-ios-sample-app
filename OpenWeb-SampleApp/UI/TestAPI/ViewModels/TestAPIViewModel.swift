@@ -119,7 +119,7 @@ class TestAPIViewModel: TestAPIViewModeling,
 
             }
             .map { envString in
-                guard let envString = envString else {
+                guard let envString else {
                     return ""
                 }
                 return NSLocalizedString("NetworkEnvironment", comment: "") + ": \(envString)"

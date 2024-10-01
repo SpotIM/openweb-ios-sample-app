@@ -325,7 +325,7 @@ private extension AuthenticationPlaygroundVC {
          */
         viewModel.outputs.dismissVC
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let navController = self.navigationController {
                     navController.popViewController(animated: true)
                 } else {

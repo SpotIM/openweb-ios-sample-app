@@ -146,7 +146,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     }
 
     private lazy var actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-        guard let self = self else { return }
+        guard let self else { return }
 
         let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
         DLog(log)
@@ -198,7 +198,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
 
     // Providing `displayAuthenticationFlow` callback
     private lazy var authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
-        guard let self = self else { return }
+        guard let self else { return }
 
         switch routeringMode {
         case .none:
@@ -210,7 +210,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
 
     // Providing `renewSSO` callback
     private lazy var  renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
-        guard let self = self else { return }
+        guard let self else { return }
         #if !PUBLIC_DEMO_APP
         let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
         if OpenWeb.manager.spotId == demoSpotId,
@@ -272,7 +272,7 @@ private extension ConversationBelowVideoViewModel {
                                      callbacks: self.actionsCallbacks,
                                      completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -294,7 +294,7 @@ private extension ConversationBelowVideoViewModel {
                                   callbacks: self.actionsCallbacks,
                                   completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -326,7 +326,7 @@ private extension ConversationBelowVideoViewModel {
                                      callbacks: self.actionsCallbacks,
                                      completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -347,7 +347,7 @@ private extension ConversationBelowVideoViewModel {
                                   callbacks: self.actionsCallbacks,
                                   completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -368,7 +368,7 @@ private extension ConversationBelowVideoViewModel {
                                     callbacks: self.actionsCallbacks,
                                     completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -388,7 +388,7 @@ private extension ConversationBelowVideoViewModel {
                                      callbacks: self.actionsCallbacks,
                                      completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -412,7 +412,7 @@ private extension ConversationBelowVideoViewModel {
                                    callbacks: self.actionsCallbacks,
                                    completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -432,7 +432,7 @@ private extension ConversationBelowVideoViewModel {
                             callbacks: self.actionsCallbacks,
                             completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)

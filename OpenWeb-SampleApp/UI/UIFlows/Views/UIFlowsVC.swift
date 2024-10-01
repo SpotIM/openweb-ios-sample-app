@@ -199,7 +199,7 @@ private extension UIFlowsVC {
 
         btnPreConversationPresentMode.rx.tap
             .map { [weak self] in
-                guard let self = self else { return .push }
+                guard let self else { return .push }
                 let style = self.viewModel.outputs.presentStyle
                 return PresentationalModeCompact.present(style: style)
             }
@@ -213,7 +213,7 @@ private extension UIFlowsVC {
 
         btnFullConversationPresentMode.rx.tap
             .map { [weak self] in
-                guard let self = self else { return .push }
+                guard let self else { return .push }
                 let style = self.viewModel.outputs.presentStyle
                 return PresentationalModeCompact.present(style: style)
             }
@@ -227,7 +227,7 @@ private extension UIFlowsVC {
 
         btnCommentCreationPresentMode.rx.tap
             .map { [weak self] in
-                guard let self = self else { return .push }
+                guard let self else { return .push }
                 return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentCreationTapped)
@@ -240,7 +240,7 @@ private extension UIFlowsVC {
 
         btnCommentThreadPresentMode.rx.tap
             .map { [weak self] in
-                guard let self = self else { return .push }
+                guard let self else { return .push }
                 return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentThreadTapped)

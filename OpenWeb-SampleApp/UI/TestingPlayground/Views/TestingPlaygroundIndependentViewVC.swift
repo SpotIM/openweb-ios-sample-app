@@ -88,7 +88,7 @@ private extension TestingPlaygroundIndependentViewVC {
 
         viewModel.outputs.testingPlaygroundView
             .subscribe(onNext: { [weak self] view in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.testingPlaygroundView = view
                 self.contentView.addSubview(view)
                 view.snp.makeConstraints { make in

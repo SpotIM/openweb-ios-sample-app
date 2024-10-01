@@ -198,7 +198,7 @@ private extension MockArticleFlowsViewModel {
             .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 let mode = result.0
                 let postId = result.1
 
@@ -211,7 +211,7 @@ private extension MockArticleFlowsViewModel {
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
                 let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                     self.loggerViewModel.inputs.log(text: log)
                 }
@@ -222,7 +222,7 @@ private extension MockArticleFlowsViewModel {
                                    additionalSettings: additionalSettings,
                                    callbacks: actionsCallbacks,
                                    completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
                     case .success(let preConversationView):
                         self._showPreConversation.onNext(preConversationView)
@@ -243,7 +243,7 @@ private extension MockArticleFlowsViewModel {
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 let mode = result.0
                 let postId = result.1
 
@@ -256,7 +256,7 @@ private extension MockArticleFlowsViewModel {
                 let article = self.commonCreatorService.mockArticle(for: manager.spotId)
 
                 let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                     self.loggerViewModel.inputs.log(text: log)
                 }
@@ -267,7 +267,7 @@ private extension MockArticleFlowsViewModel {
                                    additionalSettings: additionalSettings,
                                    callbacks: actionsCallbacks,
                                    completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
                     case .success:
                         // All good
@@ -289,7 +289,7 @@ private extension MockArticleFlowsViewModel {
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 let mode = result.0
                 let postId = result.1
 
@@ -302,7 +302,7 @@ private extension MockArticleFlowsViewModel {
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
                 let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                     self.loggerViewModel.inputs.log(text: log)
                 }
@@ -313,7 +313,7 @@ private extension MockArticleFlowsViewModel {
                                       additionalSettings: additionalSettings,
                                       callbacks: actionsCallbacks,
                                       completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
                     case .success:
                         // All good
@@ -335,7 +335,7 @@ private extension MockArticleFlowsViewModel {
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 let mode = result.0
                 let postId = result.1
 
@@ -348,7 +348,7 @@ private extension MockArticleFlowsViewModel {
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
                 let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                     self.loggerViewModel.inputs.log(text: log)
                 }
@@ -360,7 +360,7 @@ private extension MockArticleFlowsViewModel {
                                     additionalSettings: additionalSettings,
                                     callbacks: actionsCallbacks,
                                     completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
                     case .success:
                         // All good
@@ -376,7 +376,7 @@ private extension MockArticleFlowsViewModel {
 
         // Providing `displayAuthenticationFlow` callback
         let authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
-            guard let self = self else { return }
+            guard let self else { return }
             let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: OpenWeb.manager.spotId)
             let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
 
@@ -402,7 +402,7 @@ private extension MockArticleFlowsViewModel {
 
         // Providing `renewSSO` callback
         let renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
-            guard let self = self else { return }
+            guard let self else { return }
             #if !PUBLIC_DEMO_APP
             let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
             if OpenWeb.manager.spotId == demoSpotId,

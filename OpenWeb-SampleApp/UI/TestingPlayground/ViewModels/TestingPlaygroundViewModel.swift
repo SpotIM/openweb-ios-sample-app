@@ -53,7 +53,7 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
         return playgroundIndependentModeTapped
             .asObservable()
             .map { [weak self] _ -> SDKConversationDataModel? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.dataModel
             }
             .unwrap()
@@ -98,7 +98,7 @@ private extension TestingPlaygroundViewModel {
         let playgroundPresentModeObservable = playgroundPresentModeTapped
             .asObservable()
             .map { [weak self] _ -> PresentationalModeCompact? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return PresentationalModeCompact.present(style: self.present)
             }
             .unwrap()
@@ -106,7 +106,7 @@ private extension TestingPlaygroundViewModel {
         // Testing playground - Flows
         Observable.merge(playgroundPushModeObservable, playgroundPresentModeObservable)
             .subscribe(onNext: { [weak self] mode in
-                guard let self = self else { return }
+                guard let self else { return }
                 let postId = self.dataModel.postId
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
@@ -119,7 +119,7 @@ private extension TestingPlaygroundViewModel {
                                         additionalSettings: OWTestingPlaygroundSettings(),
                                         callbacks: nil,
                                         completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
                     case .success:
                         // All good

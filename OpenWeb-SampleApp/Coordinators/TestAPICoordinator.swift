@@ -54,7 +54,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         let settingsCoordinator = Observable.merge(testAPIVM.outputs.openSettings.map { nil },
                                                 deepLinkToSettings.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinator = SettingsCoordinator(router: self.router)
                 return self.coordinate(to: coordinator,
                                        deepLinkOptions: deepLink,
@@ -67,7 +67,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         let authenticationPlaygroundCoordinator = Observable.merge(testAPIVM.outputs.openAuthentication.map { nil },
                                                                    deepLinkToAuthentication.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinator = AuthenticationPlaygroundCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
@@ -77,7 +77,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 
         let flowsCoordinator = testAPIVM.outputs.openUIFlows
             .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
                 let coordinator = UIFlowsCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
@@ -88,7 +88,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 
         let viewsCoordinator = testAPIVM.outputs.openUIViews
             .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
                 let coordinator = UIViewsCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
@@ -99,7 +99,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 
         let miscellaneousCoordinator = testAPIVM.outputs.openMiscellaneous
             .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
                 let coordinator = MiscellaneousCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
@@ -111,7 +111,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 #if BETA
         let testingPlauygroundCoordinator = testAPIVM.outputs.openTestingPlayground
             .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
                 let coordinator = TestingPlaygroundCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
@@ -124,7 +124,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 #if AUTOMATION
         let automationCoordinator = testAPIVM.outputs.openAutomation
             .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
                 let coordinator = AutomationCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)

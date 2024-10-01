@@ -120,7 +120,7 @@ private extension PreConversationSettingsView {
 
         viewModel.outputs.customStyleNumberOfComments
             .map { [weak self] in
-                guard let self = self, let index = self.viewModel.outputs.customStyleNumberOfCommentsSettings.firstIndex(of: String($0))
+                guard let self, let index = self.viewModel.outputs.customStyleNumberOfCommentsSettings.firstIndex(of: String($0))
                 else { return nil }
                 return (index, 0)
             }
@@ -130,7 +130,7 @@ private extension PreConversationSettingsView {
 
         pickerCustomStyleNumberOfComments.rx.selectedPickerIndex
             .map { [weak self] in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return Int(self.viewModel.outputs.customStyleNumberOfCommentsSettings[$0.row])
             }
             .unwrap()

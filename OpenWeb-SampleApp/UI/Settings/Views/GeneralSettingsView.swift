@@ -480,7 +480,7 @@ private extension GeneralSettingsView {
 
         viewModel.outputs.languageName
             .map { [weak self] in
-                guard let self = self, let index = self.viewModel.outputs.supportedLanguageItems.firstIndex(of: $0)
+                guard let self, let index = self.viewModel.outputs.supportedLanguageItems.firstIndex(of: $0)
                 else { return nil }
                 return (index, 0)
             }
@@ -490,7 +490,7 @@ private extension GeneralSettingsView {
 
         pickerLanguageCode.rx.selectedPickerIndex
             .map { [weak self] in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.viewModel.outputs.supportedLanguageItems[$0.row]
             }
             .unwrap()

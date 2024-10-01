@@ -43,7 +43,7 @@ class PickerSetting: UIView {
         applyAccessibility(prefixId: accessibilityPrefixId)
 
         // Add items if exist after setupObservers since there is a skip(1) for skipping initial BehaviorSubject value
-        if let items = items {
+        if let items {
             self.items.onNext(items)
         }
     }

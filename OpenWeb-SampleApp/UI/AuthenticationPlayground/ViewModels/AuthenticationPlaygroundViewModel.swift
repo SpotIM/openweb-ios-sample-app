@@ -208,7 +208,7 @@ private extension AuthenticationPlaygroundViewModel {
         genericSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
                 // 1. Retrieving selected generic SSO
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self._selectedGenericSSOOptionIndex
                     .take(1)
             }
@@ -235,7 +235,7 @@ private extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] genericSSO -> Observable<(String, GenericSSOAuthentication)> in
                 // 3. Login user if needed
-                guard let self = self else { return.just(("", genericSSO)) }
+                guard let self else { return.just(("", genericSSO)) }
                 return self.login(user: genericSSO.user)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -250,7 +250,7 @@ private extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] token, genericSSO -> Observable<(String, String, GenericSSOAuthentication)> in
                 // 4. Start SSO
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 return self.startSSO()
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -264,7 +264,7 @@ private extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] codeA, token, genericSSO -> Observable<String> in
             // 5. Retrieving Code B
-            guard let self = self else { return Observable.empty() }
+            guard let self else { return Observable.empty() }
                 return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -277,7 +277,7 @@ private extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] codeB -> Observable<Void> in
                 // 6. Complete SSO
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 return self.completeSSO(codeB: codeB)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil)
@@ -306,7 +306,7 @@ private extension AuthenticationPlaygroundViewModel {
         thirdPartySSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
                 // 1. Retrieving selected Third-party SSO
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self._selectedThirdPartySSOOptionIndex
                     .take(1)
             }
@@ -333,7 +333,7 @@ private extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] thirdPartySSO -> Observable<String> in
                 // 4. Perform SSO with token
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 return self.sso(provider: thirdPartySSO.provider, token: thirdPartySSO.token)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -421,7 +421,7 @@ private extension AuthenticationPlaygroundViewModel {
     func login(user: UserAuthentication) -> Observable<String?> {
         return Observable.create { observer in
             DemoUserAuthentication.logIn(with: user.username, password: user.password) { token, error in
-                guard let token = token else {
+                guard let token else {
                     let loginError = error != nil ? error! : AuthenticationError.userLoginFailed
                     DLog("Failed in 'login(user:)' with error: \(loginError)")
                     observer.onError(loginError)
@@ -440,7 +440,7 @@ private extension AuthenticationPlaygroundViewModel {
                                             accessToken: token,
                                             username: genericSSO.user.username,
                                             accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
-                guard let codeB = codeB else {
+                guard let codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")
                     observer.onError(codeBError)

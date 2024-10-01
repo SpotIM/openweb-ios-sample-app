@@ -33,7 +33,7 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
 
     lazy var settingsVMs: [SettingsGroupVMProtocol] = {
         let settingsVMs: [SettingsGroupVMProtocol] = settingViewTypes.map { [weak self] type in
-            guard let self = self else { return nil }
+            guard let self else { return nil }
             return type.createAppropriateVM(userDefaultsProvider: self.userDefaultsProvider, manager: self.manager)
         }.unwrap()
         return settingsVMs
@@ -61,7 +61,7 @@ private extension SettingsViewModel {
     func setupObservers() {
         resetToDefaultTap
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.settingsVMs.forEach { $0.resetToDefault() }
             })
             .disposed(by: disposeBag)

@@ -81,19 +81,19 @@ private extension ConversationCountersNewAPIViewModel {
                 self?._cellsViewModels.onNext([])
             })
             .flatMapLatest { [weak self] _ -> Observable<String> in
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 return self.userPostIdsInput
                     .take(1)
             }
             .map { [weak self] userInput -> [String] in
-                guard let self = self else { return [] }
+                guard let self else { return [] }
                 return self.parse(postIds: userInput)
             }
             .subscribe(onNext: { [weak self] postIds in
-                guard let self = self else { return }
+                guard let self else { return }
                 let helper = OpenWeb.manager.helpers
                 helper.conversationCounters(forPostIds: postIds) { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self._showLoader.onNext(false)
 
                     switch result {

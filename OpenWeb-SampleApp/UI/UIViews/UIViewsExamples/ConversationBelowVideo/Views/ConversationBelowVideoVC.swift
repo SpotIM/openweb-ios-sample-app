@@ -191,7 +191,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.reportReasonsRetrieved
             .subscribe(onNext: { [weak self] view in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.reportReasons,
                                      topConstraint: &self.reportReasonsTopConstraint,
@@ -202,7 +202,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.commentThreadRetrieved
             .subscribe(onNext: { [weak self] view in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.commentThread,
                                      topConstraint: &self.commentThreadTopConstraint,
@@ -213,7 +213,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.clarityDetailsRetrieved
             .subscribe(onNext: { [weak self] view in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.clarityDetails,
                                      topConstraint: &self.clarityDetailsTopConstraint,
@@ -224,7 +224,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.webPageRetrieved
             .subscribe(onNext: { [weak self] view in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.webPage,
                                      topConstraint: &self.webPageTopConstraint,
@@ -235,7 +235,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.removeConversation
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.conversation,
                                                componentTopConstraint: self.conversationTopConstraint)
             })
@@ -243,7 +243,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.removeReportReasons
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.reportReasons,
                                                componentTopConstraint: self.reportReasonsTopConstraint)
             })
@@ -251,7 +251,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.removeClarityDetails
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.clarityDetails,
                                                componentTopConstraint: self.clarityDetailsTopConstraint)
             })
@@ -259,7 +259,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.removeCommentThread
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.commentThread,
                                                componentTopConstraint: self.commentThreadTopConstraint)
             })
@@ -267,7 +267,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.removeWebPage
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.webPage,
                                                componentTopConstraint: self.webPageTopConstraint)
             })
@@ -281,7 +281,7 @@ private extension ConversationBelowVideoVC {
 
         viewModel.outputs.openAuthentication
             .flatMap { [weak self] result -> Observable<OWBasicCompletion> in
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 let spotId = result.0
                 let completion = result.1
                 let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: spotId)
@@ -316,7 +316,7 @@ private extension ConversationBelowVideoVC {
         // Chaning report reasons height according to the keyboard
         keyboardHeight
             .subscribe(onNext: { [weak self] height in
-                guard let self = self, self.reportReasons != nil,
+                guard let self, self.reportReasons != nil,
                 let reportReasonsHeightConstraint = self.reportReasonsHeightConstraint else { return }
                 let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
                 reportReasonsHeightConstraint.update(offset: -adjustedHeight)
@@ -329,7 +329,7 @@ private extension ConversationBelowVideoVC {
         // Changing clarity details height according to the keyboard
         keyboardHeight
             .subscribe(onNext: { [weak self] height in
-                guard let self = self, self.clarityDetails != nil,
+                guard let self, self.clarityDetails != nil,
                 let clarityDetailsHeightConstraint = self.clarityDetailsHeightConstraint else { return }
                 let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
                 clarityDetailsHeightConstraint.update(offset: -adjustedHeight)
@@ -384,7 +384,7 @@ private extension ConversationBelowVideoVC {
         let offset = -containerBelowVideo.frame.height - self.view.safeAreaInsets.bottom
         conversationTopConstraint.update(offset: offset)
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.view.layoutIfNeeded()
         } completion: { _ in
             // Nothing here
@@ -434,7 +434,7 @@ private extension ConversationBelowVideoVC {
         let offset = -baseComponentView.frame.height
         topConstraint.update(offset: offset)
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.view.layoutIfNeeded()
         } completion: { _ in
             // Nothing here
@@ -447,7 +447,7 @@ private extension ConversationBelowVideoVC {
         // 1. Perform animation
         componentTopConstraint.update(offset: 0)
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.view.layoutIfNeeded()
         } completion: { [weak component] _ in
             component?.removeFromSuperview()

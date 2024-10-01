@@ -347,7 +347,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return openColorsCustomizationClicked
             .map { [weak self] _ -> UIViewController? in
                 if #available(iOS 14.0, *) {
-                    guard let self = self else { return nil }
+                    guard let self else { return nil }
                     return ColorsCustomizationVC(viewModel: ColorsCustomizationViewModel(userDefaultsProvider: self.userDefaultsProvider))
                 } else {
                     return nil
@@ -683,7 +683,7 @@ private extension GeneralSettingsVM {
 
         themeModeSelectedIndex // 0. default 1. light 2. dark
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
+                guard let self else { return }
                 var customizations = self.manager.ui.customizations
                 customizations.themeEnforcement = .themeStyle(fromIndex: index)
             })
@@ -691,7 +691,7 @@ private extension GeneralSettingsVM {
 
         statusBarStyleSelectedIndex // 0. matchTheme 1. light 2. dark
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
+                guard let self else { return }
                 var customizations = self.manager.ui.customizations
                 customizations.statusBarEnforcement = .statusBarStyle(fromIndex: index)
             })
@@ -699,7 +699,7 @@ private extension GeneralSettingsVM {
 
         navigationBarStyleSelectedIndex // 0. largeTitles 1. regular 2. keepOriginal
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
+                guard let self else { return }
                 var customizations = self.manager.ui.customizations
                 customizations.navigationBarEnforcement = .navigationBarEnforcement(fromIndex: index)
             })
@@ -707,7 +707,7 @@ private extension GeneralSettingsVM {
 
         fontGroupTypeObservable
             .subscribe(onNext: { [weak self] fontGroupType in
-                guard let self = self else { return }
+                guard let self else { return }
                 var customizations = self.manager.ui.customizations
                 customizations.fontFamily = fontGroupType
             })

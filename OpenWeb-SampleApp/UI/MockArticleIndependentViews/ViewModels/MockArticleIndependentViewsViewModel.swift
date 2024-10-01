@@ -98,7 +98,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     lazy var showComponent: Observable<ComponentAndType> = {
         return self.viewTypeUpdaters
             .flatMap { [weak self] settings -> Observable<ComponentAndType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.retrieveComponent(for: settings)
                     .map { ($0, settings.viewType) }
             }
@@ -107,7 +107,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     private lazy var viewTypeUpdaters: Observable<SDKUIIndependentViewsActionSettings> = {
         return Observable.merge(preConversationUpdater, conversationUpdater, commentCreationUpdater, commentThreadUpdater, independentAdUnitUpdater, clarityDetailsUpdater)
             .flatMapLatest { [weak self] _ -> Observable<SDKUIIndependentViewsActionSettings> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
             }
@@ -124,7 +124,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         return self.userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
                     .map { $0.viewType }
@@ -141,7 +141,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
                     .map { $0.viewType }
@@ -157,7 +157,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
                     .map { $0.viewType }
@@ -174,7 +174,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
                     .map { $0.viewType }
@@ -210,7 +210,7 @@ private extension MockArticleIndependentViewsViewModel {
         // Addressing horizontal margin
         viewTypeUpdaters
             .subscribe(onNext: { [weak self] settings in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch settings.viewType {
                 case .preConversation:
                     let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
@@ -225,7 +225,7 @@ private extension MockArticleIndependentViewsViewModel {
         viewTypeUpdaters
             .voidify()
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.loggerViewModel.inputs.clear()
             })
             .disposed(by: disposeBag)
@@ -235,7 +235,7 @@ private extension MockArticleIndependentViewsViewModel {
         let customizations: OWCustomizations = OpenWeb.manager.ui.customizations
 
         let customizableClosure: OWCustomizableElementCallback = { [weak self] element, source, style, postId in
-            guard let self = self else { return }
+            guard let self else { return }
             let postIdString = postId ?? "No postId"
             let log = "Received OWCustomizableElementCallback element: \(element), from source: \(source), style: \(style), postId: \(postIdString)\n"
             self.loggerViewModel.inputs.log(text: log)
@@ -274,7 +274,7 @@ private extension MockArticleIndependentViewsViewModel {
 
     func retrievePreConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -283,7 +283,7 @@ private extension MockArticleIndependentViewsViewModel {
             let uiViews = manager.ui.views
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
@@ -310,7 +310,7 @@ private extension MockArticleIndependentViewsViewModel {
 
     func retrieveConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -319,7 +319,7 @@ private extension MockArticleIndependentViewsViewModel {
             let uiViews = manager.ui.views
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
@@ -346,7 +346,7 @@ private extension MockArticleIndependentViewsViewModel {
 
     func retrieveCommentCreation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -355,7 +355,7 @@ private extension MockArticleIndependentViewsViewModel {
             let uiViews = manager.ui.views
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
@@ -383,7 +383,7 @@ private extension MockArticleIndependentViewsViewModel {
 
     func retrieveCommentThread(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -392,7 +392,7 @@ private extension MockArticleIndependentViewsViewModel {
             let uiViews = manager.ui.views
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
@@ -420,14 +420,14 @@ private extension MockArticleIndependentViewsViewModel {
 
     func retrieveClarityDetails(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
             let additionalSettings = self.commonCreatorService.additionalSettings()
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }

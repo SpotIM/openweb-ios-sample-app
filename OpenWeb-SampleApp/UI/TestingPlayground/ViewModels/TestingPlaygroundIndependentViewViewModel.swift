@@ -70,14 +70,14 @@ private extension TestingPlaygroundIndependentViewModel {
         // Testing playground - Views
         Observable.just(())
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 let postId = self.dataModel.postId
 
                 let manager = OpenWeb.manager
                 let views = manager.ui.views
 
                 let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                     self.loggerViewModel.inputs.log(text: log)
                 }
@@ -86,7 +86,7 @@ private extension TestingPlaygroundIndependentViewModel {
                                     additionalSettings: OWTestingPlaygroundSettings(),
                                     callbacks: actionsCallbacks,
                                     completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
                     case .success(let view):
                         self._testingPlaygroundView.onNext(view)

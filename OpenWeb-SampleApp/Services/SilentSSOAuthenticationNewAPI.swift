@@ -19,7 +19,7 @@ class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
         return Observable.just(()) // Begin RX
             .flatMapLatest { [weak self] _ -> Observable<Void> in
                 // Check user login status if needed
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 if ignoreLoginStatus {
                     return .just(())
                 } else {
@@ -37,23 +37,23 @@ class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
             }
             .flatMapLatest { [weak self] _ -> Observable<String> in
                 // Login
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.login(user: genericSSO.user)
             }
             .flatMapLatest { [weak self] token -> Observable<(String, String)> in
                 // Start SSO
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.startSSO()
                     .map { ($0, token) }
             }
             .flatMapLatest { [weak self] codeA, token -> Observable<String> in
                 // Get codeB
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
             }
             .flatMapLatest { [weak self] codeB -> Observable<String> in
                 // Complete SSO
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.completeSSO(codeB: codeB)
             }
     }
@@ -99,7 +99,7 @@ private extension SilentSSOAuthenticationNewAPI {
     func login(user: UserAuthentication) -> Observable<String> {
         return Observable.create { observer in
             DemoUserAuthentication.logIn(with: user.username, password: user.password) { token, error in
-                guard let token = token else {
+                guard let token else {
                     let loginError = error != nil ? error! : AuthenticationError.userLoginFailed
                     DLog("Failed in 'login(user:)' with error: \(loginError)")
                     observer.onError(loginError)
@@ -118,7 +118,7 @@ private extension SilentSSOAuthenticationNewAPI {
                                             accessToken: token,
                                             username: genericSSO.user.username,
                                             accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
-                guard let codeB = codeB else {
+                guard let codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")
                     observer.onError(codeBError)

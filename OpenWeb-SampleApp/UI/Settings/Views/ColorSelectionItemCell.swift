@@ -175,7 +175,7 @@ private extension ColorSelectionItemCell {
         viewModel.outputs.color
             .take(1)
             .subscribe(onNext: { [weak self] color in
-                guard let color = color else { return }
+                guard let color else { return }
                 self?.lightColorRectangleView.backgroundColor = color.lightColor
                 self?.darkColorRectangleView.backgroundColor = color.darkColor
             })
@@ -185,7 +185,7 @@ private extension ColorSelectionItemCell {
             .map { $0 !== nil }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isColorSet in
-                guard let self = self else { return }
+                guard let self else { return }
                 if isColorSet {
                     self.lightNoColorRedLine.removeFromSuperlayer()
                 } else {
@@ -202,7 +202,7 @@ private extension ColorSelectionItemCell {
             .map { $0 !== nil }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isColorSet in
-                guard let self = self else { return }
+                guard let self else { return }
                 if isColorSet {
                     self.darkNoColorRedLine.removeFromSuperlayer()
                 } else {
