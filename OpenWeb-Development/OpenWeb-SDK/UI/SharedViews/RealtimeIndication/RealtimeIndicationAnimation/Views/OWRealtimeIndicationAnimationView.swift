@@ -117,7 +117,7 @@ fileprivate extension OWRealtimeIndicationAnimationView {
 
     func animate(_ isShown: Bool) {
         guard let indicationViewCurrentBottomOffset = self.indicationViewCurrentBottomOffset else { return }
-        let offset = isShown ? -indicationViewCurrentBottomOffset/3 : indicationViewCurrentBottomOffset
+        let offset = isShown ? -indicationViewCurrentBottomOffset / 3 : indicationViewCurrentBottomOffset
         self.indicationViewBottomConstraint?.update(offset: offset)
 
         UIView.animate(

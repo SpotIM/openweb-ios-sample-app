@@ -34,6 +34,8 @@ internal class SPAnimatedButton: UIButton {
         }
     }
 
+    // swiftlint:disable operator_usage_whitespace
+
     fileprivate var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
             if isSelected {
@@ -65,6 +67,8 @@ internal class SPAnimatedButton: UIButton {
             }
         }
     }
+
+    // swiftlint:enable operator_usage_whitespace
 
     fileprivate let circleTransform = CAKeyframeAnimation(keyPath: "transform")
     fileprivate let circleMaskTransform = CAKeyframeAnimation(keyPath: "transform")

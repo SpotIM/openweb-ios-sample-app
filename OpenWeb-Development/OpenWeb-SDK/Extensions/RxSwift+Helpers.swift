@@ -49,7 +49,7 @@ extension ObservableType {
                 if index < maxAttempts {
                     let factor = index + 1
                     let exponential = factor * factor
-                    let exponentialDelay =  RxTimeInterval.milliseconds(exponential * millisecondsDelay)
+                    let exponentialDelay = RxTimeInterval.milliseconds(exponential * millisecondsDelay)
                     return Observable<Int64>.timer(exponentialDelay, scheduler: scheduler)
                 } else {
                     return Observable.error(error)

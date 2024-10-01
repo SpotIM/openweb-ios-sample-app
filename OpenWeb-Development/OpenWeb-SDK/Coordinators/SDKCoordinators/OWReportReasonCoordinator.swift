@@ -450,7 +450,7 @@ fileprivate extension OWReportReasonCoordinator {
             .disposed(by: disposeBag)
 
         // Close Report reason from Submitted Screen
-        let closeSubmittedCallbackObservable =  closeSubmittedViewTapped
+        let closeSubmittedCallbackObservable = closeSubmittedViewTapped
             .map { OWViewActionCallbackType.closeReportReason }
 
         // Close Report Reason

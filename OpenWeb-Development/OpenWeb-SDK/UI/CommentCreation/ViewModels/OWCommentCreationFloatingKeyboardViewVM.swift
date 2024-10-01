@@ -294,7 +294,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         let lastCommentTypeInCacheService = self.servicesProvider.lastCommentTypeInMemoryCacheService()
         guard let postId = self.postId else { return }
 
-        let originalCommentType =  commentCreationData.commentCreationType
+        let originalCommentType = commentCreationData.commentCreationType
 
         if case .comment = commentCreationData.commentCreationType {
             if let lastCommentType = lastCommentTypeInCacheService.value(forKey: postId) {

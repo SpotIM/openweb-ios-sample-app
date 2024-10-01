@@ -316,12 +316,12 @@ class OWUserMentionHelper {
         comment.userMentions["f42518e26df91e6af00fb62ce8a39a2f"] = OWComment.Content.UserMention(id: "f42518e26df91e6af00fb62ce8a39a2f", userId: "4567", displayName: "Alon")
         let user1 = SPUser()
         user1.id = "1234"
-        user1.userId  = "1234"
+        user1.userId = "1234"
         user1.displayName = "Refael Sommer"
 
         let user2 = SPUser()
         user2.id = "4567"
-        user2.userId  = "4567"
+        user2.userId = "4567"
         user2.displayName = "Alon Haiut"
 
         comment.users = comment.users ?? [:]
