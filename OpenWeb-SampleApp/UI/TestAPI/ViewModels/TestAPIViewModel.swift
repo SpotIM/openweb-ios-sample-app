@@ -60,7 +60,7 @@ class TestAPIViewModel: TestAPIViewModeling,
     var inputs: TestAPIViewModelingInputs { return self }
     var outputs: TestAPIViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         #if PUBLIC_DEMO_APP
         static let preFilledSpotId: String = ConversationPreset.publicMainPreset().conversationDataModel.spotId
         static let preFilledPostId: String = ConversationPreset.publicMainPreset().conversationDataModel.postId
@@ -70,7 +70,7 @@ class TestAPIViewModel: TestAPIViewModeling,
         #endif
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     let enteredSpotId = PublishSubject<OWSpotId>()
     let enteredPostId = PublishSubject<OWPostId>()
@@ -85,7 +85,7 @@ class TestAPIViewModel: TestAPIViewModeling,
     let doneSelectPresetTapped = PublishSubject<Void>()
     let viewWillAppear = PublishSubject<Void>()
 
-    fileprivate lazy var isBetaConfiguration: Bool = {
+    private lazy var isBetaConfiguration: Bool = {
     #if BETA
         return true
         #else
@@ -93,7 +93,7 @@ class TestAPIViewModel: TestAPIViewModeling,
     #endif
     }()
 
-    fileprivate lazy var isBetaConfigurationSubject: BehaviorSubject<Bool> = {
+    private lazy var isBetaConfigurationSubject: BehaviorSubject<Bool> = {
         return BehaviorSubject(value: isBetaConfiguration)
     }()
 
@@ -135,58 +135,58 @@ class TestAPIViewModel: TestAPIViewModeling,
         return userDefaultsProvider.values(key: .selectedPostId, defaultValue: Metrics.preFilledPostId)
     }
 
-    fileprivate let _shouldShowSelectPreset = BehaviorSubject<Bool>(value: false)
+    private let _shouldShowSelectPreset = BehaviorSubject<Bool>(value: false)
     var shouldShowSelectPreset: Observable<Bool> {
         return _shouldShowSelectPreset
             .distinctUntilChanged()
             .asObservable()
     }
 
-    fileprivate let _spotId = BehaviorSubject<String>(value: Metrics.preFilledSpotId)
+    private let _spotId = BehaviorSubject<String>(value: Metrics.preFilledSpotId)
     var spotId: Observable<String> {
         return _spotId
             .distinctUntilChanged()
             .asObservable()
     }
 
-    fileprivate let _postId = BehaviorSubject<String>(value: Metrics.preFilledPostId)
+    private let _postId = BehaviorSubject<String>(value: Metrics.preFilledPostId)
     var postId: Observable<String> {
         return _postId
             .distinctUntilChanged()
             .asObservable()
     }
 
-    fileprivate let _openUIFlows = PublishSubject<SDKConversationDataModel>()
+    private let _openUIFlows = PublishSubject<SDKConversationDataModel>()
     var openUIFlows: Observable<SDKConversationDataModel> {
         return _openUIFlows.asObservable()
     }
 
-    fileprivate let _openUIViews = PublishSubject<SDKConversationDataModel>()
+    private let _openUIViews = PublishSubject<SDKConversationDataModel>()
     var openUIViews: Observable<SDKConversationDataModel> {
         return _openUIViews.asObservable()
     }
 
-    fileprivate let _openMiscellaneous = PublishSubject<SDKConversationDataModel>()
+    private let _openMiscellaneous = PublishSubject<SDKConversationDataModel>()
     var openMiscellaneous: Observable<SDKConversationDataModel> {
         return _openMiscellaneous.asObservable()
     }
 
-    fileprivate let _openTestingPlayground = PublishSubject<SDKConversationDataModel>()
+    private let _openTestingPlayground = PublishSubject<SDKConversationDataModel>()
     var openTestingPlayground: Observable<SDKConversationDataModel> {
         return _openTestingPlayground.asObservable()
     }
 
-    fileprivate let _openAutomation = PublishSubject<SDKConversationDataModel>()
+    private let _openAutomation = PublishSubject<SDKConversationDataModel>()
     var openAutomation: Observable<SDKConversationDataModel> {
         return _openAutomation.asObservable()
     }
 
-    fileprivate let _openSettings = PublishSubject<Void>()
+    private let _openSettings = PublishSubject<Void>()
     var openSettings: Observable<Void> {
         return _openSettings.asObservable()
     }
 
-    fileprivate let _openAuthentication = PublishSubject<Void>()
+    private let _openAuthentication = PublishSubject<Void>()
     var openAuthentication: Observable<Void> {
         return _openAuthentication.asObservable()
     }
@@ -195,16 +195,16 @@ class TestAPIViewModel: TestAPIViewModeling,
         return NSLocalizedString("TestAPI", comment: "")
     }()
 
-    fileprivate let _selectedConversationPresetIndex = BehaviorSubject(value: 0)
+    private let _selectedConversationPresetIndex = BehaviorSubject(value: 0)
     var selectedConversationPresetIndex = PublishSubject<Int>()
 
-    fileprivate let _conversationPresets = BehaviorSubject(value: ConversationPreset.mockModels)
+    private let _conversationPresets = BehaviorSubject(value: ConversationPreset.mockModels)
     var conversationPresets: Observable<[ConversationPreset]> {
         return _conversationPresets
             .asObservable()
     }
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -212,7 +212,7 @@ class TestAPIViewModel: TestAPIViewModeling,
     }
 }
 
-fileprivate extension TestAPIViewModel {
+private extension TestAPIViewModel {
     func setupObservers() {
         enteredSpotId
             .distinctUntilChanged()

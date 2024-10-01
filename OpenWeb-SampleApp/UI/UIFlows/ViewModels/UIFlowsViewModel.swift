@@ -33,16 +33,16 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
     var inputs: UIFlowsViewModelingInputs { return self }
     var outputs: UIFlowsViewModelingOutputs { return self }
 
-    fileprivate let dataModel: SDKConversationDataModel
+    private let dataModel: SDKConversationDataModel
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     let preConversationTapped = PublishSubject<PresentationalModeCompact>()
     let fullConversationTapped = PublishSubject<PresentationalModeCompact>()
     let commentCreationTapped = PublishSubject<PresentationalModeCompact>()
     let commentThreadTapped = PublishSubject<PresentationalModeCompact>()
 
-    fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
+    private let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
     var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
         return _openMockArticleScreen
             .unwrap()
@@ -63,7 +63,7 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
     }
 }
 
-fileprivate extension UIFlowsViewModel {
+private extension UIFlowsViewModel {
 
     func setupObservers() {
         let postId = dataModel.postId

@@ -35,7 +35,7 @@ extension OWColor: Codable {
         try container.encode(darkColorComponents, forKey: .darkColor)
     }
 
-    fileprivate struct ColorComponents: Codable {
+    private struct ColorComponents: Codable {
         let red: CGFloat
         let green: CGFloat
         let blue: CGFloat

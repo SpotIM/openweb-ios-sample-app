@@ -33,17 +33,17 @@ class TestingPlaygroundIndependentViewModel: TestingPlaygroundIndependentViewMod
     var inputs: TestingPlaygroundIndependentViewModelingInputs { return self }
     var outputs: TestingPlaygroundIndependentViewModelingOutputs { return self }
 
-    fileprivate let dataModel: SDKConversationDataModel
+    private let dataModel: SDKConversationDataModel
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate let _showError = PublishSubject<String>()
+    private let _showError = PublishSubject<String>()
     var showError: Observable<String> {
         return _showError
             .asObservable()
     }
 
-    fileprivate let _testingPlaygroundView = BehaviorSubject<UIView?>(value: nil)
+    private let _testingPlaygroundView = BehaviorSubject<UIView?>(value: nil)
     var testingPlaygroundView: Observable<UIView> {
         return _testingPlaygroundView
             .unwrap()
@@ -64,7 +64,7 @@ class TestingPlaygroundIndependentViewModel: TestingPlaygroundIndependentViewMod
     }
 }
 
-fileprivate extension TestingPlaygroundIndependentViewModel {
+private extension TestingPlaygroundIndependentViewModel {
     func setupObservers() {
 
         // Testing playground - Views

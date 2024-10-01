@@ -11,7 +11,7 @@ import RxSwift
 
 class SettingsVC: UIViewController {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "settings_vc_id"
         static let resetButtonId = "settings_reset_button_id"
         static let verticalOffset: CGFloat = 40
@@ -20,25 +20,25 @@ class SettingsVC: UIViewController {
         static let resetButtonVerticalPadding: CGFloat = 20
     }
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var resetButton: UIButton = {
+    private lazy var resetButton: UIButton = {
         return NSLocalizedString("ResetToDefaults", comment: "")
             .blueRoundedButton
     }()
 
-    fileprivate lazy var settingViews: [UIView] = {
+    private lazy var settingViews: [UIView] = {
         let views = viewModel.outputs.settingsVMs.map { SettingsViewsFactory.factor(from: ($0)) }.unwrap()
         return views
     }()
 
-    fileprivate let viewModel: SettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: SettingsViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: SettingsViewModeling) {
         self.viewModel = viewModel
@@ -57,7 +57,7 @@ class SettingsVC: UIViewController {
     }
 }
 
-fileprivate extension SettingsVC {
+private extension SettingsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         resetButton.accessibilityIdentifier = Metrics.resetButtonId

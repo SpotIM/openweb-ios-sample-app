@@ -16,7 +16,7 @@ import AVKit
 
 class ConversationBelowVideoVC: UIViewController {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "uiviews_examples_vc_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
@@ -30,30 +30,30 @@ class ConversationBelowVideoVC: UIViewController {
         static let videoLink2 = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
 
-    fileprivate let viewModel: ConversationBelowVideoViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: ConversationBelowVideoViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate var preConversation: UIView?
-    fileprivate var conversation: UIView?
-    fileprivate var commentCreation: UIView?
-    fileprivate var reportReasons: UIView?
-    fileprivate var clarityDetails: UIView?
-    fileprivate var commentThread: UIView?
-    fileprivate var webPage: UIView?
+    private var preConversation: UIView?
+    private var conversation: UIView?
+    private var commentCreation: UIView?
+    private var reportReasons: UIView?
+    private var clarityDetails: UIView?
+    private var commentThread: UIView?
+    private var webPage: UIView?
 
-    fileprivate unowned var conversationTopConstraint: Constraint!
-    fileprivate unowned var reportReasonsTopConstraint: Constraint!
-    fileprivate unowned var clarityDetailsTopConstraint: Constraint!
-    fileprivate unowned var commentThreadTopConstraint: Constraint!
-    fileprivate unowned var webPageTopConstraint: Constraint!
+    private unowned var conversationTopConstraint: Constraint!
+    private unowned var reportReasonsTopConstraint: Constraint!
+    private unowned var clarityDetailsTopConstraint: Constraint!
+    private unowned var commentThreadTopConstraint: Constraint!
+    private unowned var webPageTopConstraint: Constraint!
 
     // Designed to play with the height
-    fileprivate unowned var reportReasonsHeightConstraint: Constraint!
-    fileprivate unowned var clarityDetailsHeightConstraint: Constraint!
-    fileprivate unowned var commentThreadHeightConstraint: Constraint!
-    fileprivate unowned var webPageHeightConstraint: Constraint!
+    private unowned var reportReasonsHeightConstraint: Constraint!
+    private unowned var clarityDetailsHeightConstraint: Constraint!
+    private unowned var commentThreadHeightConstraint: Constraint!
+    private unowned var webPageHeightConstraint: Constraint!
 
-    fileprivate lazy var videoPlayerItem: AVPlayerItem = {
+    private lazy var videoPlayerItem: AVPlayerItem = {
         let urlString: String
         #if targetEnvironment(simulator)
         urlString = Metrics.videoLink
@@ -66,17 +66,17 @@ class ConversationBelowVideoVC: UIViewController {
         return playerItem
     }()
 
-    fileprivate lazy var videoQueuePlayer: AVQueuePlayer = {
+    private lazy var videoQueuePlayer: AVQueuePlayer = {
         let queuePlayer = AVQueuePlayer(playerItem: videoPlayerItem)
         return queuePlayer
     }()
 
-    fileprivate lazy var videoPlayerLooper: AVPlayerLooper = {
+    private lazy var videoPlayerLooper: AVPlayerLooper = {
         let playerLooper = AVPlayerLooper(player: self.videoQueuePlayer, templateItem: self.videoPlayerItem)
         return playerLooper
     }()
 
-    fileprivate lazy var videoPlayerLayer: AVPlayerLayer = {
+    private lazy var videoPlayerLayer: AVPlayerLayer = {
         let playerLayer = AVPlayerLayer(player: self.videoQueuePlayer)
         playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         // Looper should be initialize at some point - the following line basically do that
@@ -84,13 +84,13 @@ class ConversationBelowVideoVC: UIViewController {
         return playerLayer
     }()
 
-    fileprivate lazy var imgViewPlaceholder: UIImageView = {
+    private lazy var imgViewPlaceholder: UIImageView = {
         return UIImageView()
             .image(UIImage(named: "video_placeholder")!)
             .contentMode(.scaleAspectFill)
     }()
 
-    fileprivate lazy var videoPlayerContainer: UIView = {
+    private lazy var videoPlayerContainer: UIView = {
         let view = UIView()
             .backgroundColor(.clear)
 
@@ -103,7 +103,7 @@ class ConversationBelowVideoVC: UIViewController {
         return view
     }()
 
-    fileprivate lazy var containerBelowVideo: UIView = {
+    private lazy var containerBelowVideo: UIView = {
         let view = UIView()
             .backgroundColor(ColorPalette.shared.color(type: .background))
         return view
@@ -135,7 +135,7 @@ class ConversationBelowVideoVC: UIViewController {
     }
 }
 
-fileprivate extension ConversationBelowVideoVC {
+private extension ConversationBelowVideoVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         videoPlayerContainer.accessibilityIdentifier = Metrics.videoPlayerIdentifier

@@ -11,7 +11,7 @@ import RxSwift
 
 class MiscellaneousCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let router: Routering
+    private let router: Routering
 
     init(router: Routering) {
         self.router = router
@@ -41,7 +41,7 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
     }
 }
 
-fileprivate extension MiscellaneousCoordinator {
+private extension MiscellaneousCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MiscellaneousViewModeling) {
         viewModel.outputs.openConversationCounters
             .subscribe(onNext: { [weak self] in

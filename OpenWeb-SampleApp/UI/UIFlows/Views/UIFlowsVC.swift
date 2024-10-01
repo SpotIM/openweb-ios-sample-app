@@ -14,7 +14,7 @@ import OpenWebSDK
 
 class UIFlowsVC: UIViewController {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "uiviews_vc_id"
         static let btnPreConversationPushModeIdentifier = "btn_pre_conversation_push_mode_id"
         static let btnPreConversationPresentModeIdentifier = "btn_pre_conversation_present_mode_id"
@@ -30,45 +30,45 @@ class UIFlowsVC: UIViewController {
         static let buttonHeight: CGFloat = 50
     }
 
-    fileprivate let viewModel: UIFlowsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: UIFlowsViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var btnPreConversationPushMode: UIButton = {
+    private lazy var btnPreConversationPushMode: UIButton = {
         return NSLocalizedString("PreConversationPushMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnPreConversationPresentMode: UIButton = {
+    private lazy var btnPreConversationPresentMode: UIButton = {
         return NSLocalizedString("PreConversationPresentMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnFullConversationPushMode: UIButton = {
+    private lazy var btnFullConversationPushMode: UIButton = {
         return NSLocalizedString("FullConversationPushMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnFullConversationPresentMode: UIButton = {
+    private lazy var btnFullConversationPresentMode: UIButton = {
         return NSLocalizedString("FullConversationPresentMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnCommentCreationPushMode: UIButton = {
+    private lazy var btnCommentCreationPushMode: UIButton = {
         return NSLocalizedString("CommentCreationPushMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnCommentCreationPresentMode: UIButton = {
+    private lazy var btnCommentCreationPresentMode: UIButton = {
         return NSLocalizedString("CommentCreationPresentMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnCommentThreadPushMode: UIButton = {
+    private lazy var btnCommentThreadPushMode: UIButton = {
         return NSLocalizedString("CommentThreadPushMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnCommentThreadPresentMode: UIButton = {
+    private lazy var btnCommentThreadPresentMode: UIButton = {
         return NSLocalizedString("CommentThreadPresentMode", comment: "").blueRoundedButton
     }()
 
@@ -93,7 +93,7 @@ class UIFlowsVC: UIViewController {
     }
 }
 
-fileprivate extension UIFlowsVC {
+private extension UIFlowsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnPreConversationPushMode.accessibilityIdentifier = Metrics.btnPreConversationPushModeIdentifier

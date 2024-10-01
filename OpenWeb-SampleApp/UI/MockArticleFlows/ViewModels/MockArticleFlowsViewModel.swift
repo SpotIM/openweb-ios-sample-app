@@ -42,36 +42,36 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
     var inputs: MockArticleFlowsViewModelingInputs { return self }
     var outputs: MockArticleFlowsViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let preConversationCompactHorizontalMargin: CGFloat = 16.0
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate let imageProviderAPI: ImageProviding
-    fileprivate let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
+    private let imageProviderAPI: ImageProviding
+    private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
 
-    fileprivate weak var navController: UINavigationController?
-    fileprivate weak var presentationalVC: UIViewController?
+    private weak var navController: UINavigationController?
+    private weak var presentationalVC: UIViewController?
 
-    fileprivate let _articleImageURL = BehaviorSubject<URL?>(value: nil)
+    private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
     var articleImageURL: Observable<URL> {
         return _articleImageURL
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
-    fileprivate let commonCreatorService: CommonCreatorServicing
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
+    private let commonCreatorService: CommonCreatorServicing
 
-    fileprivate let _actionSettings = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
-    fileprivate var actionSettings: Observable<SDKUIFlowActionSettings> {
+    private let _actionSettings = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
+    private var actionSettings: Observable<SDKUIFlowActionSettings> {
         return _actionSettings
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let loggerViewTitle: String
+    private let loggerViewTitle: String
 
     lazy var loggerViewModel: UILoggerViewModeling = {
         return UILoggerViewModel(title: loggerViewTitle)
@@ -103,13 +103,13 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
         setupObservers()
     }
 
-    fileprivate let _showError = PublishSubject<String>()
+    private let _showError = PublishSubject<String>()
     var showError: Observable<String> {
         return _showError
             .asObservable()
     }
 
-    fileprivate let _showPreConversation = PublishSubject<UIView>()
+    private let _showPreConversation = PublishSubject<UIView>()
     var showPreConversation: Observable<UIView> {
         return _showPreConversation
             .asObservable()
@@ -178,7 +178,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
     }
 }
 
-fileprivate extension MockArticleFlowsViewModel {
+private extension MockArticleFlowsViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()

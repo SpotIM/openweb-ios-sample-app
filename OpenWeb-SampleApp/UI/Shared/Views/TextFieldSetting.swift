@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class TextFieldSetting: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalOffset: CGFloat = 10
         static let textFieldCorners: CGFloat = 12
         static let keyboardPadding: CGFloat = 5
@@ -19,11 +19,11 @@ class TextFieldSetting: UIView {
         static let titleNumberOfLines: Int = 2
     }
 
-    fileprivate let title: String
-    fileprivate let placeholder: String
-    fileprivate let text = BehaviorSubject<String?>(value: nil)
-    fileprivate var font: UIFont
-    fileprivate let disposeBag = DisposeBag()
+    private let title: String
+    private let placeholder: String
+    private let text = BehaviorSubject<String?>(value: nil)
+    private var font: UIFont
+    private let disposeBag = DisposeBag()
 
     fileprivate lazy var textFieldTitleLbl: UILabel = {
         return title
@@ -63,7 +63,7 @@ class TextFieldSetting: UIView {
 
 }
 
-fileprivate extension TextFieldSetting {
+private extension TextFieldSetting {
     func applyAccessibility(prefixId: String) {
         textFieldTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         textFieldControl.accessibilityIdentifier = prefixId + "_text_field_id"

@@ -143,24 +143,24 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var commentActionsColorSelected = BehaviorSubject<OWCommentActionsColor>(value: .default)
     var commentActionsFontStyleSelected = BehaviorSubject<OWCommentActionsFontStyle>(value: .default)
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
-    fileprivate var manager: OWManagerProtocol
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var manager: OWManagerProtocol
 
-    fileprivate lazy var fontGroupTypeObservable =
+    private lazy var fontGroupTypeObservable =
     Observable.combineLatest(fontGroupTypeSelectedIndex, customFontGroupSelectedName) { index, name -> OWFontGroupFamily in
         return OWFontGroupFamily.fontGroupFamily(fromIndex: index, name: name)
     }
     .skip(2)
     .asObservable()
 
-    fileprivate lazy var languageStrategyObservable =
+    private lazy var languageStrategyObservable =
     Observable.combineLatest(languageStrategySelectedIndex, languageSelectedName) { index, languageName -> OWLanguageStrategy in
         return OWLanguageStrategy.languageStrategy(fromIndex: index, language: OWSupportedLanguage(languageName: languageName))
     }
     .skip(2)
     .asObservable()
 
-    fileprivate lazy var localeStrategyObservable =
+    private lazy var localeStrategyObservable =
     localeStrategySelectedIndex
         .map { index in
             return OWLocaleStrategy.localeStrategy(fromIndex: index)
@@ -357,7 +357,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
             .asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("GeneralSettings", comment: "")
@@ -583,7 +583,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 }
 
-fileprivate extension GeneralSettingsVM {
+private extension GeneralSettingsVM {
     // swiftlint:disable function_body_length
     func setupObservers() {
         articleHeaderSelectedStyle

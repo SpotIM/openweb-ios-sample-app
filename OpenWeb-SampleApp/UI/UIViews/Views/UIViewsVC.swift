@@ -13,7 +13,7 @@ import SnapKit
 
 class UIViewsVC: UIViewController {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "uiviews_vc_id"
         static let btnPreConversationIdentifier = "btn_pre_conversation_id"
         static let btnFullConversationIdentifier = "btn_full_conversation_id"
@@ -28,41 +28,41 @@ class UIViewsVC: UIViewController {
         static let buttonHeight: CGFloat = 50
     }
 
-    fileprivate let viewModel: UIViewsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: UIViewsViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var btnPreConversation: UIButton = {
+    private lazy var btnPreConversation: UIButton = {
         return NSLocalizedString("PreConversation", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnFullConversation: UIButton = {
+    private lazy var btnFullConversation: UIButton = {
         return NSLocalizedString("FullConversation", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnCommentCreation: UIButton = {
+    private lazy var btnCommentCreation: UIButton = {
         return NSLocalizedString("CommentCreation", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnCommentThread: UIButton = {
+    private lazy var btnCommentThread: UIButton = {
         return NSLocalizedString("CommentThread", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnClarityDetails: UIButton = {
+    private lazy var btnClarityDetails: UIButton = {
         return NSLocalizedString("ClarityDetails", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnIndependentAdUnit: UIButton = {
+    private lazy var btnIndependentAdUnit: UIButton = {
         return NSLocalizedString("IndependentAdUnit", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnExamples: UIButton = {
+    private lazy var btnExamples: UIButton = {
         return NSLocalizedString("Examples", comment: "").blueRoundedButton
     }()
 
@@ -87,7 +87,7 @@ class UIViewsVC: UIViewController {
     }
 }
 
-fileprivate extension UIViewsVC {
+private extension UIViewsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnPreConversation.accessibilityIdentifier = Metrics.btnPreConversationIdentifier

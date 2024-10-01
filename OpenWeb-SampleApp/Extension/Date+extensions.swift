@@ -35,7 +35,7 @@ public extension Date {
         }
     }
 
-    fileprivate func formatDate() -> String {
+    private func formatDate() -> String {
         let calendar = Calendar.current
         let formatter = DateFormatter()
         let now = Date()

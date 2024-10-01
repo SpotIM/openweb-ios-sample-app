@@ -59,7 +59,7 @@ class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
     }
 }
 
-fileprivate extension SilentSSOAuthenticationNewAPI {
+private extension SilentSSOAuthenticationNewAPI {
     func startSSO() -> Observable<String> {
         return Observable.create { observer in
             let authentication = OpenWeb.manager.authentication

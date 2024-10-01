@@ -35,15 +35,15 @@ class AutomationViewModel: AutomationViewModeling,
     var inputs: AutomationViewModelingInputs { return self }
     var outputs: AutomationViewModelingOutputs { return self }
 
-    fileprivate let dataModel: SDKConversationDataModel
-    fileprivate weak var navController: UINavigationController?
+    private let dataModel: SDKConversationDataModel
+    private weak var navController: UINavigationController?
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     let fontsTapped = PublishSubject<Void>()
     let userInformationTapped = PublishSubject<Void>()
 
-    fileprivate let _showError = PublishSubject<String>()
+    private let _showError = PublishSubject<String>()
     var showError: Observable<String> {
         return _showError
             .asObservable()
@@ -63,7 +63,7 @@ class AutomationViewModel: AutomationViewModeling,
     }
 }
 
-fileprivate extension AutomationViewModel {
+private extension AutomationViewModel {
 
     func setupObservers() {
         fontsTapped

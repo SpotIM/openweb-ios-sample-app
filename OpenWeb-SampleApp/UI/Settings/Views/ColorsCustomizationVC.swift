@@ -12,20 +12,20 @@ import RxSwift
 
 @available(iOS 14.0, *)
 class ColorsCustomizationVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalOffset: CGFloat = 40
         static let verticalOffset: CGFloat = 24
         static let rowHeight: CGFloat = 50
     }
 
-    fileprivate let viewModel: ColorsCustomizationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: ColorsCustomizationViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         return UIScrollView()
     }()
 
-    fileprivate lazy var explainLabel: UILabel = {
+    private lazy var explainLabel: UILabel = {
         let label = UILabel()
         label.font = FontBook.paragraphBold
         label.text = "Both light and dark colors should be set in order to override OWTheme"
@@ -33,7 +33,7 @@ class ColorsCustomizationVC: UIViewController {
         return label
     }()
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tblView = UITableView()
             .separatorStyle(.none)
         tblView.allowsSelection = false
@@ -42,7 +42,7 @@ class ColorsCustomizationVC: UIViewController {
         return tblView
     }()
 
-    fileprivate let picker = UIColorPickerViewController()
+    private let picker = UIColorPickerViewController()
 
     init(viewModel: ColorsCustomizationViewModeling) {
         self.viewModel = viewModel
@@ -66,7 +66,7 @@ class ColorsCustomizationVC: UIViewController {
 }
 
 @available(iOS 14.0, *)
-fileprivate extension ColorsCustomizationVC {
+private extension ColorsCustomizationVC {
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
@@ -141,7 +141,7 @@ fileprivate extension ColorsCustomizationVC {
 }
 
 @available(iOS 14.0, *)
-fileprivate extension Reactive where Base: UIColorPickerViewController {
+private extension Reactive where Base: UIColorPickerViewController {
     var didSelectColor: Observable<UIColor?> {
         return Observable.create { observer in
             let token = self.base.observe(\.selectedColor) { _, _ in

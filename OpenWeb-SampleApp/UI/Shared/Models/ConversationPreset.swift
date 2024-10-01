@@ -36,7 +36,7 @@ extension ConversationPreset {
                                                                                               postId: "sdk1"))
     }
 
-    fileprivate static func publicPresets() -> [ConversationPreset] {
+    private static func publicPresets() -> [ConversationPreset] {
         // TODO: Add more presets
         return [publicMainPreset()]
     }

@@ -34,7 +34,7 @@ class UILoggerViewModel: UILoggerViewModeling, UILoggerViewModelingInputs, UILog
                 .asObservable()
     }
 
-    fileprivate let _loggerText = BehaviorSubject<String>(value: "")
+    private let _loggerText = BehaviorSubject<String>(value: "")
     var loggerText: Observable<String> {
         return _loggerText
                 .asObservable()

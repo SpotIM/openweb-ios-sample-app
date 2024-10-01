@@ -45,20 +45,20 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     var inputs: AuthenticationPlaygroundViewModelingInputs { return self }
     var outputs: AuthenticationPlaygroundViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayUntilDismissVC = 500 // milliseconds
     }
 
-    fileprivate let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
+    private let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedGenericSSOOptionIndex = PublishSubject<Int>()
 
-    fileprivate let _selectedThirdPartySSOOptionIndex = BehaviorSubject(value: 0)
+    private let _selectedThirdPartySSOOptionIndex = BehaviorSubject(value: 0)
     var selectedThirdPartySSOOptionIndex = PublishSubject<Int>()
 
-    fileprivate let shouldInitializeSDK = BehaviorSubject(value: false)
+    private let shouldInitializeSDK = BehaviorSubject(value: false)
     var initializeSDKToggled = PublishSubject<Bool>()
 
-    fileprivate let shouldAutomaticallyDismiss = BehaviorSubject(value: true)
+    private let shouldAutomaticallyDismiss = BehaviorSubject(value: true)
     var automaticallyDismissToggled = PublishSubject<Bool>()
 
     var logoutPressed = PublishSubject<Void>()
@@ -82,7 +82,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
         return models
     }()
 
-    fileprivate lazy var _genericSSOOptions = BehaviorSubject(value: genericSSOAuthenticationModels)
+    private lazy var _genericSSOOptions = BehaviorSubject(value: genericSSOAuthenticationModels)
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> {
         return _genericSSOOptions
             .asObservable()
@@ -98,25 +98,25 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
         return models
     }()
 
-    fileprivate lazy var _thirdPartySSOOptions = BehaviorSubject(value: thirdPartySSOAuthenticationModels)
+    private lazy var _thirdPartySSOOptions = BehaviorSubject(value: thirdPartySSOAuthenticationModels)
     var thirdPartySSOOptions: Observable<[ThirdPartySSOAuthentication]> {
         return _thirdPartySSOOptions
             .asObservable()
     }
 
-    fileprivate let _genericSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
+    private let _genericSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _genericSSOAuthenticationStatus
             .asObservable()
     }
 
-    fileprivate let _thirdPartySSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
+    private let _thirdPartySSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var thirdPartySSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _thirdPartySSOAuthenticationStatus
             .asObservable()
     }
 
-    fileprivate let _logoutAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
+    private let _logoutAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var logoutAuthenticationStatus: Observable<AuthenticationStatus> {
         return _logoutAuthenticationStatus
             .asObservable()
@@ -130,9 +130,9 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
 
     var closeClick = PublishSubject<Void>()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate var spotIdToFilterBy: OWSpotId?
+    private var spotIdToFilterBy: OWSpotId?
 
     init(filterBySpotId spotId: OWSpotId? = nil) {
         spotIdToFilterBy = spotId
@@ -140,7 +140,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     }
 }
 
-fileprivate extension AuthenticationPlaygroundViewModel {
+private extension AuthenticationPlaygroundViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Different generic SSO selected

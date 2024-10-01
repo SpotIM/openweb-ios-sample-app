@@ -9,7 +9,7 @@
 import UIKit
 
 class ConversationCounterNewAPICell: UITableViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier: String = "conversation_counter_id_"
         static let lblPostIdentifier: String = "counter_post_id_"
         static let lblCommentsIdentifier: String = "counter_comments_id_"
@@ -19,7 +19,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
         static let cornerRadius: CGFloat = 12
     }
 
-    fileprivate lazy var mainArea: UIView = {
+    private lazy var mainArea: UIView = {
         let view = UIView()
             .corner(radius: Metrics.cornerRadius)
             .backgroundColor(ColorPalette.shared.color(type: .background))
@@ -28,7 +28,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var lblPostId: UILabel = {
+    private lazy var lblPostId: UILabel = {
         let txt = NSLocalizedString("PostId", comment: "") + ": "
         return txt
             .label
@@ -36,7 +36,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
             .textColor(ColorPalette.shared.color(type: .text))
     }()
 
-    fileprivate lazy var lblComments: UILabel = {
+    private lazy var lblComments: UILabel = {
         let txt = NSLocalizedString("Comments", comment: "") + ": "
         return txt
             .label
@@ -44,7 +44,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
             .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
 
-    fileprivate lazy var lblReplies: UILabel = {
+    private lazy var lblReplies: UILabel = {
         let txt = NSLocalizedString("Replies", comment: "") + ": "
         return txt
             .label
@@ -52,7 +52,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
             .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
 
-    fileprivate var viewModel: ConversationCounterNewAPICellViewModeling!
+    private var viewModel: ConversationCounterNewAPICellViewModeling!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -70,7 +70,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
         applyAccessibility()
     }
 }
-fileprivate extension ConversationCounterNewAPICell {
+private extension ConversationCounterNewAPICell {
     func setupViews() {
         selectionStyle = .none
         self.backgroundColor = .clear

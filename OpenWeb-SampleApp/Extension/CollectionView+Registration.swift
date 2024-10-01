@@ -34,7 +34,7 @@ extension UICollectionView {
     }
 }
 
-fileprivate extension UICollectionView {
+private extension UICollectionView {
     func registerIfNeeded<T: UICollectionViewCell>(cellClass: T.Type) {
         if registeredCellsIdentifiers.contains(cellClass.identifierName) {
             return

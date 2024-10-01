@@ -12,7 +12,7 @@ import RxCocoa
 
 class SwitchSetting: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleFontSize: CGFloat = 20
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 10
@@ -20,8 +20,8 @@ class SwitchSetting: UIView {
         static let titleNumberOfLines: Int = 2
     }
 
-    fileprivate let title: String
-    fileprivate let initialIsOn: Bool
+    private let title: String
+    private let initialIsOn: Bool
 
     fileprivate lazy var settingTitleLbl: UILabel = {
         return title
@@ -53,7 +53,7 @@ class SwitchSetting: UIView {
 
 }
 
-fileprivate extension SwitchSetting {
+private extension SwitchSetting {
     func applyAccessibility(prefixId: String) {
         settingTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         switchSetting.accessibilityIdentifier = prefixId + "_switch_id"
@@ -94,7 +94,7 @@ extension Reactive where Base: SwitchSetting {
         }
     }
 
-    fileprivate var value: ControlProperty<Bool> {
+    private var value: ControlProperty<Bool> {
         return base.switchSetting.rx.controlProperty(editingEvents: .valueChanged) { switchSetting in
             switchSetting.isOn
         } setter: { switchSetting, value in
