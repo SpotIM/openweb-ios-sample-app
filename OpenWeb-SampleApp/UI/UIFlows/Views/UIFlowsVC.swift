@@ -241,7 +241,8 @@ fileprivate extension UIFlowsVC {
         btnCommentThreadPresentMode.rx.tap
             .map { [weak self] in
                 guard let self = self else { return .push }
-                return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
+                return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
+            }
             .bind(to: viewModel.inputs.commentThreadTapped)
             .disposed(by: disposeBag)
     }
