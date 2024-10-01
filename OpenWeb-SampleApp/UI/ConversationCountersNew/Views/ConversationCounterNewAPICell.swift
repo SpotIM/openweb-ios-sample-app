@@ -90,13 +90,13 @@ fileprivate extension ConversationCounterNewAPICell {
         mainArea.addSubview(lblComments)
         lblComments.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
-            make.top.equalTo(lblPostId.snp.bottom).offset(Metrics.verticalMargin/2)
+            make.top.equalTo(lblPostId.snp.bottom).offset(Metrics.verticalMargin / 2)
         }
 
         mainArea.addSubview(lblReplies)
         lblReplies.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
-            make.top.equalTo(lblComments.snp.bottom).offset(Metrics.verticalMargin/2)
+            make.top.equalTo(lblComments.snp.bottom).offset(Metrics.verticalMargin / 2)
             make.bottom.equalToSuperview().inset(Metrics.verticalMargin)
         }
     }

@@ -22,7 +22,7 @@ class ConversationBelowVideoVC: UIViewController {
         static let horizontalMargin: CGFloat = 20
         static let presentAnimationDuration: TimeInterval = 0.3
         static let preConversationHorizontalMargin: CGFloat = 16.0
-        static let videoRatio: CGFloat = 9/16
+        static let videoRatio: CGFloat = 9 / 16
         static let keyboardAnimationDuration: CGFloat = 0.25
         static let videoPlayerIdentifier = "video_player_id"
         static let videoLink = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_30MB.mp4"
@@ -383,7 +383,7 @@ fileprivate extension ConversationBelowVideoVC {
         self.view.layoutIfNeeded()
 
         // 3. Perform animation
-        let offset = -containerBelowVideo.frame.height-self.view.safeAreaInsets.bottom
+        let offset = -containerBelowVideo.frame.height - self.view.safeAreaInsets.bottom
         conversationTopConstraint.update(offset: offset)
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
             guard let self = self else { return }

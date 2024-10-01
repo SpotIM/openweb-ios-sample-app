@@ -28,7 +28,7 @@ class ColorSelectionItemCell: UITableViewCell {
     }()
 
     fileprivate lazy var enableCheckbox: UISwitch = {
-        let switchView =  UISwitch()
+        let switchView = UISwitch()
         switchView.isOn = true
         switchView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         return switchView
