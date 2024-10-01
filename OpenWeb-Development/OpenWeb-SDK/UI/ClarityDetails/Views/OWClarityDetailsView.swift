@@ -213,11 +213,11 @@ private extension OWClarityDetailsView {
 
         viewModel.outputs.topParagraphAttributedStringObservable
             .subscribe(onNext: { [weak self] attributedText in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.topParagraphLabel
                     .attributedText(attributedText)
                     .addRangeGesture(targetRange: self.viewModel.outputs.communityGuidelinesClickablePlaceholder) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.viewModel.inputs.communityGuidelinesClick.onNext()
                     }
             })
@@ -226,7 +226,7 @@ private extension OWClarityDetailsView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
@@ -239,7 +239,7 @@ private extension OWClarityDetailsView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyContext)
                 self.detailsTitleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
                 self.gotItButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)

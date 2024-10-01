@@ -46,7 +46,7 @@ class OWCommentCreationImagePreviewViewModel: OWCommentCreationImagePreviewViewM
     var imageOutput: Observable<OWImageOption> {
         _image
             .map { image in
-                if let image = image {
+                if let image {
                     return .image(image: image)
                 } else {
                     return .noImage
@@ -81,13 +81,13 @@ private extension OWCommentCreationImagePreviewViewModel {
     func setupObservers() {
         image
             .subscribe(onNext: { [weak self] image in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._image.onNext(image)
             })
             .disposed(by: disposeBag)
 
         removeButtonTap.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self._image.onNext(nil)
         })
         .disposed(by: disposeBag)

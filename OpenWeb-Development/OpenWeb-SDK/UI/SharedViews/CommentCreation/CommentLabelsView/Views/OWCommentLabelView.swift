@@ -103,7 +103,7 @@ private extension OWCommentLabelView {
         commentLabelSettingsObservable
             .map { $0.iconUrl }
             .subscribe(onNext: { [weak self] url in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.iconImageView.setImage(with: url) { [weak self] image, _ in
                     self?.iconImageView.image = image?.withRenderingMode(.alwaysTemplate)
                 }
@@ -123,7 +123,7 @@ private extension OWCommentLabelView {
                 return (style, data.0, data.1.color)
             }
             .subscribe { [weak self] style, state, color in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.setUIColors(state: state, labelColor: color, currentStyle: style)
             }
             .disposed(by: disposeBag)
@@ -135,7 +135,7 @@ private extension OWCommentLabelView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.label.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)

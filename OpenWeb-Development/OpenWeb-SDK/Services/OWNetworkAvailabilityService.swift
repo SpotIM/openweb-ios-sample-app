@@ -29,7 +29,7 @@ class OWNetworkAvailabilityService: OWNetworkAvailabilityServicing {
         networkMonitor = NWPathMonitor()
 
         networkMonitor.pathUpdateHandler = { [weak self] path in
-            if let self = self {
+            if let self {
                 let isNetworkAvailable = path.status == .satisfied
                 self.networkAvailableSubject.onNext(isNetworkAvailable)
             }

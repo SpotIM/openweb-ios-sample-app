@@ -75,7 +75,7 @@ private extension OWGifService {
         sharedServicesProvider.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.giphyBridge.setIsDarkMode(style == .dark ? true : false)
             })
             .disposed(by: disposeBag)

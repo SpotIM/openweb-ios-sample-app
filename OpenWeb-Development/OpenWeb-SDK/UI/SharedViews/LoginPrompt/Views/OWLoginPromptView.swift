@@ -177,7 +177,7 @@ private extension OWLoginPromptView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
@@ -186,7 +186,7 @@ private extension OWLoginPromptView {
                                  OWSharedServicesProvider.shared.orientationService().orientation,
                                  OWColorPalette.shared.colorDriver)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation, colorMapper in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: currentOrientation == .landscape ? .separatorColor1 : .separatorColor3, themeStyle: currentStyle)
 

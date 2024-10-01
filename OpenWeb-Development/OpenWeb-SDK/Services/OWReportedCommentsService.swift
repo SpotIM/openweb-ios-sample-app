@@ -108,7 +108,7 @@ private extension OWReportedCommentsService {
 
     func loadPersistence() {
         queue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             let keychain = self.servicesProvider.keychain()
 
             if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
@@ -122,7 +122,7 @@ private extension OWReportedCommentsService {
 
     func savePersistant() {
         queue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             let keychain = self.servicesProvider.keychain()
 
             keychain.save(value: self._mapPostIdToReportedCommentIds, forKey: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments)

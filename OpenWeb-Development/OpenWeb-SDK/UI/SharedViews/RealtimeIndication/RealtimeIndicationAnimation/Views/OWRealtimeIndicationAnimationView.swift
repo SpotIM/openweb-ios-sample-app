@@ -79,7 +79,7 @@ private extension OWRealtimeIndicationAnimationView {
         viewModel.outputs
             .shouldShow
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.animate(shouldShow)
             })
             .disposed(by: disposeBag)
@@ -88,7 +88,7 @@ private extension OWRealtimeIndicationAnimationView {
             .outputs.horisontalPositionDidChange
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] transition in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.indicationViewCurrentCenterOffset = transition
                 self.indicationViewCenterConstraint?.update(offset: transition)
             })
@@ -98,7 +98,7 @@ private extension OWRealtimeIndicationAnimationView {
             .outputs.horisontalPositionChangeDidEnd
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                guard let self = self,
+                guard let self,
                       let currentCenter = self.indicationViewCurrentCenterOffset else { return }
 
                 if currentCenter > (self.bounds.width / Metrics.swipeThresholdToDismiss) || currentCenter < -(self.bounds.width / Metrics.swipeThresholdToDismiss) {
@@ -138,7 +138,7 @@ private extension OWRealtimeIndicationAnimationView {
                        animations: { [weak self] in
             self?.layoutIfNeeded()
         }, completion: { [ weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.reset()
             self.viewModel.inputs.swiped()
         })

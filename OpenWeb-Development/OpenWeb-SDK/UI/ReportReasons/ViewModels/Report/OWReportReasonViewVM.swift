@@ -105,7 +105,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     var tableViewHeaderAttributedText: Observable<NSAttributedString> {
         Observable.combineLatest(shouldShowLearnMore, OWSharedServicesProvider.shared.themeStyleService().style)
             .map { [weak self] shouldShowLearnMore, style in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return OWLocalizationManager.shared.localizedString(key: "ReportReasonHelpUsTitle")
                     .replacingOccurrences(of: self.tableViewHeaderTapText, with: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
                     .attributedString
@@ -152,7 +152,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return learnMoreTap
             .withLatestFrom(communityGuidelinesUrl)
             .withLatestFrom(servicesProvider.themeStyleService().style) { url, style in
-                guard var url = url else { return nil }
+                guard var url else { return nil }
                 url.appendThemeQueryParam(with: style)
                 return url
             }
@@ -163,7 +163,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     var cancelReportReasonTapped: Observable<Void> {
         return cancelReportReasonTap
                 .flatMap { [weak self] _ -> Observable<String> in
-                    guard let self = self else { return .empty() }
+                    guard let self else { return .empty() }
                     return self.textViewVM.outputs.textViewText
                         .take(1)
                 }
@@ -174,7 +174,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     var closeReportReasonTapped: Observable<Void> {
         return cancelReportReasonTap
                 .flatMap { [weak self] _ -> Observable<String> in
-                    guard let self = self else { return .empty() }
+                    guard let self else { return .empty() }
                     return self.textViewVM.outputs.textViewText
                         .take(1)
                 }
@@ -258,7 +258,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .skip(1)
             .unwrap()
             .flatMap { [weak self] index -> Observable<OWReportReason> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.reportReasonOptions
                     .map { $0[index] }
             }
@@ -270,7 +270,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
             .map { [weak self] config -> String? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 guard let conversationConfig = config.conversation,
                           conversationConfig.communityGuidelinesEnabled == true else {
                         self.shouldShowLearnMoreChanged.onNext(false)
@@ -290,7 +290,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .map { [weak self] config -> Bool? in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return config.mobileSdk.shouldShowReportReasonsCounter
             }
             .unwrap()
@@ -302,7 +302,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .map { [weak self] config -> Int? in
-                guard let self = self else { return Metrics.defaultTextViewMaxCharecters }
+                guard let self else { return Metrics.defaultTextViewMaxCharecters }
                 return config.mobileSdk.reportReasonsCounterMaxLength
             }
             .unwrap()
@@ -315,17 +315,17 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return submitReportReasonTapped
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 // 1. Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .reportingComment)
             }
             .flatMapLatest { [weak self] userJustLoggedIn -> Observable<(Bool, Bool)> in
                 // 2. Waiting for authentication required for reporting
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .reportingComment)
                     .map { ($0, userJustLoggedIn) }
             }
             .do(onNext: { [weak self] _, userJustLoggedIn in
-                guard let self = self else { return }
+                guard let self else { return }
                 if userJustLoggedIn {
                     self.servicesProvider.conversationUpdaterService()
                         .update(.refreshConversation, postId: self.postId)
@@ -334,17 +334,17 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .filter { $0.0 }
             .map { $0.1 }
             .flatMapLatest { [weak self] userJustLoggedIn -> Observable<(OWReportReason, Bool)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.selectedReason.take(1)
                     .map { ($0, userJustLoggedIn) }
             }
             .flatMapLatest { [weak self] selectedReason, userJustLoggedIn -> Observable<(OWReportReason, String, Bool)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewVM.outputs.textViewText.take(1)
                     .map { return (selectedReason, $0, userJustLoggedIn) }
             }
             .flatMapLatest { [weak self] result -> Observable<(Event<EmptyDecodable>, Bool)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let selectedReason = result.0
                 let userDescription = result.1
                 let userJustLoggedIn = result.2
@@ -361,7 +361,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                     .map { ($0, userJustLoggedIn) }
             }
             .map { [weak self] event, userJustLoggedIn -> (OWCommentId, Bool)? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 switch event {
                 case .next(let submit):
                     let reportService = self.servicesProvider.reportedCommentsService()
@@ -403,14 +403,14 @@ private extension OWReportReasonViewViewModel {
 
         reportReasonsCounterMaxLength
             .subscribe(onNext: { [weak self] limit in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textViewVM.inputs.textViewMaxCharectersChange.onNext(limit)
             })
             .disposed(by: disposeBag)
 
         reportReasonsCharectersLimitEnabled
             .subscribe(onNext: { [weak self] show in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textViewVM.inputs.charectarsLimitEnabledChange.onNext(show)
             })
             .disposed(by: disposeBag)
@@ -424,7 +424,7 @@ private extension OWReportReasonViewViewModel {
         presentError
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let action = OWRxPresenterAction(title: self.errorAlertActionText, type: OWCommentOptionsMenu.reportComment)
                 return self.servicesProvider.presenterService().showAlert(title: self.errorAlertTitleText,
                                                                    message: self.errorAlertMessageText,

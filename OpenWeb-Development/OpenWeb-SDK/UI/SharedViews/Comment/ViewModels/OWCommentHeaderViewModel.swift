@@ -153,7 +153,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     private var _badgeType: Observable<OWUserBadgeType> {
         _unwrappedUser
             .flatMap { [weak self] user -> Observable<OWUserBadgeType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.userBadgeService.userBadgeText(user: user)
             }
     }
@@ -213,18 +213,18 @@ private extension OWCommentHeaderViewModel {
 
         userNameTapped
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.shouldShowHiddenCommentMessage
                     .take(1)
             }
             .filter { !$0 }
             .map { [weak self] _ -> SPUser? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.user
             }
             .unwrap()
             .flatMapLatest { [weak self] user -> Observable<OWOpenProfileResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.profileService().openProfileTapped(user: user)
             }
             .map { result -> OWOpenProfileType? in

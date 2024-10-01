@@ -53,7 +53,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWCommenterAppealCoordinatorResult> {
-        guard let router = router else { return .empty() }
+        guard let router else { return .empty() }
         let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM(
             data: data,
             viewableMode: .partOfFlow,
@@ -86,7 +86,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
             .map { OWCommenterAppealCoordinatorResult.popped }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.router?.pop(popStyle: .dismiss, animated: true)
             })
 
@@ -150,7 +150,7 @@ private extension OWCommenterAppealCoordinator {
                 viewModel.outputs.viewableMode == .partOfFlow
             }
             .subscribe(onNext: { [weak self] additionalInfoViewVM in
-                guard let self = self else { return }
+                guard let self else { return }
                 guard let router = self.router else { return }
                 OWScheduler.runOnMainThreadIfNeeded {
                     let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
@@ -165,7 +165,7 @@ private extension OWCommenterAppealCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .map { [weak self] additionalInfoViewVM -> OWAdditionalInfoView? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 var additionalInfoView: OWAdditionalInfoView?
                 OWScheduler.runOnMainThreadIfNeeded {
                     additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
@@ -221,8 +221,8 @@ private extension OWCommenterAppealCoordinator {
                 viewModel.outputs.viewableMode == .partOfFlow
             }
             .do(onNext: { [weak self] in
-                guard let self = self,
-                      let router = router else { return }
+                guard let self,
+                      let router else { return }
 
                 // dismiss additional info VC
                 router.pop(popStyle: .dismiss, animated: false)
@@ -260,7 +260,7 @@ private extension OWCommenterAppealCoordinator {
                 viewModel.outputs.viewableMode == .partOfFlow
             }
             .subscribe(onNext: { [weak self] vm in
-                guard let self = self else { return }
+                guard let self else { return }
                 guard let router = self.router else { return }
                 let cancelVM = OWCancelViewModel(cancelViewViewModel: vm)
                 let cancelVC = OWCancelVC(cancelViewModel: cancelVM)
@@ -275,7 +275,7 @@ private extension OWCommenterAppealCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .map { [weak self] vm -> OWCancelView? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 var cancelView: OWCancelView?
                 OWScheduler.runOnMainThreadIfNeeded {
                     cancelView = OWCancelView(viewModel: vm)
@@ -300,7 +300,7 @@ private extension OWCommenterAppealCoordinator {
                 return cancelViewVM.outputs.closeTapped
             }
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 guard let router = self.router else { return }
 
                 router.pop(popStyle: .dismiss, animated: true)
@@ -332,7 +332,7 @@ private extension OWCommenterAppealCoordinator {
                 return cancelViewVM.outputs.cancelTapped
             }
             .do(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 // dismiss cancel appeal VC
                 self.router?.pop(popStyle: .dismiss, animated: false)
@@ -357,7 +357,7 @@ private extension OWCommenterAppealCoordinator {
             }
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 guard let router = self.router else { return .empty() }
                 let submittedViewVM = OWSubmittedViewViewModel(type: .commenterAppeal)
                 let submittedVC = OWSubmittedVC(submittedViewViewModel: submittedViewVM)
@@ -370,7 +370,7 @@ private extension OWCommenterAppealCoordinator {
         let closeSubmittedViewTapped = viewModel.outputs.appealSubmittedSuccessfully
             .filter { _ in viewModel.outputs.viewableMode == .independent }
             .flatMap { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let submittedViewVM = OWSubmittedViewViewModel(type: .commenterAppeal)
 
                 OWScheduler.runOnMainThreadIfNeeded {
@@ -388,8 +388,8 @@ private extension OWCommenterAppealCoordinator {
         // Close submitted
         closeSubmitted
             .do(onNext: { [weak self] in
-                guard let self = self,
-                      let router = router else { return }
+                guard let self,
+                      let router else { return }
 
                 // dismiss submitted appeal VC
                 router.pop(popStyle: .dismiss, animated: false)
@@ -413,7 +413,7 @@ private extension OWCommenterAppealCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .subscribe(onNext: { [weak self] viewAction in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewActionsService.append(viewAction: viewAction)
             })
             .disposed(by: disposeBag)

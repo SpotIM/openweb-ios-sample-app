@@ -70,7 +70,7 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
             }
             .unwrap()
             .map { [weak self] value in
-                guard let self = self else { return "" }
+                guard let self else { return "" }
                 return self.getCommentsText(for: value)
             }
             .asObservable()
@@ -93,7 +93,7 @@ private extension OWConversationSummaryViewModel {
     func setupObservers() {
         triggerCustomizeCounterLabelUI
             .flatMapLatest { [weak self] label -> Observable<UILabel> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.commentsCount
                     .map { _ in return label }
             }

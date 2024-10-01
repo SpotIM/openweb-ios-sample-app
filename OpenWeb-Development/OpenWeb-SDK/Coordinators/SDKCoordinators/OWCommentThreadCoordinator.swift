@@ -85,7 +85,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         // Coordinate to comment creation
         let coordinateCommentCreationObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openCommentCreation
             .flatMapLatest { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article,
                                                                         settings: self.commentThreadData.settings,
                                                                         commentCreationType: commentCreationType,
@@ -129,11 +129,11 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         let coordinateReportReasonObservable = reportReasonFromCommentThreadObservable
             .asObservable()
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] reportData -> Observable<OWReportReasonCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
                                                                         router: self.router,
                                                                         viewActionsCallbacks: self.viewActionsCallbacks,
@@ -162,11 +162,11 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         let coordinateClarityDetailsObservable = clarityDetailsFromCommentThreadObservable
             .asObservable()
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] data -> Observable<OWClarityDetailsCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
                                                                             viewActionsCallbacks: self.viewActionsCallbacks,
@@ -199,7 +199,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 .unwrap()
         )
             .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let url = tuple.0
                 let title = tuple.1
                 let options = OWWebTabOptions(url: url,
@@ -243,7 +243,7 @@ private extension OWCommentThreadCoordinator {
 
         let openPublisherProfile = viewModel.outputs.commentThreadViewVM.outputs.openProfile
             .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.flowActionsService.getOpenProfileActionCallback(for: self.commentThreadVC?.navigationController,
                                                                             openProfileType: openProfileType,
                                                                             presentationalModeCompact: self.commentThreadData.presentationalMode)
@@ -263,7 +263,7 @@ private extension OWCommentThreadCoordinator {
 
         actionsCallbacksNotifier.openCommentThread
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
             .subscribe(onNext: { commentId, performActionType in

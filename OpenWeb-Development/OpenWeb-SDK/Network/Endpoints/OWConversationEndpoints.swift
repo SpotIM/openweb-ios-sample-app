@@ -73,16 +73,16 @@ enum OWConversationEndpoints: OWEndpoints {
                 "extract_data": page == .first,
                 "depth": parentId.isEmpty ? Metrics.parentCommentDepth : Metrics.replyCommentDepth
             ]
-            if let tabId = tabId {
+            if let tabId {
                 params["tab_id"] = tabId
             }
-            if let childCount = childCount {
+            if let childCount {
                 params["child_count"] = childCount
             }
             return params
         case .commentReport(let id, let parentId):
             var params = ["message_id": id]
-            if let parentId = parentId {
+            if let parentId {
                 params["parent_Id"] = parentId
             }
             return params
@@ -90,7 +90,7 @@ enum OWConversationEndpoints: OWEndpoints {
             return parameters
         case .commentShare(let id, let parentId):
             var params = ["message_id": id]
-            if let parentId = parentId {
+            if let parentId {
                 params["parent_Id"] = parentId
             }
             return params
@@ -98,7 +98,7 @@ enum OWConversationEndpoints: OWEndpoints {
             return parameters
         case .commentDelete(let id, let parentId):
             var params = ["message_id": id]
-            if let parentId = parentId {
+            if let parentId {
                 params["parent_Id"] = parentId
             }
             return params

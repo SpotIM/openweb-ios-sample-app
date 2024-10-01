@@ -75,7 +75,7 @@ private extension OWRealtimeNewCommentsView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.iconImageView.image = UIImage(spNamed: Metrics.iconImgaeName, supportDarkMode: true)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: Metrics.textColor,
                                                                               themeStyle: currentStyle)
@@ -85,7 +85,7 @@ private extension OWRealtimeNewCommentsView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = self.font
             })
             .disposed(by: disposeBag)

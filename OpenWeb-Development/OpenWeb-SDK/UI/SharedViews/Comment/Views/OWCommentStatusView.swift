@@ -90,11 +90,11 @@ private extension OWCommentStatusView {
         viewModel.outputs.messageAttributedText
             .subscribe(onNext: { [weak self] attributedText in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.messageLabel
                         .attributedText(attributedText)
                         .addRangeGesture(targetRange: self.viewModel.outputs.learnMoreClickableString) { [weak self] in
-                            guard let self = self else { return }
+                            guard let self else { return }
                             self.viewModel.inputs.learnMoreTap.onNext()
                         }
                 }
@@ -104,7 +104,7 @@ private extension OWCommentStatusView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

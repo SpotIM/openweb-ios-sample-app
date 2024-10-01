@@ -115,7 +115,7 @@ private extension OWTypingAnimationView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.dotColors = [OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: currentStyle),
                                   OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: currentStyle).withAlphaComponent(Metrics.secondDotOpacity),
                                   OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: currentStyle).withAlphaComponent(Metrics.thirdDotOpacity)]

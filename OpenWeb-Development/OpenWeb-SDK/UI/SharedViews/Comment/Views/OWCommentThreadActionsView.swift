@@ -116,7 +116,7 @@ private extension OWCommentThreadActionsView {
     func setupObservers() {
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
             .subscribe(onNext: { [weak self] style, colorMapper in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let owBrandColor = colorMapper[.brandColor] {
                     let brandColor = owBrandColor.color(forThemeStyle: style)
                     self.actionLabel.textColor = brandColor
@@ -129,7 +129,7 @@ private extension OWCommentThreadActionsView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.actionLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
@@ -137,7 +137,7 @@ private extension OWCommentThreadActionsView {
         viewModel.outputs.disclosureImage
             .subscribe(onNext: { [weak self] image in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.disclosureImageView.image = image.withRenderingMode(.alwaysTemplate)
                 }
             })
@@ -147,7 +147,7 @@ private extension OWCommentThreadActionsView {
         viewModel.outputs.updateSpacing
             .subscribe(onNext: { [weak self] spacing in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.actionView.OWSnp.updateConstraints { make in
                         make.top.equalToSuperview().inset(spacing.top)
                         make.bottom.equalToSuperview().inset(spacing.bottom)
@@ -176,7 +176,7 @@ private extension OWCommentThreadActionsView {
         viewModel.outputs.isLoadingChanged
             .subscribe(onNext: { [weak self] isLoading in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.disclosureImageView.isHidden = isLoading
                     self.activityIndicator.isHidden = !isLoading
 

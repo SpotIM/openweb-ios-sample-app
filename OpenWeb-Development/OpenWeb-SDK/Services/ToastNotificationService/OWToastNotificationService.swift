@@ -51,7 +51,7 @@ private extension OWToastNotificationService {
             .withLatestFrom(toastToShow)
             .unwrap()
             .subscribe(onNext: { [weak self] currentToast in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.newToastDisposeBag = DisposeBag()
                 self.setupNewToastObservable()
                 self._toastToShow.onNext(nil)
@@ -63,7 +63,7 @@ private extension OWToastNotificationService {
 
         triggerWaitNextToastInQueue
             .flatMap { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.blockerServicing().waitForNonBlocker(for: [.toastNotification])
             }
             .bind(to: presentToastFromQueue)
@@ -73,14 +73,14 @@ private extension OWToastNotificationService {
     func setupNewToastObservable() {
         presentToastFromQueue
             .map { [weak self] _ -> OWToastNotificationPresentData? in
-                guard let self = self,
+                guard let self,
                       !self.queue.isEmpty(),
                       let toastPresentData = self.queue.popFirst() else { return nil }
                 return toastPresentData
             }
             .unwrap()
             .do(onNext: { [weak self] toastPresentData in
-                guard let self = self else { return }
+                guard let self else { return }
                 // Block before showing toast to prevent more toasts from showing
                 let action = OWDefaultBlockerAction(blockerType: .toastNotification)
                 self.servicesProvider.blockerServicing().add(blocker: action)
@@ -94,7 +94,7 @@ private extension OWToastNotificationService {
                     .delay(.seconds(toastPresentData.durationInSec), scheduler: MainScheduler.instance)
             }
             .do(onNext: { [weak self] toastPresentData in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let _ = self.mapToastToActionPublishSubject[toastPresentData.uuid] {
                     self._toastToShow.onNext(nil)
                 }

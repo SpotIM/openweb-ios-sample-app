@@ -110,7 +110,7 @@ private extension OWConversationEmptyStateView {
                                  viewModel.outputs.iconName)
         .observe(on: MainScheduler.instance)
         .subscribe(onNext: { [weak self] currentStyle, iconName in
-            guard let self = self else { return }
+            guard let self else { return }
 
             self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             self.iconImageView.image = UIImage(spNamed: iconName, supportDarkMode: true)
@@ -121,7 +121,7 @@ private extension OWConversationEmptyStateView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)

@@ -55,7 +55,7 @@ class OWFlowActionsService: OWFlowActionsServicing {
     func getOpenProfileActionCallback(for navigationController: UINavigationController?,
                                       openProfileType: OWOpenProfileType,
                                       presentationalModeCompact: OWPresentationalModeCompact) -> OWFlowActionCallbackType? {
-        guard let navigationController = navigationController else { return nil }
+        guard let navigationController else { return nil }
         switch openProfileType {
         case .publisherProfile(let ssoPublisherId, let type):
             let presentationMode: OWPresentationalMode? = {
@@ -67,7 +67,7 @@ class OWFlowActionsService: OWFlowActionsServicing {
                     return OWPresentationalMode.push(navigationController: navigationController)
                 }
             }()
-            guard let presentationMode = presentationMode else { return nil }
+            guard let presentationMode else { return nil }
             return OWFlowActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId,
                                                                  type: type,
                                                                  presentationalMode: presentationMode)
@@ -96,7 +96,7 @@ private extension OWFlowActionsService {
 
         // Ensure callbacks are triggered from main thread
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             while !self.queue.isEmpty(),
                   let action = self.queue.popFirst() {
                 self.flowActionsCallbacks?(action, self.viewSourceType, postId)

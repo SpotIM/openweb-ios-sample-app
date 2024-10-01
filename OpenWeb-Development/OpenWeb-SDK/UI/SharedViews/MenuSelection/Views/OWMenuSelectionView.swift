@@ -78,7 +78,7 @@ private extension OWMenuSelectionView {
             .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(cellIdentifier: OWMenuSelectionCell.identifierName,
                                          cellType: OWMenuSelectionCell.self)) { [weak self] index, viewModel, cell in
-                guard let self = self else { return }
+                guard let self else { return }
                 cell.configure(with: viewModel)
                 if index == self.tableView.numberOfRows(inSection: 0) - 1 {
                     // Hide separator for the last cell
@@ -99,7 +99,7 @@ private extension OWMenuSelectionView {
         tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
             .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
                     make.height.equalTo(height)
                 }
@@ -109,7 +109,7 @@ private extension OWMenuSelectionView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.tableView.separatorColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
                 self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor

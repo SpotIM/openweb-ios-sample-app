@@ -479,7 +479,7 @@ class OWNetworkRequest {
     func retryOrFinish(error: OWNetworkError?) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
 
-        guard let error = error, let delegate = delegate else { finish(); return }
+        guard let error, let delegate else { finish(); return }
 
         delegate.retryResult(for: self, dueTo: error) { retryResult in
             switch retryResult {
@@ -503,7 +503,7 @@ class OWNetworkRequest {
 
         $mutableState.isFinishing = true
 
-        if let error = error { self.error = error }
+        if let error { self.error = error }
 
         // Start response handlers
         processNextResponseSerializer()
@@ -986,7 +986,7 @@ extension OWNetworkRequest {
                     components.append("-u \(user):\(password)")
                 }
             } else {
-                if let credential = credential, let user = credential.user, let password = credential.password {
+                if let credential, let user = credential.user, let password = credential.password {
                     components.append("-u \(user):\(password)")
                 }
             }
@@ -1686,7 +1686,7 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
                 return
             }
 
-            if let completionHandler = completionHandler {
+            if let completionHandler {
                 // Resume to ensure metrics are gathered.
                 task.resume()
                 task.cancel { resumeData in
@@ -1819,7 +1819,7 @@ class OWNetworkUploadRequest: OWNetworkDataRequest {
     }
 
     override func task(for request: URLRequest, using session: URLSession) -> URLSessionTask {
-        guard let uploadable = uploadable else {
+        guard let uploadable else {
             fatalError("Attempting to create a URLSessionUploadTask when Uploadable value doesn't exist.")
         }
 
@@ -1843,7 +1843,7 @@ class OWNetworkUploadRequest: OWNetworkDataRequest {
     ///
     /// - Returns: The `InputStream`.
     func inputStream() -> InputStream {
-        guard let uploadable = uploadable else {
+        guard let uploadable else {
             fatalError("Attempting to access the input stream but the uploadable doesn't exist.")
         }
 
@@ -1860,7 +1860,7 @@ class OWNetworkUploadRequest: OWNetworkDataRequest {
         defer { super.cleanup() }
 
         guard
-            let uploadable = uploadable,
+            let uploadable,
             case let .file(url, shouldRemove) = uploadable,
             shouldRemove
         else { return }

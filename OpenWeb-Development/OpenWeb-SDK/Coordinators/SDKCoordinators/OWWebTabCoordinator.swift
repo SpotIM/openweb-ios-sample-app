@@ -40,7 +40,7 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWWebTabCoordinatorResult> {
-        guard let router = router else { return .empty() }
+        guard let router else { return .empty() }
         viewableMode = .partOfFlow
         let webTabVM = OWWebTabViewModel(options: options,
                                             viewableMode: .partOfFlow)
@@ -61,7 +61,7 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
         let partOfFlowPresentedWebClosedObservable = webTabVM.outputs
             .closeWebTab
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.router?.pop(popStyle: .dismiss, animated: false)
             })
 
@@ -97,7 +97,7 @@ private extension OWWebTabCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .subscribe(onNext: { [weak self] viewAction in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewActionsService.append(viewAction: viewAction)
             })
             .disposed(by: disposeBag)

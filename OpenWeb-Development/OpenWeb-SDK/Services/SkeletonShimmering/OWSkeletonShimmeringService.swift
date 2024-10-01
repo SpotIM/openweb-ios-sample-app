@@ -61,7 +61,7 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
             .observe(on: scheduler)
             .filter { !$0 }
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.isServiceRunning.onNext(true)
                 self.startService()
             })
@@ -82,7 +82,7 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
                 .observe(on: scheduler)
                 .filter { $0 }
                 .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.stopService()
                     self.isServiceRunning.onNext(false)
                 })
@@ -105,7 +105,7 @@ private extension OWSkeletonShimmeringService {
             .take(1)
             .observe(on: scheduler)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.serviceDisposeBag = nil // Cancel existing run of the service
                 self.isServiceRunning.onNext(false)
             })
@@ -123,7 +123,7 @@ private extension OWSkeletonShimmeringService {
             .delay(.milliseconds(10), scheduler: scheduler)
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     // Apply animation on each skeleton view
                     self.weakViews.forEach { weakView in
                         guard let skeletonShimmeringView = weakView.value(),
@@ -148,7 +148,7 @@ private extension OWSkeletonShimmeringService {
         servicesProvider.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 let backgroundColor = OWColorPalette.shared.color(type: self.config.backgroundColor,
                                                                   themeStyle: style)
                 let highlightColor = OWColorPalette.shared.color(type: self.config.highlightColor,

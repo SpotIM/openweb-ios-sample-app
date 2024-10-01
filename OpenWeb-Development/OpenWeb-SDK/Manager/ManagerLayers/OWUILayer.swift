@@ -78,7 +78,7 @@ extension OWUILayer {
                                                 flowCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.setActiveRouter(for: .partOfFlow)
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
@@ -120,7 +120,7 @@ extension OWUILayer {
                                                  flowCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.setActiveRouter(for: .partOfFlow)
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
@@ -172,7 +172,7 @@ extension OWUILayer {
                                                     flowCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.setActiveRouter(for: .partOfFlow)
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
@@ -225,7 +225,7 @@ extension OWUILayer {
                                                     flowCallbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.setActiveRouter(for: .partOfFlow)
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
@@ -374,7 +374,7 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.setActiveRouter(for: .independent)
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
@@ -412,7 +412,7 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.setActiveRouter(for: .independent)
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
@@ -479,7 +479,7 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.setActiveRouter(for: .independent)
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
@@ -520,7 +520,7 @@ extension OWUILayer {
             .observe(on: MainScheduler.asyncInstance)
             .take(1)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.setActiveRouter(for: .independent)
                 self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
             })
@@ -558,7 +558,7 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
@@ -591,7 +591,7 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
@@ -623,7 +623,7 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
@@ -656,7 +656,7 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in

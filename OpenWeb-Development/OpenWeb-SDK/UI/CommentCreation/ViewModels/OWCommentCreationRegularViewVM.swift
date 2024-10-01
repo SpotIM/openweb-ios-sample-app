@@ -232,7 +232,7 @@ private extension OWCommentCreationRegularViewViewModel {
             commentLabelsContainerVM.outputs.isValidSelection,
             commentLabelsContainerVM.outputs.isInitialSelectionChanged
         ) { [weak self] isValidContent, isInitialContentEdited, isValidLabelsSelection, isInitialLabelsSelectionChanged in
-            guard let self = self else { return false }
+            guard let self else { return false }
             let isValidComment = isValidContent && isValidLabelsSelection
             switch self.commentCreationData.commentCreationType {
             case .edit:

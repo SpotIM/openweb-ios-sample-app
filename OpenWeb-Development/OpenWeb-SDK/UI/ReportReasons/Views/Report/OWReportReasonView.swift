@@ -160,7 +160,7 @@ private extension OWReportReasonView {
         footerView.addSubview(footerStackView)
 
         textView.OWSnp.makeConstraints { [weak self] make in
-            guard let self = self else { return }
+            guard let self else { return }
             make.top.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewHorizontalPadding)
             // Low priority so that when the next line textViewHeightConstraint will be active it will take over this constraint
             make.height.equalTo(0).priority(1)
@@ -207,7 +207,7 @@ private extension OWReportReasonView {
 
         tableViewReasons.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
             })
             .disposed(by: disposeBag)
@@ -222,7 +222,7 @@ private extension OWReportReasonView {
             .style
             .withLatestFrom(viewModel.outputs.tableViewHeaderAttributedText) { ($0, $1) }
             .subscribe(onNext: { [weak self] currentStyle, tableViewHeaderAttributedText in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleView
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                                  themeStyle: currentStyle))
@@ -244,7 +244,7 @@ private extension OWReportReasonView {
                 self.tableHeaderLabel
                     .attributedText(tableViewHeaderAttributedText)
                     .addRangeGesture(targetRange: self.viewModel.outputs.tableViewHeaderTapText) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.viewModel.inputs.learnMoreTap.onNext()
                     }
 
@@ -270,7 +270,7 @@ private extension OWReportReasonView {
 
         viewModel.outputs.isSubmitEnabled
             .map { [weak self] isSubmitEnabled -> Bool in
-                guard let self = self else { return isSubmitEnabled }
+                guard let self else { return isSubmitEnabled }
                 self.submitButton.alpha = isSubmitEnabled ? 1 : Metrics.submitDisabledOpacity
                 return isSubmitEnabled
             }
@@ -284,7 +284,7 @@ private extension OWReportReasonView {
         viewModel.outputs.selectedReason
             .subscribe(onNext: { [weak self] selectedReason in
                 // Show textView after selection
-                guard let self = self,
+                guard let self,
                       self.textViewHeightConstraint?.isActive == false
                 else { return }
 

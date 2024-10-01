@@ -77,20 +77,20 @@ private extension OWAnalyticsService {
         _ = Observable.just(())
             .observe(on: flushEventsQueue)
             .flatMap { [weak self] _ -> Observable<[OWAnalyticEvent]> in
-                guard let self = self else { return .empty()}
+                guard let self else { return .empty()}
                 return self.analyticsEvents
                     .rx_elements()
                     .take(1)
             }
             .withLatestFrom(self.blockedEvents) { [weak self] items, blockedEvents -> [OWAnalyticEvent] in
-                guard let self = self else { return [] }
+                guard let self else { return [] }
                 return items.filter { [weak self] in
-                    guard let self = self else { return false }
+                    guard let self else { return false }
                     return self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)
                 }
             }
             .map { [weak self] event in
-                guard let self = self else { return [] }
+                guard let self else { return [] }
                 return event.map {
                     self.analyticsEventCreatorService
                         .serverAnalyticEvent(from: $0)
@@ -104,7 +104,7 @@ private extension OWAnalyticsService {
                     .take(1)
             }
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.removeAllPublisher.onNext()
             }, onError: { error in
                 OWSharedServicesProvider.shared.logger().log(level: .error, "flushEvents error \(error.localizedDescription)")
@@ -142,14 +142,14 @@ private extension OWAnalyticsService {
 
         let backgroundObservable = appLifeCycle.didEnterBackground
             .filter { [weak self] in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return !self.analyticsEvents.isEmpty
             }
 
         let maxEventObservable = analyticsEvents
             .rx_elements()
             .filter { [weak self] events in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return events.count >= self.maxEventsForFlush
             }
             .voidify()
@@ -157,7 +157,7 @@ private extension OWAnalyticsService {
         Observable.merge(backgroundObservable, maxEventObservable)
             .observe(on: flushEventsQueue)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.flushEvents()
             })
             .disposed(by: disposeBag)
@@ -171,7 +171,7 @@ private extension OWAnalyticsService {
                 return config.mobileSdk.eventsStrategyConfig
             }
             .map { eventsStrategyConfig -> [String] in
-                guard let eventsStrategyConfig = eventsStrategyConfig,
+                guard let eventsStrategyConfig,
                       let currentSdkVersionString = OWSettingsWrapper.sdkVersion(),
                       let currentSdkVersion = try? OWVersion(from: currentSdkVersionString)
                 else { return [] }
@@ -189,7 +189,7 @@ private extension OWAnalyticsService {
                 return []
             }
             .subscribe(onNext: { [weak self] blockedEvents in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.blockedEvents.onNext(blockedEvents)
             })
     }

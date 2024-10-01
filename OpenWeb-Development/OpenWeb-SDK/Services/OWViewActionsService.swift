@@ -60,7 +60,7 @@ private extension OWViewActionsService {
 
         // Ensure callbacks are triggered from main thread
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             while !self.queue.isEmpty(),
                   let action = self.queue.popFirst() {
                 self.viewActionsCallbacks?(action, self.viewSourceType, postId)

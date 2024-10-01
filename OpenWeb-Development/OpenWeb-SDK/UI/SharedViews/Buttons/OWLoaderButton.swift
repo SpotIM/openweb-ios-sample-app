@@ -59,10 +59,10 @@ class OWLoaderButton: UIButton {
             isEnabled = false
         } else {
             spinner.stopAnimating()
-            if let image = image {
+            if let image {
                 setImage(image, for: .normal)
             }
-            if let originalTextColor = originalTextColor {
+            if let originalTextColor {
                 textColor(originalTextColor)
             }
             isEnabled = true
@@ -75,7 +75,7 @@ private extension OWLoaderButton {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.spinner.color = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

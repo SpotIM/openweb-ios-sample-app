@@ -99,7 +99,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
         let configurationService = servicesProvider.spotConfigurationService()
         return Observable.combineLatest(configurationService.config(spotId: OWManager.manager.spotId).take(1), hasMoreThanOneTab)
             .map { [weak self] config, shouldShowFilterTabs -> Bool in
-                guard let self = self,
+                guard let self,
                       let conversationConfig = config.conversation else { return false }
                 return conversationConfig.isTabsEnabled && shouldShowFilterTabs
             }
@@ -182,13 +182,13 @@ private extension OWFilterTabsViewViewModel {
 
         reloadTabs
             .flatMap { [weak self] _ -> Observable<[OWFilterTabsCollectionCellViewModel]> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.getTabs
             }
             .observe(on: MainScheduler.instance)
             .withLatestFrom(serviceSelectedTabId) { ($0, $1) }
             .subscribe(onNext: { [weak self] filterTabVMs, selectedTabId in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._tabs.onNext(filterTabVMs)
                 self.selectTab(filterTabVMs: filterTabVMs, selectedTabId: selectedTabId)
             })
@@ -197,14 +197,14 @@ private extension OWFilterTabsViewViewModel {
         shouldShowFilterTabs
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<[OWFilterTabsCollectionCellViewModel]> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.getTabs
             }
             .observe(on: MainScheduler.instance)
             .withLatestFrom(serviceSelectedTabId) { ($0, $1) }
             .withLatestFrom(selectTab) { ($0.0, $0.1, $1) }
             .do(onNext: { [weak self] filterTabVMs, selectedTabId, _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.selectTab(filterTabVMs: filterTabVMs, selectedTabId: selectedTabId)
             })
             .map { $0.0 }
@@ -216,7 +216,7 @@ private extension OWFilterTabsViewViewModel {
         didSelectTab
             .withLatestFrom(tabs) { ($0, $1) }
             .subscribe(onNext: { [weak self] tabToSelect, tabsToUnselectVMs in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch tabToSelect {
                 case .tab(let tabToSelectVM):
                     if self.sourceType != .preConversation {

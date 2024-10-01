@@ -144,7 +144,7 @@ private extension OWCommentCreationVC {
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
                                  OWSharedServicesProvider.shared.orientationService().orientation)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
                 let backgroundColor: UIColor = {
                     switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
                     case .regular, .light:
@@ -172,7 +172,7 @@ private extension OWCommentCreationVC {
             .subscribe(onNext: { [weak self] notification in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard
-                        let self = self,
+                        let self,
                         let expandedKeyboardHeight = notification.keyboardSize?.height,
                         let animationDuration = notification.keyboardAnimationDuration
                         else { return }
@@ -184,13 +184,13 @@ private extension OWCommentCreationVC {
                             make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))
                         }
                         UIView.animate(withDuration: animationDuration) { [weak self] in
-                            guard let self = self else { return }
+                            guard let self else { return }
                             self.view.layoutIfNeeded()
                         }
                     case .floatingKeyboard:
                         // floatingKeyboard style handles it's own constraints
                         UIView.animate(withDuration: animationDuration) { [weak self] in
-                            guard let self = self else { return }
+                            guard let self else { return }
                             self.view.backgroundColor = Metrics.floatingBackgroungColor
                             self.floatingNavigationBarOverlayButton.alpha = 1
                             self.view.layoutIfNeeded()
@@ -206,7 +206,7 @@ private extension OWCommentCreationVC {
             .subscribe(onNext: { [weak self] notification in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard
-                        let self = self,
+                        let self,
                         let animationDuration = notification.keyboardAnimationDuration
                         else { return }
                     switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
@@ -215,13 +215,13 @@ private extension OWCommentCreationVC {
                             make.bottom.equalToSuperviewSafeArea()
                         }
                         UIView.animate(withDuration: animationDuration) { [weak self] in
-                            guard let self = self else { return }
+                            guard let self else { return }
                             self.view.layoutIfNeeded()
                         }
                     case .floatingKeyboard:
                         // floatingKeyboard style handles it's own constraints
                         UIView.animate(withDuration: animationDuration) { [weak self] in
-                            guard let self = self else { return }
+                            guard let self else { return }
                             self.view.backgroundColor = .clear
                             self.floatingNavigationBarOverlayButton.alpha = 0
                             self.view.layoutIfNeeded()

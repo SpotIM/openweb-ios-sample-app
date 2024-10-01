@@ -155,7 +155,7 @@ private extension OWAdditionalInfoView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
                 self.titleView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
@@ -172,7 +172,7 @@ private extension OWAdditionalInfoView {
 
         cancelButton.rx.tap
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 if self.viewModel.outputs.viewableMode == .independent {
                     self.viewModel.outputs.textViewVM.inputs.resignFirstResponderCall.onNext()
                 }
@@ -182,7 +182,7 @@ private extension OWAdditionalInfoView {
 
         submitButton.rx.tap
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 if self.viewModel.outputs.viewableMode == .independent {
                     self.viewModel.outputs.textViewVM.inputs.resignFirstResponderCall.onNext()
                 }
@@ -192,7 +192,7 @@ private extension OWAdditionalInfoView {
 
         viewModel.outputs.isSubmitEnabled
             .map { [weak self] isSubmitEnabled -> Bool in
-                guard let self = self else { return isSubmitEnabled }
+                guard let self else { return isSubmitEnabled }
                 self.submitButton.alpha = isSubmitEnabled ? 1 : Metrics.submitDisabledOpacity
                 return isSubmitEnabled
             }
@@ -237,7 +237,7 @@ private extension OWAdditionalInfoView {
 
             keyboardHeight
                 .subscribe(onNext: { [weak self] height in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.footerBottomPaddingConstraint?.update(inset: height)
                     self.footerBottomPaddingConstraint?.isActive = height > 0
                     UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {

@@ -101,7 +101,7 @@ class OWRoundCheckBox: UIView {
     func setupObservers() {
         setSelected
             .subscribe(onNext: { [weak self] selected in
-                guard let self = self,
+                guard let self,
                       let outerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.outerCircleName }) as? CAShapeLayer,
                         let innerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.innerCircleName }) as? CAShapeLayer
                 else { return }
@@ -114,7 +114,7 @@ class OWRoundCheckBox: UIView {
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, setSelected)
             .subscribe(onNext: { [weak self] currentStyle, selected in
-                guard let self = self,
+                guard let self,
                       let outerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.outerCircleName }) as? CAShapeLayer,
                       let innerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.innerCircleName }) as? CAShapeLayer
                 else { return }

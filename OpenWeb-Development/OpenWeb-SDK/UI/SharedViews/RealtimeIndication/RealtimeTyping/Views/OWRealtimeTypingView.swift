@@ -78,7 +78,7 @@ private extension OWRealtimeTypingView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.typingLabel.textColor = OWColorPalette.shared.color(type: Metrics.titleLabelTextColor,
                                                                         themeStyle: currentStyle)
             })
@@ -87,7 +87,7 @@ private extension OWRealtimeTypingView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.typingLabel.font = self.font
             })
             .disposed(by: disposeBag)

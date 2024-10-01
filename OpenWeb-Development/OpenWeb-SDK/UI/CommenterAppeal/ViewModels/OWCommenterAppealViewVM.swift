@@ -124,7 +124,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             .skip(1)
             .unwrap()
             .flatMap { [weak self] index -> Observable<OWAppealReason> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.appealOptions
                     .map { $0[index] }
             }
@@ -195,14 +195,14 @@ private extension OWCommenterAppealViewVM {
                 return reason.type
             }
             .do(onNext: { [weak self] reason in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.sendEvent(for: .appealSubmitted(commnetId: self.commentId, appealReason: reason.rawValue))
             })
             .withLatestFrom(textViewVM.outputs.textViewText) { reason, message in
                 return (reason, message)
             }
             .flatMapLatest { [weak self] reason, message -> Observable<Event<OWNetworkEmpty>> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 self._submitInProgress.onNext(true)
                 return self.servicesProvider.networkAPI()
                     .appeal
@@ -221,7 +221,7 @@ private extension OWCommenterAppealViewVM {
                 }
             }
             .subscribe(onNext: { [weak self] success in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.isError.onNext(!success)
                 if success {
@@ -241,7 +241,7 @@ private extension OWCommenterAppealViewVM {
 
         closeButtonPopped
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.sendEvent(for: .appealDialogExit(commentId: self.commentId))
             })
             .disposed(by: disposeBag)

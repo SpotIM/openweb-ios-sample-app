@@ -32,13 +32,13 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.invalidateExistingFlows()
                 self.generateNewPageViewId()
                 self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
             })
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
                                                                               preConversationData: preConversationData,
@@ -65,7 +65,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 
         return coordinate(to: conversationCoordinator, coordinatorData: coordinatorData)
             .do { [weak self] coordinatorResult in
-                guard let self = self else { return }
+                guard let self else { return }
                 if coordinatorResult == .popped {
                     self.cleanRouter(presentationalMode: presentationalMode)
                 }

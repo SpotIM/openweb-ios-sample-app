@@ -64,7 +64,7 @@ private extension OWCommentingCTAView {
         viewModel.outputs.style
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.subviews.forEach { $0.removeFromSuperview() }
 
                 let view = self.view(forStyle: style)
@@ -77,7 +77,7 @@ private extension OWCommentingCTAView {
             })
             .disposed(by: disposeBag)
 
-        if let heightConstraint = heightConstraint {
+        if let heightConstraint {
             viewModel.outputs.shouldShowView
                 .map { !$0 }
                 .bind(to: heightConstraint.rx.isActive)
@@ -87,7 +87,7 @@ private extension OWCommentingCTAView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

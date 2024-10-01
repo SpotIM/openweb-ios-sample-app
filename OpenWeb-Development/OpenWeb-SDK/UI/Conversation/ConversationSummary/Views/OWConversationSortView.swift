@@ -121,7 +121,7 @@ private extension OWConversationSortView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.sortByLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                           themeStyle: currentStyle)
@@ -135,7 +135,7 @@ private extension OWConversationSortView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.sortByLabel.font = OWFontBook.shared.font(typography: .bodyText)
                 self.sortLabel.font = OWFontBook.shared.font(typography: .bodyContext)
             })

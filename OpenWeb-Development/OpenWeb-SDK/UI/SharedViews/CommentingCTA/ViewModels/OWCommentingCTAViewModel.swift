@@ -129,7 +129,7 @@ private extension OWCommentingCTAViewModel {
                 return isReadOnly ? .conversationEnded : .cta
             }
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._style.onNext(style)
                 self._shouldShowView.onNext(true)
             })
@@ -137,7 +137,7 @@ private extension OWCommentingCTAViewModel {
 
         commentCreationEntryViewModel.outputs.tapped
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._commentCreationTap.onNext()
             })
             .disposed(by: disposeBag)

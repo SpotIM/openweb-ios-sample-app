@@ -155,7 +155,7 @@ class OWLogger {
         }) {
             // Make sure we don't have a greater log files which exist than the requested new max of log files
             fileCreationQueue.async { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.removeExceedingLogFilesIfNeeded()
             }
         }
@@ -168,7 +168,7 @@ class OWLogger {
         let runQueue = queue ?? self.queue
 
         runQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             guard level != .none && self._logLevel != .none else { return } // Continue only if the log level is different than none
             guard level.rank <= self._logLevel.rank else { return } // Continue only if the log level rank appropriate
 
@@ -206,7 +206,7 @@ private extension OWLogger {
                 let textToLog = "\(time()) \(hostBundleName) \(prefix) \(format)\(text)"
                 // Write on the file creation serial queue
                 fileCreationQueue.async { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.logItems.append(textToLog)
                     // Write lof file if needed
                     guard self.logItems.count >= self.maxItemsPerLogFile else { return }
@@ -326,13 +326,13 @@ private extension OWLogger {
     func setupObservers() {
         appLifeCycle.didEnterBackground
             .filter { [weak self] in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.needsToWriteLogFile()
             }
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.fileCreationQueue.async { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.writeLogFile()
                 }
             })

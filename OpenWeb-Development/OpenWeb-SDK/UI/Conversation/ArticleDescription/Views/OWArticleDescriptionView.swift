@@ -150,7 +150,7 @@ private extension OWArticleDescriptionView {
         viewModel.outputs.conversationImageType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch imageType {
                 case .custom(let url):
                     self.setImage(with: url)
@@ -174,7 +174,7 @@ private extension OWArticleDescriptionView {
             .bind(to: viewModel.inputs.tap)
             .disposed(by: disposeBag)
 
-        if let zeroHeightConstraint = zeroHeightConstraint {
+        if let zeroHeightConstraint {
             viewModel.outputs.shouldShow
                 .map { !$0 }
                 .bind(to: zeroHeightConstraint.rx.isActive)
@@ -184,7 +184,7 @@ private extension OWArticleDescriptionView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
 
                 self.topSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
@@ -202,7 +202,7 @@ private extension OWArticleDescriptionView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.authorLabel.font = OWFontBook.shared.font(typography: .footnoteText)
             })
@@ -224,11 +224,11 @@ private extension OWArticleDescriptionView {
 
     func setImage(with url: URL) {
         conversationImageView.setImage(with: url) { [weak self] image, error in
-            guard let self = self else { return }
+            guard let self else { return }
 
             if error != nil {
                 self.setImageConstraints(isVisible: false)
-            } else if let image = image {
+            } else if let image {
                 self.conversationImageView.image = image
                 self.setImageConstraints(isVisible: true)
                 // Only when we have an imgae from article url, we can replace it with customize element

@@ -123,7 +123,7 @@ private extension OWPreConversationFooterView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.termsButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
                 self.separator.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
                 self.privacyButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
@@ -135,7 +135,7 @@ private extension OWPreConversationFooterView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.termsButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.separator.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.privacyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)

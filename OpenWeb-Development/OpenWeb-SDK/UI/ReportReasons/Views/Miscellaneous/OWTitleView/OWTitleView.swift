@@ -86,7 +86,7 @@ private extension OWTitleView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle))
                 self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
                 self.backButton.image(UIImage(spNamed: Metrics.backButtonIcon, supportDarkMode: true), state: .normal)
@@ -96,7 +96,7 @@ private extension OWTitleView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyContext)
             })
             .disposed(by: disposeBag)
@@ -119,7 +119,7 @@ private extension OWTitleView {
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] shouldShow in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     if shouldShow {
                         self.addSubview(self.backButton)
                         self.backButton.OWSnp.makeConstraints { make in

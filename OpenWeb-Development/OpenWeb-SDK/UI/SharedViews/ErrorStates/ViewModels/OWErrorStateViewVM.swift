@@ -47,7 +47,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var tryAgainTapped: Observable<OWErrorStateTypes> = {
         return tryAgainTap
             .map { [weak self] _ -> OWErrorStateTypes? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.errorStateType
             }
             .unwrap()

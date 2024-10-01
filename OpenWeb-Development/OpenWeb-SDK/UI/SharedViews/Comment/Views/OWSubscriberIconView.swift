@@ -69,7 +69,7 @@ private extension OWSubscriberIconView {
         viewModel.outputs.isSubscriber
             .subscribe(onNext: { [weak self] isVisible in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.imgViewIcon.OWSnp.updateConstraints { make in
                         make.size.equalTo(isVisible ? Metrics.subscriberBadgeIconSize : 0)
                     }
@@ -85,7 +85,7 @@ private extension OWSubscriberIconView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.imgViewIcon.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: style)
             })
