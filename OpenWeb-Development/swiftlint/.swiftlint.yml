@@ -101,6 +101,8 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - private_swiftui_state
   - sorted_first_last
   - unhandled_throwing_task
+  - unneeded_parentheses_in_closure_argument
+
 included: # paths to include during linting. `excluded` paths are still ignored.
   - ../OpenWeb-SampleApp
   - ../OpenWeb-SDK

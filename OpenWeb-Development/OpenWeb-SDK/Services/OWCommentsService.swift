@@ -65,7 +65,7 @@ fileprivate extension OWCommentsService {
 
         if let existingCommentsForPostId = _mapPostIdToComments[postId] {
             // merge and replacing current comments
-            let newPostIdComments: OWCommentsMapper = existingCommentsForPostId.merging(commentIdsToComment, uniquingKeysWith: { (_, new) in new })
+            let newPostIdComments: OWCommentsMapper = existingCommentsForPostId.merging(commentIdsToComment, uniquingKeysWith: { _, new in new })
             _mapPostIdToComments[postId] = newPostIdComments
         } else {
             _mapPostIdToComments[postId] = commentIdsToComment

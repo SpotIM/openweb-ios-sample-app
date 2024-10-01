@@ -76,7 +76,7 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
     var newComments: Observable<[OWComment]> {
         return _newCommentsCache.map { comments in
             comments.values
-                .sorted { (lhsComment, rhsComment) in
+                .sorted { lhsComment, rhsComment in
                     switch (lhsComment.writtenAt, rhsComment.writtenAt) {
                     case let (lhsDate?, rhsDate?):
                         return lhsDate > rhsDate

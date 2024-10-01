@@ -67,7 +67,7 @@ internal class CommentMediaView: UIView {
         if let imageUrl = imageUrl {
             addSubview(imageView)
             configureImageView()
-            imageView.setImage(with: imageUrl) { [weak self] (image, error) in
+            imageView.setImage(with: imageUrl) { [weak self] image, error in
                 guard error == nil else { return }
                 self?.imageView.image = image
             }
