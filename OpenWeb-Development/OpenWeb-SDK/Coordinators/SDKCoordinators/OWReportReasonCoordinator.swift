@@ -464,7 +464,7 @@ fileprivate extension OWReportReasonCoordinator {
         // Open Guidelines
         let learnMoreCallbackObservable = viewModel.outputs.learnMoreTapped
             .unwrap()
-            .map {  OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
+            .map { OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
 
         // Setup view actions callbacks - Independent mode only
         Observable.merge(closeSubmittedCallbackObservable, closeReportReasonCallbackObservable, learnMoreCallbackObservable)

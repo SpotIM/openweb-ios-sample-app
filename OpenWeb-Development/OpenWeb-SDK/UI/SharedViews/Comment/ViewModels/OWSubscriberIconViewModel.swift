@@ -73,6 +73,6 @@ class OWSubscriberIconViewModel: OWSubscriberIconViewModeling,
 
     var isSubscriber: Observable<Bool> {
         return user
-            .map { $0.ssoData?.isSubscriber ?? false}
+            .map { $0.ssoData?.isSubscriber ?? false }
     }
 }

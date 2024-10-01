@@ -73,7 +73,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         }
 
         let viewObservable: Observable<OWShowable> = Observable.just(preConversationView)
-            .map { $0 as OWShowable}
+            .map { $0 as OWShowable }
             .asObservable()
 
         return viewObservable
