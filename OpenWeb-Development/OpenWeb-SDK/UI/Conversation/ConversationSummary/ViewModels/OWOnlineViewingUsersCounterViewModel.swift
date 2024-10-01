@@ -83,4 +83,3 @@ fileprivate extension OWOnlineViewingUsersCounterViewModel {
             .disposed(by: disposeBag)
     }
 }
-

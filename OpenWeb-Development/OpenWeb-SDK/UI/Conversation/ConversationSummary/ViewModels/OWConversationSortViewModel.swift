@@ -90,4 +90,3 @@ fileprivate extension OWConversationSortViewModel {
             .disposed(by: disposeBag)
     }
 }
-

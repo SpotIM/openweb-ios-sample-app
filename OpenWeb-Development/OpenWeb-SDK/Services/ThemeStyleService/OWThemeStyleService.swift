@@ -69,4 +69,3 @@ fileprivate extension OWThemeStyleService {
             .disposed(by: disposeBag)
     }
 }
-

@@ -147,4 +147,3 @@ fileprivate extension OWCommentLabelsContainerView {
             .disposed(by: disposeBag)
     }
 }
-

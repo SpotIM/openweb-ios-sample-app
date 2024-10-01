@@ -64,4 +64,3 @@ fileprivate extension OWGifPreviewViewModel {
         .disposed(by: disposeBag)
     }
 }
-

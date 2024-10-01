@@ -418,4 +418,3 @@ fileprivate extension OWCommentCreationContentViewModel {
             .disposed(by: disposeBag)
     }
 }
-

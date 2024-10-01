@@ -62,4 +62,3 @@ class OWResponseLogger: OWNetworkLogging, OWResponseMiddleware {
         logger.log(level: levelToPrint, message)
     }
 }
-

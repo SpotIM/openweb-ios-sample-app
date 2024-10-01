@@ -21,4 +21,3 @@ enum OWNetworkEnvironmentType {
     case cluster1d
 }
 #endif
-

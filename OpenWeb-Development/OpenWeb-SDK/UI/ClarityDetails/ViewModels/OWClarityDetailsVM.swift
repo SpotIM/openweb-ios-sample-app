@@ -45,4 +45,3 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
         self.data = data
     }
 }
-

@@ -84,4 +84,3 @@ class OWBaseCoordinator<ResultType> {
         fatalError("Method should be implemented.")
     }
 }
-

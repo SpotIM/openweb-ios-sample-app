@@ -191,4 +191,3 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                     .disposed(by: disposeBag)
     }
 }
-

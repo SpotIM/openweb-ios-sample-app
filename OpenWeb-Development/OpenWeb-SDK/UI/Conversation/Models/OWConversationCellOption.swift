@@ -141,4 +141,3 @@ extension OWConversationCellOption: OWIdentifiableType {
         return self.identifier
     }
 }
-
