@@ -74,9 +74,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func setColor(_ color: UIColor, forType type: OWColor.OWType, forThemeStyle themeStyle: OWThemeStyle) {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock()
-        // swiftlint:enable self_capture_in_blocks
         guard var encapsulateColor = colors[type],
               !blockedForOverride.contains(type)
         else {

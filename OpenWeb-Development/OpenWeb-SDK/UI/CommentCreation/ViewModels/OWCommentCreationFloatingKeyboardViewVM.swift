@@ -339,7 +339,6 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 }
 
 fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
-    // swiftlint:disable function_body_length
     func setupObservers() {
         OWSharedServicesProvider.shared.orientationService().orientation
             .subscribe(onNext: { [weak self] currentOrientation in
