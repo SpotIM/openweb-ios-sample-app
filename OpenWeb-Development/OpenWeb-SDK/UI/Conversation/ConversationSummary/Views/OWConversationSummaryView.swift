@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWConversationSummaryView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let leadingOffset: CGFloat = 16
         static let trailingOffset: CGFloat = 8
         static let horizontalMarginBetweenSeparator: CGFloat = 5
@@ -27,7 +27,7 @@ class OWConversationSummaryView: UIView {
         static let commentsCountLabelIdentifier = "comments_count_label_id"
     }
 
-    fileprivate lazy var summaryView: UIView = {
+    private lazy var summaryView: UIView = {
         let view = UIView()
             .enforceSemanticAttribute()
 
@@ -63,7 +63,7 @@ class OWConversationSummaryView: UIView {
         return view
     }()
 
-    fileprivate lazy var commentsCountLabel: UILabel = {
+    private lazy var commentsCountLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -71,31 +71,31 @@ class OWConversationSummaryView: UIView {
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var verticalSeparatorBetweenCommentsAndViewingUsers: UIView = {
+    private lazy var verticalSeparatorBetweenCommentsAndViewingUsers: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
+    private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
             .enforceSemanticAttribute()
             .wrapContent()
     }()
 
-    fileprivate lazy var conversationSortView: OWConversationSortView = {
+    private lazy var conversationSortView: OWConversationSortView = {
         return OWConversationSortView(viewModel: viewModel.outputs.conversationSortVM)
             .enforceSemanticAttribute()
             .wrapContent()
     }()
 
-    fileprivate lazy var bottomHorizontalSeparator: UIView = {
+    private lazy var bottomHorizontalSeparator: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var viewModel: OWConversationSummaryViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWConversationSummaryViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWConversationSummaryViewModeling) {
         self.viewModel = viewModel
@@ -110,7 +110,7 @@ class OWConversationSummaryView: UIView {
     }
 }
 
-fileprivate extension OWConversationSummaryView {
+private extension OWConversationSummaryView {
     func setupUI() {
         self.enforceSemanticAttribute()
 

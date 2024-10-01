@@ -44,9 +44,9 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     var inputs: OWCommentCreationRegularViewViewModelingInputs { return self }
     var outputs: OWCommentCreationRegularViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationData: OWCommentCreationRequiredData
 
     lazy var userMentionVM: OWUserMentionViewViewModeling = {
         return OWUserMentionViewVM(servicesProvider: servicesProvider)
@@ -76,7 +76,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     var commentCreationError = PublishSubject<Void>()
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    private lazy var postId = OWManager.manager.postId
 
     var commentType: OWCommentCreationTypeInternal
 
@@ -190,7 +190,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }
 }
 
-fileprivate extension OWCommentCreationRegularViewViewModel {
+private extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
         commentCreationContentVM.outputs.textViewVM.outputs.replaceData
             .bind(to: userMentionVM.inputs.replaceData)

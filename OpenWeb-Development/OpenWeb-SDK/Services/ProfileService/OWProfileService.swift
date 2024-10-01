@@ -15,8 +15,8 @@ protocol OWProfileServicing {
 }
 
 class OWProfileService: OWProfileServicing {
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
+    private unowned let sharedServicesProvider: OWSharedServicesProviding
 
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
@@ -142,7 +142,7 @@ class OWProfileService: OWProfileServicing {
     }
 }
 
-fileprivate extension OWProfileService {
+private extension OWProfileService {
     func profileUrl(singleUseTicket: String?, userId: String?) -> URL? {
         let baseUrl = URL(string: "https://sdk.openweb.com/index.html")
         guard var url = baseUrl,

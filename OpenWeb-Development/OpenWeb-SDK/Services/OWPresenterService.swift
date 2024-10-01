@@ -37,7 +37,7 @@ extension OWPresenterServicing {
 }
 
 class OWPresenterService: OWPresenterServicing {
-    fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
+    private unowned let sharedServicesProvider: OWSharedServicesProviding
 
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
@@ -141,7 +141,7 @@ class OWPresenterService: OWPresenterServicing {
     }
 }
 
-fileprivate extension OWPresenterService {
+private extension OWPresenterService {
     func getPresenterVC(for viewableMode: OWViewableMode) -> UIViewController? {
         switch viewableMode {
         case .independent:

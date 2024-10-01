@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "additional_info_view_id"
         static let cancelButtonIdentifier = "additional_info_cancel_button_id"
         static let submitButtonIdentifier = "additional_info_submit_button_id"
@@ -32,36 +32,36 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
         static let becomeFirstResponderDelay = 550 // miliseconds
     }
 
-    fileprivate let viewModel: OWAdditionalInfoViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWAdditionalInfoViewViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate var footerBottomPaddingConstraint: OWConstraint?
-    fileprivate var hasLayoutSubviewsFirstTime = false
+    private var footerBottomPaddingConstraint: OWConstraint?
+    private var hasLayoutSubviewsFirstTime = false
 
-    fileprivate lazy var titleView: OWTitleView = {
+    private lazy var titleView: OWTitleView = {
         return OWTitleView(title: viewModel.outputs.titleText,
                            prefixIdentifier: Metrics.prefixIdentifier,
                            viewModel: viewModel.outputs.titleViewVM)
     }()
 
-    fileprivate lazy var textView: OWTextView = {
+    private lazy var textView: OWTextView = {
         return OWTextView(viewModel: viewModel.outputs.textViewVM,
                           prefixIdentifier: Metrics.prefixIdentifier)
     }()
 
-    fileprivate lazy var footerView: UIView = {
+    private lazy var footerView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var footerStackView: UIStackView = {
+    private lazy var footerStackView: UIStackView = {
         return UIStackView()
             .spacing(Metrics.buttonsPadding)
             .axis(.horizontal)
             .distribution(.fillEqually)
     }()
 
-    fileprivate lazy var cancelButton: UIButton = {
+    private lazy var cancelButton: UIButton = {
         return UIButton()
                 .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -69,7 +69,7 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
                 .corner(radius: Metrics.buttonsRadius)
     }()
 
-    fileprivate lazy var submitButton: OWLoaderButton = {
+    private lazy var submitButton: OWLoaderButton = {
         return OWLoaderButton()
                 .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textColor(.white)
@@ -98,7 +98,7 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWAdditionalInfoView {
+private extension OWAdditionalInfoView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         cancelButton.accessibilityIdentifier = Metrics.cancelButtonIdentifier

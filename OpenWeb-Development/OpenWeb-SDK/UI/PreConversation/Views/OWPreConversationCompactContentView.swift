@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWPreConversationCompactContentView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let avatarSize: CGFloat = 40
         static let numberOfLines: Int = 2
         static let imageIconSize: CGFloat = 24
@@ -26,48 +26,48 @@ class OWPreConversationCompactContentView: UIView {
         static let textLabelIdentifier = "pre_conversation_compact_text_label_id"
     }
 
-    fileprivate lazy var avatarImageView: OWAvatarView = {
+    private lazy var avatarImageView: OWAvatarView = {
         let avatar = OWAvatarView().backgroundColor(.clear)
         avatar.configure(with: self.viewModel.outputs.avatarVM)
         return avatar
     }()
 
-    fileprivate lazy var closedImageView: UIImageView = {
+    private lazy var closedImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
         return imageView
     }()
 
-    fileprivate lazy var emptyConversationImageView: UIImageView = {
+    private lazy var emptyConversationImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "emptyConversation-icon", supportDarkMode: true)
         return imageView
     }()
 
-    fileprivate lazy var errorConversationImageView: UIImageView = {
+    private lazy var errorConversationImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "errorStateIcon", supportDarkMode: true)
         return imageView
     }()
 
-    fileprivate lazy var errorRetryView: OWErrorRetryCTAView = {
+    private lazy var errorRetryView: OWErrorRetryCTAView = {
         let tryAgainView = OWErrorRetryCTAView()
             .backgroundColor(.clear)
         tryAgainView.addGestureRecognizer(errorCtaTapGesture)
         return tryAgainView
     }()
 
-    fileprivate lazy var errorCtaTapGesture: UITapGestureRecognizer = {
+    private lazy var errorCtaTapGesture: UITapGestureRecognizer = {
         return UITapGestureRecognizer()
     }()
 
-    fileprivate var errorRetryZeroWidthConstraint: OWConstraint?
+    private var errorRetryZeroWidthConstraint: OWConstraint?
 
-    fileprivate lazy var leftViewContainer: UIView = {
+    private lazy var leftViewContainer: UIView = {
         return UIView()
     }()
 
-    fileprivate lazy var textLabel: UILabel = {
+    private lazy var textLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteText))
             .numberOfLines(Metrics.numberOfLines)
@@ -76,13 +76,13 @@ class OWPreConversationCompactContentView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var cameraIcon: UIImageView = {
+    private lazy var cameraIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
         return imageView
     }()
 
-    fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
+    private lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
         view.enforceSemanticAttribute()
 
@@ -110,7 +110,7 @@ class OWPreConversationCompactContentView: UIView {
         return view
     }()
 
-    fileprivate lazy var avatarSkeleton: UIView = {
+    private lazy var avatarSkeleton: UIView = {
         let view = UIView()
             .corner(radius: Metrics.avatarSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
@@ -119,7 +119,7 @@ class OWPreConversationCompactContentView: UIView {
         return view
     }()
 
-    fileprivate lazy var messageLinesSkeleton: [UIView] = {
+    private lazy var messageLinesSkeleton: [UIView] = {
         let color = OWColorPalette.shared.color(type: .skeletonColor,
                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
@@ -131,8 +131,8 @@ class OWPreConversationCompactContentView: UIView {
         return views
     }()
 
-    fileprivate var viewModel: OWPreConversationCompactContentViewModeling!
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWPreConversationCompactContentViewModeling!
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWPreConversationCompactContentViewModeling) {
         super.init(frame: .zero)
@@ -148,7 +148,7 @@ class OWPreConversationCompactContentView: UIView {
     }
 }
 
-fileprivate extension OWPreConversationCompactContentView {
+private extension OWPreConversationCompactContentView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         textLabel.accessibilityIdentifier = Metrics.textLabelIdentifier

@@ -17,12 +17,12 @@ class OWCommentCell: UITableViewCell {
         static let depthOffset: CGFloat = 23
     }
 
-    fileprivate lazy var commentView: OWCommentView = {
+    private lazy var commentView: OWCommentView = {
        return OWCommentView()
     }()
 
-    fileprivate var viewModel: OWCommentCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWCommentCellViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -55,7 +55,7 @@ class OWCommentCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWCommentCell {
+private extension OWCommentCell {
     func applyAccessibility() {
         self.accessibilityIdentifier = viewModel.outputs.viewAccessibilityIdentifier
     }

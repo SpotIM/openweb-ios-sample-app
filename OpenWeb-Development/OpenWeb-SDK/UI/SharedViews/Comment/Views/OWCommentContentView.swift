@@ -24,18 +24,18 @@ class OWCommentContentView: UIView {
         static let editedLabelIdentifier = "comment_edited_label_id"
     }
 
-    fileprivate lazy var textLabel: OWCommentTextLabel = {
+    private lazy var textLabel: OWCommentTextLabel = {
        return OWCommentTextLabel()
             .numberOfLines(0)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var mediaView: CommentMediaView = {
+    private lazy var mediaView: CommentMediaView = {
         return CommentMediaView()
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var editedLabel: UILabel = {
+    private lazy var editedLabel: UILabel = {
        return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteSpecial))
             .text(OWLocalizationManager.shared.localizedString(key: "Edited"))
@@ -43,10 +43,10 @@ class OWCommentContentView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate var viewModel: OWCommentContentViewModeling!
-    fileprivate var disposeBag: DisposeBag!
-    fileprivate var textHeightConstraint: OWConstraint?
-    fileprivate var editedLabelHeightConstraint: OWConstraint?
+    private var viewModel: OWCommentContentViewModeling!
+    private var disposeBag: DisposeBag!
+    private var textHeightConstraint: OWConstraint?
+    private var editedLabelHeightConstraint: OWConstraint?
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -66,7 +66,7 @@ class OWCommentContentView: UIView {
     }
 }
 
-fileprivate extension OWCommentContentView {
+private extension OWCommentContentView {
     func setupViews() {
         self.enforceSemanticAttribute()
         self.addSubviews(textLabel, mediaView)
@@ -172,7 +172,7 @@ fileprivate extension OWCommentContentView {
     }
 }
 
-fileprivate extension OWCommentContentView {
+private extension OWCommentContentView {
     func applyAccessibility() {
         // self.accessibilityIdentifier = Metrics.identifier
         textLabel.accessibilityIdentifier = Metrics.textLabelIdentifier

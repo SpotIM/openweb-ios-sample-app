@@ -18,12 +18,12 @@ protocol OWRealtimeServicing {
 }
 
 class OWRealtimeService: OWRealtimeServicing {
-    fileprivate unowned let manager: OWManagerInternalProtocol
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let scheduler: SchedulerType
-    fileprivate let currentPostId = BehaviorSubject<OWPostId?>(value: nil)
-    fileprivate let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
-    fileprivate var disposeBag: DisposeBag?
+    private unowned let manager: OWManagerInternalProtocol
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let scheduler: SchedulerType
+    private let currentPostId = BehaviorSubject<OWPostId?>(value: nil)
+    private let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
+    private var disposeBag: DisposeBag?
 
     init (manager: OWManagerInternalProtocol = OWManager.manager,
           servicesProvider: OWSharedServicesProviding,
@@ -113,7 +113,7 @@ class OWRealtimeService: OWRealtimeServicing {
     }
 }
 
-fileprivate extension OWRealtimeService {
+private extension OWRealtimeService {
     func fetchData() {
         let disposeBag = DisposeBag()
         self.disposeBag = disposeBag

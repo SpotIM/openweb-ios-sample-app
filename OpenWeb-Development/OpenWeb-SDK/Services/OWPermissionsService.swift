@@ -21,8 +21,8 @@ class OWPermissionsService: OWPermissionsServicing {
         case camera
     }
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -59,7 +59,7 @@ class OWPermissionsService: OWPermissionsServicing {
     }
 }
 
-fileprivate extension OWPermissionsService {
+private extension OWPermissionsService {
     func openAppSettings() {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(settingsUrl)
@@ -102,7 +102,7 @@ fileprivate extension OWPermissionsService {
 }
 
 // Camera
-fileprivate extension OWPermissionsService {
+private extension OWPermissionsService {
     func requestCameraPermission(result: @escaping (Bool) -> Void, viewableMode: OWViewableMode) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:

@@ -24,15 +24,15 @@ enum OWClarityDetailsCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinatorResult> {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let fadeDuration: CGFloat = 0.3
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
-    fileprivate let data: OWClarityDetailsRequireData
-    fileprivate let router: OWRoutering?
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let data: OWClarityDetailsRequireData
+    private let router: OWRoutering?
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .clarityDetails)
     }()
 
@@ -167,7 +167,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     }
 }
 
-fileprivate extension OWClarityDetailsCoordinator {
+private extension OWClarityDetailsCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWClarityDetailsViewViewModeling) {
         // MARK: General (Used for both Flow and Independent)
         guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided

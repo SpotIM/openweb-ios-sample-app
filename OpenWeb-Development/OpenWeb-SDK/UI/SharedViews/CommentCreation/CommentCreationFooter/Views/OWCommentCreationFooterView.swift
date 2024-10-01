@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWCommentCreationFooterView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_footer_view_id"
         static let ctaButtonIdentifier = "comment_footer_view_post_button_id"
         static let addImageButtonIdentifier = "comment_footer_view_add_image_button_id"
@@ -32,15 +32,15 @@ class OWCommentCreationFooterView: UIView {
         static let addGifButtonSize: CGFloat = 32
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWCommentCreationFooterViewModeling
+    private let disposeBag = DisposeBag()
+    private let viewModel: OWCommentCreationFooterViewModeling
 
-    fileprivate lazy var seperatorView: UIView = {
+    private lazy var seperatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor4, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var ctaButton: OWLoaderButton = {
+    private lazy var ctaButton: OWLoaderButton = {
         let button = OWLoaderButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -55,7 +55,7 @@ class OWCommentCreationFooterView: UIView {
         return button
     }()
 
-    fileprivate lazy var addMediaStackView: UIStackView = {
+    private lazy var addMediaStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.spacing = Metrics.addMediaStackViewSpacing
         stackView.axis = .horizontal
@@ -63,21 +63,21 @@ class OWCommentCreationFooterView: UIView {
         return stackView
     }()
 
-    fileprivate lazy var addImageButton: UIButton = {
+    private lazy var addImageButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "addImageIcon"), state: .normal)
     }()
 
-    fileprivate lazy var addGifButton: UIButton = {
+    private lazy var addGifButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "addGifIcon"), state: .normal)
     }()
 
-    fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
+    private lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
         return OWCommentLabelsContainerView()
     }()
 
-    fileprivate var commentLabelsZeroWidthConstraint: OWConstraint?
+    private var commentLabelsZeroWidthConstraint: OWConstraint?
 
     init(with viewModel: OWCommentCreationFooterViewModeling) {
         self.viewModel = viewModel
@@ -97,7 +97,7 @@ class OWCommentCreationFooterView: UIView {
     }
 }
 
-fileprivate extension OWCommentCreationFooterView {
+private extension OWCommentCreationFooterView {
     func setupUI() {
         self.enforceSemanticAttribute()
 

@@ -30,7 +30,7 @@ extension UITableView {
     }
 }
 
-fileprivate extension UITableView {
+private extension UITableView {
     func registerIfNeeded<T: UITableViewCell>(cellClass: T.Type) {
         if registeredCellsIdentifiers.contains(cellClass.identifierName) {
             return

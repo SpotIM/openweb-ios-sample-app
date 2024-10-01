@@ -19,7 +19,7 @@ import RxSwift
  - .removeSkeletonShimmering() function will be called automatically when the view is removed from the UI hierarchy - so in case the whole view purpose is only for showing skeleton shimmering, all you will need to do is to call .addSkeletonShimmering().
  
  - Example:
- fileprivate lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
+ private lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
          let view = OWSkeletonShimmeringView()
 
         // Add subviews to this view

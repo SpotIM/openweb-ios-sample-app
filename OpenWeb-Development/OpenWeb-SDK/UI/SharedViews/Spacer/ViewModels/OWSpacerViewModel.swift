@@ -36,8 +36,8 @@ class OWSpacerViewModel: OWSpacerViewModeling,
         return style == .comment
     }()
 
-    fileprivate let style: OWSpacerStyle
-    fileprivate let disposeBag = DisposeBag()
+    private let style: OWSpacerStyle
+    private let disposeBag = DisposeBag()
 
     init(style: OWSpacerStyle) {
         self.style = style

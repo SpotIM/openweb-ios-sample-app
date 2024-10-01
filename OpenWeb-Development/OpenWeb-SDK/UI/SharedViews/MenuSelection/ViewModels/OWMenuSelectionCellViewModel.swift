@@ -31,7 +31,7 @@ class OWMenuSelectionCellViewModel:
     var inputs: OWMenuSelectionCellViewModelingInputs { return self }
     var outputs: OWMenuSelectionCellViewModelingOutputs { return self }
 
-    fileprivate var _titleText = BehaviorSubject<String>(value: "")
+    private var _titleText = BehaviorSubject<String>(value: "")
     var titleText: Observable<String> {
         _titleText
             .asObserver()

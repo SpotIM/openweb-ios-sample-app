@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "menu_selection_view_id"
 
         static let menuWidth: CGFloat = 180
@@ -20,7 +20,7 @@ class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
         static let tableInset: CGFloat = 8
     }
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
@@ -35,8 +35,8 @@ class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
         return tableView
     }()
 
-    fileprivate var viewModel: OWMenuSelectionViewModeling
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
+    private var viewModel: OWMenuSelectionViewModeling
+    private var disposeBag: DisposeBag = DisposeBag()
 
     init(viewModel: OWMenuSelectionViewModeling) {
         self.viewModel = viewModel
@@ -51,7 +51,7 @@ class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWMenuSelectionView {
+private extension OWMenuSelectionView {
     func setupViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light)
         self.layer.borderWidth = 1

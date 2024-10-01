@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
         static let ctaViewSlideAnimationDelay = 50
         static let ctaViewSlideAnimationDuration: Double = 0.25
@@ -33,56 +33,56 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let animateHideShowFilterTabsDuration: CGFloat = 0.3
     }
 
-    fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
+    private let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
 
     var toastView: OWToastView?
 
-    fileprivate lazy var filterTabsView: OWFilterTabsView = {
+    private lazy var filterTabsView: OWFilterTabsView = {
         return OWFilterTabsView(viewModel: self.viewModel.outputs.filterTabsVM)
     }()
 
-    fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
+    private lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var articleDescriptionView: OWArticleDescriptionView = {
+    private lazy var articleDescriptionView: OWArticleDescriptionView = {
         return OWArticleDescriptionView(viewModel: self.viewModel.outputs.articleDescriptionViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var loginPromptView: OWLoginPromptView = {
+    private lazy var loginPromptView: OWLoginPromptView = {
         return OWLoginPromptView(with: self.viewModel.outputs.loginPromptViewModel)
     }()
 
-    fileprivate lazy var conversationSummaryView: OWConversationSummaryView = {
+    private lazy var conversationSummaryView: OWConversationSummaryView = {
         return OWConversationSummaryView(viewModel: self.viewModel.outputs.conversationSummaryViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var commentingCTATopHorizontalSeparator: UIView = {
+    private lazy var commentingCTATopHorizontalSeparator: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var commentingCTAContainerView: UIView = {
+    private lazy var commentingCTAContainerView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
+    private lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+    private lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
         return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
     }()
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
@@ -101,7 +101,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         return tableView
     }()
 
-    fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
+    private lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
         refresh.tintColor(OWColorPalette.shared.color(type: .loaderColor,
                                                       themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -109,7 +109,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         return refresh
     }()
 
-    fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
+    private lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
             guard let self = self else { return .reload }
             return self.viewModel.outputs.dataSourceTransition
@@ -130,14 +130,14 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         return dataSource
     }()
 
-    fileprivate var loginPromptPortraitConstraints: [OWConstraint] = []
-    fileprivate var loginPromptLandscapeConstraints: [OWConstraint] = []
-    fileprivate var summaryPortraitLeadingConstraint: OWConstraint?
-    fileprivate var summaryLandscapeLeadingConstraint: OWConstraint?
-    fileprivate var filterTabsHeightConstraint: OWConstraint?
+    private var loginPromptPortraitConstraints: [OWConstraint] = []
+    private var loginPromptLandscapeConstraints: [OWConstraint] = []
+    private var summaryPortraitLeadingConstraint: OWConstraint?
+    private var summaryLandscapeLeadingConstraint: OWConstraint?
+    private var filterTabsHeightConstraint: OWConstraint?
 
-    fileprivate let viewModel: OWConversationViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWConversationViewViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -153,7 +153,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     }
 }
 
-fileprivate extension OWConversationView {
+private extension OWConversationView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }

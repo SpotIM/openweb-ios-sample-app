@@ -11,9 +11,9 @@ import RxSwift
 import Foundation
 
 class OWAppealCell: UITableViewCell {
-    fileprivate var disposeBag: DisposeBag!
+    private var disposeBag: DisposeBag!
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "commenter_appeal_cell_id"
         static let titleLabelIdentifier = "commenter_appeal_cell_title_label_id"
         static let checkboxIdentifier = "commenter_appeal_cell_checkbox_id"
@@ -22,12 +22,12 @@ class OWAppealCell: UITableViewCell {
         static let cellMinHeight: CGFloat = 60
     }
 
-    fileprivate lazy var viewForText: UIView = {
+    private lazy var viewForText: UIView = {
         let viewForText = UIView()
         return viewForText
     }()
 
-    fileprivate lazy var lblTitle: UILabel = {
+    private lazy var lblTitle: UILabel = {
         return UILabel()
             .textColor(OWColorPalette.shared.color(type: .textColor4, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -35,11 +35,11 @@ class OWAppealCell: UITableViewCell {
             .numberOfLines(0)
     }()
 
-    fileprivate lazy var checkBox: OWRoundCheckBox = {
+    private lazy var checkBox: OWRoundCheckBox = {
         return OWRoundCheckBox()
     }()
 
-    fileprivate var viewModel: OWAppealCellViewModeling!
+    private var viewModel: OWAppealCellViewModeling!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -63,7 +63,7 @@ class OWAppealCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWAppealCell {
+private extension OWAppealCell {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         lblTitle.accessibilityIdentifier = Metrics.titleLabelIdentifier

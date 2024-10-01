@@ -61,7 +61,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     OWCommentCreationFloatingKeyboardViewViewModelingInputs,
     OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
         static let ctaIconName = "sendCommentIcon"
         static let delayForDismiss: Int = 350 // ms
@@ -93,14 +93,14 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     var commentCreationError = PublishSubject<Void>()
 
     var viewableMode: OWViewableMode
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    private lazy var postId = OWManager.manager.postId
 
     let servicesProvider: OWSharedServicesProviding
-    fileprivate var commentCreationData: OWCommentCreationRequiredData
+    private var commentCreationData: OWCommentCreationRequiredData
 
-    fileprivate let _triggerCustomizeSubmitButtonUI = BehaviorSubject<UIButton?>(value: nil)
+    private let _triggerCustomizeSubmitButtonUI = BehaviorSubject<UIButton?>(value: nil)
     var triggerCustomizeSubmitButtonUI = PublishSubject<UIButton>()
 
     var customizeSubmitButtonUI: Observable<UIButton> {
@@ -290,7 +290,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         setupObservers()
     }
 
-    fileprivate func setupInitialTextAndTypeFromCacheIfNeeded() {
+    private func setupInitialTextAndTypeFromCacheIfNeeded() {
         let lastCommentTypeInCacheService = self.servicesProvider.lastCommentTypeInMemoryCacheService()
         guard let postId = self.postId else { return }
 
@@ -323,7 +323,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         }
     }
 
-    fileprivate func updateCachedLastCommentType() {
+    private func updateCachedLastCommentType() {
         if let postId = self.postId {
             let lastCommentTypeInCacheService = self.servicesProvider.lastCommentTypeInMemoryCacheService()
             switch commentType {
@@ -338,7 +338,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     }
 }
 
-fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
+private extension OWCommentCreationFloatingKeyboardViewViewModel {
     func setupObservers() {
         OWSharedServicesProvider.shared.orientationService().orientation
             .subscribe(onNext: { [weak self] currentOrientation in

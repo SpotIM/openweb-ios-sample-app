@@ -29,10 +29,10 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
     var inputs: OWCommentCreationReplySnippetViewModelingInputs { return self }
     var outputs: OWCommentCreationReplySnippetViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationType: OWCommentCreationTypeInternal
-    fileprivate let shouldShowSeparator: Bool
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationType: OWCommentCreationTypeInternal
+    private let shouldShowSeparator: Bool
 
     var replySnippetText: Observable<String> {
         guard let postId = OWManager.manager.postId else { return Observable.empty() }
@@ -71,7 +71,7 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
     }
 }
 
-fileprivate extension OWCommentCreationReplySnippetViewModel {
+private extension OWCommentCreationReplySnippetViewModel {
     func setupObservers() {
 
     }

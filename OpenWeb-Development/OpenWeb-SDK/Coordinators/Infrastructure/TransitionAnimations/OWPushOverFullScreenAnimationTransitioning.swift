@@ -11,15 +11,15 @@ import Foundation
 import RxSwift
 
 class OWPushOverFullScreenAnimationTransitioning: NSObject, UIViewControllerAnimatedTransitioning {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let transitionDuration: TimeInterval = 0.3
         static let orientationChangeDelay = 10
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate var viewFromOrientation: UIView?
-    fileprivate var viewToOrientation: UIView?
-    fileprivate var presenting: Bool = true
+    private let disposeBag = DisposeBag()
+    private var viewFromOrientation: UIView?
+    private var viewToOrientation: UIView?
+    private var presenting: Bool = true
 
     override init() {
         super.init()
@@ -69,7 +69,7 @@ class OWPushOverFullScreenAnimationTransitioning: NSObject, UIViewControllerAnim
     }
 }
 
-fileprivate extension OWPushOverFullScreenAnimationTransitioning {
+private extension OWPushOverFullScreenAnimationTransitioning {
     func setupObservers() {
         NotificationCenter.default.rx
             .notification(UIDevice.orientationDidChangeNotification)

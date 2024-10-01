@@ -17,16 +17,16 @@ class OWFilterTabsView: UIView {
         static let skeletonsWidth: CGFloat = 100
     }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "filter_tabs_view_id"
         static let height: CGFloat = 54
         static let delayScrollToSelected = 50
     }
 
-    fileprivate var viewModel: OWFilterTabsViewViewModeling
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWFilterTabsViewViewModeling
+    private var disposeBag = DisposeBag()
 
-    fileprivate lazy var filterTabsCollectionView: UICollectionView = {
+    private lazy var filterTabsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -45,7 +45,7 @@ class OWFilterTabsView: UIView {
         setupObservers()
     }
 
-    fileprivate lazy var filterTabsDataSource: OWRxCollectionViewSectionedAnimatedDataSource<FilterTabsDataSourceModel> = {
+    private lazy var filterTabsDataSource: OWRxCollectionViewSectionedAnimatedDataSource<FilterTabsDataSourceModel> = {
         let dataSource = OWRxCollectionViewSectionedAnimatedDataSource<FilterTabsDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
             return .reload
         }, configureCell: { [weak self] _, collectionView, indexPath, item -> UICollectionViewCell in
@@ -66,7 +66,7 @@ class OWFilterTabsView: UIView {
     }
 }
 
-fileprivate extension OWFilterTabsView {
+private extension OWFilterTabsView {
     func setupViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
 

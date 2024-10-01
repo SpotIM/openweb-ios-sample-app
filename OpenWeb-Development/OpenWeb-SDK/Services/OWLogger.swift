@@ -90,7 +90,7 @@ class OWLogger {
         static let defaultLogFilesNumber = 20
     }
 
-    fileprivate struct PrivateMetrics {
+    private struct PrivateMetrics {
         static let osLoggersSubsystem = "com.OpenWeb.sdk"
         static let failedToWriteLogFileDescription = "Failure when trying to write log file"
         static let failedToDeleteLogFileDescription = "Failure when trying to delete log file"
@@ -102,20 +102,20 @@ class OWLogger {
         return _logLevel
     }
 
-    fileprivate let _logLevel: OWLogLevel
-    fileprivate let logMethods: [OWLogMethod]
-    fileprivate let queue: DispatchQueue
-    fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
-    fileprivate let prefix: String
-    fileprivate var osLoggers = [String: OSLog]()
-    fileprivate let sdkVer: String
-    fileprivate let hostBundleName: String
-    fileprivate let maxItemsPerLogFile: Int
-    fileprivate var maxLogFilesNumber: Int
-    fileprivate var logItems = [String]()
+    private let _logLevel: OWLogLevel
+    private let logMethods: [OWLogMethod]
+    private let queue: DispatchQueue
+    private let appLifeCycle: OWRxAppLifeCycleProtocol
+    private let prefix: String
+    private var osLoggers = [String: OSLog]()
+    private let sdkVer: String
+    private let hostBundleName: String
+    private let maxItemsPerLogFile: Int
+    private var maxLogFilesNumber: Int
+    private var logItems = [String]()
     // Non DI as those should be constant
-    fileprivate let fileCreationQueue = DispatchQueue(label: "OpenWebSDKLoggerFileCreationQueue", qos: .background) // Serial queue
-    fileprivate let disposeBag = DisposeBag()
+    private let fileCreationQueue = DispatchQueue(label: "OpenWebSDKLoggerFileCreationQueue", qos: .background) // Serial queue
+    private let disposeBag = DisposeBag()
 
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -182,7 +182,7 @@ class OWLogger {
     // I intentionally decided to do nothing in such case, i.e NOT saving the log in case the publisher decided to change configuration
 }
 
-fileprivate extension OWLogger {
+private extension OWLogger {
     func log(level: OWLogLevel, _ text: String, prefix: String, file: String = #file, line: Int = #line) {
         let fileName: String
         if let startIndex = file.range(of: "/", options: .backwards)?.upperBound {
@@ -322,7 +322,7 @@ fileprivate extension OWLogger {
 }
 
 // Rx
-fileprivate extension OWLogger {
+private extension OWLogger {
     func setupObservers() {
         appLifeCycle.didEnterBackground
             .filter { [weak self] in

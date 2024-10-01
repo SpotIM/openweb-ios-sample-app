@@ -13,14 +13,14 @@ protocol OWAuthorizationRecoveryServicing {
     func recoverAuthorization() -> Observable<Void>
 }
 class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let scheduler: SchedulerType
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let scheduler: SchedulerType
     // Cache if we just recovered for a minute (key is the userId)
-    fileprivate let didJustRecoveredCache = OWCacheService<String, Bool>(expirationStrategy: .time(lifetime: 60))
-    fileprivate var disposeBag: DisposeBag? = DisposeBag()
-    fileprivate let isCurrentlyRecovering = BehaviorSubject<Bool>(value: false)
-    fileprivate let _recoverJustFinished = BehaviorSubject<Void?>(value: nil)
-    fileprivate var recoverJustFinished: Observable<Void> {
+    private let didJustRecoveredCache = OWCacheService<String, Bool>(expirationStrategy: .time(lifetime: 60))
+    private var disposeBag: DisposeBag? = DisposeBag()
+    private let isCurrentlyRecovering = BehaviorSubject<Bool>(value: false)
+    private let _recoverJustFinished = BehaviorSubject<Void?>(value: nil)
+    private var recoverJustFinished: Observable<Void> {
         return _recoverJustFinished
             .unwrap()
             .share(replay: 0) // New subscribers will get only elements which emits after their subscription
@@ -66,7 +66,7 @@ class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
     }
 }
 
-fileprivate extension OWAuthorizationRecoveryService {
+private extension OWAuthorizationRecoveryService {
     func startRecovering(userAvailability: OWUserAvailability) {
         let disposeBag = DisposeBag()
         self.disposeBag = disposeBag

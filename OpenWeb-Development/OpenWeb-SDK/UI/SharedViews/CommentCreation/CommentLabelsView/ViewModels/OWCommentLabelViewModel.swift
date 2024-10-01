@@ -34,8 +34,8 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
     var inputs: OWCommentLabelViewModelingInputs { return self }
     var outputs: OWCommentLabelViewModelingOutputs { return self }
 
-    fileprivate let _setting = BehaviorSubject<OWCommentLabelSettings?>(value: nil)
-    fileprivate let _state = BehaviorSubject<OWLabelState>(value: .readOnly)
+    private let _setting = BehaviorSubject<OWCommentLabelSettings?>(value: nil)
+    private let _state = BehaviorSubject<OWLabelState>(value: .readOnly)
 
     init(commentLabelSettings: OWCommentLabelSettings, state: OWLabelState = .readOnly) {
         _setting.onNext(commentLabelSettings)

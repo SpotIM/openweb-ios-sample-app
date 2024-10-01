@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWCommentingReadOnlyView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let labelLeadingOffset: CGFloat = 4
         static let iconSize: CGFloat = 24
 
@@ -21,12 +21,12 @@ class OWCommentingReadOnlyView: UIView {
         static let labelIdentifier = "conversation_commenting_read_only_label_id"
     }
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
        return UIImageView(image: UIImage(spNamed: "commentingReadOnlyIcon", supportDarkMode: true))
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var label: UILabel = {
+    private lazy var label: UILabel = {
        return UILabel()
             .text(OWLocalizationManager.shared.localizedString(key: "CommentingReadOnlyMessage"))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
@@ -36,8 +36,8 @@ class OWCommentingReadOnlyView: UIView {
             .wrapContent()
     }()
 
-    fileprivate var viewModel: OWCommentingReadOnlyViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWCommentingReadOnlyViewModeling!
+    private var disposeBag = DisposeBag()
 
     init(with viewModel: OWCommentingReadOnlyViewModeling) {
         super.init(frame: .zero)
@@ -53,7 +53,7 @@ class OWCommentingReadOnlyView: UIView {
     }
 }
 
-fileprivate extension OWCommentingReadOnlyView {
+private extension OWCommentingReadOnlyView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         iconImageView.accessibilityIdentifier = Metrics.iconIdentifier

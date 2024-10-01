@@ -43,13 +43,13 @@ extension OWAuthenticationManagerProtocol {
 
 class OWAuthenticationManager: OWAuthenticationManagerProtocol {
 
-    fileprivate typealias OWUserAvailabilityMapper = [OWSpotId: OWUserAvailability]
-    fileprivate unowned let manager: OWManagerProtocol & OWManagerInternalProtocol
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let randomGenerator: OWRandomGeneratorProtocol
-    fileprivate let scheduler: SchedulerType
+    private typealias OWUserAvailabilityMapper = [OWSpotId: OWUserAvailability]
+    private unowned let manager: OWManagerProtocol & OWManagerInternalProtocol
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let randomGenerator: OWRandomGeneratorProtocol
+    private let scheduler: SchedulerType
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let maxSSORecoveryTime: Int = 30 // In seconds
         static let maxAttemptsToObtainNewUser: Int = 3
         static let delayToObtainUser: Int = 1000 // In ms
@@ -67,19 +67,19 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
         loadGeneralPersistence()
     }
 
-    fileprivate var _networkCredentials = OWNetworkSessionCredentials.none
+    private var _networkCredentials = OWNetworkSessionCredentials.none
     var networkCredentials: OWNetworkSessionCredentials {
         return _networkCredentials
     }
 
-    fileprivate let _activeUserAvailability = BehaviorSubject<OWUserAvailability>(value: .notAvailable)
+    private let _activeUserAvailability = BehaviorSubject<OWUserAvailability>(value: .notAvailable)
     var activeUserAvailability: Observable<OWUserAvailability> {
         return _activeUserAvailability
             .distinctUntilChanged()
             .share(replay: 1)
     }
 
-    fileprivate let _userAuthenticationStatus = BehaviorSubject<OWInternalUserAuthenticationStatus>(value: .notAutenticated)
+    private let _userAuthenticationStatus = BehaviorSubject<OWInternalUserAuthenticationStatus>(value: .notAutenticated)
     var userAuthenticationStatus: Observable<OWInternalUserAuthenticationStatus> {
         return _userAuthenticationStatus
             .distinctUntilChanged()
@@ -230,7 +230,7 @@ extension OWAuthenticationManager {
         }
     }
 
-    fileprivate func obtainNetworkUserIfNeeded(forSpotId spotId: OWSpotId) {
+    private func obtainNetworkUserIfNeeded(forSpotId spotId: OWSpotId) {
         _ = self._userAuthenticationStatus
             .take(1)
             .map { internalStatus -> Bool in
@@ -250,12 +250,12 @@ extension OWAuthenticationManager {
             .subscribe()
     }
 
-    fileprivate func triggerNetworkNewUser(forSpotId spotId: OWSpotId) {
+    private func triggerNetworkNewUser(forSpotId spotId: OWSpotId) {
         _ = self.retrieveNetworkNewUser()
             .subscribe()
     }
 
-    fileprivate func retrieveNetworkNewUser() -> Observable<SPUser> {
+    private func retrieveNetworkNewUser() -> Observable<SPUser> {
         let configurationService = servicesProvider.spotConfigurationService()
 
         return configurationService.config(spotId: OpenWeb.manager.spotId)
@@ -472,7 +472,7 @@ extension OWAuthenticationManager {
     }
 }
 
-fileprivate extension OWAuthenticationManager {
+private extension OWAuthenticationManager {
     func resetPersistence() {
         let keychain = servicesProvider.keychain()
 
@@ -547,7 +547,7 @@ fileprivate extension OWAuthenticationManager {
 }
 
 // Helper methods
-fileprivate extension OWAuthenticationManager {
+private extension OWAuthenticationManager {
     func shouldShowAuthenticationUI(for action: OWUserAction) -> Observable<Bool> {
         return self.requiredAuthenticationLevel(for: action)
             .flatMap { [weak self] requiredlevel -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in

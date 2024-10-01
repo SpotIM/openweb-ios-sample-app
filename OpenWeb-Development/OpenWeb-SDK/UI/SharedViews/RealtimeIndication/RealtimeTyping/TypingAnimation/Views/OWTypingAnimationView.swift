@@ -24,9 +24,9 @@ class OWTypingAnimationView: UIView {
         static var typingAnimationIndexKey = "typingAnimationIndex"
     }
 
-    fileprivate var dotLayers: [CAShapeLayer] = []
+    private var dotLayers: [CAShapeLayer] = []
     // swiftlint:disable line_length
-    fileprivate var dotColors: [UIColor] = [OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
+    private var dotColors: [UIColor] = [OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
                                             OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(Metrics.secondDotOpacity),
                                             OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(Metrics.thirdDotOpacity)] {
         // swiftlint:enable line_lenght
@@ -39,15 +39,15 @@ class OWTypingAnimationView: UIView {
         }
     }
 
-    fileprivate var dotDiameter: CGFloat {
+    private var dotDiameter: CGFloat {
         return min(bounds.width / 5, bounds.height)
     }
 
-    fileprivate var dotSpacing: CGFloat {
+    private var dotSpacing: CGFloat {
         return dotDiameter / Metrics.dotSpacingDivisor
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -110,7 +110,7 @@ extension OWTypingAnimationView: CAAnimationDelegate {
     }
 }
 
-fileprivate extension OWTypingAnimationView {
+private extension OWTypingAnimationView {
     func setupObservers() {
         OWSharedServicesProvider.shared.themeStyleService()
             .style

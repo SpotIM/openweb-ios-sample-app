@@ -27,13 +27,13 @@ protocol OWFlowActionsServicing {
 
 class OWFlowActionsService: OWFlowActionsServicing {
 
-    fileprivate var flowActionsCallbacks: OWFlowActionsCallbacks?
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let viewSourceType: OWViewSourceType
-    fileprivate let queue = OWQueue<OWFlowActionCallbackType>(duplicationStrategy: .replaceDuplicates)
-    fileprivate var disposeBag: DisposeBag?
+    private var flowActionsCallbacks: OWFlowActionsCallbacks?
+    private let servicesProvider: OWSharedServicesProviding
+    private let viewSourceType: OWViewSourceType
+    private let queue = OWQueue<OWFlowActionCallbackType>(duplicationStrategy: .replaceDuplicates)
+    private var disposeBag: DisposeBag?
 
-    fileprivate var _serviceQueueEmpty = PublishSubject<Void>()
+    private var _serviceQueueEmpty = PublishSubject<Void>()
     var serviceQueueEmpty: Observable<Void> {
         return _serviceQueueEmpty
             .asObservable()
@@ -77,7 +77,7 @@ class OWFlowActionsService: OWFlowActionsServicing {
     }
 }
 
-fileprivate extension OWFlowActionsService {
+private extension OWFlowActionsService {
     func setupBlockerServiceObservers() {
         disposeBag = DisposeBag() // Cancel previous subscriptions
         guard let dispose = disposeBag else { return }

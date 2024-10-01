@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWTitleSubtitleIconView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleIconSize: CGFloat = 40
         static let verticalSpacing: CGFloat = 10
         static let titleIconSuffixIdentifier = "_title_icon_id"
@@ -19,16 +19,16 @@ class OWTitleSubtitleIconView: UIView {
         static let subtitleLabelSuffixIdentifier = "_subtitle_label_id"
     }
 
-    fileprivate let viewModel: OWTitleSubtitleIconViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWTitleSubtitleIconViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var titleIcon: UIImageView = {
+    private lazy var titleIcon: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
 
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .titleMedium))
             .numberOfLines(0)
@@ -37,7 +37,7 @@ class OWTitleSubtitleIconView: UIView {
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var subtitleLabel: UILabel = {
+    private lazy var subtitleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .numberOfLines(0)
@@ -59,7 +59,7 @@ class OWTitleSubtitleIconView: UIView {
     }
 }
 
-fileprivate extension OWTitleSubtitleIconView {
+private extension OWTitleSubtitleIconView {
     func applyAccessibility() {
         titleIcon.accessibilityIdentifier = viewModel.outputs.accessibilityPrefixId + Metrics.titleIconSuffixIdentifier
         titleLabel.accessibilityIdentifier = viewModel.outputs.accessibilityPrefixId + Metrics.titleLabelSuffixIdentifier

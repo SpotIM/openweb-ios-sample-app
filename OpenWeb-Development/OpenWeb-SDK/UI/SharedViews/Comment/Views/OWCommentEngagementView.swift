@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWCommentEngagementView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let baseOffset: CGFloat = 14
         static let dotDividerSize: CGFloat = 3
         static let shareButtonSize: CGFloat = 24
@@ -22,38 +22,38 @@ class OWCommentEngagementView: UIView {
         static let shareButtonIdentifier = "comment_actions_view_share_button_id"
     }
 
-    fileprivate var viewModel: OWCommentEngagementViewModeling!
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
+    private var viewModel: OWCommentEngagementViewModeling!
+    private var disposeBag: DisposeBag = DisposeBag()
 
-    fileprivate var replyZeroWidthConstraint: OWConstraint?
-    fileprivate var votingTrailingConstraint: OWConstraint?
-    fileprivate var votingLeadingConstraint: OWConstraint?
-    fileprivate var shareLeadingWithVotingConstraint: OWConstraint?
-    fileprivate var shareLeadingWithReplyConstraint: OWConstraint?
+    private var replyZeroWidthConstraint: OWConstraint?
+    private var votingTrailingConstraint: OWConstraint?
+    private var votingLeadingConstraint: OWConstraint?
+    private var shareLeadingWithVotingConstraint: OWConstraint?
+    private var shareLeadingWithReplyConstraint: OWConstraint?
 
-    fileprivate lazy var replyButton: UIButton = {
+    private lazy var replyButton: UIButton = {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
             .wrapContent()
     }()
 
-    fileprivate lazy var replyDotDivider: UIView = {
+    private lazy var replyDotDivider: UIView = {
         return UIView()
             .corner(radius: Metrics.dotDividerSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var votingView: OWCommentRatingView = {
+    private lazy var votingView: OWCommentRatingView = {
         return OWCommentRatingView()
     }()
 
-    fileprivate lazy var votingDotDivider: UIView = {
+    private lazy var votingDotDivider: UIView = {
         return UIView()
             .corner(radius: Metrics.dotDividerSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var shareButton: UIButton = {
+    private lazy var shareButton: UIButton = {
         return UIButton()
             .hugContent(axis: .horizontal)
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
@@ -87,7 +87,7 @@ class OWCommentEngagementView: UIView {
     }
 }
 
-fileprivate extension OWCommentEngagementView {
+private extension OWCommentEngagementView {
     func setupUI() {
         self.enforceSemanticAttribute()
         self.addSubviews(replyButton, votingView)

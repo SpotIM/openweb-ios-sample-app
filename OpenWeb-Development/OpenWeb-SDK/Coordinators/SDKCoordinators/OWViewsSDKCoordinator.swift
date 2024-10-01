@@ -11,13 +11,13 @@ import UIKit
 import RxSwift
 
 class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatible {
-    fileprivate var compactRouter: OWCompactRoutering!
+    private var compactRouter: OWCompactRoutering!
 
     var compactRoutering: OWCompactRoutering {
         return retrieveCompactRouter()
     }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -215,7 +215,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
 #endif
 }
 
-fileprivate extension OWViewsSDKCoordinator {
+private extension OWViewsSDKCoordinator {
     func retrieveCompactRouter() -> OWCompactRoutering {
         let compactRouter: OWCompactRouter
 

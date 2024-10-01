@@ -9,7 +9,7 @@
 import Foundation
 
 class OWResponseLogger: OWNetworkLogging, OWResponseMiddleware {
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider

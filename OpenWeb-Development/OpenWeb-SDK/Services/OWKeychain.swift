@@ -23,16 +23,16 @@ protocol OWKeychainRxProtocol {
 }
 
 class OWKeychain: ReactiveCompatible, OWKeychainProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let kSecAttrService = "com.open-web.sdk"
     }
 
     var rxProtocol: OWKeychainRxProtocol { return self }
     fileprivate var rxHelper: OWPersistenceRxHelperProtocol
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let encoder: JSONEncoder
-    fileprivate let decoder: JSONDecoder
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let encoder: JSONEncoder
+    private let decoder: JSONDecoder
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          encoder: JSONEncoder = JSONEncoder(),
@@ -85,7 +85,7 @@ class OWKeychain: ReactiveCompatible, OWKeychainProtocol {
     }
 }
 
-fileprivate extension OWKeychain.OWKey {
+private extension OWKeychain.OWKey {
     // Add description for better understanding of future cases (keys)
     var description: String {
         switch self {
@@ -109,7 +109,7 @@ fileprivate extension OWKeychain.OWKey {
     }
 }
 
-fileprivate extension OWKeychain {
+private extension OWKeychain {
     func query<T>(forKey key: OWKey<T>) -> [String: Any] {
         let query: [String: Any] = [
             String(kSecClass): kSecClassGenericPassword,
@@ -198,7 +198,7 @@ extension OWKeychain {
     }
 }
 
-fileprivate extension Reactive where Base: OWKeychain {
+private extension Reactive where Base: OWKeychain {
     func setValues<T>(key: OWKeychain.OWKey<T>) -> Binder<T> {
         return base.rxHelper.binder(key: OWRxHelperKey<T>(key: key)) { value in
             base.save(value: value, forKey: key)

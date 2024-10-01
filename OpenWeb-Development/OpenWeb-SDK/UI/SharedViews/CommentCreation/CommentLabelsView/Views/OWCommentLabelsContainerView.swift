@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWCommentLabelsContainerView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_labels_container_id"
 
         static let titleLabelSpacing: CGFloat = 10.0
@@ -19,7 +19,7 @@ class OWCommentLabelsContainerView: UIView {
         static let commentLabelViewHeight: CGFloat = 28.0
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .numberOfLines(1)
             .font(OWFontBook.shared.font(typography: .footnoteContext))
@@ -28,19 +28,19 @@ class OWCommentLabelsContainerView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var labelsContainerStackView: UIStackView = {
+    private lazy var labelsContainerStackView: UIStackView = {
         return UIStackView()
             .axis(.horizontal)
             .spacing(Metrics.labelsContainerStackViewSpacing)
             .distribution(.equalSpacing)
     }()
 
-    fileprivate var titleZeroHeightConstraint: OWConstraint?
-    fileprivate var labelsHeightConstraint: OWConstraint?
-    fileprivate var labelsTopConstraint: OWConstraint?
+    private var titleZeroHeightConstraint: OWConstraint?
+    private var labelsHeightConstraint: OWConstraint?
+    private var labelsTopConstraint: OWConstraint?
 
-    fileprivate var viewModel: OWCommentLabelsContainerViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWCommentLabelsContainerViewModeling!
+    private var disposeBag: DisposeBag!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,7 +66,7 @@ class OWCommentLabelsContainerView: UIView {
     }
 }
 
-fileprivate extension OWCommentLabelsContainerView {
+private extension OWCommentLabelsContainerView {
     func setupUI() {
         self.enforceSemanticAttribute()
 

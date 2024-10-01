@@ -27,9 +27,9 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
     var inputs: OWCommentCreationViewModelingInputs { return self }
     var outputs: OWCommentCreationViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
-    fileprivate let viewableMode: OWViewableMode
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationData: OWCommentCreationRequiredData
+    private let viewableMode: OWViewableMode
 
     lazy var commentCreationViewVM: OWCommentCreationViewViewModeling = {
         return OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
@@ -53,7 +53,7 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
     }
 }
 
-fileprivate extension OWCommentCreationViewModel {
+private extension OWCommentCreationViewModel {
     func setupObservers() {
 
     }

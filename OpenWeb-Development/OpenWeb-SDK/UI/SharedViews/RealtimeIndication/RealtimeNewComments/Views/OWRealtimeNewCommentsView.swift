@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWRealtimeNewCommentsView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalPadding: CGFloat = 10
         static let iconSize: CGFloat = 16
 
@@ -20,23 +20,23 @@ class OWRealtimeNewCommentsView: UIView {
         static let iconImgaeName: String = "newCommentsArrow"
     }
 
-    fileprivate let viewModel: OWRealtimeNewCommentsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWRealtimeNewCommentsViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         return UIImageView()
             .image(UIImage(spNamed: Metrics.iconImgaeName, supportDarkMode: true)!)
             .wrapContent()
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .font(font)
             .textColor(OWColorPalette.shared.color(type: Metrics.textColor,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var font: UIFont {
+    private var font: UIFont {
         return OWFontBook.shared.font(typography: .footnoteText)
     }
 
@@ -52,7 +52,7 @@ class OWRealtimeNewCommentsView: UIView {
     }
 }
 
-fileprivate extension OWRealtimeNewCommentsView {
+private extension OWRealtimeNewCommentsView {
     func setupUI() {
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in

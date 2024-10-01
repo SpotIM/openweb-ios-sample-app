@@ -36,7 +36,7 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
     var outputs: OWConversationSummaryViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
 
     var triggerCustomizeCounterLabelUI = PublishSubject<UILabel>()
 
@@ -76,10 +76,10 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
             .asObservable()
     }()
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
-    fileprivate var postId: OWPostId {
+    private var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
 
@@ -89,7 +89,7 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
     }
 }
 
-fileprivate extension OWConversationSummaryViewModel {
+private extension OWConversationSummaryViewModel {
     func setupObservers() {
         triggerCustomizeCounterLabelUI
             .flatMapLatest { [weak self] label -> Observable<UILabel> in

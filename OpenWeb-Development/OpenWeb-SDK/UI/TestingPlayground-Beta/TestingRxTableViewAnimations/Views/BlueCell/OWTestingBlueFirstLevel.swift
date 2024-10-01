@@ -14,7 +14,7 @@ import RxCocoa
 
 class OWTestingBlueFirstLevel: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let borderWidth: CGFloat = 2.0
         static let margin: CGFloat = 15.0
         static let roundCorners: CGFloat = 10.0
@@ -23,14 +23,14 @@ class OWTestingBlueFirstLevel: UIView {
         static let expandedCellContentHeight: CGFloat = 175.0
     }
 
-    fileprivate lazy var lblIdentifier: UILabel = {
+    private lazy var lblIdentifier: UILabel = {
         return UILabel()
             .textColor(.black)
             .numberOfLines(1)
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var btnRemove: UIButton = {
+    private lazy var btnRemove: UIButton = {
         return "Remove"
             .button
             .backgroundColor(.lightGray)
@@ -40,7 +40,7 @@ class OWTestingBlueFirstLevel: UIView {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var btnState: UIButton = {
+    private lazy var btnState: UIButton = {
         return "Expand"
             .button
             .backgroundColor(.lightGray)
@@ -50,9 +50,9 @@ class OWTestingBlueFirstLevel: UIView {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate var viewModel: OWTestingBlueFirstLevelViewModeling!
-    fileprivate var disposeBag = DisposeBag()
-    fileprivate var heightConstraint: OWConstraint?
+    private var viewModel: OWTestingBlueFirstLevelViewModeling!
+    private var disposeBag = DisposeBag()
+    private var heightConstraint: OWConstraint?
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -71,7 +71,7 @@ class OWTestingBlueFirstLevel: UIView {
     }
 }
 
-fileprivate extension OWTestingBlueFirstLevel {
+private extension OWTestingBlueFirstLevel {
     func setupUI() {
         self .backgroundColor(.blue)
             .border(width: Metrics.borderWidth, color: .gray)

@@ -29,14 +29,14 @@ class OWNavigationPlaceholderViewModel: OWNavigationPlaceholderViewModeling,
     var inputs: OWNavigationPlaceholderViewModelingInputs { return self }
     var outputs: OWNavigationPlaceholderViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let intervalForObservingNewVC = 300
     }
 
-    fileprivate weak var vc: UIViewController?
-    fileprivate let onFirstActualVC: (_ vc: UIViewController) -> Void
-    fileprivate var disposeBag = DisposeBag()
-    fileprivate let scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OWNavigationPlaceholderViewModel")
+    private weak var vc: UIViewController?
+    private let onFirstActualVC: (_ vc: UIViewController) -> Void
+    private var disposeBag = DisposeBag()
+    private let scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OWNavigationPlaceholderViewModel")
 
     init(onFirstActualVC: @escaping (_ vc: UIViewController) -> Void) {
         self.onFirstActualVC = onFirstActualVC
@@ -49,7 +49,7 @@ class OWNavigationPlaceholderViewModel: OWNavigationPlaceholderViewModeling,
     }
 }
 
-fileprivate extension OWNavigationPlaceholderViewModel {
+private extension OWNavigationPlaceholderViewModel {
     func setupObservers() {
         Observable<Int>
             .interval(.milliseconds(Metrics.intervalForObservingNewVC), scheduler: scheduler)

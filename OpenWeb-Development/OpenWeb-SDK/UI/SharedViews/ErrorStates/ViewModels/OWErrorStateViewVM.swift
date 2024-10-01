@@ -32,7 +32,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     var inputs: OWErrorStateViewViewModelingInputs { return self }
     var outputs: OWErrorStateViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     var errorStateType: OWErrorStateTypes {
         didSet {
             heightChange.onNext(0)

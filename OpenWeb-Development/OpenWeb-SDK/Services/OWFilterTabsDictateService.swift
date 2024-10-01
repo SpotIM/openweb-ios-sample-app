@@ -16,11 +16,11 @@ protocol OWFilterTabsDictateServicing {
 }
 
 class OWFilterTabsDictateService: OWFilterTabsDictateServicing {
-    fileprivate typealias OWSkipAndMapping = Observable<(Bool, [OWPostId: OWFilterTabId])>
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    private typealias OWSkipAndMapping = Observable<(Bool, [OWPostId: OWFilterTabId])>
+    private unowned let servicesProvider: OWSharedServicesProviding
 
-    fileprivate let mapper = BehaviorSubject<[OWPostId: OWFilterTabId]>(value: [:])
-    fileprivate lazy var sharedMapper = {
+    private let mapper = BehaviorSubject<[OWPostId: OWFilterTabId]>(value: [:])
+    private lazy var sharedMapper = {
         return mapper
             .share(replay: 1)
             .observe(on: MainScheduler.instance)
@@ -91,7 +91,7 @@ class OWFilterTabsDictateService: OWFilterTabsDictateServicing {
     }
 }
 
-fileprivate extension OWFilterTabsDictateService {
+private extension OWFilterTabsDictateService {
     func inject(toPostId postId: OWPostId,
                 filterTabId: OWFilterTabId,
                 fromOriginalMapping originalMapping: [OWPostId: OWFilterTabId]) {

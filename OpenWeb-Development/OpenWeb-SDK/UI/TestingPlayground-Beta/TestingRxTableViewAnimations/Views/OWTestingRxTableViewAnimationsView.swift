@@ -14,14 +14,14 @@ import RxCocoa
 
 class OWTestingRxTableViewAnimationsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalMargin: CGFloat = 15.0
         static let tableViewAnimationDuration: Double = 0.25 // 0.1 is equal to 100 ms
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
@@ -38,7 +38,7 @@ class OWTestingRxTableViewAnimationsView: UIView {
         return tableView
     }()
 
-    fileprivate lazy var tableViewDataDataSource: OWRxTableViewSectionedAnimatedDataSource<OWTestingRxDataSourceModel> = {
+    private lazy var tableViewDataDataSource: OWRxTableViewSectionedAnimatedDataSource<OWTestingRxDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<OWTestingRxDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
 
@@ -53,7 +53,7 @@ class OWTestingRxTableViewAnimationsView: UIView {
         return dataSource
     }()
 
-    fileprivate lazy var cellsGeneratorView: UIStackView = {
+    private lazy var cellsGeneratorView: UIStackView = {
         let stack = UIStackView()
             .backgroundColor(.white)
 
@@ -79,19 +79,19 @@ class OWTestingRxTableViewAnimationsView: UIView {
         return stack
     }()
 
-    fileprivate lazy var redCellsGenerator: OWTestingCellsGenerator = {
+    private lazy var redCellsGenerator: OWTestingCellsGenerator = {
         return OWTestingCellsGenerator(viewModel: viewModel.outputs.redCellsGeneratorVM)
     }()
 
-    fileprivate lazy var blueCellsGenerator: OWTestingCellsGenerator = {
+    private lazy var blueCellsGenerator: OWTestingCellsGenerator = {
         return OWTestingCellsGenerator(viewModel: viewModel.outputs.blueCellsGeneratorVM)
     }()
 
-    fileprivate lazy var greenCellsGenerator: OWTestingCellsGenerator = {
+    private lazy var greenCellsGenerator: OWTestingCellsGenerator = {
         return OWTestingCellsGenerator(viewModel: viewModel.outputs.greenCellsGeneratorVM)
     }()
 
-    fileprivate var viewModel: OWTestingRxTableViewAnimationsViewViewModeling!
+    private var viewModel: OWTestingRxTableViewAnimationsViewViewModeling!
 
     init(viewModel: OWTestingRxTableViewAnimationsViewViewModeling) {
         super.init(frame: .zero)
@@ -106,7 +106,7 @@ class OWTestingRxTableViewAnimationsView: UIView {
     }
 }
 
-fileprivate extension OWTestingRxTableViewAnimationsView {
+private extension OWTestingRxTableViewAnimationsView {
     func setupUI() {
         self.backgroundColor = .white
 

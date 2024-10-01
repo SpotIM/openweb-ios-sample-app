@@ -39,9 +39,9 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     var outputs: OWLoginPromptViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeLockIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
-    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
-    fileprivate let _triggerCustomizeArrowIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    private let _triggerCustomizeLockIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    private let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeArrowIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
 
     var triggerCustomizeLockIconImageViewUI = PublishSubject<UIImageView>()
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
@@ -66,10 +66,10 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     }
 
     let style: OWLoginPromptAlignmentStyle
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag: DisposeBag
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag: DisposeBag
 
-    fileprivate let isFeatureEnabled: Bool
+    private let isFeatureEnabled: Bool
 
     init(isFeatureEnabled: Bool = true,
          style: OWLoginPromptAlignmentStyle,
@@ -108,7 +108,7 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     }
 
     var loginPromptTap = PublishSubject<Void>()
-    fileprivate var _openLogin: Observable<Void> {
+    private var _openLogin: Observable<Void> {
         loginPromptTap
             .asObservable()
     }
@@ -117,7 +117,7 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     }
 }
 
-fileprivate extension OWLoginPromptViewModel {
+private extension OWLoginPromptViewModel {
     func setupObservers() {
         triggerCustomizeLockIconImageViewUI
             .bind(to: _triggerCustomizeLockIconImageViewUI)

@@ -11,21 +11,21 @@ import Foundation
 import RxSwift
 
 class OWUserMentionLoadingCell: UITableViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "loading_cell_id"
         static let indicatorIdentifier = "loading_cell_indicator_id"
         static let indicatorHorizontalPadding: CGFloat = 20
         static let titleHorizontalPadding: CGFloat = 8
     }
 
-    fileprivate var viewModel: OWUserMentionLoadingCellViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWUserMentionLoadingCellViewModeling!
+    private var disposeBag: DisposeBag!
 
-    fileprivate lazy var indicator: UIActivityIndicatorView = {
+    private lazy var indicator: UIActivityIndicatorView = {
         return UIActivityIndicatorView()
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -56,7 +56,7 @@ class OWUserMentionLoadingCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWUserMentionLoadingCell {
+private extension OWUserMentionLoadingCell {
     func setupViews() {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear

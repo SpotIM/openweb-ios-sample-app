@@ -13,12 +13,12 @@ protocol OWHostApplicationHelperProtocol {
 }
 
 class OWHostApplicationHelper: OWHostApplicationHelperProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let openWebSampleAppScheme: String = "im.spot.demo"
     }
 
-    fileprivate static let shared = OWHostApplicationHelper()
-    fileprivate let hostAppScheme: String
+    private static let shared = OWHostApplicationHelper()
+    private let hostAppScheme: String
 
     private init() {
         hostAppScheme = Bundle.main.bundleIdentifier ?? "na"

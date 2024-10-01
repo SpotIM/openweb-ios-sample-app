@@ -11,10 +11,10 @@ import RxSwift
 import Foundation
 
 class OWUserMentionCell: UITableViewCell {
-    fileprivate var disposeBag: DisposeBag!
-    fileprivate var viewModel: OWUserMentionCellViewModeling!
+    private var disposeBag: DisposeBag!
+    private var viewModel: OWUserMentionCellViewModeling!
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "user_mention_cell_id"
         static let titleLabelIdentifier = "user_mention_cell_title_label_id"
         static let subtitleLabelIdentifier = "user_mention_cell_subtitle_label_id"
@@ -25,16 +25,16 @@ class OWUserMentionCell: UITableViewCell {
         static let avatarSize: CGFloat = 40.0
     }
 
-    fileprivate lazy var avatarView: OWAvatarView = {
+    private lazy var avatarView: OWAvatarView = {
         return OWAvatarView()
     }()
 
-    fileprivate lazy var viewForText: UIView = {
+    private lazy var viewForText: UIView = {
         let viewForText = UIView()
         return viewForText
     }()
 
-    fileprivate lazy var lblTitle: UILabel = {
+    private lazy var lblTitle: UILabel = {
         let lblTitle = UILabel()
         return lblTitle
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -42,7 +42,7 @@ class OWUserMentionCell: UITableViewCell {
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var lblSubtitle: UILabel = {
+    private lazy var lblSubtitle: UILabel = {
         let lblSubtitle = UILabel()
         return lblSubtitle
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -75,7 +75,7 @@ class OWUserMentionCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWUserMentionCell {
+private extension OWUserMentionCell {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         lblTitle.accessibilityIdentifier = Metrics.titleLabelIdentifier

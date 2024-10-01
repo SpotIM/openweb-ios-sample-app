@@ -10,23 +10,23 @@ import UIKit
 import RxSwift
 
 class OWCommentReplyCounterView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_creation_reply_counter_id"
         static let labelIdentifier = "comment_creation_reply_counter_label_id"
 
         static let counterHeight = 24.0
     }
 
-    fileprivate lazy var counterLabel: UILabel = {
+    private lazy var counterLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
     }()
 
-    fileprivate var viewHeightConstraint: OWConstraint?
+    private var viewHeightConstraint: OWConstraint?
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWCommentReplyCounterViewModeling
+    private let disposeBag = DisposeBag()
+    private let viewModel: OWCommentReplyCounterViewModeling
 
     init(with viewModel: OWCommentReplyCounterViewModeling) {
         self.viewModel = viewModel
@@ -42,7 +42,7 @@ class OWCommentReplyCounterView: UIView {
     }
 }
 
-fileprivate extension OWCommentReplyCounterView {
+private extension OWCommentReplyCounterView {
     func setupUI() {
         self.enforceSemanticAttribute()
 

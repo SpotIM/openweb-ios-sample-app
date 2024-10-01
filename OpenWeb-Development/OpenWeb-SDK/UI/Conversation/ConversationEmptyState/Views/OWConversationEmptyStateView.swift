@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWConversationEmptyStateView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleLabelTopOffset: CGFloat = 10
         static let iconSize: CGFloat = 48
         static let titleLabelNumberOfLines: Int = 0
@@ -20,12 +20,12 @@ class OWConversationEmptyStateView: UIView {
         static let titleIdentifier = "empty_state_view_title_id"
     }
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
        return UIImageView()
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
        return UILabel()
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -34,11 +34,11 @@ class OWConversationEmptyStateView: UIView {
             .hugContent(axis: .horizontal)
     }()
 
-    fileprivate lazy var containerView: UIView = { return UIView() }()
-    fileprivate var heightConstraint: OWConstraint?
+    private lazy var containerView: UIView = { return UIView() }()
+    private var heightConstraint: OWConstraint?
 
-    fileprivate var viewModel: OWConversationEmptyStateViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWConversationEmptyStateViewModeling!
+    private var disposeBag = DisposeBag()
 
     init(viewModel: OWConversationEmptyStateViewModeling) {
         super.init(frame: .zero)
@@ -67,7 +67,7 @@ class OWConversationEmptyStateView: UIView {
     }
 }
 
-fileprivate extension OWConversationEmptyStateView {
+private extension OWConversationEmptyStateView {
     func setupViews() {
         self.enforceSemanticAttribute()
 

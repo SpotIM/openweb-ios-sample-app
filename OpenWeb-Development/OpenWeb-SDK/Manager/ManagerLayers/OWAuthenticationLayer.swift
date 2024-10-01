@@ -15,7 +15,7 @@ protocol OWAuthenticationInternalProtocol {
 
 class OWAuthenticationLayer: OWAuthentication, OWAuthenticationInternalProtocol {
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -84,8 +84,8 @@ class OWAuthenticationLayer: OWAuthentication, OWAuthenticationInternalProtocol 
         }
     }
 
-    fileprivate var _shouldDisplayLoginPrompt: Bool = false
-    fileprivate var _renewSSOCallback: OWRenewSSOCallback?
+    private var _shouldDisplayLoginPrompt: Bool = false
+    private var _renewSSOCallback: OWRenewSSOCallback?
 
     func triggerRenewSSO(userId: String, completion: @escaping OWBasicCompletion) {
         guard let callback = _renewSSOCallback else {
@@ -99,7 +99,7 @@ class OWAuthenticationLayer: OWAuthentication, OWAuthenticationInternalProtocol 
     }
 }
 
-fileprivate extension OWAuthenticationLayer {
+private extension OWAuthenticationLayer {
     func handleSSOStart(completion: @escaping OWSSOStartHandler) {
         guard validateSpotIdExist(completion: completion) else { return }
 

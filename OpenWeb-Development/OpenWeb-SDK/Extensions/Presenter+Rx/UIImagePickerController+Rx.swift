@@ -48,7 +48,7 @@ extension Reactive where Base: UIImagePickerController {
     }
 }
 
-fileprivate extension Reactive where Base: UIImagePickerController {
+private extension Reactive where Base: UIImagePickerController {
     var didFinishPickingMediaWithInfo: Observable<[UIImagePickerController.InfoKey: AnyObject]> {
         return delegate
             .methodInvoked(#selector(UIImagePickerControllerDelegate.imagePickerController(_:didFinishPickingMediaWithInfo:)))

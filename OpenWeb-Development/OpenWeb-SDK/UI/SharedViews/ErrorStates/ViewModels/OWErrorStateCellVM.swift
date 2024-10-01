@@ -39,7 +39,7 @@ class OWErrorStateCellViewModel: OWErrorStateCellViewModeling,
     }()
 
     let errorStateType: OWErrorStateTypes
-    fileprivate let commentPresentationData: OWCommentPresentationData?
+    private let commentPresentationData: OWCommentPresentationData?
 
     // Unique identifier
     let id: String

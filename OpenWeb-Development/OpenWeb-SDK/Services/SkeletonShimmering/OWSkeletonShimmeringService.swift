@@ -16,15 +16,15 @@ protocol OWSkeletonShimmeringServicing {
 }
 
 class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
-    fileprivate let config: OWSkeletonShimmeringConfiguration
-    fileprivate let scheduler: SchedulerType
-    fileprivate var weakViews: [OWWeakEncapsulation<UIView>] = []
-    fileprivate var serviceDisposeBag: DisposeBag!
-    fileprivate let generalDisposeBag = DisposeBag()
-    fileprivate let isServiceRunning = BehaviorSubject<Bool>(value: false)
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    private let config: OWSkeletonShimmeringConfiguration
+    private let scheduler: SchedulerType
+    private var weakViews: [OWWeakEncapsulation<UIView>] = []
+    private var serviceDisposeBag: DisposeBag!
+    private let generalDisposeBag = DisposeBag()
+    private let isServiceRunning = BehaviorSubject<Bool>(value: false)
+    private unowned let servicesProvider: OWSharedServicesProviding
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static var animationKey = "transform.translation.x"
     }
 
@@ -99,7 +99,7 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
     }
 }
 
-fileprivate extension OWSkeletonShimmeringService {
+private extension OWSkeletonShimmeringService {
     func stopService() {
         _ = Observable.just(())
             .take(1)

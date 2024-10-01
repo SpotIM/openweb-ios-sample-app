@@ -55,11 +55,11 @@ protocol OWReportReasonViewViewModeling: AnyObject {
 
 class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWReportReasonViewViewModelingOutputs, OWReportReasonViewViewModeling {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let defaultTextViewMaxCharecters = 280
     }
 
-    fileprivate var postId: OWPostId {
+    private var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
 
@@ -116,7 +116,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .unwrap()
     }
 
-    fileprivate let _reportReasonSubmittedSuccessfully = BehaviorSubject<(OWCommentId, Bool)?>(value: nil)
+    private let _reportReasonSubmittedSuccessfully = BehaviorSubject<(OWCommentId, Bool)?>(value: nil)
     var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> {
         return _reportReasonSubmittedSuccessfully
             .unwrap()
@@ -128,12 +128,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
 
     let viewableMode: OWViewableMode
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let presentationalMode: OWPresentationalModeCompact
-    fileprivate let commentId: OWCommentId
-    fileprivate let parentId: OWCommentId
-    fileprivate var articleUrl: String = ""
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let presentationalMode: OWPresentationalModeCompact
+    private let commentId: OWCommentId
+    private let parentId: OWCommentId
+    private var articleUrl: String = ""
 
     var setSubmitInProgress = PublishSubject<Bool>()
     var submitInProgress: Observable<Bool> {
@@ -265,7 +265,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .share(replay: 1)
     }()
 
-    fileprivate lazy var communityGuidelinesUrl: Observable<URL?> = {
+    private lazy var communityGuidelinesUrl: Observable<URL?> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
@@ -388,7 +388,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }
 }
 
-fileprivate extension OWReportReasonViewViewModel {
+private extension OWReportReasonViewViewModel {
     func setupObservers() {
         selectedReason
             .map {

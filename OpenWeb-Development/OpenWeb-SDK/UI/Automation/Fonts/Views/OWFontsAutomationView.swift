@@ -14,7 +14,7 @@ import RxCocoa
 
 class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalOffset: CGFloat = 40
         static let identifier = "fonts_automation_view_id"
         static let scrollViewIdentifier = "fonts_scroll_view_id"
@@ -33,18 +33,18 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
         static let infoTextIdentifier = "info_caption_id"
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate var viewModel: OWFontsAutomationViewViewModeling!
+    private var viewModel: OWFontsAutomationViewViewModeling!
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .center
@@ -52,7 +52,7 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
         return stackView
     }()
 
-    fileprivate lazy var accessibilityMapper: [OWWeakEncapsulation<UILabel>: String] = {
+    private lazy var accessibilityMapper: [OWWeakEncapsulation<UILabel>: String] = {
         let mapper: [OWWeakEncapsulation<UILabel>: String] = [OWWeakEncapsulation(value: titleSmall): Metrics.titleSmallIdentifier,
                                                                         OWWeakEncapsulation(value: titleLarge): Metrics.titleLargeIdentifier,
                                                                         OWWeakEncapsulation(value: titleMedium): Metrics.titleMediumIdentifier,
@@ -69,7 +69,7 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
         return mapper
     }()
 
-    fileprivate lazy var fontMapper: [OWWeakEncapsulation<UILabel>: OWFontTypography] = {
+    private lazy var fontMapper: [OWWeakEncapsulation<UILabel>: OWFontTypography] = {
         let mapper: [OWWeakEncapsulation<UILabel>: OWFontTypography] = [OWWeakEncapsulation(value: titleSmall): .titleSmall,
                                                                         OWWeakEncapsulation(value: titleLarge): .titleLarge,
                                                                         OWWeakEncapsulation(value: titleMedium): .titleMedium,
@@ -86,102 +86,102 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
         return mapper
     }()
 
-    fileprivate lazy var typographyString: String = {
+    private lazy var typographyString: String = {
         return OWLocalizationManager.shared.localizedString(key: "Typography") + ": "
     }()
 
-    fileprivate lazy var titleSmall: UILabel = {
+    private lazy var titleSmall: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "TitleSmall"))
             .font(OWFontBook.shared.font(typography: .titleSmall))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var titleLarge: UILabel = {
+    private lazy var titleLarge: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "TitleLarge"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var titleMedium: UILabel = {
+    private lazy var titleMedium: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "TitleMedium"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var bodyText: UILabel = {
+    private lazy var bodyText: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "BodyText"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var bodyInteraction: UILabel = {
+    private lazy var bodyInteraction: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "BodyInteraction"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var bodyContext: UILabel = {
+    private lazy var bodyContext: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "BodyContext"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var bodySpecial: UILabel = {
+    private lazy var bodySpecial: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "BodySpecial"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var footnoteText: UILabel = {
+    private lazy var footnoteText: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "FootnoteText"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var footnoteLink: UILabel = {
+    private lazy var footnoteLink: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "FootnoteLink"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var footnoteContext: UILabel = {
+    private lazy var footnoteContext: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "FootnoteContext"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var footnoteSpecial: UILabel = {
+    private lazy var footnoteSpecial: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "FootnoteSpecial"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var footnoteCaption: UILabel = {
+    private lazy var footnoteCaption: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "FootnoteCaption"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var metaText: UILabel = {
+    private lazy var metaText: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "MetaText"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var infoCaption: UILabel = {
+    private lazy var infoCaption: UILabel = {
         return UILabel()
             .text(typographyString + OWLocalizationManager.shared.localizedString(key: "InfoCaption"))
             .font(OWFontBook.shared.font(typography: .titleLarge))
@@ -202,7 +202,7 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWFontsAutomationView {
+private extension OWFontsAutomationView {
     func setupUI() {
         self.useAsThemeStyleInjector()
         self.setupFonts()

@@ -21,9 +21,9 @@ protocol OWColorPaletteConfigurable {
 }
 
 class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
-    fileprivate var colors = [OWColor.OWType: OWColor]()
-    fileprivate var colorsMapper = BehaviorSubject<[OWColor.OWType: OWColor]>(value: [:])
-    fileprivate var blockedForOverride: Set<OWColor.OWType> = Set()
+    private var colors = [OWColor.OWType: OWColor]()
+    private var colorsMapper = BehaviorSubject<[OWColor.OWType: OWColor]>(value: [:])
+    private var blockedForOverride: Set<OWColor.OWType> = Set()
 
     var colorDriver: Observable<[OWColor.OWType: OWColor]> {
         return colorsMapper
@@ -36,7 +36,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
 
     // Multiple threads / queues access to this class
     // Avoiding "data race" by using a lock
-    fileprivate let lock: OWLock = OWUnfairLock()
+    private let lock: OWLock = OWUnfairLock()
 
     private init() {
         initiateColors()

@@ -35,17 +35,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var inputs: OWCommentCreationViewViewModelingInputs { return self }
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let allowedMediaTypes: [String] = ["public.image"]
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
     }
 
-    fileprivate let commentCreationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "commentCreationViewVMQueue")
+    private let commentCreationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "commentCreationViewVMQueue")
 
-    fileprivate let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
-    fileprivate let disposeBag = DisposeBag()
+    private let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
+    private let disposeBag = DisposeBag()
     let viewableMode: OWViewableMode
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     var customizeSubmitButtonUI: Observable<UIButton> {
         return Observable.merge(commentCreationRegularViewVm.outputs.footerViewModel.outputs.customizeSubmitButtonUI,
@@ -56,24 +56,24 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     // This is the original commentCreationData since
     // the commentCreationData Can be chaged by sub VMs
-    fileprivate var originCommentCreationData: OWCommentCreationRequiredData
+    private var originCommentCreationData: OWCommentCreationRequiredData
 
-    fileprivate var commentCreationData: OWCommentCreationRequiredData
+    private var commentCreationData: OWCommentCreationRequiredData
 
-    fileprivate var articleUrl: String = ""
+    private var articleUrl: String = ""
 
-    fileprivate lazy var postId: OWPostId = OWManager.manager.postId ?? ""
+    private lazy var postId: OWPostId = OWManager.manager.postId ?? ""
 
-    fileprivate let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
-    fileprivate let _commentCreationError = PublishSubject<Void>()
+    private let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
+    private let _commentCreationError = PublishSubject<Void>()
 
-    fileprivate let _userJustLoggedIn = PublishSubject<Void>()
+    private let _userJustLoggedIn = PublishSubject<Void>()
     var userJustLoggedIn: Observable<Void> {
         return _userJustLoggedIn
             .asObservable()
     }
 
-    fileprivate lazy var _commentText: Observable<String> = {
+    private lazy var _commentText: Observable<String> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText
@@ -84,7 +84,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentImage: Observable<OWCommentImage?> = {
+    private lazy var _commentImage: Observable<OWCommentImage?> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentImageOutput
@@ -95,7 +95,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentGif: Observable<OWCommentGif?> = {
+    private lazy var _commentGif: Observable<OWCommentGif?> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.gifPreviewVM.outputs.gifDataOutput
@@ -106,7 +106,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentSelectedLabelIds: Observable<[String]> = {
+    private lazy var _commentSelectedLabelIds: Observable<[String]> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.commentLabelsContainerVM.outputs.selectedLabelIds
@@ -117,7 +117,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentSelectedMentions: Observable<OWUserMentionData> = {
+    private lazy var _commentSelectedMentions: Observable<OWUserMentionData> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.userMentionVM.outputs.mentionsData
@@ -129,7 +129,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     // swiftlint:disable large_tuple
-    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, OWCommentGif?, [String], OWUserMentionData)> = {
+    private lazy var _commentContent: Observable<(String, OWCommentImage?, OWCommentGif?, [String], OWUserMentionData)> = {
         Observable.combineLatest(_commentText,
                                  _commentImage,
                                  _commentGif,
@@ -227,8 +227,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         setupObservers()
     }
 
-    fileprivate lazy var _retryCommentCreationSubmitted = PublishSubject<Void>()
-    fileprivate lazy var retryCommentCreationSubmitted: Observable<OWCommentCreationCtaData> = {
+    private lazy var _retryCommentCreationSubmitted = PublishSubject<Void>()
+    private lazy var retryCommentCreationSubmitted: Observable<OWCommentCreationCtaData> = {
         return _retryCommentCreationSubmitted
             .withLatestFrom(Observable.merge(commentCreationRegularViewVm.outputs.performCta,
                                              commentCreationLightViewVm.outputs.performCta,
@@ -413,7 +413,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 }
 
-fileprivate extension OWCommentCreationViewViewModel {
+private extension OWCommentCreationViewViewModel {
     static func addDisplayUserMentions(to commentCreationData: inout OWCommentCreationRequiredData) -> [OWUserMentionObject]? {
         switch commentCreationData.commentCreationType {
         case .edit(comment: let comment):

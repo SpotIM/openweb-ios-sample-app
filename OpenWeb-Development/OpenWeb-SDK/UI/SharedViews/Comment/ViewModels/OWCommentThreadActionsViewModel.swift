@@ -42,7 +42,7 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     var inputs: OWCommentThreadActionsViewModelingInputs { return self }
     var outputs: OWCommentThreadActionsViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     var tap = PublishSubject<Void>()
     var tapOutput: Observable<Void> {
@@ -55,12 +55,12 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     }
 
     var updateActionType = BehaviorSubject<OWCommentThreadActionType>(value: .collapseThread)
-    fileprivate lazy var updatedType: Observable<OWCommentThreadActionType> = {
+    private lazy var updatedType: Observable<OWCommentThreadActionType> = {
         return updateActionType
             .asObservable()
     }()
 
-    fileprivate let _updateSpacing = BehaviorSubject<OWVerticalSpacing?>(value: nil)
+    private let _updateSpacing = BehaviorSubject<OWVerticalSpacing?>(value: nil)
     var updateSpacing: Observable<OWVerticalSpacing> {
         _updateSpacing
             .unwrap()
@@ -82,7 +82,7 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     }
 
     let commentId: String
-    fileprivate let spacing: OWVerticalSpacing
+    private let spacing: OWVerticalSpacing
 
     init(with type: OWCommentThreadActionType,
          commentId: String,
@@ -108,7 +108,7 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     }
 }
 
-fileprivate extension OWCommentThreadActionsViewModel {
+private extension OWCommentThreadActionsViewModel {
     func setupObservers() {
         updatedType
             .observe(on: MainScheduler.instance)
