@@ -6552,15 +6552,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -6686,15 +6677,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -6813,15 +6795,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -6939,15 +6912,6 @@
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
-				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
 				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -7535,15 +7499,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -7590,15 +7545,6 @@
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
-				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
 				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
