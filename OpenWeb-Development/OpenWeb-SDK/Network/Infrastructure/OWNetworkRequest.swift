@@ -1075,7 +1075,7 @@ class OWNetworkDataRequest: OWNetworkRequest {
 
     /// Protected storage for the `Data` read by the instance.
     @OWProtected
-    private var mutableData: Data? = nil
+    private var mutableData: Data?
 
     /// Creates a `DataRequest` using the provided parameters.
     ///

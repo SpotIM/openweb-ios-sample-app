@@ -132,7 +132,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     }
 
     var replyToAttributedString: Observable<NSAttributedString> {
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentCreationData.commentCreationType {
         case .edit(let comment):
             if let postId = self.postId,
@@ -163,7 +163,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
     var shouldShowReplySnippet: Bool {
         guard let postId = self.postId else { return false }
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentType {
         case .edit(let comment):
             if let parentId = comment.parentId,

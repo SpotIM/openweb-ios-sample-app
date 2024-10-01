@@ -559,7 +559,7 @@ fileprivate extension OWCommentThreadViewViewModel {
               let user = self.servicesProvider.usersService().get(userId: commentUserId)
         else { return nil }
 
-        var replyToUser: SPUser? = nil
+        var replyToUser: SPUser?
         if let replyToCommentId = comment.parentId,
            let replyToComment = self.servicesProvider.commentsService().get(commentId: replyToCommentId, postId: self.postId),
            let replyToUserId = replyToComment.userId {
@@ -597,7 +597,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         guard !comment.reported && !commentUser.isMuted else { return }
 
         let currentRankByUser = comment.rank?.rankedByCurrentUser ?? 0
-        var rankChangeToPerform: SPRankChange? = nil
+        var rankChangeToPerform: SPRankChange?
 
         switch (currentRankByUser, rankChange.to.rawValue) {
         case (0, _):

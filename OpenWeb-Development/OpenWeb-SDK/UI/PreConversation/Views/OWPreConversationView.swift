@@ -38,7 +38,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
-    var toastView: OWToastView? = nil
+    var toastView: OWToastView?
 
     fileprivate lazy var preConversationSummary: OWPreConversationSummaryView = {
         return OWPreConversationSummaryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
@@ -74,12 +74,12 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
             .wrapContent()
     }()
 
-    fileprivate var commentingCTAZeroHeightConstraint: OWConstraint? = nil
+    fileprivate var commentingCTAZeroHeightConstraint: OWConstraint?
 
     fileprivate lazy var errorStateView: OWErrorStateView = {
         return OWErrorStateView(with: viewModel.outputs.errorStateViewModel)
     }()
-    fileprivate var errorStateZeroHeightConstraint: OWConstraint? = nil
+    fileprivate var errorStateZeroHeightConstraint: OWConstraint?
 
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -110,7 +110,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
             .font(OWFontBook.shared.font(typography: .bodyContext))
     }()
 
-    fileprivate var ctaZeroHeightConstraint: OWConstraint? = nil
+    fileprivate var ctaZeroHeightConstraint: OWConstraint?
 
     fileprivate lazy var footerTopDevider: UIView = {
         return UIView()
@@ -154,7 +154,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
 
     private var tableViewHeightConstraint: OWConstraint?
     private var commentingCTAHeightConstraint: OWConstraint?
-    fileprivate var filterTabsHeightConstraint: OWConstraint? = nil
+    fileprivate var filterTabsHeightConstraint: OWConstraint?
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 

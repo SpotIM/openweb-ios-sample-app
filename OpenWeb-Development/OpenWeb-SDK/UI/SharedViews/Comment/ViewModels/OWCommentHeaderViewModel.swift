@@ -54,7 +54,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model.unwrap()
     }
 
-    fileprivate var user: SPUser? = nil
+    fileprivate var user: SPUser?
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     fileprivate var _unwrappedUser: Observable<SPUser> {
         _user.unwrap()

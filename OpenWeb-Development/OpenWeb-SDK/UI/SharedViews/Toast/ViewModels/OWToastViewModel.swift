@@ -76,7 +76,7 @@ fileprivate extension OWToastViewModel {
     }
 
     func iconForType(type: OWToastType) -> UIImage {
-        var image: UIImage? = nil
+        var image: UIImage?
         switch type {
         case .information: image = UIImage(spNamed: "informationToast", supportDarkMode: false)
         case .success: image = UIImage(spNamed: "successToast", supportDarkMode: false)

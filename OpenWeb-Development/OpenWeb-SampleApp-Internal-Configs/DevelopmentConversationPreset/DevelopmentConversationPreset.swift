@@ -11,7 +11,7 @@ import Foundation
 public struct DevelopmentConversationPreset {
     public let displayName: String
     public let conversationDataModel: DevelopmentSDKConversationDataModel
-    public var section: String? = nil
+    public var section: String?
 }
 
 public extension DevelopmentConversationPreset {

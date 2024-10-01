@@ -39,7 +39,7 @@ class OWCommunityQuestionView: UIView {
             .border(width: 1, color: OWColorPalette.shared.color(type: .borderColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var heightConstraint: OWConstraint? = nil
+    fileprivate var heightConstraint: OWConstraint?
     fileprivate var viewModel: OWCommunityQuestionViewModeling!
     fileprivate var disposeBag = DisposeBag()
 

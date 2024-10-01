@@ -36,9 +36,9 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate var spotId: OWSpotId? = nil
+    fileprivate var spotId: OWSpotId?
     fileprivate var _locale = Locale(identifier: Metrics.defaultLocaleIdentifier)
-    fileprivate var localizationBundle: Bundle? = nil
+    fileprivate var localizationBundle: Bundle?
 
     fileprivate let _languageStrategy = BehaviorSubject<OWLanguageStrategy>(value: OWLanguageStrategy.default)
     fileprivate var languageStrategy: Observable<OWLanguageStrategy> {

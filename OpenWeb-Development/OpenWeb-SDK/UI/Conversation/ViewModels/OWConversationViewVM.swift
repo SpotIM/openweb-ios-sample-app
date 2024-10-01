@@ -863,7 +863,7 @@ fileprivate extension OWConversationViewViewModel {
               let user = self.servicesProvider.usersService().get(userId: commentUserId)
         else { return nil }
 
-        var replyToUser: SPUser? = nil
+        var replyToUser: SPUser?
         if let replyToCommentId = comment.parentId,
            let replyToComment = self.servicesProvider.commentsService().get(commentId: replyToCommentId, postId: self.postId),
            let replyToUserId = replyToComment.userId {

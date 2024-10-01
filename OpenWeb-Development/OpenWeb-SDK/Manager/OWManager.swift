@@ -26,8 +26,8 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
     fileprivate let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
-    fileprivate var _currentNonRxSpotId: OWSpotId? = nil
-    fileprivate var _currentNonRxPostId: OWPostId? = nil
+    fileprivate var _currentNonRxSpotId: OWSpotId?
+    fileprivate var _currentNonRxPostId: OWPostId?
 
     // Layers
     let analyticsLayer: OWAnalytics

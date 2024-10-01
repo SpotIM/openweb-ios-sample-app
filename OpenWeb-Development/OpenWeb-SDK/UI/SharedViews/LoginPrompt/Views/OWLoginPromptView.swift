@@ -90,8 +90,8 @@ class OWLoginPromptView: UIView {
         return tap
     }()
 
-    fileprivate var zeroHeightConstraint: OWConstraint? = nil
-    fileprivate var zeroWidthConstraint: OWConstraint? = nil
+    fileprivate var zeroHeightConstraint: OWConstraint?
+    fileprivate var zeroWidthConstraint: OWConstraint?
 
     fileprivate var viewModel: OWLoginPromptViewModeling
     fileprivate var disposeBag: DisposeBag

@@ -35,7 +35,7 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate let viewModel: OWAdditionalInfoViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate var footerBottomPaddingConstraint: OWConstraint? = nil
+    fileprivate var footerBottomPaddingConstraint: OWConstraint?
     fileprivate var hasLayoutSubviewsFirstTime = false
 
     fileprivate lazy var titleView: OWTitleView = {

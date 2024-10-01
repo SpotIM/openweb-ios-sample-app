@@ -112,9 +112,9 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastN
         return OWUserMentionView(viewModel: viewModel.outputs.userMentionVM)
     }()
 
-    fileprivate var replyToLabelHeightConstraint: OWConstraint? = nil
-    fileprivate var replySnippetHeightConstraint: OWConstraint? = nil
-    fileprivate var commentLabelsContainerHeightConstraint: OWConstraint? = nil
+    fileprivate var replyToLabelHeightConstraint: OWConstraint?
+    fileprivate var replySnippetHeightConstraint: OWConstraint?
+    fileprivate var commentLabelsContainerHeightConstraint: OWConstraint?
     fileprivate let viewModel: OWCommentCreationLightViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 

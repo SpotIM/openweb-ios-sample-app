@@ -52,7 +52,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var labelClickIndex = PublishSubject<Int>()
 
     fileprivate var userMentions: [OWUserMentionObject]
-    fileprivate var readMoreRange: NSRange? = nil
+    fileprivate var readMoreRange: NSRange?
     fileprivate var availableUrlsRange: OWRangeURLsMapper
     fileprivate var serviceProvider: OWSharedServicesProviding
 

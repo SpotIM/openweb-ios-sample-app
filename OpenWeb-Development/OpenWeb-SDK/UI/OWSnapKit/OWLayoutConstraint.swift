@@ -18,7 +18,7 @@ class OWLayoutConstraint: NSLayoutConstraint {
         }
     }
 
-    weak var constraint: OWConstraint? = nil
+    weak var constraint: OWConstraint?
 }
 
 func == (lhs: OWLayoutConstraint, rhs: OWLayoutConstraint) -> Bool {
