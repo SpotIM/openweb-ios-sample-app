@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-typealias CommentLabelsSectionsConfig = Dictionary<String, SPCommentLabelsSectionConfiguration>
+typealias CommentLabelsSectionsConfig = [String: SPCommentLabelsSectionConfiguration]
 
 protocol OWCommentLabelViewModelingInputs {
     var labelClicked: PublishSubject<Void> { get }

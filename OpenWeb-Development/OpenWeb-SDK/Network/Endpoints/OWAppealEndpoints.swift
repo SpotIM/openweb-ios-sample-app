@@ -60,7 +60,7 @@ enum OWAppealEndpoints: OWEndpoints {
 }
 
 protocol OWAppealAPI {
-    func getAppealOptions() -> OWNetworkResponse<Array<OWAppealReason>>
+    func getAppealOptions() -> OWNetworkResponse<[OWAppealReason]>
     func isEligibleToAppeal(commentId: String) -> OWNetworkResponse<IsEligibleToAppealResponse>
     func submitAppeal(commentId: String, reason: OWAppealReasonType, message: String) -> OWNetworkResponse<OWNetworkEmpty>
 }
@@ -69,7 +69,7 @@ extension OWNetworkAPI: OWAppealAPI {
     // Access by .appeal for readability
     var appeal: OWAppealAPI { return self }
 
-    func getAppealOptions() -> OWNetworkResponse<Array<OWAppealReason>> {
+    func getAppealOptions() -> OWNetworkResponse<[OWAppealReason]> {
         let endpoint = OWAppealEndpoints.appealOptions
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
