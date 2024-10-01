@@ -42,7 +42,7 @@ protocol PreConversationSettingsViewModeling {
 class PreConversationSettingsVM: PreConversationSettingsViewModeling,
                                  PreConversationSettingsViewModelingInputs,
                                  PreConversationSettingsViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayInsertDataToPersistense = 100
     }
 
@@ -54,7 +54,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
     var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.default.index)
     var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.default.index)
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     var showCustomStyleOptions: Observable<Bool> {
         return styleModeIndex
@@ -122,7 +122,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
             .asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("PreConversationSettings", comment: "")
@@ -170,14 +170,14 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
         return [_none, _regular, _compact]
     }()
 
-    fileprivate let min = OWPreConversationStyle.Metrics.minNumberOfComments
-    fileprivate let max = OWPreConversationStyle.Metrics.maxNumberOfComments
+    private let min = OWPreConversationStyle.Metrics.minNumberOfComments
+    private let max = OWPreConversationStyle.Metrics.maxNumberOfComments
     lazy var customStyleNumberOfCommentsSettings: [String] = {
         Array(min...max).map { String($0) }
     }()
 
     // swiftlint:disable closure_parameter_position
-    fileprivate lazy var customStyleModeObservable: Observable<OWPreConversationStyle> = {
+    private lazy var customStyleModeObservable: Observable<OWPreConversationStyle> = {
         return Observable.combineLatest(customStyleModeSelectedIndex,
                                         customStyleModeSelectedNumberOfComments,
                                         communityGuidelinesStyleSelectedIndex,
@@ -202,7 +202,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
     }
 }
 
-fileprivate extension PreConversationSettingsVM {
+private extension PreConversationSettingsVM {
     func setupObservers() {
         customStyleModeObservable
             .skip(1)

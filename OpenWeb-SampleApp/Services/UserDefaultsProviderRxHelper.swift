@@ -24,7 +24,7 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
 
-    fileprivate var rxObjects: [String: RxHelperModel] = [:]
+    private var rxObjects: [String: RxHelperModel] = [:]
 
     init(decoder: JSONDecoder, encoder: JSONEncoder) {
         self.decoder = decoder
@@ -63,7 +63,7 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
     }
 }
 
-fileprivate extension UserDefaultsProviderRxHelper {
+private extension UserDefaultsProviderRxHelper {
     func getBinderObservable<T>(key: UserDefaultsProvider.UDKey<T>) -> Observable<Data?> {
         guard let observer = rxObject(key: key).binderObservable else {
             let observer = Observable<Data?>.create { _ in

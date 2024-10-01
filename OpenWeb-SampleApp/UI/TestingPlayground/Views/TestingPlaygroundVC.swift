@@ -17,7 +17,7 @@ import SnapKit
 
 class TestingPlaygroundVC: UIViewController {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "testing_playground_vc_id"
         static let btnPlaygroundPushModeIdentifier = "btn_playground_push_mode_id"
         static let btnPlaygroundPresentModeIdentifier = "btn_playground_present_mode_id"
@@ -27,25 +27,25 @@ class TestingPlaygroundVC: UIViewController {
         static let buttonHeight: CGFloat = 50
     }
 
-    fileprivate let viewModel: TestingPlaygroundViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: TestingPlaygroundViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var btnPlaygroundPushMode: UIButton = {
+    private lazy var btnPlaygroundPushMode: UIButton = {
         return NSLocalizedString("PlaygroundPushMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnPlaygroundPresentMode: UIButton = {
+    private lazy var btnPlaygroundPresentMode: UIButton = {
         return NSLocalizedString("PlaygroundPresentMode", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnPlaygroundIndependentMode: UIButton = {
+    private lazy var btnPlaygroundIndependentMode: UIButton = {
         return NSLocalizedString("PlaygroundIndependentMode", comment: "").blueRoundedButton
     }()
 
@@ -70,7 +70,7 @@ class TestingPlaygroundVC: UIViewController {
     }
 }
 
-fileprivate extension TestingPlaygroundVC {
+private extension TestingPlaygroundVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnPlaygroundPushMode.accessibilityIdentifier = Metrics.btnPlaygroundPushModeIdentifier

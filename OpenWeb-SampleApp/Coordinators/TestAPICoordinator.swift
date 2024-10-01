@@ -11,7 +11,7 @@ import RxSwift
 
 class TestAPICoordinator: BaseCoordinator<Void> {
 
-    fileprivate let router: Routering
+    private let router: Routering
 
     init(router: Routering) {
         self.router = router

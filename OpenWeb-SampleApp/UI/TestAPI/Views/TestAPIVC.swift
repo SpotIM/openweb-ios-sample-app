@@ -12,7 +12,7 @@ import RxCocoa
 import SnapKit
 
 class TestAPIVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "test_api_vc_id"
         static let settingsBarItemIdentifier = "settings_bar_item_id"
         static let authBarItemIdentifier = "auth_bar_item_id"
@@ -44,24 +44,24 @@ class TestAPIVC: UIViewController {
         static let authBarItemMargin: CGFloat = 65
     }
 
-    fileprivate let viewModel: TestAPIViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: TestAPIViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var settingsBarItem: UIBarButtonItem = {
+    private lazy var settingsBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
                                style: .plain,
                                target: nil,
                                action: nil)
     }()
 
-    fileprivate lazy var authBarItem: UIBarButtonItem = {
+    private lazy var authBarItem: UIBarButtonItem = {
         let authBarItem = UIBarButtonItem(image: UIImage(named: "authenticationIcon"),
                                    style: .plain,
                                    target: nil,
@@ -70,7 +70,7 @@ class TestAPIVC: UIViewController {
         return authBarItem
     }()
 
-    fileprivate lazy var conversationPresetSelectionView: UIView = {
+    private lazy var conversationPresetSelectionView: UIView = {
         let spotPresetSelection = UIView()
         spotPresetSelection.backgroundColor = ColorPalette.shared.color(type: .background)
 
@@ -89,11 +89,11 @@ class TestAPIVC: UIViewController {
         return spotPresetSelection
     }()
 
-    fileprivate lazy var presetPicker: UIPickerView = {
+    private lazy var presetPicker: UIPickerView = {
         return UIPickerView()
     }()
 
-    fileprivate lazy var toolbarPicker: UIToolbar = {
+    private lazy var toolbarPicker: UIToolbar = {
         var toolbar = UIToolbar()
         toolbar.barTintColor = ColorPalette.shared.color(type: .darkGrey)
         toolbar.tintColor = ColorPalette.shared.color(type: .blackish)
@@ -108,55 +108,55 @@ class TestAPIVC: UIViewController {
         return toolbar
     }()
 
-    fileprivate lazy var btnDone: UIButton = {
+    private lazy var btnDone: UIButton = {
         return NSLocalizedString("Done", comment: "")
                 .blueRoundedButton
                 .withPadding(Metrics.buttonPadding)
     }()
 
-    fileprivate lazy var envLabel: UILabel = {
+    private lazy var envLabel: UILabel = {
         return UILabel()
             .font(FontBook.paragraphBold)
             .textColor(.red)
     }()
 
-    fileprivate lazy var btnSelectPreset: UIButton = {
+    private lazy var btnSelectPreset: UIButton = {
         return NSLocalizedString("SelectPreset", comment: "").darkGrayRoundedButton
     }()
 
-    fileprivate lazy var txtFieldSpotId: TextFieldSetting = {
+    private lazy var txtFieldSpotId: TextFieldSetting = {
         let txtField = TextFieldSetting(title: NSLocalizedString("SpotId", comment: "") + ":",
                                         accessibilityPrefixId: Metrics.txtFieldSpotIdIdentifier)
         return txtField
     }()
 
-    fileprivate lazy var txtFieldPostId: TextFieldSetting = {
+    private lazy var txtFieldPostId: TextFieldSetting = {
         let txtField = TextFieldSetting(title: NSLocalizedString("PostId", comment: "") + ":",
                                         accessibilityPrefixId: Metrics.txtFieldPostIdIdentifier)
         return txtField
     }()
 
-    fileprivate lazy var btnUIFlows: UIButton = {
+    private lazy var btnUIFlows: UIButton = {
         return NSLocalizedString("UIFlows", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnUIViews: UIButton = {
+    private lazy var btnUIViews: UIButton = {
         return NSLocalizedString("UIViews", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnMiscellaneous: UIButton = {
+    private lazy var btnMiscellaneous: UIButton = {
         return NSLocalizedString("Miscellaneous", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnTestingPlayground: UIButton = {
+    private lazy var btnTestingPlayground: UIButton = {
         return NSLocalizedString("TestingPlayground", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnAutomation: UIButton = {
+    private lazy var btnAutomation: UIButton = {
         return NSLocalizedString("Automation", comment: "").blueRoundedButton
     }()
 
-    fileprivate var selectedAnswer: ConversationPreset?
+    private var selectedAnswer: ConversationPreset?
 
     init(viewModel: TestAPIViewModeling = TestAPIViewModel()) {
         self.viewModel = viewModel
@@ -187,7 +187,7 @@ class TestAPIVC: UIViewController {
     }
 }
 
-fileprivate extension TestAPIVC {
+private extension TestAPIVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
@@ -417,7 +417,7 @@ fileprivate extension TestAPIVC {
     }
 }
 
-fileprivate extension TestAPIVC {
+private extension TestAPIVC {
 
     func showPresetPicker(_ shouldShow: Bool) {
         if shouldShow {

@@ -19,7 +19,7 @@ protocol CommonCreatorServicing {
 }
 
 class CommonCreatorService: CommonCreatorServicing {
-    fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider

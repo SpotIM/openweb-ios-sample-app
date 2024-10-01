@@ -11,7 +11,7 @@ import RxSwift
 
 class PreConversationSettingsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "pre_conversation_settings_view_id"
         static let segmentedStyleModeIdentifier = "custom_style_mode"
         static let pickerCustomStyleNumberOfCommentsIdentifier = "custom_style_number_of_comments"
@@ -21,21 +21,21 @@ class PreConversationSettingsView: UIView {
         static let horizontalOffset: CGFloat = 10
     }
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metrics.verticalOffset
         return stackView
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedStyleMode: SegmentedControlSetting = {
+    private lazy var segmentedStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.styleModeTitle
         let items = viewModel.outputs.styleModeSettings
 
@@ -44,7 +44,7 @@ class PreConversationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var pickerCustomStyleNumberOfComments: PickerSetting = {
+    private lazy var pickerCustomStyleNumberOfComments: PickerSetting = {
         let title = viewModel.outputs.customStyleNumberOfCommentsTitle
         let picker = PickerSetting(title: title,
                                    accessibilityPrefixId: Metrics.pickerCustomStyleNumberOfCommentsIdentifier,
@@ -52,7 +52,7 @@ class PreConversationSettingsView: UIView {
         return picker
     }()
 
-    fileprivate lazy var segmentedCommunityGuidelinesStyleMode: SegmentedControlSetting = {
+    private lazy var segmentedCommunityGuidelinesStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.communityGuidelinesStyleModeTitle
         let items = viewModel.outputs.communityGuidelinesModeSettings
 
@@ -61,7 +61,7 @@ class PreConversationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedCommunityQuestionsStyleMode: SegmentedControlSetting = {
+    private lazy var segmentedCommunityQuestionsStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.communityQuestionsStyleModeTitle
         let items = viewModel.outputs.communityQuestionsStyleModeSettings
 
@@ -70,8 +70,8 @@ class PreConversationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate let viewModel: PreConversationSettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: PreConversationSettingsViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: PreConversationSettingsViewModeling) {
         self.viewModel = viewModel
@@ -86,7 +86,7 @@ class PreConversationSettingsView: UIView {
     }
 }
 
-fileprivate extension PreConversationSettingsView {
+private extension PreConversationSettingsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }

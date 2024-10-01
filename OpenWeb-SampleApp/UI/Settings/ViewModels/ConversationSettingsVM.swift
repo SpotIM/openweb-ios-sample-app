@@ -52,7 +52,7 @@ protocol ConversationSettingsViewModeling {
 class ConversationSettingsVM: ConversationSettingsViewModeling,
                               ConversationSettingsViewModelingInputs,
                               ConversationSettingsViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayInsertDataToPersistense = 100
     }
 
@@ -67,7 +67,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
     var communityGuidelinesSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)")
     var communityQuestionsGuidelinesSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)")
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     var styleModeIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
@@ -188,7 +188,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
             .asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("ConversationSettings", comment: "")
@@ -268,7 +268,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
 
     // swiftlint:disable closure_parameter_position
     // Observer for all conversation style parameters to data
-    fileprivate lazy var styleModeObservable: Observable<OWConversationStyle> = {
+    private lazy var styleModeObservable: Observable<OWConversationStyle> = {
         return Observable.combineLatest(styleModeSelectedIndex,
                                         communityGuidelinesStyleSelectedIndex,
                                         communityQuestionsStyleModeSelectedIndex,
@@ -302,7 +302,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
     }
 }
 
-fileprivate extension ConversationSettingsVM {
+private extension ConversationSettingsVM {
     func setupObservers() {
         // Conversation style mode data binder to persistence key conversationStyle
         styleModeObservable

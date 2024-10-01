@@ -12,7 +12,7 @@ import RxCocoa
 import SnapKit
 
 class MockArticleFlowsVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         // 1.2 * screen height, defualt to 1200
@@ -26,10 +26,10 @@ class MockArticleFlowsVC: UIViewController {
         static let viewIdentifier = "mock_article_flows_view_id"
     }
 
-    fileprivate let viewModel: MockArticleFlowsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: MockArticleFlowsViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var articleScrollView: UIScrollView = {
+    private lazy var articleScrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
 
@@ -45,7 +45,7 @@ class MockArticleFlowsVC: UIViewController {
         return scroll
     }()
 
-    fileprivate lazy var articleView: UIView = {
+    private lazy var articleView: UIView = {
         let article = UIView()
 
         article.snp.makeConstraints { make in
@@ -69,14 +69,14 @@ class MockArticleFlowsVC: UIViewController {
         return article
     }()
 
-    fileprivate lazy var imgViewArticle: UIImageView = {
+    private lazy var imgViewArticle: UIImageView = {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
             .corner(radius: Metrics.articelImageViewCornerRadius)
     }()
 
-    fileprivate lazy var lblArticleDescription: UILabel = {
+    private lazy var lblArticleDescription: UILabel = {
         let txt = NSLocalizedString("MockArticleDescription", comment: "")
 
         return txt
@@ -86,7 +86,7 @@ class MockArticleFlowsVC: UIViewController {
             .textColor(ColorPalette.shared.color(type: .text))
     }()
 
-    fileprivate lazy var btnFullConversation: UIButton = {
+    private lazy var btnFullConversation: UIButton = {
         return UIButton()
             .backgroundColor(ColorPalette.shared.color(type: .blue))
             .textColor(ColorPalette.shared.color(type: .extraLightGrey))
@@ -95,7 +95,7 @@ class MockArticleFlowsVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
 
-    fileprivate lazy var btnCommentCreation: UIButton = {
+    private lazy var btnCommentCreation: UIButton = {
         return UIButton()
             .backgroundColor(ColorPalette.shared.color(type: .blue))
             .textColor(ColorPalette.shared.color(type: .extraLightGrey))
@@ -104,7 +104,7 @@ class MockArticleFlowsVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
 
-    fileprivate lazy var btnCommentThread: UIButton = {
+    private lazy var btnCommentThread: UIButton = {
         return UIButton()
             .backgroundColor(ColorPalette.shared.color(type: .blue))
             .textColor(ColorPalette.shared.color(type: .extraLightGrey))
@@ -143,7 +143,7 @@ class MockArticleFlowsVC: UIViewController {
     }
 }
 
-fileprivate extension MockArticleFlowsVC {
+private extension MockArticleFlowsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         articleView.accessibilityIdentifier = Metrics.viewIdentifier

@@ -38,12 +38,12 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
     var inputs: TestingPlaygroundViewModelingInputs { return self }
     var outputs: TestingPlaygroundViewModelingOutputs { return self }
 
-    fileprivate let dataModel: SDKConversationDataModel
+    private let dataModel: SDKConversationDataModel
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate weak var navController: UINavigationController?
-    fileprivate weak var presentationalVC: UIViewController?
+    private weak var navController: UINavigationController?
+    private weak var presentationalVC: UIViewController?
 
     let playgroundPushModeTapped = PublishSubject<Void>()
     let playgroundPresentModeTapped = PublishSubject<Void>()
@@ -59,7 +59,7 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
             .unwrap()
     }
 
-    fileprivate let _showError = PublishSubject<String>()
+    private let _showError = PublishSubject<String>()
     var showError: Observable<String> {
         return _showError
             .asObservable()
@@ -87,7 +87,7 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
     }
 }
 
-fileprivate extension TestingPlaygroundViewModel {
+private extension TestingPlaygroundViewModel {
 
     func setupObservers() {
 

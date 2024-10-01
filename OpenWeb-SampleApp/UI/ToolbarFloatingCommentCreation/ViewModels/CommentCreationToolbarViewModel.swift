@@ -30,7 +30,7 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
     var inputs: CommentCreationToolbarViewModelingInputs { return self }
     var outputs: CommentCreationToolbarViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     var _toolbarCellsVM = BehaviorSubject<[ToolbarCollectionCellViewModeling]?>(value: nil)
     var toolbarCellsVM: Observable<[ToolbarCollectionCellViewModeling]> {
@@ -46,13 +46,13 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
 
     var modelSelected = PublishSubject<ToolbarCollectionCellViewModeling>()
 
-    fileprivate var commentCreationSettings: OWCommentCreationSettingsProtocol?
+    private var commentCreationSettings: OWCommentCreationSettingsProtocol?
     func setCommentCreationSettings(_ settings: OWCommentCreationSettingsProtocol) {
         commentCreationSettings = settings
     }
 }
 
-fileprivate extension CommentCreationToolbarViewModel {
+private extension CommentCreationToolbarViewModel {
     func setupObservers() {
         modelSelected
             .subscribe(onNext: { [weak self] cellViewModel in

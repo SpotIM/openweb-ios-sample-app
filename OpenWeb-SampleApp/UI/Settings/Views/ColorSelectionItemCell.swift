@@ -14,7 +14,7 @@ import OpenWebSDK
 
 @available(iOS 14.0, *)
 class ColorSelectionItemCell: UITableViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let colorViewBorderSize: CGFloat = 1
         static let colorViewCornerRadius: CGFloat = 4
         static let generalSpacing: CGFloat = 14
@@ -22,29 +22,29 @@ class ColorSelectionItemCell: UITableViewCell {
         static let colorRectangleSize: CGFloat = 16
     }
 
-    fileprivate lazy var title: UILabel = {
+    private lazy var title: UILabel = {
         return UILabel()
             .font(FontBook.paragraph)
     }()
 
-    fileprivate lazy var enableCheckbox: UISwitch = {
+    private lazy var enableCheckbox: UISwitch = {
         let switchView = UISwitch()
         switchView.isOn = true
         switchView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         return switchView
     }()
 
-    fileprivate lazy var lightLabel: UILabel = {
+    private lazy var lightLabel: UILabel = {
         let label = UILabel()
         label.font = FontBook.helper
         label.text = "light"
         return label
     }()
 
-    fileprivate lazy var lightNoColorRedLine: CAShapeLayer = {
+    private lazy var lightNoColorRedLine: CAShapeLayer = {
         return diagonalRedLine()
     }()
-    fileprivate lazy var lightColorRectangleView: UIView = {
+    private lazy var lightColorRectangleView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.borderWidth = Metrics.colorViewBorderSize
@@ -55,17 +55,17 @@ class ColorSelectionItemCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var darkLabel: UILabel = {
+    private lazy var darkLabel: UILabel = {
         let label = UILabel()
         label.font = FontBook.helper
         label.text = "dark"
         return label
     }()
 
-    fileprivate lazy var darkNoColorRedLine: CAShapeLayer = {
+    private lazy var darkNoColorRedLine: CAShapeLayer = {
         return diagonalRedLine()
     }()
-    fileprivate lazy var darkColorRectangleView: UIView = {
+    private lazy var darkColorRectangleView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.borderWidth = Metrics.colorViewBorderSize
@@ -76,7 +76,7 @@ class ColorSelectionItemCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var lightTapGesture: UITapGestureRecognizer = {
+    private lazy var lightTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         self.addGestureRecognizer(tap)
         self.isUserInteractionEnabled = true
@@ -84,7 +84,7 @@ class ColorSelectionItemCell: UITableViewCell {
         return tap
     }()
 
-    fileprivate lazy var darkTapGesture: UITapGestureRecognizer = {
+    private lazy var darkTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         self.addGestureRecognizer(tap)
         self.isUserInteractionEnabled = true
@@ -92,8 +92,8 @@ class ColorSelectionItemCell: UITableViewCell {
         return tap
     }()
 
-    fileprivate var viewModel: ColorSelectionItemCellViewModeling!
-    fileprivate var disposeBag: DisposeBag
+    private var viewModel: ColorSelectionItemCellViewModeling!
+    private var disposeBag: DisposeBag
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         self.disposeBag = DisposeBag()
@@ -114,7 +114,7 @@ class ColorSelectionItemCell: UITableViewCell {
 }
 
 @available(iOS 14.0, *)
-fileprivate extension ColorSelectionItemCell {
+private extension ColorSelectionItemCell {
     func setupViews() {
         self.contentView.isUserInteractionEnabled = false
 

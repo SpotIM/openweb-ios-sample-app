@@ -33,7 +33,7 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
     var inputs: ConversationCountersNewAPIViewModelingInputs { return self }
     var outputs: ConversationCountersNewAPIViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let parsingSeparator: String = ", "
     }
 
@@ -43,21 +43,21 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
     let userPostIdsInput = BehaviorSubject<String>(value: "")
     let loadConversationCounter = PublishSubject<Void>()
 
-    fileprivate let _showLoader = BehaviorSubject<Bool?>(value: nil)
+    private let _showLoader = BehaviorSubject<Bool?>(value: nil)
     var showLoader: Observable<Bool> {
         return _showLoader
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let _showError = BehaviorSubject<String?>(value: nil)
+    private let _showError = BehaviorSubject<String?>(value: nil)
     var showError: Observable<String> {
         return _showError
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let _cellsViewModels = BehaviorSubject<[ConversationCounterNewAPICellViewModeling]?>(value: nil)
+    private let _cellsViewModels = BehaviorSubject<[ConversationCounterNewAPICellViewModeling]?>(value: nil)
     var cellsViewModels: Observable<[ConversationCounterNewAPICellViewModeling]> {
         _cellsViewModels
             .unwrap()
@@ -65,14 +65,14 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
             .startWith([])
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init() {
         setupObservers()
     }
 }
 
-fileprivate extension ConversationCountersNewAPIViewModel {
+private extension ConversationCountersNewAPIViewModel {
     func setupObservers() {
         loadConversationCounter
             .do(onNext: { [weak self] _ in

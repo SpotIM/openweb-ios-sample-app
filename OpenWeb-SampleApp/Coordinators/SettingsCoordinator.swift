@@ -11,7 +11,7 @@ import RxSwift
 
 class SettingsCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let router: Routering
+    private let router: Routering
 
     init(router: Routering) {
         self.router = router
@@ -46,7 +46,7 @@ class SettingsCoordinator: BaseCoordinator<Void> {
     }
 }
 
-fileprivate extension SettingsCoordinator {
+private extension SettingsCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: SettingsViewModeling) {
         if let generalSettingsVM = viewModel.outputs.settingsVMs.first(where: { $0 is GeneralSettingsViewModeling }) as? GeneralSettingsViewModeling {
             generalSettingsVM.outputs.openColorsCustomizationScreen
