@@ -91,4 +91,3 @@ fileprivate extension OWRealtimeNewCommentsView {
             .disposed(by: disposeBag)
     }
 }
-

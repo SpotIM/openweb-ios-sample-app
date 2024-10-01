@@ -56,4 +56,3 @@ fileprivate extension UITableView {
         }
     }
 }
-

@@ -99,4 +99,3 @@ fileprivate extension OWToastActionViewModel {
             .disposed(by: disposeBag)
     }
 }
-

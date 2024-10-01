@@ -173,4 +173,3 @@ fileprivate extension OWConversationSummaryView {
         commentsCountLabel.accessibilityIdentifier = Metrics.commentsCountLabelIdentifier
     }
 }
-

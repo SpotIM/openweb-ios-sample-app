@@ -72,4 +72,3 @@ fileprivate extension OWCommunityQuestionCell {
         self.accessibilityIdentifier = Metrics.identifier
     }
 }
-

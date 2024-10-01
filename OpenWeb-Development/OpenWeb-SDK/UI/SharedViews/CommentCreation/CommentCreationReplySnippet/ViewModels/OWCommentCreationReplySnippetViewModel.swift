@@ -76,4 +76,3 @@ fileprivate extension OWCommentCreationReplySnippetViewModel {
 
     }
 }
-

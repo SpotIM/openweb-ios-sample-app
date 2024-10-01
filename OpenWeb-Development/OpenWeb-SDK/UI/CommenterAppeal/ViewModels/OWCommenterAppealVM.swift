@@ -49,4 +49,3 @@ class OWCommenterAppealVM: OWCommenterAppealViewModeling,
         self.presentationalMode = presentationalMode
     }
 }
-
