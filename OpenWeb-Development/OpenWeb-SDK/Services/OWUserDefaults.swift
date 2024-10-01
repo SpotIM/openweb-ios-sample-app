@@ -24,17 +24,17 @@ protocol OWUserDefaultsRxProtocol {
 }
 
 class OWUserDefaults: ReactiveCompatible, OWUserDefaultsProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let suiteName = "com.open-web.sdk"
     }
 
     var rxProtocol: OWUserDefaultsRxProtocol { return self }
     fileprivate var rxHelper: OWPersistenceRxHelperProtocol
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let encoder: JSONEncoder
-    fileprivate let decoder: JSONDecoder
-    fileprivate let userDefaults: UserDefaults
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let encoder: JSONEncoder
+    private let decoder: JSONDecoder
+    private let userDefaults: UserDefaults
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          userDefaults: UserDefaults = UserDefaults(suiteName: Metrics.suiteName) ?? UserDefaults.standard,
@@ -84,7 +84,7 @@ class OWUserDefaults: ReactiveCompatible, OWUserDefaultsProtocol {
     }
 }
 
-fileprivate extension OWUserDefaults.OWKey {
+private extension OWUserDefaults.OWKey {
     // Add description for better understanding of future cases (keys)
     var description: String {
         switch self {
@@ -94,7 +94,7 @@ fileprivate extension OWUserDefaults.OWKey {
     }
 }
 
-fileprivate extension OWUserDefaults {
+private extension OWUserDefaults {
     func _save<T>(data: Data, forKey key: OWKey<T>) {
         servicesProvider.logger().log(level: .verbose, "Writing data to UserDefaults for key: \(key.rawValue)")
         userDefaults.set(data, forKey: key.rawValue)
@@ -125,7 +125,7 @@ extension OWUserDefaults {
     }
 }
 
-fileprivate extension Reactive where Base: OWUserDefaults {
+private extension Reactive where Base: OWUserDefaults {
     func setValues<T>(key: OWUserDefaults.OWKey<T>) -> Binder<T> {
         return base.rxHelper.binder(key: OWRxHelperKey<T>(key: key)) { value in
             base.save(value: value, forKey: key)

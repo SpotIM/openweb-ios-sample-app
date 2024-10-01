@@ -40,9 +40,9 @@ class OWCommenterAppealVM: OWCommenterAppealViewModeling,
         return OWCommenterAppealViewVM(data: data, viewableMode: viewableMode, presentationalMode: presentationalMode)
     }()
 
-    fileprivate let data: OWAppealRequiredData
-    fileprivate let viewableMode: OWViewableMode
-    fileprivate let presentationalMode: OWPresentationalModeCompact
+    private let data: OWAppealRequiredData
+    private let viewableMode: OWViewableMode
+    private let presentationalMode: OWPresentationalModeCompact
     init(data: OWAppealRequiredData, viewableMode: OWViewableMode, presentationalMode: OWPresentationalModeCompact) {
         self.data = data
         self.viewableMode = viewableMode

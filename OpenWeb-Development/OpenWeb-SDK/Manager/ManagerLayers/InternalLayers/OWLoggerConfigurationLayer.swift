@@ -9,9 +9,9 @@
 import Foundation
 
 class OWLoggerConfigurationLayer: OWLoggerConfiguration {
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var _logLevel: OWLogLevel = OWLogLevel.defaultLevelToUse
-    fileprivate var _logMethods: [OWLogMethod] = OWLogMethod.defaultMethodsToUse
+    private let servicesProvider: OWSharedServicesProviding
+    private var _logLevel: OWLogLevel = OWLogLevel.defaultLevelToUse
+    private var _logMethods: [OWLogMethod] = OWLogMethod.defaultMethodsToUse
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -38,7 +38,7 @@ class OWLoggerConfigurationLayer: OWLoggerConfiguration {
     }
 }
 
-fileprivate extension OWLoggerConfigurationLayer {
+private extension OWLoggerConfigurationLayer {
     func configureLogger() {
         guard let servicesProviderConfigure = servicesProvider as? OWSharedServicesProviderConfigure else {
             let logMessage = "Failed casting `OWSharedServicesProvider` to `OWSharedServicesProviderConfigure` protocol, can't configure logger settings"

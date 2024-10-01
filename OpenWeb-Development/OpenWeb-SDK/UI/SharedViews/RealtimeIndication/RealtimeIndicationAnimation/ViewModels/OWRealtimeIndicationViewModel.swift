@@ -41,7 +41,7 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
     let panHorisontalPositionDidChange = PublishSubject<CGFloat>()
     let panHorisontalPositionChangeDidEnd = PublishSubject<Void>()
 
-    fileprivate let _tapped = PublishSubject<Void>()
+    private let _tapped = PublishSubject<Void>()
     var tapped: Observable<Void> {
         _tapped
             .asObservable()
@@ -55,14 +55,14 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
         panHorisontalPositionChangeDidEnd.asObservable()
     }
 
-    fileprivate let _shouldShowTypingLabel = BehaviorSubject<Bool>(value: false)
+    private let _shouldShowTypingLabel = BehaviorSubject<Bool>(value: false)
     var shouldShowTypingLabel: Observable<Bool> {
         return _shouldShowTypingLabel
             .distinctUntilChanged()
             .asObservable()
     }
 
-    fileprivate let _shouldShowNewCommentsLabel = BehaviorSubject<Bool>(value: false)
+    private let _shouldShowNewCommentsLabel = BehaviorSubject<Bool>(value: false)
     var shouldShowNewCommentsLabel: Observable<Bool> {
         return _shouldShowNewCommentsLabel
             .distinctUntilChanged()
@@ -77,8 +77,8 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
         return OWRealtimeNewCommentsViewModel()
     }()
 
-    fileprivate var realtimeIndicatorService: OWRealtimeIndicatorServicing
-    fileprivate let disposeBag = DisposeBag()
+    private var realtimeIndicatorService: OWRealtimeIndicatorServicing
+    private let disposeBag = DisposeBag()
 
     init(realtimeIndicatorService: OWRealtimeIndicatorServicing = OWSharedServicesProvider.shared.realtimeIndicatorService()) {
         self.realtimeIndicatorService = realtimeIndicatorService

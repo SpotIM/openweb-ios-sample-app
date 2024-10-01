@@ -34,7 +34,7 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
     var outputs: OWConversationSortViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeSortByLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeSortByLabelUI = BehaviorSubject<UILabel?>(value: nil)
 
     var triggerCustomizeSortByLabelUI = PublishSubject<UILabel>()
     var sortTapped = PublishSubject<OWUISource>()
@@ -46,7 +46,7 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
             .asObservable()
     }
 
-    fileprivate let _selectedSortOption = BehaviorSubject<OWSortOption?>(value: nil)
+    private let _selectedSortOption = BehaviorSubject<OWSortOption?>(value: nil)
     var selectedSortOption: Observable<OWSortOption> {
         _selectedSortOption
             .unwrap()
@@ -57,10 +57,10 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
         sortTapped.asObservable()
     }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
-    fileprivate var postId: OWPostId {
+    private var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
 
@@ -71,7 +71,7 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
     }
 }
 
-fileprivate extension OWConversationSortViewModel {
+private extension OWConversationSortViewModel {
     func setupObservers() {
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider

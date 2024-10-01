@@ -17,7 +17,7 @@ extension Double {
     return lhs.precised(value) == rhs.precised(value)
   }
 
-  fileprivate func precised(_ value: Int = 1) -> Double {
+  private func precised(_ value: Int = 1) -> Double {
     let offset = pow(10, Double(value))
     return (self * offset).rounded() / offset
   }

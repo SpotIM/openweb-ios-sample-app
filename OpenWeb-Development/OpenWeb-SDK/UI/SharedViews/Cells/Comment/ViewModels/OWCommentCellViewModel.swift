@@ -28,7 +28,7 @@ protocol OWCommentCellViewModeling: OWCellViewModel {
 class OWCommentCellViewModel: OWCommentCellViewModeling,
                               OWCommentCellViewModelingInputs,
                               OWCommentCellViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let viewAccessibilityIdentifier = "comment_cell_id_"
     }
 
@@ -39,7 +39,7 @@ class OWCommentCellViewModel: OWCommentCellViewModeling,
         return Metrics.viewAccessibilityIdentifier + id
     }()
 
-    fileprivate let _updateSpacing = BehaviorSubject<OWVerticalSpacing?>(value: nil)
+    private let _updateSpacing = BehaviorSubject<OWVerticalSpacing?>(value: nil)
     var updateSpacing: Observable<OWVerticalSpacing> {
         _updateSpacing
             .unwrap()

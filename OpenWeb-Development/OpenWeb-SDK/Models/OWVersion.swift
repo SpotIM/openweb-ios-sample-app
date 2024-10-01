@@ -13,9 +13,9 @@ public enum OWParserError: Error {
 }
 
 class OWVersion: Decodable {
-    fileprivate let major: Int
-    fileprivate let minor: Int
-    fileprivate let patch: Int
+    private let major: Int
+    private let minor: Int
+    private let patch: Int
 
     init(from versionString: String) throws {
         let versionDelimiter = "."

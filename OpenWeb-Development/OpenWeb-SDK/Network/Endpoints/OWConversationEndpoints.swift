@@ -9,7 +9,7 @@
 import Foundation
 
 enum OWConversationEndpoints: OWEndpoints {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let parentCommentDepth: Int = 2
         static let replyCommentDepth: Int = 1
     }

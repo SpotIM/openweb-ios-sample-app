@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWCommunityGuidelinesView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let containerCorderRadius: CGFloat = 8
         static let containerHeight: CGFloat = 44
         static let horizontalOffset: CGFloat = 16
@@ -25,29 +25,29 @@ class OWCommunityGuidelinesView: UIView {
         static func communityGuidelinesTextViewIdentifier(fromStyle style: OWCommunityGuidelinesStyle) -> String { return "community_guidelines_text_view_\(style.rawValue)_id" }
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var guidelinesContainer: UIView = {
+    private lazy var guidelinesContainer: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .corner(radius: Metrics.containerCorderRadius)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var guidelinesIcon: UIImageView = {
+    private lazy var guidelinesIcon: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
             .wrapContent()
             .image(UIImage(spNamed: "guidelinesIcon", supportDarkMode: false)!)
     }()
 
-    fileprivate var heightConstraint: OWConstraint?
-    fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var heightConstraint: OWConstraint?
+    private var viewModel: OWCommunityGuidelinesViewModeling!
+    private var disposeBag = DisposeBag()
 
     // For init when using in Views and not in cells
     init(with viewModel: OWCommunityGuidelinesViewModeling) {
@@ -78,7 +78,7 @@ class OWCommunityGuidelinesView: UIView {
     }
 }
 
-fileprivate extension OWCommunityGuidelinesView {
+private extension OWCommunityGuidelinesView {
     // This function is Called updateUI instead of setupUI since it is designed to be reused for cells -
     // using function configure and here it is also called in init when this class is used as a standalone uiview
     func updateUI() {

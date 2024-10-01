@@ -37,17 +37,17 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     var inputs: OWAppealLabelViewModelingInputs { return self }
     var outputs: OWAppealLabelViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
-    fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
+    private var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
     var viewType: Observable<OWAppealLabelViewType> {
         _viewType
             .asObservable()
     }
 
-    fileprivate var _appealReasons = PublishSubject<[OWAppealReason]>()
-    fileprivate var appealReasons: Observable<[OWAppealReason]> {
+    private var _appealReasons = PublishSubject<[OWAppealReason]>()
+    private var appealReasons: Observable<[OWAppealReason]> {
         _appealReasons
             .asObservable()
     }
@@ -198,8 +198,8 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             .asObservable()
     }
 
-    fileprivate let commentId: OWCommentId
-    fileprivate let clarityDetailsType: OWClarityDetailsType
+    private let commentId: OWCommentId
+    private let clarityDetailsType: OWClarityDetailsType
     init(commentId: OWCommentId,
          clarityDetailsType: OWClarityDetailsType,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -211,7 +211,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     }
 
     // Show view according to config & appeal type
-    fileprivate lazy var shouldShowAppealView: Observable<Bool> = {
+    private lazy var shouldShowAppealView: Observable<Bool> = {
         let configurationService = servicesProvider.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
@@ -229,7 +229,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     }()
 }
 
-fileprivate extension OWAppealLabelViewModel {
+private extension OWAppealLabelViewModel {
     func setupObservers() {
         shouldShowAppealView
             .subscribe(onNext: { [weak self] shouldShow in

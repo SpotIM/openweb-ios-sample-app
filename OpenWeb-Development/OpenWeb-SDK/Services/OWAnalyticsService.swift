@@ -16,22 +16,22 @@ protocol OWAnalyticsServicing {
 }
 
 class OWAnalyticsService: OWAnalyticsServicing {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let maxEvents: Int = 10
         static let allEventsPlacholder: String = "all"
     }
 
-    fileprivate let maxEventsForFlush: Int
-    fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
-    fileprivate var analyticsEvents = OWObservableArray<OWAnalyticEvent>()
-    fileprivate var blockedEvents = BehaviorSubject<[String]>(value: [])
-    fileprivate let analyticsEventCreatorService: OWAnalyticsEventCreatorServicing
-    fileprivate let analyticsLayer: OWAnalyticsInternalProtocol
-    fileprivate let appendEventsPublisher = PublishSubject<[OWAnalyticEvent]>()
-    fileprivate let removeAllPublisher = PublishSubject<Void>()
+    private let maxEventsForFlush: Int
+    private let appLifeCycle: OWRxAppLifeCycleProtocol
+    private var analyticsEvents = OWObservableArray<OWAnalyticEvent>()
+    private var blockedEvents = BehaviorSubject<[String]>(value: [])
+    private let analyticsEventCreatorService: OWAnalyticsEventCreatorServicing
+    private let analyticsLayer: OWAnalyticsInternalProtocol
+    private let appendEventsPublisher = PublishSubject<[OWAnalyticEvent]>()
+    private let removeAllPublisher = PublishSubject<Void>()
 
-    fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
-    fileprivate let disposeBag = DisposeBag()
+    private let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
+    private let disposeBag = DisposeBag()
 
     // swiftlint:disable force_cast
     init(maxEventsForFlush: Int = Metrics.maxEvents,
@@ -69,7 +69,7 @@ class OWAnalyticsService: OWAnalyticsServicing {
 
 }
 
-fileprivate extension OWAnalyticsService {
+private extension OWAnalyticsService {
 
     func flushEvents() {
         let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.networkAPI().analytics
@@ -122,7 +122,7 @@ fileprivate extension OWAnalyticsService {
 }
 
 // Rx
-fileprivate extension OWAnalyticsService {
+private extension OWAnalyticsService {
     func setupObservers() {
         // Appending events
         appendEventsPublisher

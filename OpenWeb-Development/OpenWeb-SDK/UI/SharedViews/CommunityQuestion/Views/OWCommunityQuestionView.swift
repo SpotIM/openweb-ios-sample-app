@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWCommunityQuestionView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let fontSize: CGFloat = 15.0
         static let questionHorizontalOffset: CGFloat = 12.0
         static let questionVerticalOffset: CGFloat = 8.0
@@ -20,7 +20,7 @@ class OWCommunityQuestionView: UIView {
         static let identifier = "community_question_id"
     }
 
-    fileprivate lazy var questionLabel: UILabel = {
+    private lazy var questionLabel: UILabel = {
         return OWItalicLabel(top: Metrics.questionLabelInsets.top,
                              left: Metrics.questionLabelInsets.left,
                              bottom: Metrics.questionLabelInsets.bottom,
@@ -32,16 +32,16 @@ class OWCommunityQuestionView: UIView {
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var questionContainer: UIView = {
+    private lazy var questionContainer: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .corner(radius: Metrics.containerCorderRadius)
             .border(width: 1, color: OWColorPalette.shared.color(type: .borderColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var heightConstraint: OWConstraint?
-    fileprivate var viewModel: OWCommunityQuestionViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var heightConstraint: OWConstraint?
+    private var viewModel: OWCommunityQuestionViewModeling!
+    private var disposeBag = DisposeBag()
 
     // For init when using in Views and not in cells
     init(with viewModel: OWCommunityQuestionViewModeling) {
@@ -71,7 +71,7 @@ class OWCommunityQuestionView: UIView {
     }
 }
 
-fileprivate extension OWCommunityQuestionView {
+private extension OWCommunityQuestionView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }

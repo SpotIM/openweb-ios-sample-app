@@ -11,7 +11,7 @@ import Foundation
 import RxSwift
 
 class OWUserMentionView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "user_mention_view_id"
         static let rowHeight: CGFloat = 56
         static let maxNumberOfCellsHeight = 2.7
@@ -20,10 +20,10 @@ class OWUserMentionView: UIView {
         static let heightLowPriority = 250
     }
 
-    fileprivate let viewModel: OWUserMentionViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWUserMentionViewViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .separatorStyle(.singleLine)
             .separatorColor(OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light))
@@ -36,7 +36,7 @@ class OWUserMentionView: UIView {
         return tableView
     }()
 
-    fileprivate var heightContraint: OWConstraint?
+    private var heightContraint: OWConstraint?
 
     init(viewModel: OWUserMentionViewViewModeling = OWUserMentionViewVM()) {
         self.viewModel = viewModel
@@ -50,7 +50,7 @@ class OWUserMentionView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    fileprivate lazy var userMentionsDataSource: OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel> = {
+    private lazy var userMentionsDataSource: OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
             return .reload
         }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
@@ -68,7 +68,7 @@ class OWUserMentionView: UIView {
     }()
 }
 
-fileprivate extension OWUserMentionView {
+private extension OWUserMentionView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }

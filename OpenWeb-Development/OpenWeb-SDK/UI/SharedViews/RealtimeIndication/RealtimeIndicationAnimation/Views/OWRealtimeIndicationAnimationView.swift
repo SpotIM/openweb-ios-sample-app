@@ -19,17 +19,17 @@ class OWRealtimeIndicationAnimationView: UIView {
         static let showAndDismissAnimationSpringVelocity: CGFloat = 0.5
     }
 
-    fileprivate var indicationViewBottomConstraint: OWConstraint?
-    fileprivate var indicationViewCenterConstraint: OWConstraint?
-    fileprivate var indicationViewCurrentCenterOffset: CGFloat?
-    fileprivate var indicationViewCurrentBottomOffset: CGFloat?
+    private var indicationViewBottomConstraint: OWConstraint?
+    private var indicationViewCenterConstraint: OWConstraint?
+    private var indicationViewCurrentCenterOffset: CGFloat?
+    private var indicationViewCurrentBottomOffset: CGFloat?
 
-    fileprivate lazy var realtimeIndicationView: OWRealtimeIndicationView = {
+    private lazy var realtimeIndicationView: OWRealtimeIndicationView = {
         return OWRealtimeIndicationView(viewModel: viewModel.outputs.realtimeIndicationViewModel)
     }()
 
-    fileprivate var viewModel: OWRealtimeIndicationAnimationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWRealtimeIndicationAnimationViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWRealtimeIndicationAnimationViewModeling) {
         self.viewModel = viewModel
@@ -64,7 +64,7 @@ class OWRealtimeIndicationAnimationView: UIView {
     }
 }
 
-fileprivate extension OWRealtimeIndicationAnimationView {
+private extension OWRealtimeIndicationAnimationView {
     func setupUI() {
         self.clipsToBounds = true
 

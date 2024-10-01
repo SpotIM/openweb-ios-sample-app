@@ -16,11 +16,11 @@ protocol OWActiveArticleServicing {
 
 class OWActiveArticleService: OWActiveArticleServicing {
 
-    fileprivate let _strategy = BehaviorSubject<OWArticleInformationStrategy>(value: .server)
-    fileprivate let _serverArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData.empty)
+    private let _strategy = BehaviorSubject<OWArticleInformationStrategy>(value: .server)
+    private let _serverArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData.empty)
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var disposeBag: DisposeBag
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private var disposeBag: DisposeBag
 
     init(servicesProvider: OWSharedServicesProviding) {
         self.servicesProvider = servicesProvider
@@ -28,7 +28,7 @@ class OWActiveArticleService: OWActiveArticleServicing {
         setupObservers()
     }
 
-    fileprivate var newPost = PublishSubject<OWPostId>()
+    private var newPost = PublishSubject<OWPostId>()
 
     var articleExtraData: Observable<OWArticleExtraData> {
         return Observable.combineLatest(_serverArticle, _strategy) { serverArticle, strategy in
@@ -53,7 +53,7 @@ class OWActiveArticleService: OWActiveArticleServicing {
     }
 }
 
-fileprivate extension OWActiveArticleService {
+private extension OWActiveArticleService {
     func setupObservers() {
         newPost
             .withLatestFrom(_strategy) { _, strategy in

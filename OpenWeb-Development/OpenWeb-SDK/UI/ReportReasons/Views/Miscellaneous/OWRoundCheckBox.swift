@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWRoundCheckBox: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let outerSize: CGFloat = 24
         static let innerSize: CGFloat = 16
         static let outerRadius: CGFloat = outerSize / 2
@@ -22,9 +22,9 @@ class OWRoundCheckBox: UIView {
 
     var setSelected = BehaviorSubject(value: false)
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var checkBoxView: UIView = {
+    private lazy var checkBoxView: UIView = {
         let checkBoxView = UIView()
         let outerCirclePath = UIBezierPath(
             arcCenter: CGPoint(

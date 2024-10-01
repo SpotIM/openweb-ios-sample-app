@@ -34,10 +34,10 @@ class OWParagraphWithIconVM: OWParagraphWithIconViewModeling,
     var outputs: OWParagraphWithIconViewModelingOutputs { return self }
 
     var icon: UIImage?
-    fileprivate let text: String
-    fileprivate let communityGuidelinesClickable: Bool
+    private let text: String
+    private let communityGuidelinesClickable: Bool
 
-    fileprivate var _attributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil)
+    private var _attributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil)
     lazy var attributedString: Observable<NSAttributedString> = {
         return _attributedString
             .unwrap()
@@ -51,15 +51,15 @@ class OWParagraphWithIconVM: OWParagraphWithIconViewModeling,
             .asObservable()
     }
 
-    fileprivate lazy var accessibilityChange: Observable<Bool> = {
+    private lazy var accessibilityChange: Observable<Bool> = {
         servicesProvider.appLifeCycle()
             .didChangeContentSizeCategory
             .map { true }
             .startWith(false)
     }()
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var disposeBag: DisposeBag
+    private let servicesProvider: OWSharedServicesProviding
+    private var disposeBag: DisposeBag
 
     init(
         icon: UIImage?,
@@ -77,7 +77,7 @@ class OWParagraphWithIconVM: OWParagraphWithIconViewModeling,
     }
 }
 
-fileprivate extension OWParagraphWithIconVM {
+private extension OWParagraphWithIconVM {
     func setupObservers() {
         Observable.combineLatest(
             servicesProvider.themeStyleService().style,

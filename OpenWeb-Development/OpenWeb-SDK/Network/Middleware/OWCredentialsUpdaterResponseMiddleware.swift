@@ -10,7 +10,7 @@ import Foundation
 
 class OWCredentialsUpdaterResponseMiddleware: OWResponseMiddleware {
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider

@@ -17,10 +17,10 @@ protocol OWCommentStatusUpdaterServicing {
 }
 
 class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private var disposeBag: DisposeBag = DisposeBag()
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let retriesDefault: Int = 12
         static let timeoutDefault: Int = 3000
         static let intervalDefault: Int = 300
@@ -33,18 +33,18 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
         self.setupObservers()
     }
 
-    fileprivate var retries: Int = Metrics.retriesDefault
-    fileprivate var timeout: Int = Metrics.timeoutDefault
-    fileprivate var interval: Int = Metrics.intervalDefault
+    private var retries: Int = Metrics.retriesDefault
+    private var timeout: Int = Metrics.timeoutDefault
+    private var interval: Int = Metrics.intervalDefault
 
-    fileprivate let _statusUpdate = PublishSubject<(OWCommentId, OWCommentStatusType)>()
+    private let _statusUpdate = PublishSubject<(OWCommentId, OWCommentStatusType)>()
     lazy var statusUpdate: Observable<(OWCommentId, OWCommentStatusType)> = {
         _statusUpdate
             .asObserver()
             .share(replay: 1)
     }()
 
-    fileprivate let _fetchStatusFor = PublishSubject<OWComment>()
+    private let _fetchStatusFor = PublishSubject<OWComment>()
     func fetchStatusFor(comment: OWComment) {
         _fetchStatusFor.onNext(comment)
     }
@@ -59,7 +59,7 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     }
 }
 
-fileprivate extension OWCommentStatusUpdaterService {
+private extension OWCommentStatusUpdaterService {
     func getRawStatus(for comment: OWComment) -> Observable<String> {
         guard let commentId = comment.id else { return .empty() }
 

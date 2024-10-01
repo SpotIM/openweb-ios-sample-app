@@ -38,18 +38,18 @@ protocol OWCommenterAppealViewViewModeling {
 class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
                                OWCommenterAppealViewViewModelingInputs,
                                OWCommenterAppealViewViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let defaultTextViewMaxCharecters = 280
     }
 
     var inputs: OWCommenterAppealViewViewModelingInputs { return self }
     var outputs: OWCommenterAppealViewViewModelingOutputs { return self }
 
-    fileprivate var disposeBag: DisposeBag
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentId: OWCommentId
-    fileprivate var articleUrl: String = ""
-    fileprivate let presentationalMode: OWPresentationalModeCompact
+    private var disposeBag: DisposeBag
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentId: OWCommentId
+    private var articleUrl: String = ""
+    private let presentationalMode: OWPresentationalModeCompact
 
     let textViewVM: OWTextViewViewModeling
     let viewableMode: OWViewableMode
@@ -74,7 +74,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     }
 
     var closeOrCancelClick = PublishSubject<Void>()
-    fileprivate var isDismissEnable: Observable<Bool> {
+    private var isDismissEnable: Observable<Bool> {
         // Dismiss only if no text was added
         return textViewVM.outputs.textViewText
             .map { $0.isEmpty }
@@ -97,7 +97,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             .voidify()
     }
 
-    fileprivate let _appealOptions = BehaviorSubject<[OWAppealReason]>(value: [])
+    private let _appealOptions = BehaviorSubject<[OWAppealReason]>(value: [])
     lazy var appealOptions: Observable<[OWAppealReason]> = {
         _appealOptions
             .asObservable()
@@ -131,13 +131,13 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var _submitInProgress = BehaviorSubject<Bool>(value: false)
+    private var _submitInProgress = BehaviorSubject<Bool>(value: false)
     var submitInProgress: Observable<Bool> {
         return _submitInProgress
             .asObservable()
     }
 
-    fileprivate var isError = BehaviorSubject<Bool>(value: false)
+    private var isError = BehaviorSubject<Bool>(value: false)
     var submitButtonText: Observable<String> {
         return isError
             .map { error in
@@ -145,7 +145,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             }
     }
 
-    fileprivate var _isSubmitEnabled = PublishSubject<Bool>()
+    private var _isSubmitEnabled = PublishSubject<Bool>()
     var isSubmitEnabled: Observable<Bool> {
         return Observable.combineLatest(selectedReason, textViewVM.outputs.textViewText, submitInProgress)
             .map { reason, text, submitInProgress -> Bool in
@@ -159,7 +159,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
 
     var submitAppealTap = PublishSubject<Void>()
 
-    fileprivate let _appealSubmittedSuccessfully = BehaviorSubject<Void?>(value: nil)
+    private let _appealSubmittedSuccessfully = BehaviorSubject<Void?>(value: nil)
     var appealSubmittedSuccessfully: Observable<Void> {
         return _appealSubmittedSuccessfully
             .unwrap()
@@ -167,7 +167,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     }
 }
 
-fileprivate extension OWCommenterAppealViewVM {
+private extension OWCommenterAppealViewVM {
     func setupObservers() {
         selectedReason
             .map {

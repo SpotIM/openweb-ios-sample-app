@@ -18,17 +18,17 @@ protocol OWSortDictateServicing {
 
 class OWSortDictateService: OWSortDictateServicing {
 
-    fileprivate typealias OWSkipAndMapping = Observable<(Bool, [OWPostId: OWSortOption])>
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    private typealias OWSkipAndMapping = Observable<(Bool, [OWPostId: OWSortOption])>
+    private unowned let servicesProvider: OWSharedServicesProviding
 
-    fileprivate let mapper = BehaviorSubject<[OWPostId: OWSortOption]>(value: [:])
-    fileprivate lazy var sharedMapper = {
+    private let mapper = BehaviorSubject<[OWPostId: OWSortOption]>(value: [:])
+    private lazy var sharedMapper = {
         return mapper
             .share(replay: 1)
             .observe(on: MainScheduler.instance)
     }()
 
-    fileprivate lazy var sortCustomizer: OWSortingCustomizations = {
+    private lazy var sortCustomizer: OWSortingCustomizations = {
         return OpenWeb.manager
             .ui
             .customizations
@@ -141,7 +141,7 @@ class OWSortDictateService: OWSortDictateServicing {
     }
 }
 
-fileprivate extension OWSortDictateService {
+private extension OWSortDictateService {
     func inject(toPostId postId: OWPostId,
                 sortOption: OWSortOption,
                 fromOriginalMapping originalMapping: [OWPostId: OWSortOption]) {

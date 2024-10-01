@@ -27,12 +27,12 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringModeProtocol, OWCompactR
         return viewsSdkCoordinator.compactRoutering
     }
 
-    fileprivate let flowsSdkCoordinator: OWFlowsSDKCoordinator
-    fileprivate let viewsSdkCoordinator: OWViewsSDKCoordinator
-    fileprivate let _customizations: OWCustomizations
-    fileprivate let _authenticationUI: OWUIAuthentication
-    fileprivate var flowDisposeBag: DisposeBag!
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let flowsSdkCoordinator: OWFlowsSDKCoordinator
+    private let viewsSdkCoordinator: OWViewsSDKCoordinator
+    private let _customizations: OWCustomizations
+    private let _authenticationUI: OWUIAuthentication
+    private var flowDisposeBag: DisposeBag!
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          flowsSdkCoordinator: OWFlowsSDKCoordinator = OWFlowsSDKCoordinator(),
@@ -701,7 +701,7 @@ extension OWUILayer {
 #endif
 }
 
-fileprivate extension OWUILayer {
+private extension OWUILayer {
     func validateSpotIdExist<T: Any>(completion: @escaping (Result<T, OWError>) -> Void) -> Bool {
         let spotId = OpenWeb.manager.spotId
         guard !spotId.isEmpty else {
@@ -745,7 +745,7 @@ fileprivate extension OWUILayer {
     }
 }
 
-fileprivate extension OWUILayer {
+private extension OWUILayer {
     func event(for eventType: OWAnalyticEventType, presentationalStyle: OWPresentationalModeCompact) -> OWAnalyticEvent {
         return servicesProvider
             .analyticsEventCreatorService()

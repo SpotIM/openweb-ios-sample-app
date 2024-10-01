@@ -36,7 +36,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                                    OWCommentTextViewModelingInputs,
                                    OWCommentTextViewModelingOutputs {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let textOffset: CGFloat = OWCommentView.Metrics.horizontalOffset + OWCommentCell.ExternalMetrics.horizontalOffset * 2
         static let invalidURLSchemes: [String] = ["mailto"]
     }
@@ -44,17 +44,17 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var inputs: OWCommentTextViewModelingInputs { return self }
     var outputs: OWCommentTextViewModelingOutputs { return self }
 
-    fileprivate let collapsableTextLineLimit: Int
-    fileprivate let disposeBag = DisposeBag()
+    private let collapsableTextLineLimit: Int
+    private let disposeBag = DisposeBag()
 
-    fileprivate var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "SeeMore")
+    private var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "SeeMore")
 
     var labelClickIndex = PublishSubject<Int>()
 
-    fileprivate var userMentions: [OWUserMentionObject]
-    fileprivate var readMoreRange: NSRange?
-    fileprivate var availableUrlsRange: OWRangeURLsMapper
-    fileprivate var serviceProvider: OWSharedServicesProviding
+    private var userMentions: [OWUserMentionObject]
+    private var readMoreRange: NSRange?
+    private var availableUrlsRange: OWRangeURLsMapper
+    private var serviceProvider: OWSharedServicesProviding
 
     init(serviceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          comment: OWComment,
@@ -75,16 +75,16 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         _comment.onNext(comment)
     }
 
-    fileprivate lazy var _themeStyleObservable: Observable<OWThemeStyle> = {
+    private lazy var _themeStyleObservable: Observable<OWThemeStyle> = {
         OWSharedServicesProvider.shared.themeStyleService().style
     }()
 
-    fileprivate let _comment = BehaviorSubject<OWComment?>(value: nil)
-    fileprivate var comment: Observable<OWComment> {
+    private let _comment = BehaviorSubject<OWComment?>(value: nil)
+    private var comment: Observable<OWComment> {
         _comment.unwrap()
     }
 
-    fileprivate lazy var fullAttributedString: Observable<NSMutableAttributedString> = {
+    private lazy var fullAttributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_themeStyleObservable, _comment)
             .map { [weak self] style, comment in
                 guard let messageText = comment?.text?.text else { return NSMutableAttributedString() }
@@ -98,7 +98,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }()
 
     var width = BehaviorSubject<CGFloat>(value: 0)
-    fileprivate var widthObservable: Observable<CGFloat> {
+    private var widthObservable: Observable<CGFloat> {
         self.serviceProvider.conversationSizeService().conversationTableSize
             .distinctUntilChanged()
             .map { $0.width }
@@ -113,7 +113,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .asObservable()
     }
 
-    fileprivate var _linesAndFullAttributedString: Observable<([CTLine], NSMutableAttributedString)> {
+    private var _linesAndFullAttributedString: Observable<([CTLine], NSMutableAttributedString)> {
         Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, currentWidth in
             return (messageAttributedString.getLines(with: currentWidth), messageAttributedString)
         }
@@ -121,7 +121,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         .asObservable()
     }
 
-    fileprivate var _textState = BehaviorSubject<OWTextState>(value: .collapsed)
+    private var _textState = BehaviorSubject<OWTextState>(value: .collapsed)
     lazy var readMoreTap: Observable<Void> = {
         _textState
             .asObservable()
@@ -176,7 +176,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
 }
 
-fileprivate extension OWCommentTextViewModel {
+private extension OWCommentTextViewModel {
     func setupObservers() {
         labelClickIndex
             .subscribe(onNext: { [weak self] index in
@@ -207,7 +207,7 @@ fileprivate extension OWCommentTextViewModel {
     }
 }
 
-fileprivate extension OWCommentTextViewModel {
+private extension OWCommentTextViewModel {
 
     func messageStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()

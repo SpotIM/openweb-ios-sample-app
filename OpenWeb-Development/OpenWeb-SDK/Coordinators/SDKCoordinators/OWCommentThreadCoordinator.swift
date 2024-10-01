@@ -27,23 +27,23 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
-    fileprivate let router: OWRoutering!
-    fileprivate let commentThreadData: OWCommentThreadRequiredData
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let flowActionsCallbacks: OWFlowActionsCallbacks?
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var viewableMode: OWViewableMode!
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let router: OWRoutering!
+    private let commentThreadData: OWCommentThreadRequiredData
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private let flowActionsCallbacks: OWFlowActionsCallbacks?
+    private let servicesProvider: OWSharedServicesProviding
+    private var viewableMode: OWViewableMode!
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .commentThread)
     }()
-    fileprivate lazy var flowActionsService: OWFlowActionsServicing = {
+    private lazy var flowActionsService: OWFlowActionsServicing = {
         return OWFlowActionsService(flowActionsCallbacks: flowActionsCallbacks, viewSourceType: .commentThread)
     }()
-    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+    private lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .commentThread)
     }()
 
-    fileprivate var commentThreadVC: OWCommentThreadVC?
+    private var commentThreadVC: OWCommentThreadVC?
 
     init(router: OWRoutering! = nil,
          commentThreadData: OWCommentThreadRequiredData,
@@ -232,7 +232,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 }
 
-fileprivate extension OWCommentThreadCoordinator {
+private extension OWCommentThreadCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentThreadViewModeling) {
         // Setting up general observers which affect app flow however not entirely inside the SDK
         setupObservers(forViewModel: viewModel.outputs.commentThreadViewVM)

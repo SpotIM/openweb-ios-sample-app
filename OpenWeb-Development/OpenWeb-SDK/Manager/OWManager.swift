@@ -22,12 +22,12 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     static let manager = OWManager()
 
     // Memebers variables
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
-    fileprivate let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
-    fileprivate var _currentNonRxSpotId: OWSpotId?
-    fileprivate var _currentNonRxPostId: OWPostId?
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
+    private let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
+    private var _currentNonRxSpotId: OWSpotId?
+    private var _currentNonRxPostId: OWPostId?
 
     // Layers
     let analyticsLayer: OWAnalytics
@@ -102,7 +102,7 @@ extension OWManager {
 }
 
 // Extension with access only inside this file and for the OWManager class
-fileprivate extension OWManager {
+private extension OWManager {
     func setupObservers() {
         currentPostId
             .skip(1)

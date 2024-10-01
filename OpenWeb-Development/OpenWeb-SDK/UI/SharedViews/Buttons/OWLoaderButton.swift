@@ -11,8 +11,8 @@ import RxSwift
 import RxCocoa
 
 class OWLoaderButton: UIButton {
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate var spinner = UIActivityIndicatorView()
+    private let disposeBag = DisposeBag()
+    private var spinner = UIActivityIndicatorView()
     fileprivate var isLoading = false {
         didSet {
             if isLoading != oldValue {
@@ -33,7 +33,7 @@ class OWLoaderButton: UIButton {
         setupObservers()
     }
 
-    fileprivate func setupView() {
+    private func setupView() {
         spinner.hidesWhenStopped = true
         spinner.color = OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         addSubview(spinner)
@@ -42,9 +42,9 @@ class OWLoaderButton: UIButton {
         }
     }
 
-    fileprivate var image: UIImage?
-    fileprivate var originalTextColor: UIColor?
-    fileprivate func updateView() {
+    private var image: UIImage?
+    private var originalTextColor: UIColor?
+    private func updateView() {
         if isLoading {
             spinner.startAnimating()
 
@@ -70,7 +70,7 @@ class OWLoaderButton: UIButton {
     }
 }
 
-fileprivate extension OWLoaderButton {
+private extension OWLoaderButton {
     func setupObservers() {
         OWSharedServicesProvider.shared.themeStyleService()
             .style

@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWErrorRetryCTAView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let ctaVerticalPadding: CGFloat = 5
         static let ctaHorizontalPadding: CGFloat = 4
         static let retryIconSize: CGFloat = 14
@@ -21,7 +21,7 @@ class OWErrorRetryCTAView: UIView {
         static let ctaLabelIdentifier = "error_state_cta_label_id"
     }
 
-    fileprivate var attributedString: NSAttributedString {
+    private var attributedString: NSAttributedString {
         return NSAttributedString(
             string: OWLocalizationManager.shared.localizedString(key: "TryAgain"),
             attributes: [
@@ -30,20 +30,20 @@ class OWErrorRetryCTAView: UIView {
             ])
     }
 
-    fileprivate lazy var ctaLabel: UILabel = {
+    private lazy var ctaLabel: UILabel = {
         return UILabel()
             .textColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
             .attributedText(attributedString)
             .wrapContent(axis: .horizontal)
     }()
 
-    fileprivate lazy var retryIcon: UIImageView = {
+    private lazy var retryIcon: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
             .image(UIImage(spNamed: "errorStateRetryIcon", supportDarkMode: false)!)
     }()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init() {
         super.init(frame: .zero)
@@ -57,7 +57,7 @@ class OWErrorRetryCTAView: UIView {
     }
 }
 
-fileprivate extension OWErrorRetryCTAView {
+private extension OWErrorRetryCTAView {
     func setupUI() {
         self.addSubview(ctaLabel)
         ctaLabel.OWSnp.makeConstraints { make in

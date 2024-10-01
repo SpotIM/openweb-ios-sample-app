@@ -36,52 +36,52 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
 
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
-    // TODO: fileprivate lazy var adBannerView: SPAdBannerView
+    // TODO: private lazy var adBannerView: SPAdBannerView
 
     var toastView: OWToastView?
 
-    fileprivate lazy var preConversationSummary: OWPreConversationSummaryView = {
+    private lazy var preConversationSummary: OWPreConversationSummaryView = {
         return OWPreConversationSummaryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
     }()
 
-    fileprivate lazy var loginPromptView: OWLoginPromptView = {
+    private lazy var loginPromptView: OWLoginPromptView = {
         return OWLoginPromptView(with: self.viewModel.outputs.loginPromptViewModel)
     }()
 
-    fileprivate lazy var filterTabsView: OWFilterTabsView = {
+    private lazy var filterTabsView: OWFilterTabsView = {
         return OWFilterTabsView(viewModel: self.viewModel.outputs.filterTabsVM)
     }()
 
-    fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
+    private lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
         return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
     }()
 
-    fileprivate lazy var communityQuestionBottomDevider: UIView = {
+    private lazy var communityQuestionBottomDevider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
     }()
 
-    fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
+    private lazy var communityQuestionView: OWCommunityQuestionView = {
         return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
     }()
 
-    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+    private lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
         return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
     }()
 
-    fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
+    private lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
             .wrapContent()
     }()
 
-    fileprivate var commentingCTAZeroHeightConstraint: OWConstraint?
+    private var commentingCTAZeroHeightConstraint: OWConstraint?
 
-    fileprivate lazy var errorStateView: OWErrorStateView = {
+    private lazy var errorStateView: OWErrorStateView = {
         return OWErrorStateView(with: viewModel.outputs.errorStateViewModel)
     }()
-    fileprivate var errorStateZeroHeightConstraint: OWConstraint?
+    private var errorStateZeroHeightConstraint: OWConstraint?
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
@@ -96,12 +96,12 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
         return tableView
     }()
 
-    fileprivate lazy var tableBottomDivider: UIView = {
+    private lazy var tableBottomDivider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
 
-    fileprivate lazy var btnCTAConversation: UIButton = {
+    private lazy var btnCTAConversation: UIButton = {
         return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)
@@ -110,18 +110,18 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
             .font(OWFontBook.shared.font(typography: .bodyContext))
     }()
 
-    fileprivate var ctaZeroHeightConstraint: OWConstraint?
+    private var ctaZeroHeightConstraint: OWConstraint?
 
-    fileprivate lazy var footerTopDevider: UIView = {
+    private lazy var footerTopDevider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
 
-    fileprivate lazy var footerView: OWPreConversationFooterView = {
+    private lazy var footerView: OWPreConversationFooterView = {
         return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
     }()
 
-    fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
+    private lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
             guard let self = self else { return .reload }
             return self.viewModel.outputs.dataSourceTransition
@@ -139,11 +139,11 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
         return dataSource
     }()
 
-    fileprivate lazy var compactContentView: OWPreConversationCompactContentView = {
+    private lazy var compactContentView: OWPreConversationCompactContentView = {
         return OWPreConversationCompactContentView(viewModel: viewModel.outputs.compactCommentVM)
     }()
 
-    fileprivate lazy var compactTapGesture: UITapGestureRecognizer = {
+    private lazy var compactTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         if viewModel.outputs.shouldAddContentTapRecognizer {
             self.addGestureRecognizer(tap)
@@ -154,9 +154,9 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
 
     private var tableViewHeightConstraint: OWConstraint?
     private var commentingCTAHeightConstraint: OWConstraint?
-    fileprivate var filterTabsHeightConstraint: OWConstraint?
-    fileprivate let viewModel: OWPreConversationViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var filterTabsHeightConstraint: OWConstraint?
+    private let viewModel: OWPreConversationViewViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -172,7 +172,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
     }
 }
 
-fileprivate extension OWPreConversationView {
+private extension OWPreConversationView {
     func applyAccessibility() {
         self.accessibilityIdentifier = viewModel.outputs.viewAccessibilityIdentifier
         btnCTAConversation.accessibilityIdentifier = Metrics.moreCommentsButtonIdentifier

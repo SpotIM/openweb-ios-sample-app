@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 internal class CommentMediaView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_media_view_id"
         static let gifIdentifier = "comment_gif_webview_id"
         static let imageIdentifier = "comment_image_view_id"
@@ -81,7 +81,7 @@ internal class CommentMediaView: UIView {
     }
 }
 
-fileprivate extension CommentMediaView {
+private extension CommentMediaView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         gifWebView.accessibilityIdentifier = Metrics.gifIdentifier

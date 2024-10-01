@@ -21,11 +21,11 @@ protocol OWViewActionsServicing {
 
 class OWViewActionsService: OWViewActionsServicing {
 
-    fileprivate var viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let viewSourceType: OWViewSourceType
-    fileprivate let queue = OWQueue<OWViewActionCallbackType>(duplicationStrategy: .replaceDuplicates)
-    fileprivate var disposeBag: DisposeBag?
+    private var viewActionsCallbacks: OWViewActionsCallbacks?
+    private let servicesProvider: OWSharedServicesProviding
+    private let viewSourceType: OWViewSourceType
+    private let queue = OWQueue<OWViewActionCallbackType>(duplicationStrategy: .replaceDuplicates)
+    private var disposeBag: DisposeBag?
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          viewActionsCallbacks: OWViewActionsCallbacks?,
@@ -41,7 +41,7 @@ class OWViewActionsService: OWViewActionsServicing {
     }
 }
 
-fileprivate extension OWViewActionsService {
+private extension OWViewActionsService {
     func setupBlockerServiceObservers() {
         disposeBag = DisposeBag() // Cancel previous subscriptions
         guard let dispose = disposeBag else { return }

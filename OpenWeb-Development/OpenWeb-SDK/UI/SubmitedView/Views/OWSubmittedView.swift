@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWSubmittedView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
         static let horizontalSpacing: CGFloat = 16
@@ -28,13 +28,13 @@ class OWSubmittedView: UIView, OWThemeStyleInjectorProtocol {
         static let gotitButtonIdentifier = "submitted_gotit_button_id"
     }
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             .withPadding(Metrics.closeButtonPadding)
     }()
 
-    fileprivate lazy var confirmButton: UIButton = {
+    private lazy var confirmButton: UIButton = {
         return UIButton()
                 .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textColor(.white)
@@ -43,12 +43,12 @@ class OWSubmittedView: UIView, OWThemeStyleInjectorProtocol {
                 .corner(radius: Metrics.buttonRadius)
     }()
 
-    fileprivate lazy var titleView: OWTitleSubtitleIconView = {
+    private lazy var titleView: OWTitleSubtitleIconView = {
         return OWTitleSubtitleIconView(viewModel: viewModel.outputs.titleViewVM)
     }()
 
-    fileprivate let viewModel: OWSubmittedViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWSubmittedViewViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWSubmittedViewViewModeling) {
         self.viewModel = viewModel
@@ -63,7 +63,7 @@ class OWSubmittedView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWSubmittedView {
+private extension OWSubmittedView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 

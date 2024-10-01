@@ -75,7 +75,7 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
         }
     }
 
-    fileprivate func setupToastObservers(disposeBag: DisposeBag) {
+    private func setupToastObservers(disposeBag: DisposeBag) {
         let panGesture = UIPanGestureRecognizer()
         panGesture.name = ToastMetrics.panGestureName
         panGesture.rx.event
@@ -122,7 +122,7 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
     }
 }
 
-fileprivate extension OWToastNotificationPresenterProtocol where Self: UIView {
+private extension OWToastNotificationPresenterProtocol where Self: UIView {
     mutating func removeToast() {
         guard let toastView = self.toastView else { return }
         toastView.removeFromSuperview()

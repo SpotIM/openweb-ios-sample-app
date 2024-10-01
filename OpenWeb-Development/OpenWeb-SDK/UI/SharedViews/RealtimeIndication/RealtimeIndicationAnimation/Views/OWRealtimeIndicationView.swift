@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWRealtimeIndicationView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let containerShdowOpacity: Float = 0.20
         static let containerShdowRadius: CGFloat = 20
         static let viewsPadding: CGFloat = 10
@@ -22,17 +22,17 @@ class OWRealtimeIndicationView: UIView {
         static let identifier = "realtime_indication_view_id"
     }
 
-    fileprivate lazy var typingView: OWRealtimeTypingView = {
+    private lazy var typingView: OWRealtimeTypingView = {
         return OWRealtimeTypingView(viewModel: viewModel.outputs.realtimeTypingViewModel)
             .userInteractionEnabled(false)
     }()
 
-    fileprivate lazy var newCommentsView: OWRealtimeNewCommentsView = {
+    private lazy var newCommentsView: OWRealtimeNewCommentsView = {
         return OWRealtimeNewCommentsView(viewModel: viewModel.outputs.realtimeNewCommentsViewModel)
             .userInteractionEnabled(false)
     }()
 
-    fileprivate lazy var container: UIView = {
+    private lazy var container: UIView = {
         let view = UIView()
         let currentThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
 
@@ -54,33 +54,33 @@ class OWRealtimeIndicationView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var verticalSeparatorBetweenTypingAndNewComments: UIView = {
+    private lazy var verticalSeparatorBetweenTypingAndNewComments: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()
         container.addGestureRecognizer(tapGesture)
         return tapGesture
     }()
 
-    fileprivate lazy var panGesture: UIPanGestureRecognizer = {
+    private lazy var panGesture: UIPanGestureRecognizer = {
         let panGesture = UIPanGestureRecognizer()
         container.addGestureRecognizer(panGesture)
         return panGesture
     }()
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         return UIStackView()
             .spacing(Metrics.viewsPadding)
             .axis(.horizontal)
             .userInteractionEnabled(false)
     }()
 
-    fileprivate var viewModel: OWRealtimeIndicationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWRealtimeIndicationViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWRealtimeIndicationViewModeling) {
         self.viewModel = viewModel
@@ -102,7 +102,7 @@ class OWRealtimeIndicationView: UIView {
     }
 }
 
-fileprivate extension OWRealtimeIndicationView {
+private extension OWRealtimeIndicationView {
     func setupUI() {
         layer.masksToBounds = false
 

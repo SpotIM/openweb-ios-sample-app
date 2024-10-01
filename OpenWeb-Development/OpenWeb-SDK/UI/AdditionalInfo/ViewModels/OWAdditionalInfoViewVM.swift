@@ -41,11 +41,11 @@ protocol OWAdditionalInfoViewViewModeling {
 }
 
 class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWAdditionalInfoViewViewModelingOutputs, OWAdditionalInfoViewViewModeling {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let defaultTextViewMaxCharecters = 280
     }
 
-    fileprivate var disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     var inputs: OWAdditionalInfoViewViewModelingInputs { return self }
     var outputs: OWAdditionalInfoViewViewModelingOutputs { return self }
@@ -147,7 +147,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     }
 }
 
-fileprivate extension OWAdditionalInfoViewViewModel {
+private extension OWAdditionalInfoViewViewModel {
     func setupObservers(minimumTextLength: Observable<Int>, isTextRequired: Observable<Bool>, submitInProgress: Observable<Bool>, submitText: Observable<String>) {
         submitInProgress
             .bind(to: self.inputs.submitInProgress)

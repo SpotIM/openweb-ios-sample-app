@@ -14,7 +14,7 @@ import RxCocoa
 
 class OWTestingRedSecondLevel: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let borderWidth: CGFloat = 2.0
         static let margin: CGFloat = 10.0
         static let roundCorners: CGFloat = 10.0
@@ -27,14 +27,14 @@ class OWTestingRedSecondLevel: UIView {
         // swiftlint:enable line_length
     }
 
-    fileprivate lazy var lblIdentifier: UILabel = {
+    private lazy var lblIdentifier: UILabel = {
         return UILabel()
             .textColor(.black)
             .numberOfLines(1)
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var lblLongStuff: UILabel = {
+    private lazy var lblLongStuff: UILabel = {
         return Metrics.shortText
             .label
             .textColor(.black)
@@ -42,7 +42,7 @@ class OWTestingRedSecondLevel: UIView {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var btnRemove: UIButton = {
+    private lazy var btnRemove: UIButton = {
         return "Remove"
             .button
             .backgroundColor(.lightGray)
@@ -52,7 +52,7 @@ class OWTestingRedSecondLevel: UIView {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var btnState: UIButton = {
+    private lazy var btnState: UIButton = {
         return "Expand"
             .button
             .backgroundColor(.lightGray)
@@ -62,8 +62,8 @@ class OWTestingRedSecondLevel: UIView {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate var viewModel: OWTestingRedSecondLevelViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWTestingRedSecondLevelViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -82,7 +82,7 @@ class OWTestingRedSecondLevel: UIView {
     }
 }
 
-fileprivate extension OWTestingRedSecondLevel {
+private extension OWTestingRedSecondLevel {
     func setupUI() {
         self .backgroundColor(.red)
             .border(width: Metrics.borderWidth, color: .gray)

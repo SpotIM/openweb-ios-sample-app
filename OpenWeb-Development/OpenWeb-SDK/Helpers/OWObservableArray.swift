@@ -34,12 +34,12 @@ extension OWUpdaterProtocol {
 class OWObservableArray<Element: OWUpdaterProtocol>: ExpressibleByArrayLiteral {
     typealias EventType = OWArrayChangeEvent
 
-    fileprivate let eventSubject = PublishSubject<EventType>()
-    fileprivate let elementsSubject: BehaviorSubject<[Element]>
+    private let eventSubject = PublishSubject<EventType>()
+    private let elementsSubject: BehaviorSubject<[Element]>
 
-    fileprivate var disposedBag = DisposeBag()
+    private var disposedBag = DisposeBag()
 
-    fileprivate var elements: [Element]
+    private var elements: [Element]
 
     required init() {
         self.elements = []
@@ -74,7 +74,7 @@ extension OWObservableArray {
         return eventSubject
     }
 
-    fileprivate func arrayDidChange(_ event: EventType) {
+    private func arrayDidChange(_ event: EventType) {
         elementsSubject.onNext(elements)
         eventSubject.onNext(event)
     }
@@ -281,7 +281,7 @@ extension OWObservableArray: Sequence {
     }
 }
 
-fileprivate extension OWObservableArray {
+private extension OWObservableArray {
     func setupObserversForElementsUpdater() {
         self.disposedBag = DisposeBag()
 

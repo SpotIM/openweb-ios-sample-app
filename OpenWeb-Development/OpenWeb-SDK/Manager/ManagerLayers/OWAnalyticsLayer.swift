@@ -14,13 +14,13 @@ protocol OWAnalyticsInternalProtocol {
 }
 
 class OWAnalyticsLayer: OWAnalytics, OWAnalyticsInternalProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let maxBIEventsCallbacksNumber: Int = 10
     }
 
     var customBIData: OWCustomBIData = [:]
-    fileprivate var callbacks = [OWOptionalEncapsulation<OWBIAnalyticEventCallback>]()
-    fileprivate let queue = DispatchQueue(label: "OpenWebSDKBIEventCallback", qos: .utility)
+    private var callbacks = [OWOptionalEncapsulation<OWBIAnalyticEventCallback>]()
+    private let queue = DispatchQueue(label: "OpenWebSDKBIEventCallback", qos: .utility)
 
     func addBICallback(_ callback: @escaping OWBIAnalyticEventCallback) {
         guard callbacks.count < Metrics.maxBIEventsCallbacksNumber else {

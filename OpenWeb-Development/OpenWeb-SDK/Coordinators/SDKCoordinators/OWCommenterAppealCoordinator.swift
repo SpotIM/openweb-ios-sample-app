@@ -25,22 +25,22 @@ enum OWCommenterAppealCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinatorResult> {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let fadeDuration: CGFloat = 0.3
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
-    fileprivate let router: OWRoutering?
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let router: OWRoutering?
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .commenterAppeal)
     }()
 
     let presentationalMode: OWPresentationalModeCompact
     let popAppealWithAnimation = PublishSubject<Void>()
 
-    fileprivate let data: OWAppealRequiredData
-    fileprivate var commenterAppealView: UIView?
+    private let data: OWAppealRequiredData
+    private var commenterAppealView: UIView?
 
     init(router: OWRoutering? = nil,
          appealData: OWAppealRequiredData,
@@ -112,7 +112,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     }
 }
 
-fileprivate extension OWCommenterAppealCoordinator {
+private extension OWCommenterAppealCoordinator {
     // swiftlint:disable function_body_length
     func setupObservers(for viewModel: OWCommenterAppealViewViewModeling) {
         // Appeal OWTextViewVM - General

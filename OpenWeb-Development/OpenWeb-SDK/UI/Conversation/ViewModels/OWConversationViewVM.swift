@@ -86,7 +86,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var inputs: OWConversationViewViewModelingInputs { return self }
     var outputs: OWConversationViewViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let defaultNumberOfReplies: Int = 5
         static let numberOfSkeletonComments: Int = 5
         static let spacingBetweenCommentsDivisor: CGFloat = 2
@@ -109,9 +109,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let filterTabsHideMinimumOffset: CGFloat = 50
     }
 
-    fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
+    private var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
-    fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewVMQueue")
+    private let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewVMQueue")
 
     let filterTabsVM: OWFilterTabsViewViewModeling
 
@@ -123,7 +123,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
-    fileprivate var scrollingDown = BehaviorSubject<Bool>(value: false)
+    private var scrollingDown = BehaviorSubject<Bool>(value: false)
 
     var tableViewSize = PublishSubject<CGSize>()
     lazy var tableViewSizeChanged: Observable<CGSize> = {
@@ -133,13 +133,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     var tableViewDragBeginContentOffsetY = BehaviorSubject<CGFloat>(value: 0)
-    fileprivate lazy var tableViewDragBeginContentOffsetYChanged: Observable<CGFloat> = {
+    private lazy var tableViewDragBeginContentOffsetYChanged: Observable<CGFloat> = {
         tableViewDragBeginContentOffsetY
             .asObservable()
     }()
 
     var tableViewContentOffsetY = BehaviorSubject<CGFloat>(value: 0)
-    fileprivate lazy var tableViewContentOffsetYChanged: Observable<CGFloat> = {
+    private lazy var tableViewContentOffsetYChanged: Observable<CGFloat> = {
         tableViewContentOffsetY
             .asObservable()
     }()
@@ -151,7 +151,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
-    fileprivate var postId: OWPostId {
+    private var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
 
@@ -159,31 +159,31 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return conversationData.article.additionalSettings.headerStyle != .none
     }()
 
-    fileprivate var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
+    private var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
     var tryAgainAfterError: Observable<OWErrorStateTypes> {
         return _tryAgainAfterError
             .asObservable()
     }
 
-    fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
+    private var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
     var shouldShowErrorLoadingComments: Observable<Bool> {
         return _shouldShowErrorLoadingComments
             .asObservable()
     }
 
-    fileprivate var _shouldShowErrorLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+    private var _shouldShowErrorLoadingMoreComments = BehaviorSubject<Bool>(value: false)
     var shouldShowErrorLoadingMoreComments: Observable<Bool> {
         return _shouldShowErrorLoadingMoreComments
             .asObservable()
     }
 
-    fileprivate var _shouldShowErrorCommentDelete = BehaviorSubject<Bool>(value: false)
+    private var _shouldShowErrorCommentDelete = BehaviorSubject<Bool>(value: false)
     var shouldShowErrorCommentDelete: Observable<Bool> {
         return _shouldShowErrorCommentDelete
             .asObservable()
     }
 
-    fileprivate var _shouldShowErrorMuteUser = BehaviorSubject<Bool>(value: false)
+    private var _shouldShowErrorMuteUser = BehaviorSubject<Bool>(value: false)
     var shouldShowErrorMuteUser: Observable<Bool> {
         return _shouldShowErrorMuteUser
             .asObservable()
@@ -199,45 +199,45 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return viewableMode == .independent
     }
 
-    fileprivate var conversationPaginationOffset = 0
-    fileprivate var conversationHasNext = false
+    private var conversationPaginationOffset = 0
+    private var conversationHasNext = false
 
-    fileprivate var articleUrl: String = ""
+    private var articleUrl: String = ""
 
-    fileprivate let _serverCommentsLoadingState = BehaviorSubject<OWLoadingState>(value: .loading(triggredBy: .initialLoading))
-    fileprivate var serverCommentsLoadingState: Observable<OWLoadingState> {
+    private let _serverCommentsLoadingState = BehaviorSubject<OWLoadingState>(value: .loading(triggredBy: .initialLoading))
+    private var serverCommentsLoadingState: Observable<OWLoadingState> {
         _serverCommentsLoadingState
             .asObservable()
     }
-    fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
+    private var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
-    fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
-    fileprivate let _loadMoreComments = PublishSubject<Int>()
-    fileprivate let _isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
-    fileprivate var isLoadingMoreComments: Observable<Bool> {
+    private let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
+    private let _loadMoreComments = PublishSubject<Int>()
+    private let _isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+    private var isLoadingMoreComments: Observable<Bool> {
         _isLoadingMoreComments
             .asObservable()
     }
 
-    fileprivate let _insertNewLocalComments = PublishSubject<[OWComment]>()
-    fileprivate let _insertNewRealtimeComments = PublishSubject<[OWComment]>()
-    fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
-    fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    private let _insertNewLocalComments = PublishSubject<[OWComment]>()
+    private let _insertNewRealtimeComments = PublishSubject<[OWComment]>()
+    private let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    private let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
-    fileprivate let _scrollToTopAnimated = PublishSubject<Bool>()
+    private let _scrollToTopAnimated = PublishSubject<Bool>()
     var scrollToTopAnimated: Observable<Bool> {
         _scrollToTopAnimated
             .asObservable()
     }
     var scrolledToTop = PublishSubject<Void>()
 
-    fileprivate var _scrollToCellIndex = PublishSubject<Int>()
+    private var _scrollToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
         _scrollToCellIndex
             .asObservable()
     }
 
-    fileprivate var _scrollToCellIndexIfNotVisible = PublishSubject<Int>()
+    private var _scrollToCellIndexIfNotVisible = PublishSubject<Int>()
     var scrollToCellIndexIfNotVisible: Observable<Int> {
         _scrollToCellIndexIfNotVisible
             .asObservable()
@@ -245,45 +245,45 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     var scrolledToCellIndex = PublishSubject<Int>()
 
-    fileprivate var _highlightCellsIndexes = PublishSubject<[Int]>()
+    private var _highlightCellsIndexes = PublishSubject<[Int]>()
     var highlightCellsIndexes: Observable<[Int]> {
         return _highlightCellsIndexes
             .asObservable()
     }
 
-    fileprivate var _reloadCellIndex = PublishSubject<Int>()
+    private var _reloadCellIndex = PublishSubject<Int>()
     var reloadCellIndex: Observable<Int> {
         _reloadCellIndex
             .asObservable()
     }
 
-    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
-    fileprivate lazy var isReadOnly: Observable<Bool> = {
+    private lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
+    private lazy var isReadOnly: Observable<Bool> = {
         return _isReadOnly
             .share(replay: 1)
     }()
 
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
+    private var _openProfile = PublishSubject<OWOpenProfileType>()
     var openProfile: Observable<OWOpenProfileType> {
         return _openProfile
             .asObservable()
     }
 
-    fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+    private var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> {
         _openCommentThread
             .asObservable()
     }
 
-    fileprivate var _urlClick = PublishSubject<URL>()
+    private var _urlClick = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
         return _urlClick
             .asObservable()
     }
 
-    fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
-    fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
-    fileprivate var retryMute = PublishSubject<Void>()
+    private var deleteComment = PublishSubject<OWCommentViewModeling>()
+    private var muteCommentUser = PublishSubject<OWCommentViewModeling>()
+    private var retryMute = PublishSubject<Void>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -325,13 +325,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWConversationEmptyStateCellViewModel()
     }()
 
-    fileprivate lazy var shouldShowCommunityQuestion: Observable<Bool> = {
+    private lazy var shouldShowCommunityQuestion: Observable<Bool> = {
         return communityQuestionCellViewModel.outputs
             .communityQuestionViewModel.outputs
             .shouldShowView
     }()
 
-    fileprivate lazy var shouldShowCommunityGuidelines: Observable<Bool> = {
+    private lazy var shouldShowCommunityGuidelines: Observable<Bool> = {
         return communityGuidelinesCellViewModel.outputs
             .communityGuidelinesViewModel.outputs
             .shouldShowView
@@ -349,9 +349,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         .asObservable()
     }()
 
-    fileprivate lazy var pendingLocalComments = BehaviorSubject<[OWComment]?>(value: nil)
+    private lazy var pendingLocalComments = BehaviorSubject<[OWComment]?>(value: nil)
 
-    fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
+    private lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWConversationCellOption]> in
@@ -361,7 +361,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
-    fileprivate lazy var communityCellsOptions: Observable<[OWConversationCellOption]> = {
+    private lazy var communityCellsOptions: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(shouldShowCommunityQuestion, shouldShowCommunityGuidelines)
             .flatMapLatest({ [weak self] showCommunityQuestion, showCommunityGuidlines -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
@@ -371,7 +371,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
-    fileprivate lazy var errorCellViewModels: Observable<[OWConversationCellOption]> = {
+    private lazy var errorCellViewModels: Observable<[OWConversationCellOption]> = {
         return shouldShowErrorLoadingComments
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<[OWConversationCellOption]> in
@@ -381,7 +381,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .startWith([])
     }()
 
-    fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
+    private lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(serverCommentsLoadingState,
                                         commentCellsOptions,
                                         shouldShowErrorLoadingComments,
@@ -502,7 +502,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             }
     }
 
-    fileprivate var _performTableViewAnimation = PublishSubject<Void>()
+    private var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return Observable.combineLatest(_performTableViewAnimation, _dataSourceTransition) { _, transition in
             return transition
@@ -536,38 +536,38 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWRealtimeIndicationAnimationViewModel()
     }()
 
-    fileprivate lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
+    private lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
         return OWSpacerCellViewModel(style: .none)
     }()
 
-    fileprivate lazy var communityQuestionCellOption: OWConversationCellOption = {
+    private lazy var communityQuestionCellOption: OWConversationCellOption = {
         return OWConversationCellOption.communityQuestion(viewModel: communityQuestionCellViewModel)
     }()
 
-    fileprivate lazy var communityGuidelinesCellOption: OWConversationCellOption = {
+    private lazy var communityGuidelinesCellOption: OWConversationCellOption = {
         return OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
     }()
 
-    fileprivate lazy var conversationEmptyStateCellOption: OWConversationCellOption = {
+    private lazy var conversationEmptyStateCellOption: OWConversationCellOption = {
         return OWConversationCellOption.conversationEmptyState(viewModel: conversationEmptyStateCellViewModel)
     }()
 
-    fileprivate lazy var communitySpacerCellOption: OWConversationCellOption = {
+    private lazy var communitySpacerCellOption: OWConversationCellOption = {
         return OWConversationCellOption.spacer(viewModel: communitySpacerCellViewModel)
     }()
 
-    fileprivate lazy var conversationStyle: OWConversationStyle = {
+    private lazy var conversationStyle: OWConversationStyle = {
         return self.conversationData.settings.fullConversationSettings.style
     }()
 
-    fileprivate lazy var spacingBetweenComments: OWVerticalSpacing = {
+    private lazy var spacingBetweenComments: OWVerticalSpacing = {
         let top = self.conversationStyle.spacing.betweenComments.top / Metrics.spacingBetweenCommentsDivisor
         let bottom = self.conversationStyle.spacing.betweenComments.bottom / Metrics.spacingBetweenCommentsDivisor
         return OWVerticalSpacing(top: top, bottom: bottom)
     }()
 
     var viewInitialized = PublishSubject<Void>()
-    fileprivate lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
+    private lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
         return viewInitialized
             .map { OWLoadingTriggeredReason.initialLoading }
     }()
@@ -575,8 +575,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
 
     var pullToRefresh = PublishSubject<Void>()
-    fileprivate var _forceRefresh = PublishSubject<Void>()
-    fileprivate lazy var refreshConversationObservable: Observable<OWLoadingTriggeredReason> = {
+    private var _forceRefresh = PublishSubject<Void>()
+    private lazy var refreshConversationObservable: Observable<OWLoadingTriggeredReason> = {
         return Observable.merge(
             pullToRefresh.map { OWLoadingTriggeredReason.pullToRefresh },
             _forceRefresh.map { OWLoadingTriggeredReason.forceRefresh }
@@ -597,13 +597,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         .asObservable()
     }()
 
-    fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
+    private var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
         return openReportReasonChange
             .asObservable()
     }
 
-    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsRequireData>()
+    private var openClarityDetailsChange = PublishSubject<OWClarityDetailsRequireData>()
     var openClarityDetails: Observable<OWClarityDetailsRequireData> {
         return openClarityDetailsChange
             .asObservable()
@@ -617,7 +617,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     var dismissToast = PublishSubject<Void>()
 
-    fileprivate var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    private var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
     var displayToast: Observable<OWToastNotificationCombinedData> {
         return _displayToast
             .unwrap()
@@ -630,7 +630,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var firstVisibleCommentIndex: Observable<Int> {
+    private var firstVisibleCommentIndex: Observable<Int> {
         return Observable.combineLatest(shouldShowCommunityQuestion.startWith(false),
                                         shouldShowCommunityGuidelines.startWith(false))
             .flatMapLatest({ showCommunityQuestion, showCommunityGuidlines -> Observable<Int> in
@@ -645,14 +645,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     // dataSourceTransition is used for the view to build DataSource, it change according to _dataSourceTransition - do not chnge it manually
     var dataSourceTransition: OWViewTransition = .reload
-    fileprivate var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
+    private var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
-    fileprivate let imageProvider: OWImageProviding
-    fileprivate let conversationData: OWConversationRequiredData
-    fileprivate let viewableMode: OWViewableMode
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
+    private let imageProvider: OWImageProviding
+    private let conversationData: OWConversationRequiredData
+    private let viewableMode: OWViewableMode
+    private let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
@@ -672,7 +672,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 }
 
-fileprivate extension OWConversationViewViewModel {
+private extension OWConversationViewViewModel {
     func getCommentCells(for commentsPresentationData: [OWCommentPresentationData]) -> [OWConversationCellOption] {
         var cellOptions = [OWConversationCellOption]()
 
@@ -892,7 +892,7 @@ fileprivate extension OWConversationViewViewModel {
     }
 }
 
-fileprivate extension OWConversationViewViewModel {
+private extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         tableViewContentOffsetYChanged

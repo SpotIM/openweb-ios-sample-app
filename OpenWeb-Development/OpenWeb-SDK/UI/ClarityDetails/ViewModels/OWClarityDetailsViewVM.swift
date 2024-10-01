@@ -40,13 +40,13 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     var inputs: OWClarityDetailsViewViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
 
-    fileprivate let type: OWClarityDetailsType
-    fileprivate let commentId: OWCommentId
-    fileprivate var disposeBag: DisposeBag
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let requiredData: OWClarityDetailsRequireData
-    fileprivate var articleUrl: String = ""
-    fileprivate let presentationalMode: OWPresentationalModeCompact
+    private let type: OWClarityDetailsType
+    private let commentId: OWCommentId
+    private var disposeBag: DisposeBag
+    private let servicesProvider: OWSharedServicesProviding
+    private let requiredData: OWClarityDetailsRequireData
+    private var articleUrl: String = ""
+    private let presentationalMode: OWPresentationalModeCompact
 
     init(data: OWClarityDetailsRequireData,
          presentationalMode: OWPresentationalModeCompact = .none,
@@ -66,7 +66,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     }()
 
     var communityGuidelinesClick = PublishSubject<Void>()
-    fileprivate lazy var paragraphsCommunityGuidelinesClick: Observable<Void> = {
+    private lazy var paragraphsCommunityGuidelinesClick: Observable<Void> = {
         let clickObservers = self.paragraphViewModels
             .map { viewModel in
                 viewModel.outputs.communityGuidelinesClickObservable
@@ -98,7 +98,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         }
     }()
 
-    fileprivate var _topParagraphAttributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil)
+    private var _topParagraphAttributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil)
     lazy var topParagraphAttributedStringObservable: Observable<NSAttributedString> = {
         return _topParagraphAttributedString
             .unwrap()
@@ -174,7 +174,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
             .startWith(false)
     }()
 
-    fileprivate lazy var communityGuidelinesUrl: Observable<URL?> = {
+    private lazy var communityGuidelinesUrl: Observable<URL?> = {
         let configurationService = servicesProvider.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
@@ -194,7 +194,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     }()
 }
 
-fileprivate extension OWClarityDetailsViewVM {
+private extension OWClarityDetailsViewVM {
     func setupObservers() {
         Observable.combineLatest(
             servicesProvider.themeStyleService().style,

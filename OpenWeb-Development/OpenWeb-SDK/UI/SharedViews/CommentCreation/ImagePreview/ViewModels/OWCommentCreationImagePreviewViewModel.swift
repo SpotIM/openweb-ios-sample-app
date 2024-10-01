@@ -35,8 +35,8 @@ class OWCommentCreationImagePreviewViewModel: OWCommentCreationImagePreviewViewM
     var inputs: OWCommentCreationImagePreviewViewModelingInputs { return self }
     var outputs: OWCommentCreationImagePreviewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
 
     var removeButtonTap: PublishSubject<Void> = PublishSubject()
     var isUploadingImage: BehaviorSubject<Bool> = BehaviorSubject(value: false)
@@ -77,7 +77,7 @@ class OWCommentCreationImagePreviewViewModel: OWCommentCreationImagePreviewViewM
     }
 }
 
-fileprivate extension OWCommentCreationImagePreviewViewModel {
+private extension OWCommentCreationImagePreviewViewModel {
     func setupObservers() {
         image
             .subscribe(onNext: { [weak self] image in

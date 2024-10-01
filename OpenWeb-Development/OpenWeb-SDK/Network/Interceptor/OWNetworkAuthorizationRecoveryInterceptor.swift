@@ -10,8 +10,8 @@ import Foundation
 import RxSwift
 
 class OWNetworkAuthorizationRecoveryInterceptor: OWNetworkRequestInterceptor {
-    fileprivate let retryLimit: Int
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let retryLimit: Int
+    private let servicesProvider: OWSharedServicesProviding
 
     init(retryLimit: Int = 2, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.retryLimit = retryLimit
@@ -54,7 +54,7 @@ class OWNetworkAuthorizationRecoveryInterceptor: OWNetworkRequestInterceptor {
     }
 }
 
-fileprivate extension OWNetworkAuthorizationRecoveryInterceptor {
+private extension OWNetworkAuthorizationRecoveryInterceptor {
     func recoverFromAuthorizationError(completion: @escaping (OWNetworkRetryResult) -> Void, requestURLPath: String) {
         let authorizationRecoveryService = servicesProvider.authorizationRecoveryService()
 

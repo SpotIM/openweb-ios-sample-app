@@ -25,7 +25,7 @@ struct OWAnalyticEventPayload: Encodable {
     }
 }
 
-fileprivate extension OWAnalyticEventPayload {
+private extension OWAnalyticEventPayload {
     func encode(value: Encodable, forKey key: String, container: inout KeyedEncodingContainer<OWStringKey>) {
         try? container.encode(value, forKey: OWStringKey(stringValue: key))
     }

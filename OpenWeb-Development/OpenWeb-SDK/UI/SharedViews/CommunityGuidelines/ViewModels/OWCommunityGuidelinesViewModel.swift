@@ -51,16 +51,16 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var outputs: OWCommunityGuidelinesViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeContainerViewUI = BehaviorSubject<UIView?>(value: nil)
-    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
-    fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    private let _triggerCustomizeContainerViewUI = BehaviorSubject<UIView?>(value: nil)
+    private let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
 
     var triggerCustomizeContainerViewUI = PublishSubject<UIView>()
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
     var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
     let urlClicked = PublishSubject<Void>()
 
-    fileprivate var _communityGuidelinesUrl = BehaviorSubject<URL?>(value: nil)
+    private var _communityGuidelinesUrl = BehaviorSubject<URL?>(value: nil)
     var urlClickedOutput: Observable<URL> {
         urlClicked
             .withLatestFrom(_communityGuidelinesUrl.unwrap()) { _, url in
@@ -102,7 +102,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .share(replay: 1)
     }
 
-    fileprivate lazy var contentSizeChanged: Observable<Bool> = {
+    private lazy var contentSizeChanged: Observable<Bool> = {
         servicesProvider.appLifeCycle()
             .didChangeContentSizeCategory
             .map { true }
@@ -110,7 +110,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     }()
 
     var retryGetConfig = BehaviorSubject<Void>(value: ())
-    fileprivate var communityGuidelinesTitleFromConfig: Observable<String> {
+    private var communityGuidelinesTitleFromConfig: Observable<String> {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return retryGetConfig.asObservable().startWith(())
             .flatMapLatest {
@@ -135,7 +135,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .unwrap()
     }
 
-    fileprivate var _updateCommunityGuidelinesAttributedString = BehaviorSubject<OWThemeStyle?>(value: nil)
+    private var _updateCommunityGuidelinesAttributedString = BehaviorSubject<OWThemeStyle?>(value: nil)
     var communityGuidelinesAttributedString: Observable<NSAttributedString> {
         return Observable.combineLatest(communityGuidelinesTitleFromConfig,
                                 _updateCommunityGuidelinesAttributedString)
@@ -148,7 +148,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .unwrap()
     }
 
-    fileprivate var _communityGuidelinesClickableString = PublishSubject<String>()
+    private var _communityGuidelinesClickableString = PublishSubject<String>()
     var communityGuidelinesClickableString: Observable<String> {
         return _communityGuidelinesClickableString
             .asObservable()
@@ -160,8 +160,8 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
 
     let style: OWCommunityGuidelinesStyle
     let spacing: OWVerticalSpacing
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
     init(style: OWCommunityGuidelinesStyle,
          spacing: OWVerticalSpacing,
@@ -173,7 +173,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     }
 }
 
-fileprivate extension OWCommunityGuidelinesViewModel {
+private extension OWCommunityGuidelinesViewModel {
     func setupObservers() {
         communityGuidelinesAttributedString
             .take(1)

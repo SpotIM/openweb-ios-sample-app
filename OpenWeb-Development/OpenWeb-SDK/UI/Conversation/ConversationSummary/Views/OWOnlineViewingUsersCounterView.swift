@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWOnlineViewingUsersCounterView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalMargin: CGFloat = 6
         static let iconSize: CGFloat = 24.0
 
@@ -21,16 +21,16 @@ class OWOnlineViewingUsersCounterView: UIView {
         static let lblViewersNumberIdentifier = "online_viewing_users_lbl_viewers_number_id"
     }
 
-    fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWOnlineViewingUsersCounterViewModeling!
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         return UIImageView()
             .image(UIImage(spNamed: "onlineViewingUsers", supportDarkMode: false)!)
             .wrapContent()
     }()
 
-    fileprivate lazy var counterLabel: UILabel = {
+    private lazy var counterLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
             .wrapContent()
@@ -51,7 +51,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     }
 }
 
-fileprivate extension OWOnlineViewingUsersCounterView {
+private extension OWOnlineViewingUsersCounterView {
     func setupUI() {
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in

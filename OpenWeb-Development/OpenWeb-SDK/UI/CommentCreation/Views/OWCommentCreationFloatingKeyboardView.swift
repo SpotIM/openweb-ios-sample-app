@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_creation_floating_keyboard_view_id"
         static let mainContainerIdentifier = "comment_creation_floating_keyboard_main_container_view_id"
         static let underFooterViewIdentifier = "comment_creation_floating_keyboard_under_footer_view_id"
@@ -56,44 +56,44 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
 
     var toastView: OWToastView?
 
-    fileprivate var keyboardWasHidden = true
-    fileprivate var toolbarBottomConstraint: OWConstraint?
+    private var keyboardWasHidden = true
+    private var toolbarBottomConstraint: OWConstraint?
 
-    fileprivate lazy var mainContainer: OWFloatingKeyboardMainContainerView = {
+    private lazy var mainContainer: OWFloatingKeyboardMainContainerView = {
         return OWFloatingKeyboardMainContainerView(frame: .zero)
             .backgroundColor(.clear)
     }()
 
-    fileprivate lazy var userMentionView: OWUserMentionView = {
+    private lazy var userMentionView: OWUserMentionView = {
         return OWUserMentionView(viewModel: viewModel.outputs.userMentionVM)
     }()
 
-    fileprivate lazy var underFooterView: UIView = {
+    private lazy var underFooterView: UIView = {
         return UIView(frame: .zero)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var headerCloseButton: UIButton = {
+    private lazy var headerCloseButton: UIButton = {
         let closeButton = UIButton()
             .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             .contentMode(.center)
         return closeButton
     }()
 
-    fileprivate lazy var headerTitleLabel: UILabel = {
+    private lazy var headerTitleLabel: UILabel = {
         let currentStyle = viewModel.outputs.servicesProvider.themeStyleService().currentStyle
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
     }()
 
-    fileprivate lazy var headerIconView: UIImageView = {
+    private lazy var headerIconView: UIImageView = {
         let currentStyle = viewModel.outputs.servicesProvider.themeStyleService().currentStyle
         return UIImageView()
             .tintColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
     }()
 
-    fileprivate lazy var headerView: UIView = {
+    private lazy var headerView: UIView = {
         let headerView = UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
 
@@ -146,36 +146,36 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         return headerView
     }()
 
-    fileprivate lazy var footerView: UIView = {
+    private lazy var footerView: UIView = {
         return UIView(frame: .zero)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .clipsToBounds(true)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var textViewObject: OWTextView = {
+    private lazy var textViewObject: OWTextView = {
         return OWTextView(viewModel: viewModel.outputs.textViewVM,
                           prefixIdentifier: Metrics.prefixIdentifier)
     }()
 
-    fileprivate lazy var userAvatarView: OWAvatarView = {
+    private lazy var userAvatarView: OWAvatarView = {
         let avatarView = OWAvatarView()
         avatarView.backgroundColor = .clear
         return avatarView
     }()
 
-    fileprivate lazy var lineSeparator: UIView = {
+    private lazy var lineSeparator: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton(frame: .zero)
             .backgroundColor(.clear)
     }()
 
-    fileprivate lazy var ctaButton: OWLoaderButton = {
+    private lazy var ctaButton: OWLoaderButton = {
         return OWLoaderButton()
             .image(viewModel.outputs.ctaIcon, state: .normal)
             .imageEdgeInsets(UIEdgeInsets(top: Metrics.ctaButtonSize - Metrics.ctaButtonImageSize,
@@ -188,15 +188,15 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var toolbar: UIView? = {
+    private lazy var toolbar: UIView? = {
         if case let OWAccessoryViewStrategy.bottomToolbar(toolbar) = viewModel.outputs.accessoryViewStrategy {
             return toolbar
         }
         return nil
     }()
 
-    fileprivate let viewModel: OWCommentCreationFloatingKeyboardViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWCommentCreationFloatingKeyboardViewViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -212,7 +212,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         setupObservers()
     }
 
-    fileprivate var firstLayoutSubviewsDone = false
+    private var firstLayoutSubviewsDone = false
     override func layoutSubviews() {
         if !firstLayoutSubviewsDone,
            let toolbar = toolbar,
@@ -252,7 +252,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
     }
 }
 
-fileprivate extension OWCommentCreationFloatingKeyboardView {
+private extension OWCommentCreationFloatingKeyboardView {
     func setupViews() {
         self.clipsToBounds = false
         mainContainer.clipsToBounds = false

@@ -54,7 +54,7 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     }
 }
 
-fileprivate extension OWToastViewModel {
+private extension OWToastViewModel {
     func setupObservers() {
         actionClick
             .asObservable()

@@ -43,10 +43,10 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     var conversationFetched = PublishSubject<OWConversationReadRM>()
     var isReadOnly = PublishSubject<Bool>()
     var conversationError = PublishSubject<Bool>()
-    fileprivate var emptyConversation = PublishSubject<Void>()
-    fileprivate var comment = PublishSubject<OWComment>()
+    private var emptyConversation = PublishSubject<Void>()
+    private var comment = PublishSubject<OWComment>()
 
-    fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skeleton)
+    private let _contentType = BehaviorSubject<OWCompactContentType>(value: .skeleton)
     lazy var contentType: Observable<OWCompactContentType> = {
         return _contentType
             .asObservable()
@@ -115,8 +115,8 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             .asObservable()
     }()
 
-    fileprivate let imageProvider: OWImageProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let imageProvider: OWImageProviding
+    private let disposeBag = DisposeBag()
     init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.imageProvider = imageProvider
         setupObservers()
@@ -127,7 +127,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     }()
 }
 
-fileprivate extension OWPreConversationCompactContentViewModel {
+private extension OWPreConversationCompactContentViewModel {
     func setupObservers() {
         conversationFetched
             .subscribe(onNext: { [weak self] conversationResponse in

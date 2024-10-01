@@ -12,7 +12,7 @@ import RxSwift
 
 class OWMenuSelectionCell: UITableViewCell {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "menu_selection_cell_id"
         static let contentViewIdentifier = "menu_selection_content_view_id"
         static let labelIdentifier = "menu_selection_label_id_"
@@ -21,14 +21,14 @@ class OWMenuSelectionCell: UITableViewCell {
         static let horizontalPadding: CGFloat = 4
     }
 
-    fileprivate lazy var label: UILabel = {
+    private lazy var label: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: .light))
     }()
 
-    fileprivate var viewModel: OWMenuSelectionCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWMenuSelectionCellViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -47,7 +47,7 @@ class OWMenuSelectionCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWMenuSelectionCell {
+private extension OWMenuSelectionCell {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         contentView.accessibilityIdentifier = Metrics.contentViewIdentifier

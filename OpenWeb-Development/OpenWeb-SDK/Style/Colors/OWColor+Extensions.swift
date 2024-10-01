@@ -204,11 +204,11 @@ extension OWColor {
         }
     }
 
-    fileprivate mutating func setLightThemeColor(_ color: UIColor) {
+    private mutating func setLightThemeColor(_ color: UIColor) {
         lightColor = color
     }
 
-    fileprivate mutating func setDarkThemeColor(_ color: UIColor) {
+    private mutating func setDarkThemeColor(_ color: UIColor) {
         darkColor = color
     }
 }

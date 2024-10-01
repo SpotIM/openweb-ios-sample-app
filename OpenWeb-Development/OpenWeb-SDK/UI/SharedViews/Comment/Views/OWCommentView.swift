@@ -15,7 +15,7 @@ class OWCommentView: UIView {
         static let horizontalOffset: CGFloat = 16.0
     }
 
-    fileprivate struct InternalMetrics {
+    private struct InternalMetrics {
         static let leadingOffset: CGFloat = 16.0
         static let commentHeaderVerticalOffset: CGFloat = 12.0
         static let commentStatusBottomPadding: CGFloat = 12.0
@@ -24,35 +24,35 @@ class OWCommentView: UIView {
         static let commentActionsTopPadding: CGFloat = 15.0
     }
 
-    fileprivate lazy var commentStatusView: OWCommentStatusView = {
+    private lazy var commentStatusView: OWCommentStatusView = {
         return OWCommentStatusView()
     }()
-    fileprivate lazy var blockingOpacityView: UIView = {
+    private lazy var blockingOpacityView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
             .alpha(0.5)
     }()
-    fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
+    private lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
-    fileprivate lazy var commentOptionsView: OWCommentOptionsView = {
+    private lazy var commentOptionsView: OWCommentOptionsView = {
         return OWCommentOptionsView()
     }()
-    fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
+    private lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
         return OWCommentLabelsContainerView()
     }()
-    fileprivate lazy var commentContentView: OWCommentContentView = {
+    private lazy var commentContentView: OWCommentContentView = {
         return OWCommentContentView()
     }()
-    fileprivate lazy var commentEngagementView: OWCommentEngagementView = {
+    private lazy var commentEngagementView: OWCommentEngagementView = {
         return OWCommentEngagementView()
     }()
 
-    fileprivate var viewModel: OWCommentViewModeling!
-    fileprivate var disposedBag = DisposeBag()
+    private var viewModel: OWCommentViewModeling!
+    private var disposedBag = DisposeBag()
 
-    fileprivate var commentHeaderBottomConstraint: OWConstraint?
-    fileprivate var commentStatusZeroHeightConstraint: OWConstraint?
+    private var commentHeaderBottomConstraint: OWConstraint?
+    private var commentStatusZeroHeightConstraint: OWConstraint?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -82,7 +82,7 @@ class OWCommentView: UIView {
     }
 }
 
-fileprivate extension OWCommentView {
+private extension OWCommentView {
     func setupUI() {
         self.backgroundColor = .clear
 

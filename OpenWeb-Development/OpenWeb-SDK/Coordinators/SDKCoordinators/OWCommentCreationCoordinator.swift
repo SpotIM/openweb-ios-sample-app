@@ -29,13 +29,13 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
-    fileprivate let router: OWRoutering!
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let router: OWRoutering!
+    private let commentCreationData: OWCommentCreationRequiredData
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .commentCreation)
     }()
-    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+    private lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .commentCreation)
     }()
 
@@ -147,7 +147,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     }
 }
 
-fileprivate extension OWCommentCreationCoordinator {
+private extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
         setupObservers(forViewModel: viewModel.outputs.commentCreationViewVM)
     }

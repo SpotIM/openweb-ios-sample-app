@@ -36,9 +36,9 @@ class OWTestingRedSecondLevelViewModel: OWTestingRedSecondLevelViewModeling,
 
     let id: String
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
+    private let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
     var changedCellState: Observable<OWTestingCellState> {
         return cellState
             .distinctUntilChanged()
@@ -61,7 +61,7 @@ class OWTestingRedSecondLevelViewModel: OWTestingRedSecondLevelViewModeling,
     }
 }
 
-fileprivate extension OWTestingRedSecondLevelViewModel {
+private extension OWTestingRedSecondLevelViewModel {
     func setupObservers() {
         changeCellStateTap
             .withLatestFrom(cellState)

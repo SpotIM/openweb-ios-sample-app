@@ -16,7 +16,7 @@ import RxCocoa
 
 class OWTestingCellsGenerator: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalMargin: CGFloat = 10.0
         static let horizontalMargin: CGFloat = 8.0
         static let roundCorners: CGFloat = 10.0
@@ -25,15 +25,15 @@ class OWTestingCellsGenerator: UIView {
         static let textFieldWidth: CGFloat = 30.0
     }
 
-    fileprivate var viewModel: OWTestingCellsGeneratorViewModeling!
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWTestingCellsGeneratorViewModeling!
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var mainTitle: UILabel = {
+    private lazy var mainTitle: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var addCellsView: UIView = {
+    private lazy var addCellsView: UIView = {
         let view = UIView()
 
         view.addSubview(btnAdd)
@@ -57,7 +57,7 @@ class OWTestingCellsGenerator: UIView {
         return view
     }()
 
-    fileprivate lazy var btnAdd: UIButton = {
+    private lazy var btnAdd: UIButton = {
         return "Add"
             .button
             .backgroundColor(.lightGray)
@@ -67,7 +67,7 @@ class OWTestingCellsGenerator: UIView {
             .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
 
-    fileprivate lazy var textFieldNumberToAdd: UITextField = {
+    private lazy var textFieldNumberToAdd: UITextField = {
         let txtField = UITextField()
             .backgroundColor(UIColor.white)
             .corner(radius: Metrics.roundCorners)
@@ -91,7 +91,7 @@ class OWTestingCellsGenerator: UIView {
         return txtField
     }()
 
-    fileprivate lazy var btnReloadAll: UIButton = {
+    private lazy var btnReloadAll: UIButton = {
         return "Reload All"
             .button
             .backgroundColor(.lightGray)
@@ -101,7 +101,7 @@ class OWTestingCellsGenerator: UIView {
             .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
 
-    fileprivate lazy var btnRemoveAll: UIButton = {
+    private lazy var btnRemoveAll: UIButton = {
         return "Remove All"
             .button
             .backgroundColor(.lightGray)
@@ -124,7 +124,7 @@ class OWTestingCellsGenerator: UIView {
     }
 }
 
-fileprivate extension OWTestingCellsGenerator {
+private extension OWTestingCellsGenerator {
     func setupUI() {
         self.backgroundColor = .white
 

@@ -85,7 +85,7 @@ class OWFiles {
     }
 }
 
-fileprivate extension OWFiles {
+private extension OWFiles {
     static func url(forFolder folder: String?, subfolder: String?) -> URL? {
         // Documnet path
         guard var url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }

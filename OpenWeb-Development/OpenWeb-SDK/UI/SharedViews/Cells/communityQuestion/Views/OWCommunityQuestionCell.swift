@@ -12,17 +12,17 @@ import RxSwift
 
 class OWCommunityQuestionCell: UITableViewCell {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let edgesPadding: CGFloat = 12
         static let identifier = "community_question_cell_id"
     }
 
-    fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
+    private lazy var communityQuestionView: OWCommunityQuestionView = {
         return OWCommunityQuestionView()
     }()
 
-    fileprivate var viewModel: OWCommunityQuestionCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWCommunityQuestionCellViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -46,7 +46,7 @@ class OWCommunityQuestionCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWCommunityQuestionCell {
+private extension OWCommunityQuestionCell {
     func setupUI() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
                                                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)

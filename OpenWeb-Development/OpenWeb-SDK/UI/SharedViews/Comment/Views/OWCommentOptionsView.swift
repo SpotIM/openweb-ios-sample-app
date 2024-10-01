@@ -17,10 +17,10 @@ class OWCommentOptionsView: UIView {
         static let optionButtonIdentifier = "comment_header_option_button_id"
     }
 
-    fileprivate var viewModel: OWCommentOptionsViewModeling!
-    fileprivate var disposedBag = DisposeBag()
+    private var viewModel: OWCommentOptionsViewModeling!
+    private var disposedBag = DisposeBag()
 
-    fileprivate lazy var optionButton: UIButton = {
+    private lazy var optionButton: UIButton = {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
         let leftInset: CGFloat = OWLocalizationManager.shared.textAlignment == .left ? 0 : -Metrics.optionsImageInset
         let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -Metrics.optionsImageInset
@@ -50,7 +50,7 @@ class OWCommentOptionsView: UIView {
     }
 }
 
-fileprivate extension OWCommentOptionsView {
+private extension OWCommentOptionsView {
     func setupViews() {
         addSubview(optionButton)
         optionButton.OWSnp.makeConstraints { make in

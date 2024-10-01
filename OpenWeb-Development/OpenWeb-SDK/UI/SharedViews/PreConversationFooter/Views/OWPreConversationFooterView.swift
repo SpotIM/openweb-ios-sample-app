@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 internal class OWPreConversationFooterView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "pre_conversation_footer_id"
         static let termsButtonIdentifier = "pre_conversation_footer_show_terms_button_id"
         static let privacyButtonIdentifier = "pre_conversation_footer_show_privacy_button_id"
@@ -51,9 +51,9 @@ internal class OWPreConversationFooterView: UIView {
         return btn
     }()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate let viewModel: OWPreConversationFooterViewModeling
+    private let viewModel: OWPreConversationFooterViewModeling
 
     init(with viewModel: OWPreConversationFooterViewModeling) {
         self.viewModel = viewModel
@@ -73,7 +73,7 @@ internal class OWPreConversationFooterView: UIView {
 
 }
 
-fileprivate extension OWPreConversationFooterView {
+private extension OWPreConversationFooterView {
     func setupUI() {
         self.addSubview(termsButton)
         termsButton.OWSnp.makeConstraints { make in

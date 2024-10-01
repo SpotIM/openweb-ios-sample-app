@@ -51,7 +51,7 @@ extension Date {
         }
     }
 
-    fileprivate func owFormatDate() -> String {
+    private func owFormatDate() -> String {
         let calendar = Calendar.current
         let formatter = DateFormatter()
         formatter.locale = OWLocalizationManager.shared.locale

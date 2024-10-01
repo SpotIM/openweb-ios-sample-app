@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWTitleView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalPadding: CGFloat = 16
         static let titleLeadingPadding: CGFloat = 8
         static let backButtonSize: CGFloat = 24
@@ -24,23 +24,23 @@ class OWTitleView: UIView {
         static let closeButtonSuffixIdentifier = "_close_button_id"
     }
 
-    fileprivate let viewModel: OWTitleViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let title: String
+    private let viewModel: OWTitleViewViewModeling
+    private let disposeBag = DisposeBag()
+    private let title: String
 
-    fileprivate lazy var backButton: UIButton = {
+    private lazy var backButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: Metrics.backButtonIcon, supportDarkMode: true), state: .normal)
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return title
             .label
             .font(OWFontBook.shared.font(typography: .bodyContext))
             .text(title)
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
     }()
@@ -59,7 +59,7 @@ class OWTitleView: UIView {
     }
 }
 
-fileprivate extension OWTitleView {
+private extension OWTitleView {
     func applyAccessibility(prefixId: String) {
         self.accessibilityIdentifier = prefixId + Metrics.suffixIdentifier
         titleLabel.accessibilityIdentifier = prefixId + Metrics.titleLabelSuffixIdentifier
