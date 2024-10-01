@@ -309,9 +309,11 @@ extension Array where Element == OWNetworkHTTPHeader {
 extension OWNetworkHTTPHeaders {
     /// The default set of `HTTPHeaders` used by OWNetwork. Includes `Accept-Encoding`, `Accept-Language`, and
     /// `User-Agent`.
-    static let `default`: OWNetworkHTTPHeaders = [.defaultAcceptEncoding,
-                                                .defaultAcceptLanguage,
-                                                .defaultUserAgent]
+    static let `default`: OWNetworkHTTPHeaders = [
+        .defaultAcceptEncoding,
+        .defaultAcceptLanguage,
+        .defaultUserAgent
+    ]
 }
 
 extension OWNetworkHTTPHeader {

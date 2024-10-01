@@ -90,6 +90,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - array_init
   - closure_end_indentation
   - closure_spacing
+  - collection_alignment
   - contains_over_filter_count
   - contains_over_filter_is_empty
   - contains_over_first_not_nil

@@ -25,11 +25,11 @@ class OWTypingAnimationView: UIView {
     }
 
     private var dotLayers: [CAShapeLayer] = []
-    // swiftlint:disable line_length
-    private var dotColors: [UIColor] = [OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
-                                            OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(Metrics.secondDotOpacity),
-                                            OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(Metrics.thirdDotOpacity)] {
-        // swiftlint:enable line_lenght
+    private var dotColors: [UIColor] = [
+        OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
+        OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(Metrics.secondDotOpacity),
+        OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(Metrics.thirdDotOpacity)
+    ] {
         didSet {
             for (index, dotLayer) in dotLayers.enumerated() {
                 if index < dotColors.count {
