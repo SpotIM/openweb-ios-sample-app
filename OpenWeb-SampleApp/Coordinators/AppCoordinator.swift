@@ -66,4 +66,3 @@ fileprivate extension AppCoordinator {
         router = Router(navigationController: navigation)
     }
 }
-
