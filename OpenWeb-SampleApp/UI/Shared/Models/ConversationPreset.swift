@@ -26,7 +26,7 @@ extension ConversationPreset {
         return publicPresets()
     #else
         let developmentPresets = DevelopmentConversationPreset.developmentPresets().map { $0.toConversationPreset() }
-        return publicPresets()+developmentPresets
+        return publicPresets() + developmentPresets
     #endif
     }
 

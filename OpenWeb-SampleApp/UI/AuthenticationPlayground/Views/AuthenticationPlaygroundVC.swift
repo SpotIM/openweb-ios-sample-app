@@ -157,7 +157,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         // Initialize SDK section
         scrollView.addSubview(switchInitializeSDK)
         switchInitializeSDK.snp.makeConstraints { make in
-            make.top.equalTo(scrollView.contentLayoutGuide).offset(2*Metrics.verticalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(2 * Metrics.verticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
@@ -173,7 +173,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         scrollView.addSubview(lblAutomaticallyDismissDescription)
         lblAutomaticallyDismissDescription.snp.makeConstraints { make in
             make.top.equalTo(switchAutomaticallyDismiss.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(scrollView).offset(2*Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(2 * Metrics.horizontalMargin)
             make.trailing.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
@@ -194,13 +194,13 @@ fileprivate extension AuthenticationPlaygroundVC {
         scrollView.addSubview(lblGenericSSOStatusSymbol)
         lblGenericSSOStatusSymbol.snp.makeConstraints { make in
             make.centerY.equalTo(lblGenericSSOStatus)
-            make.leading.equalTo(lblGenericSSOStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblGenericSSOStatus.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         scrollView.addSubview(btnGenericSSOAuthenticate)
         btnGenericSSOAuthenticate.snp.makeConstraints { make in
             make.centerY.equalTo(lblGenericSSOStatusSymbol)
-            make.leading.equalTo(lblGenericSSOStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblGenericSSOStatusSymbol.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         // Third-party SSO section
@@ -220,13 +220,13 @@ fileprivate extension AuthenticationPlaygroundVC {
         scrollView.addSubview(lblThirdPartySSOStatusSymbol)
         lblThirdPartySSOStatusSymbol.snp.makeConstraints { make in
             make.centerY.equalTo(lblThirdPartySSOStatus)
-            make.leading.equalTo(lblThirdPartySSOStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblThirdPartySSOStatus.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         scrollView.addSubview(btnThirdPartySSOAuthenticate)
         btnThirdPartySSOAuthenticate.snp.makeConstraints { make in
             make.centerY.equalTo(lblThirdPartySSOStatusSymbol)
-            make.leading.equalTo(lblThirdPartySSOStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblThirdPartySSOStatusSymbol.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         // Logout
@@ -239,13 +239,13 @@ fileprivate extension AuthenticationPlaygroundVC {
         scrollView.addSubview(lblLogoutStatusSymbol)
         lblLogoutStatusSymbol.snp.makeConstraints { make in
             make.centerY.equalTo(lblLogoutStatus)
-            make.leading.equalTo(lblLogoutStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblLogoutStatus.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         scrollView.addSubview(btnLogout)
         btnLogout.snp.makeConstraints { make in
             make.centerY.equalTo(lblLogoutStatusSymbol)
-            make.leading.equalTo(lblLogoutStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblLogoutStatusSymbol.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
 

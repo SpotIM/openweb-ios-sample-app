@@ -14,7 +14,7 @@ public extension Date {
         let calendar = Calendar.current
         let now = Date()
         let earliest = self < now ? self : now
-        let latest =  self > now ? self : now
+        let latest = self > now ? self : now
 
         let unitFlags: Set<Calendar.Component> = [.second, .minute, .hour, .day, .weekOfYear]
         let components: DateComponents = calendar.dateComponents(unitFlags, from: earliest, to: latest)

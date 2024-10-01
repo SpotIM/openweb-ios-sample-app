@@ -110,7 +110,7 @@ fileprivate extension ConversationCountersNewAPIVC {
 
         self.view.addSubview(lblDescription)
         lblDescription.snp.makeConstraints { make in
-            make.top.equalTo(txtFieldPostIds.snp.bottom).offset(Metrics.verticalMargin/2)
+            make.top.equalTo(txtFieldPostIds.snp.bottom).offset(Metrics.verticalMargin / 2)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalMargin)
         }
 
