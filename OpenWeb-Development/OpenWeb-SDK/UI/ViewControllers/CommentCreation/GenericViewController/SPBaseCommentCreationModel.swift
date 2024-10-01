@@ -75,7 +75,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     }
 
     func updateCommentLabels(labelsIds: [String]) {
-        if let commentLabelsSection = commentLabelsSection, !labelsIds.isEmpty {
+        if let commentLabelsSection, !labelsIds.isEmpty {
             selectedLabels = SelectedLabels(section: commentLabelsSection, ids: labelsIds)
         } else {
             selectedLabels = nil

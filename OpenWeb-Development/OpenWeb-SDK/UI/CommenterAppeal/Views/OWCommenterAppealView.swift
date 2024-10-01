@@ -162,7 +162,7 @@ private extension OWCommenterAppealView {
 
         footerView.addSubview(textView)
         textView.OWSnp.makeConstraints { [weak self] make in
-            guard let self = self else { return }
+            guard let self else { return }
             make.top.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewHorizontalPadding)
             self.textViewHeightConstraint = make.height.equalTo(0).constraint
         }
@@ -203,7 +203,7 @@ private extension OWCommenterAppealView {
 
         tableViewReasons.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
             })
             .disposed(by: disposeBag)
@@ -211,7 +211,7 @@ private extension OWCommenterAppealView {
         viewModel.outputs.selectedReason
             .subscribe(onNext: { [weak self] selectedReason in
                 // Show textView after selection
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.textViewHeightConstraint?.update(offset: Metrics.textViewHeight)
 
@@ -261,7 +261,7 @@ private extension OWCommenterAppealView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
@@ -274,7 +274,7 @@ private extension OWCommenterAppealView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyContext)
                 self.cancelButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
                 self.submitButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)

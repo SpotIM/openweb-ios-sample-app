@@ -55,7 +55,7 @@ private extension OWSpacerCell {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

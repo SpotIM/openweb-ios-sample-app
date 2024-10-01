@@ -175,7 +175,7 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
     private func configureModelHandlers() {
         model?.postCompletionHandler = { [weak self] comment in
             Logger.verbose("FirstComment: Post returned")
-            guard let self = self else { return }
+            guard let self else { return }
 
             if comment.status == .block || !comment.published {
                 switch comment.content?.first {
@@ -190,7 +190,7 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
             self.dismissController()
         }
         model?.errorHandler = { [weak self] error in
-            guard let self = self else { return }
+            guard let self else { return }
 
             self.hideLoader()
             self.showAlert(

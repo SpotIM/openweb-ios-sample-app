@@ -70,11 +70,11 @@ private extension OWParagraphWithIconView {
 
         viewModel.outputs.attributedString
             .subscribe(onNext: { [weak self] attributedString in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textLabel
                     .attributedText(attributedString)
                     .addRangeGesture(targetRange: self.viewModel.outputs.communityGuidelinesClickablePlaceholder) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.viewModel.inputs.communityGuidelinesClick.onNext()
                     }
             })
@@ -83,7 +83,7 @@ private extension OWParagraphWithIconView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

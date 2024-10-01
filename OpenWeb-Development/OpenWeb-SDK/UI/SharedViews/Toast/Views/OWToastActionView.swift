@@ -69,7 +69,7 @@ private extension OWToastActionView {
     func setupObservers() {
         viewModel.outputs.color
             .subscribe(onNext: { [weak self] color in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.textColor = color
                 self.iconImageView.tintColor = color
             })
@@ -78,7 +78,7 @@ private extension OWToastActionView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)

@@ -55,7 +55,7 @@ private extension OWMenuSelectionEncapsulationView {
     func setupObservers() {
         tapGesture.rx.event
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.dismissMenu()
                 self.menuVM.inputs.menuDismissed.onNext()
             })
@@ -64,7 +64,7 @@ private extension OWMenuSelectionEncapsulationView {
         OWSharedServicesProvider.shared.orientationService().orientation
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.dismissMenu()
                 self.menuVM.inputs.menuDismissed.onNext()
             })

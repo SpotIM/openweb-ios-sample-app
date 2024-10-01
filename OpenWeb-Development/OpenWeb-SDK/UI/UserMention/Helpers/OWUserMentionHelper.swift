@@ -25,16 +25,16 @@ class OWUserMentionHelper {
         let commentsCacheService = servicesProvider.commentsInMemoryCacheService()
         switch commentCreationType {
         case .comment:
-            guard let postId = postId,
+            guard let postId,
                   let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
             userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         case .replyToComment(originComment: let originComment):
-            guard let postId = postId,
+            guard let postId,
                   let originCommentId = originComment.id,
                   let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)] else { return }
             userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         case .edit(comment: let comment):
-            guard let postId = postId,
+            guard let postId,
                   let commentId = comment.id,
                   let commentCreationCache = commentsCacheService[.edit(postId: postId, commentId: commentId)] else { return }
             userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
@@ -163,7 +163,7 @@ class OWUserMentionHelper {
             }
         }
 
-        if let currentMentionRange = currentMentionRange,
+        if let currentMentionRange,
            let range = textViewText.nsRange(from: currentMentionRange) {
             attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
                                         value: brandColor,
@@ -232,7 +232,7 @@ class OWUserMentionHelper {
 
     static func addUserMentionDisplayNames(to text: String, mentions: [OWUserMentionObject]?) -> String {
         guard OWUserMentionHelper.mentionsEnabled else { return text }
-        guard let mentions = mentions else { return text }
+        guard let mentions else { return text }
         var text = text
         for mention in mentions {
             text = text.replacingOccurrences(of: mention.jsonString, with: mention.text)
@@ -295,7 +295,7 @@ class OWUserMentionHelper {
 
     static func filterUserMentions(in text: String, userMentions: [OWUserMentionObject], readMoreRange: NSRange?) -> [OWUserMentionObject] {
         guard OWUserMentionHelper.mentionsEnabled else { return [] }
-        guard let readMoreRange = readMoreRange else { return userMentions }
+        guard let readMoreRange else { return userMentions }
         let utf16Count = text.utf16.count
         var filtered = userMentions.filter { $0.range.location <= utf16Count }
         if let last = filtered.last {

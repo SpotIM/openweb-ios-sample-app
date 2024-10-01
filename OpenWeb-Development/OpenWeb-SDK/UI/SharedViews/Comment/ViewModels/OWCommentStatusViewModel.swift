@@ -87,7 +87,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             isCommentOfActiveUser,
             sharedServicesProvider.themeStyleService().style,
             accessibilityChange) { [weak self] status, isCommentOfActiveUser, style, _ in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let messageString: String
                 switch status {
                 case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
@@ -150,7 +150,7 @@ private extension OWCommentStatusViewModel {
         sharedServicesProvider.commentStatusUpdaterService()
             .statusUpdate
             .filter { [weak self] commentId, _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return commentId == self.commentId
             }
             .subscribe(onNext: { [weak self] _, status in

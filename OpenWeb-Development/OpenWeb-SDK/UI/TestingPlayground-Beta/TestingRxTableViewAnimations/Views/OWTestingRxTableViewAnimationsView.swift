@@ -40,7 +40,7 @@ class OWTestingRxTableViewAnimationsView: UIView {
 
     private lazy var tableViewDataDataSource: OWRxTableViewSectionedAnimatedDataSource<OWTestingRxDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<OWTestingRxDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
-            guard let self = self else { return UITableViewCell() }
+            guard let self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             cell.configure(with: item.viewModel)
@@ -130,7 +130,7 @@ private extension OWTestingRxTableViewAnimationsView {
         viewModel.outputs.performTableViewAnimation
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
                     self.tableView.beginUpdates()
                     self.tableView.endUpdates()

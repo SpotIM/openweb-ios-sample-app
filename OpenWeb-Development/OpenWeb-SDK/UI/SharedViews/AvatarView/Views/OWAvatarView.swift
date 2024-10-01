@@ -141,7 +141,7 @@ private extension OWAvatarView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.onlineIndicatorView.backgroundColor = OWColorPalette.shared.color(type: .borderColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -153,7 +153,7 @@ private extension OWAvatarView {
             avatarImageView.image = Metrics.defaultAvatar(style: style)
         case .custom(let url):
             avatarImageView.setImage(with: url) { [weak self] image, _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.avatarImageView.image = image ?? Metrics.defaultAvatar(style: style)
             }
         }

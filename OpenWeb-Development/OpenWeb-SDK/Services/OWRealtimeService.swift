@@ -59,13 +59,13 @@ class OWRealtimeService: OWRealtimeServicing {
             .take(1)
             .observe(on: self.scheduler) // Do the rest of the Rx chain on this class scheduler
             .flatMap { [weak self] spotId -> Observable<SPSpotConfiguration> in
-                guard let self = self else { return .empty()}
+                guard let self else { return .empty()}
                 return self.servicesProvider.spotConfigurationService().config(spotId: spotId)
                     .take(1)
             }
             .flatMap { [weak self] config -> Observable<String?> in
                 // Continue only if real time service is enabled according to the config
-                guard let self = self,
+                guard let self,
                       let realtimeEnabled = config.mobileSdk.realtimeEnabled,
                       realtimeEnabled else {
                           self?.servicesProvider.logger().log(level: .verbose, "Realtime flag in the configuration is not enabled, so the realtime service will not fetch data")
@@ -76,7 +76,7 @@ class OWRealtimeService: OWRealtimeServicing {
             }
             .flatMap { [weak self] currentPostId -> Observable<Bool> in
                 // Check if the provided postId is the current one we working on or something else
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 guard let currPostId = currentPostId else {
                     // First time we call `startFetchingData`
                     self.currentPostId.onNext(postId)
@@ -97,7 +97,7 @@ class OWRealtimeService: OWRealtimeServicing {
             }
             .filter { $0 == true } // Continue only if we should fetch the data
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.fetchData()
             })
     }
@@ -123,7 +123,7 @@ private extension OWRealtimeService {
             .unwrap()
             .observe(on: self.scheduler) // Do the rest of the Rx chain on this class scheduler
             .flatMap { [weak self] postId -> Observable<OWRealTime> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let api: OWRealtimeAPI = self.servicesProvider.networkAPI().realtime
                 // Fetch from API
                 return api.fetchData(fullConversationId: "\(OWManager.manager.spotId)_\(postId)")
@@ -140,7 +140,7 @@ private extension OWRealtimeService {
                 self?._realtimeData.onNext(realtimeDataModel)
             })
             .flatMap { [weak self] realtimeDataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let secondsOffset = realtimeDataModel.nextFetch - realtimeDataModel.timestamp
                 // Start delay for the next fetch
                 return .just(())
@@ -150,7 +150,7 @@ private extension OWRealtimeService {
                 // Fetch the next data
                 self?.fetchData()
             }, onError: { [weak self] error in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.servicesProvider.logger().log(level: .error, "Realtime service failed after retry mechanisem with error: \(error)")
                 self.stopFetchingData()
             })

@@ -59,7 +59,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         }()
 
         let animated = {
-            guard let coordinatorData = coordinatorData else { return true }
+            guard let coordinatorData else { return true }
             switch coordinatorData.deepLink {
             case .commentCreation(let commentCreationData):
                 guard coordinatorData.source == .preConversation,
@@ -91,7 +91,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
         let userLoggedInObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.userJustLoggedIn
             .map { [weak self] _ -> OWCommentCreationRequiredData? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.commentCreationData
             }
             .unwrap()
@@ -120,7 +120,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commentCreatedObservable, userLoggedInObservable)
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 let popStyle: OWScreenPopStyle = {
                     switch commentCreationViewVM.outputs.commentCreationStyle {
                     case .regular, .light:
@@ -199,7 +199,7 @@ private extension OWCommentCreationCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .subscribe(onNext: { [weak self] viewAction in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewActionsService.append(viewAction: viewAction)
             })
             .disposed(by: disposeBag)

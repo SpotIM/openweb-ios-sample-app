@@ -97,7 +97,7 @@ extension OWAuthenticationManager {
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool> {
         return self.shouldShowAuthenticationUI(for: action)
             .do(onNext: { [weak self] shouldShow in
-                guard shouldShow, let self = self,
+                guard shouldShow, let self,
                       let routeringModeProtocol = self.manager.ui as? OWRouteringModeProtocol,
                       let authenticationUILayer = self.manager.ui.authenticationUI as? OWUIAuthenticationInternalProtocol else { return }
                 let blockerService = self.servicesProvider.blockerServicing()
@@ -116,7 +116,7 @@ extension OWAuthenticationManager {
                 }
 
                 // For Pre-conversation present mode where the VC not started yet
-                if let router = router, router.isEmpty() {
+                if let router, router.isEmpty() {
                     let authDismiss = PublishSubject<Void>()
                     let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: { publisherAuthVC in
                         router.start()
@@ -167,7 +167,7 @@ extension OWAuthenticationManager {
             }
             .unwrap()
             .flatMapLatest { [weak self] level -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.requiredAuthenticationLevel(for: action)
                     .map { (level, $0) }
             }
@@ -185,7 +185,7 @@ extension OWAuthenticationManager {
         } else {
             authenticationForActionObserver = self.requiredAuthenticationLevel(for: action)
                 .flatMap { [weak self] requiredlevel -> Observable<Void> in
-                    guard let self = self else { return .empty() }
+                    guard let self else { return .empty() }
                     return self.waitForAuthenticationLevel(aboveOrEqual: requiredlevel)
                         .voidify()
                 }
@@ -244,7 +244,7 @@ extension OWAuthenticationManager {
             }
             .filter { $0 } // We would like to obtain user only in non SSO related statuses, otherwise `OWAuthorizationRecoveryService` class will take care for the rest
             .flatMap { [weak self] _ -> Observable<SPUser> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.retrieveNetworkNewUser()
             }
             .subscribe()
@@ -262,7 +262,7 @@ extension OWAuthenticationManager {
             .observe(on: scheduler)
             .take(1) // Here we are simply waiting for the config first / ensuring such exist for the specific spotId
             .flatMap { [weak self] _ -> Observable<SPUser> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let user = self.servicesProvider.networkAPI().user
                 return user
                     .userData()
@@ -272,7 +272,7 @@ extension OWAuthenticationManager {
                     .take(1) // No need to dispose
             }
             .do(onNext: { [weak self] newUser in
-                guard let self = self else { return }
+                guard let self else { return }
                 let authenticationRecoveryResult: OWAuthenticationRecoveryResult = .newAuthentication(user: newUser)
                 self.finishAuthenticationRecovery(with: authenticationRecoveryResult)
             })
@@ -292,7 +292,7 @@ extension OWAuthenticationManager {
         _ = userAuthenticationStatus
             .take(1)
             .subscribe(onNext: { [weak self] status in
-                guard let self = self else { return }
+                guard let self else { return }
                 if case OWInternalUserAuthenticationStatus.ssoLoggedIn(userId: let userId) = status {
                     // Entering SSO recovering status
                     self._userAuthenticationStatus.onNext(.ssoRecovering(userId: userId))
@@ -328,7 +328,7 @@ extension OWAuthenticationManager {
             .response
             .take(1)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 let newCredentials = OWNetworkSessionCredentials(guid: self._networkCredentials.guid,
                                                                  openwebToken: self._networkCredentials.openwebToken,
                                                                  authorization: nil)
@@ -338,13 +338,13 @@ extension OWAuthenticationManager {
             .do(onNext: { [weak self] currentAuthenticationStatus in
                 // Do not update status to .notAutenticated if we are sso recovering
                 if case .ssoRecovering = currentAuthenticationStatus { return }
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.update(userAvailability: .notAvailable)
                 self._userAuthenticationStatus.onNext(.notAutenticated)
             })
             .flatMapLatest { [weak self] currentAuthenticationStatus -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 if case .ssoRecovering = currentAuthenticationStatus { return Observable.just(()) }
                 return self.retrieveNetworkNewUser()
                     .take(1)
@@ -356,7 +356,7 @@ extension OWAuthenticationManager {
         return _activeUserAvailability
             .take(1)
             .flatMap { [weak self] userAvailablity -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 // 1. Logout current user if needed
                 if case .user = userAvailablity {
                     return self.logout()
@@ -365,7 +365,7 @@ extension OWAuthenticationManager {
                 }
             }
             .flatMap { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 // 2. Login (usually will provide a guest user))
                 let networkAuthentication = self.servicesProvider.networkAPI().authentication
                 return networkAuthentication
@@ -373,7 +373,7 @@ extension OWAuthenticationManager {
                     .response
                     .withLatestFrom(self._userAuthenticationStatus) { ($0, $1) }
                     .do(onNext: { [weak self] user, currentAuthenticationStatus in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         // Do not update user while we are sso recovering
                         if case .ssoRecovering = currentAuthenticationStatus { return }
 
@@ -383,7 +383,7 @@ extension OWAuthenticationManager {
                     .voidify()
             }
             .flatMap { [weak self] _ -> Observable<OWSSOStartResponse> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 // 2. Start SSO
                 guard let authorization = self._networkCredentials.authorization else { return .error(OWError.ssoStart)}
                 let networkAuthentication = self.servicesProvider.networkAPI().authentication
@@ -406,14 +406,14 @@ extension OWAuthenticationManager {
                 }
             }
             .flatMapLatest { [weak self] _ -> Observable<OWSSOCompletionResponse> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 // 2. Proceed with SSO complete
                 let networkAuthentication = self.servicesProvider.networkAPI().authentication
                 return networkAuthentication
                     .ssoComplete(codeB: codeB)
                     .response
                     .do(onNext: { [weak self] ssoCompletionResponse  in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         let user = ssoCompletionResponse.user
                         self.update(userAvailability: .user(user))
                         self._userAuthenticationStatus.onNext(.ssoLoggedIn(userId: user.userId ?? ""))
@@ -439,7 +439,7 @@ extension OWAuthenticationManager {
                 return .error(OWError.alreadyLoggedIn)
             }
             .flatMap { [weak self] _ -> Observable<OWSSOProviderResponse> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 // 2. Proceed with SSO complete
                 let networkAuthentication = self.servicesProvider.networkAPI().authentication
                 return networkAuthentication
@@ -447,7 +447,7 @@ extension OWAuthenticationManager {
                     .response
             }
             .do(onNext: { [weak self] ssoProviderResponse  in
-                guard let self = self else { return }
+                guard let self else { return }
                 let user = ssoProviderResponse.user
                 self.update(userAvailability: .user(user))
                 self._userAuthenticationStatus.onNext(.ssoLoggedIn(userId: user.userId ?? ""))
@@ -551,7 +551,7 @@ private extension OWAuthenticationManager {
     func shouldShowAuthenticationUI(for action: OWUserAction) -> Observable<Bool> {
         return self.requiredAuthenticationLevel(for: action)
             .flatMap { [weak self] requiredlevel -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.waitForAuthenticationLevel()
                     .take(1)
                     .map { ($0, requiredlevel) }
@@ -585,13 +585,13 @@ private extension OWAuthenticationManager {
         return manager.currentSpotId
             .take(1)
             .flatMap { [weak self] spotId -> Observable<SPSpotConfiguration> in
-                guard let self = self else { return .empty()}
+                guard let self else { return .empty()}
                 return self.servicesProvider.spotConfigurationService().config(spotId: spotId)
                     .take(1)
             }
             .materialize()
             .map { [weak self] event -> OWAuthenticationLevel? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 switch event {
                 case .next(let config):
                     return self.requiredAuthenticationLevel(for: action, accordingToConfig: config)
@@ -650,7 +650,7 @@ private extension OWAuthenticationManager {
             .unwrap()
             .take(1)
             .do(onNext: { [weak self] status in
-                guard let self = self,
+                guard let self,
                         case .ssoLoggedIn(let userId) = status else { return }
                 // Signal if the recovery was succesfull or not
                 if userId == originalUserId {
@@ -670,13 +670,13 @@ private extension OWAuthenticationManager {
             .delay(.seconds(Metrics.maxSSORecoveryTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .utility))
             .take(1)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 // Signal recovery failed due to timeout
                 self._userAuthenticationStatus.onNext(.ssoFailedRecover(userId: originalUserId))
             })
             .flatMapLatest { [weak self] _ -> Observable<SPUser> in
                 // Retrieve new guest user
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.retrieveNetworkNewUser()
             }
             .voidify()

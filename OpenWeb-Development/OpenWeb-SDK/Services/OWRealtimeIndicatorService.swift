@@ -53,7 +53,7 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
     private lazy var typingCount: Observable<Int> = {
         return realtimeService.realtimeData
             .map { [weak self] realtimeData -> Int? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return realtimeData.data?.rootCommentsTypingCount(forPostId: self.postId)
             }
             .unwrap()
@@ -65,7 +65,7 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
     private var newCommentsObservable: Observable<[OWComment]> {
         return realtimeService.realtimeData
             .withLatestFrom(isRealtimeIndicatorEnabled) { [weak self] realtimeData, isEnabled -> [OWComment]? in
-                guard let self = self,
+                guard let self,
                       isEnabled else { return nil }
                 return realtimeData.data?.newComments(forPostId: self.postId)
             }
@@ -151,7 +151,7 @@ extension OWRealtimeIndicatorService {
     func setupObservers() {
         newCommentsObservable
             .subscribe(onNext: { [weak self] newComments in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 var updateUsers: [SPUser] = []
 

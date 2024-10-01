@@ -86,7 +86,7 @@ private extension OWParagraphWithIconVM {
             return style
         }
         .subscribe(onNext: { [weak self] style in
-            guard let self = self else { return }
+            guard let self else { return }
             let attString = self.getAttributedString(style: style)
             self._attributedString.onNext(attString)
         })

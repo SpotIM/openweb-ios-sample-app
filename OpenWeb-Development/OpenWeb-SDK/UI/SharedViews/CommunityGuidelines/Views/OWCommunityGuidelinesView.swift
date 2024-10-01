@@ -92,7 +92,7 @@ private extension OWCommunityGuidelinesView {
         if viewModel.outputs.shouldShowContainer {
             self.addSubview(guidelinesContainer)
             guidelinesContainer.OWSnp.makeConstraints { [weak self] make in
-                guard let self = self else { return }
+                guard let self else { return }
                 make.top.equalToSuperview().inset(self.viewModel.outputs.spacing.top)
                 make.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
@@ -114,7 +114,7 @@ private extension OWCommunityGuidelinesView {
         } else {
             self.addSubview(titleLabel)
             titleLabel.OWSnp.makeConstraints { [weak self] make in
-                guard let self = self else { return }
+                guard let self else { return }
                 make.top.equalToSuperview().inset(self.viewModel.outputs.spacing.top)
                 make.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
@@ -155,11 +155,11 @@ private extension OWCommunityGuidelinesView {
                                  communityGuidelinesClickableStringObservable)
             .subscribe(onNext: { [weak self] attributedText, clickableString in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.titleLabel
                         .attributedText(attributedText)
                         .addRangeGesture(targetRange: clickableString) { [weak self] in
-                            guard let self = self else { return }
+                            guard let self else { return }
                             self.viewModel.inputs.urlClicked.onNext(())
                         }
                 }
@@ -169,7 +169,7 @@ private extension OWCommunityGuidelinesView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.guidelinesContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: currentStyle)
                 self.updateCustomUI()
             })

@@ -230,12 +230,12 @@ private extension OWCommentRatingViewModel {
     func setupObservers() {
         let rankChangedLocallyObservable: Observable<SPRankChange> = rankChanged
             .flatMapLatest { [weak self] rankChange -> Observable<SPRankChange> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 return Observable.combineLatest(self._rankUp, self._rankDown)
                     .take(1)
                     .do(onNext: { [weak self] rankUp, rankDown in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.updateChangeLocally(rankChange: rankChange, rankUp: rankUp ?? 0, rankDown: rankDown ?? 0)
                     })
                     .map { _ in rankChange }
@@ -244,7 +244,7 @@ private extension OWCommentRatingViewModel {
         // Updating Network/Remote about rank change
         rankChangedLocallyObservable
             .flatMapLatest { [weak self] rankChange -> Observable<Event<EmptyDecodable>> in
-                guard let self = self,
+                guard let self,
                       let postId = OWManager.manager.postId,
                       let operation = rankChange.operation
                 else { return .empty() }

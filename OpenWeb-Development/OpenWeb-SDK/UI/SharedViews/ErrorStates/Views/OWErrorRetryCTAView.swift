@@ -78,7 +78,7 @@ private extension OWErrorRetryCTAView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.ctaLabel.textColor = OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -86,7 +86,7 @@ private extension OWErrorRetryCTAView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.ctaLabel.attributedText = self.attributedString
             })
             .disposed(by: disposeBag)

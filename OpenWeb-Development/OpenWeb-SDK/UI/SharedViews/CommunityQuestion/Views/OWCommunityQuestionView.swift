@@ -129,7 +129,7 @@ private extension OWCommunityQuestionView {
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if let heightConstraint = heightConstraint {
+        if let heightConstraint {
             viewModel.outputs.shouldShowView
                 .map { !$0 }
                 .bind(to: heightConstraint.rx.isActive)
@@ -139,7 +139,7 @@ private extension OWCommunityQuestionView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.questionLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.questionContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: currentStyle)
                 self.questionContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1, themeStyle: currentStyle).cgColor
@@ -150,7 +150,7 @@ private extension OWCommunityQuestionView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.questionLabel.font = self.viewModel.outputs.titleFont
             })
             .disposed(by: disposeBag)

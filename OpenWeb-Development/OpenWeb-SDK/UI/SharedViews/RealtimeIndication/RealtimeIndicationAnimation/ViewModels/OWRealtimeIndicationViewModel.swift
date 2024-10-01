@@ -91,7 +91,7 @@ extension OWRealtimeIndicationViewModel {
         realtimeIndicatorService.realtimeIndicatorType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
+                guard let self else { return }
                 let (shouldShowTyping, shouldShowNewComments) = self.displaySettings(for: type)
 
                 self._shouldShowTypingLabel.onNext(shouldShowTyping)
@@ -105,7 +105,7 @@ extension OWRealtimeIndicationViewModel {
             }
             .subscribe(onNext: { [weak self] newCommentsCount in
                 guard newCommentsCount > 0,
-                      let self = self else { return }
+                      let self else { return }
                 self._tapped.onNext()
             })
             .disposed(by: disposeBag)

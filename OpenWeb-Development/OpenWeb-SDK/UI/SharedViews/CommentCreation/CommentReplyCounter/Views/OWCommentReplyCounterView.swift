@@ -60,7 +60,7 @@ private extension OWCommentReplyCounterView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
@@ -77,7 +77,7 @@ private extension OWCommentReplyCounterView {
                                  isLanscapeObsarvable)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showCounter, isLanscape in
-                guard let self = self else { return }
+                guard let self else { return }
                 if showCounter {
                     self.viewHeightConstraint?.update(offset: isLanscape ? 0 : Metrics.counterHeight)
                 }
@@ -87,7 +87,7 @@ private extension OWCommentReplyCounterView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.counterLabel.font = OWFontBook.shared.font(typography: .footnoteText)
             })
             .disposed(by: disposeBag)

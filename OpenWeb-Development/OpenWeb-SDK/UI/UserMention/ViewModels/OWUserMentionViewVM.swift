@@ -123,7 +123,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .filter { !$0.isEmpty }
             .withLatestFrom(users) { ($0, $1) }
             .do(onNext: { [weak self] name, users in
-                guard let self = self else { return }
+                guard let self else { return }
                 if name.count > 0, users.count == 0 {
                     self.isSearchingUsers.onNext(true)
                 }
@@ -132,14 +132,14 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .asObservable()
             .throttle(.milliseconds(Metrics.throttleGetUsers), scheduler: MainScheduler.instance)
             .flatMapLatest { [weak self] name, _ -> Observable<[SPUser]> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.networkAPI()
                     .user
                     .getUsers(name: name, count: Metrics.usersCount)
                     .response
                     .materialize()
                     .map { [weak self] event in
-                        guard let self = self,
+                        guard let self,
                               self.getUsersForName == name else { return nil }
                         self.isSearchingUsers.onNext(false)
                         switch event {
@@ -218,7 +218,7 @@ private extension OWUserMentionViewVM {
         replaceData
             .withLatestFrom(textViewText) { ($0, $1) }
             .subscribe(onNext: { [weak self] replaceData, text in
-                guard let self = self,
+                guard let self,
                       let textData = OWUserMentionHelper.getUserMentionTextData(replaceData: replaceData, text: text) else { return }
                 self.textData.onNext(textData)
             })
@@ -227,14 +227,14 @@ private extension OWUserMentionViewVM {
         // Edit cursor range and select full user mention if current selected range is on user mention
         cursorRange
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return !self.tappedMentionInProgress
             }
             .debounce(.microseconds(Metrics.debounceCursorChange), scheduler: MainScheduler.instance)
             .withLatestFrom(textViewText) { ($0, $1) }
             .withLatestFrom(mentionsData) { ($0.0, $0.1, $1) }
             .subscribe(onNext: { [weak self] cursorRange, text, mentionsData in
-                guard let self = self else { return }
+                guard let self else { return }
                 if cursorRange.lowerBound != cursorRange.upperBound {
                     self.getUsersForName = ""
                     self._users.onNext([])
@@ -247,7 +247,7 @@ private extension OWUserMentionViewVM {
         Observable.combineLatest(textViewText, cursorRange)
             .filter { $1.lowerBound == $1.upperBound }
             .subscribe(onNext: { [weak self] text, cursorRange in
-                guard let self = self else { return }
+                guard let self else { return }
                 let textData = OWUserMentionTextData(text: text, cursorRange: cursorRange, replacingText: nil)
                 self.textData.onNext(textData)
             })
@@ -267,7 +267,7 @@ private extension OWUserMentionViewVM {
             .withLatestFrom(mentionsData) { ($0.0, $0.1, $0.2, $1) }
             .asObservable()
             .subscribe(onNext: { [weak self] displayName, id, textData, mentionsData in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.tappedMentionInProgress = true
                 OWUserMentionHelper.addUserMention(to: mentionsData, textData: textData, id: id, displayName: displayName, randomGenerator: self.randomGenerator)
                 self.tappedMentionAction.onNext(mentionsData)
@@ -278,7 +278,7 @@ private extension OWUserMentionViewVM {
         tappedMention
             .withLatestFrom(textAfterMention) { ($0, $1) }
             .subscribe(onNext: { [weak self] mentionsData, textAfterMention in
-                guard let self = self,
+                guard let self,
                       let textData = OWUserMentionHelper.getUserMentionTextDataAfterTapped(mentionsData: mentionsData,
                                                                                            textAfterMention: textAfterMention) else { return }
                 self.textChange.onNext(textData.text)
@@ -291,7 +291,7 @@ private extension OWUserMentionViewVM {
         Observable.combineLatest(styleChangedObserver, mentionsData, currentMentionRange)
             .withLatestFrom(textViewText) { ($0.1, $0.2, $1) }
             .subscribe(onNext: { [weak self] mentionsData, currentMentionRange, textViewText in
-                guard let self = self,
+                guard let self,
                 let attributedText = OWUserMentionHelper.getAttributedText(for: textViewText, mentionsData: mentionsData, currentMentionRange: currentMentionRange) else { return }
                 attributedTextChange.onNext(attributedText)
             })
@@ -302,7 +302,7 @@ private extension OWUserMentionViewVM {
             .filter { $0.replacingText == nil } // Adding text
             .withLatestFrom(mentionsData) { ($0, $1) }
             .subscribe(onNext: { [weak self] textData, mentionsData in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.getUsersForName = ""
                 self._currentMentionRange.onNext(nil)
                 self.searchText(textData.textToCursor, fullText: textData.fullText, mentions: mentionsData.mentions)
@@ -314,7 +314,7 @@ private extension OWUserMentionViewVM {
             .withLatestFrom(mentionsData) { ($0, $1) }
             .subscribe(onNext: { [weak self] textData, mentionsData in
                 if let textData = OWUserMentionHelper.updateMentionRanges(with: textData, mentionsData: mentionsData) {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.textChange.onNext(textData.text)
                     DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
                         self?.cursorRangeChange.onNext(textData.cursorRange)
@@ -347,7 +347,7 @@ private extension OWUserMentionViewVM {
             }
 
             regex.enumerateMatches(in: searchText, range: nsRange) { [weak self] result, _, _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let r = result?.range, let range = Range(r, in: searchText) {
                     if !(mentions.contains(where: { mention in
                         let mentionRange = Range(mention.range, in: searchText)

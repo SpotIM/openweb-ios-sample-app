@@ -94,7 +94,7 @@ private extension OWUsersService {
             }
             .unwrap()
             .subscribe(onNext: { [weak self] user in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.set(users: [user])
             })
             .disposed(by: disposeBag)

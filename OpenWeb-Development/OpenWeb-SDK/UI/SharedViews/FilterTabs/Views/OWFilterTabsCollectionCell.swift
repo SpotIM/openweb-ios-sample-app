@@ -84,7 +84,7 @@ private extension OWFilterTabsCollectionCell {
         Observable.combineLatest(viewModel.outputs.isSelected,
                                  OWSharedServicesProvider.shared.themeStyleService().style)
             .subscribe(onNext: { [weak self] isSelected, currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 if isSelected {
                     self.mainView.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
                     self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: .dark)

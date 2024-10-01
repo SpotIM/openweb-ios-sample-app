@@ -108,7 +108,7 @@ private extension OWManager {
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
                 // PostId was re-set to another postId
-                guard let self = self else { return }
+                guard let self else { return }
                 self.resetPostId()
             })
             .disposed(by: disposeBag)
@@ -117,7 +117,7 @@ private extension OWManager {
             .take(1)
             .subscribe(onNext: { [weak self] spotId in
                 // SpotId was set for the first time
-                guard let self = self else { return }
+                guard let self else { return }
                 self.servicesProvider.configure.set(spotId: spotId)
             })
             .disposed(by: disposeBag)
@@ -141,7 +141,7 @@ private extension OWManager {
             .map { $0.1 } // Map back to the spotId
             .subscribe(onNext: { [weak self] spotId in
                 // SpotId was re-set to another spotId
-                guard let self = self else { return }
+                guard let self else { return }
                 self.resetSpotId()
                 self.servicesProvider.configure.change(spotId: spotId)
             })
@@ -166,7 +166,7 @@ private extension OWManager {
             .map { $0.1 } // Map back to the spotId
             .subscribe(onNext: { [weak self] _ in
                 // SpotId was re-set to the same spotId
-                guard let self = self else { return }
+                guard let self else { return }
                 self.resetSpotId()
             })
             .disposed(by: disposeBag)

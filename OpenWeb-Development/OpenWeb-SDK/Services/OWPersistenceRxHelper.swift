@@ -47,7 +47,7 @@ class OWPersistenceRxHelper: OWPersistenceRxHelperProtocol {
     func observable<T>(key: OWRxHelperKey<T>, value: Data?, defaultValue: T? = nil) -> Observable<T> {
         var defaultValueData: Data?
         if value == nil,
-           let defaultValue = defaultValue,
+           let defaultValue,
            let encodedData = try? encoder.encode(defaultValue) {
             defaultValueData = encodedData
         }

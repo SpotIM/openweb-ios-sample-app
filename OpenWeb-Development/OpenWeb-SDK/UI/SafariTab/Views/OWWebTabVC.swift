@@ -78,7 +78,7 @@ private extension OWWebTabVC {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
                 self.backButton.image(UIImage(spNamed: Metrics.backButtonImageName, supportDarkMode: true), state: .normal)
             })
@@ -93,7 +93,7 @@ private extension OWWebTabVC {
             .outputs
             .shouldShowCloseButton
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
+                guard let self else { return }
                 addCloseButtonIfNeeded(shouldShow)
             })
             .disposed(by: disposeBag)
@@ -106,7 +106,7 @@ private extension OWWebTabVC {
             .webTabViewVM.outputs
             .shouldShowBackButton
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
+                guard let self else { return }
                 addBackButtonIfNeeded(shouldShow)
             })
             .disposed(by: disposeBag)
@@ -115,7 +115,7 @@ private extension OWWebTabVC {
             .webTabViewVM.outputs
             .title
             .subscribe(onNext: { [weak self] title in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.title = title
             })
             .disposed(by: disposeBag)

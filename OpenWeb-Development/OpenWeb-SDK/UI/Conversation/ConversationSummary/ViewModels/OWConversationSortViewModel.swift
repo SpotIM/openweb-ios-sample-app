@@ -78,7 +78,7 @@ private extension OWConversationSortViewModel {
             .sortOption(perPostId: self.postId)
 
         sortOptionObservable.subscribe(onNext: { [weak self] sortOption in
-            guard let self = self else { return }
+            guard let self else { return }
 
             self._selectedSortOption.onNext(sortOption)
         })

@@ -43,7 +43,7 @@ class OWCommentOptionsViewModel: OWCommentOptionsViewModeling,
     var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
         tapButton
             .flatMapLatest { [weak self] view -> Observable<([OWUserAction: Bool], UIView, SPUser)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let actions: [OWUserAction] = [.deletingComment, .editingComment]
                 let authentication = self.sharedServiceProvider.authenticationManager()
 

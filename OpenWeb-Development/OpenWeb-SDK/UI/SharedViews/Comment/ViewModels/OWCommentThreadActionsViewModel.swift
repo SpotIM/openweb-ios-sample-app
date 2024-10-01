@@ -113,7 +113,7 @@ private extension OWCommentThreadActionsViewModel {
         updatedType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch type {
                 case .collapseThread:
                     self._actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "CollapseThread"))

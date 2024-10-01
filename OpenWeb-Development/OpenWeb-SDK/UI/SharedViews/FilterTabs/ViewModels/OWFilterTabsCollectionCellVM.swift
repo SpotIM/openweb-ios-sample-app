@@ -74,7 +74,7 @@ private extension OWFilterTabsCollectionCellViewModel {
     func setupObservers() {
         isSelected
             .subscribe(onNext: { [weak self] isSelected in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.model.selected = isSelected
             })
             .disposed(by: disposeBag)

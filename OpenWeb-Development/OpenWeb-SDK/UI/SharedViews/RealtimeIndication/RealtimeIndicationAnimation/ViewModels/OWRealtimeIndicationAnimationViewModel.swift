@@ -66,7 +66,7 @@ extension OWRealtimeIndicationAnimationViewModel {
         realtimeIndicatorService.realtimeIndicatorType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
+                guard let self else { return }
                 let isShown = type != .none
                 self._isThereAnyDataToShow.onNext(isShown)
             })
@@ -74,7 +74,7 @@ extension OWRealtimeIndicationAnimationViewModel {
 
         realtimeIndicatorService.state
             .subscribe(onNext: { [weak self] state in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._isRealtimeIndicatorEnabled.onNext(state == .enable)
                 if state == .disable {
                     self.realtimeIndicatorService.cleanCache()

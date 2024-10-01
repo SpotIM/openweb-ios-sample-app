@@ -158,7 +158,7 @@ private extension OWCommentViewModel {
     func setupObservers() {
         _currentUser
             .map { [weak self] user -> Bool in
-                guard let self = self, let user = user else { return false }
+                guard let self, let user else { return false }
                 return user.userId == self.comment.userId
             }
             .bind(to: _isCommentOfActiveUser)

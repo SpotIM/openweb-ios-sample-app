@@ -200,7 +200,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     lazy var performCta: Observable<OWCommentCreationCtaData> = {
         return ctaTap
             .map { [weak self] _ -> OWUserAction? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 switch self.commentType {
                 case .comment:
                     return .commenting
@@ -212,11 +212,11 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             }
             .unwrap()
             .flatMap { [weak self] userAction -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: userAction)
             }
             .do(onNext: { [weak self] loginToPost in
-                guard let self = self,
+                guard let self,
                       loginToPost == true else { return }
                 self._loginToPostClick.onNext()
             })
@@ -342,7 +342,7 @@ private extension OWCommentCreationFloatingKeyboardViewViewModel {
     func setupObservers() {
         OWSharedServicesProvider.shared.orientationService().orientation
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
                 let isPortrait = (currentOrientation == .portrait)
                 self.textViewVM.inputs.hasSuggestionsBarChange.onNext(isPortrait)
 
@@ -400,7 +400,7 @@ private extension OWCommentCreationFloatingKeyboardViewViewModel {
             .withLatestFrom(textViewVM.outputs.textViewText) { ($0, $1) }
             .withLatestFrom(textViewVM.outputs.cursorRange) { ($0.0, $0.1, $1) }
             .subscribe(onNext: { [weak self] request, currentText, currentSelectedRange in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch request {
                 case .manipulateUserInputText(let manipulationTextCompletion):
                     let manipulationTextModel = OWManipulateTextModel(text: currentText, cursorRange: currentSelectedRange)
@@ -429,7 +429,7 @@ private extension OWCommentCreationFloatingKeyboardViewViewModel {
         closedInstantly
             .withLatestFrom(textBeforeClosedChanged)
             .subscribe(onNext: { [weak self] text in
-                guard let self = self else { return }
+                guard let self else { return }
                 if text.isEmpty {
                     self.commentCreationData.commentCreationType = .comment
                 }
@@ -440,7 +440,7 @@ private extension OWCommentCreationFloatingKeyboardViewViewModel {
         resetTypeToNewCommentChanged
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.commentCreationData.commentCreationType = .comment
                 self.updateCachedLastCommentType()
             })
@@ -448,7 +448,7 @@ private extension OWCommentCreationFloatingKeyboardViewViewModel {
 
         initialTextUsed
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.initialText = ""
             })
             .disposed(by: disposeBag)

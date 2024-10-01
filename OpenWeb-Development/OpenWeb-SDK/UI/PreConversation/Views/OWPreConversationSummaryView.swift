@@ -139,7 +139,7 @@ private extension OWPreConversationSummaryView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1,
                                                                         themeStyle: currentStyle)
@@ -152,7 +152,7 @@ private extension OWPreConversationSummaryView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: self.viewModel.outputs.titleFontTypography)
                 self.counterLabel.font = OWFontBook.shared.font(typography: self.viewModel.outputs.counterFontTypography)
             })

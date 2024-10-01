@@ -85,7 +85,7 @@ class OWRouter: NSObject, OWRoutering {
     }
 
     func start() {
-        guard let navigationController = navigationController else { return }
+        guard let navigationController else { return }
         switch presentationalMode {
         case .present(let viewControllerWeakEncapsulation, _, let animated):
             viewControllerWeakEncapsulation.value()?.present(navigationController, animated: animated)
@@ -263,7 +263,7 @@ private extension OWRouter {
 
         navigationController.dismissed
             .subscribe(onNext: { [ weak self] _ in
-                guard let self = self,
+                guard let self,
                       let navController = navigationController as? UINavigationController else { return }
                 let childs = navController.children.reversed()
                 childs.forEach { [weak self] in

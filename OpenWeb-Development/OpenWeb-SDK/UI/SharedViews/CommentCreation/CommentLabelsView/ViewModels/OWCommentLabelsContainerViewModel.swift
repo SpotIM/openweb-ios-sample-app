@@ -51,7 +51,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     var isInitialSelectionChanged: Observable<Bool> {
         _selectedLabelIds
             .map { [weak self] selectedLabelIds in
-                guard let self = self else { return false }
+                guard let self else { return false }
 
                 if case .edit(let comment) = self.commentCreationType {
                     let initialSelectedLabels = comment.additionalData?.labels
@@ -72,7 +72,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     var isValidSelection: Observable<Bool> {
         Observable.combineLatest(_commentLabelsSection, selectedLabelIds) { ($0, $1) }
             .map { sectionConfig, selectedLabelIds in
-                if let sectionConfig = sectionConfig {
+                if let sectionConfig {
                     return (sectionConfig.minSelected, selectedLabelIds.count)
                 } else {
                     return (0, selectedLabelIds.count)
@@ -96,7 +96,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
         self.servicesProvider = servicerProvider
         self.section = section
         self.commentCreationType = commentCreationType
-        if let comment = comment {
+        if let comment {
             _comment.onNext(comment)
         }
 
@@ -130,8 +130,8 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                 return sharedConfig.commentLabels
             }
             .map { [weak self] commentLabelsSectionsConfig in
-                guard let self = self,
-                      let commentLabelsSectionsConfig = commentLabelsSectionsConfig
+                guard let self,
+                      let commentLabelsSectionsConfig
                 else { return nil }
                 if let sectionConfig = commentLabelsSectionsConfig[self.section] {
                     return sectionConfig
@@ -145,8 +145,8 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     private lazy var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> = {
         _comment
             .withLatestFrom(_commentLabelsSection) { [weak self] comment, commentLabelsSection in
-                guard let self = self,
-                      let commentLabelsSection = commentLabelsSection
+                guard let self,
+                      let commentLabelsSection
                 else { return nil }
                 return self.getCommentLabels(comment: comment, commentLabelsSection: commentLabelsSection)
             }.unwrap()
@@ -167,7 +167,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     private var _commentLabelsTitle: Observable<String?> {
         Observable.combineLatest(_comment, _commentLabelsSection) { comment, commentLabelsSection in
             guard comment == nil,
-                  let commentLabelsSection = commentLabelsSection
+                  let commentLabelsSection
             else { return nil }
             return commentLabelsSection.guidelineText
         }
@@ -196,8 +196,8 @@ private extension OWCommentLabelsContainerViewModel {
             .withLatestFrom(_commentLabelsSection) { ($0.0, $0.1, $1) }
             .withLatestFrom(_selectedLabelIds) { ($0.0, $0.1, $0.2, $1) }
             .subscribe(onNext: { [weak self] state, settings, sectionSettings, selectedLabelIds in
-                guard let self = self,
-                      let sectionSettings = sectionSettings
+                guard let self,
+                      let sectionSettings
                 else { return }
                 switch state {
                 case .notSelected:
@@ -228,7 +228,7 @@ private extension OWCommentLabelsContainerViewModel {
 private extension OWCommentLabelsContainerViewModel {
     func getCommentLabels(comment: OWComment?, commentLabelsSection: SPCommentLabelsSectionConfiguration) -> [OWCommentLabelSettings] {
         var commentLabelsConfig: [SPLabelConfiguration]
-        if let comment = comment {
+        if let comment {
             commentLabelsConfig = getCommentLabelsOfComment(comment: comment, commentLabelsSection: commentLabelsSection)
         } else {
             commentLabelsConfig = commentLabelsSection.labels
@@ -271,7 +271,7 @@ private extension OWCommentLabelsContainerViewModel {
 
         switch commentCreationType {
         case .comment:
-            guard let postId = postId else { return }
+            guard let postId else { return }
             initialCommentLabelIds = commentsCacheService[.comment(postId: postId)]?.commentLabelIds
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,

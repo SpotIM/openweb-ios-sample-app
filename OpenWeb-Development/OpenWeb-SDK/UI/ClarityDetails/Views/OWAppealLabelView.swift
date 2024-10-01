@@ -102,7 +102,7 @@ private extension OWAppealLabelView {
         viewModel.outputs.viewType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
+                guard let self else { return }
                 var contentView: UIView
                 switch type {
                 case .skeleton:
@@ -141,11 +141,11 @@ private extension OWAppealLabelView {
 
         viewModel.outputs.defaultAttributedText
             .subscribe(onNext: { [weak self] attributedText in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.defaultLabel
                     .attributedText(attributedText)
                     .addRangeGesture(targetRange: self.viewModel.outputs.appealClickableText) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.viewModel.inputs.appealClick.onNext()
                     }
             })
@@ -162,7 +162,7 @@ private extension OWAppealLabelView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.skeletonContentView.backgroundColor = OWColorPalette.shared.color(type: .skeletonColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

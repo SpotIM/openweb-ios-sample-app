@@ -129,14 +129,14 @@ private extension OWConversationEmptyStateViewModel {
         }
         .unwrap()
         .subscribe(onNext: { [weak self] contentType in
-            guard let self = self else { return }
+            guard let self else { return }
             self._contentType.onNext(contentType)
         })
         .disposed(by: disposeBag)
 
         triggerCustomizeTitleLabelUI
             .flatMapLatest { [weak self] label -> Observable<UILabel> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.text
                     .map { _ in return label }
             }

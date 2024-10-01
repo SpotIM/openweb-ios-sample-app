@@ -228,7 +228,7 @@ private extension OWPreConversationCompactContentView {
         viewModel.outputs.contentType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.leftViewContainer.subviews.forEach { $0.removeFromSuperview() }
                 let view = self.getViewForContent(type: type)
@@ -263,7 +263,7 @@ private extension OWPreConversationCompactContentView {
         viewModel.outputs.shouldShowImagePlaceholder
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showImage in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.cameraIcon.OWSnp.updateConstraints { make in
                     make.size.equalTo(showImage ? Metrics.imageIconSize : 0)
                     make.leading.equalTo(self.leftViewContainer.OWSnp.trailing).offset(showImage ? Metrics.imageLeftPadding : 10)
@@ -275,7 +275,7 @@ private extension OWPreConversationCompactContentView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.textLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.emptyConversationImageView.image = UIImage(spNamed: "emptyConversation-icon", supportDarkMode: true)
@@ -288,7 +288,7 @@ private extension OWPreConversationCompactContentView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textLabel.font = OWFontBook.shared.font(typography: .footnoteText)
             })
             .disposed(by: disposeBag)

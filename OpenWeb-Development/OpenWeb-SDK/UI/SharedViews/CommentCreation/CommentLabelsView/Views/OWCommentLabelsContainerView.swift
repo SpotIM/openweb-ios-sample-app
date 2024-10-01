@@ -88,14 +88,14 @@ private extension OWCommentLabelsContainerView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
         viewModel.outputs.commentLabelsTitle
             .subscribe(onNext: { [weak self] title in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.titleLabel.text = title
                     self.titleZeroHeightConstraint?.isActive = title == nil
                     self.labelsTopConstraint?.update(offset: title == nil ? 0 : Metrics.titleLabelSpacing)
@@ -105,7 +105,7 @@ private extension OWCommentLabelsContainerView {
         viewModel.outputs.commentLabelsViewModels
             .subscribe(onNext: { [weak self] viewModels in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     // clean stackview if needed
                     self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
 
@@ -117,7 +117,7 @@ private extension OWCommentLabelsContainerView {
                         return commentLabel
                     }
                     commentLabelsViews.forEach { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.labelsContainerStackView.addArrangedSubview($0)
                     }
                 }
@@ -127,7 +127,7 @@ private extension OWCommentLabelsContainerView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
             })
             .disposed(by: disposeBag)
@@ -135,7 +135,7 @@ private extension OWCommentLabelsContainerView {
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let isLandscape = currentOrientation == .landscape
                 self.titleLabel.isHidden = isLandscape

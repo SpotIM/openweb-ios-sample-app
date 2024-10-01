@@ -77,14 +77,14 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var image: Observable<OWImageType> {
         _comment
             .flatMap { [weak self] comment -> Observable<URL?> in
-                guard let self = self,
+                guard let self,
                       let imageId = comment?.image?.imageId
                 else { return .empty() }
 
                 return self.imageProvider.imageURL(with: imageId, size: nil)
             }
             .map { url in
-                guard let url = url else { return .defaultImage }
+                guard let url else { return .defaultImage }
                 return .custom(url: url)
             }
             .asObservable()
@@ -92,7 +92,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
 
     var mediaSize: Observable<CGSize> {
         Observable.combineLatest(_commentMediaOriginalSize, _commentLeadingOffset) { [weak self] mediaOriginalSize, leadingOffset -> CGSize in
-            guard let self = self else { return .zero }
+            guard let self else { return .zero }
             return self.getMediaSize(originalSize: mediaOriginalSize, leadingOffset: leadingOffset)
         }.asObservable()
     }
@@ -100,7 +100,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var isEdited: Observable<Bool> {
         _comment
             .map { comment in
-                guard let comment = comment
+                guard let comment
                 else { return false }
 
                 return comment.edited
@@ -126,7 +126,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
         _comment
             .unwrap()
             .map { [weak self] comment in
-                guard let self = self else { return 0 }
+                guard let self else { return 0 }
                 return self.leadingOffset(perCommentDepth: comment.depth ?? 0)
             }
             .asObservable()

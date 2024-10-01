@@ -140,7 +140,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         return Observable.combineLatest(communityGuidelinesTitleFromConfig,
                                 _updateCommunityGuidelinesAttributedString)
             .map { [weak self] communityGuidelinesTitle, themeStyle -> NSAttributedString? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.getAttributedText(style: self.style,
                                               themeStyle: themeStyle,
                                               communityGuidelinesText: communityGuidelinesTitle)
@@ -179,7 +179,7 @@ private extension OWCommunityGuidelinesViewModel {
             .take(1)
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self._shouldShowView.onNext(self.style != .none)
                 }
             })
@@ -195,7 +195,7 @@ private extension OWCommunityGuidelinesViewModel {
 
         triggerCustomizeTitleLabelUI
             .flatMapLatest { [weak self] label -> Observable<UILabel> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.communityGuidelinesAttributedString
                     .map { _ in return label }
             }
@@ -211,7 +211,7 @@ private extension OWCommunityGuidelinesViewModel {
         }
             .unwrap()
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._updateCommunityGuidelinesAttributedString.onNext(style)
             })
             .disposed(by: disposeBag)

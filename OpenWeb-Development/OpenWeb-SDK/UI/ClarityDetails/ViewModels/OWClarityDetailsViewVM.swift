@@ -179,7 +179,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
             .map { [weak self] config -> String? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 guard let conversationConfig = config.conversation,
                           conversationConfig.communityGuidelinesEnabled == true else {
                         return nil
@@ -203,7 +203,7 @@ private extension OWClarityDetailsViewVM {
             return style
         }
         .subscribe(onNext: { [weak self] style in
-            guard let self = self else { return }
+            guard let self else { return }
             let attString = self.getTopParagraphAttributedString(clarityType: self.type, style: style)
             self._topParagraphAttributedString.onNext(attString)
         })
@@ -225,7 +225,7 @@ private extension OWClarityDetailsViewVM {
 
         dismissView
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 if self.type == .rejected {
                     self.sendEvent(for: .rejectedNoticeLearnDialogExit(commentId: self.commentId))
                 }
@@ -236,7 +236,7 @@ private extension OWClarityDetailsViewVM {
             .outputs
             .openAppeal
             .subscribe(onNext: { [weak self] data in
-                guard let self = self else { return }
+                guard let self else { return }
                 if self.type == .rejected {
                     self.sendEvent(for: .rejectedNoticeLearnDialogViewFileAnAppealClicked(commentId: data.commentId))
                 }

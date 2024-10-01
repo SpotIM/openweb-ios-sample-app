@@ -52,7 +52,7 @@ private extension OWStatusBarStyleService {
 
         themeService.style
             .subscribe(onNext: { [weak self] themeStyle in
-                guard let self = self,
+                guard let self,
                         self._enforcement == .matchTheme else { return }
 
                 self._currentStyle = UIStatusBarStyle(reverseFrom: themeStyle)

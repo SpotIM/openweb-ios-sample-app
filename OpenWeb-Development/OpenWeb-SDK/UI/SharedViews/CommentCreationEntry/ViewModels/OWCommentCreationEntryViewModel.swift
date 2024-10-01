@@ -83,7 +83,7 @@ private extension OWCommentCreationEntryViewModel {
         sharedServiceProvider.authenticationManager()
             .activeUserAvailability
             .subscribe(onNext: { [weak self] availability in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch availability {
                 case .notAvailable:
                     self.avatarViewVM.inputs.userInput.onNext(nil)

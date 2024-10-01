@@ -115,7 +115,7 @@ private extension OWPreConversationSummaryViewModel {
 
         triggerCustomizeCounterLabelUI
             .flatMapLatest { [weak self] label -> Observable<UILabel> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.commentsCount
                     .map { _ in return label }
             }

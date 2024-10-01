@@ -58,7 +58,7 @@ class OWGifPreviewViewModel: OWGifPreviewViewModeling,
 private extension OWGifPreviewViewModel {
     func setupObservers() {
         removeButtonTap.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.gifData.onNext(nil)
         })
         .disposed(by: disposeBag)

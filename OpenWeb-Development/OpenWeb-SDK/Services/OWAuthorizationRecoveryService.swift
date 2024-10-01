@@ -39,7 +39,7 @@ class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
             .take(1)
             .observe(on: scheduler)
             .flatMap { [weak self] userAvailability -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 if case OWUserAvailability.user(let user) = userAvailability,
                    let userId = user.userId,
@@ -51,7 +51,7 @@ class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
                     return self.isCurrentlyRecovering
                        .take(1)
                        .flatMap { [weak self] isRecovering -> Observable<Void> in
-                           guard let self = self else { return .empty() }
+                           guard let self else { return .empty() }
                            if !isRecovering {
                                self.isCurrentlyRecovering.onNext(true)
                                self.startRecovering(userAvailability: userAvailability)
@@ -76,7 +76,7 @@ private extension OWAuthorizationRecoveryService {
             .observe(on: scheduler)
             .take(1)
             .flatMap { [weak self] config -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 // Get new user session and reset the old one
                 // Also check if we should renew SSO after the process
@@ -93,7 +93,7 @@ private extension OWAuthorizationRecoveryService {
                 return .just(shouldRenewSSO)
             }
             .flatMap { [weak self] shouldRenewSSO -> Observable<SPUser> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let user = self.servicesProvider.networkAPI().user
                 return user
                     .userData()
@@ -101,7 +101,7 @@ private extension OWAuthorizationRecoveryService {
                     .observe(on: self.scheduler)
                     .take(1) // No need to dispose
                     .do(onNext: { [weak self] newUser in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.isCurrentlyRecovering.onNext(false)
                         self._recoverJustFinished.onNext(())
 
@@ -123,7 +123,7 @@ private extension OWAuthorizationRecoveryService {
                         let authenticationManager = self.servicesProvider.authenticationManager()
                         authenticationManager.finishAuthenticationRecovery(with: authenticationRecoveryResult)
                     }, onError: {[weak self] error in
-                        guard let self = self else { return  }
+                        guard let self else { return  }
                         self.isCurrentlyRecovering.onNext(false)
                         self._recoverJustFinished.onError(error)
                     })

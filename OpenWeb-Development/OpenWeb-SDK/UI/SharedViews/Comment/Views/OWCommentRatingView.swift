@@ -138,7 +138,7 @@ private extension OWCommentRatingView {
         rankUpSelectedObservable
             .skip(1)
             .subscribe(onNext: { [weak self] selected in
-                guard let self = self else { return }
+                guard let self else { return }
                 _ = selected ? self.rankUpButton.select() : self.rankUpButton.deselect()
             })
             .disposed(by: disposeBag)
@@ -154,7 +154,7 @@ private extension OWCommentRatingView {
         rankDownSelectedObservable
             .skip(1)
             .subscribe(onNext: { [weak self] selected in
-                guard let self = self else { return }
+                guard let self else { return }
                 _ = selected ? self.rankDownButton.select() : self.rankDownButton.deselect()
             })
             .disposed(by: disposeBag)
@@ -162,7 +162,7 @@ private extension OWCommentRatingView {
         viewModel.outputs.voteTypes
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] voteTypes in
-                guard let self = self else { return }
+                guard let self else { return }
                 if voteTypes.contains(.voteUp) {
                     self.configureRankUpButton()
                     self.configureSeperatorView()
@@ -175,7 +175,7 @@ private extension OWCommentRatingView {
 
         viewModel.outputs.votingUpImages
             .subscribe(onNext: { [weak self] (regular: UIImage?, selected: UIImage?) in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.rankUpButton.image = regular
                 self.rankUpButton.selectedImage = selected
             })
@@ -183,7 +183,7 @@ private extension OWCommentRatingView {
 
         viewModel.outputs.votingDownImages
             .subscribe(onNext: { [weak self] (regular: UIImage?, selected: UIImage?) in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.rankDownButton.image = regular
                 self.rankDownButton.selectedImage = selected
             })
@@ -200,7 +200,7 @@ private extension OWCommentRatingView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.rankUpButton.selectedColor = OWColorPalette.shared.color(type: .voteUpSelectedColor, themeStyle: style)
                 self.rankDownButton.selectedColor = OWColorPalette.shared.color(type: .voteDownSelectedColor, themeStyle: style)
                 self.rankUpButton.imageColorOff = OWColorPalette.shared.color(type: .voteUpUnselectedColor, themeStyle: style)
@@ -211,7 +211,7 @@ private extension OWCommentRatingView {
             .disposed(by: disposeBag)
 
         let setLabelsFont = { [weak self] (commentActionsFontStyle: OWCommentActionsFontStyle) in
-            guard let self = self else { return }
+            guard let self else { return }
             switch commentActionsFontStyle {
             case .default:
                 self.rankUpLabel.font = OWFontBook.shared.font(typography: .footnoteText)

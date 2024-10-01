@@ -95,7 +95,7 @@ private extension OWTitleSubtitleIconView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
@@ -105,7 +105,7 @@ private extension OWTitleSubtitleIconView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .titleMedium)
                 self.subtitleLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })

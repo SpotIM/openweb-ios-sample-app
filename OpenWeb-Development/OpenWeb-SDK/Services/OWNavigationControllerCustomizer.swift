@@ -61,7 +61,7 @@ private extension OWNavigationControllerCustomizer {
         servicesProvider.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] style in
-                guard let self = self,
+                guard let self,
                       let _ = self.activeNavigationController else { return }
 
                 self.setupNavController(style: style)

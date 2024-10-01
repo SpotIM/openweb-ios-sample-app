@@ -97,7 +97,7 @@ private extension OWSubmittedView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
                 self.confirmButton.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
@@ -107,7 +107,7 @@ private extension OWSubmittedView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.confirmButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)

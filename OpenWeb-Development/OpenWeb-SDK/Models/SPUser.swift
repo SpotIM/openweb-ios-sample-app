@@ -80,7 +80,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     }
 
     var expired: Bool {
-        guard let tokenExpiration = tokenExpiration else {
+        guard let tokenExpiration else {
             return true
         }
 

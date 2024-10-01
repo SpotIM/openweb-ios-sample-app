@@ -138,7 +138,7 @@ extension OWNetworkDownloadResponseSerializerProtocol where Self: OWNetworkDataR
     func serializeDownload(request: URLRequest?, response: HTTPURLResponse?, fileURL: URL?, error: Error?) throws -> Self.SerializedObject {
         guard error == nil else { throw error! }
 
-        guard let fileURL = fileURL else {
+        guard let fileURL else {
             throw OWNetworkError.responseSerializationFailed(reason: .inputFileNil)
         }
 
@@ -229,7 +229,7 @@ extension OWNetworkDataRequest {
                     var didComplete: (() -> Void)?
 
                     defer {
-                        if let didComplete = didComplete {
+                        if let didComplete {
                             self.responseSerializerDidComplete { queue.async { didComplete() } }
                         }
                     }
@@ -367,7 +367,7 @@ extension OWNetworkDownloadRequest {
                     var didComplete: (() -> Void)?
 
                     defer {
-                        if let didComplete = didComplete {
+                        if let didComplete {
                             self.responseSerializerDidComplete { queue.async { didComplete() } }
                         }
                     }
@@ -502,7 +502,7 @@ class OWNetworkDataResponseSerializer: OWNetworkResponseSerializer {
     func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> Data {
         guard error == nil else { throw error! }
 
-        guard var data = data, !data.isEmpty else {
+        guard var data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
                 throw OWNetworkError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
@@ -622,7 +622,7 @@ class OWNetworkStringResponseSerializer: OWNetworkResponseSerializer {
     func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> String {
         guard error == nil else { throw error! }
 
-        guard var data = data, !data.isEmpty else {
+        guard var data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
                 throw OWNetworkError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
@@ -767,7 +767,7 @@ class JSONResponseSerializer: OWNetworkResponseSerializer {
     func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> Any {
         guard error == nil else { throw error! }
 
-        guard var data = data, !data.isEmpty else {
+        guard var data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
                 throw OWNetworkError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
@@ -924,7 +924,7 @@ class OWNetworkDecodableResponseSerializer<T: Decodable>: OWNetworkResponseSeria
     func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> T {
         guard error == nil else { throw error! }
 
-        guard var data = data, !data.isEmpty else {
+        guard var data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
                 throw OWNetworkError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }

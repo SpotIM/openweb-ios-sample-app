@@ -293,7 +293,7 @@ private extension OWObservableArray {
 
         Observable.merge(elementsUpdaterObservables)
             .subscribe { [weak self] idx in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.arrayDidChange(OWArrayChangeEvent(updated: [idx]))
             }
             .disposed(by: disposedBag)

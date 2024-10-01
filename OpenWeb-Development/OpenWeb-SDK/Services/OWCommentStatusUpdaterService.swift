@@ -95,7 +95,7 @@ private extension OWCommentStatusUpdaterService {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .subscribe(onNext: { [weak self] config in
-                guard let self = self,
+                guard let self,
                       let convConfig = config.conversation else { return }
                 self.retries = convConfig.statusFetchRetryCount
                 self.interval = convConfig.statusFetchIntervalInMs
@@ -105,13 +105,13 @@ private extension OWCommentStatusUpdaterService {
 
         _fetchStatusFor
             .flatMap { [weak self] comment -> Observable<(String, OWComment)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.getRawStatus(for: comment)
                     .map { ($0, comment) }
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] status, comment in
-                guard let self = self,
+                guard let self,
                       let commentId = comment.id
                 else { return }
                 var newComment = comment

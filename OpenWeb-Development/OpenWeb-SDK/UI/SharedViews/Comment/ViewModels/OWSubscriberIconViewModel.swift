@@ -62,7 +62,7 @@ class OWSubscriberIconViewModel: OWSubscriberIconViewModeling,
         isSubscriber
             .filter { $0 } // Only start the download of the image (or caching retrieve) if the user is a subscriber
             .withLatestFrom(subscriberBadgeConfig) { [weak self] _, config -> Observable<UIImage>? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.subscriberBadgeService.badgeImage(config: config)
             }
             .unwrap()

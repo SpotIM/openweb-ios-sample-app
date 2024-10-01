@@ -72,7 +72,7 @@ private extension OWCommentPresentationData {
 
         Observable.merge(repliesUpdateObservers)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.update.onNext()
             })
             .disposed(by: disposedBag)
