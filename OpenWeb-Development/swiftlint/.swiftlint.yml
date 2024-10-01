@@ -9,6 +9,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - comment_spacing
   - compiler_protocol_init
   - computed_accessors_order
+  - control_statement
   - discouraged_direct_init
   - duplicate_conditions
   - duplicate_enum_cases

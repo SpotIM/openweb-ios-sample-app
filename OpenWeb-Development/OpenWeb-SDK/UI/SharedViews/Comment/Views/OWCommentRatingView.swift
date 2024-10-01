@@ -163,11 +163,11 @@ fileprivate extension OWCommentRatingView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] voteTypes in
                 guard let self = self else { return }
-                if (voteTypes.contains(.voteUp)) {
+                if voteTypes.contains(.voteUp) {
                     self.configureRankUpButton()
                     self.configureSeperatorView()
                 }
-                if (voteTypes.contains(.voteDown)) {
+                if voteTypes.contains(.voteDown) {
                     self.configureRankDownButton()
                 }
             })

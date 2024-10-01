@@ -78,7 +78,7 @@ fileprivate extension OWCommentReplyCounterView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showCounter, isLanscape in
                 guard let self = self else { return }
-                if (showCounter) {
+                if showCounter {
                     self.viewHeightConstraint?.update(offset: isLanscape ? 0 : Metrics.counterHeight)
                 }
             })

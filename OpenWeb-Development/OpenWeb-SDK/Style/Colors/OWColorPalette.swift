@@ -92,7 +92,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         // And will cause a recursive lock and crash
         self.lock.unlock()
 
-        if (type.shouldUpdateRxObservable) {
+        if type.shouldUpdateRxObservable {
             let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
             colorsMapper.onNext(colorsRx)
         }

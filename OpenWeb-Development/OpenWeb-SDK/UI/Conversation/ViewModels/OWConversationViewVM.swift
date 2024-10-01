@@ -451,10 +451,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                             let commentVm = commentCellVm.outputs.commentVM
                             let updatedCommentVm = viewModel.outputs.commentVM
 
-                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment) {
+                            if updatedCommentVm.outputs.comment != commentVm.outputs.comment {
                                 commentVMsUpdateComment.append((commentVm, updatedCommentVm))
                             }
-                            if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
+                            if updatedCommentVm.outputs.user != commentVm.outputs.user {
                                 commentVMsUpdateUser.append((commentVm, updatedCommentVm))
                             }
                             return OWConversationCellOption.comment(viewModel: commentCellVm)
@@ -463,7 +463,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                         }
                     case .commentThreadActions(let viewModel):
                         if let commentThreadActionVm = commentThreadActionVmsMapper[viewModel.outputs.id] {
-                            if (ObjectIdentifier(viewModel.outputs.commentPresentationData) != ObjectIdentifier(commentThreadActionVm.outputs.commentPresentationData)) {
+                            if ObjectIdentifier(viewModel.outputs.commentPresentationData) != ObjectIdentifier(commentThreadActionVm.outputs.commentPresentationData) {
                                 commentThreadActionVm.inputs.update(commentPresentationData: viewModel.outputs.commentPresentationData)
                             }
                             return OWConversationCellOption.commentThreadActions(viewModel: commentThreadActionVm)
@@ -681,7 +681,7 @@ fileprivate extension OWConversationViewViewModel {
         for (idx, commentPresentationData) in commentsPresentationData.enumerated() {
             guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
 
-            if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
+            if commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0 {
                 cellOptions.append(OWConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(
                     id: "\(commentPresentationData.id)_spacer",
                     style: .comment
@@ -1806,7 +1806,7 @@ fileprivate extension OWConversationViewViewModel {
                 case .completion:
                     self.sendEvent(for: .commentMenuClosed(commentId: commentVm.outputs.comment.id ?? ""))
                 case .selected(action: let action):
-                    switch (action.type) {
+                    switch action.type {
                     case OWCommentOptionsMenu.reportComment:
                         self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.openReportReasonChange.onNext(commentVm)
@@ -1996,13 +1996,13 @@ fileprivate extension OWConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] typy, currentSort in
                 guard let self = self else { return }
-                switch (typy) {
+                switch typy {
                 case .completion:
                     self.sendEvent(for: .sortByClosed(currentSort: currentSort))
                     return
                 case .selected(action: let action):
                     let newSort: OWSortOption
-                    switch (action.type) {
+                    switch action.type {
                     case OWSortMenu.sortBest: newSort = .best
                     case OWSortMenu.sortNewest: newSort = .newest
                     case OWSortMenu.sortOldest: newSort = .oldest
@@ -2192,7 +2192,7 @@ fileprivate extension OWConversationViewViewModel {
                         self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
                     }
                 let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
-                if (!updatedCommentsPresentationData.isEmpty) {
+                if !updatedCommentsPresentationData.isEmpty {
                     self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
                 }
             })
@@ -2210,7 +2210,7 @@ fileprivate extension OWConversationViewViewModel {
                         self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
                     }
                 let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
-                if (!updatedCommentsPresentationData.isEmpty) {
+                if !updatedCommentsPresentationData.isEmpty {
                     self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
                 }
             })
@@ -2280,7 +2280,7 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 let newCommentPresentationData = OWCommentPresentationData(id: commentId)
                 let existingRepliesPresentationData: [OWCommentPresentationData]
-                if (parentCommentPresentationData.repliesPresentation.count == 0) {
+                if parentCommentPresentationData.repliesPresentation.count == 0 {
                     existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData).prefix(4))
                 } else {
                     existingRepliesPresentationData = parentCommentPresentationData.repliesPresentation

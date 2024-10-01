@@ -36,14 +36,14 @@ internal class SPAnimatedButton: UIButton {
 
     fileprivate var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
-            if (isSelected) {
+            if isSelected {
                 selectedImageShape.fillColor = imageColorOn.cgColor
             }
         }
     }
     var imageColorOff: UIColor! = UIColor(red: 136/255, green: 153/255, blue: 166/255, alpha: 1.0) {
         didSet {
-            if (!isSelected) {
+            if !isSelected {
                 imageShape.fillColor = imageColorOff.cgColor
             }
         }
@@ -86,7 +86,7 @@ internal class SPAnimatedButton: UIButton {
 
     override open var isSelected: Bool {
         didSet {
-            if (isSelected != oldValue) {
+            if isSelected != oldValue {
                 selectedImageShape.fillColor = imageColorOn.cgColor
                 imageShape.fillColor = imageColorOff.cgColor
                 if isSelected {

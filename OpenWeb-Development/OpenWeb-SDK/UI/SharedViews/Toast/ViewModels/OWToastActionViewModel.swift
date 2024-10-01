@@ -53,7 +53,7 @@ class OWToastActionViewModel: OWToastActionViewModeling, OWToastActionViewModeli
 
 fileprivate extension OWToastActionViewModel {
     func title(for action: OWToastAction) -> String {
-        switch(action) {
+        switch action {
         case .learnMore:
             return OWLocalizationManager.shared.localizedString(key: "LearnMore")
         case .tryAgain:
@@ -68,7 +68,7 @@ fileprivate extension OWToastActionViewModel {
     }
 
     func icon(for action: OWToastAction) -> UIImage? {
-        switch(action) {
+        switch action {
         case .learnMore:
             return nil
         case .tryAgain:

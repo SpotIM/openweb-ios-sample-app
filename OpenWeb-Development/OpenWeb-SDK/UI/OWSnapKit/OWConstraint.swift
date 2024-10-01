@@ -226,7 +226,7 @@ class OWConstraint: ReactiveCompatible {
             layoutConstraint.constant = self.constant.constraintConstantTargetValueFor(layoutAttribute: attribute)
 
             let requiredPriority = OWConstraintPriority.required.value
-            if (layoutConstraint.priority.rawValue < requiredPriority), (self.priority.constraintPriorityTargetValue != requiredPriority) {
+            if layoutConstraint.priority.rawValue < requiredPriority, self.priority.constraintPriorityTargetValue != requiredPriority {
                 layoutConstraint.priority = OWLayoutPriority(rawValue: self.priority.constraintPriorityTargetValue)
             }
         }

@@ -470,7 +470,7 @@ fileprivate extension OWConversationCoordinator {
             viewModel.outputs.commentingCTAViewModel.outputs.openProfile
         )
             .map { openProfileType in
-                switch(openProfileType) {
+                switch openProfileType {
                 case .OWProfile(let data):
                     return OWViewActionCallbackType.openOWProfile(data: data)
                 case .publisherProfile(let ssoPublisherId, let type):

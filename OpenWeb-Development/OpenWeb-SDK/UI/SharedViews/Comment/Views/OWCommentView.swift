@@ -141,11 +141,11 @@ fileprivate extension OWCommentView {
         viewModel.outputs.shouldHideCommentContent
             .subscribe(onNext: { [weak self] shouldBlockComment in
                 guard let self = self else { return }
-                if (shouldBlockComment) {
+                if shouldBlockComment {
                     self.commentLabelsContainerView.removeFromSuperview()
                     self.commentContentView.removeFromSuperview()
                     self.commentEngagementView.removeFromSuperview()
-                } else if (self.commentLabelsContainerView.superview == nil) {
+                } else if self.commentLabelsContainerView.superview == nil {
                     self.setupCommentContentUI()
                 }
                 self.commentOptionsView.isHidden = shouldBlockComment

@@ -201,7 +201,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                 guard let self = self else { return Observable.never() }
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
-                } else if (shouldShowError) {
+                } else if shouldShowError {
                     return Observable.just(errorCellViewModels)
                 } else {
                     return Observable.just(commentCellsOptions)
@@ -235,10 +235,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                             let commentVm = commentCellVm.outputs.commentVM
                             let updatedCommentVm = viewModel.outputs.commentVM
 
-                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment) {
+                            if updatedCommentVm.outputs.comment != commentVm.outputs.comment {
                                 commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
                             }
-                            if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
+                            if updatedCommentVm.outputs.user != commentVm.outputs.user {
                                 commentVm.inputs.update(user: updatedCommentVm.outputs.user)
                             }
                             return OWCommentThreadCellOption.comment(viewModel: commentCellVm)
@@ -247,7 +247,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                         }
                     case .commentThreadActions(let viewModel):
                         if let commentThreadActionVm = commentThreadActionVmsMapper[viewModel.outputs.id] {
-                            if (ObjectIdentifier(viewModel.outputs.commentPresentationData) != ObjectIdentifier(commentThreadActionVm.outputs.commentPresentationData)) {
+                            if ObjectIdentifier(viewModel.outputs.commentPresentationData) != ObjectIdentifier(commentThreadActionVm.outputs.commentPresentationData) {
                                 commentThreadActionVm.inputs.update(commentPresentationData: viewModel.outputs.commentPresentationData)
                             }
                             return OWCommentThreadCellOption.commentThreadActions(viewModel: commentThreadActionVm)
@@ -424,7 +424,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         for (idx, commentPresentationData) in commentsPresentationData.enumerated() {
             guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
 
-            if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
+            if commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0 {
                 cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel(
                     id: "\(commentPresentationData.id)_spacer",
                     style: .comment
@@ -1404,7 +1404,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 case .completion:
                     self.sendEvent(for: .commentMenuClosed(commentId: commentVm.outputs.comment.id ?? ""))
                 case .selected(action: let action):
-                    switch (action.type) {
+                    switch action.type {
                     case OWCommentOptionsMenu.reportComment:
                         self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.openReportReasonChange.onNext(commentVm)
@@ -1680,7 +1680,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 let newCommentPresentationData = OWCommentPresentationData(id: commentId)
                 let existingRepliesPresentationData: [OWCommentPresentationData]
-                if (parentCommentPresentationData.repliesPresentation.count == 0) {
+                if parentCommentPresentationData.repliesPresentation.count == 0 {
                     existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData).prefix(4))
                 } else {
                     existingRepliesPresentationData = parentCommentPresentationData.repliesPresentation
