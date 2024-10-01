@@ -231,7 +231,7 @@ fileprivate extension UserDefaultsProvider {
 
 fileprivate extension Reactive where Base: UserDefaultsProvider {
     func setValues<T>(key: UserDefaultsProvider.UDKey<T>) -> Binder<T> {
-        return base.rxHelper.binder(key: key) { (value) in
+        return base.rxHelper.binder(key: key) { value in
             base.save(value: value, forKey: key)
         }
     }

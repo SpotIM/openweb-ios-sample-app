@@ -75,13 +75,13 @@ class TestAPIVC: UIViewController {
         spotPresetSelection.backgroundColor = ColorPalette.shared.color(type: .background)
 
         spotPresetSelection.addSubview(toolbarPicker)
-        toolbarPicker.snp.makeConstraints { (make) in
+        toolbarPicker.snp.makeConstraints { make in
             make.height.equalTo(Metrics.toolbarPickerHeight)
             make.top.leading.trailing.equalToSuperview()
         }
 
         spotPresetSelection.addSubview(presetPicker)
-        presetPicker.snp.makeConstraints { (make) in
+        presetPicker.snp.makeConstraints { make in
             make.width.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(toolbarPicker.snp.bottom)
         }
@@ -310,7 +310,7 @@ fileprivate extension TestAPIVC {
 
         // Setup preset picker and its container.
         view.addSubview(conversationPresetSelectionView)
-        conversationPresetSelectionView.snp.makeConstraints { (make) in
+        conversationPresetSelectionView.snp.makeConstraints { make in
             make.height.equalTo(Metrics.pickerHeight)
             make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             make.bottom.equalToSuperview().inset(-Metrics.pickerHeight)
