@@ -227,7 +227,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .withLatestFrom(shouldInitializeSDK) { genericSSO, shouldInitializeSDK -> GenericSSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
-                if (shouldInitializeSDK) {
+                if shouldInitializeSDK {
                     var manager = OpenWeb.manager
                     manager.spotId = genericSSO.spotId
                 }
@@ -325,7 +325,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .withLatestFrom(shouldInitializeSDK) { thirdPartySSO, shouldInitializeSDK -> ThirdPartySSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
-                if (shouldInitializeSDK) {
+                if shouldInitializeSDK {
                     var manager = OpenWeb.manager
                     manager.spotId = thirdPartySSO.spotId
                 }
