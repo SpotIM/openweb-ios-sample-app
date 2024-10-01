@@ -83,8 +83,8 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
                         collectionView.reloadData()
                         return
                     }
-                } catch let e {
-                    rxDebugFatalError(e)
+                } catch {
+                    rxDebugFatalError(error)
                     dataSource.setSections(newSections)
                     collectionView.reloadData()
                 }
