@@ -608,7 +608,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     self._shouldShowErrorLoadingComments.onNext(false)
                     return conversationRead
-                case .error(_):
+                case .error:
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     self._shouldShowErrorLoadingComments.onNext(true)
                     self._serverCommentsLoadingState.onNext(.notLoading)
@@ -1279,7 +1279,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .next(let commentDelete):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return commentDelete
-                case .error(_):
+                case .error:
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     return nil
                 default:
@@ -1387,7 +1387,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: nil))
                     return true
-                case .error(_):
+                case .error:
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()

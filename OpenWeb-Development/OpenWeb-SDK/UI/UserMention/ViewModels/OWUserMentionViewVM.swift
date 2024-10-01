@@ -147,7 +147,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
                             let suggestions = userMentionResponse.suggestions ?? []
                             let atLeastOneContained = self.atLeastOneContained(name: name, userMentions: suggestions)
                             return atLeastOneContained ? suggestions : []
-                        case .error(_):
+                        case .error:
                             return nil
                         default:
                             return nil

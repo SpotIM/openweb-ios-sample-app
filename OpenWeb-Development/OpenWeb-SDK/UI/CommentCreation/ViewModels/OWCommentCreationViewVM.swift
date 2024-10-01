@@ -314,7 +314,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 switch event {
                 case .next(let comment):
                     return (commentCreationData, comment)
-                case .error(_):
+                case .error:
                     self._commentCreationSubmitInProgrss.onNext(false)
                     self._commentCreationError.onNext()
                     let data = OWToastRequiredData(type: .error, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "ErrorStatePostComment"))
@@ -440,7 +440,7 @@ fileprivate extension OWCommentCreationViewViewModel {
                 commentCreationRegularViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
             case .light:
                 commentCreationLightViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
-            case .floatingKeyboard(accessoryViewStrategy: _):
+            case .floatingKeyboard:
                 commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
             }
         case .replyToComment:

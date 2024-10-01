@@ -78,7 +78,7 @@ extension OWLogMethod: Hashable {
             return hasher.combine(1)
         case .osLog:
             return hasher.combine(2)
-        case .file(_):
+        case .file:
             return hasher.combine(3)
         }
     }
@@ -202,7 +202,7 @@ fileprivate extension OWLogger {
                 let osLogger = osLoggers[prefix] ?? OSLog(subsystem: PrivateMetrics.osLoggersSubsystem, category: prefix)
                 let textToLog = format + text
                 os_log("%@", log: osLogger, type: level.osLevel, textToLog)
-            case .file(_):
+            case .file:
                 let textToLog = "\(time()) \(hostBundleName) \(prefix) \(format)\(text)"
                 // Write on the file creation serial queue
                 fileCreationQueue.async { [weak self] in

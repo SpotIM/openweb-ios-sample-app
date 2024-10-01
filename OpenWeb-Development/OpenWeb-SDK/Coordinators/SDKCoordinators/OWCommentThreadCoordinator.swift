@@ -97,7 +97,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             }
             .do(onNext: { result in
                 switch result {
-                case .commentCreated(_):
+                case .commentCreated:
                     // TODO: We will probably would like to push this comment to the table view with a nice highlight animation
                     break
                 case .loadedToScreen:

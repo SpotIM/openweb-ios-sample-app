@@ -368,7 +368,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                     reportService.updateCommentReportedSuccessfully(commentId: self.commentId, postId: self.postId)
                     self._reportReasonSubmittedSuccessfully.onNext((self.commentId, userJustLoggedIn))
                     return (self.commentId, userJustLoggedIn)
-                case .error(_):
+                case .error:
                     self.setSubmitInProgress.onNext(false)
                     self.errorSubmitting.onNext()
                     self.changeSubmitButtonText.onNext(true)

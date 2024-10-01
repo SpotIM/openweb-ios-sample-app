@@ -64,7 +64,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -106,7 +106,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -153,7 +153,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -206,7 +206,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -257,7 +257,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -360,7 +360,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -398,7 +398,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -437,7 +437,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -504,7 +504,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -545,7 +545,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -582,7 +582,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -614,7 +614,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -647,7 +647,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
@@ -678,7 +678,7 @@ extension OWUILayer {
             case .failure(let error):
                 completion(.failure(error))
                 return
-            case .success(_):
+            case .success:
                 break
             }
         }
