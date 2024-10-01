@@ -52,7 +52,7 @@ fileprivate extension Reactive where Base: UIImagePickerController {
     var didFinishPickingMediaWithInfo: Observable<[UIImagePickerController.InfoKey: AnyObject]> {
         return delegate
             .methodInvoked(#selector(UIImagePickerControllerDelegate.imagePickerController(_:didFinishPickingMediaWithInfo:)))
-            .map({ (a) in
+            .map({ a in
                 return try castOrThrow(Dictionary<UIImagePickerController.InfoKey, AnyObject>.self, a[1])
             })
     }

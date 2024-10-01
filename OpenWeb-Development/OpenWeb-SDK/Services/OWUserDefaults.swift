@@ -127,7 +127,7 @@ extension OWUserDefaults {
 
 fileprivate extension Reactive where Base: OWUserDefaults {
     func setValues<T>(key: OWUserDefaults.OWKey<T>) -> Binder<T> {
-        return base.rxHelper.binder(key: OWRxHelperKey<T>(key: key)) { (value) in
+        return base.rxHelper.binder(key: OWRxHelperKey<T>(key: key)) { value in
             base.save(value: value, forKey: key)
         }
     }

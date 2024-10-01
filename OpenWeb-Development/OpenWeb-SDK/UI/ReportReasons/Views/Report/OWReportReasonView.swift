@@ -188,7 +188,7 @@ fileprivate extension OWReportReasonView {
     func setupObservers() {
         // TableView binding
         viewModel.outputs.reportReasonCellViewModels
-            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWReportReasonCell.self.identifierName, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
+            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWReportReasonCell.self.identifierName, cellType: OWReportReasonCell.self)) { _, viewModel, cell in
                 cell.configure(with: viewModel)
             }
             .disposed(by: disposeBag)
@@ -221,7 +221,7 @@ fileprivate extension OWReportReasonView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .withLatestFrom(viewModel.outputs.tableViewHeaderAttributedText) { ($0, $1) }
-            .subscribe(onNext: { [weak self] (currentStyle, tableViewHeaderAttributedText) in
+            .subscribe(onNext: { [weak self] currentStyle, tableViewHeaderAttributedText in
                 guard let self = self else { return }
                 self.titleView
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,

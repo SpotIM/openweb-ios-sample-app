@@ -353,7 +353,7 @@ fileprivate extension OWPreConversationView {
 
         Observable.combineLatest(shouldShowQuestion, shouldShowGuidelines)
             .observe(on: MainScheduler.instance)
-            .flatMap { (shouldShowQuestion, shouldShowGuidelines) -> Observable<Bool> in
+            .flatMap { shouldShowQuestion, shouldShowGuidelines -> Observable<Bool> in
                 // Return devider Obsevable
                 return Observable.just(shouldShowQuestion && shouldShowGuidelines)
             }
@@ -494,7 +494,7 @@ fileprivate extension OWPreConversationView {
             .disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
-            .subscribe(onNext: { [weak self] (style, colorMapper) in
+            .subscribe(onNext: { [weak self] style, colorMapper in
                 guard let self = self else { return }
 
                 if let owBrandColor = colorMapper[.brandColor] {

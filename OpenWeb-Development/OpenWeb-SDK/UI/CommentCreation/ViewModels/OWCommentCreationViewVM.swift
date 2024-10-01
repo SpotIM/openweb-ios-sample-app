@@ -295,7 +295,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     .materialize()
                     .map { (commentCreationData, $0) }
             }
-            .flatMapLatest({ [weak self] (commentCreationData, event) -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
+            .flatMapLatest({ [weak self] commentCreationData, event -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // Add delay if end time for posting comment is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just((commentCreationData, event)) }
                 let timeToPostComment = self.servicesProvider.timeMeasuringService()
@@ -308,7 +308,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 }
                 return Observable.just((commentCreationData, event))
             })
-            .map { [weak self] (commentCreationData, event) -> (OWCommentCreationCtaData, OWComment)? in
+            .map { [weak self] commentCreationData, event -> (OWCommentCreationCtaData, OWComment)? in
                 // 3 - handle network response
                 guard let self = self else { return nil }
                 switch event {

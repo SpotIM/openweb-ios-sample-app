@@ -285,7 +285,7 @@ fileprivate extension OWObservableArray {
     func setupObserversForElementsUpdater() {
         self.disposedBag = DisposeBag()
 
-        let elementsUpdaterObservables = elements.enumerated().map { (idx, element) -> Observable<Int> in
+        let elementsUpdaterObservables = elements.enumerated().map { idx, element -> Observable<Int> in
             return element.update
                 .asObservable()
                 .map { idx }

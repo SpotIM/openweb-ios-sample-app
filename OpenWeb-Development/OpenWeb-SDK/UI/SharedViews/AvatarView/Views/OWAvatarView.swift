@@ -152,7 +152,7 @@ fileprivate extension OWAvatarView {
         case .defaultImage:
             avatarImageView.image = Metrics.defaultAvatar(style: style)
         case .custom(let url):
-            avatarImageView.setImage(with: url) { [weak self] (image, _) in
+            avatarImageView.setImage(with: url) { [weak self] image, _ in
                 guard let self = self else { return }
                 self.avatarImageView.image = image ?? Metrics.defaultAvatar(style: style)
             }

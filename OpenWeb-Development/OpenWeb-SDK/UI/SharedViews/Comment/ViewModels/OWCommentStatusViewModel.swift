@@ -122,7 +122,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     var learnMoreTap = PublishSubject<Void>()
     var learnMoreClicked: Observable<OWClarityDetailsType> {
         return learnMoreTap
-            .withLatestFrom(status) { (_, status) in
+            .withLatestFrom(status) { _, status in
                 return status
             }
             .map { status -> OWClarityDetailsType? in

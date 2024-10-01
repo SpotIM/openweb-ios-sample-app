@@ -55,7 +55,7 @@ class OWUsersService: OWUsersServicing {
         let userIdsToUser: OWUsersMapper = userIdToUserTupples.reduce(into: [:]) { $0[$1.0] = $1.1 }
 
         // merge and replacing current users
-        _users.merge(userIdsToUser, uniquingKeysWith: { (_, new) in new })
+        _users.merge(userIdsToUser, uniquingKeysWith: { _, new in new })
     }
 
     func set(users: OWUsersMapper) {
@@ -64,7 +64,7 @@ class OWUsersService: OWUsersServicing {
         // swiftlint:enable self_capture_in_blocks
 
         // merge and replacing current users
-        _users.merge(users, uniquingKeysWith: { (_, new) in new })
+        _users.merge(users, uniquingKeysWith: { _, new in new })
     }
 
     func cleanCache() {
