@@ -874,6 +874,7 @@
 		9EE87B462AC8EE9400F11DD2 /* OWRepliesErrorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE87B452AC8EE9400F11DD2 /* OWRepliesErrorState.swift */; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
+		C2DF42B92CAC41AE00BA68CE /* NSObject+AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
 		F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */; };
@@ -1810,6 +1811,7 @@
 		9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueueDuplicationStrategy.swift; sourceTree = "<group>"; };
 		ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+AssociatedObject.swift"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsTests.swift; sourceTree = "<group>"; };
@@ -4337,6 +4339,7 @@
 				3D50D9112B163E0400FD3232 /* UIColor+Extensions.swift */,
 				8DCC87C82B6BAC0000E053A4 /* UIWindow+Utils.swift */,
 				9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */,
+				C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -5781,6 +5784,7 @@
 				2484039A2ADD23A000EAD59A /* OWOrientationEnforcement.swift in Sources */,
 				445418AB23685154001D0ED0 /* Int+SPExtensions.swift in Sources */,
 				8D358D4C29C8942E00E229A3 /* OWConversationSortViewModel.swift in Sources */,
+				C2DF42B92CAC41AE00BA68CE /* NSObject+AssociatedObject.swift in Sources */,
 				3D20A36727B00E7D003F8513 /* OWConstraintConstantTarget.swift in Sources */,
 				248835EE2B95B9CE002BC8DD /* OWGifPreviewView.swift in Sources */,
 				3D0AFC9C29C7398A002670D1 /* OWSSOProviderResponse.swift in Sources */,
