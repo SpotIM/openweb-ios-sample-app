@@ -88,7 +88,7 @@ fileprivate extension SettingsVC {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
-        var previousView: UIView? = nil
+        var previousView: UIView?
         for (index, settingsView) in settingViews.enumerated() {
             scrollView.addSubview(settingsView)
             settingsView.snp.makeConstraints { make in

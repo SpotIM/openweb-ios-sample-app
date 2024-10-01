@@ -29,7 +29,7 @@ class TestingPlaygroundIndependentViewVC: UIViewController {
         return view
     }()
 
-    fileprivate var testingPlaygroundView: UIView? = nil
+    fileprivate var testingPlaygroundView: UIView?
 
     fileprivate lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)

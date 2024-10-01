@@ -14,7 +14,7 @@ import Foundation
 struct ConversationPreset {
     let displayName: String
     let conversationDataModel: SDKConversationDataModel
-    var section: String? = nil
+    var section: String?
 }
 
 // swiftlint:disable line_length
