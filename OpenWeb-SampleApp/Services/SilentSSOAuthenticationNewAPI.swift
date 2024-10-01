@@ -25,7 +25,7 @@ class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
                 } else {
                     return self.userLoginStatus()
                         .map { loginStatus in
-                            if case .ssoLoggedIn(_) = loginStatus {
+                            if case .ssoLoggedIn = loginStatus {
                                 return false
                             } else {
                                 return true
