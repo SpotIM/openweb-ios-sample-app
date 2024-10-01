@@ -55,10 +55,6 @@ class SettingsVC: UIViewController {
         setupViews()
         applyAccessibility()
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 }
 
 fileprivate extension SettingsVC {
