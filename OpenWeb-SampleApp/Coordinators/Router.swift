@@ -99,4 +99,3 @@ fileprivate extension Router {
         completions.removeValue(forKey: controller)
     }
 }
-
