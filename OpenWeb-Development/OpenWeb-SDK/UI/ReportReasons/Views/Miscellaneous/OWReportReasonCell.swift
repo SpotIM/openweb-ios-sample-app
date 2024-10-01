@@ -61,6 +61,7 @@ class OWReportReasonCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         disposeBag = nil
     }
 
