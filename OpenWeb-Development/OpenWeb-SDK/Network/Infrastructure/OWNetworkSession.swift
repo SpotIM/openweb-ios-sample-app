@@ -25,7 +25,7 @@ class OWNetworkSession {
     ///
     let session: URLSession
     /// Instance's `SessionDelegate`, which handles the `URLSessionDelegate` methods and `Request` interaction.
-    let delegate: OWNetworkSessionDelegate
+    let delegate: OWNetworkSessionDelegate // swiftlint:disable:this weak_delegate
     /// Root `DispatchQueue` for all internal callbacks and state update. **MUST** be a serial queue.
     let rootQueue: DispatchQueue
     /// Value determining whether this instance automatically calls `resume()` on all created `Request`s.
