@@ -57,11 +57,11 @@ fileprivate extension CommentCreationToolbarViewModel {
         modelSelected
             .subscribe(onNext: { [weak self] cellViewModel in
                 guard let self = self,
-                        let settings = self.commentCreationSettings else { return }
+                      let settings = self.commentCreationSettings else { return }
                 settings.request(.manipulateUserInputText(completion: { result in
                     let action = cellViewModel.outputs.action
                     switch (result, action) {
-	                    case (.success(let manipulateTextModel), .append(let textToAppend)):
+                    case (.success(let manipulateTextModel), .append(let textToAppend)):
                         return textToAppend
                     case (.success(_), .removeAll):
                         return ""
