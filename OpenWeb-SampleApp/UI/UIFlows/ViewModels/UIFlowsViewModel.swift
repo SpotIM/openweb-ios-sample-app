@@ -97,7 +97,6 @@ private extension UIFlowsViewModel {
             }
 
         Observable.merge(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
-            .map { return $0 }
             .bind(to: _openMockArticleScreen)
             .disposed(by: disposeBag)
     }

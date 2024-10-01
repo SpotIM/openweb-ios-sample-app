@@ -124,7 +124,6 @@ private extension UIViewsViewModel {
             clarityDetailsTappedModel,
             preConversationTappedModel,
             independentAdUnitTappedModel)
-        .map { return $0 }
         .bind(to: _openMockArticleScreen)
         .disposed(by: disposeBag)
 

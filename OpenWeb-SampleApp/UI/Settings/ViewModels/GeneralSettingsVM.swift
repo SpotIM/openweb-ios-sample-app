@@ -665,7 +665,6 @@ private extension GeneralSettingsVM {
             .disposed(by: disposeBag)
 
         fontGroupTypeObservable
-            .map { $0 }
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWFontGroupFamily>.fontGroupType))
             .disposed(by: disposeBag)
