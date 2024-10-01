@@ -58,6 +58,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - statement_position
   - static_over_final_class
   - superfluous_disable_command
+  - switch_case_alignment
   - syntactic_sugar
   - trailing_comma
   - trailing_newline

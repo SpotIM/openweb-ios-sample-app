@@ -145,24 +145,24 @@ fileprivate extension OWCommentLabelView {
         // set background, border, image and text colors according to state
         let isDarkMode = currentStyle == .dark
         switch state {
-            case .notSelected:
-                labelContainer.backgroundColor = .clear
-                labelContainer.layer.borderWidth = 1
-                labelContainer.layer.borderColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.borderOpacityDarkMode : Metrics.borderOpacityLightMode).cgColor
-                iconImageView.tintColor = labelColor
-                label.textColor = labelColor
+        case .notSelected:
+            labelContainer.backgroundColor = .clear
+            labelContainer.layer.borderWidth = 1
+            labelContainer.layer.borderColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.borderOpacityDarkMode : Metrics.borderOpacityLightMode).cgColor
+            iconImageView.tintColor = labelColor
+            label.textColor = labelColor
 
-            case .selected:
-                labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.selectedOpacityDarkMode : Metrics.selectedOpacityLightMode)
-                labelContainer.layer.borderWidth = 0
-                iconImageView.tintColor = .white
-                label.textColor = .white
+        case .selected:
+            labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.selectedOpacityDarkMode : Metrics.selectedOpacityLightMode)
+            labelContainer.layer.borderWidth = 0
+            iconImageView.tintColor = .white
+            label.textColor = .white
 
-            case .readOnly:
-                labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.opacityDarkMode : Metrics.opacityLightMode)
-                labelContainer.layer.borderWidth = 0
-                iconImageView.tintColor = labelColor
-                label.textColor = labelColor
+        case .readOnly:
+            labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.opacityDarkMode : Metrics.opacityLightMode)
+            labelContainer.layer.borderWidth = 0
+            iconImageView.tintColor = labelColor
+            label.textColor = labelColor
 
         }
     }
