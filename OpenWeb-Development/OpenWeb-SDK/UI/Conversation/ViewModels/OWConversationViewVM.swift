@@ -381,7 +381,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .startWith([])
     }()
 
-    // swiftlint:disable line_length
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(serverCommentsLoadingState,
                                         commentCellsOptions,
@@ -493,7 +492,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
             .share(replay: 1)
     }()
-    // swiftlint:enable line_length
 
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
         return cellsViewModels

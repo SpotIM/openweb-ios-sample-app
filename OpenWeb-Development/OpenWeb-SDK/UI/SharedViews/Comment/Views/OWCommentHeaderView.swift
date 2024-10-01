@@ -200,7 +200,6 @@ fileprivate extension OWCommentHeaderView {
         }
     }
 
-    // swiftlint:disable function_body_length
     func setupObservers() {
         userNameTapGesture.rx.event
             .voidify()
@@ -315,7 +314,6 @@ fileprivate extension OWCommentHeaderView {
             })
             .disposed(by: disposeBag)
     }
-    // swiftlint:enable function_body_length
 }
 
 // MARK: Accessibility

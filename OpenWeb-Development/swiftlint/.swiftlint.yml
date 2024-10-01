@@ -57,6 +57,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - shorthand_operator
   - statement_position
   - static_over_final_class
+  - superfluous_disable_command
   - syntactic_sugar
   - trailing_comma
   - trailing_newline
