@@ -65,14 +65,12 @@ protocol OWNetworkDataPreprocessor {
 
 /// `DataPreprocessor` that returns passed `Data` without any transform.
 struct OWNetworkPassthroughPreprocessor: OWNetworkDataPreprocessor {
-    init() {}
 
     func preprocess(_ data: Data) throws -> Data { data }
 }
 
 /// `DataPreprocessor` that trims Google's typical `)]}',\n` XSSI JSON header.
 struct OWNetworkGoogleXSSIPreprocessor: OWNetworkDataPreprocessor {
-    init() {}
 
     func preprocess(_ data: Data) throws -> Data {
         (data.prefix(6) == Data(")]}',\n".utf8)) ? data.dropFirst(6) : data
@@ -442,8 +440,6 @@ extension OWNetworkDownloadRequest {
 /// A `DownloadResponseSerializerProtocol` that performs only `Error` checking and ensures that a downloaded `fileURL`
 /// is present.
 struct OWNetworkURLResponseSerializer: OWNetworkDownloadResponseSerializerProtocol {
-    /// Creates an instance.
-    init() {}
 
     func serializeDownload(request: URLRequest?,
                            response: HTTPURLResponse?,
@@ -1080,16 +1076,12 @@ struct OWNetworkDecodableStreamSerializer<T: Decodable>: OWNetworkDataStreamSeri
 
 /// `DataStreamSerializer` which performs no serialization on incoming `Data`.
 struct OWNetworkPassthroughStreamSerializer: OWNetworkDataStreamSerializer {
-    /// Creates an instance.
-    init() {}
 
     func serialize(_ data: Data) throws -> Data { data }
 }
 
 /// `DataStreamSerializer` which serializes incoming stream `Data` into `UTF8`-decoded `String` values.
 struct OWNetworkStringStreamSerializer: OWNetworkDataStreamSerializer {
-    /// Creates an instance.
-    init() {}
 
     func serialize(_ data: Data) throws -> String {
         String(decoding: data, as: UTF8.self)
