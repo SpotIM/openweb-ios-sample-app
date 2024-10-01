@@ -8,6 +8,8 @@
 
 import UIKit
 
+// swiftlint:disable operator_usage_whitespace
+
 extension OWColor {
     enum OWType: CaseIterable {
         case skeletonColor
@@ -210,3 +212,5 @@ extension OWColor {
         darkColor = color
     }
 }
+
+// swiftlint:enable operator_usage_whitespace

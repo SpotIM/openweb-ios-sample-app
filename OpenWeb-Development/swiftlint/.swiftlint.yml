@@ -95,6 +95,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - identical_operands
   - joined_default_parameter
   - literal_expression_end_indentation
+  - operator_usage_whitespace
   - private_subject
   - private_swiftui_state
   - sorted_first_last

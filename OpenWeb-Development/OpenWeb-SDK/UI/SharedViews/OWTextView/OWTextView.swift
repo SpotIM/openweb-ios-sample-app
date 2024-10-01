@@ -395,7 +395,7 @@ fileprivate extension OWTextView {
 
         let paragraphStyle = NSMutableParagraphStyle()
 
-        paragraphStyle.baseWritingDirection =  NSMutableParagraphStyle.defaultWritingDirection(forLanguage: detectedLanguage(for: String(attributedText.string)))
+        paragraphStyle.baseWritingDirection = NSMutableParagraphStyle.defaultWritingDirection(forLanguage: detectedLanguage(for: String(attributedText.string)))
 
         updatedAttributedText.addAttribute(.font, value: font, range: nsRange)
         updatedAttributedText.addAttribute(.foregroundColor, value: textColor, range: nsRange)

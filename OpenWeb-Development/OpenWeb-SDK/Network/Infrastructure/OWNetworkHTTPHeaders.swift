@@ -353,7 +353,7 @@ extension OWNetworkHTTPHeader {
         let osNameVersion: String = {
             let version = ProcessInfo.processInfo.operatingSystemVersion
             let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
-            let osName: String =  "iOS"
+            let osName: String = "iOS"
 
             return "\(osName) \(versionString)"
         }()
