@@ -16,6 +16,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - duplicate_imports
   - duplicated_key_in_dictionary_literal
   - dynamic_inline
+  - empty_enum_arguments
   - empty_parameters
   - empty_parentheses_with_trailing_closure
   - force_cast

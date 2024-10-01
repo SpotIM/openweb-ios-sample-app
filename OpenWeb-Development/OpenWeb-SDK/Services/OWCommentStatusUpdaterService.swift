@@ -81,7 +81,7 @@ fileprivate extension OWCommentStatusUpdaterService {
                 switch event {
                 case .next(let status):
                     return status
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil

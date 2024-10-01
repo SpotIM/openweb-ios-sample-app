@@ -65,7 +65,7 @@ class OWCacheService<Key: Hashable, Value: Any> {
         switch expirationStrategy {
         case .none:
             break
-        case .time(_):
+        case .time:
             guard case .expiration(let date) = wrappedValue.expiration,
                   dateProvider() < date else {
                       // Such case means that the current date is after the expiration date

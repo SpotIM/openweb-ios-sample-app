@@ -162,7 +162,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
                                                           sortOptions: $0.sortOptions)
                             return OWFilterTabsCollectionCellViewModel(model: model)
                         }
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil

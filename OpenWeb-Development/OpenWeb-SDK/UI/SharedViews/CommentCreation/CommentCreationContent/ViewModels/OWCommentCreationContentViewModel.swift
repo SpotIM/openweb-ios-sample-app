@@ -356,7 +356,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 switch event {
                 case .next(let signResponse):
                     return (signResponse.signature, image, imageId, timestamp)
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil
@@ -390,7 +390,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                         originalHeight: uploadResponse.height,
                         imageId: imageId
                     )
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil

@@ -68,7 +68,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
                 switch event {
                 case .next(let shareLink):
                     return shareLink.reference
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil
