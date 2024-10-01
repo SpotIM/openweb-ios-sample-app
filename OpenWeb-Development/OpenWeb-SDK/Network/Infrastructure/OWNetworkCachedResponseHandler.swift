@@ -49,13 +49,6 @@ struct OWNetworkResponseCacher {
 
     /// The `Behavior` of the `ResponseCacher`.
     let behavior: Behavior
-
-    /// Creates a `ResponseCacher` instance from the `Behavior`.
-    ///
-    /// - Parameter behavior: The `Behavior`.
-    init(behavior: Behavior) {
-        self.behavior = behavior
-    }
 }
 
 extension OWNetworkResponseCacher: OWNetworkCachedResponseHandler {

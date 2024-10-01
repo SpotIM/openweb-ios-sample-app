@@ -1454,10 +1454,6 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
         static let removePreviousFile = Options(rawValue: 1 << 1)
 
         let rawValue: Int
-
-        init(rawValue: Int) {
-            self.rawValue = rawValue
-        }
     }
 
     // MARK: Destination

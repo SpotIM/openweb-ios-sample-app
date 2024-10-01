@@ -177,11 +177,6 @@ struct OWColor {
             }
         }
     }
-
-    init(lightThemeColor: UIColor, darkThemeColor: UIColor) {
-        self.lightThemeColor = lightThemeColor
-        self.darkThemeColor = darkThemeColor
-    }
 }
 
 extension OWColor {
