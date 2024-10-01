@@ -148,13 +148,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .flatMapLatest { [weak self] coordinatorData -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 switch coordinatorData.deepLink {
-                    case .commentCreation(let commentCreationData):
-                        let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
-                                                                                      commentCreationData: commentCreationData,
-                                                                                      viewActionsCallbacks: self.viewActionsCallbacks)
-                        return self.coordinate(to: commentCreationCoordinator, coordinatorData: coordinatorData)
-                    default:
-                        return .empty()
+                case .commentCreation(let commentCreationData):
+                    let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
+                                                                                  commentCreationData: commentCreationData,
+                                                                                  viewActionsCallbacks: self.viewActionsCallbacks)
+                    return self.coordinate(to: commentCreationCoordinator, coordinatorData: coordinatorData)
+                default:
+                    return .empty()
                 }
             }
             .do(onNext: { [weak self] result in
