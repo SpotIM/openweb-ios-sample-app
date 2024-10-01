@@ -47,6 +47,7 @@ class OWAppealCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         disposeBag = nil
     }
 

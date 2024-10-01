@@ -45,6 +45,7 @@ class OWUserMentionLoadingCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         disposeBag = nil
     }
 
