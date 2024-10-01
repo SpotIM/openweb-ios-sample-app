@@ -97,7 +97,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             servicesProvider.themeStyleService().style,
             accessibilityChange
         ) { [weak self] style, _ in
-            guard let self = self else { return nil }
+            guard let self else { return nil }
             let string = OWLocalizationManager.shared.localizedString(key: "AppealLabel")
             let attributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),
@@ -216,7 +216,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
             .map { [weak self] config -> Bool in
-                guard let self = self,
+                guard let self,
                       let conversationConfig = config.conversation,
                       conversationConfig.isAppealEnabled == true
                 else {
@@ -312,12 +312,12 @@ private extension OWAppealLabelViewModel {
             }
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager()
                     .ifNeededTriggerAuthenticationUI(for: .commenterAppeal)
             }
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .commenterAppeal)
             }
             .filter { $0 }

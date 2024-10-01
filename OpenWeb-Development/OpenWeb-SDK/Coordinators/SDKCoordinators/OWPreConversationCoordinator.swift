@@ -86,7 +86,7 @@ private extension OWPreConversationCoordinator {
     // swiftlint:enable function_body_length
         dismissInitialVC
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch self.preConversationData.presentationalMode {
                 case .present:
                     router.dismiss(animated: true, completion: nil)
@@ -105,7 +105,7 @@ private extension OWPreConversationCoordinator {
             .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWCoordinatorData? in
                 // 3. Perform deeplink to comment creation screen
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article,
                                                                         settings: self.preConversationData.settings,
                                                                         commentCreationType: type,
@@ -117,7 +117,7 @@ private extension OWPreConversationCoordinator {
         let openCommentThreadObservable = viewModel.outputs.openCommentThread
             .observe(on: MainScheduler.instance)
             .map { [weak self] commentId, performAction -> OWCoordinatorData? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 guard var newAdditionalSettings = self.preConversationData.settings as? OWAdditionalSettings,
                       var newCommentThreadSettings = newAdditionalSettings.commentThreadSettings as? OWCommentThreadSettings
                 else { return nil }
@@ -154,11 +154,11 @@ private extension OWPreConversationCoordinator {
                          openClarityDetailsObservable,
                          openCommentThreadObservable)
             .filter { [weak self] _ in
-                guard let self = self else { return true }
+                guard let self else { return true }
                 return self.viewableMode == .partOfFlow
             }
             .flatMapLatest { [weak self] coordinatorData -> Observable<OWConversationCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
                                                                   settings: self.preConversationData.settings,
                                                                   presentationalMode: self.preConversationData.presentationalMode)
@@ -169,7 +169,7 @@ private extension OWPreConversationCoordinator {
                 return self.coordinate(to: conversationCoordinator, coordinatorData: coordinatorData)
             }
             .do(onNext: { [weak self] coordinatorResult in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch coordinatorResult {
                 case .popped:
                     self._dismissInitialVC.onNext()
@@ -196,11 +196,11 @@ private extension OWPreConversationCoordinator {
 
         coordinateToSafariObservables
             .filter { [weak self] _ in
-                guard let self = self else { return true }
+                guard let self else { return true }
                 return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let url = tuple.0
                 let title = tuple.1
                 let options = OWWebTabOptions(url: url,
@@ -211,7 +211,7 @@ private extension OWPreConversationCoordinator {
                 return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { [weak self] coordinatorResult in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch coordinatorResult {
                 case .popped:
                     self._dismissInitialVC.onNext()
@@ -230,7 +230,7 @@ private extension OWPreConversationCoordinator {
 
         let openPublisherProfile = viewModel.outputs.openProfile
             .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.flowActionsService.getOpenProfileActionCallback(for: self.router.navigationController,
                                                                             openProfileType: openProfileType,
                                                                             presentationalModeCompact: self.preConversationData.presentationalMode)

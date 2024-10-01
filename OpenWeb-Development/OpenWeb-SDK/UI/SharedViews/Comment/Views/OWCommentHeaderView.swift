@@ -245,7 +245,7 @@ private extension OWCommentHeaderView {
         viewModel.outputs.hiddenCommentReasonText
             .subscribe(onNext: { [weak self] text in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.hiddenCommentReasonLabel.text = text
                 }
             })
@@ -254,7 +254,7 @@ private extension OWCommentHeaderView {
         viewModel.outputs.shouldShowHiddenCommentMessage
             .subscribe(onNext: { [weak self] isHiddenMessage in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
 
                     self.dateLabel.isHidden = isHiddenMessage
                     self.subscriberBadgeView.isHidden = isHiddenMessage
@@ -270,7 +270,7 @@ private extension OWCommentHeaderView {
             .outputs.isSubscriber
             .subscribe(onNext: { [weak self] isVisible in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.subscriberBadgeView.OWSnp.updateConstraints { make in
                         make.leading.equalTo(self.userNameLabel.OWSnp.trailing).offset(isVisible ? Metrics.subscriberVerticalPadding : 0)
                     }
@@ -281,7 +281,7 @@ private extension OWCommentHeaderView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.userNameLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.seperatorBetweenSubtitleAndDateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
@@ -292,7 +292,7 @@ private extension OWCommentHeaderView {
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
             .subscribe(onNext: { [weak self] style, colorMapper in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let owBrandColor = colorMapper[.brandColor] {
                     let brandColor = owBrandColor.color(forThemeStyle: style)
                     self.badgeTagLabel.textColor = brandColor
@@ -304,7 +304,7 @@ private extension OWCommentHeaderView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.userNameLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
                 self.badgeTagLabel.font = OWFontBook.shared.font(typography: .infoText)
                 self.subtitleLabel.font = OWFontBook.shared.font(typography: .metaText)

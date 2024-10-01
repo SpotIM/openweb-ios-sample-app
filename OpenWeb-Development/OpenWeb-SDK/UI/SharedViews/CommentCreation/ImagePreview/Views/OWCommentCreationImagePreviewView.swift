@@ -98,7 +98,7 @@ private extension OWCommentCreationImagePreviewView {
         viewModel.outputs.imageOutput
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch imageType {
                 case .image(let image):
                     self.isHidden = false
@@ -120,7 +120,7 @@ private extension OWCommentCreationImagePreviewView {
         viewModel.outputs.shouldShowLoadingState
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowLoader in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.loaderView.isHidden = !shouldShowLoader
                 self.imageViewLoadingCoverView.isHidden = !shouldShowLoader
                 if shouldShowLoader {

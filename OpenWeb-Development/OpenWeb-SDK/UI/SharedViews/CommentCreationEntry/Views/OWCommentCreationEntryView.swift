@@ -120,7 +120,7 @@ private extension OWCommentCreationEntryView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
                 self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
@@ -131,7 +131,7 @@ private extension OWCommentCreationEntryView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.label.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)

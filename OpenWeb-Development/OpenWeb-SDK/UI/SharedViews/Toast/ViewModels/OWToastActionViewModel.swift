@@ -86,7 +86,7 @@ private extension OWToastActionViewModel {
         servicesProvider.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch self.action {
                 case .undo, .learnMore, .tryAgain:
                     self._color.onNext(OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle))

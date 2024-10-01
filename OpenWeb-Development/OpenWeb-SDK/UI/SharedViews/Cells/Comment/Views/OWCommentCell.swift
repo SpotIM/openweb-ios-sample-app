@@ -76,7 +76,7 @@ private extension OWCommentCell {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -84,7 +84,7 @@ private extension OWCommentCell {
         viewModel.outputs.updateSpacing
             .subscribe(onNext: { [weak self] spacing in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
 
                     self.commentView.OWSnp.updateConstraints { make in
                         make.top.equalToSuperview().inset(spacing.top)

@@ -122,7 +122,7 @@ private extension OWTestingGreenCell {
         viewModel.outputs.changedCellState
             .skip(1)
             .subscribe(onNext: { [weak self] state in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let height: CGFloat
                 switch state {
@@ -168,7 +168,7 @@ private extension OWTestingGreenCell {
        viewModel.outputs.changedCellState
             .take(1)
             .subscribe(onNext: { [weak self] state in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let height: CGFloat
                 switch state {

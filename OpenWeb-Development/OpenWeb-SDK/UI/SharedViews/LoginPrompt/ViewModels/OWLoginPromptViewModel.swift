@@ -93,7 +93,7 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
         .map { [weak self] status in
             guard self?.isFeatureEnabled == true,
                   OWManager.manager.authentication.shouldDisplayLoginPrompt == true,
-                  let status = status
+                  let status
             else { return false }
             switch status {
             case .ssoLoggedIn, .ssoRecovering, .ssoRecoveredSuccessfully:
@@ -133,12 +133,12 @@ private extension OWLoginPromptViewModel {
 
         _openLogin
             .flatMapLatest { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .loginPrompt)
                     .voidify()
             }
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .loginPrompt)
             }
             .filter { $0 }

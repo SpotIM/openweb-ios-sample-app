@@ -49,7 +49,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
-        guard let router = router else { return .empty() }
+        guard let router else { return .empty() }
         let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(data: data, viewableMode: .partOfFlow)
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
 
@@ -77,7 +77,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
             .map { OWClarityDetailsCoordinatorResult.popped }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.router?.pop(popStyle: .dismiss, animated: false)
             })
 
@@ -98,7 +98,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
         let coordinateToSafariObservable = coordinateToSafariObservables
             .flatMap { [weak self] url -> Observable<OWWebTabCoordinatorResult> in
-                guard let self = self,
+                guard let self,
                       let router = self.router
                 else { return .empty() }
                 let title = clarityDetailsVM.outputs.clarityDetailsViewViewModel
@@ -134,7 +134,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
         let coordinateToAppealObservable = appealTapped
             .flatMap { [weak self] data -> Observable<OWCommenterAppealCoordinatorResult> in
-                guard let self = self,
+                guard let self,
                       let router = self.router
                 else { return .empty() }
 

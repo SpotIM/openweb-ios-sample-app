@@ -42,7 +42,7 @@ class OWCloudinaryImageProvider: OWImageProviding {
         return _fetchImageBaseUrl
             .take(1)
             .map { [weak self] baseUrl in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let cloudinaryUrlString = self.cloudinaryURLString(size, baseUrl: baseUrl)
                 return URL(string: cloudinaryUrlString.appending(urlSuffix))
             }
@@ -63,7 +63,7 @@ private extension OWCloudinaryImageProvider {
     func cloudinaryURLString(_ imageSize: CGSize? = nil, baseUrl: String) -> String {
         var result = baseUrl.appending(Metrics.cloudinaryImageParamString)
 
-        if let imageSize = imageSize {
+        if let imageSize {
             result.append("\(Metrics.cloudinaryWidthPrefix)" +
                 "\(Int(imageSize.width))" +
                 "\(Metrics.cloudinaryHeightPrefix)" +

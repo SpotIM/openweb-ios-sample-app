@@ -73,7 +73,7 @@ private extension OWCommentCreationReplySnippetView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.replySnippetLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.bottomSeparatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
@@ -90,7 +90,7 @@ private extension OWCommentCreationReplySnippetView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.replySnippetLabel.font = OWFontBook.shared.font(typography: .footnoteText)
             })
             .disposed(by: disposeBag)

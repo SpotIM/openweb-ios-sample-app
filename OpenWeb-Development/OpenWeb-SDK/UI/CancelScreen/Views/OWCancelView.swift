@@ -131,7 +131,7 @@ private extension OWCancelView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton
                     .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
@@ -145,7 +145,7 @@ private extension OWCancelView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.continueButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
                 self.cancelButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })

@@ -88,7 +88,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         Observable.combineLatest(_themeStyleObservable, _comment)
             .map { [weak self] style, comment in
                 guard let messageText = comment?.text?.text else { return NSMutableAttributedString() }
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return NSMutableAttributedString(
                     string: messageText,
                     attributes: self.messageStringAttributes(with: style)
@@ -132,7 +132,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_linesAndFullAttributedString, _textState, _themeStyleObservable)
             .map { [weak self] linesAndAttributedString, currentState, style -> (NSMutableAttributedString, OWThemeStyle)? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let lines = linesAndAttributedString.0
                 let fullAttributedString = linesAndAttributedString.1
                 let attString = self.appendReadMoreIfNeeded(fullAttributedString, lines: lines, currentState: currentState, style: style)
@@ -141,7 +141,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .unwrap()
             .withLatestFrom(comment) { ($0.0, $0.1, $1) }
             .map { [weak self] attString, style, comment in
-                guard let self = self,
+                guard let self,
                       var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
                 self.availableUrlsRange.removeAll()
                 self.locateURLsInText(text: &res, style: style)
@@ -180,7 +180,7 @@ private extension OWCommentTextViewModel {
     func setupObservers() {
         labelClickIndex
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 if self.isReadMoreTap(at: index) {
                     self._textState.onNext(.expanded)

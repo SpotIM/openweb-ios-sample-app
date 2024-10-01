@@ -49,7 +49,7 @@ class OWPushOverFullScreenAnimationTransitioning: NSObject, UIViewControllerAnim
                            animations: {
                 vcTo.view.alpha = 1.0
             }, completion: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
                 container.insertSubview(vcFrom.view, belowSubview: vcTo.view)
                 self.viewFromOrientation = vcFrom.view
@@ -75,7 +75,7 @@ private extension OWPushOverFullScreenAnimationTransitioning {
             .notification(UIDevice.orientationDidChangeNotification)
             .delay(.milliseconds(Metrics.orientationChangeDelay), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let viewToOrientation = self.viewToOrientation,
                    let viewFromOrientation = self.viewFromOrientation {
                     viewFromOrientation.frame = viewToOrientation.frame

@@ -131,7 +131,7 @@ private extension OWPreConversationCompactContentViewModel {
     func setupObservers() {
         conversationFetched
             .subscribe(onNext: { [weak self] conversationResponse in
-                guard let self = self,
+                guard let self,
                       let responseComments = conversationResponse.conversation?.comments,
                       !responseComments.isEmpty
                 else { return }
@@ -156,7 +156,7 @@ private extension OWPreConversationCompactContentViewModel {
         }
         .unwrap()
         .subscribe(onNext: { [weak self] contentType in
-            guard let self = self else { return }
+            guard let self else { return }
             self._contentType.onNext(contentType)
         })
         .disposed(by: disposeBag)
@@ -164,7 +164,7 @@ private extension OWPreConversationCompactContentViewModel {
         // Set comment type
         comment
             .subscribe(onNext: { [weak self] commentData in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let commentType: OWCompactCommentType = {
                     if let commentText = commentData.text?.text {

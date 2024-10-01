@@ -134,7 +134,7 @@ private extension OWCommentEngagementView {
     func setupObservers() {
         viewModel.outputs.shareButtonStyle
             .subscribe(onNext: { [weak self] shareButtonStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch shareButtonStyle {
                 case .text:
                     self.shareButton
@@ -150,7 +150,7 @@ private extension OWCommentEngagementView {
 
         viewModel.outputs.votesPosition
             .subscribe(onNext: { [weak self] position in
-                guard let self = self else { return }
+                guard let self else { return }
                 OWScheduler.runOnMainThreadIfNeeded {
                     switch position {
                     case .default:
@@ -181,7 +181,7 @@ private extension OWCommentEngagementView {
         viewModel.outputs.showReplyButton
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showReply in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.replyButton.isHidden = !showReply
                 self.replyDotDivider.isHidden = !showReply
                 self.replyZeroWidthConstraint?.isActive = !showReply
@@ -197,7 +197,7 @@ private extension OWCommentEngagementView {
             .style
             .withLatestFrom(viewModel.outputs.commentActionsColor) { ($0, $1) }
             .subscribe(onNext: { [weak self] currentStyle, commentActionsColor in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.replyDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.votingDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 switch commentActionsColor {
@@ -213,7 +213,7 @@ private extension OWCommentEngagementView {
             }).disposed(by: disposeBag)
 
         let setButtonsFont = { [weak self] (commentActionsFontStyle: OWCommentActionsFontStyle) in
-            guard let self = self else { return }
+            guard let self else { return }
             switch commentActionsFontStyle {
             case .default:
                 self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)

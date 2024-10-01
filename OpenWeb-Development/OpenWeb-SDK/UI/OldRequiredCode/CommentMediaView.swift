@@ -64,7 +64,7 @@ internal class CommentMediaView: UIView {
     func configureMedia(imageUrl: URL?, gifUrl: String?) {
         clearExistingMedia()
         // if imageUrl exist, set image and clean gif
-        if let imageUrl = imageUrl {
+        if let imageUrl {
             addSubview(imageView)
             configureImageView()
             imageView.setImage(with: imageUrl) { [weak self] image, error in
@@ -73,7 +73,7 @@ internal class CommentMediaView: UIView {
             }
         }
         // if gifUrl exist, set gif and clean image
-        else if let gifUrl = gifUrl {
+        else if let gifUrl {
             addSubview(gifWebView)
             configureGifWebView()
             gifWebView.configure(gifUrl: gifUrl)

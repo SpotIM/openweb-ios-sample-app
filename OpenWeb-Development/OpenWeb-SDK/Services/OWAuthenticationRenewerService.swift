@@ -29,7 +29,7 @@ private extension OWAuthenticationRenewerService {
     func setupObservers() {
         appLifeCycle.willEnterForeground
             .flatMapLatest { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 // The call to get the user data is enough to trigger the whole renew auth process in case it's needed
                 return self.netwokAPI.user
                     .userData()

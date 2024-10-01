@@ -58,7 +58,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWReportReasonCoordinatorResult> {
-        guard let router = router else { return .empty() }
+        guard let router else { return .empty() }
         let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(reportData: reportData,
                                                                                  viewableMode: .partOfFlow,
                                                                                  presentMode: self.presentationalMode)
@@ -79,7 +79,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
         let reportReasonPoppedObservable = reportReasonPopped
             .filter { [weak self] _ -> Bool in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return !self.isUserSubmitted
             }
             .map { OWReportReasonCoordinatorResult.popped }
@@ -87,7 +87,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
         let reportReasonSubmittedObservable = reportReasonPopped
             .filter { [weak self] _ -> Bool in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.isUserSubmitted
             }
             .flatMapLatest { [weak reportReasonViewViewModel] _ -> Observable<(OWCommentId, Bool)> in
@@ -106,7 +106,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             .outputs.learnMoreTapped
             .unwrap()
             .flatMap { [weak self] url -> Observable<OWWebTabCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 guard let router = self.router else { return .empty() }
                 let options = OWWebTabOptions(url: url,
                                                  title: "")
@@ -206,7 +206,7 @@ private extension OWReportReasonCoordinator {
             .filter { viewModel.outputs.viewableMode == .partOfFlow }
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 guard let router = self.router else { return .empty() }
                 let reportReasonSubmittedViewVM = OWSubmittedViewViewModel(type: .reportReason)
                 let reportReasonSubmittedVC = OWSubmittedVC(submittedViewViewModel: reportReasonSubmittedViewVM)
@@ -215,7 +215,7 @@ private extension OWReportReasonCoordinator {
                 return reportReasonSubmittedViewVM.outputs.closeSubmittedTapped
             }
             .do(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.isUserSubmitted = true
             })
 
@@ -225,7 +225,7 @@ private extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .partOfFlow
             }
             .subscribe(onNext: { [weak self] additionalInfoViewVM in
-                guard let self = self else { return }
+                guard let self else { return }
                 guard let router = self.router else { return }
                 let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
                 router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
@@ -238,7 +238,7 @@ private extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .map { [weak self] additionalInfoViewVM -> OWAdditionalInfoView? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
 
                 additionalInfoView.alpha = 0
@@ -310,7 +310,7 @@ private extension OWReportReasonCoordinator {
                 return reportReasonCancelViewVM.outputs.closeTapped
             }
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 guard let router = self.router else { return }
 
                 router.pop(popStyle: .dismiss, animated: true)
@@ -324,7 +324,7 @@ private extension OWReportReasonCoordinator {
             }
             // Step 1 - Dismiss OWReportReasonSubmittedVC or OWReportReasonCancelVC
             .flatMap { [weak self] _ -> Observable<OWRoutering> in
-                guard let self = self,
+                guard let self,
                       let router = self.router else { return .empty() }
                 let visableViewController = router.navigationController?.visibleViewController
                 let isReportReasonVC = visableViewController?.isKind(of: OWReportReasonVC.self) ?? false
@@ -338,7 +338,7 @@ private extension OWReportReasonCoordinator {
             }
             // Step 2 - Dismiss report reason screen if it is the only one in the router or Pop if router has previous VCs
             .subscribe(onNext: { [weak self] router in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 guard let controllerToPopTo = router.navigationController?.viewControllers.first(where: {
                     $0.isKind(of: OWReportReasonVC.self)
@@ -362,7 +362,7 @@ private extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .partOfFlow
             }
             .subscribe(onNext: { [weak self] reportReasonViewModel in
-                guard let self = self else { return }
+                guard let self else { return }
                 guard let router = self.router else { return }
                 let ReportReasonCancelVM = OWCancelViewModel(cancelViewViewModel: reportReasonViewModel)
                 let reportReasonCancelVC = OWCancelVC(cancelViewModel: ReportReasonCancelVM)
@@ -376,7 +376,7 @@ private extension OWReportReasonCoordinator {
             .filter { _ in viewModel.outputs.viewableMode == .independent }
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] commentId, userJustLoggedIn -> Observable<(OWCommentId, Bool)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let reportReasonSubmittedViewVM = OWSubmittedViewViewModel(type: .reportReason)
                 let reportReasonSubmittedView = OWSubmittedView(viewModel: reportReasonSubmittedViewVM)
 
@@ -392,7 +392,7 @@ private extension OWReportReasonCoordinator {
                     .map { (commentId, userJustLoggedIn) }
             }
             .do(onNext: { [weak self] commentId, userJustLoggedIn in
-                guard let self = self else { return }
+                guard let self else { return }
                 if userJustLoggedIn {
                     self.servicesProvider
                         .actionsCallbacksNotifier()
@@ -408,7 +408,7 @@ private extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .map { [weak self] reportReasonCancelViewVM -> OWCancelView? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let reportReasonCancelView = OWCancelView(viewModel: reportReasonCancelViewVM)
                 reportReasonCancelView.alpha = 0
                 self.reportReasonView?.addSubview(reportReasonCancelView)
@@ -472,7 +472,7 @@ private extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .subscribe(onNext: { [weak self] viewAction in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewActionsService.append(viewAction: viewAction)
             })
             .disposed(by: disposeBag)

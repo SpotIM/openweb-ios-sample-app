@@ -54,7 +54,7 @@ class OWUserMentionView: UIView {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
             return .reload
         }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
-            guard let self = self else { return UITableViewCell() }
+            guard let self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             cell.configure(with: item.viewModel)
@@ -93,7 +93,7 @@ private extension OWUserMentionView {
             .delay(.milliseconds(Metrics.delayFrameChanged), scheduler: MainScheduler.instance)
             .unwrap()
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.viewFrameChanged.onNext(self.frame)
             })
             .disposed(by: disposeBag)
@@ -108,7 +108,7 @@ private extension OWUserMentionView {
 
         tableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.tappedMentionIndex.onNext(indexPath.item)
             })
             .disposed(by: disposeBag)
@@ -117,7 +117,7 @@ private extension OWUserMentionView {
             .map { $0.isEmpty ? 0 : $0[0].items.count }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] cellsCount in
-                guard let self = self else { return }
+                guard let self else { return }
                 let maxHeight = CGFloat(Metrics.maxNumberOfCellsHeight) * Metrics.rowHeight
                 let wantedHeight = CGFloat(cellsCount) * Metrics.rowHeight
                 let newHeight = min(maxHeight, wantedHeight)
@@ -134,7 +134,7 @@ private extension OWUserMentionView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.tableView.separatorColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

@@ -144,7 +144,7 @@ private extension OWLocalizationManager {
                  Guard will prevent us from immediately trying to dictate the language.
                  This way we allow changing the strategy before or after the `spotId` setup from `OpenWeb.Manager.spotId`
                  */
-                guard let self = self,
+                guard let self,
                       let spotId = self.spotId,
                       spotId == OpenWeb.manager.spotId else { return .empty() }
 
@@ -162,7 +162,7 @@ private extension OWLocalizationManager {
                  Guard will prevent us from immediately trying to dictate the locale.
                  This way we allow changing the strategy before or after the `spotId` setup from `OpenWeb.Manager.spotId`
                  */
-                guard let self = self,
+                guard let self,
                       let spotId = self.spotId,
                       spotId == OpenWeb.manager.spotId else { return .empty() }
 
@@ -195,7 +195,7 @@ private extension OWLocalizationManager {
             .map { $0.mobileSdk.locale ?? Metrics.defaultLocaleIdentifier }
             .flatMap { [weak self] serverLocaleIdentifier -> Observable<(OWLanguageStrategy, String)> in
                 // 2. Take into account language strategy
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.languageStrategy
                     .take(1)
                     .map { ($0, serverLocaleIdentifier) }
@@ -236,7 +236,7 @@ private extension OWLocalizationManager {
             .map { $0.mobileSdk.locale ?? Metrics.defaultLocaleIdentifier }
             .flatMap { [weak self] serverLocaleIdentifier -> Observable<(OWLocaleStrategy, String)> in
                 // 2. Take into account language strategy
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.localeStrategy
                     .take(1)
                     .map { ($0, serverLocaleIdentifier) }

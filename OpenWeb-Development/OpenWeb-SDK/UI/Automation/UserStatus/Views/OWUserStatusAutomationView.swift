@@ -109,7 +109,7 @@ private extension OWUserStatusAutomationView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 let font = OWFontBook.shared.font(typography: .bodyText)
                 self.activeSpotIdLbl.font = font
                 self.activePostIdLbl.font = font
@@ -120,7 +120,7 @@ private extension OWUserStatusAutomationView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 let textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.activeSpotIdLbl.textColor = textColor
                 self.activePostIdLbl.textColor = textColor

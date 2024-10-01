@@ -105,7 +105,7 @@ private extension OWReportReasonVC {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             })
@@ -139,7 +139,7 @@ private extension OWReportReasonVC {
         Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
             .subscribe(onNext: { [weak self] displayMode in
                 let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
-                guard let self = self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
+                guard let self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
 
                 let isLargeTitleGoingToBeDisplay = displayMode == .always
                 self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)

@@ -71,7 +71,7 @@ private extension OWCommentOptionsView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.optionButton.image(UIImage(spNamed: "optionsIcon", supportDarkMode: true), state: .normal)
             })

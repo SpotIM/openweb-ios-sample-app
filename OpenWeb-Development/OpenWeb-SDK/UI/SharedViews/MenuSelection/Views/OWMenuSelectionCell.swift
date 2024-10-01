@@ -73,7 +73,7 @@ private extension OWMenuSelectionCell {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor5, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -81,7 +81,7 @@ private extension OWMenuSelectionCell {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.label.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)

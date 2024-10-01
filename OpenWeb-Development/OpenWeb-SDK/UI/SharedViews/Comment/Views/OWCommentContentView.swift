@@ -95,7 +95,7 @@ private extension OWCommentContentView {
         viewModel.outputs.image
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
-                guard let self = self,
+                guard let self,
                       case .custom(let url) = imageType else { return }
 
                 self.mediaView.configureMedia(imageUrl: url, gifUrl: nil)
@@ -104,14 +104,14 @@ private extension OWCommentContentView {
 
         viewModel.outputs.gifUrl
             .subscribe(onNext: { [weak self] url in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.mediaView.configureMedia(imageUrl: nil, gifUrl: url)
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.mediaSize
             .subscribe(onNext: { [weak self] size in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.mediaView.OWSnp.updateConstraints { make in
                     make.size.equalTo(size)
                     make.top.equalTo(self.textLabel.OWSnp.bottom).offset(
@@ -129,7 +129,7 @@ private extension OWCommentContentView {
         viewModel.outputs.collapsableLabelViewModel
             .outputs.height
             .subscribe(onNext: { [weak self] newHeight in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textHeightConstraint?.update(offset: newHeight)
             })
             .disposed(by: disposeBag)
@@ -139,7 +139,7 @@ private extension OWCommentContentView {
             .bind(to: editedLabel.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if let editedLabelHeightConstraint = editedLabelHeightConstraint {
+        if let editedLabelHeightConstraint {
             viewModel.outputs.isEdited
                 .map { !$0 }
                 .bind(to: editedLabelHeightConstraint.rx.isActive)
@@ -148,7 +148,7 @@ private extension OWCommentContentView {
 
         viewModel.outputs.isEdited
             .subscribe(onNext: { [weak self] isEdited in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.editedLabel.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.mediaView.OWSnp.bottom).offset(isEdited ? Metrics.editedTopPadding : 0)
                 }
@@ -158,14 +158,14 @@ private extension OWCommentContentView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.editedLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.editedLabel.font = OWFontBook.shared.font(typography: .footnoteSpecial)
             })
             .disposed(by: disposeBag)

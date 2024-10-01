@@ -72,7 +72,7 @@ extension OWCommentCreationView: UIGestureRecognizerDelegate {
             }
             return nil
         }()
-        guard let userMentionVM = userMentionVM else { return true }
+        guard let userMentionVM else { return true }
         let tappedOnUserMention = userMentionVM.outputs.isUserMentionAt(point: gestureRecognizer.location(in: self))
         return !tappedOnUserMention
     }
@@ -109,7 +109,7 @@ private extension OWCommentCreationView {
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
                                  OWSharedServicesProvider.shared.orientationService().orientation)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
                 let backgroundColor: UIColor = {
                     switch self.viewModel.outputs.commentCreationStyle {
                     case .regular, .light:

@@ -133,7 +133,7 @@ private extension OWRealtimeIndicationView {
 
         panGesture.rx.event
             .subscribe(onNext: { [weak self] recognizer in
-                guard let self = self, let superView = self.superview else { return }
+                guard let self, let superView = self.superview else { return }
 
                 switch recognizer.state {
                 case .changed, .began:
@@ -172,7 +172,7 @@ private extension OWRealtimeIndicationView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.container.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.container.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
                 self.verticalSeparatorBetweenTypingAndNewComments.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2,

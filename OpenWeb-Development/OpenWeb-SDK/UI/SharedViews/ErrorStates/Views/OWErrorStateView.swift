@@ -133,7 +133,7 @@ private extension OWErrorStateView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 let borderColor: UIColor = self.viewModel.outputs.shouldHaveBorder ? OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle) : .clear
                 self.border(width: Metrics.borderWidth, color: borderColor)
                 self.headerIcon.image = UIImage(spNamed: "errorStateIcon", supportDarkMode: true)
@@ -149,7 +149,7 @@ private extension OWErrorStateView {
         viewModel.outputs.height
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] newHeight in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.OWSnp.updateConstraints { make in
                     // We use here greaterThen since the default newHeight is 0 in this constraint
                     // So that it will be tied to the components constraints inside this view
@@ -165,7 +165,7 @@ private extension OWErrorStateView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteLink)
             })
             .disposed(by: disposeBag)

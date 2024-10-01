@@ -209,7 +209,7 @@ private extension OWCommentCreationLightView {
     func setupObservers() {
         viewModel.outputs.displayToastCalled
             .subscribe(onNext: { [weak self] combinedData in
-                guard var self = self else { return }
+                guard var self else { return }
                 var requiredData = combinedData.presentData.data
                 requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorToastBottomPadding
                 let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion,
@@ -228,7 +228,7 @@ private extension OWCommentCreationLightView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.topContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.contentView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
@@ -242,7 +242,7 @@ private extension OWCommentCreationLightView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .titleSmall)
                 self.replyToLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })
@@ -277,7 +277,7 @@ private extension OWCommentCreationLightView {
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
                 let isLandscape = currentOrientation == .landscape
 
                 // Header

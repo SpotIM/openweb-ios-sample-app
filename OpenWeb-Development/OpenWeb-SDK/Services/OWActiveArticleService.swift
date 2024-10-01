@@ -67,7 +67,7 @@ private extension OWActiveArticleService {
                 }
             }
             .flatMap { [weak self] _ -> Observable<Event<OWConversationReadRM>> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider
                     .networkAPI()
                     .conversation
@@ -86,7 +86,7 @@ private extension OWActiveArticleService {
             }
             .unwrap()
             .subscribe(onNext: { [weak self] conversation in
-                guard let self = self,
+                guard let self,
                       let extractData = conversation.extractData,
                       let url = extractData.url,
                       let title = extractData.title

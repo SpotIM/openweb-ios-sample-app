@@ -215,14 +215,14 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
     private var firstLayoutSubviewsDone = false
     override func layoutSubviews() {
         if !firstLayoutSubviewsDone,
-           let toolbar = toolbar,
+           let toolbar,
            mainContainer.subviews.contains(toolbar) {
             firstLayoutSubviewsDone = true
             viewModel.outputs.textViewVM.inputs.becomeFirstResponderCallWithDelay.onNext(Metrics.delayKeyboard)
             updateToolbarConstraints(hidden: true)
             mainContainer.layoutIfNeeded()
             UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.updateToolbarConstraints(hidden: false)
                 self.mainContainer.layoutIfNeeded()
             }
@@ -323,7 +323,7 @@ private extension OWCommentCreationFloatingKeyboardView {
             make.bottom.equalToSuperview().inset(OWCommentCreationEntryView.TextViewMetrics.textViewBottomPadding)
         }
 
-        if let toolbar = toolbar {
+        if let toolbar {
             mainContainer.addSubview(toolbar)
             toolbar.OWSnp.makeConstraints { make in
                 toolbarBottomConstraint = make.bottom.equalTo(mainContainer.OWSnp.bottom).constraint
@@ -357,7 +357,7 @@ private extension OWCommentCreationFloatingKeyboardView {
     }
 
     func updateToolbarConstraints(hidden: Bool) {
-        if let toolbar = toolbar {
+        if let toolbar {
             footerView.OWSnp.removeConstraints()
             if hidden {
                 toolbarBottomConstraint?.deactivate()
@@ -386,7 +386,7 @@ private extension OWCommentCreationFloatingKeyboardView {
     func setupObservers() {
         viewModel.outputs.displayToastCalled
             .subscribe(onNext: { [weak self] combinedData in
-                guard let self = self else { return }
+                guard let self else { return }
                 var requiredData = combinedData.presentData.data
                 requiredData.bottomPadding = self.toastBottomPadding
                 let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
@@ -408,7 +408,7 @@ private extension OWCommentCreationFloatingKeyboardView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.headerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.headerIconView.tintColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.headerTitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
@@ -423,15 +423,15 @@ private extension OWCommentCreationFloatingKeyboardView {
 
         headerCloseButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.headerView.OWSnp.updateConstraints { make in
                     make.bottom.equalTo(self.footerView.OWSnp.top).inset(Metrics.headerHeight)
                 }
                 UIView.animate(withDuration: Metrics.closeHeaderDuration) { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.mainContainer.layoutIfNeeded()
                 } completion: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.footerView.addSubview(lineSeparator)
                     self.lineSeparator.OWSnp.makeConstraints { make in
                         make.leading.top.trailing.equalToSuperview()
@@ -448,11 +448,11 @@ private extension OWCommentCreationFloatingKeyboardView {
         let postedOrClosedObservable = Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .observe(on: MainScheduler.instance)
             .flatMap({ [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 if self.toolbar != nil {
                     self.updateToolbarConstraints(hidden: true)
                     UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.mainContainer.layoutIfNeeded()
                     }
                     return Observable.just(()).delay(.milliseconds(Metrics.delayKeyboard), scheduler: MainScheduler.instance)
@@ -470,7 +470,7 @@ private extension OWCommentCreationFloatingKeyboardView {
             .delay(.milliseconds(toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration), scheduler: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
             .subscribe(onNext: { [weak self] text in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.closeInstantly.onNext(text)
                 self.viewModel.inputs.pop.onNext()
             })
@@ -505,7 +505,7 @@ private extension OWCommentCreationFloatingKeyboardView {
             // shows with animation and puts objects into their final position.
             .skip(1)
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
                 let isLandscape = currentOrientation == .landscape
 
                 self.headerIconView.OWSnp.updateConstraints { make in
@@ -532,7 +532,7 @@ private extension OWCommentCreationFloatingKeyboardView {
             .withLatestFrom(viewModel.outputs.textBeforeClosedWithMentions) { ($0, $1) }
             .subscribe(onNext: { [weak self] notification, textBeforeClosed in
                 guard
-                   let self = self,
+                   let self,
                    let expandedKeyboardHeight = notification.keyboardSize?.height,
                    let animationDuration = notification.keyboardAnimationDuration
                 else { return }
@@ -541,7 +541,7 @@ private extension OWCommentCreationFloatingKeyboardView {
                 let isLandscape = currentOrientation == .landscape
 
                 UIView.animate(withDuration: animationDuration) { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .brandColor,
                                                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
                     self.ctaButton.alpha(1)
@@ -579,7 +579,7 @@ private extension OWCommentCreationFloatingKeyboardView {
                     make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.trailingLandscapeMargin : Metrics.ctaButtonHorizontalPadding)
                 }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     if self.viewModel.outputs.viewableMode == .independent {
                         self.backgroundColor = Metrics.floatingBackgroungColor
                     }
@@ -596,7 +596,7 @@ private extension OWCommentCreationFloatingKeyboardView {
             .withLatestFrom(viewModel.outputs.ctaButtonLoading) { ($0.0, $0.1, $1) }
             .subscribe(onNext: { [weak self] notification, textViewText, isSendingComment  in
                 guard
-                    let self = self,
+                    let self,
                     let animationDuration = notification.keyboardAnimationDuration else { return }
 
                 self.viewModel.inputs.textBeforeClosedChange.onNext(isSendingComment ? "" : textViewText)
@@ -606,7 +606,7 @@ private extension OWCommentCreationFloatingKeyboardView {
                 let isLandscape = currentOrientation == .landscape
 
                 UIView.animate(withDuration: animationDuration) { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2,
                                                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
                     self.ctaButton.alpha(0)
@@ -626,11 +626,11 @@ private extension OWCommentCreationFloatingKeyboardView {
                         make.bottom.equalToSuperviewSafeArea()
                     }
                     UIView.animate(withDuration: animationDuration) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.backgroundColor = .clear
                         self.mainContainer.layoutIfNeeded()
                     } completion: { [weak self] finished in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         if finished && self.viewModel.outputs.viewableMode == .independent {
                             self.firstLayoutSubviewsDone = false
                         }

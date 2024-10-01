@@ -80,7 +80,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var cancelAdditionalInfoTapped: Observable<Void> {
         return cancelAdditionalInfoTap
             .flatMap { [weak self] _ -> Observable<String> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewVM.outputs.textViewText
                     .take(1)
             }
@@ -92,7 +92,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var closeReportReasonTapped: Observable<Void> {
         return cancelAdditionalInfoTap
             .flatMap { [weak self] _ -> Observable<String> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewVM.outputs.textViewText
                     .take(1)
             }
@@ -156,7 +156,7 @@ private extension OWAdditionalInfoViewViewModel {
         isTextRequired
             .withLatestFrom(minimumTextLength) { ($0, $1) }
             .flatMap { [weak self] isTextRequired, minimumTextLength -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 var minimumTextLength = minimumTextLength
                 minimumTextLength = minimumTextLength > 0 ? minimumTextLength : 1
                 return self.textViewVM.outputs.textViewText.map {

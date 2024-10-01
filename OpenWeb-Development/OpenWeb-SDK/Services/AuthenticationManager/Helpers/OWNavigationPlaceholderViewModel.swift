@@ -56,14 +56,14 @@ private extension OWNavigationPlaceholderViewModel {
             .observe(on: scheduler)
             .map { [weak self] _ -> Bool in
                 // Make sure vc exist before checking its navigation controller
-                guard let self = self,
+                guard let self,
                       let _ = self.vc else { return false }
                 return true
             }
             .filter { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self,
+                guard let self,
                       let vc = self.vc else { return }
 
                 if let topVC = vc.navigationController?.topViewController, topVC != vc {

@@ -36,7 +36,7 @@ enum OWProfileEndpoints: OWEndpoints {
             let owToken = networkCredentials.openwebToken
             let token = accessToken?.replacingOccurrences(of: "Bearer ", with: "") ?? ""
             var requestParams: OWNetworkParameters = ["access_token": token]
-            if let owToken = owToken {
+            if let owToken {
                 requestParams["open_web_token"] = owToken
             }
             return requestParams

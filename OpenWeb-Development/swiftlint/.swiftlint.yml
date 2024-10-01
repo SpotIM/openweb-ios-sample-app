@@ -107,6 +107,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - prefer_zero_over_explicit_init
   - private_subject
   - private_swiftui_state
+  - shorthand_optional_binding
   - sorted_first_last
   - unhandled_throwing_task
   - unneeded_parentheses_in_closure_argument

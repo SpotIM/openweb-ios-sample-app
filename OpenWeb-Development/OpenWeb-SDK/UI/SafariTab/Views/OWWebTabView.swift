@@ -115,7 +115,7 @@ private extension OWWebTabView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -132,7 +132,7 @@ private extension OWWebTabView {
         // Observe the title property
         webView.rx.title
             .subscribe(onNext: { [weak self] title in
-                guard let self = self else { return }
+                guard let self else { return }
                 // Set the title of the view controller to the webview's title
                 let webTitle = self.webView.canGoBack ? title : self.viewModel.outputs.options.title
                 self.viewModel.inputs.setTitle.onNext(webTitle)
@@ -142,7 +142,7 @@ private extension OWWebTabView {
         viewModel.outputs
             .backTapped
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.webView.goBack()
             })
             .disposed(by: disposeBag)

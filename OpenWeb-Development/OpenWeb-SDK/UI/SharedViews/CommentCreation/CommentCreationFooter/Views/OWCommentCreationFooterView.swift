@@ -148,7 +148,7 @@ private extension OWCommentCreationFooterView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor4, themeStyle: currentStyle)
                 self.ctaButton.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
                 self.addGifButton.setImage(UIImage(spNamed: "addGifIcon", supportDarkMode: true), for: .normal)
@@ -199,7 +199,7 @@ private extension OWCommentCreationFooterView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.ctaButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
@@ -207,7 +207,7 @@ private extension OWCommentCreationFooterView {
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let isLandscape = currentOrientation == .landscape
                 self.commentLabelsContainerView.isHidden = !isLandscape

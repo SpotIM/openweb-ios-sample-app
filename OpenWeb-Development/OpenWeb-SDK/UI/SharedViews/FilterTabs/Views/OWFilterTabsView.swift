@@ -49,7 +49,7 @@ class OWFilterTabsView: UIView {
         let dataSource = OWRxCollectionViewSectionedAnimatedDataSource<FilterTabsDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
             return .reload
         }, configureCell: { [weak self] _, collectionView, indexPath, item -> UICollectionViewCell in
-            guard let self = self else { return UICollectionViewCell() }
+            guard let self else { return UICollectionViewCell() }
             let cell = collectionView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             cell.configure(with: item.viewModel)
 
@@ -85,7 +85,7 @@ private extension OWFilterTabsView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -93,7 +93,7 @@ private extension OWFilterTabsView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.filterTabsCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -110,7 +110,7 @@ private extension OWFilterTabsView {
             .observe(on: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.tabs)
             .subscribe(onNext: { [weak self] tabs in
-                guard let self = self,
+                guard let self,
                       let index = tabs.firstIndex(where: { $0.outputs.isSelectedNonRx }) else { return }
                 self.filterTabsCollectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredHorizontally, animated: true)
             })
@@ -128,7 +128,7 @@ private extension OWFilterTabsView {
             .unwrap()
             .withLatestFrom(viewModel.outputs.minimumLeadingTrailingMargin) { ($0, $1) }
             .subscribe(onNext: { [weak self] contentSize, minimumLeadingTrailingMargin in
-                guard let self = self else { return }
+                guard let self else { return }
                 let maxWidth = self.frame.size.width
                 let horizontalMargins = max((maxWidth - contentSize.width) / 2, minimumLeadingTrailingMargin)
                 self.filterTabsCollectionView.OWSnp.updateConstraints { make in

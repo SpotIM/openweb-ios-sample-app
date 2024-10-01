@@ -78,8 +78,8 @@ private extension OWGifPreviewView {
             data
         }
         .subscribe(onNext: { [weak self] data in
-            guard let self = self else { return }
-            if let data = data {
+            guard let self else { return }
+            if let data {
                 OWScheduler.runOnMainThreadIfNeeded {
                     self.isHidden = false
                     let ratio = CGFloat(data.originalWidth) / CGFloat(data.originalHeight)

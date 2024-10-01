@@ -99,7 +99,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         tapCta
             .asObservable()
             .map { [weak self] _ -> OWUserAction? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 switch self.commentCreationType {
                 case .comment:
                     return .commenting
@@ -111,11 +111,11 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             }
             .unwrap()
             .flatMap { [weak self] userAction -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: userAction)
             }
             .do(onNext: { [weak self] loginToPost in
-                guard let self = self,
+                guard let self,
                       loginToPost == true else { return }
                 self._loginToPostClick.onNext()
             })
@@ -128,7 +128,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     var ctaTitleText: Observable<String> {
         _shouldSignUpToPostComment
             .map { [weak self] shouldSignUpToPost in
-                guard let self = self, !shouldSignUpToPost else {
+                guard let self, !shouldSignUpToPost else {
                     return OWLocalizationManager.shared.localizedString(key: "SignUpToPost")
                 }
 

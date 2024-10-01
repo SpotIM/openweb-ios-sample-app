@@ -290,7 +290,7 @@ class OWNetworkAuthenticationInterceptor<AuthenticatorType>: OWNetworkRequestInt
         }
 
         // Do not attempt retry if there is no credential.
-        guard let credential = credential else {
+        guard let credential else {
             let error = OWNetworkAuthenticationError.missingCredential
             completion(.doNotRetryWithError(error))
             return

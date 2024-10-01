@@ -83,7 +83,7 @@ private extension OWCommentingReadOnlyView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.iconImageView.image = UIImage(spNamed: "commentingReadOnlyIcon", supportDarkMode: true)
                 self.updateCustomUI()
@@ -93,7 +93,7 @@ private extension OWCommentingReadOnlyView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.label.font = OWFontBook.shared.font(typography: .bodyContext)
             })
             .disposed(by: disposeBag)

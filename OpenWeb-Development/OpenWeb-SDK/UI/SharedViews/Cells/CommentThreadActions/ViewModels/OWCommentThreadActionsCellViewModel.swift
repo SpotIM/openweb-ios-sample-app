@@ -104,7 +104,7 @@ private extension OWCommentThreadActionsCellViewModel {
     func setupObservers() {
         triggerUpdateActionType
             .map({ [weak self] _ -> OWCommentThreadActionType? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
 
                 switch mode {
                 case .collapse:

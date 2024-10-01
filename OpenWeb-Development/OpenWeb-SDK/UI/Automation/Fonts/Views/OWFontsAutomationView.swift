@@ -244,7 +244,7 @@ private extension OWFontsAutomationView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.setupFonts()
             })
             .disposed(by: disposeBag)
@@ -252,7 +252,7 @@ private extension OWFontsAutomationView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.setupLabelsTheme(theme: currentStyle)
             })
             .disposed(by: disposeBag)

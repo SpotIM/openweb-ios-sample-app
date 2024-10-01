@@ -10,7 +10,7 @@ import Foundation
 
 extension Double {
   static func equal(_ lhs: Double, _ rhs: Double, precise value: Int? = nil) -> Bool {
-    guard let value = value else {
+    guard let value else {
       return lhs == rhs
     }
 

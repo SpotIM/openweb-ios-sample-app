@@ -140,7 +140,7 @@ private extension OWCommentView {
     func setupObservers() {
         viewModel.outputs.shouldHideCommentContent
             .subscribe(onNext: { [weak self] shouldBlockComment in
-                guard let self = self else { return }
+                guard let self else { return }
                 if shouldBlockComment {
                     self.commentLabelsContainerView.removeFromSuperview()
                     self.commentContentView.removeFromSuperview()
@@ -151,7 +151,7 @@ private extension OWCommentView {
                 self.commentOptionsView.isHidden = shouldBlockComment
             }).disposed(by: disposedBag)
 
-        if let commentHeaderBottomConstraint = commentHeaderBottomConstraint {
+        if let commentHeaderBottomConstraint {
             viewModel.outputs.shouldHideCommentContent
                 .bind(to: commentHeaderBottomConstraint.rx.isActive)
                 .disposed(by: disposedBag)
@@ -160,7 +160,7 @@ private extension OWCommentView {
         viewModel.outputs.shouldShowCommentStatus
             .subscribe(onNext: { [weak self] shouldShow in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.commentHeaderView.OWSnp.updateConstraints { make in
                         make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? InternalMetrics.commentStatusBottomPadding : 0)
                     }
@@ -178,7 +178,7 @@ private extension OWCommentView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.blockingOpacityView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })

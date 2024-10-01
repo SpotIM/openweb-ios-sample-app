@@ -83,7 +83,7 @@ private extension OWAnalyticsEventCreatorService {
         servicesProvider.authenticationManager()
             .currentAuthenticationLevelAvailability
             .subscribe(onNext: { [weak self] availability in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch availability {
                 case .level(let level):
                     switch level {
@@ -103,7 +103,7 @@ private extension OWAnalyticsEventCreatorService {
         servicesProvider.authenticationManager()
             .activeUserAvailability
             .subscribe(onNext: { [weak self] availability in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch availability {
                 case .notAvailable:
                     self.userId = ""
