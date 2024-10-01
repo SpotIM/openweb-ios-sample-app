@@ -49,7 +49,7 @@ fileprivate extension FontBook {
     }
 }
 
-fileprivate enum FontType {
+private enum FontType {
     case regular, medium, bold, light
 
     var fontName: String {
