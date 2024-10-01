@@ -87,6 +87,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - custom_rules
 
 # opt_in_rules:
+  - array_init
   - closure_end_indentation
   - closure_spacing
   - contains_over_filter_count
