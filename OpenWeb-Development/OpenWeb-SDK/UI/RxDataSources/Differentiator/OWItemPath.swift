@@ -11,11 +11,6 @@ import Foundation
 struct OWItemPath {
     let sectionIndex: Int
     let itemIndex: Int
-
-    init(sectionIndex: Int, itemIndex: Int) {
-        self.sectionIndex = sectionIndex
-        self.itemIndex = itemIndex
-    }
 }
 
 extension OWItemPath: Equatable {}
