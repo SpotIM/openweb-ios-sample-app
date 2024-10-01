@@ -1789,7 +1789,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         // This calls layoutIfNeeded to initial error loading comments cell, fixes height not always right
         willDisplayCell
             .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
-            .filter {  $0.0.cell.isKind(of: OWErrorStateCell.self) && $0.1 }
+            .filter { $0.0.cell.isKind(of: OWErrorStateCell.self) && $0.1 }
             .map { $0.0 }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { willDisplayCellEvent in

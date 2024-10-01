@@ -238,7 +238,7 @@ fileprivate extension OWCommentRatingViewModel {
                         guard let self = self else { return }
                         self.updateChangeLocally(rankChange: rankChange, rankUp: rankUp ?? 0, rankDown: rankDown ?? 0)
                     })
-                    .map { _ in rankChange}
+                    .map { _ in rankChange }
             }
 
         // Updating Network/Remote about rank change

@@ -239,7 +239,7 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowSubtitleSeperator
-            .map { $0 ? " · " : ""}
+            .map { $0 ? " · " : "" }
             .bind(to: seperatorBetweenSubtitleAndDateLabel.rx.text)
             .disposed(by: disposeBag)
 

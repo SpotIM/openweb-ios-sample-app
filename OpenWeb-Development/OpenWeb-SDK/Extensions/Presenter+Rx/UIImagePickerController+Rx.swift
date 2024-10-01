@@ -60,7 +60,7 @@ fileprivate extension Reactive where Base: UIImagePickerController {
     var didCancel: Observable<()> {
         return delegate
             .methodInvoked(#selector(UIImagePickerControllerDelegate.imagePickerControllerDidCancel(_:)))
-            .map {_ in () }
+            .map { _ in () }
     }
 
     func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {

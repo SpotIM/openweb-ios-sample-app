@@ -101,7 +101,7 @@ fileprivate extension OWCommentLabelView {
             .share(replay: 1)
 
         commentLabelSettingsObservable
-            .map {$0.iconUrl}
+            .map { $0.iconUrl }
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
                 self.iconImageView.setImage(with: url) { [weak self] (image, _) in
@@ -111,7 +111,7 @@ fileprivate extension OWCommentLabelView {
             .disposed(by: disposeBag)
 
         commentLabelSettingsObservable
-            .map {$0.text}
+            .map { $0.text }
             .bind(to: self.label.rx.text)
             .disposed(by: disposeBag)
 
