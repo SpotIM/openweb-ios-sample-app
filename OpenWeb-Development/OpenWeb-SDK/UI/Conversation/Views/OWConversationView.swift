@@ -35,7 +35,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
 
-    var toastView: OWToastView? = nil
+    var toastView: OWToastView?
 
     fileprivate lazy var filterTabsView: OWFilterTabsView = {
         return OWFilterTabsView(viewModel: self.viewModel.outputs.filterTabsVM)
@@ -132,9 +132,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
 
     fileprivate var loginPromptPortraitConstraints: [OWConstraint] = []
     fileprivate var loginPromptLandscapeConstraints: [OWConstraint] = []
-    fileprivate var summaryPortraitLeadingConstraint: OWConstraint? = nil
-    fileprivate var summaryLandscapeLeadingConstraint: OWConstraint? = nil
-    fileprivate var filterTabsHeightConstraint: OWConstraint? = nil
+    fileprivate var summaryPortraitLeadingConstraint: OWConstraint?
+    fileprivate var summaryLandscapeLeadingConstraint: OWConstraint?
+    fileprivate var filterTabsHeightConstraint: OWConstraint?
 
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()

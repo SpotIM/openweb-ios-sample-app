@@ -54,7 +54,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         }
     }
 
-    var toastView: OWToastView? = nil
+    var toastView: OWToastView?
 
     fileprivate var keyboardWasHidden = true
     fileprivate var toolbarBottomConstraint: OWConstraint?

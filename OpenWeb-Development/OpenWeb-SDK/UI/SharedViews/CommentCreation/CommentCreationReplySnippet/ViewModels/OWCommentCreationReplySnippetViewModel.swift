@@ -36,7 +36,7 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
 
     var replySnippetText: Observable<String> {
         guard let postId = OWManager.manager.postId else { return Observable.empty() }
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentCreationType {
         case .edit(let comment):
             if let parentId = comment.parentId,

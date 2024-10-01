@@ -75,7 +75,7 @@ class OWArticleDescriptionView: UIView {
         return UITapGestureRecognizer()
     }()
 
-    fileprivate var zeroHeightConstraint: OWConstraint? = nil
+    fileprivate var zeroHeightConstraint: OWConstraint?
     fileprivate var viewModel: OWArticleDescriptionViewModeling!
     fileprivate let disposeBag = DisposeBag()
 

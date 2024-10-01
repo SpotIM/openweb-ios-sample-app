@@ -51,8 +51,8 @@ class OWCommentView: UIView {
     fileprivate var viewModel: OWCommentViewModeling!
     fileprivate var disposedBag = DisposeBag()
 
-    fileprivate var commentHeaderBottomConstraint: OWConstraint? = nil
-    fileprivate var commentStatusZeroHeightConstraint: OWConstraint? = nil
+    fileprivate var commentHeaderBottomConstraint: OWConstraint?
+    fileprivate var commentStatusZeroHeightConstraint: OWConstraint?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

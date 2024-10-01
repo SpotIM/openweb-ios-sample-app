@@ -26,8 +26,8 @@ class OWCommentingCTAView: UIView {
             .wrapContent()
     }()
 
-    fileprivate var currentStyleView: UIView? = nil
-    fileprivate var heightConstraint: OWConstraint? = nil
+    fileprivate var currentStyleView: UIView?
+    fileprivate var heightConstraint: OWConstraint?
     fileprivate var viewModel: OWCommentingCTAViewModeling!
     fileprivate var disposeBag = DisposeBag()
 

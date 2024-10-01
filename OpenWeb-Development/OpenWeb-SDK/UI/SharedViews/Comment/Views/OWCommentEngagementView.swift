@@ -25,11 +25,11 @@ class OWCommentEngagementView: UIView {
     fileprivate var viewModel: OWCommentEngagementViewModeling!
     fileprivate var disposeBag: DisposeBag = DisposeBag()
 
-    fileprivate var replyZeroWidthConstraint: OWConstraint? = nil
-    fileprivate var votingTrailingConstraint: OWConstraint? = nil
-    fileprivate var votingLeadingConstraint: OWConstraint? = nil
-    fileprivate var shareLeadingWithVotingConstraint: OWConstraint? = nil
-    fileprivate var shareLeadingWithReplyConstraint: OWConstraint? = nil
+    fileprivate var replyZeroWidthConstraint: OWConstraint?
+    fileprivate var votingTrailingConstraint: OWConstraint?
+    fileprivate var votingLeadingConstraint: OWConstraint?
+    fileprivate var shareLeadingWithVotingConstraint: OWConstraint?
+    fileprivate var shareLeadingWithReplyConstraint: OWConstraint?
 
     fileprivate lazy var replyButton: UIButton = {
         return UIButton()

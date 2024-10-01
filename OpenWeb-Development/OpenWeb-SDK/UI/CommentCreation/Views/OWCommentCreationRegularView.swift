@@ -109,9 +109,9 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol, OWToas
         return OWUserMentionView(viewModel: viewModel.outputs.userMentionVM)
     }()
 
-    fileprivate var replySnippetHeightConstraint: OWConstraint? = nil
-    fileprivate var articleDescriptionHeightConstraint: OWConstraint? = nil
-    fileprivate var commentLabelsContainerHeightConstraint: OWConstraint? = nil
+    fileprivate var replySnippetHeightConstraint: OWConstraint?
+    fileprivate var articleDescriptionHeightConstraint: OWConstraint?
+    fileprivate var commentLabelsContainerHeightConstraint: OWConstraint?
     fileprivate let viewModel: OWCommentCreationRegularViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 

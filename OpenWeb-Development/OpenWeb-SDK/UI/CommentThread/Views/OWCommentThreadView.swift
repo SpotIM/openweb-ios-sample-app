@@ -26,7 +26,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
         static let separatorHeight: CGFloat = 1.0
     }
 
-    var toastView: OWToastView? = nil
+    var toastView: OWToastView?
 
     fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in

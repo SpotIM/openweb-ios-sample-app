@@ -116,7 +116,7 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
             .alpha(Metrics.submitDisabledOpacity)
     }()
 
-    fileprivate var textViewHeightConstraint: OWConstraint? = nil
+    fileprivate var textViewHeightConstraint: OWConstraint?
 
     fileprivate let viewModel: OWCommenterAppealViewViewModeling
     fileprivate var disposeBag: DisposeBag
