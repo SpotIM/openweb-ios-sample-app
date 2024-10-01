@@ -216,7 +216,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     var conversationCTAButtonTitle: Observable<String> {
         Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnlyObservable, isEmpty) { count, style, isReadOnly, isEmpty in
-            switch(style) {
+            switch style {
             case .regular, .custom:
                 return OWLocalizationManager.shared.localizedString(key: "ShowMoreComments")
             case .compact:
@@ -357,7 +357,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var summaryTopPadding: Observable<CGFloat> {
        preConversationStyleObservable
             .map { style in
-                switch(style) {
+                switch style {
                 case .ctaButtonOnly:
                     return 0
                 case .compact:
@@ -370,7 +370,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     var shouldShowComments: Observable<Bool> {
         Observable.combineLatest(preConversationStyleObservable, isEmpty, shouldShowErrorLoadingComments) { style, isEmpty, isError in
-            switch(style) {
+            switch style {
             case .regular, .custom:
                 return !isEmpty && !isError
             case .compact, .ctaWithSummary, .ctaButtonOnly:
@@ -401,7 +401,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                                  isEmpty) { shouldShow, style, isReadOnly, isEmpty in
             guard shouldShow else { return false }
             var isVisible = true
-            switch (style) {
+            switch style {
             case .regular, .custom:
                 isVisible = !isEmpty
             case .ctaButtonOnly, .ctaWithSummary:
@@ -421,7 +421,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             shouldShowErrorLoadingComments
         ) { style, isReadOnly, isEmpty, shouldShowErrorLoadingComments in
             guard shouldShowErrorLoadingComments == false else { return false }
-            switch (style) {
+            switch style {
             case .regular, .custom:
                 return true
             case .compact:
@@ -435,7 +435,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var shouldShowFooter: Observable<Bool> { // TODO: will get from config
         preConversationStyleObservable
             .map { style in
-                switch(style) {
+                switch style {
                 case .compact:
                     return false
                 default:
@@ -539,7 +539,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         let realtimeIndicatorUpdateStateObservable = Observable.combineLatest(viewInitialized,
                                                                               preConversationStyleObservable) { _, style -> Bool in
-            switch(style) {
+            switch style {
             case .regular, .custom:
                 return true
             case .compact, .ctaButtonOnly, .ctaWithSummary:
@@ -684,7 +684,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         )))
                     }
 
-                    if (index < comments.count - 1) {
+                    if index < comments.count - 1 {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
                     }
                 }
@@ -1101,7 +1101,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .completion:
                     self.sendEvent(for: .commentMenuClosed(commentId: commentVm.outputs.comment.id ?? ""))
                 case .selected(action: let action):
-                    switch (action.type) {
+                    switch action.type {
                     case OWCommentOptionsMenu.reportComment:
                         self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.openReportReasonChange.onNext(commentVm)

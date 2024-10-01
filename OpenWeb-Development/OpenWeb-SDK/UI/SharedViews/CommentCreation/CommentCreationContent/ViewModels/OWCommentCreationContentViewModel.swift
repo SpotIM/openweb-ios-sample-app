@@ -284,7 +284,7 @@ fileprivate extension OWCommentCreationContentViewModel {
             .activeUserAvailability
             .subscribe(onNext: { [weak self] availability in
                 guard let self = self else { return }
-                switch (availability) {
+                switch availability {
                 case .notAvailable:
                     self.avatarViewVM.inputs.userInput.onNext(nil)
                 case .user(let user):

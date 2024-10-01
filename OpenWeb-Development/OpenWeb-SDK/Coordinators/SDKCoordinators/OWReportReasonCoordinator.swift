@@ -393,7 +393,7 @@ fileprivate extension OWReportReasonCoordinator {
             }
             .do(onNext: { [weak self] commentId, userJustLoggedIn in
                 guard let self = self else { return }
-                if (userJustLoggedIn) {
+                if userJustLoggedIn {
                     self.servicesProvider
                         .actionsCallbacksNotifier()
                         .openCommentThread(commentId: commentId,

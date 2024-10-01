@@ -123,7 +123,7 @@ fileprivate extension OWPreConversationSummaryView {
         }
 
         self.isHidden = !viewModel.outputs.isVisible
-        if (!viewModel.outputs.isVisible) {
+        if !viewModel.outputs.isVisible {
             self.OWSnp.makeConstraints { make in
                 make.height.equalTo(0)
             }

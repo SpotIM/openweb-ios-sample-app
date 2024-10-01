@@ -127,7 +127,7 @@ fileprivate extension OWCommentThreadActionsCellViewModel {
         let extendedRepliesCount = min(visibleRepliesCount + Metrics.expandCommentsCount, totalRepliesCount)
 
         let commentThreadActionType: OWCommentThreadActionType
-        if (visibleRepliesCount == 0 && totalRepliesCount < Metrics.expandCommentsCount) {
+        if visibleRepliesCount == 0 && totalRepliesCount < Metrics.expandCommentsCount {
             commentThreadActionType = .viewMoreReplies(count: extendedRepliesCount)
         } else {
             commentThreadActionType = .viewMoreRepliesRange(from: extendedRepliesCount, to: totalRepliesCount)

@@ -180,7 +180,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             let localizationKey: String
             if user.isMuted {
                 localizationKey = "MutedCommentMessage"
-            } else if (model.reported && !isCommentOfActiveUser) {
+            } else if model.reported && !isCommentOfActiveUser {
                 localizationKey = "ReportedCommentMessage"
             } else if model.status == .block || model.status == .reject {
                 localizationKey = isCommentOfActiveUser ? "AuthorViolatedPolicyCommentMessage" : "ViolatedPolicyCommentMessage"

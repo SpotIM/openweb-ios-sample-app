@@ -48,7 +48,7 @@ class OWPermissionsService: OWPermissionsServicing {
         switch type {
         case .camera:
             let hasRequiredDescription = Bundle.main.hasCameraUsageDescription && Bundle.main.hasPhotoLibraryUsageDescription
-            if (!hasRequiredDescription) {
+            if !hasRequiredDescription {
                 let message = "Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file"
                 self.servicesProvider
                     .logger()

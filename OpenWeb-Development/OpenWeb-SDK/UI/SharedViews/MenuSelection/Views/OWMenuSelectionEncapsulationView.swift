@@ -40,7 +40,7 @@ class OWMenuSelectionEncapsulationView: UIView {
         self.addSubview(menuView)
         menuView.OWSnp.makeConstraints { make in
             constraintsMapper.forEach { option, constraintItem in
-                switch(option) {
+                switch option {
                 case .top: make.top.equalTo(constraintItem)
                 case .bottom: make.bottom.equalTo(constraintItem)
                 case .left: make.left.equalTo(constraintItem)

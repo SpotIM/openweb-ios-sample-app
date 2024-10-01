@@ -123,7 +123,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .unwrap()
             .withLatestFrom(_voteSymbolType) { rankUpCount, votesType in
                 let formattedRankCount = rankUpCount.kmFormatted
-                if (votesType == .recommend) {
+                if votesType == .recommend {
                     let recommendText = OWLocalizationManager.shared.localizedString(key: "Recommend")
                     return "\(recommendText) (\(formattedRankCount))"
                 } else {
@@ -146,16 +146,16 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
                 guard let convConfig = config.conversation
                 else { return voteTypesToShow }
 
-                if (convConfig.disableVoteUp == true) {
+                if convConfig.disableVoteUp == true {
                     voteTypesToShow.removeAll { $0 == .voteUp }
                 }
-                if (convConfig.disableVoteDown == true) {
+                if convConfig.disableVoteDown == true {
                     voteTypesToShow.removeAll { $0 == .voteDown }
                 }
                 return voteTypesToShow
             }
             .withLatestFrom(_voteSymbolType) { voteTypes, availableTypes -> [OWVoteType] in
-                if([OWVotesType.heart, OWVotesType.recommend].contains(availableTypes)) {
+                if [OWVotesType.heart, OWVotesType.recommend].contains(availableTypes) {
                     return voteTypes.filter { $0 == .voteUp }
                 }
                 return voteTypes

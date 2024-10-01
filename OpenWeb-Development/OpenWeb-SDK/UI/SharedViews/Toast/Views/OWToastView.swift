@@ -96,7 +96,7 @@ fileprivate extension OWToastView {
             make.leading.equalTo(messageLabel.OWSnp.trailing).offset(Metrics.actionLeadingPadding)
             make.top.bottom.equalToSuperview()
             make.trailing.equalToSuperview().inset(viewModel.outputs.showAction ? Metrics.horizontalPadding : 0)
-            if (!viewModel.outputs.showAction) {
+            if !viewModel.outputs.showAction {
                 make.width.equalTo(0)
             }
         }

@@ -31,7 +31,7 @@ class OWSubscriberBadgeService: OWSubscriberBadgeServicing {
         case custom
 
         func buildUrl(config: OWSubscriberBadgeConfiguration) -> URL {
-            switch(self) {
+            switch self {
             case .regular:
                 return URL(string: "\(URLS.subscriberBadgeFontAwesomeBaseUrl)regular/\(config.name).png")!
             case .solid:

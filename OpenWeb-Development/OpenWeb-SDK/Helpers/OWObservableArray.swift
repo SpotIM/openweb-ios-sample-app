@@ -211,14 +211,14 @@ extension OWObservableArray {
         elements.removeAll(keepingCapacity: true)
         elements.insert(contentsOf: newElements, at: 0)
         setupObserversForElementsUpdater()
-        if (originalElements.count == 0) {
+        if originalElements.count == 0 {
             arrayDidChange(OWArrayChangeEvent(inserted: Array(0..<newElements.count)))
-        } else if (originalElements.count < newElements.count) {
+        } else if originalElements.count < newElements.count {
             arrayDidChange(OWArrayChangeEvent(updated: Array(0..<originalElements.count)))
             arrayDidChange(OWArrayChangeEvent(inserted: Array(originalElements.count..<newElements.count)))
         } else {
             arrayDidChange(OWArrayChangeEvent(updated: Array(0..<newElements.count)))
-            if (newElements.count != originalElements.count) {
+            if newElements.count != originalElements.count {
                 arrayDidChange(OWArrayChangeEvent(deleted: Array(newElements.count..<originalElements.count)))
             }
         }
