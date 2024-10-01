@@ -1506,7 +1506,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         .outputs.tapOutput
                         .map { (commentThreadActionsCellsVm.outputs.commentPresentationData,
                                 commentThreadActionsCellsVm.outputs.mode,
-                                commentThreadActionsCellsVm.outputs.commentActionsVM.inputs.isLoading) }
+                                commentThreadActionsCellsVm.outputs.commentActionsVM.inputs.isLoading)
+                        }
                 }
 
                 return Observable.merge(threadActionsClickObservable)

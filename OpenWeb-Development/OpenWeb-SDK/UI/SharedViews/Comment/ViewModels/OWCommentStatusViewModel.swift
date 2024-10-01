@@ -68,7 +68,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 case .appealed: return UIImage(spNamed: "appealIcon", supportDarkMode: true)
                 case .appealRejected: return UIImage(spNamed: "appealRejectedIcon", supportDarkMode: false)
                 }
-            }
+        }
             .unwrap()
     }()
 
@@ -115,7 +115,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 }
 
                 return messageAttributedString
-            }
+        }
             .unwrap()
     }
 
