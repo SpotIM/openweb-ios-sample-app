@@ -66,7 +66,7 @@ class CommonCreatorService: CommonCreatorServicing {
 
     func commentThreadCommentId() -> String {
         let commentId = self.userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
-        if (commentId.isEmpty) {
+        if commentId.isEmpty {
             // If value is empty on user defaults, we want to use the default comment ID
             return OWCommentThreadSettings.defaultCommentId
         } else {
@@ -85,7 +85,7 @@ class CommonCreatorService: CommonCreatorServicing {
 
         var section = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
                                                                           defaultValue: nil)
-        if (section == nil || section?.isEmpty == true) {
+        if section == nil || section?.isEmpty == true {
             section = self.getSectionFromPreset(for: postId)
         }
 
