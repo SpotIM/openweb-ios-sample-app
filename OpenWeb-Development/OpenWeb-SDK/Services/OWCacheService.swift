@@ -32,9 +32,9 @@ enum OWCacheExpirationStrategy {
 }
 
 class OWCacheService<Key: Hashable, Value: Any> {
-    fileprivate let cache = NSCache<OWWrappedKey, OWWrappedValue>()
-    fileprivate let expirationStrategy: OWCacheExpirationStrategy
-    fileprivate let dateProvider: () -> Date
+    private let cache = NSCache<OWWrappedKey, OWWrappedValue>()
+    private let expirationStrategy: OWCacheExpirationStrategy
+    private let dateProvider: () -> Date
 
     init(dateProvider: @escaping () -> Date = Date.init,
          expirationStrategy: OWCacheExpirationStrategy = .time(lifetime: DefaultMetrics.defaultEntryLifetime),
@@ -106,7 +106,7 @@ extension OWCacheService {
 }
 
 // OWWrappedKey - Key for NSCache must be from NSObject, that's why we use WrappedKey
-fileprivate extension OWCacheService {
+private extension OWCacheService {
     class OWWrappedKey: NSObject {
         let key: Key
 
@@ -128,7 +128,7 @@ fileprivate extension OWCacheService {
 }
 
 // OWWrappedValue - We wrapped the value so we can add expiration strategy
-fileprivate extension OWCacheService {
+private extension OWCacheService {
     class OWWrappedValue {
         let value: Value
         let expiration: OWWrappedValueExpirationStrategy

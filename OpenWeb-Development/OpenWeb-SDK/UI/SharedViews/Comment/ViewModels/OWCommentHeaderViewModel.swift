@@ -45,28 +45,28 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var inputs: OWCommentHeaderViewModelingInputs { return self }
     var outputs: OWCommentHeaderViewModelingOutputs { return self }
 
-    fileprivate let disposedBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let userBadgeService: OWUserBadgeServicing
+    private let disposedBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let userBadgeService: OWUserBadgeServicing
 
-    fileprivate let _model = BehaviorSubject<OWComment?>(value: nil)
-    fileprivate var _unwrappedModel: Observable<OWComment> {
+    private let _model = BehaviorSubject<OWComment?>(value: nil)
+    private var _unwrappedModel: Observable<OWComment> {
         _model.unwrap()
     }
 
-    fileprivate var user: SPUser?
-    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    fileprivate var _unwrappedUser: Observable<SPUser> {
+    private var user: SPUser?
+    private let _user = BehaviorSubject<SPUser?>(value: nil)
+    private var _unwrappedUser: Observable<SPUser> {
         _user.unwrap()
     }
 
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
+    private var _openProfile = PublishSubject<OWOpenProfileType>()
     var openProfile: Observable<OWOpenProfileType> {
         _openProfile
             .asObservable()
     }
 
-    fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
+    private let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
     var isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
 
@@ -141,7 +141,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
-    fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
+    private var conversationConfig: Observable<SPConfigurationConversation> {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationConversation? in
@@ -150,7 +150,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .unwrap()
     }
 
-    fileprivate var _badgeType: Observable<OWUserBadgeType> {
+    private var _badgeType: Observable<OWUserBadgeType> {
         _unwrappedUser
             .flatMap { [weak self] user -> Observable<OWUserBadgeType> in
                 guard let self = self else { return .empty() }
@@ -205,7 +205,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 }
 
-fileprivate extension OWCommentHeaderViewModel {
+private extension OWCommentHeaderViewModel {
     func setupObservers() {
         shouldShowHiddenCommentMessage
             .bind(to: avatarVM.inputs.shouldBlockAvatar)

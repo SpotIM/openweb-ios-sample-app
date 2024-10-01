@@ -43,16 +43,16 @@ protocol OWCommentCreationLightViewViewModeling {
 }
 
 class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModeling, OWCommentCreationLightViewViewModelingInputs, OWCommentCreationLightViewViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleFontSize: CGFloat = 15.0
     }
 
     var inputs: OWCommentCreationLightViewViewModelingInputs { return self }
     var outputs: OWCommentCreationLightViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationData: OWCommentCreationRequiredData
 
     lazy var userMentionVM: OWUserMentionViewViewModeling = {
         return OWUserMentionViewVM(servicesProvider: servicesProvider)
@@ -82,7 +82,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
     var commentCreationError = PublishSubject<Void>()
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    private lazy var postId = OWManager.manager.postId
 
     var commentType: OWCommentCreationTypeInternal
 
@@ -206,7 +206,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     }
 }
 
-fileprivate extension OWCommentCreationLightViewViewModel {
+private extension OWCommentCreationLightViewViewModel {
     func setupObservers() {
         commentCreationContentVM.outputs.textViewVM.outputs.replaceData
             .bind(to: userMentionVM.inputs.replaceData)

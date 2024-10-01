@@ -36,11 +36,11 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     var inputs: OWCommentStatusViewModelingInputs { return self }
     var outputs: OWCommentStatusViewModelingOutputs { return self }
 
-    fileprivate let _status = BehaviorSubject<OWCommentStatusType>(value: .none)
-    fileprivate let commentId: OWCommentId
+    private let _status = BehaviorSubject<OWCommentStatusType>(value: .none)
+    private let commentId: OWCommentId
 
-    fileprivate let sharedServicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let sharedServicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
     init (status: OWCommentStatusType, commentId: OWCommentId, sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServicesProvider = sharedServicesProvider
@@ -145,7 +145,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     }
 }
 
-fileprivate extension OWCommentStatusViewModel {
+private extension OWCommentStatusViewModel {
     func setupObservers() {
         sharedServicesProvider.commentStatusUpdaterService()
             .statusUpdate

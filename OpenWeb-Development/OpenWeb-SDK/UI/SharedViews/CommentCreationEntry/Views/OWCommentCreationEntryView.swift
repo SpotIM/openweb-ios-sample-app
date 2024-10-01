@@ -17,7 +17,7 @@ class OWCommentCreationEntryView: UIView {
         static let textViewBottomPadding: CGFloat = 12
     }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let userAvatarSize: CGFloat = 40
         static let containerLeadingOffset: CGFloat = 10
         static let labelInsetTop: CGFloat = 11
@@ -27,13 +27,13 @@ class OWCommentCreationEntryView: UIView {
         static let labelIdentifier = "comment_creation_entry_label_id"
     }
 
-    fileprivate lazy var userAvatarView: OWAvatarView = {
+    private lazy var userAvatarView: OWAvatarView = {
         let avatarView = OWAvatarView()
         avatarView.backgroundColor = .clear
         return avatarView
     }()
 
-    fileprivate lazy var labelContainer: UIView = {
+    private lazy var labelContainer: UIView = {
         return UIView()
             .border(
                 width: 1.0,
@@ -44,7 +44,7 @@ class OWCommentCreationEntryView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var label: UILabel = {
+    private lazy var label: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .text(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
@@ -52,14 +52,14 @@ class OWCommentCreationEntryView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()
         labelContainer.addGestureRecognizer(tapGesture)
         return tapGesture
     }()
 
-    fileprivate var viewModel: OWCommentCreationEntryViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWCommentCreationEntryViewModeling!
+    private var disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -80,7 +80,7 @@ class OWCommentCreationEntryView: UIView {
     }
 }
 
-fileprivate extension OWCommentCreationEntryView {
+private extension OWCommentCreationEntryView {
     func updateCustomUI() {
         viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(label)
         viewModel.inputs.triggerCustomizeContainerViewUI.onNext(labelContainer)

@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWCommentThreadActionsView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_thread_actions_view_id_"
         static let actionViewIdentifier = "comment_thread_actions_view_action_view_id_"
         static let actionLabelIdentifier = "comment_thread_actions_view_action_label_id_"
@@ -20,8 +20,8 @@ class OWCommentThreadActionsView: UIView {
         static let textToImageSpacing: CGFloat = 6.5
     }
 
-    fileprivate var viewModel: OWCommentThreadActionsViewModeling!
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
+    private var viewModel: OWCommentThreadActionsViewModeling!
+    private var disposeBag: DisposeBag = DisposeBag()
 
     init() {
         super.init(frame: .zero)
@@ -44,14 +44,14 @@ class OWCommentThreadActionsView: UIView {
         self.disclosureImageView.isHidden = false
     }
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         self.addGestureRecognizer(tap)
         self.isUserInteractionEnabled = true
         return tap
     }()
 
-    fileprivate lazy var actionView: UIView = {
+    private lazy var actionView: UIView = {
         let view = UIView()
 
         view.addSubview(actionLabel)
@@ -77,25 +77,25 @@ class OWCommentThreadActionsView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var actionLabel: UILabel = {
+    private lazy var actionLabel: UILabel = {
         return UILabel()
             .userInteractionEnabled(false)
             .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var disclosureImageView: UIImageView = {
+    private lazy var disclosureImageView: UIImageView = {
         return UIImageView()
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var activityIndicator: UIActivityIndicatorView = {
+    private lazy var activityIndicator: UIActivityIndicatorView = {
         return UIActivityIndicatorView(style: .gray)
             .isHidden(true)
     }()
 }
 
-fileprivate extension OWCommentThreadActionsView {
+private extension OWCommentThreadActionsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier + viewModel.outputs.commentId
         actionView.accessibilityIdentifier = Metrics.actionViewIdentifier + viewModel.outputs.commentId

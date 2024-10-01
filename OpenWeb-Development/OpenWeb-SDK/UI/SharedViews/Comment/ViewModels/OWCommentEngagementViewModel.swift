@@ -42,10 +42,10 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     var outputs: OWCommentEngagementViewModelingOutputs { return self }
 
     let votingVM: OWCommentRatingViewModeling
-    fileprivate let sharedServiceProvider: OWSharedServicesProviding
+    private let sharedServiceProvider: OWSharedServicesProviding
 
-    fileprivate let commentId: String
-    fileprivate let parentCommentId: String?
+    private let commentId: String
+    private let parentCommentId: String?
 
     var replyClicked = PublishSubject<Void>()
     var replyClickedOutput: Observable<Void> {
@@ -113,7 +113,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }()
 
-    fileprivate let customizationsLayer: OWCustomizations
+    private let customizationsLayer: OWCustomizations
 
     init(comment: OWComment,
          sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,

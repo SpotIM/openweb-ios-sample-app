@@ -10,7 +10,7 @@ import UIKit
 
 class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let avatarSize: CGFloat = 36.0
         static let userNameWidthRatio: CGFloat = 1 / 6
         static let userNameHeight: CGFloat = 13
@@ -26,9 +26,9 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         static let skeletonViewIdentifier = "comment_skeleton_view_id"
     }
 
-    fileprivate var viewModel: OWCommentSkeletonShimmeringCellViewModeling!
+    private var viewModel: OWCommentSkeletonShimmeringCellViewModeling!
 
-    fileprivate lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
+    private lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
         view.enforceSemanticAttribute()
 
@@ -92,7 +92,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var avatarSkeleton: UIView = {
+    private lazy var avatarSkeleton: UIView = {
         let view = UIView()
             .corner(radius: Metrics.avatarSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
@@ -101,7 +101,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var userNameSkeleton: UIView = {
+    private lazy var userNameSkeleton: UIView = {
         let view = UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -109,7 +109,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var timeSkeleton: UIView = {
+    private lazy var timeSkeleton: UIView = {
         let view = UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -117,7 +117,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var messageLinesSkeleton: [UIView] = {
+    private lazy var messageLinesSkeleton: [UIView] = {
         let color = OWColorPalette.shared.color(type: .skeletonColor,
                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
@@ -159,7 +159,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWCommentSkeletonShimmeringCell {
+private extension OWCommentSkeletonShimmeringCell {
     func setupUI() {
         self.selectionStyle = .none
         backgroundColor = .clear

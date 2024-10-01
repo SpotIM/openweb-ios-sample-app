@@ -11,7 +11,7 @@ import RxSwift
 import UIKit
 
 class OWGifPreviewView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_gif_preview_id"
         static let gifViewIdentifier = "comment_gif_preview_gif_view_id"
         static let removeButtonIdentifier = "comment_gif_preview_remove_button_id"
@@ -21,11 +21,11 @@ class OWGifPreviewView: UIView {
         static let removeButtonSize: CGFloat = 45.0
     }
 
-    fileprivate lazy var gifView: GifWebView = {
+    private lazy var gifView: GifWebView = {
         return GifWebView()
     }()
 
-    fileprivate lazy var removeButton: UIButton = {
+    private lazy var removeButton: UIButton = {
         let button = UIButton()
             .image(UIImage(spNamed: "removeImageIcon", supportDarkMode: false), state: .normal)
         button.contentHorizontalAlignment = .right
@@ -33,8 +33,8 @@ class OWGifPreviewView: UIView {
         return button
     }()
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWGifPreviewViewModeling
+    private let disposeBag = DisposeBag()
+    private let viewModel: OWGifPreviewViewModeling
 
     init(with viewModel: OWGifPreviewViewModeling) {
         self.viewModel = viewModel
@@ -50,7 +50,7 @@ class OWGifPreviewView: UIView {
     }
 }
 
-fileprivate extension OWGifPreviewView {
+private extension OWGifPreviewView {
     func setupUI() {
         self.enforceSemanticAttribute()
 

@@ -11,14 +11,14 @@ import RxSwift
 import RxCocoa
 
 class OWCommentThreadVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
 
     }
 
-    fileprivate let viewModel: OWCommentThreadViewModeling
+    private let viewModel: OWCommentThreadViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var commentThreadView: OWCommentThreadView = {
+    private lazy var commentThreadView: OWCommentThreadView = {
         let commentThreadView = OWCommentThreadView(viewModel: viewModel.outputs.commentThreadViewVM)
         return commentThreadView
     }()
@@ -52,7 +52,7 @@ class OWCommentThreadVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 }
 
-fileprivate extension OWCommentThreadVC {
+private extension OWCommentThreadVC {
     func setupViews() {
         self.title = viewModel.outputs.title
         let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()

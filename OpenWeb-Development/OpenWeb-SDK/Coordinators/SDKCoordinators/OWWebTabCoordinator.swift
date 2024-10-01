@@ -25,11 +25,11 @@ enum OWWebTabCoordinatorResult: OWCoordinatorResultProtocol {
 
 class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
 
-    fileprivate let router: OWRoutering?
-    fileprivate let options: OWWebTabOptions
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate var viewableMode: OWViewableMode!
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let router: OWRoutering?
+    private let options: OWWebTabOptions
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private var viewableMode: OWViewableMode!
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .webView)
     }()
 
@@ -86,7 +86,7 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
     }
 }
 
-fileprivate extension OWWebTabCoordinator {
+private extension OWWebTabCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWWebTabViewViewModeling) {
         let closeObservable = viewModel.outputs.closeTapped
             .voidify()

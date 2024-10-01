@@ -36,15 +36,15 @@ class OWOrientationService: OWOrientationServicing {
         return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
     }
 
-    fileprivate var _viewableMode: OWViewableMode = .partOfFlow
+    private var _viewableMode: OWViewableMode = .partOfFlow
 
-    fileprivate var _orientation = BehaviorSubject<OWOrientation?>(value: nil)
-    fileprivate var _currentOrientation: OWOrientation = .portrait
-    fileprivate var _enforcement: OWOrientationEnforcement = .enableAll
-    fileprivate let disposeBag = DisposeBag()
+    private var _orientation = BehaviorSubject<OWOrientation?>(value: nil)
+    private var _currentOrientation: OWOrientation = .portrait
+    private var _enforcement: OWOrientationEnforcement = .enableAll
+    private let disposeBag = DisposeBag()
 
-    fileprivate let notificationCenter: NotificationCenter
-    fileprivate let uiDevice: UIDevice
+    private let notificationCenter: NotificationCenter
+    private let uiDevice: UIDevice
 
     init(notificationCenter: NotificationCenter = NotificationCenter.default,
          uiDevice: UIDevice = UIDevice.current) {
@@ -60,7 +60,7 @@ class OWOrientationService: OWOrientationServicing {
     }
 }
 
-fileprivate extension OWOrientationService {
+private extension OWOrientationService {
 
     func setupObservers() {
         orientation

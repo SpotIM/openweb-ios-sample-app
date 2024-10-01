@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWMenuSelectionEncapsulationView: UIView {
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         tap.delegate = self
         self.addGestureRecognizer(tap)
@@ -19,10 +19,10 @@ class OWMenuSelectionEncapsulationView: UIView {
         return tap
     }()
 
-    fileprivate var menuView: OWMenuSelectionView
-    fileprivate var constraintsMapper: [OWMenuConstraintOption: OWConstraintItem]
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let menuVM: OWMenuSelectionViewModeling
+    private var menuView: OWMenuSelectionView
+    private var constraintsMapper: [OWMenuConstraintOption: OWConstraintItem]
+    private let disposeBag = DisposeBag()
+    private let menuVM: OWMenuSelectionViewModeling
 
     init(menuVM: OWMenuSelectionViewModeling, constraintsMapper: [OWMenuConstraintOption: OWConstraintItem]) {
         self.menuVM = menuVM
@@ -51,7 +51,7 @@ class OWMenuSelectionEncapsulationView: UIView {
     }
 }
 
-fileprivate extension OWMenuSelectionEncapsulationView {
+private extension OWMenuSelectionEncapsulationView {
     func setupObservers() {
         tapGesture.rx.event
             .subscribe(onNext: { [weak self] _ in

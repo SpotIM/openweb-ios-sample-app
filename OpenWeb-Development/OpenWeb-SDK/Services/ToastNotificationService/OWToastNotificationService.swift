@@ -16,19 +16,19 @@ protocol OWToastNotificationServicing {
 }
 
 class OWToastNotificationService: OWToastNotificationServicing {
-    fileprivate let queue = OWQueue<OWToastNotificationPresentData>()
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var mapToastToActionPublishSubject: [String: PublishSubject<Void>?] = [:]
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
-    fileprivate var newToastDisposeBag: DisposeBag = DisposeBag()
-    fileprivate var _toastToShow = BehaviorSubject<OWToastNotificationCombinedData?>(value: nil)
+    private let queue = OWQueue<OWToastNotificationPresentData>()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private var mapToastToActionPublishSubject: [String: PublishSubject<Void>?] = [:]
+    private var disposeBag: DisposeBag = DisposeBag()
+    private var newToastDisposeBag: DisposeBag = DisposeBag()
+    private var _toastToShow = BehaviorSubject<OWToastNotificationCombinedData?>(value: nil)
     var toastToShow: Observable<OWToastNotificationCombinedData?> {
         return _toastToShow
             .asObservable()
     }
 
-    fileprivate var triggerWaitNextToastInQueue = PublishSubject<Void>()
-    fileprivate var presentToastFromQueue = PublishSubject<Void>()
+    private var triggerWaitNextToastInQueue = PublishSubject<Void>()
+    private var presentToastFromQueue = PublishSubject<Void>()
 
     var clearCurrentToast = PublishSubject<Void>()
 
@@ -45,7 +45,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
     }
 }
 
-fileprivate extension OWToastNotificationService {
+private extension OWToastNotificationService {
     func setupObservers() {
         clearCurrentToast
             .withLatestFrom(toastToShow)

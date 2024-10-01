@@ -12,9 +12,9 @@ import RxSwift
 protocol OWAuthenticationRenewerServicing {}
 
 class OWAuthenticationRenewerService: OWAuthenticationRenewerServicing {
-    fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
-    fileprivate let netwokAPI: OWNetworkAPIProtocol
-    fileprivate let disposeBag = DisposeBag()
+    private let appLifeCycle: OWRxAppLifeCycleProtocol
+    private let netwokAPI: OWNetworkAPIProtocol
+    private let disposeBag = DisposeBag()
 
     init(appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle(),
          netwokAPI: OWNetworkAPIProtocol = OWSharedServicesProvider.shared.networkAPI()) {
@@ -25,7 +25,7 @@ class OWAuthenticationRenewerService: OWAuthenticationRenewerServicing {
     }
 }
 
-fileprivate extension OWAuthenticationRenewerService {
+private extension OWAuthenticationRenewerService {
     func setupObservers() {
         appLifeCycle.willEnterForeground
             .flatMapLatest { [weak self] _ -> Observable<Void> in

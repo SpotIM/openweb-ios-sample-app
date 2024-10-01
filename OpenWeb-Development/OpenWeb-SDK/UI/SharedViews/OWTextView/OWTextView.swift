@@ -13,7 +13,7 @@ import RxCocoa
 import NaturalLanguage
 
 class OWTextView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let suffixIdentifier = "_text_view_view_id"
         static let textViewSuffixIdentifier = "_textview_id"
         static let placeholderLabelSuffixIdentifier = "_placeholder_label_id"
@@ -38,9 +38,9 @@ class OWTextView: UIView {
     }
 
     let viewModel: OWTextViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var textView: UITextView = {
+    private lazy var textView: UITextView = {
         let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
         let textView = UITextView()
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -59,7 +59,7 @@ class OWTextView: UIView {
         return textView
     }()
 
-    fileprivate lazy var charectersCountLabel: UILabel = {
+    private lazy var charectersCountLabel: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(typography: .footnoteText))
                 .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -67,7 +67,7 @@ class OWTextView: UIView {
                 .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var textViewPlaceholder: UILabel = {
+    private lazy var textViewPlaceholder: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -100,7 +100,7 @@ extension OWTextView: UITextViewDelegate {
     }
 }
 
-fileprivate extension OWTextView {
+private extension OWTextView {
     func applyAccessibility(prefixId: String) {
         self.accessibilityIdentifier = prefixId + Metrics.suffixIdentifier
         textView.accessibilityIdentifier = prefixId + Metrics.textViewSuffixIdentifier
@@ -419,7 +419,7 @@ fileprivate extension OWTextView {
     }
 }
 
-fileprivate extension UITextView {
+private extension UITextView {
     func newHeight(withBaseHeight baseHeight: CGFloat, maxLines: Int) -> CGFloat {
         // Calculate the required size of the textview
         let fixedWidth = frame.size.width

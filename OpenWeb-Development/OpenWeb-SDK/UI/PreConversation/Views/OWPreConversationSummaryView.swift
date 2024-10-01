@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWPreConversationSummaryView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let counterLeading: CGFloat = 8
         static let nextArrowLeading: CGFloat = 10
         static let onlineViewingUsersBottomLeading: CGFloat = 8
@@ -49,15 +49,15 @@ class OWPreConversationSummaryView: UIView {
             .wrapContent(axis: .horizontal)
     }()
 
-    fileprivate lazy var nextArrow: UIImageView = {
+    private lazy var nextArrow: UIImageView = {
         return UIImageView()
             .image(UIImage(spNamed: "nextArrow", supportDarkMode: true)!)
             .enforceSemanticAttribute()
             .wrapContent(axis: .horizontal)
     }()
 
-    fileprivate var viewModel: OWPreConversationSummaryViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWPreConversationSummaryViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWPreConversationSummaryViewModeling) {
         self.viewModel = viewModel
@@ -72,7 +72,7 @@ class OWPreConversationSummaryView: UIView {
     }
 }
 
-fileprivate extension OWPreConversationSummaryView {
+private extension OWPreConversationSummaryView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier

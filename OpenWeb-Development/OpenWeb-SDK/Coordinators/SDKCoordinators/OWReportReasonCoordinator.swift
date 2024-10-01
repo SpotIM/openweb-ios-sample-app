@@ -26,21 +26,21 @@ enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResult> {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let fadeDuration: CGFloat = 0.3
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
-    fileprivate let reportData: OWReportReasonsRequiredData
-    fileprivate let router: OWRoutering?
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let reportData: OWReportReasonsRequiredData
+    private let router: OWRoutering?
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private let servicesProvider: OWSharedServicesProviding
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .reportReason)
     }()
 
-    fileprivate let reportReasonPopped = PublishSubject<Void>()
-    fileprivate var isUserSubmitted: Bool = false
+    private let reportReasonPopped = PublishSubject<Void>()
+    private var isUserSubmitted: Bool = false
 
     let presentationalMode: OWPresentationalModeCompact
     var reportReasonView: UIView?
@@ -135,7 +135,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     }
 }
 
-fileprivate extension OWReportReasonCoordinator {
+private extension OWReportReasonCoordinator {
     // swiftlint:disable function_body_length
     func setupObservers(forViewModel viewModel: OWReportReasonViewViewModeling) {
         // ReportReaon OWTextViewVM - General

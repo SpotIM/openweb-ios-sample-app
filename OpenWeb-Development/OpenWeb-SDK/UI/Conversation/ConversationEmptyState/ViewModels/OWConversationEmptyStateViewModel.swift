@@ -36,7 +36,7 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
     var inputs: OWConversationEmptyStateViewModelingInputs { return self }
     var outputs: OWConversationEmptyStateViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let emptyIcon: String = "emptyConversation-icon"
         static let closedAndEmptyIcon: String = "closedAndEmptyConversation-icon"
         static let emptyIconIdentifier = "empty_state_view_empty_icon_id"
@@ -44,8 +44,8 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
     }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
-    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    private let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
 
     var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
@@ -65,7 +65,7 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
     var conversationFetched = PublishSubject<SPConversationReadRM>()
     var isReadOnly = PublishSubject<Bool>()
     var isEmpty = PublishSubject<Bool>()
-    fileprivate let _contentType = BehaviorSubject<OWConversationContentType?>(value: nil)
+    private let _contentType = BehaviorSubject<OWConversationContentType?>(value: nil)
     lazy var contentType: Observable<OWConversationContentType> = {
         return _contentType
             .unwrap()
@@ -111,14 +111,14 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
             .asObservable()
     }()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init() {
         setupObservers()
     }
 }
 
-fileprivate extension OWConversationEmptyStateViewModel {
+private extension OWConversationEmptyStateViewModel {
     func setupObservers() {
         Observable.combineLatest(isReadOnly, isEmpty) { isReadOnly, isEmpty -> OWConversationContentType? in
             if isEmpty {

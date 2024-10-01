@@ -11,8 +11,8 @@ import UIKit
 @IBDesignable
 internal class SPAnimatedButton: UIButton {
 
-    fileprivate var imageShape: CAShapeLayer!
-    fileprivate var selectedImageShape: CAShapeLayer!
+    private var imageShape: CAShapeLayer!
+    private var selectedImageShape: CAShapeLayer!
 
     var image: UIImage? {
         didSet {
@@ -36,7 +36,7 @@ internal class SPAnimatedButton: UIButton {
 
     // swiftlint:disable operator_usage_whitespace
 
-    fileprivate var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
+    private var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
             if isSelected {
                 selectedImageShape.fillColor = imageColorOn.cgColor
@@ -51,16 +51,16 @@ internal class SPAnimatedButton: UIButton {
         }
     }
 
-    fileprivate var circleShape: CAShapeLayer!
-    fileprivate var circleMask: CAShapeLayer!
-    fileprivate var circleColor: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
+    private var circleShape: CAShapeLayer!
+    private var circleMask: CAShapeLayer!
+    private var circleColor: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
             circleShape.fillColor = circleColor.cgColor
         }
     }
 
-    fileprivate var lines: [CAShapeLayer]!
-    fileprivate var lineColor: UIColor! = UIColor(red: 250/255, green: 120/255, blue: 68/255, alpha: 1.0) {
+    private var lines: [CAShapeLayer]!
+    private var lineColor: UIColor! = UIColor(red: 250/255, green: 120/255, blue: 68/255, alpha: 1.0) {
         didSet {
             for line in lines {
                 line.strokeColor = lineColor.cgColor
@@ -70,14 +70,14 @@ internal class SPAnimatedButton: UIButton {
 
     // swiftlint:enable operator_usage_whitespace
 
-    fileprivate let circleTransform = CAKeyframeAnimation(keyPath: "transform")
-    fileprivate let circleMaskTransform = CAKeyframeAnimation(keyPath: "transform")
-    fileprivate let lineStrokeStart = CAKeyframeAnimation(keyPath: "strokeStart")
-    fileprivate let lineStrokeEnd = CAKeyframeAnimation(keyPath: "strokeEnd")
-    fileprivate let lineOpacity = CAKeyframeAnimation(keyPath: "opacity")
-    fileprivate let imageTransform = CAKeyframeAnimation(keyPath: "transform")
+    private let circleTransform = CAKeyframeAnimation(keyPath: "transform")
+    private let circleMaskTransform = CAKeyframeAnimation(keyPath: "transform")
+    private let lineStrokeStart = CAKeyframeAnimation(keyPath: "strokeStart")
+    private let lineStrokeEnd = CAKeyframeAnimation(keyPath: "strokeEnd")
+    private let lineOpacity = CAKeyframeAnimation(keyPath: "opacity")
+    private let imageTransform = CAKeyframeAnimation(keyPath: "transform")
 
-    fileprivate var duration: Double = 1.0 {
+    private var duration: Double = 1.0 {
         didSet {
             circleTransform.duration = 0.333 * duration // 0.0333 * 10
             circleMaskTransform.duration = 0.333 * duration // 0.0333 * 10
@@ -128,7 +128,7 @@ internal class SPAnimatedButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    fileprivate func createLayers(buttonInset insets: UIEdgeInsets) { // swiftlint:disable:this function_body_length
+    private func createLayers(buttonInset insets: UIEdgeInsets) { // swiftlint:disable:this function_body_length
         self.layer.sublayers = nil
         let imageFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height).inset(by: insets)
 
@@ -377,7 +377,7 @@ internal class SPAnimatedButton: UIButton {
         ]
     }
 
-    fileprivate func addTargets() {
+    private func addTargets() {
         // ===============
         // add target
         // ===============

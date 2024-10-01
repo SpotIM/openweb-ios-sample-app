@@ -16,11 +16,11 @@ protocol OWStatusBarStyleServicing {
 }
 
 class OWStatusBarStyleService: OWStatusBarStyleServicing {
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var _currentStyle: UIStatusBarStyle = .default
-    fileprivate let _forceStatusBarUpdate = PublishSubject<Void>()
-    fileprivate var _enforcement: OWStatusBarEnforcement = .matchTheme
-    fileprivate let disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private var _currentStyle: UIStatusBarStyle = .default
+    private let _forceStatusBarUpdate = PublishSubject<Void>()
+    private var _enforcement: OWStatusBarEnforcement = .matchTheme
+    private let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -46,7 +46,7 @@ class OWStatusBarStyleService: OWStatusBarStyleServicing {
     }
 }
 
-fileprivate extension OWStatusBarStyleService {
+private extension OWStatusBarStyleService {
     func setupObservers() {
         let themeService = servicesProvider.themeStyleService()
 

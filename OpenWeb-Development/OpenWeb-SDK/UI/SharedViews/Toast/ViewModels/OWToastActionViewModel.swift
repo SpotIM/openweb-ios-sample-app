@@ -31,14 +31,14 @@ class OWToastActionViewModel: OWToastActionViewModeling, OWToastActionViewModeli
     var icon: UIImage?
     var action: OWToastAction
 
-    fileprivate var _color = BehaviorSubject<UIColor>(value: OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
+    private var _color = BehaviorSubject<UIColor>(value: OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
     var color: Observable<UIColor> {
         _color
             .asObservable()
     }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var disposeBag: DisposeBag
+    private let servicesProvider: OWSharedServicesProviding
+    private var disposeBag: DisposeBag
 
     init(action: OWToastAction, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -51,7 +51,7 @@ class OWToastActionViewModel: OWToastActionViewModeling, OWToastActionViewModeli
     }
 }
 
-fileprivate extension OWToastActionViewModel {
+private extension OWToastActionViewModel {
     func title(for action: OWToastAction) -> String {
         switch action {
         case .learnMore:

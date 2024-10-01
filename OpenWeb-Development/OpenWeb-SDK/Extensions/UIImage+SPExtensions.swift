@@ -29,7 +29,7 @@ internal extension UIImage {
     }
 }
 
-fileprivate extension OWImageName {
+private extension OWImageName {
     var dark: String {
         appending("-dark")
     }

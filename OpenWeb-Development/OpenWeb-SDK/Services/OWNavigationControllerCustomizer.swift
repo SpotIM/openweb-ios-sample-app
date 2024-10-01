@@ -21,10 +21,10 @@ class OWNavigationControllerCustomizer: OWNavigationControllerCustomizing {
         static let animationTimeForLargeTitle: Double = 0.15
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let customizationsLayer: OWCustomizations
-    fileprivate weak var activeNavigationController: UINavigationController?
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let customizationsLayer: OWCustomizations
+    private weak var activeNavigationController: UINavigationController?
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
@@ -55,7 +55,7 @@ class OWNavigationControllerCustomizer: OWNavigationControllerCustomizing {
     }
 }
 
-fileprivate extension OWNavigationControllerCustomizer {
+private extension OWNavigationControllerCustomizer {
 
     func setupObservers() {
         servicesProvider.themeStyleService()

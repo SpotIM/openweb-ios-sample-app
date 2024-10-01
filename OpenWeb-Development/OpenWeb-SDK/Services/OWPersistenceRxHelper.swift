@@ -37,7 +37,7 @@ class OWPersistenceRxHelper: OWPersistenceRxHelperProtocol {
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
 
-    fileprivate var rxObjects: [String: OWRxHelperModel] = [:]
+    private var rxObjects: [String: OWRxHelperModel] = [:]
 
     init(decoder: JSONDecoder, encoder: JSONEncoder) {
         self.decoder = decoder
@@ -76,7 +76,7 @@ class OWPersistenceRxHelper: OWPersistenceRxHelperProtocol {
     }
 }
 
-fileprivate extension OWPersistenceRxHelper {
+private extension OWPersistenceRxHelper {
     func getBinderObservable<T>(key: OWRxHelperKey<T>) -> Observable<Data?> {
         guard let observer = rxObject(key: key).binderObservable else {
             let observer = Observable<Data?>.create { _ in

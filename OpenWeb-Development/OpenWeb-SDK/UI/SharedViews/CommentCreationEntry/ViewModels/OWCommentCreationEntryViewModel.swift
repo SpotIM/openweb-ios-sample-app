@@ -36,8 +36,8 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling,
     var outputs: OWCommentCreationEntryViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
-    fileprivate let _triggerCustomizeContainerViewUI = BehaviorSubject<UIView?>(value: nil)
+    private let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeContainerViewUI = BehaviorSubject<UIView?>(value: nil)
 
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
     var triggerCustomizeContainerViewUI = PublishSubject<UIView>()
@@ -54,7 +54,7 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling,
             .asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     var imageURLProvider: OWImageProviding
     var sharedServiceProvider: OWSharedServicesProviding
@@ -78,7 +78,7 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling,
     }()
 }
 
-fileprivate extension OWCommentCreationEntryViewModel {
+private extension OWCommentCreationEntryViewModel {
     func setupObservers() {
         sharedServiceProvider.authenticationManager()
             .activeUserAvailability

@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWAppealLabelView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let cornerRadius: CGFloat = 5
         static let borderWidth: CGFloat = 1
         static let padding: CGFloat = 15
@@ -26,15 +26,15 @@ class OWAppealLabelView: UIView {
         static let labelIdentifier = "appeal_label_label_id"
     }
 
-    fileprivate let disposeBag: DisposeBag
-    fileprivate let viewModel: OWAppealLabelViewModeling
+    private let disposeBag: DisposeBag
+    private let viewModel: OWAppealLabelViewModeling
 
-    fileprivate lazy var skeletonContentView: UIView = {
+    private lazy var skeletonContentView: UIView = {
         return UIView()
             .corner(radius: Metrics.skeletonCornerRadius)
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor, themeStyle: .light))
     }()
-    fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
+    private lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
         view.enforceSemanticAttribute()
         view.addSubview(skeletonContentView)
@@ -45,19 +45,19 @@ class OWAppealLabelView: UIView {
         return view
     }()
 
-    fileprivate lazy var defaultLabel: UILabel = {
+    private lazy var defaultLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
     }()
 
-    fileprivate lazy var icon: UIImageView = {
+    private lazy var icon: UIImageView = {
         return UIImageView()
     }()
-    fileprivate lazy var label: UILabel = {
+    private lazy var label: UILabel = {
         return UILabel()
             .numberOfLines(0)
     }()
-    fileprivate lazy var iconAndLabelView: UIView = {
+    private lazy var iconAndLabelView: UIView = {
         let view = UIView()
         view.addSubview(icon)
         icon.OWSnp.makeConstraints { make in
@@ -89,7 +89,7 @@ class OWAppealLabelView: UIView {
     }
 }
 
-fileprivate extension OWAppealLabelView {
+private extension OWAppealLabelView {
     func setupViews() {
         self.enforceSemanticAttribute()
         self.corner(radius: Metrics.cornerRadius)

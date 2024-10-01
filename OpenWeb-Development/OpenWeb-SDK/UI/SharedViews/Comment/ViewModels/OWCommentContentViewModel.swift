@@ -32,7 +32,7 @@ protocol OWCommentContentViewModeling {
 class OWCommentContentViewModel: OWCommentContentViewModeling,
                                  OWCommentContentViewModelingInputs,
                                  OWCommentContentViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let commentMediaMaxHeight: Float = 226.0
         static let depth0Offset: CGFloat = 0.0
         static let depth1Offset: CGFloat = 25.0
@@ -43,9 +43,9 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var inputs: OWCommentContentViewModelingInputs { return self }
     var outputs: OWCommentContentViewModelingOutputs { return self }
 
-    fileprivate let _comment = BehaviorSubject<OWComment?>(value: nil)
-    fileprivate let lineLimit: Int
-    fileprivate let imageProvider: OWImageProviding
+    private let _comment = BehaviorSubject<OWComment?>(value: nil)
+    private let lineLimit: Int
+    private let imageProvider: OWImageProviding
 
     var collapsableLabelViewModel: OWCommentTextViewModeling
 
@@ -108,7 +108,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             .asObservable()
     }
 
-    fileprivate lazy var _commentMediaOriginalSize: Observable<CGSize> = {
+    private lazy var _commentMediaOriginalSize: Observable<CGSize> = {
         _comment
             .map { comment in
                 if let gif = comment?.gif {
@@ -122,7 +122,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             .asObservable()
     }()
 
-    fileprivate lazy var _commentLeadingOffset: Observable<CGFloat> = {
+    private lazy var _commentLeadingOffset: Observable<CGFloat> = {
         _comment
             .unwrap()
             .map { [weak self] comment in
@@ -133,7 +133,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     }()
 }
 
-fileprivate extension OWCommentContentViewModel {
+private extension OWCommentContentViewModel {
     func leadingOffset(perCommentDepth depth: Int) -> CGFloat {
         switch depth {
         case 0: return Metrics.depth0Offset

@@ -32,10 +32,10 @@ class OWCommentOptionsViewModel: OWCommentOptionsViewModeling,
     var inputs: OWCommentOptionsViewModelingInputs { return self }
     var outputs: OWCommentOptionsViewModelingOutputs { return self }
 
-    fileprivate let disposedBag = DisposeBag()
-    fileprivate let sharedServiceProvider: OWSharedServicesProviding
+    private let disposedBag = DisposeBag()
+    private let sharedServiceProvider: OWSharedServicesProviding
 
-    fileprivate var user: SPUser
+    private var user: SPUser
 
     var isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
 

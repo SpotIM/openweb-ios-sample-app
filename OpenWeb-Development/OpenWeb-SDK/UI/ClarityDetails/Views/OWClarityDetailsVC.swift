@@ -11,13 +11,13 @@ import RxSwift
 import RxCocoa
 
 class OWClarityDetailsVC: UIViewController {
-    fileprivate lazy var clarityDetailsView: OWClarityDetailsView = {
+    private lazy var clarityDetailsView: OWClarityDetailsView = {
         return OWClarityDetailsView(viewModel: viewModel.outputs.clarityDetailsViewViewModel)
     }()
 
-    fileprivate weak var dismissNavigationController: UINavigationController?
+    private weak var dismissNavigationController: UINavigationController?
 
-    fileprivate let viewModel: OWClarityDetailsViewModeling
+    private let viewModel: OWClarityDetailsViewModeling
     let disposeBag: DisposeBag = DisposeBag()
 
     init(viewModel: OWClarityDetailsViewModeling) {
@@ -62,7 +62,7 @@ class OWClarityDetailsVC: UIViewController {
     }
 }
 
-fileprivate extension OWClarityDetailsVC {
+private extension OWClarityDetailsVC {
     func setupViews() {
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light)
 

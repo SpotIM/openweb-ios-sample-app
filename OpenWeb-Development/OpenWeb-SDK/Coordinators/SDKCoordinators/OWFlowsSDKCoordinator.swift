@@ -11,9 +11,9 @@ import UIKit
 import RxSwift
 
 class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
-    fileprivate var router: OWRoutering!
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let uiDevice: UIDevice
+    private var router: OWRoutering!
+    private let servicesProvider: OWSharedServicesProviding
+    private let uiDevice: UIDevice
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          uiDevice: UIDevice = UIDevice.current) {
@@ -141,7 +141,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 #endif
 }
 
-fileprivate extension OWFlowsSDKCoordinator {
+private extension OWFlowsSDKCoordinator {
     func prepareRouter(presentationalMode: OWPresentationalMode, presentAnimated: Bool) {
         invalidateExistingFlows()
 

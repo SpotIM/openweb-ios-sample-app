@@ -40,9 +40,9 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
     var outputs: OWArticleDescriptionViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
-    fileprivate let _triggerCustomizeAuthorLabelUI = BehaviorSubject<UILabel?>(value: nil)
-    fileprivate let _triggerCustomizeImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    private let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeAuthorLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
 
     var tap = PublishSubject<Void>()
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
@@ -67,8 +67,8 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
             .asObservable()
     }
 
-    fileprivate let _articleExtraData = BehaviorSubject<OWArticleExtraData?>(value: nil)
-    fileprivate lazy var articleExtraData: Observable<OWArticleExtraData> = {
+    private let _articleExtraData = BehaviorSubject<OWArticleExtraData?>(value: nil)
+    private lazy var articleExtraData: Observable<OWArticleExtraData> = {
         self._articleExtraData
             .unwrap()
     }()
@@ -99,14 +99,14 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
         return tap.asObservable()
     }
 
-    fileprivate var _shouldShow = BehaviorSubject(value: false)
+    private var _shouldShow = BehaviorSubject(value: false)
     var shouldShow: Observable<Bool> {
         _shouldShow
             .asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -114,7 +114,7 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
     }
 }
 
-fileprivate extension OWArticleDescriptionViewModel {
+private extension OWArticleDescriptionViewModel {
     func setupObservers() {
         triggerCustomizeTitleLabelUI
             .bind(to: _triggerCustomizeTitleLabelUI)

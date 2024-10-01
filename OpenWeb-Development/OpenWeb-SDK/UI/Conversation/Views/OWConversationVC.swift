@@ -11,18 +11,18 @@ import RxSwift
 import RxCocoa
 
 class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let closeButtonImageName: String = "closeButton"
     }
 
-    fileprivate let viewModel: OWConversationViewModeling
+    private let viewModel: OWConversationViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var conversationView: OWConversationView = {
+    private lazy var conversationView: OWConversationView = {
         return OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         let closeButton = UIButton()
             .image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
             .horizontalAlignment(.left)
@@ -61,7 +61,7 @@ class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 }
 
-fileprivate extension OWConversationVC {
+private extension OWConversationVC {
     func setupUI() {
         self.title = viewModel.outputs.title
         let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()

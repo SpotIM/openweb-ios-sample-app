@@ -71,43 +71,43 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     var configure: OWSharedServicesProviderConfigure { return self }
 
-    fileprivate lazy var _profileService: OWProfileServicing = {
+    private lazy var _profileService: OWProfileServicing = {
         return OWProfileService(sharedServicesProvider: self)
     }()
 
-    fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
+    private lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
     }()
 
-    fileprivate lazy var _orientationService: OWOrientationService = {
+    private lazy var _orientationService: OWOrientationService = {
         return OWOrientationService()
     }()
 
-    fileprivate lazy var _conversationSizeService: OWConversationSizeServicing = {
+    private lazy var _conversationSizeService: OWConversationSizeServicing = {
         return OWConversationSizeService()
     }()
 
-    fileprivate lazy var _gifService: OWGifServicing = {
+    private lazy var _gifService: OWGifServicing = {
         return OWGifService(sharedServicesProvider: self)
     }()
 
-    fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
+    private lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
         return OWStatusBarStyleService()
     }()
 
-    fileprivate lazy var _imageCacheService: OWCacheService<String, UIImage> = {
+    private lazy var _imageCacheService: OWCacheService<String, UIImage> = {
         return OWCacheService<String, UIImage>()
     }()
 
-    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData> = {
+    private lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData> = {
         return OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData>()
     }()
 
-    fileprivate lazy var _lastCommentTypeInMemoryCacheService: OWCacheService<OWPostId, OWCachedLastCommentType> = {
+    private lazy var _lastCommentTypeInMemoryCacheService: OWCacheService<OWPostId, OWCachedLastCommentType> = {
         return OWCacheService<OWPostId, OWCachedLastCommentType>()
     }()
 
-    fileprivate lazy var _networkAPI: OWNetworkAPIProtocol = {
+    private lazy var _networkAPI: OWNetworkAPIProtocol = {
         /*
          By default we create the network once.
          If we will want to "reset" everything when a new spotIfy provided, we can re-create the network entirely.
@@ -117,129 +117,129 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWNetworkAPI(environment: OWEnvironment.currentEnvironment)
     }()
 
-    fileprivate lazy var _logger: OWLogger = {
+    private lazy var _logger: OWLogger = {
         let logger = OWLogger(logLevel: OWLogLevel.defaultLevelToUse, logMethods: OWLogMethod.defaultMethodsToUse)
         logger.log(level: .verbose, "Logger initialized")
         return logger
     }()
 
-    fileprivate lazy var _appLifeCycle: OWRxAppLifeCycleProtocol = {
+    private lazy var _appLifeCycle: OWRxAppLifeCycleProtocol = {
         return OWRxAppLifeCycle()
     }()
 
-    fileprivate lazy var _keychain: OWKeychainProtocol = {
+    private lazy var _keychain: OWKeychainProtocol = {
         return OWKeychain(servicesProvider: self)
     }()
 
-    fileprivate lazy var _analyticsService: OWAnalyticsServicing = {
+    private lazy var _analyticsService: OWAnalyticsServicing = {
         return OWAnalyticsService()
     }()
 
-    fileprivate lazy var _analyticsEventCreatorService: OWAnalyticsEventCreatorServicing = {
+    private lazy var _analyticsEventCreatorService: OWAnalyticsEventCreatorServicing = {
         return OWAnalyticsEventCreatorService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _userDefaults: OWUserDefaultsProtocol = {
+    private lazy var _userDefaults: OWUserDefaultsProtocol = {
         return OWUserDefaults(servicesProvider: self)
     }()
 
-    fileprivate lazy var _realtimeService: OWRealtimeServicing = {
+    private lazy var _realtimeService: OWRealtimeServicing = {
         return OWRealtimeService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _spotConfigurationService: OWSpotConfigurationServicing = {
+    private lazy var _spotConfigurationService: OWSpotConfigurationServicing = {
         return OWSpotConfigurationService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _skeletonShimmeringService: OWSkeletonShimmeringServicing = {
+    private lazy var _skeletonShimmeringService: OWSkeletonShimmeringServicing = {
         return OWSkeletonShimmeringService(config: OWSkeletonShimmeringConfiguration.default)
     }()
 
-    fileprivate lazy var _authorizationRecoveryService: OWAuthorizationRecoveryServicing = {
+    private lazy var _authorizationRecoveryService: OWAuthorizationRecoveryServicing = {
         return OWAuthorizationRecoveryService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _timeMeasuringService: OWTimeMeasuringServicing = {
+    private lazy var _timeMeasuringService: OWTimeMeasuringServicing = {
         return OWTimeMeasuringService()
     }()
 
-    fileprivate lazy var _sortDictateService: OWSortDictateServicing = {
+    private lazy var _sortDictateService: OWSortDictateServicing = {
         return OWSortDictateService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _filterTabsDictateService: OWFilterTabsDictateServicing = {
+    private lazy var _filterTabsDictateService: OWFilterTabsDictateServicing = {
         return OWFilterTabsDictateService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _authenticationManager: OWAuthenticationManagerProtocol = {
+    private lazy var _authenticationManager: OWAuthenticationManagerProtocol = {
         return OWAuthenticationManager(servicesProvider: self)
     }()
 
-    fileprivate lazy var _blockerService: OWBlockerServicing = {
+    private lazy var _blockerService: OWBlockerServicing = {
         return OWBlockerService()
     }()
 
-    fileprivate lazy var _commentsService: OWCommentsServicing = {
+    private lazy var _commentsService: OWCommentsServicing = {
         return OWCommentsService()
     }()
 
-    fileprivate lazy var _reportedCommentsService: OWReportedCommentsServicing = {
+    private lazy var _reportedCommentsService: OWReportedCommentsServicing = {
         return OWReportedCommentsService()
     }()
 
-    fileprivate lazy var _usersService: OWUsersServicing = {
+    private lazy var _usersService: OWUsersServicing = {
         return OWUsersService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _presenterService: OWPresenterServicing = {
+    private lazy var _presenterService: OWPresenterServicing = {
         return OWPresenterService(sharedServicesProvider: self)
     }()
 
-    fileprivate lazy var _commentCreationRequestsService: OWCommentCreationRequestsServicing = {
+    private lazy var _commentCreationRequestsService: OWCommentCreationRequestsServicing = {
         return OWCommentCreationRequestsService()
     }()
 
-    fileprivate lazy var _activeArticleService: OWActiveArticleServicing = {
+    private lazy var _activeArticleService: OWActiveArticleServicing = {
         return OWActiveArticleService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _conversationUpdaterService: OWConversationUpdaterServicing = {
+    private lazy var _conversationUpdaterService: OWConversationUpdaterServicing = {
         return OWConversationUpdaterService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _localCommentDataPopulator: OWLocalCommentDataPopulating = {
+    private lazy var _localCommentDataPopulator: OWLocalCommentDataPopulating = {
         return OWLocalCommentDataPopulator()
     }()
 
-    fileprivate lazy var _navigationControllerCustomizer: OWNavigationControllerCustomizing = {
+    private lazy var _navigationControllerCustomizer: OWNavigationControllerCustomizing = {
         return OWNavigationControllerCustomizer(servicesProvider: self)
     }()
 
-    fileprivate lazy var _realtimeIndicatorServicre: OWRealtimeIndicatorServicing = {
+    private lazy var _realtimeIndicatorServicre: OWRealtimeIndicatorServicing = {
         return OWRealtimeIndicatorService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _permissionsService: OWPermissionsServicing = {
+    private lazy var _permissionsService: OWPermissionsServicing = {
         return OWPermissionsService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _pageViewIdHolder: OWPageViewIdHolderProtocol = {
+    private lazy var _pageViewIdHolder: OWPageViewIdHolderProtocol = {
         return OWPageViewIdHolder()
     }()
 
-    fileprivate lazy var _toastNotificationService: OWToastNotificationServicing = {
+    private lazy var _toastNotificationService: OWToastNotificationServicing = {
         return OWToastNotificationService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _commentStatusUpdaterService: OWCommentStatusUpdaterServicing = {
+    private lazy var _commentStatusUpdaterService: OWCommentStatusUpdaterServicing = {
         return OWCommentStatusUpdaterService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _networkAvailabilityService: OWNetworkAvailabilityServicing = {
+    private lazy var _networkAvailabilityService: OWNetworkAvailabilityServicing = {
         return OWNetworkAvailabilityService.shared
     }()
 
-    fileprivate lazy var _actionsCallbacksNotifier: OWActionsCallbacksNotifierServicing = {
+    private lazy var _actionsCallbacksNotifier: OWActionsCallbacksNotifierServicing = {
         return OWActionsCallbacksNotifierService()
     }()
 
@@ -450,7 +450,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     }
 }
 
-fileprivate extension OWSharedServicesProvider {
+private extension OWSharedServicesProvider {
     func configure(forSpotId spotId: OWSpotId) {
         OWLocalizationManager.shared.configure(forSpotId: spotId)
     }

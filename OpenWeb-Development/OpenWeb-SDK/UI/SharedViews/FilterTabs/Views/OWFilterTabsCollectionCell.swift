@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWFilterTabsCollectionCell: UICollectionViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let margin: CGFloat = 10
         static let cornerRadius: CGFloat = 3
         static let numberOfLines = 1
@@ -19,7 +19,7 @@ class OWFilterTabsCollectionCell: UICollectionViewCell {
         static let accessibilitySurfix = "filter_tabs_collection_cell_id"
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .textAlignment(.center)
@@ -28,13 +28,13 @@ class OWFilterTabsCollectionCell: UICollectionViewCell {
             .lineBreakMode(.byClipping)
     }()
 
-    fileprivate lazy var mainView: UIView = {
+    private lazy var mainView: UIView = {
         return UIView()
             .corner(radius: Metrics.cornerRadius)
     }()
 
-    fileprivate var disposeBag: DisposeBag!
-    fileprivate var viewModel: OWFilterTabsCollectionCellViewModel!
+    private var disposeBag: DisposeBag!
+    private var viewModel: OWFilterTabsCollectionCellViewModel!
 
     override func configure(with viewModel: OWCellViewModel) {
         guard let viewModel = viewModel as? OWFilterTabsCollectionCellViewModel else { return }
@@ -59,7 +59,7 @@ class OWFilterTabsCollectionCell: UICollectionViewCell {
     }
 }
 
-fileprivate extension OWFilterTabsCollectionCell {
+private extension OWFilterTabsCollectionCell {
     func setupUI() {
         contentView.addSubview(mainView)
         mainView.OWSnp.makeConstraints { make in

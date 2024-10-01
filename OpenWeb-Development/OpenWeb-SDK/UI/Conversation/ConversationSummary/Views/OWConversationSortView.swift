@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWConversationSortView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalMarginBetweenSortLabelAndSortIcon: CGFloat = 2
         static let verticalMarginBetweenSortLabelAndSortButton: CGFloat = 5
 
@@ -20,10 +20,10 @@ class OWConversationSortView: UIView {
         static let sortViewIdentifier = "conversation_sort_view_id"
     }
 
-    fileprivate var viewModel: OWConversationSortViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWConversationSortViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var sortByLabel: UILabel = {
+    private lazy var sortByLabel: UILabel = {
         return UILabel()
             .wrapContent()
             .text(OWLocalizationManager.shared.localizedString(key: "SortBy"))
@@ -32,13 +32,13 @@ class OWConversationSortView: UIView {
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var sortIcon: UIImageView = {
+    private lazy var sortIcon: UIImageView = {
         return UIImageView()
             .wrapContent()
             .image(UIImage(spNamed: "sort")!)
     }()
 
-    fileprivate lazy var sortLabel: UILabel = {
+    private lazy var sortLabel: UILabel = {
         return UILabel()
             .wrapContent()
             .font(OWFontBook.shared.font(typography: .bodyContext))
@@ -46,7 +46,7 @@ class OWConversationSortView: UIView {
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var sortView: UIView = {
+    private lazy var sortView: UIView = {
         let view = UIView()
         view.addGestureRecognizer(tapGesture)
 
@@ -67,7 +67,7 @@ class OWConversationSortView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()
         return tapGesture
     }()
@@ -85,7 +85,7 @@ class OWConversationSortView: UIView {
     }
 }
 
-fileprivate extension OWConversationSortView {
+private extension OWConversationSortView {
     func setupUI() {
         // Setup sort by label
         self.addSubview(sortByLabel)

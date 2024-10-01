@@ -34,11 +34,11 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
     var inputs: OWTestingRxTableViewAnimationsViewViewModelingInputs { return self }
     var outputs: OWTestingRxTableViewAnimationsViewViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayForTableViewAnimation: Int = 50 // In ms
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var redCellsGeneratorVM: OWTestingCellsGeneratorViewModeling = {
         let requiredData = OWTestingCellsGeneratorRequiredData(color: .red, title: "Red")
@@ -55,10 +55,10 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
         return OWTestingCellsGeneratorViewModel(requiredData: requiredData)
     }()
 
-    fileprivate var cellsIdToIndexMapper = [String: Int]()
+    private var cellsIdToIndexMapper = [String: Int]()
 
-    fileprivate var _cellsViewModels = OWObservableArray<OWTestingRxTableViewCellOption>()
-    fileprivate var cellsViewModels: Observable<[OWTestingRxTableViewCellOption]> {
+    private var _cellsViewModels = OWObservableArray<OWTestingRxTableViewCellOption>()
+    private var cellsViewModels: Observable<[OWTestingRxTableViewCellOption]> {
         return _cellsViewModels
             .rx_elements()
             .asObservable()
@@ -72,7 +72,7 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
             }
     }
 
-    fileprivate let _performTableViewAnimation = PublishSubject<Void>()
+    private let _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
             .asObservable()
@@ -83,7 +83,7 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
     }
 }
 
-fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
+private extension OWTestingRxTableViewAnimationsViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Update cells id to index mapper

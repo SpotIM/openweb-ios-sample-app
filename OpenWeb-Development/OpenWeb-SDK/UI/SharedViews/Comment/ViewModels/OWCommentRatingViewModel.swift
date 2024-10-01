@@ -42,18 +42,18 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     var inputs: OWCommentRatingViewModelingInputs { return self }
     var outputs: OWCommentRatingViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let sharedServiceProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
+    private let sharedServiceProvider: OWSharedServicesProviding
 
     var rankChanged = PublishSubject<SPRankChange>()
     var tapRankUp = PublishSubject<Void>()
     var tapRankDown = PublishSubject<Void>()
 
-    fileprivate let _rankUp = BehaviorSubject<Int?>(value: nil)
-    fileprivate let _rankDown = BehaviorSubject<Int?>(value: nil)
-    fileprivate let _rankedByUser = BehaviorSubject<Int?>(value: nil)
+    private let _rankUp = BehaviorSubject<Int?>(value: nil)
+    private let _rankDown = BehaviorSubject<Int?>(value: nil)
+    private let _rankedByUser = BehaviorSubject<Int?>(value: nil)
 
-    fileprivate var _voteSymbolType: Observable<OWVotesType> {
+    private var _voteSymbolType: Observable<OWVotesType> {
         self.sharedServiceProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> OWVotesType in
@@ -88,7 +88,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
         return Observable.merge(rankUpTriggeredObservable, rankDownTriggeredObservable)
     }
 
-    fileprivate let commentId: String
+    private let commentId: String
 
     init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
@@ -97,7 +97,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
         commentId = ""
     }
 
-    fileprivate let customizationsLayer: OWCustomizations
+    private let customizationsLayer: OWCustomizations
 
     init(model: OWCommentVotingModel,
          commentId: String,
@@ -226,7 +226,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     }
 }
 
-fileprivate extension OWCommentRatingViewModel {
+private extension OWCommentRatingViewModel {
     func setupObservers() {
         let rankChangedLocallyObservable: Observable<SPRankChange> = rankChanged
             .flatMapLatest { [weak self] rankChange -> Observable<SPRankChange> in

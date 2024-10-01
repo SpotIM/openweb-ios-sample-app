@@ -10,20 +10,20 @@ import UIKit
 import RxSwift
 
 class OWSpacerView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let height: CGFloat = 1.0
         static let verticalPadding: CGFloat = 16
         static let horizontalPadding: CGFloat = 16
         static let horizontalCommunityPadding: CGFloat = 12
     }
 
-    fileprivate lazy var seperatorView: UIView = {
+    private lazy var seperatorView: UIView = {
        return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
     }()
 
-    fileprivate var viewModel: OWSpacerViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWSpacerViewModeling!
+    private var disposeBag = DisposeBag()
 
     init(with viewModel: OWSpacerViewModeling) {
         self.viewModel = viewModel

@@ -54,16 +54,16 @@ extension OWRoutering {
 }
 
 class OWRouter: NSObject, OWRoutering {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let transitionDuration = 0.5
         static let childAnimationDuration = 0.3
     }
-    fileprivate var completions: [UIViewController: PublishSubject<Void>]
-    fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
+    private var completions: [UIViewController: PublishSubject<Void>]
+    private var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
-    fileprivate let presentationalMode: OWPresentationalModeExtended
-    fileprivate var navDisposedBag: DisposeBag!
-    fileprivate lazy var pushOverFullScreenAnimationTransitioning = OWPushOverFullScreenAnimationTransitioning()
+    private let presentationalMode: OWPresentationalModeExtended
+    private var navDisposedBag: DisposeBag!
+    private lazy var pushOverFullScreenAnimationTransitioning = OWPushOverFullScreenAnimationTransitioning()
     var rootViewController: UIViewController? {
         return navigationController?.viewControllers.first
     }
@@ -249,7 +249,7 @@ extension OWRouter: UINavigationControllerDelegate {
     }
 }
 
-fileprivate extension OWRouter {
+private extension OWRouter {
     func runCompletion(for controller: UIViewController) {
         guard let completion = completions[controller] else {
             return

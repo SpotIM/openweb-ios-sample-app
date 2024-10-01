@@ -13,10 +13,10 @@ import RxSwift
 
 class OWUserStatusAutomationVC: UIViewController {
 
-    fileprivate let viewModel: OWUserStatusAutomationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWUserStatusAutomationViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var userStatusAutomationView: OWUserStatusAutomationView = {
+    private lazy var userStatusAutomationView: OWUserStatusAutomationView = {
         return OWUserStatusAutomationView(viewModel: viewModel.outputs.viewVM)
     }()
 
@@ -40,7 +40,7 @@ class OWUserStatusAutomationVC: UIViewController {
     }
 }
 
-fileprivate extension OWUserStatusAutomationVC {
+private extension OWUserStatusAutomationVC {
     func setupUI() {
         view.addSubview(userStatusAutomationView)
         userStatusAutomationView.OWSnp.makeConstraints { make in

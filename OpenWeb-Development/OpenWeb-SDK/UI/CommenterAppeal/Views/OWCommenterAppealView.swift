@@ -12,7 +12,7 @@ import RxCocoa
 import RxSwift
 
 class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let closeButtonSize: CGFloat = 28
         static let navigationTitleTrailingPadding: CGFloat = 8
         static let navigationBottomPadding: CGFloat = 10
@@ -38,7 +38,7 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
         static let submitButtonIdentifier = "commenter_appeal_submit_buton_id"
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .text(OWLocalizationManager.shared.localizedString(key: "CommenterAppealTitle"))
             .font(OWFontBook.shared.font(typography: .bodyContext))
@@ -46,12 +46,12 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
     }()
 
-    fileprivate lazy var topContainerView: UIView = {
+    private lazy var topContainerView: UIView = {
         let topContainerView = UIView()
             .enforceSemanticAttribute()
 
@@ -72,31 +72,31 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
         return topContainerView
     }()
 
-    fileprivate lazy var tableViewReasons: UITableView = {
+    private lazy var tableViewReasons: UITableView = {
         return UITableView(frame: .zero, style: .grouped)
             .separatorStyle(.none)
             .registerCell(cellClass: OWAppealCell.self)
             .backgroundColor(.clear)
     }()
 
-    fileprivate lazy var footerView: UIView = {
+    private lazy var footerView: UIView = {
         let footerView = UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
         footerView.apply(shadow: .standard, direction: .up)
         return footerView
     }()
-    fileprivate lazy var textView: OWTextView = {
+    private lazy var textView: OWTextView = {
         return OWTextView(viewModel: viewModel.outputs.textViewVM,
                           prefixIdentifier: Metrics.prefixIdentifier)
                 .alpha(0)
     }()
-    fileprivate lazy var footerButtonsStackView: UIStackView = {
+    private lazy var footerButtonsStackView: UIStackView = {
         return UIStackView()
             .spacing(Metrics.buttonsPadding)
             .axis(.horizontal)
             .distribution(.fillEqually)
     }()
-    fileprivate lazy var cancelButton: UIButton = {
+    private lazy var cancelButton: UIButton = {
         return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
@@ -105,7 +105,7 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
             .withPadding(Metrics.buttonTextPadding)
             .corner(radius: Metrics.buttonsRadius)
     }()
-    fileprivate lazy var submitButton: OWLoaderButton = {
+    private lazy var submitButton: OWLoaderButton = {
         return OWLoaderButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)
@@ -116,10 +116,10 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
             .alpha(Metrics.submitDisabledOpacity)
     }()
 
-    fileprivate var textViewHeightConstraint: OWConstraint?
+    private var textViewHeightConstraint: OWConstraint?
 
-    fileprivate let viewModel: OWCommenterAppealViewViewModeling
-    fileprivate var disposeBag: DisposeBag
+    private let viewModel: OWCommenterAppealViewViewModeling
+    private var disposeBag: DisposeBag
 
     init(viewModel: OWCommenterAppealViewViewModeling) {
         self.viewModel = viewModel
@@ -136,7 +136,7 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWCommenterAppealView {
+private extension OWCommenterAppealView {
     func setupViews() {
         self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()

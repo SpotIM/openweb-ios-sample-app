@@ -36,15 +36,15 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     var inputs: OWFilterTabsViewViewModelingInputs { return self }
     var outputs: OWFilterTabsViewViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let numberOfSkeletons = 6
         static let debounceCellViewModelsDuration = 10
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let sourceType: OWViewSourceType
-    fileprivate let isLoading = BehaviorSubject<Bool>(value: true)
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let sourceType: OWViewSourceType
+    private let isLoading = BehaviorSubject<Bool>(value: true)
 
     var reloadTabs = PublishSubject<Void>()
     var selectTabAll = PublishSubject<Void>()
@@ -85,7 +85,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
             .asObservable()
     }
 
-    fileprivate lazy var hasMoreThanOneTab: Observable<Bool> = {
+    private lazy var hasMoreThanOneTab: Observable<Bool> = {
         return cellsViewModels
             .map { $0.count > 1 }
             // This is to prevent animation hide and show for a moment when tabs are initialized
@@ -120,7 +120,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
         self.setupObservers()
     }
 
-    fileprivate var cellsViewModels: Observable<[OWFilterTabsCellOption]> {
+    private var cellsViewModels: Observable<[OWFilterTabsCellOption]> {
         return Observable.combineLatest(tabs, isLoading)
             .flatMapLatest({ tabs, isLoading -> Observable<[OWFilterTabsCellOption]> in
                 if isLoading {
@@ -142,7 +142,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
             .asObservable()
     }
 
-    fileprivate lazy var getTabs: Observable<[OWFilterTabsCollectionCellViewModel]> = {
+    private lazy var getTabs: Observable<[OWFilterTabsCollectionCellViewModel]> = {
         return self.servicesProvider
             .networkAPI()
             .conversation
@@ -173,7 +173,7 @@ class OWFilterTabsViewViewModel: OWFilterTabsViewViewModeling, OWFilterTabsViewV
     }()
 }
 
-fileprivate extension OWFilterTabsViewViewModel {
+private extension OWFilterTabsViewViewModel {
     func setupObservers() {
         guard let postId = OWManager.manager.postId else { return }
         let serviceSelectedTabId = self.servicesProvider

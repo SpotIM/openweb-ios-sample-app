@@ -16,8 +16,8 @@ protocol OWUserBadgeServicing {
 
 class OWUserBadgeService: OWUserBadgeServicing {
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let localizationManager: OWLocalizationManagerProtocol
+    private let servicesProvider: OWSharedServicesProviding
+    private let localizationManager: OWLocalizationManagerProtocol
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          localizationManager: OWLocalizationManagerProtocol = OWLocalizationManager.shared) {
@@ -25,7 +25,7 @@ class OWUserBadgeService: OWUserBadgeServicing {
         self.localizationManager = localizationManager
     }
 
-    fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
+    private var conversationConfig: Observable<SPConfigurationConversation> {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationConversation? in

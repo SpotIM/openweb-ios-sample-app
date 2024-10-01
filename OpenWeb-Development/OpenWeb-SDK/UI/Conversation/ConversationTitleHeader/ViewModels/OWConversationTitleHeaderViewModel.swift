@@ -34,15 +34,15 @@ class OWConversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling,
     var outputs: OWConversationTitleHeaderViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
-    fileprivate let _triggerCustomizeCloseButtonUI = BehaviorSubject<UIButton?>(value: nil)
+    private let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeCloseButtonUI = BehaviorSubject<UIButton?>(value: nil)
 
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
     var triggerCustomizeCloseButtonUI = PublishSubject<UIButton>()
 
     var closeTapped = PublishSubject<Void>()
 
-    fileprivate var _closeConversation = PublishSubject<Void>()
+    private var _closeConversation = PublishSubject<Void>()
     var closeConversation: Observable<Void> {
         return _closeConversation.asObservable()
     }
@@ -59,14 +59,14 @@ class OWConversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling,
             .asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init () {
         self.setupObservers()
     }
 }
 
-fileprivate extension OWConversationTitleHeaderViewModel {
+private extension OWConversationTitleHeaderViewModel {
     func setupObservers() {
         closeTapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }

@@ -68,7 +68,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         static let maxNumberOfLines = 5
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     let hasBorder: Bool
     let isEditable: Bool
@@ -201,7 +201,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     }
 }
 
-fileprivate extension OWTextViewViewModel {
+private extension OWTextViewViewModel {
     func setupObservers() {
         maxLinesChange
             .subscribe(onNext: { [weak self] maxLines in

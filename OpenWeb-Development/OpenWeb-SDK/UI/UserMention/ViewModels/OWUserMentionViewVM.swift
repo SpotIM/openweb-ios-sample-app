@@ -45,7 +45,7 @@ protocol OWUserMentionViewViewModeling: AnyObject {
 
 class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionViewViewModelingOutputs, OWUserMentionViewViewModeling {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let usersCount = 10
         static let throttleGetUsers = 150
         static let debounceTextChange = 10
@@ -55,16 +55,16 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     var inputs: OWUserMentionViewViewModelingInputs { return self }
     var outputs: OWUserMentionViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let randomGenerator: OWRandomGeneratorProtocol
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let randomGenerator: OWRandomGeneratorProtocol
 
     var replaceData = PublishSubject<OWTextViewReplaceData>()
     var textViewText = PublishSubject<String>()
     var cursorRange = PublishSubject<Range<String.Index>>()
-    fileprivate var viewFrame: CGRect = .zero
-    fileprivate var tappedMentionInProgress = false
-    fileprivate var textAfterMention = BehaviorSubject<String>(value: "")
+    private var viewFrame: CGRect = .zero
+    private var tappedMentionInProgress = false
+    private var textAfterMention = BehaviorSubject<String>(value: "")
 
     var viewFrameChanged = BehaviorSubject<CGRect>(value: .zero)
 
@@ -87,30 +87,30 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     var getUsersForName: String = ""
     var textData = PublishSubject<OWUserMentionTextData>()
 
-    fileprivate lazy var _currentMentionRange = BehaviorSubject<Range<String.Index>?>(value: nil)
+    private lazy var _currentMentionRange = BehaviorSubject<Range<String.Index>?>(value: nil)
     lazy var currentMentionRange: Observable<Range<String.Index>?> = {
         return _currentMentionRange
             .asObservable()
     }()
 
-    fileprivate var name = BehaviorSubject<String>(value: "")
+    private var name = BehaviorSubject<String>(value: "")
     var tappedMentionIndex = PublishSubject<Int>()
 
     var initialMentions = PublishSubject<[OWUserMentionObject]?>()
-    fileprivate lazy var _mentionsData = BehaviorSubject<OWUserMentionData>(value: OWUserMentionData())
+    private lazy var _mentionsData = BehaviorSubject<OWUserMentionData>(value: OWUserMentionData())
     lazy var mentionsData: Observable<OWUserMentionData> = {
         return _mentionsData
             .asObservable()
     }()
 
-    fileprivate lazy var _users = BehaviorSubject<[SPUser]>(value: [])
-    fileprivate lazy var users: Observable<[SPUser]> = {
+    private lazy var _users = BehaviorSubject<[SPUser]>(value: [])
+    private lazy var users: Observable<[SPUser]> = {
         return _users
             .asObservable()
 
     }()
 
-    fileprivate let isSearchingUsers = BehaviorSubject<Bool>(value: false)
+    private let isSearchingUsers = BehaviorSubject<Bool>(value: false)
 
     var tappedMentionAction = PublishSubject<OWUserMentionData>()
     var tappedMention: Observable<OWUserMentionData> {
@@ -118,7 +118,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .asObservable()
     }
 
-    fileprivate lazy var getUsers: Observable<[SPUser]> = {
+    private lazy var getUsers: Observable<[SPUser]> = {
         return name
             .filter { !$0.isEmpty }
             .withLatestFrom(users) { ($0, $1) }
@@ -158,7 +158,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .share()
     }()
 
-    fileprivate lazy var cellsViewModels: Observable<[OWUserMentionsCellOption]> = {
+    private lazy var cellsViewModels: Observable<[OWUserMentionsCellOption]> = {
         return Observable.combineLatest(users, isSearchingUsers)
             .flatMapLatest({ [weak self] result -> Observable<[OWUserMentionsCellOption]> in
                 let (users,
@@ -196,7 +196,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     }
 }
 
-fileprivate extension OWUserMentionViewVM {
+private extension OWUserMentionViewVM {
     // swiftlint:disable function_body_length
     func setupObservers() {
         guard OWUserMentionHelper.mentionsEnabled else { return }

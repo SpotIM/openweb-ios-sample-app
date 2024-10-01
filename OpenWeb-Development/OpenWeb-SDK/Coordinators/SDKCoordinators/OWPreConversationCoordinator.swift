@@ -18,25 +18,25 @@ enum OWPreConversationCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinatorResult> {
-    fileprivate var _dismissInitialVC = PublishSubject<Void>()
+    private var _dismissInitialVC = PublishSubject<Void>()
     var dismissInitialVC: Observable<Void> {
         return _dismissInitialVC.asObservable()
     }
 
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
-    fileprivate var router: OWRoutering!
-    fileprivate let preConversationData: OWPreConversationRequiredData
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let flowActionsCallbacks: OWFlowActionsCallbacks?
-    fileprivate var viewableMode: OWViewableMode!
-    fileprivate lazy var flowActionsService: OWFlowActionsServicing = {
+    private var router: OWRoutering!
+    private let preConversationData: OWPreConversationRequiredData
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private let flowActionsCallbacks: OWFlowActionsCallbacks?
+    private var viewableMode: OWViewableMode!
+    private lazy var flowActionsService: OWFlowActionsServicing = {
         return OWFlowActionsService(flowActionsCallbacks: flowActionsCallbacks, viewSourceType: .preConversation)
     }()
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .preConversation)
     }()
-    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+    private lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .preConversation)
     }()
 
@@ -80,7 +80,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     }
 }
 
-fileprivate extension OWPreConversationCoordinator {
+private extension OWPreConversationCoordinator {
     // swiftlint:disable function_body_length
     func setupObservers(forViewModel viewModel: OWPreConversationViewViewModeling) {
     // swiftlint:enable function_body_length

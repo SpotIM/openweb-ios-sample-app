@@ -26,30 +26,30 @@ enum OWConversationCoordinatorResult: OWCoordinatorResultProtocol {
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
-    fileprivate let router: OWRoutering!
-    fileprivate let conversationData: OWConversationRequiredData
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let flowActionsCallbacks: OWFlowActionsCallbacks?
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var viewableMode: OWViewableMode!
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let router: OWRoutering!
+    private let conversationData: OWConversationRequiredData
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private let flowActionsCallbacks: OWFlowActionsCallbacks?
+    private let servicesProvider: OWSharedServicesProviding
+    private var viewableMode: OWViewableMode!
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .conversation)
     }()
-    fileprivate lazy var flowActionsService: OWFlowActionsServicing = {
+    private lazy var flowActionsService: OWFlowActionsServicing = {
         return OWFlowActionsService(flowActionsCallbacks: flowActionsCallbacks, viewSourceType: .conversation)
     }()
-    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+    private lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .conversation)
     }()
 
-    fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+    private var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayCommentThreadAfterReport: CGFloat = 0.5
     }
 
-    fileprivate let conversationPopped = PublishSubject<Void>()
-    fileprivate var conversationVC: OWConversationVC?
+    private let conversationPopped = PublishSubject<Void>()
+    private var conversationVC: OWConversationVC?
 
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
@@ -411,7 +411,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     }
 }
 
-fileprivate extension OWConversationCoordinator {
+private extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
         setupObservers(forViewModel: viewModel.outputs.conversationViewVM)
 

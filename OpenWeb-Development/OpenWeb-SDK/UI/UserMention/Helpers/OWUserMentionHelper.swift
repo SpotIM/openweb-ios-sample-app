@@ -11,7 +11,7 @@ import Foundation
 class OWUserMentionHelper {
     static var mentionsEnabled = true
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let mentionString = "@"
         static let mentionCharecter: Character = "@"
         static let jsonRegexPattern = "\\@\\{(.*?)\\}"
@@ -268,7 +268,7 @@ class OWUserMentionHelper {
     }
 
     // Parsing jsons @{} in text with comment content ids
-    fileprivate static func parseJsonsInText(text: String) -> [(String, Range<String.Index>)] {
+    private static func parseJsonsInText(text: String) -> [(String, Range<String.Index>)] {
         guard OWUserMentionHelper.mentionsEnabled else { return [] }
         var results = [(String, Range<String.Index>)]()
         do {

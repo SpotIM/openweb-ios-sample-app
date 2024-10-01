@@ -21,14 +21,14 @@ protocol OWUsersServicing {
 }
 
 class OWUsersService: OWUsersServicing {
-    fileprivate var disposeBag = DisposeBag()
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    private var disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
 
     // Multiple threads / queues access to this class
     // Avoiding "data race" by using a lock
-    fileprivate let lock: OWLock = OWUnfairLock()
+    private let lock: OWLock = OWUnfairLock()
 
-    fileprivate var _users = OWUsersMapper()
+    private var _users = OWUsersMapper()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -80,7 +80,7 @@ class OWUsersService: OWUsersServicing {
     }
 }
 
-fileprivate extension OWUsersService {
+private extension OWUsersService {
     func setupObservers() {
         self.servicesProvider.authenticationManager()
             .activeUserAvailability

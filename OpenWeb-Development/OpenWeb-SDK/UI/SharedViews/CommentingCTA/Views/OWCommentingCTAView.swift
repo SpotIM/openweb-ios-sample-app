@@ -11,25 +11,25 @@ import RxSwift
 
 class OWCommentingCTAView: UIView {
 
-    fileprivate lazy var skelatonView: OWCommentingCTASkeletonView = {
+    private lazy var skelatonView: OWCommentingCTASkeletonView = {
         return OWCommentingCTASkeletonView()
     }()
 
-    fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
+    private lazy var commentCreationEntryView: OWCommentCreationEntryView = {
         return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
             .enforceSemanticAttribute()
             .wrapContent()
     }()
 
-    fileprivate lazy var commentingReadOnlyView: OWCommentingReadOnlyView = {
+    private lazy var commentingReadOnlyView: OWCommentingReadOnlyView = {
         return OWCommentingReadOnlyView(with: self.viewModel.outputs.commentingReadOnlyViewModel)
             .wrapContent()
     }()
 
-    fileprivate var currentStyleView: UIView?
-    fileprivate var heightConstraint: OWConstraint?
-    fileprivate var viewModel: OWCommentingCTAViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var currentStyleView: UIView?
+    private var heightConstraint: OWConstraint?
+    private var viewModel: OWCommentingCTAViewModeling!
+    private var disposeBag = DisposeBag()
 
     init(with viewModel: OWCommentingCTAViewModeling) {
         self.viewModel = viewModel
@@ -48,7 +48,7 @@ class OWCommentingCTAView: UIView {
     }
 }
 
-fileprivate extension OWCommentingCTAView {
+private extension OWCommentingCTAView {
     func setupViews() {
         self.enforceSemanticAttribute()
 

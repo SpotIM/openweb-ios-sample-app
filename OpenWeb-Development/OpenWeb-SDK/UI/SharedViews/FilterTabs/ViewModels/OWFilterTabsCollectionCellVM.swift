@@ -33,8 +33,8 @@ class OWFilterTabsCollectionCellViewModel: OWFilterTabsCollectionCellViewModelin
     var inputs: OWFilterTabsCollectionCellViewModelingInputs { return self }
     var outputs: OWFilterTabsCollectionCellViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let model: OWFilterTabObject
+    private let disposeBag = DisposeBag()
+    private let model: OWFilterTabObject
 
     var accessibilityPrefix: String {
         model.name
@@ -70,7 +70,7 @@ class OWFilterTabsCollectionCellViewModel: OWFilterTabsCollectionCellViewModelin
     }
 }
 
-fileprivate extension OWFilterTabsCollectionCellViewModel {
+private extension OWFilterTabsCollectionCellViewModel {
     func setupObservers() {
         isSelected
             .subscribe(onNext: { [weak self] isSelected in

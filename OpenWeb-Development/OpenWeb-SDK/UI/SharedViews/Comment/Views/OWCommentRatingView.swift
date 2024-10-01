@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWCommentRatingView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let voteButtonSize: CGFloat = 24.0
         static let stackviewHeight: CGFloat = 28.0
         static let identifier = "comment_voting_view_id"
@@ -22,10 +22,10 @@ class OWCommentRatingView: UIView {
         static let rankDownLabelIdentifier = "comment_voting_view_rank_down_label_id"
     }
 
-    fileprivate var viewModel: OWCommentRatingViewModeling!
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
+    private var viewModel: OWCommentRatingViewModeling!
+    private var disposeBag: DisposeBag = DisposeBag()
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         return UIStackView()
             .axis(.horizontal)
             .alignment(.center)
@@ -33,21 +33,21 @@ class OWCommentRatingView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var rankUpButton: SPAnimatedButton = {
+    private lazy var rankUpButton: SPAnimatedButton = {
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
         let button = SPAnimatedButton(frame: frame)
             .hugContent(axis: .horizontal)
         return button
     }()
 
-    fileprivate lazy var rankDownButton: SPAnimatedButton = {
+    private lazy var rankDownButton: SPAnimatedButton = {
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
         let button = SPAnimatedButton(frame: frame)
             .hugContent(axis: .horizontal)
         return button
     }()
 
-    fileprivate lazy var rankUpLabel: UILabel = {
+    private lazy var rankUpLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
             .font(OWFontBook.shared.font(typography: .footnoteContext))
@@ -55,7 +55,7 @@ class OWCommentRatingView: UIView {
             .textColor(OWColorPalette.shared.color(type: .voteUpUnselectedColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var rankDownLabel: UILabel = {
+    private lazy var rankDownLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
             .font(OWFontBook.shared.font(typography: .footnoteContext))
@@ -63,7 +63,7 @@ class OWCommentRatingView: UIView {
             .textColor(OWColorPalette.shared.color(type: .voteDownUnselectedColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var seperetorView: UIView = {
+    private lazy var seperetorView: UIView = {
         return UIView()
     }()
 
@@ -91,7 +91,7 @@ class OWCommentRatingView: UIView {
     }
 }
 
-fileprivate extension OWCommentRatingView {
+private extension OWCommentRatingView {
     func setupUI() {
         self.addSubviews(stackView)
 
@@ -239,7 +239,7 @@ fileprivate extension OWCommentRatingView {
 }
 
 // MARK: Accessibility
-fileprivate extension OWCommentRatingView {
+private extension OWCommentRatingView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         rankUpButton.accessibilityIdentifier = Metrics.rankUpButtonIdentifier

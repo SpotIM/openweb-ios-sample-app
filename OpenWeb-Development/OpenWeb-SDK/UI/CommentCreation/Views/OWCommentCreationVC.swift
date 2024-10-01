@@ -11,21 +11,21 @@ import RxSwift
 import RxCocoa
 
 class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
         static let navBarTitleFadeDuration = 0.3
         static let floatingOverNavBarOffset: CGFloat = -100
     }
-    fileprivate weak var dismissNavigationController: UINavigationController?
-    fileprivate let viewModel: OWCommentCreationViewModeling
+    private weak var dismissNavigationController: UINavigationController?
+    private let viewModel: OWCommentCreationViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var commentCreationView: OWCommentCreationView = {
+    private lazy var commentCreationView: OWCommentCreationView = {
         let commentCreationView = OWCommentCreationView(viewModel: viewModel.outputs.commentCreationViewVM)
         return commentCreationView
     }()
 
-    fileprivate lazy var footerSafeAreaView: UIView = {
+    private lazy var footerSafeAreaView: UIView = {
         return UIView(frame: .zero)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -114,7 +114,7 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 }
 
-fileprivate extension OWCommentCreationVC {
+private extension OWCommentCreationVC {
     func setupViews() {
         let backgroundColor: UIColor = {
             switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {

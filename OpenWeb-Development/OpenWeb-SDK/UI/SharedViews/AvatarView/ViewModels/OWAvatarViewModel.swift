@@ -52,22 +52,22 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             }
     }
 
-    fileprivate var _authenticationTriggered = PublishSubject<Void>()
+    private var _authenticationTriggered = PublishSubject<Void>()
     var authenticationTriggered: Observable<Void> {
         _authenticationTriggered
             .asObservable()
     }
 
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
+    private var _openProfile = PublishSubject<OWOpenProfileType>()
     var openProfile: Observable<OWOpenProfileType> {
         _openProfile
             .asObservable()
     }
 
-    fileprivate let imageURLProvider: OWImageProviding
-    fileprivate let sharedServicesProvider: OWSharedServicesProviding
+    private let imageURLProvider: OWImageProviding
+    private let sharedServicesProvider: OWSharedServicesProviding
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init (
         user: SPUser? = nil,
@@ -81,7 +81,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         setupObservers()
     }
 
-    fileprivate lazy var user: Observable<SPUser> = {
+    private lazy var user: Observable<SPUser> = {
         self.userInput
             .unwrap()
     }()
@@ -142,7 +142,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     }
 }
 
-fileprivate extension OWAvatarViewModel {
+private extension OWAvatarViewModel {
     func setupObservers() {
         avatarTapped
             .flatMapLatest { [weak self] user -> Observable<OWOpenProfileResult> in

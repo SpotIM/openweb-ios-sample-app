@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWCommentLabelView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_label_id"
         static let labelIdentifier = "comment_label_label_id"
         static let cornerRaius: CGFloat = 3
@@ -26,30 +26,30 @@ class OWCommentLabelView: UIView {
         static var borderOpacityLightMode: CGFloat = 0.4
     }
 
-    fileprivate lazy var labelContainer: UIView = {
+    private lazy var labelContainer: UIView = {
         return UIView()
             .userInteractionEnabled(true)
             .corner(radius: Metrics.cornerRaius)
     }()
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
             .backgroundColor(.clear)
             .tintAdjustmentMode(.normal)
             .clipsToBounds(true)
     }()
-    fileprivate lazy var label: UILabel = {
+    private lazy var label: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyInteraction))
     }()
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()
         labelContainer.addGestureRecognizer(tapGesture)
         return tapGesture
     }()
 
-    fileprivate var viewModel: OWCommentLabelViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWCommentLabelViewModeling!
+    private var disposeBag: DisposeBag!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -68,7 +68,7 @@ class OWCommentLabelView: UIView {
     }
 }
 
-fileprivate extension OWCommentLabelView {
+private extension OWCommentLabelView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         label.accessibilityIdentifier = Metrics.labelIdentifier

@@ -25,8 +25,8 @@ extension OWBlockerServicing {
 }
 
 class OWBlockerService: OWBlockerServicing {
-    fileprivate let _blockersMapper = BehaviorSubject<[OWBlockerActionType: OWBlockerActionProtocol]>(value: [:])
-    fileprivate var blockersMapper: Observable<[OWBlockerActionType: OWBlockerActionProtocol]> {
+    private let _blockersMapper = BehaviorSubject<[OWBlockerActionType: OWBlockerActionProtocol]>(value: [:])
+    private var blockersMapper: Observable<[OWBlockerActionType: OWBlockerActionProtocol]> {
         return _blockersMapper
             .asObservable()
     }

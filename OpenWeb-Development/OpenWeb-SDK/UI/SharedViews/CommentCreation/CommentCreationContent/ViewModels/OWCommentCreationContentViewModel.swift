@@ -40,22 +40,22 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var inputs: OWCommentCreationContentViewModelingInputs { return self }
     var outputs: OWCommentCreationContentViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayAfterLoadingImage = 50
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate var uploadImageDisposeBag = DisposeBag()
-    fileprivate let imageURLProvider: OWImageProviding
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationType: OWCommentCreationTypeInternal
+    private let disposeBag = DisposeBag()
+    private var uploadImageDisposeBag = DisposeBag()
+    private let imageURLProvider: OWImageProviding
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationType: OWCommentCreationTypeInternal
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    private lazy var postId = OWManager.manager.postId
 
     var imagePicked = PublishSubject<UIImage>()
     var gifPicked = PublishSubject<OWCommentGif>()
 
-    fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
+    private let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
     var commentContent: Observable<OWCommentCreationContent> {
         Observable.combineLatest(textViewVM.outputs.textViewText, _imageContent.asObservable(), gifPreviewVM.outputs.gifDataOutput)
@@ -76,7 +76,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         OWAvatarViewModel(imageURLProvider: imageURLProvider)
     }()
 
-    fileprivate lazy var _commentTextCharactersLimit: Observable<Int?> = {
+    private lazy var _commentTextCharactersLimit: Observable<Int?> = {
         return servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
             .materialize()
             .map { event -> Int? in
@@ -167,7 +167,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     }
 }
 
-fileprivate extension OWCommentCreationContentViewModel {
+private extension OWCommentCreationContentViewModel {
     func setupInitialTextIfNeeded() {
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
         var initialText: String?

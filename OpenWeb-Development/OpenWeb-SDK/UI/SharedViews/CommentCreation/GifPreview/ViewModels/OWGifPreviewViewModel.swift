@@ -31,8 +31,8 @@ class OWGifPreviewViewModel: OWGifPreviewViewModeling,
     var inputs: OWGifPreviewViewModelingInputs { return self }
     var outputs: OWGifPreviewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
 
     var removeButtonTap: PublishSubject<Void> = PublishSubject()
     var gifData: BehaviorSubject<OWCommentGif?> = BehaviorSubject(value: nil)
@@ -55,7 +55,7 @@ class OWGifPreviewViewModel: OWGifPreviewViewModeling,
     }
 }
 
-fileprivate extension OWGifPreviewViewModel {
+private extension OWGifPreviewViewModel {
     func setupObservers() {
         removeButtonTap.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }

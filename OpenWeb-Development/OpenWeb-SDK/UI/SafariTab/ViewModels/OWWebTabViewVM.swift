@@ -79,7 +79,7 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
         return OWTitleViewViewModel()
     }()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init(options: OWWebTabOptions, viewableMode: OWViewableMode) {
         self.options = options

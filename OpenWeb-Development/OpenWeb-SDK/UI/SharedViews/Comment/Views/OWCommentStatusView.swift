@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWCommentStatusView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let cornerRadius: CGFloat = 4
         static let horizontalPadding: CGFloat = 10
         static let verticalPadding: CGFloat = 8
@@ -24,15 +24,15 @@ class OWCommentStatusView: UIView {
         static let labelIdentifier = "comment_status_label_id"
     }
 
-    fileprivate var viewModel: OWCommentStatusViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWCommentStatusViewModeling!
+    private var disposeBag: DisposeBag!
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
     }()
 
-    fileprivate lazy var messageLabel: UILabel = {
+    private lazy var messageLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
             .enforceSemanticAttribute()
@@ -55,7 +55,7 @@ class OWCommentStatusView: UIView {
     }
 }
 
-fileprivate extension OWCommentStatusView {
+private extension OWCommentStatusView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         iconImageView.accessibilityIdentifier = Metrics.iconIdentifier
