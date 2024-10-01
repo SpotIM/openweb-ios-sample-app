@@ -117,7 +117,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     fileprivate lazy var styleModeObservable: Observable<OWCommentCreationStyle> = {
         return Observable.combineLatest(customStyleModeSelectedIndex,
                                         accessoryViewSelectedIndex)
-            .map { (customStyleModeIndex, accessoryViewIndex) -> OWCommentCreationStyle in
+            .map { customStyleModeIndex, accessoryViewIndex -> OWCommentCreationStyle in
                 var style = OWCommentCreationStyle.commentCreationStyle(fromIndex: customStyleModeIndex)
                 if case .floatingKeyboard = style {
                     let accessoryViewStrategy = OWAccessoryViewStrategy(index: accessoryViewIndex)

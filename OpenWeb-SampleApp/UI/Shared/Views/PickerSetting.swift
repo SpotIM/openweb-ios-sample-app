@@ -81,7 +81,7 @@ fileprivate extension PickerSetting {
         items
             .skip(1) // Skip initialize BehaviorSubject value
             .take(1) // Take first value after initialize
-            .bind(to: pickerControl.rx.itemTitles) { (_, element) in
+            .bind(to: pickerControl.rx.itemTitles) { _, element in
                 return element
             }
             .disposed(by: disposeBag)
