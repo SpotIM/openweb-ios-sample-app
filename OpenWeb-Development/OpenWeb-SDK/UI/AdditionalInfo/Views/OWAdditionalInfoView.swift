@@ -215,18 +215,14 @@ fileprivate extension OWAdditionalInfoView {
             let keyboardShowHeight = NotificationCenter.default.rx
                 .notification(UIResponder.keyboardWillShowNotification)
                 .map { notification -> CGFloat in
-                    // swiftlint:disable line_length
                     let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-                    // swiftlint:enable line_length
                     return height ?? 0
                 }
 
             let keyboardChangeHeight = NotificationCenter.default.rx
                 .notification(UIResponder.keyboardDidChangeFrameNotification)
                 .map { notification -> CGFloat in
-                    // swiftlint:disable line_length
                     let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-                    // swiftlint:enable line_length
                     return height ?? 0
                 }
 
