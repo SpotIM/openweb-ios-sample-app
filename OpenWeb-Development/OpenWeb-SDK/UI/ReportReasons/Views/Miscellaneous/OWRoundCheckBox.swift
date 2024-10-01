@@ -13,9 +13,9 @@ class OWRoundCheckBox: UIView {
     fileprivate struct Metrics {
         static let outerSize: CGFloat = 24
         static let innerSize: CGFloat = 16
-        static let outerRadius: CGFloat = outerSize/2
-        static let innerRadius: CGFloat = innerSize/2
-        static let circleCenter: CGFloat = outerSize/2
+        static let outerRadius: CGFloat = outerSize / 2
+        static let innerRadius: CGFloat = innerSize / 2
+        static let circleCenter: CGFloat = outerSize / 2
         static let outerCircleName = "OuterCircle"
         static let innerCircleName = "InnerCircle"
     }

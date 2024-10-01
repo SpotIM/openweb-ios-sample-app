@@ -12,7 +12,7 @@ extension Date {
 
     static let owDayNameFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat  = "EEEE"
+        dateFormatter.dateFormat = "EEEE"
         dateFormatter.locale = OWLocalizationManager.shared.locale
 
         return dateFormatter
@@ -20,7 +20,7 @@ extension Date {
 
     static let owHourFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat  = "HH"
+        dateFormatter.dateFormat = "HH"
         dateFormatter.locale = OWLocalizationManager.shared.locale
 
         return dateFormatter

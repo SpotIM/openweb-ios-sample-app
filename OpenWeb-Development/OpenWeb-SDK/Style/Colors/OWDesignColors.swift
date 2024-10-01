@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+// swiftlint:disable operator_usage_whitespace
+
 struct OWDesignColors {
     static let G1: UIColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
     static let G2: UIColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
@@ -33,3 +35,5 @@ struct OWDesignColors {
     static let D4: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
     static let D1ALT: UIColor = UIColor(red: 54/255, green: 54/255, blue: 54/255, alpha: 1) // Used only in pre conversation compact style
 }
+
+// swiftlint:enable operator_usage_whitespace

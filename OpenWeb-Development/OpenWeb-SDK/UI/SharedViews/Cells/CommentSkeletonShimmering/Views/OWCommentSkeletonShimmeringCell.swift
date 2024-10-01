@@ -12,9 +12,9 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
     fileprivate struct Metrics {
         static let avatarSize: CGFloat = 36.0
-        static let userNameWidthRatio: CGFloat = 1/6
+        static let userNameWidthRatio: CGFloat = 1 / 6
         static let userNameHeight: CGFloat = 13
-        static let timeWidthRatio: CGFloat = 1/4
+        static let timeWidthRatio: CGFloat = 1 / 4
         static let timeHeight: CGFloat = 12
         static let spaceBetweenUserNameAndTime: CGFloat = 5
         static let messageHeight: CGFloat = 10
@@ -67,9 +67,9 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         }
 
         // Adding "between"" message lines
-        for i in 1...(messageLinesSkeleton.count-2) {
+        for i in 1...(messageLinesSkeleton.count - 2) {
             let currentLine = messageLinesSkeleton[i]
-            let lineBefore = messageLinesSkeleton[i-1]
+            let lineBefore = messageLinesSkeleton[i - 1]
             view.addSubview(currentLine)
             currentLine.OWSnp.makeConstraints { make in
                 make.top.equalTo(lineBefore.OWSnp.bottom).offset(Metrics.spaceBetweenMessageLines)

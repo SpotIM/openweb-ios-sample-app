@@ -39,7 +39,7 @@ class OWCommentEngagementView: UIView {
 
     fileprivate lazy var replyDotDivider: UIView = {
         return UIView()
-            .corner(radius: Metrics.dotDividerSize/2)
+            .corner(radius: Metrics.dotDividerSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
 
@@ -49,7 +49,7 @@ class OWCommentEngagementView: UIView {
 
     fileprivate lazy var votingDotDivider: UIView = {
         return UIView()
-            .corner(radius: Metrics.dotDividerSize/2)
+            .corner(radius: Metrics.dotDividerSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
 
