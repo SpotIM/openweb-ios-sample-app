@@ -300,9 +300,7 @@ fileprivate extension ConversationBelowVideoVC {
         let keyboardShowHeight = NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
             .map { notification -> CGFloat in
-                // swiftlint:disable line_length
                 let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-                // swiftlint:enable line_length
                 return height ?? 0
             }
 

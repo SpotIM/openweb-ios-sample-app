@@ -317,7 +317,6 @@ fileprivate extension TestAPIVC {
         }
     }
 
-    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
 
@@ -416,7 +415,6 @@ fileprivate extension TestAPIVC {
             .bind(to: envLabel.rx.isHidden)
             .disposed(by: disposeBag)
     }
-    // swiftlint:enable function_body_length
 }
 
 fileprivate extension TestAPIVC {
