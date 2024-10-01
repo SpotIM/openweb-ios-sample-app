@@ -167,4 +167,3 @@ fileprivate extension OWCommentLabelView {
         }
     }
 }
-

@@ -90,4 +90,3 @@ extension OWPreConversationCellOption: OWIdentifiableType {
         return self.identifier
     }
 }
-

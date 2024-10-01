@@ -159,4 +159,3 @@ fileprivate extension OWPreConversationSummaryView {
             .disposed(by: disposeBag)
     }
 }
-

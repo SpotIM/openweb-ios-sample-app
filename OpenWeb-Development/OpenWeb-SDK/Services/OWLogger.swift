@@ -348,4 +348,3 @@ fileprivate extension OWLogger {
         })
     }
 }
-

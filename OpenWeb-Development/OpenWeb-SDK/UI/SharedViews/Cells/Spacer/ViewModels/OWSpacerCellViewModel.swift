@@ -47,4 +47,3 @@ extension OWSpacerCellViewModel {
         return OWSpacerCellViewModel()
     }
 }
-

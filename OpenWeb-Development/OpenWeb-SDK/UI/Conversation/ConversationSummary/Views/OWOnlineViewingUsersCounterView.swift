@@ -106,4 +106,3 @@ fileprivate extension OWOnlineViewingUsersCounterView {
         viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(counterLabel)
     }
 }
-

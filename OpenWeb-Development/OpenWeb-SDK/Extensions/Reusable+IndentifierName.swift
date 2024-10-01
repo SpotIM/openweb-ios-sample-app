@@ -21,4 +21,3 @@ extension IdentifierCell where Self: UIView {
 
 extension UITableViewCell: IdentifierCell {}
 extension UICollectionReusableView: IdentifierCell {}
-

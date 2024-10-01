@@ -82,4 +82,3 @@ fileprivate extension OWNavigationPlaceholderViewModel {
             .disposed(by: disposeBag)
     }
 }
-

@@ -44,4 +44,3 @@ class OWConstraintDescription {
         self.attributes = attributes
     }
 }
-

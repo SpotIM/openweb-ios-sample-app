@@ -121,4 +121,3 @@ fileprivate extension OWAppealCell {
             .disposed(by: disposeBag)
     }
 }
-

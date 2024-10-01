@@ -93,4 +93,3 @@ fileprivate extension OWCommentCreationImagePreviewViewModel {
         .disposed(by: disposeBag)
     }
 }
-
