@@ -61,7 +61,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
         Observable.combineLatest(
             status,
             sharedServicesProvider.themeStyleService().style) { [weak self] status, _ in
-                switch(status) {
+                switch status {
                 case .none: return nil
                 case .rejected: return UIImage(spNamed: "rejectedIcon", supportDarkMode: false)
                 case .pending: return UIImage(spNamed: "pendingIcon", supportDarkMode: true)
@@ -89,7 +89,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             accessibilityChange) { [weak self] status, isCommentOfActiveUser, style, _ in
                 guard let self = self else { return nil }
                 let messageString: String
-                switch(status) {
+                switch status {
                 case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
                 case .appealed: messageString = OWLocalizationManager.shared.localizedString(key: "AppealedCommentStatusMessage")
                 case .appealRejected: messageString = OWLocalizationManager.shared.localizedString(key: "AppealRejectedCommentStatusMessage")

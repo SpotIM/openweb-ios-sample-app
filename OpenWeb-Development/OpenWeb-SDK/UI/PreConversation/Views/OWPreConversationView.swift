@@ -145,7 +145,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
 
     fileprivate lazy var compactTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
-        if (viewModel.outputs.shouldAddContentTapRecognizer) {
+        if viewModel.outputs.shouldAddContentTapRecognizer {
             self.addGestureRecognizer(tap)
             self.isUserInteractionEnabled = true
         }
@@ -188,7 +188,7 @@ fileprivate extension OWPreConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
-        if (viewModel.outputs.shouldShowComapactView) {
+        if viewModel.outputs.shouldShowComapactView {
             self.addSubview(compactContentView)
             compactContentView.OWSnp.makeConstraints { make in
                 make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.compactContentTopPedding)

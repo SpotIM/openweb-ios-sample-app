@@ -67,7 +67,7 @@ fileprivate extension OWConversationUpdaterService {
                 self.servicesProvider.commentsService().set(comments: [parentComment], postId: postId)
             }
         }
-        if (!commentsToCache.isEmpty) {
+        if !commentsToCache.isEmpty {
             self.servicesProvider.commentsService().set(comments: commentsToCache, postId: postId)
         }
     }

@@ -120,7 +120,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
                   avatarBlocked == false
             else { return false }
 
-            if (user.online == true) {
+            if user.online == true {
                 return true
             }
 

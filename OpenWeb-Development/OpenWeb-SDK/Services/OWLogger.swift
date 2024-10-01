@@ -246,7 +246,7 @@ fileprivate extension OWLogger {
 
     func removeOldestLogFileIfNeeded() {
         let numberOfLogsWritten = retrieveNumberOfSavedLogs()
-        if (numberOfLogsWritten >= maxLogFilesNumber) {
+        if numberOfLogsWritten >= maxLogFilesNumber {
             // Remove oldest
             removeOldestLogFiles(numOfFilesToRemove: 1)
         }
@@ -254,7 +254,7 @@ fileprivate extension OWLogger {
 
     func removeExceedingLogFilesIfNeeded() {
         let numberOfLogsWritten = retrieveNumberOfSavedLogs()
-        if (numberOfLogsWritten > maxLogFilesNumber) {
+        if numberOfLogsWritten > maxLogFilesNumber {
             // Remove exceeding
             let numToRemove = numberOfLogsWritten - maxLogFilesNumber
             removeOldestLogFiles(numOfFilesToRemove: numToRemove)

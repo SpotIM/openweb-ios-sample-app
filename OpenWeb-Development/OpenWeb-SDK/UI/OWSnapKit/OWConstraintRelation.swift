@@ -14,7 +14,7 @@ enum OWConstraintRelation: Int {
     case greaterThanOrEqual
 
     var layoutRelation: OWLayoutRelation {
-        switch(self) {
+        switch self {
         case .equal:
             return .equal
         case .lessThanOrEqual:

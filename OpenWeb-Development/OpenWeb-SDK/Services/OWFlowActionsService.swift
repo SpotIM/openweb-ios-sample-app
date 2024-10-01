@@ -56,7 +56,7 @@ class OWFlowActionsService: OWFlowActionsServicing {
                                       openProfileType: OWOpenProfileType,
                                       presentationalModeCompact: OWPresentationalModeCompact) -> OWFlowActionCallbackType? {
         guard let navigationController = navigationController else { return nil }
-        switch(openProfileType) {
+        switch openProfileType {
         case .publisherProfile(let ssoPublisherId, let type):
             let presentationMode: OWPresentationalMode? = {
                 switch presentationalModeCompact {
