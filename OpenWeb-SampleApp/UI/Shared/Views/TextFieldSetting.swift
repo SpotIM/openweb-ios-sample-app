@@ -46,7 +46,7 @@ class TextFieldSetting: UIView {
     init(title: String, placeholder: String = "", accessibilityPrefixId: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
         self.title = title
         self.placeholder = placeholder
-        if let text = text {
+        if let text {
             self.text.onNext(text)
         }
         self.font = font
@@ -122,7 +122,7 @@ private extension TextFieldSetting {
 
         keyboardHeight
             .subscribe(onNext: { [weak self] keyboardHeight in
-                guard let self = self else { return }
+                guard let self else { return }
                 if self.textFieldControl.isFirstResponder,
                    let scrollView = self.superview as? UIScrollView {
                     let insets = UIEdgeInsets(top: 0,

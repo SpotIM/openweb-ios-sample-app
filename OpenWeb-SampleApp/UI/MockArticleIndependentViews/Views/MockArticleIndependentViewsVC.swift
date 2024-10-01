@@ -120,7 +120,7 @@ private extension MockArticleIndependentViewsVC {
 
         viewModel.outputs.showComponent
             .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 let view = result.0
                 let type = result.1
 

@@ -68,7 +68,7 @@ private extension AutomationViewModel {
     func setupObservers() {
         fontsTapped
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self,
+                guard let self,
                       let navigationController = self.navController else { return }
 
                 let manager = OpenWeb.manager
@@ -78,7 +78,7 @@ private extension AutomationViewModel {
                                         additionalSettings: OWAutomationSettings(),
                                         callbacks: nil,
                                         completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
                     case .success:
                         // All good
@@ -94,7 +94,7 @@ private extension AutomationViewModel {
 
         userInformationTapped
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self,
+                guard let self,
                       let navigationController = self.navController else { return }
 
                 let manager = OpenWeb.manager
@@ -104,7 +104,7 @@ private extension AutomationViewModel {
                                         additionalSettings: OWAutomationSettings(),
                                         callbacks: nil,
                                         completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
                     case .success:
                         // All good

@@ -117,7 +117,7 @@ private extension ColorsCustomizationVC {
                 self?.showPicker()
             })
             .flatMapLatest { [weak self] updateColor -> Observable<(UIColor?, BehaviorSubject<UIColor?>)?> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.picker.rx.didSelectColor
                     .map { ($0, updateColor) }
             }

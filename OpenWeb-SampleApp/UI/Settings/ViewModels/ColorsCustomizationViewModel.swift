@@ -92,7 +92,7 @@ private extension ColorsCustomizationViewModel {
             }
             .map { colors in
                 return Observable.combineLatest(colors) { [weak self] colorsValues -> OWTheme in
-                    guard let self = self else { return OWTheme() }
+                    guard let self else { return OWTheme() }
                     return self.getTheme(from: colorsValues)
                 }
             }

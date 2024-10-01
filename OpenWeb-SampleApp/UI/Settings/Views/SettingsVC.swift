@@ -123,7 +123,7 @@ private extension SettingsVC {
             .notification(UIResponder.keyboardWillShowNotification)
             .subscribe(onNext: { [weak self] notification in
                 guard
-                    let self = self,
+                    let self,
                     let expandedKeyboardHeight = notification.keyboardSize?.height,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
@@ -131,10 +131,10 @@ private extension SettingsVC {
                     make.bottom.equalToSuperview().offset(-expandedKeyboardHeight)
                 }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.view.layoutIfNeeded()
                 } completion: { [weak self] finished in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     if finished,
                        let firstResponder = self.view.firstResponder {
                         self.scrollToView(toView: firstResponder)
@@ -148,7 +148,7 @@ private extension SettingsVC {
             .notification(UIResponder.keyboardWillHideNotification)
             .voidify()
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.resetButton.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-Metrics.resetButtonVerticalPadding)
                 }

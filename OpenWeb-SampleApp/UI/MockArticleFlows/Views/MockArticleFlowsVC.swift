@@ -193,7 +193,7 @@ private extension MockArticleFlowsVC {
         let btnFullConversationObservable = viewModel.outputs.showFullConversationButton
             .take(1)
             .do(onNext: { [weak self] mode in
-                guard let self = self else { return }
+                guard let self else { return }
                 let btnTitle: String
                 switch mode {
                 case .push:
@@ -205,7 +205,7 @@ private extension MockArticleFlowsVC {
                 self.btnFullConversation.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.btnFullConversation
             }
             .unwrap()
@@ -214,7 +214,7 @@ private extension MockArticleFlowsVC {
         let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
             .take(1)
             .do(onNext: { [weak self] mode in
-                guard let self = self else { return }
+                guard let self else { return }
                 let btnTitle: String
                 switch mode {
                 case .push:
@@ -226,7 +226,7 @@ private extension MockArticleFlowsVC {
                 self.btnCommentCreation.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.btnCommentCreation
             }
             .unwrap()
@@ -235,7 +235,7 @@ private extension MockArticleFlowsVC {
         let btnCommentThreadObservable = viewModel.outputs.showCommentThreadButton
             .take(1)
             .do(onNext: { [weak self] mode in
-                guard let self = self else { return }
+                guard let self else { return }
                 let btnTitle: String
                 switch mode {
                 case .push:
@@ -247,14 +247,14 @@ private extension MockArticleFlowsVC {
                 self.btnCommentThread.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.btnCommentThread
             }
             .unwrap()
 
         Observable.merge(btnFullConversationObservable, btnCommentCreationObservable, btnCommentThreadObservable)
             .subscribe(onNext: { [weak self] btn in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)
@@ -276,7 +276,7 @@ private extension MockArticleFlowsVC {
         // Adding pre conversation
         viewModel.outputs.showPreConversation
             .subscribe(onNext: { [weak self] preConversationView in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)

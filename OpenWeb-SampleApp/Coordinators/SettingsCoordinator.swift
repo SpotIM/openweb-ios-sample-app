@@ -51,7 +51,7 @@ private extension SettingsCoordinator {
         if let generalSettingsVM = viewModel.outputs.settingsVMs.first(where: { $0 is GeneralSettingsViewModeling }) as? GeneralSettingsViewModeling {
             generalSettingsVM.outputs.openColorsCustomizationScreen
                 .subscribe(onNext: { [weak self] colorsCustomizationVC in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.router.push(colorsCustomizationVC,
                                      animated: true,
                                      completion: nil)

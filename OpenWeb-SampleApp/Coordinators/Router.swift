@@ -48,7 +48,7 @@ class Router: NSObject, Routering {
                 return
         }
 
-        if let completion = completion {
+        if let completion {
             completions[module.toPresentable()] = completion
         }
 
