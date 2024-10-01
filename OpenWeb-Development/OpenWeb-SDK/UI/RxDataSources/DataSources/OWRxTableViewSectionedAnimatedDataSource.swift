@@ -93,8 +93,8 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
                         tableView.reloadData()
                         return
                     }
-                } catch let e {
-                    rxDebugFatalError(e)
+                } catch {
+                    rxDebugFatalError(error)
                     dataSource.setSections(newSections)
                     tableView.reloadData()
                 }

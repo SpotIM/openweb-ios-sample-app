@@ -36,8 +36,8 @@ class OWVersion: Decodable {
         }
         do {
             try self.init(from: versionString)
-        } catch let err {
-            throw err
+        } catch {
+            throw error
         }
 
     }
