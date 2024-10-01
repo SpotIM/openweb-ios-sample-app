@@ -43,6 +43,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - operator_whitespace
   - orphaned_doc_comment
   - prefer_type_checking
+  - private_over_fileprivate
   - private_unit_test
   - protocol_property_accessors_order
   - reduce_boolean

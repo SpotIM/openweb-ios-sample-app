@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-fileprivate typealias OWReportedCommentIds = Set<OWCommentId>
+private typealias OWReportedCommentIds = Set<OWCommentId>
 
 protocol OWReportedCommentsServicing {
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment

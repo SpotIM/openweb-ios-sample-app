@@ -119,7 +119,7 @@ enum OWConversationEndpoints: OWEndpoints {
     }
 }
 
-fileprivate struct OWConversationEndpointConst {
+private struct OWConversationEndpointConst {
     static let PAGE_SIZE = 15
 }
 
