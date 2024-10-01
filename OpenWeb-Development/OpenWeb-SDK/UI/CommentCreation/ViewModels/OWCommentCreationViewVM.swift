@@ -384,7 +384,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     commentUpdateType = .update(commentId: commentId, withComment: updatedComment)
                 case .replyToComment(originComment: let originComment):
                     guard let commentId = originComment.id else { return }
-                    commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)                }
+                    commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)
+                }
                 if let updateType = commentUpdateType {
                     self.servicesProvider
                         .conversationUpdaterService()

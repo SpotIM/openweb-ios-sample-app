@@ -61,18 +61,18 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         let animated = {
             guard let coordinatorData = coordinatorData else { return true }
             switch coordinatorData.deepLink {
-                case .commentCreation(let commentCreationData):
-                    guard coordinatorData.source == .preConversation,
-                          case .present = commentCreationData.presentationalStyle else { return true }
-                    // If comment creation was called from PreConversation
-                    // And the presentation style is present, then we do not
-                    // animate the comment creation since the animation of present
-                    // is done by the conversation presenting under it
-                    // this fixes a UI bug that in some cases looked like a
-                    // double present.
-                    return false
-                default:
-                    break
+            case .commentCreation(let commentCreationData):
+                guard coordinatorData.source == .preConversation,
+                      case .present = commentCreationData.presentationalStyle else { return true }
+                // If comment creation was called from PreConversation
+                // And the presentation style is present, then we do not
+                // animate the comment creation since the animation of present
+                // is done by the conversation presenting under it
+                // this fixes a UI bug that in some cases looked like a
+                // double present.
+                return false
+            default:
+                break
             }
             return true
         }()
