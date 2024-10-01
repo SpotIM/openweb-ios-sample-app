@@ -25,7 +25,7 @@ class OWReportReasonCell: UITableViewCell {
         static let cellHeight: CGFloat = 68
     }
 
-    fileprivate var subtitleHeightZeroConstraint: OWConstraint? = nil
+    fileprivate var subtitleHeightZeroConstraint: OWConstraint?
 
     fileprivate lazy var viewForText: UIView = {
         let viewForText = UIView()

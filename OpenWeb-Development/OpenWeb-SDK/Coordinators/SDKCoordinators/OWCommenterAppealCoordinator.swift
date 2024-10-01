@@ -40,7 +40,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     let popAppealWithAnimation = PublishSubject<Void>()
 
     fileprivate let data: OWAppealRequiredData
-    fileprivate var commenterAppealView: UIView? = nil
+    fileprivate var commenterAppealView: UIView?
 
     init(router: OWRoutering? = nil,
          appealData: OWAppealRequiredData,
@@ -166,7 +166,7 @@ fileprivate extension OWCommenterAppealCoordinator {
             }
             .map { [weak self] additionalInfoViewVM -> OWAdditionalInfoView? in
                 guard let self = self else { return nil }
-                var additionalInfoView: OWAdditionalInfoView? = nil
+                var additionalInfoView: OWAdditionalInfoView?
                 OWScheduler.runOnMainThreadIfNeeded {
                     additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
                     self.displayViewWithAnimation(view: additionalInfoView!)
@@ -276,7 +276,7 @@ fileprivate extension OWCommenterAppealCoordinator {
             }
             .map { [weak self] vm -> OWCancelView? in
                 guard let self = self else { return nil }
-                var cancelView: OWCancelView? = nil
+                var cancelView: OWCancelView?
                 OWScheduler.runOnMainThreadIfNeeded {
                     cancelView = OWCancelView(viewModel: vm)
                     self.displayViewWithAnimation(view: cancelView!)

@@ -85,7 +85,7 @@ class OWAuthenticationLayer: OWAuthentication, OWAuthenticationInternalProtocol 
     }
 
     fileprivate var _shouldDisplayLoginPrompt: Bool = false
-    fileprivate var _renewSSOCallback: OWRenewSSOCallback? = nil
+    fileprivate var _renewSSOCallback: OWRenewSSOCallback?
 
     func triggerRenewSSO(userId: String, completion: @escaping OWBasicCompletion) {
         guard let callback = _renewSSOCallback else {

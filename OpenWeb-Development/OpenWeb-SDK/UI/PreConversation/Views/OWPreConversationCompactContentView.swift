@@ -61,7 +61,7 @@ class OWPreConversationCompactContentView: UIView {
         return UITapGestureRecognizer()
     }()
 
-    fileprivate var errorRetryZeroWidthConstraint: OWConstraint? = nil
+    fileprivate var errorRetryZeroWidthConstraint: OWConstraint?
 
     fileprivate lazy var leftViewContainer: UIView = {
         return UIView()

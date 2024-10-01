@@ -106,7 +106,7 @@ extension OWAuthenticationManager {
 
                 let routeringMode: OWRouteringMode
 
-                var router: OWRoutering? = nil
+                var router: OWRoutering?
                 if case let OWRouteringModeInternal.routering(routering) = routeringModeProtocol.activeRouteringMode,
                    let navController = routering.navigationController {
                     routeringMode = .flow(navigationController: navController)

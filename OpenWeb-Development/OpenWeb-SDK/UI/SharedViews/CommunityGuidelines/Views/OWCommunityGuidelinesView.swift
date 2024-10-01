@@ -45,7 +45,7 @@ class OWCommunityGuidelinesView: UIView {
             .image(UIImage(spNamed: "guidelinesIcon", supportDarkMode: false)!)
     }()
 
-    fileprivate var heightConstraint: OWConstraint? = nil
+    fileprivate var heightConstraint: OWConstraint?
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 

@@ -170,7 +170,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 fileprivate extension OWCommentCreationContentViewModel {
     func setupInitialTextIfNeeded() {
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
-        var initialText: String? = nil
+        var initialText: String?
         switch commentCreationType {
         case .comment:
             guard let postId = self.postId,

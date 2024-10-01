@@ -29,7 +29,7 @@ class OWUIAuthenticationLayer: OWUIAuthentication, OWUIAuthenticationInternalPro
         }
     }
 
-    fileprivate var _displayAuthenticationFlow: OWAuthenticationFlowCallback? = nil
+    fileprivate var _displayAuthenticationFlow: OWAuthenticationFlowCallback?
 
     func triggerPublisherDisplayAuthenticationFlow(routeringMode: OWRouteringMode, completion: @escaping OWBasicCompletion) {
         guard let callback = _displayAuthenticationFlow else {

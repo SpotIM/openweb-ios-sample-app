@@ -33,7 +33,7 @@ class OWNavigationPlaceholderViewModel: OWNavigationPlaceholderViewModeling,
         static let intervalForObservingNewVC = 300
     }
 
-    fileprivate weak var vc: UIViewController? = nil
+    fileprivate weak var vc: UIViewController?
     fileprivate let onFirstActualVC: (_ vc: UIViewController) -> Void
     fileprivate var disposeBag = DisposeBag()
     fileprivate let scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OWNavigationPlaceholderViewModel")

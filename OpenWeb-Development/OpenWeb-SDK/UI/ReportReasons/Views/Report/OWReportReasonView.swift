@@ -35,7 +35,7 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let animateTextViewAlphaDuration: CGFloat = 0.7
     }
 
-    fileprivate var textViewHeightConstraint: OWConstraint? = nil
+    fileprivate var textViewHeightConstraint: OWConstraint?
 
     fileprivate lazy var titleView: OWTitleView = {
         return OWTitleView(title: viewModel.outputs.titleText,

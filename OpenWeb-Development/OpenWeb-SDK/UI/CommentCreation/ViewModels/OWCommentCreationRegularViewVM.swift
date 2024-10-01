@@ -116,7 +116,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     lazy var titleAttributedString: Observable<NSAttributedString> = {
         let commentingOnText = OWLocalizationManager.shared.localizedString(key: "CommentingOn")
 
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentCreationData.commentCreationType {
         case .edit(let comment):
             if let postId = self.postId,
@@ -147,7 +147,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     var shouldShowReplySnippet: Bool {
         guard let postId = self.postId else { return false }
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentType {
         case .edit(let comment):
             if let parentId = comment.parentId,

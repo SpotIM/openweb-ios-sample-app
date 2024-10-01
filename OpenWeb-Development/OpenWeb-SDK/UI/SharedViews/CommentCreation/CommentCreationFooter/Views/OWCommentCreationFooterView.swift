@@ -77,7 +77,7 @@ class OWCommentCreationFooterView: UIView {
         return OWCommentLabelsContainerView()
     }()
 
-    fileprivate var commentLabelsZeroWidthConstraint: OWConstraint? = nil
+    fileprivate var commentLabelsZeroWidthConstraint: OWConstraint?
 
     init(with viewModel: OWCommentCreationFooterViewModeling) {
         self.viewModel = viewModel
