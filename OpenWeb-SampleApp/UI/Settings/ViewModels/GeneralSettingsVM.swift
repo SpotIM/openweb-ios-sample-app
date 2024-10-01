@@ -230,7 +230,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
                 switch fontGroupFamily {
                 case .`default`:
                     return 0
-                case .custom(fontFamily: _):
+                case .custom:
                     return 1
                 default:
                     return 0
@@ -264,7 +264,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return userDefaultsProvider.values(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
             .map { fontGroupFamily in
                 switch fontGroupFamily {
-                case .custom(fontFamily: _):
+                case .custom:
                     return true
                 default:
                     return false
@@ -296,7 +296,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
                     return 0
                 case .useServerConfig:
                     return 1
-                case .use(language: _):
+                case .use:
                     return 2
                 default:
                     return OWLanguageStrategy.defaultStrategyIndex
@@ -329,7 +329,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
             .map {
                 switch $0 {
                 case .server: return false
-                case .local(_): return true
+                case .local: return true
                 default:
                     return false
                 }

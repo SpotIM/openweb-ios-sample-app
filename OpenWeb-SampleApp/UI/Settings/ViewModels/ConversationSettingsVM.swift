@@ -77,7 +77,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
                     return OWConversationStyleIndexer.regular.index
                 case .compact:
                     return OWConversationStyleIndexer.compact.index
-                case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: _):
+                case .custom:
                     return OWConversationStyleIndexer.custom.index
                 default:
                     return OWConversationStyle.defaultIndex

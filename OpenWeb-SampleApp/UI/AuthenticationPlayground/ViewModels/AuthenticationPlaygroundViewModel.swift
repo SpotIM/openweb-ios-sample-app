@@ -190,7 +190,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     DLog("Before logout \(loginStatus))")
                     authentication.logout { [weak self] result in
                         switch result {
-                        case .success(_):
+                        case .success:
                             authentication.userStatus { loginStatus in
                                 DLog("After logout \(loginStatus))")
                             }

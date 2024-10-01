@@ -123,7 +123,7 @@ fileprivate extension TestingPlaygroundViewModel {
                                         completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
-                    case .success(_):
+                    case .success:
                         // All good
                         break
                     case .failure(let error):
