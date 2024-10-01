@@ -337,7 +337,7 @@ extension OWAuthenticationManager {
             .withLatestFrom(_userAuthenticationStatus)
             .do(onNext: { [weak self] currentAuthenticationStatus in
                 // Do not update status to .notAutenticated if we are sso recovering
-                if case .ssoRecovering(_) = currentAuthenticationStatus { return }
+                if case .ssoRecovering = currentAuthenticationStatus { return }
                 guard let self = self else { return }
 
                 self.update(userAvailability: .notAvailable)
@@ -345,7 +345,7 @@ extension OWAuthenticationManager {
             })
             .flatMapLatest { [weak self] currentAuthenticationStatus -> Observable<Void> in
                 guard let self = self else { return .empty() }
-                if case .ssoRecovering(_) = currentAuthenticationStatus { return Observable.just(()) }
+                if case .ssoRecovering = currentAuthenticationStatus { return Observable.just(()) }
                 return self.retrieveNetworkNewUser()
                     .take(1)
                     .voidify()
@@ -358,7 +358,7 @@ extension OWAuthenticationManager {
             .flatMap { [weak self] userAvailablity -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 // 1. Logout current user if needed
-                if case .user(_) = userAvailablity {
+                if case .user = userAvailablity {
                     return self.logout()
                 } else {
                     return .just(())
@@ -375,7 +375,7 @@ extension OWAuthenticationManager {
                     .do(onNext: { [weak self] user, currentAuthenticationStatus in
                         guard let self = self else { return }
                         // Do not update user while we are sso recovering
-                        if case .ssoRecovering(_) = currentAuthenticationStatus { return }
+                        if case .ssoRecovering = currentAuthenticationStatus { return }
 
                         self.update(userAvailability: .user(user))
                         self._userAuthenticationStatus.onNext(.guest(userId: user.userId ?? ""))
@@ -399,7 +399,7 @@ extension OWAuthenticationManager {
             .take(1)
             .flatMapLatest { authenticationStatus -> Observable<Void> in
                 // 1. Make sure not already logged in
-                if case .ssoLoggedIn(_) = authenticationStatus {
+                if case .ssoLoggedIn = authenticationStatus {
                     return .error(OWError.alreadyLoggedIn)
                 } else {
                     return .just(())
@@ -430,7 +430,7 @@ extension OWAuthenticationManager {
             .take(1)
             .flatMap { authenticationStatus -> Observable<Void> in
                 // 1. Make sure not already logged in
-                if case .guest(_) = authenticationStatus {
+                if case .guest = authenticationStatus {
                     return .just(())
                 } else if authenticationStatus == .notAutenticated {
                     return .just(())
@@ -641,7 +641,7 @@ fileprivate extension OWAuthenticationManager {
     func ensureSSORecoveryStatus(for originalUserId: String) {
         let statusObservable = userAuthenticationStatus
             .map { status -> OWInternalUserAuthenticationStatus? in
-                if case .ssoLoggedIn(_) = status {
+                if case .ssoLoggedIn = status {
                     return status
                 } else {
                     return nil

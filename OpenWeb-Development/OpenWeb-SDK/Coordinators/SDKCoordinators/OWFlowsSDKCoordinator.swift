@@ -187,7 +187,7 @@ fileprivate extension OWFlowsSDKCoordinator {
 
     func cleanRouter(presentationalMode: OWPresentationalMode) {
         switch presentationalMode {
-        case .present(viewController: _):
+        case .present:
             router.dismiss(animated: true, completion: nil)
         default:
             break
