@@ -50,7 +50,6 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
     var selectedSortOption: Observable<OWSortOption> {
         _selectedSortOption
             .unwrap()
-            .map { $0 }
     }
 
     var openSort: Observable<OWUISource> {
