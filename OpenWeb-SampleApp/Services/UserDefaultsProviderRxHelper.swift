@@ -32,7 +32,7 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
     }
 
     func observable<T>(key: UserDefaultsProvider.UDKey<T>, value: Data?, defaultValue: T? = nil) -> Observable<T> {
-        var defaultValueData: Data? = nil
+        var defaultValueData: Data?
         if value == nil,
            let defaultValue = defaultValue,
            let encodedData = try? encoder.encode(defaultValue) {

@@ -48,7 +48,7 @@ class MockArticleIndependentViewsVC: UIViewController {
         return scroll
     }()
 
-    fileprivate var independentView: UIView? = nil
+    fileprivate var independentView: UIView?
 
     fileprivate lazy var settingsBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
