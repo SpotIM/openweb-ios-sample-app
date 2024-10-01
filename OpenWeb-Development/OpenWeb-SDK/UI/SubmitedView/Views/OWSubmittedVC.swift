@@ -33,10 +33,6 @@ class OWSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
         setupObservers()
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
