@@ -52,7 +52,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 
         // 2. Define childs coordinators
         let settingsCoordinator = Observable.merge(testAPIVM.outputs.openSettings.map { nil },
-                                                deepLinkToSettings.map { deepLinkOptions})
+                                                deepLinkToSettings.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let coordinator = SettingsCoordinator(router: self.router)
@@ -65,7 +65,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             }
 
         let authenticationPlaygroundCoordinator = Observable.merge(testAPIVM.outputs.openAuthentication.map { nil },
-                                                                   deepLinkToAuthentication.map { deepLinkOptions})
+                                                                   deepLinkToAuthentication.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let coordinator = AuthenticationPlaygroundCoordinator(router: self.router)

@@ -40,7 +40,7 @@ class MainPageCoordinator: BaseCoordinator<Void> {
 
         // Define childs coordinators
         let aboutCoordinator = Observable.merge(mainPageVM.outputs.showAbout.map { nil },
-                                                deepLinkToAbout.map { deepLinkOptions})
+                                                deepLinkToAbout.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let coordinator = AboutCoordinator(router: self.router)
@@ -48,7 +48,7 @@ class MainPageCoordinator: BaseCoordinator<Void> {
             }
 
         let testAPICoordinator = Observable.merge(mainPageVM.outputs.testAPI.map { nil },
-                                                  deepLinkToTestAPI.map { deepLinkOptions})
+                                                  deepLinkToTestAPI.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let coordinator = TestAPICoordinator(router: self.router)
