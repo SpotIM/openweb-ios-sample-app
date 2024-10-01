@@ -20,7 +20,7 @@ Examples of using this service:
 */
 
 // Defaults
-fileprivate struct DefaultMetrics {
+private struct DefaultMetrics {
     static let defaultEntryLifetime: TimeInterval = 24 * 60 * 60 // 1 day
     static let defaultMaxEntryCount: Int = 50
 }
@@ -140,7 +140,7 @@ fileprivate extension OWCacheService {
     }
 }
 
-fileprivate enum OWWrappedValueExpirationStrategy {
+private enum OWWrappedValueExpirationStrategy {
     case none
     case expiration(date: Date)
 }
