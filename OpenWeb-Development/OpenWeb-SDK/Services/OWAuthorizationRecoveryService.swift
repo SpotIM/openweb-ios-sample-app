@@ -127,7 +127,7 @@ fileprivate extension OWAuthorizationRecoveryService {
                         self.isCurrentlyRecovering.onNext(false)
                         self._recoverJustFinished.onError(error)
                     })
-                }
+            }
                 .subscribe()
                 .disposed(by: disposeBag)
     }

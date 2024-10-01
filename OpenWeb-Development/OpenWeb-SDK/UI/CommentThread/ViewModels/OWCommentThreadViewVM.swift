@@ -669,7 +669,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .conversationRead(mode: .newest, page: OWPaginationPage.first, childCount: 5, messageId: data.commentId)
                 .response
                 .materialize()
-        }
+            }
 
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
