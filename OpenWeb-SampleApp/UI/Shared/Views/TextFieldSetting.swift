@@ -107,9 +107,7 @@ fileprivate extension TextFieldSetting {
         let keyboardShowHeight = NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
             .map { notification -> CGFloat in
-                // swiftlint:disable line_length
                 let height = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.height
-                // swiftlint:enable line_length
                 return height ?? 0
             }
 
@@ -134,10 +132,8 @@ fileprivate extension TextFieldSetting {
                     scrollView.contentInset = insets
                     scrollView.scrollIndicatorInsets = insets
 
-                    // swiftlint:disable line_length
                     if scrollView.frame.height - keyboardHeight + scrollView.contentOffset.y < self.frame.origin.y + Metrics.keyboardPadding + self.frame.size.height {
                         let moveTo = self.frame.origin.y - keyboardHeight + self.frame.size.height + Metrics.keyboardPadding
-                        // swiftlint:enable line_length
                         let scrollPoint = CGPoint(x: 0, y: moveTo)
                         scrollView.setContentOffset(scrollPoint, animated: true)
                     }

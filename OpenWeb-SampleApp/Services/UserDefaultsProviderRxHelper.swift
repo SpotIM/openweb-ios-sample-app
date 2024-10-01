@@ -39,9 +39,7 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
             defaultValueData = encodedData
         }
 
-        // swiftlint:disable line_length
         let subscribable = rxObjects[key.rawValue]?.subscribableObservable ?? BehaviorSubject<Data?>(value: value ?? defaultValueData)
-        // swiftlint:enable line_length
         addSubscribableIfNeeded(key: key, subscribable: subscribable)
         return subscribable
             .unwrap()

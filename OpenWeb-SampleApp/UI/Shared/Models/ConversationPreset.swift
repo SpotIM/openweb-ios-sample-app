@@ -17,7 +17,6 @@ struct ConversationPreset {
     var section: String?
 }
 
-// swiftlint:disable line_length
 extension ConversationPreset {
     static let mockModels = Self.createMockModels()
 
@@ -42,4 +41,3 @@ extension ConversationPreset {
         return [publicMainPreset()]
     }
 }
-// swiftlint:enable line_length

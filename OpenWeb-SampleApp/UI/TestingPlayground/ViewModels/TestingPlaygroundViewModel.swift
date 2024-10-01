@@ -66,9 +66,7 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
     }
 
     var present: OWModalPresentationStyle {
-        // swiftlint:disable line_length
         return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
-        // swiftlint:enable line_length
     }
 
     lazy var title: String = {
