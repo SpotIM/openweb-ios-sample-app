@@ -38,10 +38,12 @@ class OWClarityDetailsVC: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         // If modalPresentationStyle is pageSheet and animated by pulling down the VC
         // we want to bring back the navigation bar after the VC is dismissed
         // Fixes navigation bar showing over title bar.
