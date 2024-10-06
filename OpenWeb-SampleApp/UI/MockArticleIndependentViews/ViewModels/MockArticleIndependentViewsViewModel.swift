@@ -33,19 +33,19 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     var inputs: MockArticleIndependentViewsViewModelingInputs { return self }
     var outputs: MockArticleIndependentViewsViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let preConversationCompactHorizontalMargin: CGFloat = 16.0
         static let timeForPersistenceToUpdate: Int = 100 // In ms
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     let settingsTapped = PublishSubject<Void>()
 
-    fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
-    fileprivate let commonCreatorService: CommonCreatorServicing
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
+    private let commonCreatorService: CommonCreatorServicing
 
-    fileprivate let _actionSettings = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
-    fileprivate var actionSettings: Observable<SDKUIIndependentViewsActionSettings> {
+    private let _actionSettings = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
+    private var actionSettings: Observable<SDKUIIndependentViewsActionSettings> {
         return _actionSettings
             .unwrap()
             .asObservable()
@@ -85,7 +85,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .asObservable()
     }
 
-    fileprivate let loggerViewTitle: String
+    private let loggerViewTitle: String
 
     lazy var title: String = {
         return NSLocalizedString("MockArticle", comment: "")
@@ -98,33 +98,33 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     lazy var showComponent: Observable<ComponentAndType> = {
         return self.viewTypeUpdaters
             .flatMap { [weak self] settings -> Observable<ComponentAndType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.retrieveComponent(for: settings)
                     .map { ($0, settings.viewType) }
             }
     }()
 
-    fileprivate lazy var viewTypeUpdaters: Observable<SDKUIIndependentViewsActionSettings> = {
+    private lazy var viewTypeUpdaters: Observable<SDKUIIndependentViewsActionSettings> = {
         return Observable.merge(preConversationUpdater, conversationUpdater, commentCreationUpdater, commentThreadUpdater, independentAdUnitUpdater, clarityDetailsUpdater)
             .flatMapLatest { [weak self] _ -> Observable<SDKUIIndependentViewsActionSettings> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
             }
             .delay(.milliseconds(Metrics.timeForPersistenceToUpdate), scheduler: MainScheduler.asyncInstance)
     }()
 
-    fileprivate var _horizontalMargin: CGFloat = 0.0
+    private var _horizontalMargin: CGFloat = 0.0
     var independentViewHorizontalMargin: CGFloat {
         return _horizontalMargin
     }
 
     // All the stuff which should trigger new pre conversation component
-    fileprivate lazy var preConversationStyleChanged: Observable<Void> = {
+    private lazy var preConversationStyleChanged: Observable<Void> = {
         return self.userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
                     .map { $0.viewType }
@@ -132,16 +132,16 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .filter { $0 == .preConversation }
             .voidify()
     }()
-    fileprivate lazy var preConversationUpdater: Observable<Void> = {
+    private lazy var preConversationUpdater: Observable<Void> = {
         return Observable.merge(self.preConversationStyleChanged)
     }()
 
     // All the stuff which should trigger new conversation component
-    fileprivate lazy var conversationStyleChanged: Observable<Void> = {
+    private lazy var conversationStyleChanged: Observable<Void> = {
         return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
                     .map { $0.viewType }
@@ -149,15 +149,15 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .filter { $0 == .conversation }
             .voidify()
     }()
-    fileprivate lazy var conversationUpdater: Observable<Void> = {
+    private lazy var conversationUpdater: Observable<Void> = {
         return Observable.merge(self.conversationStyleChanged)
     }()
 
-    fileprivate lazy var commentCreationStyleChanged: Observable<Void> = {
+    private lazy var commentCreationStyleChanged: Observable<Void> = {
         return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
                     .map { $0.viewType }
@@ -165,16 +165,16 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .filter { $0 == .commentCreation }
             .voidify()
     }()
-    fileprivate lazy var commentCreationUpdater: Observable<Void> = {
+    private lazy var commentCreationUpdater: Observable<Void> = {
         return Observable.merge(self.commentCreationStyleChanged)
     }()
 
     // All the stuff which should trigger new comment thread component
-    fileprivate lazy var commentThreadStyleChanged: Observable<Void> = {
+    private lazy var commentThreadStyleChanged: Observable<Void> = {
         return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.actionSettings
                     .take(1)
                     .map { $0.viewType }
@@ -183,34 +183,34 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .voidify()
     }()
 
-    fileprivate lazy var commentThreadUpdater: Observable<Void> = {
+    private lazy var commentThreadUpdater: Observable<Void> = {
         return Observable.merge(self.commentThreadStyleChanged)
     }()
 
     // All the stuff which should trigger new comment thread component
-    fileprivate lazy var independentAdUnitStyleChanged: Observable<Void> = {
+    private lazy var independentAdUnitStyleChanged: Observable<Void> = {
         // TODO: Complete once developed
         return Observable.never()
     }()
-    fileprivate lazy var independentAdUnitUpdater: Observable<Void> = {
+    private lazy var independentAdUnitUpdater: Observable<Void> = {
         return Observable.merge(self.independentAdUnitStyleChanged)
     }()
 
     // All the stuff which should trigger new comment thread component
-    fileprivate lazy var clarityDetailsStyleChanged: Observable<Void> = {
+    private lazy var clarityDetailsStyleChanged: Observable<Void> = {
         return Observable.just(())
     }()
-    fileprivate lazy var clarityDetailsUpdater: Observable<Void> = {
+    private lazy var clarityDetailsUpdater: Observable<Void> = {
         return Observable.merge(self.clarityDetailsStyleChanged)
     }()
 }
 
-fileprivate extension MockArticleIndependentViewsViewModel {
+private extension MockArticleIndependentViewsViewModel {
     func setupObservers() {
         // Addressing horizontal margin
         viewTypeUpdaters
             .subscribe(onNext: { [weak self] settings in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch settings.viewType {
                 case .preConversation:
                     let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
@@ -225,7 +225,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         viewTypeUpdaters
             .voidify()
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.loggerViewModel.inputs.clear()
             })
             .disposed(by: disposeBag)
@@ -235,7 +235,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         let customizations: OWCustomizations = OpenWeb.manager.ui.customizations
 
         let customizableClosure: OWCustomizableElementCallback = { [weak self] element, source, style, postId in
-            guard let self = self else { return }
+            guard let self else { return }
             let postIdString = postId ?? "No postId"
             let log = "Received OWCustomizableElementCallback element: \(element), from source: \(source), style: \(style), postId: \(postIdString)\n"
             self.loggerViewModel.inputs.log(text: log)
@@ -274,7 +274,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
 
     func retrievePreConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -283,7 +283,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             let uiViews = manager.ui.views
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
@@ -310,7 +310,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
 
     func retrieveConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -319,7 +319,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             let uiViews = manager.ui.views
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
@@ -346,7 +346,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
 
     func retrieveCommentCreation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -355,7 +355,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             let uiViews = manager.ui.views
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
@@ -383,7 +383,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
 
     func retrieveCommentThread(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -392,7 +392,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             let uiViews = manager.ui.views
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
@@ -420,14 +420,14 @@ fileprivate extension MockArticleIndependentViewsViewModel {
 
     func retrieveClarityDetails(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
+            guard let self else { return Disposables.create() }
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
             let additionalSettings = self.commonCreatorService.additionalSettings()
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }

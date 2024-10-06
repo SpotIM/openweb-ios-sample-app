@@ -30,13 +30,13 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
     var rxProtocol: UserDefaultsProviderRxProtocol { return self }
     fileprivate var rxHelper: UserDefaultsProviderRxHelperProtocol
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let suiteName = "com.open-web.demo-app"
     }
 
-    fileprivate let encoder: JSONEncoder
-    fileprivate let decoder: JSONDecoder
-    fileprivate let userDefaults: UserDefaults
+    private let encoder: JSONEncoder
+    private let decoder: JSONDecoder
+    private let userDefaults: UserDefaults
 
     init(userDefaults: UserDefaults = UserDefaults(suiteName: Metrics.suiteName) ?? UserDefaults.standard,
          encoder: JSONEncoder = JSONEncoder(),
@@ -64,9 +64,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         }
 
         guard let valueToReturn = try? decoder.decode(T.self, from: data) else {
-            // swiftlint:disable line_length
             DLog("Failed to decode data for key: \(key.rawValue) to class: \(T.self) after retrieving from UserDefaults")
-            // swiftlint:enable line_length
             return nil
         }
 
@@ -134,7 +132,7 @@ extension UserDefaultsProvider {
     }
 }
 
-fileprivate extension UserDefaultsProvider.UDKey {
+private extension UserDefaultsProvider.UDKey {
     // Add description for better understanding of future cases (keys)
     var description: String {
         switch self {
@@ -212,7 +210,7 @@ fileprivate extension UserDefaultsProvider.UDKey {
     }
 }
 
-fileprivate extension UserDefaultsProvider {
+private extension UserDefaultsProvider {
     func _save<T>(data: Data, forKey key: UDKey<T>) {
         DLog("Writing data to UserDefaults for key: \(key.rawValue)")
         userDefaults.set(data, forKey: key.rawValue)
@@ -229,9 +227,9 @@ fileprivate extension UserDefaultsProvider {
     }
 }
 
-fileprivate extension Reactive where Base: UserDefaultsProvider {
+private extension Reactive where Base: UserDefaultsProvider {
     func setValues<T>(key: UserDefaultsProvider.UDKey<T>) -> Binder<T> {
-        return base.rxHelper.binder(key: key) { (value) in
+        return base.rxHelper.binder(key: key) { value in
             base.save(value: value, forKey: key)
         }
     }

@@ -14,10 +14,9 @@ import Foundation
 struct ConversationPreset {
     let displayName: String
     let conversationDataModel: SDKConversationDataModel
-    var section: String? = nil
+    var section: String?
 }
 
-// swiftlint:disable line_length
 extension ConversationPreset {
     static let mockModels = Self.createMockModels()
 
@@ -26,7 +25,7 @@ extension ConversationPreset {
         return publicPresets()
     #else
         let developmentPresets = DevelopmentConversationPreset.developmentPresets().map { $0.toConversationPreset() }
-        return publicPresets()+developmentPresets
+        return publicPresets() + developmentPresets
     #endif
     }
 
@@ -37,9 +36,8 @@ extension ConversationPreset {
                                                                                               postId: "sdk1"))
     }
 
-    fileprivate static func publicPresets() -> [ConversationPreset] {
+    private static func publicPresets() -> [ConversationPreset] {
         // TODO: Add more presets
         return [publicMainPreset()]
     }
 }
-// swiftlint:enable line_length

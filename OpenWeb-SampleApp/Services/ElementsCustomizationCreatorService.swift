@@ -32,7 +32,7 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
     }
 }
 
-fileprivate extension ElementsCustomizationCreatorService {
+private extension ElementsCustomizationCreatorService {
 
     // swiftlint:disable function_body_length
     static func getFirstStyle(element: OWCustomizableElement, source: OWViewSourceType, themeStyle: OWThemeStyle) {

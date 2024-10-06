@@ -12,7 +12,7 @@ import OpenWebSDK
 
 class GeneralSettingsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "general_settings_view_id"
         static let segmentedReadOnlyModeIdentifier = "read_only_mode"
         static let segmentedArticleHeaderStyleIdentifier = "article_header_style"
@@ -39,21 +39,21 @@ class GeneralSettingsView: UIView {
         static let btnPadding: CGFloat = 12
     }
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metrics.verticalOffset
         return stackView
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedArticleHeaderStyle: SegmentedControlSetting = {
+    private lazy var segmentedArticleHeaderStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.articleHeaderStyleTitle
         let items = viewModel.outputs.articleHeaderStyleSettings
 
@@ -62,7 +62,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedArticleInformationStrategy: SegmentedControlSetting = {
+    private lazy var segmentedArticleInformationStrategy: SegmentedControlSetting = {
         let title = viewModel.outputs.articleInformationStrategyTitle
         let items = viewModel.outputs.articleInformationStrategySettings
 
@@ -71,7 +71,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedElementsCustomizationStyle: SegmentedControlSetting = {
+    private lazy var segmentedElementsCustomizationStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.elementsCustomizationStyleTitle
         let items = viewModel.outputs.elementsCustomizationStyleSettings
 
@@ -80,7 +80,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedColorsCustomizationStyle: SegmentedControlSetting = {
+    private lazy var segmentedColorsCustomizationStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.colorsCustomizationStyleTitle
         let items = viewModel.outputs.colorsCustomizationStyleSettings
 
@@ -89,13 +89,13 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var openCustomColorsBtn: UIButton = {
+    private lazy var openCustomColorsBtn: UIButton = {
         return "Custom Colors"
             .blueRoundedButton
             .withPadding(Metrics.btnPadding)
     }()
 
-    fileprivate lazy var segmentedReadOnlyMode: SegmentedControlSetting = {
+    private lazy var segmentedReadOnlyMode: SegmentedControlSetting = {
         let title = viewModel.outputs.readOnlyTitle
         let items = viewModel.outputs.readOnlySettings
 
@@ -104,7 +104,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedThemeMode: SegmentedControlSetting = {
+    private lazy var segmentedThemeMode: SegmentedControlSetting = {
         let title = viewModel.outputs.themeModeTitle
         let items = viewModel.outputs.themeModeSettings
 
@@ -113,7 +113,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedStatusBarStyle: SegmentedControlSetting = {
+    private lazy var segmentedStatusBarStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.statusBarStyleTitle
         let items = viewModel.outputs.statusBarStyleSettings
 
@@ -122,7 +122,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedNavigationBarStyle: SegmentedControlSetting = {
+    private lazy var segmentedNavigationBarStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.navigationBarStyleTitle
         let items = viewModel.outputs.navigationBarStyleSettings
 
@@ -131,7 +131,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedModalStyle: SegmentedControlSetting = {
+    private lazy var segmentedModalStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.modalStyleTitle
         let items = viewModel.outputs.modalStyleSettings
 
@@ -140,7 +140,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedInitialSort: SegmentedControlSetting = {
+    private lazy var segmentedInitialSort: SegmentedControlSetting = {
         let title = viewModel.outputs.initialSortTitle
         let items = viewModel.outputs.initialSortSettings
 
@@ -149,7 +149,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedFontGroupType: SegmentedControlSetting = {
+    private lazy var segmentedFontGroupType: SegmentedControlSetting = {
         let title = viewModel.outputs.fontGroupTypeTitle
         let items = viewModel.outputs.fontGroupTypeSettings
 
@@ -158,28 +158,28 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var textFieldCustomFontName: TextFieldSetting = {
+    private lazy var textFieldCustomFontName: TextFieldSetting = {
         let txtField = TextFieldSetting(title: viewModel.outputs.customFontGroupTypeNameTitle,
                                         accessibilityPrefixId: Metrics.textFieldCustomFontNameIdentifier,
                                         font: FontBook.paragraph)
         return txtField
     }()
 
-    fileprivate lazy var textFieldArticleURL: TextFieldSetting = {
+    private lazy var textFieldArticleURL: TextFieldSetting = {
         let txtField = TextFieldSetting(title: viewModel.outputs.articleURLTitle,
                                         accessibilityPrefixId: Metrics.textFieldArticleURLIdentifier,
                                         font: FontBook.paragraph)
         return txtField
     }()
 
-    fileprivate lazy var textFieldArticleSection: TextFieldSetting = {
+    private lazy var textFieldArticleSection: TextFieldSetting = {
         let txtField = TextFieldSetting(title: viewModel.outputs.articleSectionTitle,
                                         accessibilityPrefixId: Metrics.textFieldArticleSectionIdentifier,
                                         font: FontBook.paragraph)
         return txtField
     }()
 
-    fileprivate lazy var segmentedLanguageStrategy: SegmentedControlSetting = {
+    private lazy var segmentedLanguageStrategy: SegmentedControlSetting = {
         let title = viewModel.outputs.languageStrategyTitle
         let items = viewModel.outputs.languageStrategySettings
 
@@ -188,7 +188,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedLocaleStrategy: SegmentedControlSetting = {
+    private lazy var segmentedLocaleStrategy: SegmentedControlSetting = {
         let title = viewModel.outputs.localeStrategyTitle
         let items = viewModel.outputs.localeStrategySettings
 
@@ -197,7 +197,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var pickerLanguageCode: PickerSetting = {
+    private lazy var pickerLanguageCode: PickerSetting = {
         let title = viewModel.outputs.supportedLanguageTitle
         let items = viewModel.outputs.supportedLanguageItems
         let picker = PickerSetting(title: title,
@@ -206,13 +206,13 @@ class GeneralSettingsView: UIView {
         return picker
     }()
 
-    fileprivate lazy var showLoginPromptSwitch: SwitchSetting = {
+    private lazy var showLoginPromptSwitch: SwitchSetting = {
         return SwitchSetting(
             title: viewModel.outputs.showLoginPromptTitle,
             accessibilityPrefixId: Metrics.loginPromptSwitchIdentifier)
     }()
 
-    fileprivate lazy var segmentedOrientationEnforcement: SegmentedControlSetting = {
+    private lazy var segmentedOrientationEnforcement: SegmentedControlSetting = {
         let title = viewModel.outputs.orientationEnforcementTitle
         let items = viewModel.outputs.orientationEnforcementSettings
 
@@ -221,10 +221,10 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate let viewModel: GeneralSettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: GeneralSettingsViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var segmentedCommentActionsColor: SegmentedControlSetting = {
+    private lazy var segmentedCommentActionsColor: SegmentedControlSetting = {
         let title = viewModel.outputs.commentActionsColorTitle
         let items = viewModel.outputs.commentActionsColorSettings
 
@@ -233,7 +233,7 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedCommentActionsFontStyle: SegmentedControlSetting = {
+    private lazy var segmentedCommentActionsFontStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.commentActionsFontStyleTitle
         let items = viewModel.outputs.commentActionsFontStyleSettings
 
@@ -255,7 +255,7 @@ class GeneralSettingsView: UIView {
     }
 }
 
-fileprivate extension GeneralSettingsView {
+private extension GeneralSettingsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -480,7 +480,7 @@ fileprivate extension GeneralSettingsView {
 
         viewModel.outputs.languageName
             .map { [weak self] in
-                guard let self = self, let index = self.viewModel.outputs.supportedLanguageItems.firstIndex(of: $0)
+                guard let self, let index = self.viewModel.outputs.supportedLanguageItems.firstIndex(of: $0)
                 else { return nil }
                 return (index, 0)
             }
@@ -490,7 +490,7 @@ fileprivate extension GeneralSettingsView {
 
         pickerLanguageCode.rx.selectedPickerIndex
             .map { [weak self] in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.viewModel.outputs.supportedLanguageItems[$0.row]
             }
             .unwrap()

@@ -26,9 +26,9 @@ class IAUSettingsVM: IAUSettingsViewModeling, IAUSettingsViewModelingInputs, IAU
     var inputs: IAUSettingsViewModelingInputs { return self }
     var outputs: IAUSettingsViewModelingOutputs { return self }
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("IAUSettings", comment: "")
@@ -40,7 +40,7 @@ class IAUSettingsVM: IAUSettingsViewModeling, IAUSettingsViewModelingInputs, IAU
     }
 }
 
-fileprivate extension IAUSettingsVM {
+private extension IAUSettingsVM {
     func setupObservers() {
     }
 }

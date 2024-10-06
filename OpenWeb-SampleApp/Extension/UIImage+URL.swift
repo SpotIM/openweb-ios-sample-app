@@ -17,7 +17,7 @@ extension UIImage {
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
                   let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
-                  let data = data,
+                  let data,
                   error == nil,
                   let image = UIImage(data: data) else {
                       DLog("Failed to download image from url: \(url))")

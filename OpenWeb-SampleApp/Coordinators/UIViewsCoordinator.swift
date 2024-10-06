@@ -11,7 +11,7 @@ import RxSwift
 
 class UIViewsCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let router: Routering
+    private let router: Routering
 
     init(router: Routering) {
         self.router = router
@@ -37,7 +37,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
         // Child coordinators
         let mockArticleIndependentCoordinator = viewsVM.outputs.openMockArticleScreen
             .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.actionsViewSettings(data: dataModel)
                 let coordinator = MockArticleIndependentCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
@@ -48,7 +48,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
 
         let viewsExamplesCoordinator = viewsVM.outputs.openExamplesScreen
             .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
                 let coordinator = ViewsExamplesCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)

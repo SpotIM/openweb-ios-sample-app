@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 class AboutVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         static let identifier = "about_vc_id"
@@ -18,9 +18,9 @@ class AboutVC: UIViewController {
         static let rightsReservedIdentifier = "rights_reserved_label_id"
     }
 
-    fileprivate let viewModel: AboutViewModeling
+    private let viewModel: AboutViewModeling
 
-    fileprivate lazy var aboutTextView: UITextView = {
+    private lazy var aboutTextView: UITextView = {
         let textView = UITextView()
             .font(FontBook.paragraphMedium)
             .textColor(ColorAsset.L6.color)
@@ -28,7 +28,7 @@ class AboutVC: UIViewController {
         return textView
     }()
 
-    fileprivate lazy var allRightsReservedLbl: UILabel = {
+    private lazy var allRightsReservedLbl: UILabel = {
         return UILabel()
             .textColor(ColorAsset.L4.color)
             .font(FontBook.helper)
@@ -61,7 +61,7 @@ class AboutVC: UIViewController {
     }
 }
 
-fileprivate extension AboutVC {
+private extension AboutVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         aboutTextView.accessibilityIdentifier = Metrics.textViewIdentifier

@@ -22,7 +22,7 @@ protocol Routering {
 
 class Router: NSObject, Routering {
 
-    fileprivate var completions: [UIViewController: PublishSubject<Void>]
+    private var completions: [UIViewController: PublishSubject<Void>]
     unowned let navigationController: UINavigationController
     var rootViewController: UIViewController? {
         return navigationController.viewControllers.first
@@ -48,7 +48,7 @@ class Router: NSObject, Routering {
                 return
         }
 
-        if let completion = completion {
+        if let completion {
             completions[module.toPresentable()] = completion
         }
 
@@ -90,7 +90,7 @@ extension Router: UINavigationControllerDelegate {
     }
 }
 
-fileprivate extension Router {
+private extension Router {
     func runCompletion(for controller: UIViewController) {
         guard let completion = completions[controller] else {
             return
@@ -99,4 +99,3 @@ fileprivate extension Router {
         completions.removeValue(forKey: controller)
     }
 }
-

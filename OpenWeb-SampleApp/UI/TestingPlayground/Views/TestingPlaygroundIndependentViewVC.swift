@@ -14,24 +14,24 @@ import RxCocoa
 #if BETA
 
 class TestingPlaygroundIndependentViewVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let identifier = "testing_playground_independent_view_vc_id"
     }
 
-    fileprivate let viewModel: TestingPlaygroundIndependentViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: TestingPlaygroundIndependentViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var contentView: UIView = {
+    private lazy var contentView: UIView = {
         let view = UIView()
             .backgroundColor(.clear)
         return view
     }()
 
-    fileprivate var testingPlaygroundView: UIView? = nil
+    private var testingPlaygroundView: UIView?
 
-    fileprivate lazy var loggerView: UILoggerView = {
+    private lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
     }()
 
@@ -61,7 +61,7 @@ class TestingPlaygroundIndependentViewVC: UIViewController {
     }
 }
 
-fileprivate extension TestingPlaygroundIndependentViewVC {
+private extension TestingPlaygroundIndependentViewVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
     }
@@ -88,7 +88,7 @@ fileprivate extension TestingPlaygroundIndependentViewVC {
 
         viewModel.outputs.testingPlaygroundView
             .subscribe(onNext: { [weak self] view in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.testingPlaygroundView = view
                 self.contentView.addSubview(view)
                 view.snp.makeConstraints { make in

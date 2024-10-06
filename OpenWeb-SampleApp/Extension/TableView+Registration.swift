@@ -32,7 +32,7 @@ extension UITableView {
     }
 }
 
-fileprivate extension UITableView {
+private extension UITableView {
     func registerIfNeeded<T: UITableViewCell>(cellClass: T.Type) {
         if registeredCellsIdentifiers.contains(cellClass.identifierName) {
             return
@@ -44,9 +44,7 @@ fileprivate extension UITableView {
     var registeredCellsIdentifiers: Set<String> {
         get {
             // Check if it was already set
-            // swiftlint:disable line_length
             if let registered = objc_getAssociatedObject(self, &AssociatedCells.registeredCellsIdentifiers) as? Set<String> {
-                // swiftlint:enable line_length
                 return registered
             }
 

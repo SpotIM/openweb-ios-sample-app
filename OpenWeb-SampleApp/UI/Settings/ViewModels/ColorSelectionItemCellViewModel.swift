@@ -38,8 +38,8 @@ class ColorSelectionItemCellViewModel: ColorSelectionItemCellViewModeling, Color
     var inputs: ColorSelectionItemCellViewModelingInputs { return self }
     var outputs: ColorSelectionItemCellViewModelingOutputs { return self }
 
-    fileprivate var item: ThemeColorItem
-    fileprivate let disposeBag = DisposeBag()
+    private var item: ThemeColorItem
+    private let disposeBag = DisposeBag()
 
     init(item: ThemeColorItem) {
         self.item = item
