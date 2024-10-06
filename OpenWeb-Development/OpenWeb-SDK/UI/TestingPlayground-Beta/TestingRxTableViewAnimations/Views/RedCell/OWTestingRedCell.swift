@@ -12,19 +12,19 @@ import UIKit
 
 class OWTestingRedCell: UITableViewCell {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let insetForFirstLevel: CGFloat = 5.0
         static let roundCorners: CGFloat = 10.0
         static let padding: CGFloat = 8.0
     }
 
-    fileprivate lazy var firstLevelView: OWTestingRedFirstLevel = {
+    private lazy var firstLevelView: OWTestingRedFirstLevel = {
         return OWTestingRedFirstLevel()
     }()
 
-    fileprivate var viewModel: OWTestingRedCellViewModeling!
+    private var viewModel: OWTestingRedCellViewModeling!
 
-    fileprivate lazy var cellContent: UIView = {
+    private lazy var cellContent: UIView = {
         let view = UIView()
             .backgroundColor(.red)
             .corner(radius: Metrics.roundCorners)
@@ -54,7 +54,7 @@ class OWTestingRedCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWTestingRedCell {
+private extension OWTestingRedCell {
     func setupUI() {
         self.backgroundColor = .red
         self.selectionStyle = .none

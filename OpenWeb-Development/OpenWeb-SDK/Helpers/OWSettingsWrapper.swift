@@ -9,14 +9,14 @@
 import Foundation
 
 class OWSettingsWrapper {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let sdkVersionKey: String = "sdkVersion"
         static let plistSuffix: String = "plist"
         static let openWebSettingsResource: String = "OpenWebSettings"
     }
 
-    fileprivate static let shared = OWSettingsWrapper()
-    fileprivate var sdkVersion: String?
+    private static let shared = OWSettingsWrapper()
+    private var sdkVersion: String?
 
     private init() {
         if let path = Bundle.openWeb.path(forResource: Metrics.openWebSettingsResource, ofType: Metrics.plistSuffix) {

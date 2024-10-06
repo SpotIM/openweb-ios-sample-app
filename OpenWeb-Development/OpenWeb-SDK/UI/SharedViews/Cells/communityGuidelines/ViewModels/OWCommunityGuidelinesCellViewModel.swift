@@ -36,8 +36,8 @@ class OWCommunityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling,
         return self.spacing
     }()
 
-    fileprivate let style: OWCommunityGuidelinesStyle
-    fileprivate let spacing: OWVerticalSpacing
+    private let style: OWCommunityGuidelinesStyle
+    private let spacing: OWVerticalSpacing
 
     // Unique identifier
     let id: String = UUID().uuidString

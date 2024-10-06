@@ -54,16 +54,16 @@ extension OWRoutering {
 }
 
 class OWRouter: NSObject, OWRoutering {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let transitionDuration = 0.5
         static let childAnimationDuration = 0.3
     }
-    fileprivate var completions: [UIViewController: PublishSubject<Void>]
-    fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
+    private var completions: [UIViewController: PublishSubject<Void>]
+    private var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
-    fileprivate let presentationalMode: OWPresentationalModeExtended
-    fileprivate var navDisposedBag: DisposeBag!
-    fileprivate lazy var pushOverFullScreenAnimationTransitioning = OWPushOverFullScreenAnimationTransitioning()
+    private let presentationalMode: OWPresentationalModeExtended
+    private var navDisposedBag: DisposeBag!
+    private lazy var pushOverFullScreenAnimationTransitioning = OWPushOverFullScreenAnimationTransitioning()
     var rootViewController: UIViewController? {
         return navigationController?.viewControllers.first
     }
@@ -85,11 +85,11 @@ class OWRouter: NSObject, OWRoutering {
     }
 
     func start() {
-        guard let navigationController = navigationController else { return }
+        guard let navigationController else { return }
         switch presentationalMode {
         case .present(let viewControllerWeakEncapsulation, _, let animated):
             viewControllerWeakEncapsulation.value()?.present(navigationController, animated: animated)
-        case .push(_):
+        case .push:
             // Already handled in coordinator
             break
         }
@@ -249,7 +249,7 @@ extension OWRouter: UINavigationControllerDelegate {
     }
 }
 
-fileprivate extension OWRouter {
+private extension OWRouter {
     func runCompletion(for controller: UIViewController) {
         guard let completion = completions[controller] else {
             return
@@ -263,7 +263,7 @@ fileprivate extension OWRouter {
 
         navigationController.dismissed
             .subscribe(onNext: { [ weak self] _ in
-                guard let self = self,
+                guard let self,
                       let navController = navigationController as? UINavigationController else { return }
                 let childs = navController.children.reversed()
                 childs.forEach { [weak self] in

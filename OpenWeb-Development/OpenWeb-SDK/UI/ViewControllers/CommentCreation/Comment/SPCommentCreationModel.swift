@@ -62,7 +62,7 @@ final class SPCommentCreationModel: SPBaseCommentCreationModel {
             postId: dataModel.postId,
             success: { [weak self] comment in
                 Logger.verbose("FirstComment: post returned with comment \(comment)")
-                guard let self = self else { return }
+                guard let self else { return }
 
                 var comment = comment
                 comment.writtenAt = Date().timeIntervalSince1970

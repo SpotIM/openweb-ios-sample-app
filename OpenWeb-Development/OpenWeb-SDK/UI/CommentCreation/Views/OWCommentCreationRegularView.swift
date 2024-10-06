@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_creation_regular_view_id"
         static let topContainerIdentifier = "top_container_view_id"
         static let titleLabelIdentifier = "title_label_id"
@@ -33,7 +33,7 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol, OWToas
 
     var toastView: OWToastView?
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .text(OWLocalizationManager.shared.localizedString(key: "CommentingOn"))
@@ -42,17 +42,17 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol, OWToas
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
     }()
 
-    fileprivate lazy var seperatorView: UIView = {
+    private lazy var seperatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var topContainerView: UIView = {
+    private lazy var topContainerView: UIView = {
         let topContainerView = UIView()
             .enforceSemanticAttribute()
 
@@ -79,41 +79,41 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol, OWToas
         return topContainerView
     }()
 
-    fileprivate lazy var articleDescriptionView: OWArticleDescriptionView = {
+    private lazy var articleDescriptionView: OWArticleDescriptionView = {
         return OWArticleDescriptionView(viewModel: self.viewModel.outputs.articleDescriptionViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var replySnippetView: OWCommentCreationReplySnippetView = {
+    private lazy var replySnippetView: OWCommentCreationReplySnippetView = {
         return OWCommentCreationReplySnippetView(with: self.viewModel.outputs.replySnippetViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var contentView: OWCommentCreationContentView = {
+    private lazy var contentView: OWCommentCreationContentView = {
         return OWCommentCreationContentView(with: self.viewModel.outputs.commentCreationContentVM)
     }()
 
-    fileprivate lazy var commentReplyCounterView: OWCommentReplyCounterView = {
+    private lazy var commentReplyCounterView: OWCommentReplyCounterView = {
         return OWCommentReplyCounterView(with: viewModel.outputs.commentCounterViewModel)
     }()
 
-    fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
+    private lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
         return OWCommentLabelsContainerView()
     }()
 
-    fileprivate lazy var footerView: OWCommentCreationFooterView = {
+    private lazy var footerView: OWCommentCreationFooterView = {
         return OWCommentCreationFooterView(with: self.viewModel.outputs.footerViewModel)
     }()
 
-    fileprivate lazy var userMentionView: OWUserMentionView = {
+    private lazy var userMentionView: OWUserMentionView = {
         return OWUserMentionView(viewModel: viewModel.outputs.userMentionVM)
     }()
 
-    fileprivate var replySnippetHeightConstraint: OWConstraint? = nil
-    fileprivate var articleDescriptionHeightConstraint: OWConstraint? = nil
-    fileprivate var commentLabelsContainerHeightConstraint: OWConstraint? = nil
-    fileprivate let viewModel: OWCommentCreationRegularViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var replySnippetHeightConstraint: OWConstraint?
+    private var articleDescriptionHeightConstraint: OWConstraint?
+    private var commentLabelsContainerHeightConstraint: OWConstraint?
+    private let viewModel: OWCommentCreationRegularViewViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -140,7 +140,7 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol, OWToas
     }
 }
 
-fileprivate extension OWCommentCreationRegularView {
+private extension OWCommentCreationRegularView {
     func setupViews() {
         self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
@@ -205,7 +205,7 @@ fileprivate extension OWCommentCreationRegularView {
     func setupObservers() {
         viewModel.outputs.displayToastCalled
             .subscribe(onNext: { [weak self] combinedData in
-                guard var self = self else { return }
+                guard var self else { return }
                 var requiredData = combinedData.presentData.data
                 requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorToastBottomPadding
                 let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion,
@@ -224,7 +224,7 @@ fileprivate extension OWCommentCreationRegularView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.topContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.contentView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
@@ -244,7 +244,7 @@ fileprivate extension OWCommentCreationRegularView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
@@ -253,7 +253,7 @@ fileprivate extension OWCommentCreationRegularView {
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
                 let isLandscape = currentOrientation == .landscape
 
                 // Header

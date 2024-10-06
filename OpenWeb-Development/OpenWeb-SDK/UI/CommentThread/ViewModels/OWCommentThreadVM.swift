@@ -30,10 +30,10 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     var inputs: OWCommentThreadViewModelingInputs { return self }
     var outputs: OWCommentThreadViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentThreadData: OWCommentThreadRequiredData
-    fileprivate let viewableMode: OWViewableMode
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentThreadData: OWCommentThreadRequiredData
+    private let viewableMode: OWViewableMode
 
     lazy var commentThreadViewVM: OWCommentThreadViewViewModeling = {
         return OWCommentThreadViewViewModel(commentThreadData: commentThreadData,
@@ -50,7 +50,7 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
         return viewDidLoad.asObservable()
     }
 
-    fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
+    private lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
         return BehaviorSubject<Bool>(value: servicesProvider.navigationControllerCustomizer().isLargeTitlesEnabled())
     }()
 
@@ -69,7 +69,7 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     }
 }
 
-fileprivate extension OWCommentThreadViewModel {
+private extension OWCommentThreadViewModel {
     func setupObservers() {
         changeIsLargeTitleDisplay
             .bind(to: _isLargeTitleDisplay)

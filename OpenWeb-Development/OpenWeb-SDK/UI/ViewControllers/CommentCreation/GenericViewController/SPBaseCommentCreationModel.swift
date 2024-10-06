@@ -47,9 +47,9 @@ class SPBaseCommentCreationModel: CommentStateable {
         (sectionCommentLabelsConfig, commentLabelsSection) = getLabelsSectionConfig(commentLabelsConfig: commentLabelsConfig)
     }
 
-    private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> (SPCommentLabelsSectionConfiguration?, String?) {
-        var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
-        var commentLabelsSection: String? = nil
+    private func getLabelsSectionConfig(commentLabelsConfig: [String: SPCommentLabelsSectionConfiguration]) -> (SPCommentLabelsSectionConfiguration?, String?) {
+        var sectionLabelsConfig: SPCommentLabelsSectionConfiguration?
+        var commentLabelsSection: String?
         // here we want to match the article section to the commentLabelsConfig section (if exists) - if not, we will take the default.
         if commentLabelsConfig[articleMetadate.section] != nil {
             sectionLabelsConfig = commentLabelsConfig[articleMetadate.section]
@@ -75,7 +75,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     }
 
     func updateCommentLabels(labelsIds: [String]) {
-        if let commentLabelsSection = commentLabelsSection, !labelsIds.isEmpty {
+        if let commentLabelsSection, !labelsIds.isEmpty {
             selectedLabels = SelectedLabels(section: commentLabelsSection, ids: labelsIds)
         } else {
             selectedLabels = nil

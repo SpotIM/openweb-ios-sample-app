@@ -14,8 +14,8 @@ protocol OWSortingCustomizationsInternal {
 
 class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInternal {
 
-    fileprivate var customizationTitleMapper: [OWSortOption: String] = [:]
-    fileprivate let sharedServicesProvider: OWSharedServicesProviding
+    private var customizationTitleMapper: [OWSortOption: String] = [:]
+    private let sharedServicesProvider: OWSharedServicesProviding
 
     init(sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServicesProvider = sharedServicesProvider
@@ -41,7 +41,7 @@ class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInter
     }
 }
 
-fileprivate extension OWSortingCustomizer {
+private extension OWSortingCustomizer {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return sharedServicesProvider
             .analyticsEventCreatorService()

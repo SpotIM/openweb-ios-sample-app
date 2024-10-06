@@ -39,7 +39,7 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
     var outputs: OWCommentingCTAViewModelingOutputs { return self }
 
     var isReadOnly = PublishSubject<Bool>()
-    fileprivate let _style = BehaviorSubject<OWCommentingCTAStyle>(value: .skelaton)
+    private let _style = BehaviorSubject<OWCommentingCTAStyle>(value: .skelaton)
     lazy var style: Observable<OWCommentingCTAStyle> = {
         return _style
             .skip(1)
@@ -95,26 +95,26 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
             .share(replay: 0)
     }
 
-    fileprivate let _openProfile = PublishSubject<OWOpenProfileType>()
+    private let _openProfile = PublishSubject<OWOpenProfileType>()
     var openProfile: Observable<OWOpenProfileType> {
         _openProfile
             .asObservable()
     }
 
-    fileprivate let _authenticationTriggered = PublishSubject<Void>()
+    private let _authenticationTriggered = PublishSubject<Void>()
     var authenticationTriggered: Observable<Void> {
         _authenticationTriggered
             .asObservable()
     }
 
-    fileprivate let _commentCreationTap = PublishSubject<Void>()
+    private let _commentCreationTap = PublishSubject<Void>()
     var commentCreationTapped: Observable<Void> {
         _commentCreationTap
             .asObserver()
     }
 
-    fileprivate let imageProvider: OWImageProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let imageProvider: OWImageProviding
+    private let disposeBag = DisposeBag()
 
     init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.imageProvider = imageProvider
@@ -122,14 +122,14 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
     }
 }
 
-fileprivate extension OWCommentingCTAViewModel {
+private extension OWCommentingCTAViewModel {
     func setupObservers() {
         isReadOnly
             .map { isReadOnly -> OWCommentingCTAStyle in
                 return isReadOnly ? .conversationEnded : .cta
             }
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._style.onNext(style)
                 self._shouldShowView.onNext(true)
             })
@@ -137,7 +137,7 @@ fileprivate extension OWCommentingCTAViewModel {
 
         commentCreationEntryViewModel.outputs.tapped
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._commentCreationTap.onNext()
             })
             .disposed(by: disposeBag)

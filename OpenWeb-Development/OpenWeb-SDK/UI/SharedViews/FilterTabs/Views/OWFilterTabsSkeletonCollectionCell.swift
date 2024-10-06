@@ -9,20 +9,20 @@
 import UIKit
 
 class OWFilterTabsSkeletonCollectionCell: UICollectionViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let skeletonCornerRadius: CGFloat = 3
         static let height: CGFloat = OWFilterTabsView.FilterTabsMetrics.itemsHeight
         static let width: CGFloat = OWFilterTabsView.FilterTabsMetrics.skeletonsWidth
         static let accessibilityId = "filter_tabs_skeleton_collection_cell_id"
     }
 
-    fileprivate lazy var skeletonContentView: UIView = {
+    private lazy var skeletonContentView: UIView = {
         return UIView()
             .corner(radius: Metrics.skeletonCornerRadius)
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
+    private lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
         view.enforceSemanticAttribute()
         view.addSubview(skeletonContentView)
@@ -33,7 +33,7 @@ class OWFilterTabsSkeletonCollectionCell: UICollectionViewCell {
         return view
     }()
 
-    fileprivate var viewModel: OWFilterTabsSkeletonCollectionCellVM!
+    private var viewModel: OWFilterTabsSkeletonCollectionCellVM!
 
     override func configure(with viewModel: OWCellViewModel) {
         guard let viewModel = viewModel as? OWFilterTabsSkeletonCollectionCellVM else { return }
@@ -52,7 +52,7 @@ class OWFilterTabsSkeletonCollectionCell: UICollectionViewCell {
     }
 }
 
-fileprivate extension OWFilterTabsSkeletonCollectionCell {
+private extension OWFilterTabsSkeletonCollectionCell {
     func setupUI() {
         contentView.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in

@@ -22,8 +22,8 @@ protocol OWQueueProtocol {
 }
 
 class OWQueue<Node: Equatable & Codable>: OWQueueProtocol {
-    fileprivate var queue: [Node] = []
-    fileprivate let duplicationStrategy: OWQueueDuplicationStrategy
+    private var queue: [Node] = []
+    private let duplicationStrategy: OWQueueDuplicationStrategy
 
     init(duplicationStrategy: OWQueueDuplicationStrategy = .allowDuplicates) {
         self.duplicationStrategy = duplicationStrategy
@@ -72,7 +72,7 @@ class OWQueue<Node: Equatable & Codable>: OWQueueProtocol {
         }
     }
 
-    fileprivate func insertOrAppend(_ node: Node, atIndex index: Int) {
+    private func insertOrAppend(_ node: Node, atIndex index: Int) {
         if index < queue.count {
             queue.insert(node, at: index)
         } else {

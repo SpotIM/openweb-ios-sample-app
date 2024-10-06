@@ -32,10 +32,10 @@ class OWCommentOptionsViewModel: OWCommentOptionsViewModeling,
     var inputs: OWCommentOptionsViewModelingInputs { return self }
     var outputs: OWCommentOptionsViewModelingOutputs { return self }
 
-    fileprivate let disposedBag = DisposeBag()
-    fileprivate let sharedServiceProvider: OWSharedServicesProviding
+    private let disposedBag = DisposeBag()
+    private let sharedServiceProvider: OWSharedServicesProviding
 
-    fileprivate var user: SPUser
+    private var user: SPUser
 
     var isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
 
@@ -43,7 +43,7 @@ class OWCommentOptionsViewModel: OWCommentOptionsViewModeling,
     var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
         tapButton
             .flatMapLatest { [weak self] view -> Observable<([OWUserAction: Bool], UIView, SPUser)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let actions: [OWUserAction] = [.deletingComment, .editingComment]
                 let authentication = self.sharedServiceProvider.authenticationManager()
 
@@ -57,25 +57,25 @@ class OWCommentOptionsViewModel: OWCommentOptionsViewModeling,
                 let allowEditingComment = actionsAuthenticationLevel[.editingComment] ?? false
 
                 var optionsActions: [OWRxPresenterAction] = []
-                if (!isLoggedInUserComment) {
+                if !isLoggedInUserComment {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Report"),
                         type: OWCommentOptionsMenu.reportComment)
                     )
                 }
-                if (allowEditingComment && isLoggedInUserComment) {
+                if allowEditingComment && isLoggedInUserComment {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Edit"),
                         type: OWCommentOptionsMenu.editComment)
                     )
                 }
-                if (allowDeletingComment && isLoggedInUserComment) {
+                if allowDeletingComment && isLoggedInUserComment {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Delete"),
                         type: OWCommentOptionsMenu.deleteComment)
                     )
                 }
-                if (!isLoggedInUserComment && !user.isAdmin) {
+                if !isLoggedInUserComment && !user.isAdmin {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Mute"),
                         type: OWCommentOptionsMenu.muteUser)

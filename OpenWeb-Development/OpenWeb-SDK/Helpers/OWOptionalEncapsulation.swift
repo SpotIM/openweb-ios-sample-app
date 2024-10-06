@@ -13,7 +13,7 @@ import Foundation
  This class should be used to store callbacks and other types which are not conform to AnyObject
  */
 class OWOptionalEncapsulation<T> {
-    fileprivate var _value: T?
+    private var _value: T?
 
     init(value: T) {
         self._value = value

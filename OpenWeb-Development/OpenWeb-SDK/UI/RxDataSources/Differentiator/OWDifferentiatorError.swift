@@ -8,7 +8,7 @@
 
 import Foundation
 
-fileprivate struct DebugTools {
+private struct DebugTools {
     static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
 }
 

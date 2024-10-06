@@ -75,7 +75,7 @@ extension OWChangeset: CustomDebugStringConvertible {
         + "   \n\(serializedSections)"
         + (!insertedSections.isEmpty || !deletedSections.isEmpty || !movedSections.isEmpty || !updatedSections.isEmpty ? "\nSections:" : "")
         + (!insertedSections.isEmpty ? "\ninsertedSections:\n\t\(insertedSections)" : "")
-        + (!deletedSections.isEmpty ?  "\ndeletedSections:\n\t\(deletedSections)" : "")
+        + (!deletedSections.isEmpty ? "\ndeletedSections:\n\t\(deletedSections)" : "")
         + (!movedSections.isEmpty ? "\nmovedSections:\n\t\(movedSections)" : "")
         + (!updatedSections.isEmpty ? "\nupdatesSections:\n\t\(updatedSections)" : "")
             + (!insertedItems.isEmpty || !deletedItems.isEmpty || !movedItems.isEmpty || !updatedItems.isEmpty ? "\nItems:" : "")

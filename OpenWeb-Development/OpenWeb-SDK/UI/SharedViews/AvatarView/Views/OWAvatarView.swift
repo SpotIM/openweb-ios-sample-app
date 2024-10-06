@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWAvatarView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "user_avatar_view_id"
         static let avatarImageIdentifier = "avatar_image_id"
         static let avatarButtonIdentifier = "avatar_button_id"
@@ -35,22 +35,22 @@ class OWAvatarView: UIView {
         }
     }
 
-    fileprivate lazy var avatarButton: UIButton = {
+    private lazy var avatarButton: UIButton = {
         return UIButton()
     }()
 
-    fileprivate lazy var avatarImageView: UIImageView = {
+    private lazy var avatarImageView: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFill)
     }()
 
-    fileprivate lazy var onlineGreenView = {
+    private lazy var onlineGreenView = {
         UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .green, themeStyle: .light))
             .corner(radius: Metrics.innerIndicatorSize / 2)
     }()
 
-    fileprivate lazy var onlineIndicatorView: UIView = {
+    private lazy var onlineIndicatorView: UIView = {
         let view = UIView()
             .corner(radius: Metrics.onlineIndicatorSize / 2)
             .isHidden(true)
@@ -68,8 +68,8 @@ class OWAvatarView: UIView {
         return view
     }()
 
-    fileprivate var viewModel: OWAvatarViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWAvatarViewModeling!
+    private var disposeBag: DisposeBag!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -98,7 +98,7 @@ class OWAvatarView: UIView {
     }
 }
 
-fileprivate extension OWAvatarView {
+private extension OWAvatarView {
     private func setupUI() {
         addSubview(avatarButton)
         avatarButton.OWSnp.makeConstraints { make in
@@ -141,7 +141,7 @@ fileprivate extension OWAvatarView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.onlineIndicatorView.backgroundColor = OWColorPalette.shared.color(type: .borderColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -152,8 +152,8 @@ fileprivate extension OWAvatarView {
         case .defaultImage:
             avatarImageView.image = Metrics.defaultAvatar(style: style)
         case .custom(let url):
-            avatarImageView.setImage(with: url) { [weak self] (image, _) in
-                guard let self = self else { return }
+            avatarImageView.setImage(with: url) { [weak self] image, _ in
+                guard let self else { return }
                 self.avatarImageView.image = image ?? Metrics.defaultAvatar(style: style)
             }
         }

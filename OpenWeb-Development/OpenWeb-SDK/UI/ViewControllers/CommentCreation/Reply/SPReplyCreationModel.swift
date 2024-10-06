@@ -36,7 +36,7 @@ final class SPReplyCreationModel: SPBaseCommentCreationModel {
             parameters: parameters,
             postId: dataModel.postId,
             success: { [weak self] reply in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 var reply = reply
                 reply.writtenAt = Date().timeIntervalSince1970

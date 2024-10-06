@@ -117,13 +117,6 @@ class OWNetworkRevocationTrustEvaluator: OWNetworkServerTrustEvaluating {
 
         /// The raw value of the option.
         let rawValue: CFOptionFlags
-
-        /// Creates an `Options` value with the given `CFOptionFlags`.
-        ///
-        /// - Parameter rawValue: The `CFOptionFlags` value to initialize with.
-        init(rawValue: CFOptionFlags) {
-            self.rawValue = rawValue
-        }
     }
 
     private let performDefaultValidation: Bool

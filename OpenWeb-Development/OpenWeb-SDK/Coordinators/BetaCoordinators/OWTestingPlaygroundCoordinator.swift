@@ -34,8 +34,8 @@ class OWTestingPlaygroundCoordinator: OWBaseCoordinator<OWTestingPlaygroundCoord
 
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
-    fileprivate let router: OWRoutering!
-    fileprivate let testingPlaygroundData: OWTestingPlaygroundRequiredData
+    private let router: OWRoutering!
+    private let testingPlaygroundData: OWTestingPlaygroundRequiredData
 
     init(router: OWRoutering! = nil, testingPlaygroundData: OWTestingPlaygroundRequiredData) {
         self.router = router
