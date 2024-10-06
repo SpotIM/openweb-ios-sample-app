@@ -16,14 +16,14 @@ protocol OWSubscriberBadgeServicing {
 
 class OWSubscriberBadgeService: OWSubscriberBadgeServicing {
 
-    fileprivate struct URLS {
+    private struct URLS {
         static let subscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL)\(SPImageRequestConstants.iconsPathComponent)"
         // swiftlint:disable line_length
         static let subscriberBadgeFontAwesomeBaseUrl: String = "\(subscriberBadgeBaseUrl)\(SPImageRequestConstants.fontAwesomePathComponent)\(SPImageRequestConstants.fontAwesomeVersionPathComponent)"
         // swiftlint:enable line_length
     }
 
-    fileprivate enum OWSubscriberBadgeIconType: String {
+    private enum OWSubscriberBadgeIconType: String {
         case regular = "fa-regular"
         case solid = "fa-solid"
         case brands = "fa-brands"
@@ -31,7 +31,7 @@ class OWSubscriberBadgeService: OWSubscriberBadgeServicing {
         case custom
 
         func buildUrl(config: OWSubscriberBadgeConfiguration) -> URL {
-            switch(self) {
+            switch self {
             case .regular:
                 return URL(string: "\(URLS.subscriberBadgeFontAwesomeBaseUrl)regular/\(config.name).png")!
             case .solid:

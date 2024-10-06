@@ -16,4 +16,3 @@ enum OWFontStyle: String, CaseIterable {
     case semiBold = "SemiBold"
     case italic = "Italic"
 }
-

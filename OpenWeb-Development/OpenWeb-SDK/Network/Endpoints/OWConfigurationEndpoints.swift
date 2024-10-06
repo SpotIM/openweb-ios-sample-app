@@ -46,10 +46,10 @@ enum OWConfigurationEndpoints: OWEndpoints {
         case .fetchAdsConfig:
             let date = Date()
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat  = "EEEE"
+            dateFormatter.dateFormat = "EEEE"
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
             let dayName = dateFormatter.string(from: date).lowercased()
-            dateFormatter.dateFormat  = "HH"
+            dateFormatter.dateFormat = "HH"
             let hour = Int(dateFormatter.string(from: date))!
             return ["day": dayName, "hour": hour]
         case .fetchAbTestData:

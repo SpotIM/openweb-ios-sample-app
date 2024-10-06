@@ -8,7 +8,7 @@
 
 import UIKit
 
-fileprivate struct Metrics {
+private struct Metrics {
     static var dummyViewKey = "DummyViewKey"
 }
 

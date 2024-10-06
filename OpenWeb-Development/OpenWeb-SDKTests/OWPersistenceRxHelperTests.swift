@@ -13,7 +13,7 @@ import Nimble
 
 @testable import OpenWebSDK
 
-fileprivate enum OWTestKey: String, OWRawableKey {
+private enum OWTestKey: String, OWRawableKey {
     typealias T = String // swiftlint:disable:this type_name
     case key
 }

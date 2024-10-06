@@ -8,7 +8,7 @@
 
 import Foundation
 
-fileprivate extension OWAnimatableSectionModelType {
+private extension OWAnimatableSectionModelType {
     init(safeOriginal: Self, safeItems: [Item]) throws {
         self.init(original: safeOriginal, items: safeItems)
 

@@ -297,7 +297,7 @@ class OWNetworkMultipartFormData {
     /// - Returns: The encoded `Data`, if encoding is successful.
     /// - Throws:  An `AFError` if encoding encounters an error.
     func encode() throws -> Data {
-        if let bodyPartError = bodyPartError {
+        if let bodyPartError {
             throw bodyPartError
         }
 
@@ -322,7 +322,7 @@ class OWNetworkMultipartFormData {
     /// - Parameter fileURL: File `URL` to which to write the form data.
     /// - Throws:            An `AFError` if encoding encounters an error.
     func writeEncodedData(to fileURL: URL) throws {
-        if let bodyPartError = bodyPartError {
+        if let bodyPartError {
             throw bodyPartError
         }
 
@@ -489,10 +489,10 @@ class OWNetworkMultipartFormData {
 
     private func contentHeaders(withName name: String, fileName: String? = nil, mimeType: String? = nil) -> OWNetworkHTTPHeaders {
         var disposition = "form-data; name=\"\(name)\""
-        if let fileName = fileName { disposition += "; filename=\"\(fileName)\"" }
+        if let fileName { disposition += "; filename=\"\(fileName)\"" }
 
         var headers: OWNetworkHTTPHeaders = [.contentDisposition(disposition)]
-        if let mimeType = mimeType { headers.add(.contentType(mimeType)) }
+        if let mimeType { headers.add(.contentType(mimeType)) }
 
         return headers
     }

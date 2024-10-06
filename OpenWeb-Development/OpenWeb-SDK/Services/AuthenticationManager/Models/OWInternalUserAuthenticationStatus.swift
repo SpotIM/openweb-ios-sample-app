@@ -22,9 +22,9 @@ extension OWInternalUserAuthenticationStatus {
         switch self {
         case .notAutenticated:
             return .level(.notAutenticated)
-        case .guest(_):
+        case .guest:
             return .level(.guest)
-        case .ssoLoggedIn(_):
+        case .ssoLoggedIn:
             return .level(.loggedIn)
         default:
             return .pending
@@ -35,7 +35,7 @@ extension OWInternalUserAuthenticationStatus {
         switch self {
         case .notAutenticated:
             return .notAutenticated
-        case .guest(_):
+        case .guest:
             return .guest
         case .ssoLoggedIn(let userId):
             return .ssoLoggedIn(userId: userId)

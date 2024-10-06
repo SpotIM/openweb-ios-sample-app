@@ -11,9 +11,9 @@ import RxSwift
 import Foundation
 
 class OWReportReasonCell: UITableViewCell {
-    fileprivate var disposeBag: DisposeBag!
+    private var disposeBag: DisposeBag!
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "report_reason_cell_id"
         static let titleLabelIdentifier = "report_reason_cell_title_label_id"
         static let subtitleLabelIdentifier = "report_reason_cell_subtitle_label_id"
@@ -25,14 +25,14 @@ class OWReportReasonCell: UITableViewCell {
         static let cellHeight: CGFloat = 68
     }
 
-    fileprivate var subtitleHeightZeroConstraint: OWConstraint? = nil
+    private var subtitleHeightZeroConstraint: OWConstraint?
 
-    fileprivate lazy var viewForText: UIView = {
+    private lazy var viewForText: UIView = {
         let viewForText = UIView()
         return viewForText
     }()
 
-    fileprivate lazy var lblTitle: UILabel = {
+    private lazy var lblTitle: UILabel = {
         let lblTitle = UILabel()
         return lblTitle
                 .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -40,7 +40,7 @@ class OWReportReasonCell: UITableViewCell {
                 .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var lblSubtitle: UILabel = {
+    private lazy var lblSubtitle: UILabel = {
         let lblSubtitle = UILabel()
         return lblSubtitle
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -49,11 +49,11 @@ class OWReportReasonCell: UITableViewCell {
                 .lineBreakMode(.byTruncatingMiddle)
     }()
 
-    fileprivate lazy var checkBox: OWRoundCheckBox = {
+    private lazy var checkBox: OWRoundCheckBox = {
         return OWRoundCheckBox()
     }()
 
-    fileprivate var viewModel: OWReportReasonCellViewModeling!
+    private var viewModel: OWReportReasonCellViewModeling!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -61,6 +61,7 @@ class OWReportReasonCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         disposeBag = nil
     }
 
@@ -77,7 +78,7 @@ class OWReportReasonCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWReportReasonCell {
+private extension OWReportReasonCell {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         lblTitle.accessibilityIdentifier = Metrics.titleLabelIdentifier
@@ -138,7 +139,7 @@ fileprivate extension OWReportReasonCell {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.lblTitle.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.lblSubtitle.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             })
@@ -147,7 +148,7 @@ fileprivate extension OWReportReasonCell {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.lblTitle.font = OWFontBook.shared.font(typography: .bodyText)
                 self.lblSubtitle.font = OWFontBook.shared.font(typography: .footnoteText)
             })

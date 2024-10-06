@@ -14,9 +14,9 @@ protocol OWCustomizationsServicing {
 
 class OWCustomizationsService: OWCustomizationsServicing {
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let viewSourceType: OWViewSourceType
-    fileprivate let customizationsLayer: OWCustomizationsInternalProtocol
+    private let servicesProvider: OWSharedServicesProviding
+    private let viewSourceType: OWViewSourceType
+    private let customizationsLayer: OWCustomizationsInternalProtocol
 
     // swiftlint:disable force_cast
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,

@@ -16,7 +16,7 @@ struct OWHTTPHeaderContent {
 
 class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -69,7 +69,7 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
     }
 }
 
-fileprivate extension OWHTTPHeaderRequestMiddleware {
+private extension OWHTTPHeaderRequestMiddleware {
     func extendedAgent() -> String {
         var agent = OWNetworkHTTPHeaders.default.dictionary["User-Agent"] ?? "na"
         let device = UIDevice.modelIdentifier()

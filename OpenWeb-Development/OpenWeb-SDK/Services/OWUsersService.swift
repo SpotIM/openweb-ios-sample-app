@@ -21,14 +21,14 @@ protocol OWUsersServicing {
 }
 
 class OWUsersService: OWUsersServicing {
-    fileprivate var disposeBag = DisposeBag()
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    private var disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
 
     // Multiple threads / queues access to this class
     // Avoiding "data race" by using a lock
-    fileprivate let lock: OWLock = OWUnfairLock()
+    private let lock: OWLock = OWUnfairLock()
 
-    fileprivate var _users = OWUsersMapper()
+    private var _users = OWUsersMapper()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -55,7 +55,7 @@ class OWUsersService: OWUsersServicing {
         let userIdsToUser: OWUsersMapper = userIdToUserTupples.reduce(into: [:]) { $0[$1.0] = $1.1 }
 
         // merge and replacing current users
-        _users.merge(userIdsToUser, uniquingKeysWith: {(_, new) in new })
+        _users.merge(userIdsToUser, uniquingKeysWith: { _, new in new })
     }
 
     func set(users: OWUsersMapper) {
@@ -64,7 +64,7 @@ class OWUsersService: OWUsersServicing {
         // swiftlint:enable self_capture_in_blocks
 
         // merge and replacing current users
-        _users.merge(users, uniquingKeysWith: {(_, new) in new })
+        _users.merge(users, uniquingKeysWith: { _, new in new })
     }
 
     func cleanCache() {
@@ -80,7 +80,7 @@ class OWUsersService: OWUsersServicing {
     }
 }
 
-fileprivate extension OWUsersService {
+private extension OWUsersService {
     func setupObservers() {
         self.servicesProvider.authenticationManager()
             .activeUserAvailability
@@ -94,7 +94,7 @@ fileprivate extension OWUsersService {
             }
             .unwrap()
             .subscribe(onNext: { [weak self] user in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.set(users: [user])
             })
             .disposed(by: disposeBag)

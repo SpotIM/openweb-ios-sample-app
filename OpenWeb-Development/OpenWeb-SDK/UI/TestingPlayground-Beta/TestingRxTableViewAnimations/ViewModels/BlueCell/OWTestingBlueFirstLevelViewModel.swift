@@ -34,9 +34,9 @@ class OWTestingBlueFirstLevelViewModel: OWTestingBlueFirstLevelViewModeling,
     var inputs: OWTestingBlueFirstLevelViewModelingInputs { return self }
     var outputs: OWTestingBlueFirstLevelViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
+    private let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
     var changedCellState: Observable<OWTestingCellState> {
         return cellState
             .distinctUntilChanged()
@@ -61,7 +61,7 @@ class OWTestingBlueFirstLevelViewModel: OWTestingBlueFirstLevelViewModeling,
     }
 }
 
-fileprivate extension OWTestingBlueFirstLevelViewModel {
+private extension OWTestingBlueFirstLevelViewModel {
     func setupObservers() {
         changeCellStateTap
             .withLatestFrom(cellState)

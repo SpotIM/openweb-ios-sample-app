@@ -14,7 +14,7 @@ class OWSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     let submittedViewViewModel: OWSubmittedViewViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var submittedView: OWSubmittedView = {
+    private lazy var submittedView: OWSubmittedView = {
         return OWSubmittedView(viewModel: submittedViewViewModel)
     }()
 
@@ -33,10 +33,6 @@ class OWSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
         setupObservers()
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
@@ -46,15 +42,17 @@ class OWSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 }
 
-fileprivate extension OWSubmittedVC {
+private extension OWSubmittedVC {
     func setupViews() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)

@@ -34,7 +34,7 @@ protocol OWPreConversationSummaryViewModeling {
 class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling,
                                          OWPreConversationSummaryViewModelingInputs,
                                          OWPreConversationSummaryViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleFontTypography: OWFontTypography = .titleLarge
         static let titleFontTypographyCompact: OWFontTypography = .bodyContext
         static let counterFontTypography: OWFontTypography = .bodyText
@@ -45,8 +45,8 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling,
     var outputs: OWPreConversationSummaryViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
-    fileprivate let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
 
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
     var triggerCustomizeCounterLabelUI = PublishSubject<UILabel>()
@@ -98,8 +98,8 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling,
         return style != .none
     }()
 
-    fileprivate let style: OWPreConversationSummaryStyle
-    fileprivate let disposeBag = DisposeBag()
+    private let style: OWPreConversationSummaryStyle
+    private let disposeBag = DisposeBag()
 
     init(style: OWPreConversationSummaryStyle) {
         self.style = style
@@ -107,7 +107,7 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling,
     }
 }
 
-fileprivate extension OWPreConversationSummaryViewModel {
+private extension OWPreConversationSummaryViewModel {
     func setupObservers() {
         triggerCustomizeTitleLabelUI
             .bind(to: _triggerCustomizeTitleLabelUI)
@@ -115,7 +115,7 @@ fileprivate extension OWPreConversationSummaryViewModel {
 
         triggerCustomizeCounterLabelUI
             .flatMapLatest { [weak self] label -> Observable<UILabel> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.commentsCount
                     .map { _ in return label }
             }

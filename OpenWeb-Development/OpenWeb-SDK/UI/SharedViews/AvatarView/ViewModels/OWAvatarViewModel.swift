@@ -46,28 +46,28 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             .filter { !$0 }
             .voidify()
             .flatMapLatest { [weak self] _ -> Observable<SPUser> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.user
                     .take(1)
             }
     }
 
-    fileprivate var _authenticationTriggered = PublishSubject<Void>()
+    private var _authenticationTriggered = PublishSubject<Void>()
     var authenticationTriggered: Observable<Void> {
         _authenticationTriggered
             .asObservable()
     }
 
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
+    private var _openProfile = PublishSubject<OWOpenProfileType>()
     var openProfile: Observable<OWOpenProfileType> {
         _openProfile
             .asObservable()
     }
 
-    fileprivate let imageURLProvider: OWImageProviding
-    fileprivate let sharedServicesProvider: OWSharedServicesProviding
+    private let imageURLProvider: OWImageProviding
+    private let sharedServicesProvider: OWSharedServicesProviding
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init (
         user: SPUser? = nil,
@@ -75,13 +75,13 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageURLProvider = imageURLProvider
         self.sharedServicesProvider = sharedServicesProvider
-        if let user = user {
+        if let user {
             self.userInput.onNext(user)
         }
         setupObservers()
     }
 
-    fileprivate lazy var user: Observable<SPUser> = {
+    private lazy var user: Observable<SPUser> = {
         self.userInput
             .unwrap()
     }()
@@ -91,9 +91,9 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             self.userInput,
             self.shouldBlockAvatar.asObservable()
         )
-            .flatMapLatest { [weak self] (user, shouldBlockAvatar) -> Observable<URL?> in
-                guard let self = self,
-                      let user = user,
+            .flatMapLatest { [weak self] user, shouldBlockAvatar -> Observable<URL?> in
+                guard let self,
+                      let user,
                       let imageId = user.imageId,
                       !shouldBlockAvatar
                 else { return Observable.just(nil) }
@@ -101,7 +101,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
                 return self.imageURLProvider.imageURL(with: imageId, size: nil)
             }
             .map { url in
-                guard let url = url else { return .defaultImage }
+                guard let url else { return .defaultImage }
                 return .custom(url: url)
             }
             .asObservable()
@@ -120,7 +120,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
                   avatarBlocked == false
             else { return false }
 
-            if (user.online == true) {
+            if user.online == true {
                 return true
             }
 
@@ -142,15 +142,15 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     }
 }
 
-fileprivate extension OWAvatarViewModel {
+private extension OWAvatarViewModel {
     func setupObservers() {
         avatarTapped
             .flatMapLatest { [weak self] user -> Observable<OWOpenProfileResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.sharedServicesProvider.profileService().openProfileTapped(user: user)
             }
             .do(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 if case .authenticationTriggered = result {
                     self._authenticationTriggered.onNext()
                 }

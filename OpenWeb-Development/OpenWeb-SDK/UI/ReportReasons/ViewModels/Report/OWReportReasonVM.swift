@@ -31,7 +31,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     var inputs: OWReportReasonViewModelingInputs { return self }
     var outputs: OWReportReasonViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
@@ -40,7 +40,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
 
     let viewableMode: OWViewableMode
     let presentationalMode: OWPresentationalModeCompact
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     lazy var reportReasonViewViewModel: OWReportReasonViewViewModeling = {
         return OWReportReasonViewViewModel(reportData: reportData,
@@ -52,9 +52,9 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
         return OWLocalizationManager.shared.localizedString(key: "ReportReasonTitle")
     }()
 
-    fileprivate let reportData: OWReportReasonsRequiredData
+    private let reportData: OWReportReasonsRequiredData
 
-    fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
+    private lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
         return BehaviorSubject<Bool>(value: servicesProvider.navigationControllerCustomizer().isLargeTitlesEnabled())
     }()
 
@@ -76,7 +76,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     }
 }
 
-fileprivate extension OWReportReasonViewModel {
+private extension OWReportReasonViewModel {
     func setupObservers() {
         changeIsLargeTitleDisplay
             .bind(to: _isLargeTitleDisplay)

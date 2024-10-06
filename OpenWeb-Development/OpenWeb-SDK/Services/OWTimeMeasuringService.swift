@@ -33,7 +33,7 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
         case preConversationLoadingInitialComments
     }
 
-    fileprivate var startTimeDictionary = [String: CFAbsoluteTime]()
+    private var startTimeDictionary = [String: CFAbsoluteTime]()
 
     func startMeasure(forKey key: OWTimeMeasuringService.OWKeys) {
         startTimeDictionary[key.value] = CFAbsoluteTimeGetCurrent()
@@ -63,7 +63,7 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
     }
 }
 
-fileprivate extension OWTimeMeasuringService.OWKeys {
+private extension OWTimeMeasuringService.OWKeys {
     static func == (lhs: OWTimeMeasuringService.OWKeys, rhs: OWTimeMeasuringService.OWKeys) -> Bool {
         switch (lhs, rhs) {
         case (.conversationUIBuildingTime, .conversationUIBuildingTime):
