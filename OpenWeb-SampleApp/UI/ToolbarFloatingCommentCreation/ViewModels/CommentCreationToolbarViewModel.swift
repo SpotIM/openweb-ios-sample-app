@@ -61,9 +61,9 @@ private extension CommentCreationToolbarViewModel {
                 settings.request(.manipulateUserInputText(completion: { result in
                     let action = cellViewModel.outputs.action
                     switch (result, action) {
-                    case (.success(let manipulateTextModel), .append(let textToAppend)):
+                    case (.success, .append(let textToAppend)):
                         return textToAppend
-                    case (.success(_), .removeAll):
+                    case (.success, .removeAll):
                         return ""
                     default:
                         let textToLog = "Received an error when tried to request `manipulateUserInputText` request option"
