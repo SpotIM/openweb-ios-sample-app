@@ -5344,7 +5344,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1210;
+				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = OpenWeb;
 				TargetAttributes = {
 					3DA1DEC02C6CCB0300EBFA7D = {
