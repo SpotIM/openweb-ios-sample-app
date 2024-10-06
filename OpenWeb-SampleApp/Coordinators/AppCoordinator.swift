@@ -16,8 +16,8 @@ import FirebaseCore
 
 class AppCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let window: UIWindow
-    fileprivate var router: Routering!
+    private let window: UIWindow
+    private var router: Routering!
 
     init(window: UIWindow) {
         self.window = window
@@ -33,7 +33,7 @@ class AppCoordinator: BaseCoordinator<Void> {
     }
 }
 
-fileprivate extension AppCoordinator {
+private extension AppCoordinator {
     func initialSetup() {
         initialVendorsSetup()
         initialDataSetup()
@@ -66,4 +66,3 @@ fileprivate extension AppCoordinator {
         router = Router(navigationController: navigation)
     }
 }
-

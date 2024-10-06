@@ -12,7 +12,7 @@ import RxCocoa
 
 class SegmentedControlSetting: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleFontSize: CGFloat = 20
         static let verticalOffset: CGFloat = 10
         static let horizontalOffset: CGFloat = 10
@@ -20,8 +20,8 @@ class SegmentedControlSetting: UIView {
         static let titleNumberOfLines: Int = 2
     }
 
-    fileprivate let title: String
-    fileprivate let items: [String]
+    private let title: String
+    private let items: [String]
 
     fileprivate lazy var segmentTitleLbl: UILabel = {
         return title
@@ -53,7 +53,7 @@ class SegmentedControlSetting: UIView {
 
 }
 
-fileprivate extension SegmentedControlSetting {
+private extension SegmentedControlSetting {
     func applyAccessibility(prefixId: String) {
         segmentTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         segmentedControl.accessibilityIdentifier = prefixId + "_segment_id"
@@ -94,7 +94,7 @@ extension Reactive where Base: SegmentedControlSetting {
         }
     }
 
-    fileprivate var value: ControlProperty<Int> {
+    private var value: ControlProperty<Int> {
         return base.segmentedControl.rx.controlProperty(editingEvents: .valueChanged) { segmentedControl in
             segmentedControl.selectedSegmentIndex
         } setter: { segmentedControl, value in

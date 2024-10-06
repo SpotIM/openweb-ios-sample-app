@@ -55,8 +55,8 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
         return [none, about, testAPI, settings, authentication]
     }()
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    private let disposeBag = DisposeBag()
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -64,7 +64,7 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
     }
 }
 
-fileprivate extension SampleAppSettingsVM {
+private extension SampleAppSettingsVM {
     func setupObservers() {
         deeplinkOptionSelected
             .skip(1)

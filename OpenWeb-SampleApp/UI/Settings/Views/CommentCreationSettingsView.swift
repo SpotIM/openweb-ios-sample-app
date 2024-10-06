@@ -11,7 +11,7 @@ import RxSwift
 
 class CommentCreationSettingsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_creation_settings_view_id"
         static let segmentedStyleModeIdentifier = "custom_style_mode"
         static let switchAccessoryViewIdentifier = "accessory_view"
@@ -19,21 +19,21 @@ class CommentCreationSettingsView: UIView {
         static let horizontalOffset: CGFloat = 10
     }
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metrics.verticalOffset
         return stackView
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedStyleMode: SegmentedControlSetting = {
+    private lazy var segmentedStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.styleModeTitle
         let items = viewModel.outputs.styleModeSettings
 
@@ -42,7 +42,7 @@ class CommentCreationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedAccessoryView: SegmentedControlSetting = {
+    private lazy var segmentedAccessoryView: SegmentedControlSetting = {
         let title = viewModel.outputs.accessoryViewTitle
         let items = viewModel.outputs.accessoryViewSettings
 
@@ -51,8 +51,8 @@ class CommentCreationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate let viewModel: CommentCreationSettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: CommentCreationSettingsViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: CommentCreationSettingsViewModeling) {
         self.viewModel = viewModel
@@ -67,7 +67,7 @@ class CommentCreationSettingsView: UIView {
     }
 }
 
-fileprivate extension CommentCreationSettingsView {
+private extension CommentCreationSettingsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }

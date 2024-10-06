@@ -13,7 +13,7 @@ import SnapKit
 
 class UIViewsExamplesVC: UIViewController {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "uiviews_examples_vc_id"
         static let btnConversationBelowVideoIdentifier = "btn_conversation_below_video_id"
         static let verticalMargin: CGFloat = 40
@@ -22,17 +22,17 @@ class UIViewsExamplesVC: UIViewController {
         static let buttonHeight: CGFloat = 50
     }
 
-    fileprivate let viewModel: UIViewsExamplesViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: UIViewsExamplesViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var btnConversationBelowVideo: UIButton = {
+    private lazy var btnConversationBelowVideo: UIButton = {
         return NSLocalizedString("ConversationBelowVideo", comment: "")
             .blueRoundedButton
     }()
@@ -58,7 +58,7 @@ class UIViewsExamplesVC: UIViewController {
     }
 }
 
-fileprivate extension UIViewsExamplesVC {
+private extension UIViewsExamplesVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnConversationBelowVideo.accessibilityIdentifier = Metrics.btnConversationBelowVideoIdentifier

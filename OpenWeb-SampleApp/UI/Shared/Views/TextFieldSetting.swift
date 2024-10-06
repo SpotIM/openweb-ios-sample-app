@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class TextFieldSetting: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalOffset: CGFloat = 10
         static let textFieldCorners: CGFloat = 12
         static let keyboardPadding: CGFloat = 5
@@ -19,11 +19,11 @@ class TextFieldSetting: UIView {
         static let titleNumberOfLines: Int = 2
     }
 
-    fileprivate let title: String
-    fileprivate let placeholder: String
-    fileprivate let text = BehaviorSubject<String?>(value: nil)
-    fileprivate var font: UIFont
-    fileprivate let disposeBag = DisposeBag()
+    private let title: String
+    private let placeholder: String
+    private let text = BehaviorSubject<String?>(value: nil)
+    private var font: UIFont
+    private let disposeBag = DisposeBag()
 
     fileprivate lazy var textFieldTitleLbl: UILabel = {
         return title
@@ -46,7 +46,7 @@ class TextFieldSetting: UIView {
     init(title: String, placeholder: String = "", accessibilityPrefixId: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
         self.title = title
         self.placeholder = placeholder
-        if let text = text {
+        if let text {
             self.text.onNext(text)
         }
         self.font = font
@@ -63,7 +63,7 @@ class TextFieldSetting: UIView {
 
 }
 
-fileprivate extension TextFieldSetting {
+private extension TextFieldSetting {
     func applyAccessibility(prefixId: String) {
         textFieldTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         textFieldControl.accessibilityIdentifier = prefixId + "_text_field_id"
@@ -107,9 +107,7 @@ fileprivate extension TextFieldSetting {
         let keyboardShowHeight = NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
             .map { notification -> CGFloat in
-                // swiftlint:disable line_length
                 let height = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.height
-                // swiftlint:enable line_length
                 return height ?? 0
             }
 
@@ -124,7 +122,7 @@ fileprivate extension TextFieldSetting {
 
         keyboardHeight
             .subscribe(onNext: { [weak self] keyboardHeight in
-                guard let self = self else { return }
+                guard let self else { return }
                 if self.textFieldControl.isFirstResponder,
                    let scrollView = self.superview as? UIScrollView {
                     let insets = UIEdgeInsets(top: 0,
@@ -134,10 +132,8 @@ fileprivate extension TextFieldSetting {
                     scrollView.contentInset = insets
                     scrollView.scrollIndicatorInsets = insets
 
-                    // swiftlint:disable line_length
                     if scrollView.frame.height - keyboardHeight + scrollView.contentOffset.y < self.frame.origin.y + Metrics.keyboardPadding + self.frame.size.height {
                         let moveTo = self.frame.origin.y - keyboardHeight + self.frame.size.height + Metrics.keyboardPadding
-                        // swiftlint:enable line_length
                         let scrollPoint = CGPoint(x: 0, y: moveTo)
                         scrollView.setContentOffset(scrollPoint, animated: true)
                     }

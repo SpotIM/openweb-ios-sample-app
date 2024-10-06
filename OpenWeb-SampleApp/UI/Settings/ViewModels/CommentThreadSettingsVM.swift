@@ -38,9 +38,9 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
         return NSLocalizedString("OpenCommentId", comment: "")
     }()
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("CommentThreadSettings", comment: "")
@@ -52,7 +52,7 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
     }
 }
 
-fileprivate extension CommentThreadSettingsVM {
+private extension CommentThreadSettingsVM {
     func setupObservers() {
         openCommentIdSelected
             .skip(1)

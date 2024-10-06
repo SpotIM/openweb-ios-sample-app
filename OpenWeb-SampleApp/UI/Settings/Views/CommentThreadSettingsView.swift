@@ -11,36 +11,36 @@ import RxSwift
 
 class CommentThreadSettingsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_thread_settings_view_id"
         static let textFieldOpenCommentIdIdentifier = "comment_thread_settings_view_open_comment_id_id"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metrics.verticalOffset
         return stackView
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
     }()
 
-    fileprivate lazy var textFieldOpenCommentId: TextFieldSetting = {
+    private lazy var textFieldOpenCommentId: TextFieldSetting = {
         let txtField = TextFieldSetting(title: viewModel.outputs.openCommentIdTitle,
                                         accessibilityPrefixId: Metrics.textFieldOpenCommentIdIdentifier,
                                         font: FontBook.paragraph)
         return txtField
     }()
 
-    fileprivate let viewModel: CommentThreadSettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: CommentThreadSettingsViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: CommentThreadSettingsViewModeling) {
         self.viewModel = viewModel
@@ -55,7 +55,7 @@ class CommentThreadSettingsView: UIView {
     }
 }
 
-fileprivate extension CommentThreadSettingsView {
+private extension CommentThreadSettingsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         textFieldOpenCommentId.accessibilityIdentifier = Metrics.textFieldOpenCommentIdIdentifier
