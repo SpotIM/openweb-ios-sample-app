@@ -33,8 +33,8 @@ class OWCommentingReadOnlyViewModel: OWCommentingReadOnlyViewModeling,
     var outputs: OWCommentingReadOnlyViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
-    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    private let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
 
     var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
@@ -51,14 +51,14 @@ class OWCommentingReadOnlyViewModel: OWCommentingReadOnlyViewModeling,
             .asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init() {
         setupObservers()
     }
 }
 
-fileprivate extension OWCommentingReadOnlyViewModel {
+private extension OWCommentingReadOnlyViewModel {
     func setupObservers() {
         triggerCustomizeTitleLabelUI
             .bind(to: _triggerCustomizeTitleLabelUI)

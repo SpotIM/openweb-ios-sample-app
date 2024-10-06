@@ -11,11 +11,11 @@
 import UIKit
 
 class OWTestingRxTableViewAnimationsVC: UIViewController {
-    fileprivate struct Metrics { }
+    private struct Metrics { }
 
-    fileprivate let viewModel: OWTestingRxTableViewAnimationsViewModeling
+    private let viewModel: OWTestingRxTableViewAnimationsViewModeling
 
-    fileprivate lazy var testingRxTableViewAnimationsView: OWTestingRxTableViewAnimationsView = {
+    private lazy var testingRxTableViewAnimationsView: OWTestingRxTableViewAnimationsView = {
         return OWTestingRxTableViewAnimationsView(viewModel: viewModel.outputs.viewVM)
     }()
 
@@ -34,7 +34,7 @@ class OWTestingRxTableViewAnimationsVC: UIViewController {
     }
 }
 
-fileprivate extension OWTestingRxTableViewAnimationsVC {
+private extension OWTestingRxTableViewAnimationsVC {
     func setupUI() {
         view.addSubview(testingRxTableViewAnimationsView)
         testingRxTableViewAnimationsView.OWSnp.makeConstraints { make in

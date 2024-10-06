@@ -26,7 +26,7 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
     var inputs: OWMenuSelectionViewModelingInputs { return self }
     var outputs: OWMenuSelectionViewModelingOutputs { return self }
 
-    fileprivate let _cellsViewModels = BehaviorSubject<[OWMenuSelectionCellViewModeling]>(value: [])
+    private let _cellsViewModels = BehaviorSubject<[OWMenuSelectionCellViewModeling]>(value: [])
     var cellsViewModels: Observable<[OWMenuSelectionCellViewModeling]> {
         return _cellsViewModels
             .asObservable()
@@ -34,7 +34,7 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
     }
 
     var menuDismissed = PublishSubject<Void>()
-    fileprivate var menuDismissedObservable: Observable<Void> {
+    private var menuDismissedObservable: Observable<Void> {
         return menuDismissed
             .asObservable()
     }

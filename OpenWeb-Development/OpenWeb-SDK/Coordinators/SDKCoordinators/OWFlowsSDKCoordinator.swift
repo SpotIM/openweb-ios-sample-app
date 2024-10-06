@@ -11,9 +11,9 @@ import UIKit
 import RxSwift
 
 class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
-    fileprivate var router: OWRoutering!
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let uiDevice: UIDevice
+    private var router: OWRoutering!
+    private let servicesProvider: OWSharedServicesProviding
+    private let uiDevice: UIDevice
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          uiDevice: UIDevice = UIDevice.current) {
@@ -32,13 +32,13 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.invalidateExistingFlows()
                 self.generateNewPageViewId()
                 self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
             })
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
                                                                               preConversationData: preConversationData,
@@ -65,7 +65,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 
         return coordinate(to: conversationCoordinator, coordinatorData: coordinatorData)
             .do { [weak self] coordinatorResult in
-                guard let self = self else { return }
+                guard let self else { return }
                 if coordinatorResult == .popped {
                     self.cleanRouter(presentationalMode: presentationalMode)
                 }
@@ -141,7 +141,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 #endif
 }
 
-fileprivate extension OWFlowsSDKCoordinator {
+private extension OWFlowsSDKCoordinator {
     func prepareRouter(presentationalMode: OWPresentationalMode, presentAnimated: Bool) {
         invalidateExistingFlows()
 
@@ -187,7 +187,7 @@ fileprivate extension OWFlowsSDKCoordinator {
 
     func cleanRouter(presentationalMode: OWPresentationalMode) {
         switch presentationalMode {
-        case .present(viewController: _):
+        case .present:
             router.dismiss(animated: true, completion: nil)
         default:
             break

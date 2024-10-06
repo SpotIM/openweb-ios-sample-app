@@ -10,7 +10,7 @@ import UIKit
 
 class OWCommentingCTASkeletonView: OWSkeletonShimmeringView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let avatarSize: CGFloat = 40
         static let commentEntrySkeletonHeight: CGFloat = 40
         static let commentEntrySkeletonCornerRadius: CGFloat = 6
@@ -19,21 +19,21 @@ class OWCommentingCTASkeletonView: OWSkeletonShimmeringView {
         static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
 
-    fileprivate lazy var avatarSkeleton: UIView = {
+    private lazy var avatarSkeleton: UIView = {
         return UIView()
             .corner(radius: Metrics.avatarSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var commentEntrySkeleton: UIView = {
+    private lazy var commentEntrySkeleton: UIView = {
         return UIView()
             .corner(radius: Metrics.commentEntrySkeletonCornerRadius)
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
+    private lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
         view.enforceSemanticAttribute()
 

@@ -17,7 +17,7 @@ internal protocol OWImageProviding {
 
 class OWCloudinaryImageProvider: OWImageProviding {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let placeholderImagePrefix = "#"
         static let avatarPathComponent = "avatars/"
         static let cloudinaryImageParamString = "dpr_3,c_thumb,g_face"
@@ -26,7 +26,7 @@ class OWCloudinaryImageProvider: OWImageProviding {
         static let defaultBaseUrl = "https://images.spot.im/image/upload/"
     }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -42,14 +42,14 @@ class OWCloudinaryImageProvider: OWImageProviding {
         return _fetchImageBaseUrl
             .take(1)
             .map { [weak self] baseUrl in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let cloudinaryUrlString = self.cloudinaryURLString(size, baseUrl: baseUrl)
                 return URL(string: cloudinaryUrlString.appending(urlSuffix))
             }
             .asObservable()
     }
 
-    fileprivate var _fetchImageBaseUrl: Observable<String> {
+    private var _fetchImageBaseUrl: Observable<String> {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> String in
@@ -59,11 +59,11 @@ class OWCloudinaryImageProvider: OWImageProviding {
     }
 }
 
-fileprivate extension OWCloudinaryImageProvider {
+private extension OWCloudinaryImageProvider {
     func cloudinaryURLString(_ imageSize: CGSize? = nil, baseUrl: String) -> String {
         var result = baseUrl.appending(Metrics.cloudinaryImageParamString)
 
-        if let imageSize = imageSize {
+        if let imageSize {
             result.append("\(Metrics.cloudinaryWidthPrefix)" +
                 "\(Int(imageSize.width))" +
                 "\(Metrics.cloudinaryHeightPrefix)" +

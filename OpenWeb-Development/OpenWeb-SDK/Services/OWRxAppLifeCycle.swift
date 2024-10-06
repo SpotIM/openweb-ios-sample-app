@@ -21,9 +21,9 @@ protocol OWRxAppLifeCycleProtocol {
 
 class OWRxAppLifeCycle: OWRxAppLifeCycleProtocol {
 
-    fileprivate let notificationCenter: NotificationCenter
-    fileprivate let queueScheduler: SerialDispatchQueueScheduler
-    fileprivate let disposeBag = DisposeBag()
+    private let notificationCenter: NotificationCenter
+    private let queueScheduler: SerialDispatchQueueScheduler
+    private let disposeBag = DisposeBag()
 
     init(notificationCenter: NotificationCenter = NotificationCenter.default,
          queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKAppLifeCycleQueue")) {
@@ -33,49 +33,49 @@ class OWRxAppLifeCycle: OWRxAppLifeCycleProtocol {
         setupObservers()
     }
 
-    fileprivate let _willTerminate = PublishSubject<Void>()
+    private let _willTerminate = PublishSubject<Void>()
     var willTerminate: Observable<Void> {
         return _willTerminate
             .asObservable()
             .share(replay: 0) // Zero to emitt new subscriber only new events
     }
 
-    fileprivate let _didBecomeActive = PublishSubject<Void>()
+    private let _didBecomeActive = PublishSubject<Void>()
     var didBecomeActive: Observable<Void> {
         return _didBecomeActive
             .asObservable()
             .share(replay: 0) // Zero to emitt new subscriber only new events
     }
 
-    fileprivate let _didEnterBackground = PublishSubject<Void>()
+    private let _didEnterBackground = PublishSubject<Void>()
     var didEnterBackground: Observable<Void> {
         return _didEnterBackground
             .asObservable()
             .share(replay: 0) // Zero to emitt new subscriber only new events
     }
 
-    fileprivate let _willEnterForeground = PublishSubject<Void>()
+    private let _willEnterForeground = PublishSubject<Void>()
     var willEnterForeground: Observable<Void> {
         return _willEnterForeground
             .asObservable()
             .share(replay: 0) // Zero to emitt new subscriber only new events
     }
 
-    fileprivate let _willResignActive = PublishSubject<Void>()
+    private let _willResignActive = PublishSubject<Void>()
     var willResignActive: Observable<Void> {
         return _willResignActive
             .asObservable()
             .share(replay: 0) // Zero to emitt new subscriber only new events
     }
 
-    fileprivate let _didChangeContentSizeCategory = PublishSubject<Void>()
+    private let _didChangeContentSizeCategory = PublishSubject<Void>()
     var didChangeContentSizeCategory: Observable<Void> {
         return _didChangeContentSizeCategory
             .asObservable()
             .share(replay: 0) // Zero to emitt new subscriber only new events
     }
 
-    fileprivate let _isActive = BehaviorSubject<Bool>(value: true)
+    private let _isActive = BehaviorSubject<Bool>(value: true)
     var isActive: Observable<Bool> {
         return _isActive
             .asObservable()
@@ -83,7 +83,7 @@ class OWRxAppLifeCycle: OWRxAppLifeCycleProtocol {
     }
 }
 
-fileprivate extension OWRxAppLifeCycle {
+private extension OWRxAppLifeCycle {
     func setupObservers() {
         notificationCenter.rx.notification(UIApplication.willTerminateNotification)
             .observe(on: queueScheduler)

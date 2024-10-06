@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalOffset: CGFloat = 16.0
         static let tableViewAnimationDuration: Double = 0.25
         static let identifier = "comment_thread_view_id"
@@ -26,14 +26,14 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
         static let separatorHeight: CGFloat = 1.0
     }
 
-    var toastView: OWToastView? = nil
+    var toastView: OWToastView?
 
-    fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
+    private lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
-            guard let self = self else { return .reload }
+            guard let self else { return .reload }
             return self.viewModel.outputs.dataSourceTransition
         }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
-            guard let self = self else { return UITableViewCell() }
+            guard let self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             cell.configure(with: item.viewModel)
@@ -46,7 +46,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
         return dataSource
     }()
 
-    fileprivate lazy var headerView: UIView = {
+    private lazy var headerView: UIView = {
         let view = UIView()
 
         view.addSubview(titleLabel)
@@ -72,12 +72,12 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: Metrics.closeButtonIconName, supportDarkMode: true), state: .normal)
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(typography: .titleSmall))
@@ -85,13 +85,13 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
             .text(viewModel.outputs.title)
     }()
 
-    fileprivate lazy var separatorView: UIView = {
+    private lazy var separatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
@@ -109,7 +109,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
         return tableView
     }()
 
-    fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
+    private lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
         refresh.tintColor(OWColorPalette.shared.color(type: .loaderColor,
                                                       themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -117,8 +117,8 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
         return refresh
     }()
 
-    fileprivate let viewModel: OWCommentThreadViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWCommentThreadViewViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -134,7 +134,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
     }
 }
 
-fileprivate extension OWCommentThreadView {
+private extension OWCommentThreadView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -171,7 +171,7 @@ fileprivate extension OWCommentThreadView {
     func setupObservers() {
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] data in
-                guard var self = self else { return }
+                guard var self else { return }
                 let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
                 self.presentToast(requiredData: data.presentData.data,
                                   completions: completions,
@@ -192,7 +192,7 @@ fileprivate extension OWCommentThreadView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.headerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: Metrics.closeButtonIconName, supportDarkMode: true), for: .normal)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
@@ -209,7 +209,7 @@ fileprivate extension OWCommentThreadView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .titleSmall)
             })
             .disposed(by: disposeBag)
@@ -217,7 +217,7 @@ fileprivate extension OWCommentThreadView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .titleSmall)
             })
             .disposed(by: disposeBag)
@@ -232,14 +232,14 @@ fileprivate extension OWCommentThreadView {
 
         tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
             .flatMapLatest { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.tableView.rx.didEndDecelerating
                     .asObservable()
                     .take(1)
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.pullToRefresh.onNext()
                 self.tableView.setContentOffset(.zero, animated: true)
             })
@@ -248,7 +248,7 @@ fileprivate extension OWCommentThreadView {
         viewModel.outputs.performTableViewAnimation
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
                         self.tableView.beginUpdates()
                         self.tableView.endUpdates()
@@ -259,7 +259,7 @@ fileprivate extension OWCommentThreadView {
         viewModel.outputs.scrollToCellIndex
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] index in
-                guard let self = self else { return }
+                guard let self else { return }
                 let cellIndexPath = IndexPath(row: index, section: 0)
                 self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
             })
@@ -271,7 +271,7 @@ fileprivate extension OWCommentThreadView {
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] index in
                     let cellIndexPath = IndexPath(row: index, section: 0)
-                    guard let self = self, let cell = self.tableView.cellForRow(at: cellIndexPath) else { return }
+                    guard let self, let cell = self.tableView.cellForRow(at: cellIndexPath) else { return }
                     let prevBackgroundColor = cell.backgroundColor
                     UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, animations: {
                         cell.backgroundColor = OWColorPalette.shared.color(
@@ -305,7 +305,7 @@ fileprivate extension OWCommentThreadView {
         viewModel.outputs.updateTableViewInstantly
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.tableView.reloadData()
                 self.tableView.layoutIfNeeded()
             })

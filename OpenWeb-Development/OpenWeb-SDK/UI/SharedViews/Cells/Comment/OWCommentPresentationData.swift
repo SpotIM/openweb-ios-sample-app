@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 class OWCommentPresentationData: OWUpdaterProtocol {
-    fileprivate var disposedBag = DisposeBag()
+    private var disposedBag = DisposeBag()
 
     var update: PublishSubject<Void> = PublishSubject()
 
@@ -18,7 +18,7 @@ class OWCommentPresentationData: OWUpdaterProtocol {
     var repliesIds: [OWCommentId]
     var totalRepliesCount: Int
     var repliesOffset: Int
-    fileprivate(set) var repliesPresentation: [OWCommentPresentationData]
+    private(set) var repliesPresentation: [OWCommentPresentationData]
 
     init(
         id: OWCommentId,
@@ -64,7 +64,7 @@ extension OWCommentPresentationData {
     }
 }
 
-fileprivate extension OWCommentPresentationData {
+private extension OWCommentPresentationData {
     func updateRepliesPresentationObservers() {
         disposedBag = DisposeBag()
 
@@ -72,7 +72,7 @@ fileprivate extension OWCommentPresentationData {
 
         Observable.merge(repliesUpdateObservers)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.update.onNext()
             })
             .disposed(by: disposedBag)

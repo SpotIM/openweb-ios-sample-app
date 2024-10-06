@@ -36,7 +36,7 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
         return viewDidLoad.asObservable()
     }
 
-    fileprivate let data: OWClarityDetailsRequireData
+    private let data: OWClarityDetailsRequireData
     lazy var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling = {
         return OWClarityDetailsViewVM(data: data)
     }()
@@ -45,4 +45,3 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
         self.data = data
     }
 }
-

@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-fileprivate typealias OWReportedCommentIds = Set<OWCommentId>
+private typealias OWReportedCommentIds = Set<OWCommentId>
 
 protocol OWReportedCommentsServicing {
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment
@@ -22,14 +22,14 @@ protocol OWReportedCommentsServicing {
 
 class OWReportedCommentsService: OWReportedCommentsServicing {
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
-    fileprivate var _commentJustReported = PublishSubject<OWCommentId>()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
+    private var _commentJustReported = PublishSubject<OWCommentId>()
 
     // Multiple threads / queues access to this class
     // Avoiding "data race" by using a lock
-    fileprivate let lock: OWLock = OWUnfairLock()
-    fileprivate let queue = DispatchQueue(label: "OpenWebSDKReportedCommentsService", qos: .utility)
+    private let lock: OWLock = OWUnfairLock()
+    private let queue = DispatchQueue(label: "OpenWebSDKReportedCommentsService", qos: .utility)
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -73,7 +73,7 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     }
 }
 
-fileprivate extension OWReportedCommentsService {
+private extension OWReportedCommentsService {
     func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
         // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
@@ -108,7 +108,7 @@ fileprivate extension OWReportedCommentsService {
 
     func loadPersistence() {
         queue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             let keychain = self.servicesProvider.keychain()
 
             if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
@@ -122,7 +122,7 @@ fileprivate extension OWReportedCommentsService {
 
     func savePersistant() {
         queue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             let keychain = self.servicesProvider.keychain()
 
             keychain.save(value: self._mapPostIdToReportedCommentIds, forKey: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments)

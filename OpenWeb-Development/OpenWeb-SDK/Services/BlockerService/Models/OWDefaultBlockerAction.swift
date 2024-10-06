@@ -14,7 +14,7 @@ class OWDefaultBlockerAction: OWBlockerActionProtocol {
         return _completion
     }
 
-    fileprivate var _completion: OWBasicCompletion!
+    private var _completion: OWBasicCompletion!
 
     init(blockerType: OWBlockerActionType) {
         self.blockerType = blockerType
@@ -22,7 +22,7 @@ class OWDefaultBlockerAction: OWBlockerActionProtocol {
     }
 }
 
-fileprivate extension OWDefaultBlockerAction {
+private extension OWDefaultBlockerAction {
     func setupCompletion() {
         _completion = { [weak self] in
             self?.finish()

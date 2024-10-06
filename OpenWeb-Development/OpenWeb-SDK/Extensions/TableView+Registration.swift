@@ -30,7 +30,7 @@ extension UITableView {
     }
 }
 
-fileprivate extension UITableView {
+private extension UITableView {
     func registerIfNeeded<T: UITableViewCell>(cellClass: T.Type) {
         if registeredCellsIdentifiers.contains(cellClass.identifierName) {
             return
@@ -41,19 +41,10 @@ fileprivate extension UITableView {
 
     var registeredCellsIdentifiers: Set<String> {
         get {
-            // Check if it was already set
-            if let registered = objc_getAssociatedObject(self, &AssociatedCells.registeredCellsIdentifiers) as? Set<String> {
-                return registered
-            }
-
-            // Create set
-            let registered = Set<String>()
-            return registered
+            return self.getObjectiveCAssociatedObject(key: &AssociatedCells.registeredCellsIdentifiers) ?? Set<String>()
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedCells.registeredCellsIdentifiers,
-                                       newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+            setObjectiveCAssociatedObject(key: &AssociatedCells.registeredCellsIdentifiers, value: newValue)
+       }
     }
 }
-

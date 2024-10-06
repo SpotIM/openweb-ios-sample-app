@@ -51,9 +51,9 @@ extension OWFilterTabsCellOption: Equatable {
 
     static func == (lhs: OWFilterTabsCellOption, rhs: OWFilterTabsCellOption) -> Bool {
         switch (lhs, rhs) {
-        case (.filterTab(_), .filterTab(_)):
+        case (.filterTab, .filterTab):
             return lhs.identifier == rhs.identifier
-        case (.filterTabSkeleton(_), .filterTabSkeleton(_)):
+        case (.filterTabSkeleton, .filterTabSkeleton):
             return lhs.identifier == rhs.identifier
         default:
             return false
@@ -66,4 +66,3 @@ extension OWFilterTabsCellOption: OWIdentifiableType {
         return self.identifier
     }
 }
-

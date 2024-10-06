@@ -8,6 +8,8 @@
 
 import UIKit
 
+// swiftlint:disable operator_usage_whitespace
+
 extension OWColor {
     enum OWType: CaseIterable {
         case skeletonColor
@@ -202,11 +204,13 @@ extension OWColor {
         }
     }
 
-    fileprivate mutating func setLightThemeColor(_ color: UIColor) {
+    private mutating func setLightThemeColor(_ color: UIColor) {
         lightColor = color
     }
 
-    fileprivate mutating func setDarkThemeColor(_ color: UIColor) {
+    private mutating func setDarkThemeColor(_ color: UIColor) {
         darkColor = color
     }
 }
+
+// swiftlint:enable operator_usage_whitespace

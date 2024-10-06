@@ -13,16 +13,16 @@ import RxCocoa
 
 class OWSubscriberIconView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let subscriberBadgeIconSize: CGFloat = 12
         static let identifier = "subscriber_badge_view_id"
         static let imageViewIdentifier = "subscriber_badge_image_view_id"
     }
 
-    fileprivate var viewModel: OWSubscriberIconViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWSubscriberIconViewModeling!
+    private var disposeBag: DisposeBag!
 
-    fileprivate lazy var imgViewIcon: UIImageView = {
+    private lazy var imgViewIcon: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
@@ -45,7 +45,7 @@ class OWSubscriberIconView: UIView {
     }
 }
 
-fileprivate extension OWSubscriberIconView {
+private extension OWSubscriberIconView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         imgViewIcon.accessibilityIdentifier = Metrics.imageViewIdentifier
@@ -69,7 +69,7 @@ fileprivate extension OWSubscriberIconView {
         viewModel.outputs.isSubscriber
             .subscribe(onNext: { [weak self] isVisible in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.imgViewIcon.OWSnp.updateConstraints { make in
                         make.size.equalTo(isVisible ? Metrics.subscriberBadgeIconSize : 0)
                     }
@@ -85,7 +85,7 @@ fileprivate extension OWSubscriberIconView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.imgViewIcon.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: style)
             })

@@ -19,7 +19,7 @@ enum OWAnalyticSourceType {
     case none
 
     var analyticsComponentName: String {
-        switch(self) {
+        switch self {
         case .commentCreation:
             return "comment_creation"
         case .preConversation:

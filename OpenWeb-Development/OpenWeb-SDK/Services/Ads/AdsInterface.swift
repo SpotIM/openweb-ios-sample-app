@@ -103,12 +103,12 @@ internal final class SPAdsViewTracker {
     var viewedConversations = Set<String>()
 
     func trackView(conversation id: String?) {
-        guard let id = id else { return }
+        guard let id else { return }
         viewedConversations.insert(id)
     }
 
     func isViewedConversation(with id: String?) -> Bool {
-        guard let id = id else { return false }
+        guard let id else { return false }
         return id.isEmpty == false && viewedConversations.contains(id)
     }
 }

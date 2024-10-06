@@ -11,16 +11,16 @@ import RxSwift
 
 // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 class OWConversationEmptyStateCell: UITableViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "empty_state_cell_id"
     }
 
-    fileprivate lazy var conversationEmptyStateView: OWConversationEmptyStateView = {
+    private lazy var conversationEmptyStateView: OWConversationEmptyStateView = {
         return OWConversationEmptyStateView()
     }()
 
-    fileprivate var viewModel: OWConversationEmptyStateCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWConversationEmptyStateCellViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -43,7 +43,7 @@ class OWConversationEmptyStateCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWConversationEmptyStateCell {
+private extension OWConversationEmptyStateCell {
     func setupUI() {
         self.backgroundColor = .clear
 

@@ -181,16 +181,6 @@ struct OWNetworkHTTPHeader: Hashable {
 
     /// Value of the header.
     let value: String
-
-    /// Creates an instance from the given `name` and `value`.
-    ///
-    /// - Parameters:
-    ///   - name:  The name of the header.
-    ///   - value: The value of the header.
-    init(name: String, value: String) {
-        self.name = name
-        self.value = value
-    }
 }
 
 extension OWNetworkHTTPHeader: CustomStringConvertible {
@@ -319,9 +309,11 @@ extension Array where Element == OWNetworkHTTPHeader {
 extension OWNetworkHTTPHeaders {
     /// The default set of `HTTPHeaders` used by OWNetwork. Includes `Accept-Encoding`, `Accept-Language`, and
     /// `User-Agent`.
-    static let `default`: OWNetworkHTTPHeaders = [.defaultAcceptEncoding,
-                                                .defaultAcceptLanguage,
-                                                .defaultUserAgent]
+    static let `default`: OWNetworkHTTPHeaders = [
+        .defaultAcceptEncoding,
+        .defaultAcceptLanguage,
+        .defaultUserAgent
+    ]
 }
 
 extension OWNetworkHTTPHeader {
@@ -363,7 +355,7 @@ extension OWNetworkHTTPHeader {
         let osNameVersion: String = {
             let version = ProcessInfo.processInfo.operatingSystemVersion
             let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
-            let osName: String =  "iOS"
+            let osName: String = "iOS"
 
             return "\(osName) \(versionString)"
         }()

@@ -32,7 +32,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     var inputs: OWErrorStateViewViewModelingInputs { return self }
     var outputs: OWErrorStateViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     var errorStateType: OWErrorStateTypes {
         didSet {
             heightChange.onNext(0)
@@ -47,7 +47,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var tryAgainTapped: Observable<OWErrorStateTypes> = {
         return tryAgainTap
             .map { [weak self] _ -> OWErrorStateTypes? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.errorStateType
             }
             .unwrap()

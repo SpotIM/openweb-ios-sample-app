@@ -10,12 +10,12 @@ import RxSwift
 import RxCocoa
 
 struct OWRealTimeData: Decodable {
-    fileprivate let conversationCountMessages: [String: [OWRealTimeMessagesCount]]
-    fileprivate let conversationTypingV2Count: [String: [[String: Int]]]
-    fileprivate let conversationTypingV2Users: [String: [OWRealTimeTypingUsers]]
-    fileprivate let conversationNewMessages: [String: [OWComment]]
-    fileprivate let onlineViewingUsers: [String: [OWRealTimeOnlineViewingUsers]]
-    fileprivate let onlineUsers: [String: [OWRealTimeOnlineUser]]
+    private let conversationCountMessages: [String: [OWRealTimeMessagesCount]]
+    private let conversationTypingV2Count: [String: [[String: Int]]]
+    private let conversationTypingV2Users: [String: [OWRealTimeTypingUsers]]
+    private let conversationNewMessages: [String: [OWComment]]
+    private let onlineViewingUsers: [String: [OWRealTimeOnlineViewingUsers]]
+    private let onlineUsers: [String: [OWRealTimeOnlineUser]]
 
     enum CodingKeys: String, CodingKey {
         case conversationCountMessages = "conversation/count-messages"
@@ -46,7 +46,7 @@ struct OWRealTimeData: Decodable {
 
 extension OWRealTimeData {
 
-    fileprivate func getConversationId(forPostId postId: OWPostId) -> String {
+    private func getConversationId(forPostId postId: OWPostId) -> String {
         return "\(OWManager.manager.spotId)_\(postId)"
     }
 

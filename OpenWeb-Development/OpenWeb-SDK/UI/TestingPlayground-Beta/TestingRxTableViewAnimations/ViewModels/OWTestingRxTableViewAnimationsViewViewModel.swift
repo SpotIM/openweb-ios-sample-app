@@ -34,11 +34,11 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
     var inputs: OWTestingRxTableViewAnimationsViewViewModelingInputs { return self }
     var outputs: OWTestingRxTableViewAnimationsViewViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayForTableViewAnimation: Int = 50 // In ms
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var redCellsGeneratorVM: OWTestingCellsGeneratorViewModeling = {
         let requiredData = OWTestingCellsGeneratorRequiredData(color: .red, title: "Red")
@@ -55,10 +55,10 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
         return OWTestingCellsGeneratorViewModel(requiredData: requiredData)
     }()
 
-    fileprivate var cellsIdToIndexMapper = [String: Int]()
+    private var cellsIdToIndexMapper = [String: Int]()
 
-    fileprivate var _cellsViewModels = OWObservableArray<OWTestingRxTableViewCellOption>()
-    fileprivate var cellsViewModels: Observable<[OWTestingRxTableViewCellOption]> {
+    private var _cellsViewModels = OWObservableArray<OWTestingRxTableViewCellOption>()
+    private var cellsViewModels: Observable<[OWTestingRxTableViewCellOption]> {
         return _cellsViewModels
             .rx_elements()
             .asObservable()
@@ -72,7 +72,7 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
             }
     }
 
-    fileprivate let _performTableViewAnimation = PublishSubject<Void>()
+    private let _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
             .asObservable()
@@ -83,13 +83,13 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
     }
 }
 
-fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
+private extension OWTestingRxTableViewAnimationsViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Update cells id to index mapper
         cellsViewModels
             .subscribe(onNext: { [weak self] cellOptions in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.cellsIdToIndexMapper.removeAll()
                 for index in 0..<cellOptions.count {
                     let cellOption = cellOptions[index]
@@ -134,7 +134,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
 
         Observable.merge(addRedObservable, addBlueObservable, addGreenObservable)
             .subscribe(onNext: { [weak self] cellOptions in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._cellsViewModels.append(contentsOf: cellOptions)
             })
             .disposed(by: disposeBag)
@@ -189,13 +189,13 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
         let removeRedIndexObservable = redCellsObservable
             .flatMapLatest { [weak self] redCellsVms -> Observable<Int> in
                 let reomveOutputObservable: [Observable<Int>] = redCellsVms.map { redCellVm in
-                    guard let self = self else { return .empty() }
+                    guard let self else { return .empty() }
                     return redCellVm.outputs.firstLevelVM
                         .outputs.secondLevelVM
                         .outputs.removeTapped
                         .map { redCellVm.outputs.id }
                         .map { [weak self] cellId -> Int? in
-                            guard let self = self,
+                            guard let self,
                                   let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                             return cellIndex
                         }
@@ -206,13 +206,13 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
 
         let removeBlueIndexObservable = blueCellsObservable
             .flatMapLatest { [weak self] blueCellsVms -> Observable<Int> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let reomveOutputObservable: [Observable<Int>] = blueCellsVms.map { blueCellVm in
                     return blueCellVm.outputs.firstLevelVM
                         .outputs.removeTapped
                         .map { blueCellVm.outputs.id }
                         .map { [weak self] cellId -> Int? in
-                            guard let self = self,
+                            guard let self,
                                   let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                             return cellIndex
                         }
@@ -227,7 +227,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
                     return greenCellVm.outputs.removeTapped
                         .map { greenCellVm.outputs.id }
                         .map { [weak self] cellId -> Int? in
-                            guard let self = self,
+                            guard let self,
                                   let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                             return cellIndex
                         }
@@ -238,7 +238,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
 
         Observable.merge(removeRedIndexObservable, removeBlueIndexObservable, removeGreenIndexObservable)
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._cellsViewModels.remove(at: index)
             })
             .disposed(by: disposeBag)
@@ -252,7 +252,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .map { cellsVm -> [Int] in
                 let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
                     let cellId = individualCellVm.outputs.id
-                    guard let self = self,
+                    guard let self,
                           let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                     return cellIndex
                 }
@@ -269,7 +269,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .map { cellsVm -> [Int] in
                 let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
                     let cellId = individualCellVm.outputs.id
-                    guard let self = self,
+                    guard let self,
                           let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                     return cellIndex
                 }
@@ -286,7 +286,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .map { cellsVm -> [Int] in
                 let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
                     let cellId = individualCellVm.outputs.id
-                    guard let self = self,
+                    guard let self,
                           let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                     return cellIndex
                 }
@@ -298,7 +298,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
         Observable.merge(removeAllRedsObservable, removeAllBluesObservable, removeAllGreensObservable)
             .filter { !$0.isEmpty }
             .subscribe(onNext: { [weak self] indices in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._cellsViewModels.remove(at: indices)
             })
             .disposed(by: disposeBag)
@@ -312,7 +312,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .map { cellsVm -> [(OWTestingRxTableViewCellOption, Int)] in
                 let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
                     let cellId = individualCellVm.outputs.id
-                    guard let self = self,
+                    guard let self,
                           let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                     return cellIndex
                 }
@@ -335,7 +335,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .map { cellsVm -> [(OWTestingRxTableViewCellOption, Int)] in
                 let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
                     let cellId = individualCellVm.outputs.id
-                    guard let self = self,
+                    guard let self,
                           let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                     return cellIndex
                 }
@@ -358,7 +358,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .map { cellsVm -> [(OWTestingRxTableViewCellOption, Int)] in
                 let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
                     let cellId = individualCellVm.outputs.id
-                    guard let self = self,
+                    guard let self,
                           let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
                     return cellIndex
                 }
@@ -376,7 +376,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
         Observable.merge(reloadAllRedsObservable, reloadAllBluesObservable, reloadAllGreensObservable)
             .filter { !$0.isEmpty }
             .subscribe(onNext: { [weak self] elementsAndIndices in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._cellsViewModels.update(elementsWithIndices: elementsAndIndices)
             })
             .disposed(by: disposeBag)

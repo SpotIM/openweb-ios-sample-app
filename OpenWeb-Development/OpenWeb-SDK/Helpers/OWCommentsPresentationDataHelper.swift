@@ -21,7 +21,7 @@ class OWCommentsPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
         in commentsPresentationData: [OWCommentPresentationData]
     ) -> OWCommentPresentationData? {
         for commentPresentationData in commentsPresentationData {
-            if (commentPresentationData.id == commentId) {
+            if commentPresentationData.id == commentId {
                 return commentPresentationData
             }
             // Replies recursion

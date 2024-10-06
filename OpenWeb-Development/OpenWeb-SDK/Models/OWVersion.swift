@@ -8,10 +8,14 @@
 
 import Foundation
 
+public enum OWParserError: Error {
+    case generalParseError
+}
+
 class OWVersion: Decodable {
-    fileprivate let major: Int
-    fileprivate let minor: Int
-    fileprivate let patch: Int
+    private let major: Int
+    private let minor: Int
+    private let patch: Int
 
     init(from versionString: String) throws {
         let versionDelimiter = "."
@@ -32,8 +36,8 @@ class OWVersion: Decodable {
         }
         do {
             try self.init(from: versionString)
-        } catch let err {
-            throw err
+        } catch {
+            throw error
         }
 
     }

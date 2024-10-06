@@ -48,11 +48,11 @@ extension Reactive where Base: UIImagePickerController {
     }
 }
 
-fileprivate extension Reactive where Base: UIImagePickerController {
+private extension Reactive where Base: UIImagePickerController {
     var didFinishPickingMediaWithInfo: Observable<[UIImagePickerController.InfoKey: AnyObject]> {
         return delegate
             .methodInvoked(#selector(UIImagePickerControllerDelegate.imagePickerController(_:didFinishPickingMediaWithInfo:)))
-            .map({ (a) in
+            .map({ a in
                 return try castOrThrow(Dictionary<UIImagePickerController.InfoKey, AnyObject>.self, a[1])
             })
     }
@@ -60,7 +60,7 @@ fileprivate extension Reactive where Base: UIImagePickerController {
     var didCancel: Observable<()> {
         return delegate
             .methodInvoked(#selector(UIImagePickerControllerDelegate.imagePickerControllerDidCancel(_:)))
-            .map {_ in () }
+            .map { _ in () }
     }
 
     func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {

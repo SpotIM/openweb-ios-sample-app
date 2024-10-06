@@ -34,12 +34,12 @@ extension OWUpdaterProtocol {
 class OWObservableArray<Element: OWUpdaterProtocol>: ExpressibleByArrayLiteral {
     typealias EventType = OWArrayChangeEvent
 
-    fileprivate let eventSubject = PublishSubject<EventType>()
-    fileprivate let elementsSubject: BehaviorSubject<[Element]>
+    private let eventSubject = PublishSubject<EventType>()
+    private let elementsSubject: BehaviorSubject<[Element]>
 
-    fileprivate var disposedBag = DisposeBag()
+    private var disposedBag = DisposeBag()
 
-    fileprivate var elements: [Element]
+    private var elements: [Element]
 
     required init() {
         self.elements = []
@@ -74,7 +74,7 @@ extension OWObservableArray {
         return eventSubject
     }
 
-    fileprivate func arrayDidChange(_ event: EventType) {
+    private func arrayDidChange(_ event: EventType) {
         elementsSubject.onNext(elements)
         eventSubject.onNext(event)
     }
@@ -211,14 +211,14 @@ extension OWObservableArray {
         elements.removeAll(keepingCapacity: true)
         elements.insert(contentsOf: newElements, at: 0)
         setupObserversForElementsUpdater()
-        if (originalElements.count == 0) {
+        if originalElements.count == 0 {
             arrayDidChange(OWArrayChangeEvent(inserted: Array(0..<newElements.count)))
-        } else if (originalElements.count < newElements.count) {
+        } else if originalElements.count < newElements.count {
             arrayDidChange(OWArrayChangeEvent(updated: Array(0..<originalElements.count)))
             arrayDidChange(OWArrayChangeEvent(inserted: Array(originalElements.count..<newElements.count)))
         } else {
             arrayDidChange(OWArrayChangeEvent(updated: Array(0..<newElements.count)))
-            if (newElements.count != originalElements.count) {
+            if newElements.count != originalElements.count {
                 arrayDidChange(OWArrayChangeEvent(deleted: Array(newElements.count..<originalElements.count)))
             }
         }
@@ -281,11 +281,11 @@ extension OWObservableArray: Sequence {
     }
 }
 
-fileprivate extension OWObservableArray {
+private extension OWObservableArray {
     func setupObserversForElementsUpdater() {
         self.disposedBag = DisposeBag()
 
-        let elementsUpdaterObservables = elements.enumerated().map { (idx, element) -> Observable<Int> in
+        let elementsUpdaterObservables = elements.enumerated().map { idx, element -> Observable<Int> in
             return element.update
                 .asObservable()
                 .map { idx }
@@ -293,7 +293,7 @@ fileprivate extension OWObservableArray {
 
         Observable.merge(elementsUpdaterObservables)
             .subscribe { [weak self] idx in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.arrayDidChange(OWArrayChangeEvent(updated: [idx]))
             }
             .disposed(by: disposedBag)

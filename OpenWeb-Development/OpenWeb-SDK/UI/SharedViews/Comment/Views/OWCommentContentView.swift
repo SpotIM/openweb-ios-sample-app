@@ -24,18 +24,18 @@ class OWCommentContentView: UIView {
         static let editedLabelIdentifier = "comment_edited_label_id"
     }
 
-    fileprivate lazy var textLabel: OWCommentTextLabel = {
+    private lazy var textLabel: OWCommentTextLabel = {
        return OWCommentTextLabel()
             .numberOfLines(0)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var mediaView: CommentMediaView = {
+    private lazy var mediaView: CommentMediaView = {
         return CommentMediaView()
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var editedLabel: UILabel = {
+    private lazy var editedLabel: UILabel = {
        return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteSpecial))
             .text(OWLocalizationManager.shared.localizedString(key: "Edited"))
@@ -43,10 +43,10 @@ class OWCommentContentView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate var viewModel: OWCommentContentViewModeling!
-    fileprivate var disposeBag: DisposeBag!
-    fileprivate var textHeightConstraint: OWConstraint?
-    fileprivate var editedLabelHeightConstraint: OWConstraint?
+    private var viewModel: OWCommentContentViewModeling!
+    private var disposeBag: DisposeBag!
+    private var textHeightConstraint: OWConstraint?
+    private var editedLabelHeightConstraint: OWConstraint?
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -66,7 +66,7 @@ class OWCommentContentView: UIView {
     }
 }
 
-fileprivate extension OWCommentContentView {
+private extension OWCommentContentView {
     func setupViews() {
         self.enforceSemanticAttribute()
         self.addSubviews(textLabel, mediaView)
@@ -95,7 +95,7 @@ fileprivate extension OWCommentContentView {
         viewModel.outputs.image
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
-                guard let self = self,
+                guard let self,
                       case .custom(let url) = imageType else { return }
 
                 self.mediaView.configureMedia(imageUrl: url, gifUrl: nil)
@@ -104,14 +104,14 @@ fileprivate extension OWCommentContentView {
 
         viewModel.outputs.gifUrl
             .subscribe(onNext: { [weak self] url in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.mediaView.configureMedia(imageUrl: nil, gifUrl: url)
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.mediaSize
             .subscribe(onNext: { [weak self] size in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.mediaView.OWSnp.updateConstraints { make in
                     make.size.equalTo(size)
                     make.top.equalTo(self.textLabel.OWSnp.bottom).offset(
@@ -129,7 +129,7 @@ fileprivate extension OWCommentContentView {
         viewModel.outputs.collapsableLabelViewModel
             .outputs.height
             .subscribe(onNext: { [weak self] newHeight in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textHeightConstraint?.update(offset: newHeight)
             })
             .disposed(by: disposeBag)
@@ -139,7 +139,7 @@ fileprivate extension OWCommentContentView {
             .bind(to: editedLabel.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if let editedLabelHeightConstraint = editedLabelHeightConstraint {
+        if let editedLabelHeightConstraint {
             viewModel.outputs.isEdited
                 .map { !$0 }
                 .bind(to: editedLabelHeightConstraint.rx.isActive)
@@ -148,7 +148,7 @@ fileprivate extension OWCommentContentView {
 
         viewModel.outputs.isEdited
             .subscribe(onNext: { [weak self] isEdited in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.editedLabel.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.mediaView.OWSnp.bottom).offset(isEdited ? Metrics.editedTopPadding : 0)
                 }
@@ -158,21 +158,21 @@ fileprivate extension OWCommentContentView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.editedLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.editedLabel.font = OWFontBook.shared.font(typography: .footnoteSpecial)
             })
             .disposed(by: disposeBag)
     }
 }
 
-fileprivate extension OWCommentContentView {
+private extension OWCommentContentView {
     func applyAccessibility() {
         // self.accessibilityIdentifier = Metrics.identifier
         textLabel.accessibilityIdentifier = Metrics.textLabelIdentifier

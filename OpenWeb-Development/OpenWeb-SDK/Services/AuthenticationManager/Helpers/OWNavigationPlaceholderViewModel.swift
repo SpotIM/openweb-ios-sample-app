@@ -29,14 +29,14 @@ class OWNavigationPlaceholderViewModel: OWNavigationPlaceholderViewModeling,
     var inputs: OWNavigationPlaceholderViewModelingInputs { return self }
     var outputs: OWNavigationPlaceholderViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let intervalForObservingNewVC = 300
     }
 
-    fileprivate weak var vc: UIViewController? = nil
-    fileprivate let onFirstActualVC: (_ vc: UIViewController) -> Void
-    fileprivate var disposeBag = DisposeBag()
-    fileprivate let scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OWNavigationPlaceholderViewModel")
+    private weak var vc: UIViewController?
+    private let onFirstActualVC: (_ vc: UIViewController) -> Void
+    private var disposeBag = DisposeBag()
+    private let scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OWNavigationPlaceholderViewModel")
 
     init(onFirstActualVC: @escaping (_ vc: UIViewController) -> Void) {
         self.onFirstActualVC = onFirstActualVC
@@ -49,21 +49,21 @@ class OWNavigationPlaceholderViewModel: OWNavigationPlaceholderViewModeling,
     }
 }
 
-fileprivate extension OWNavigationPlaceholderViewModel {
+private extension OWNavigationPlaceholderViewModel {
     func setupObservers() {
         Observable<Int>
             .interval(.milliseconds(Metrics.intervalForObservingNewVC), scheduler: scheduler)
             .observe(on: scheduler)
             .map { [weak self] _ -> Bool in
                 // Make sure vc exist before checking its navigation controller
-                guard let self = self,
+                guard let self,
                       let _ = self.vc else { return false }
                 return true
             }
             .filter { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self,
+                guard let self,
                       let vc = self.vc else { return }
 
                 if let topVC = vc.navigationController?.topViewController, topVC != vc {
@@ -82,4 +82,3 @@ fileprivate extension OWNavigationPlaceholderViewModel {
             .disposed(by: disposeBag)
     }
 }
-

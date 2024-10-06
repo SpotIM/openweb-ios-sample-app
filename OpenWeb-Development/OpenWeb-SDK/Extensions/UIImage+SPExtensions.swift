@@ -21,7 +21,7 @@ internal extension UIImage {
     convenience init?(spNamed: OWImageName, supportDarkMode: Bool = false) {
         var imageName = spNamed
 
-        if (supportDarkMode && SPUserInterfaceStyle.isDarkMode) {
+        if supportDarkMode && SPUserInterfaceStyle.isDarkMode {
             imageName = spNamed.dark
         }
 
@@ -29,7 +29,7 @@ internal extension UIImage {
     }
 }
 
-fileprivate extension OWImageName {
+private extension OWImageName {
     var dark: String {
         appending("-dark")
     }

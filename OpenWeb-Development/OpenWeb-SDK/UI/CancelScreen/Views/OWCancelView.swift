@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWCancelView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "cancel_view_id"
         static let closeButtonIdentifier = "cancel_close_button_id"
         static let continueButtonIdentifier = "cancel_continue_button_id"
@@ -29,24 +29,24 @@ class OWCancelView: UIView, OWThemeStyleInjectorProtocol {
         static let closeCrossIcon = "closeCrossIcon"
     }
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             .withPadding(Metrics.closeButtonPadding)
     }()
 
-    fileprivate lazy var titleView: OWTitleSubtitleIconView = {
+    private lazy var titleView: OWTitleSubtitleIconView = {
         return OWTitleSubtitleIconView(viewModel: viewModel.outputs.titleViewVM)
     }()
 
-    fileprivate lazy var buttonsStackView: UIStackView = {
+    private lazy var buttonsStackView: UIStackView = {
         return UIStackView()
             .axis(.vertical)
             .spacing(Metrics.verticalSpacing)
             .distribution(.fillEqually)
     }()
 
-    fileprivate lazy var continueButton: UIButton = {
+    private lazy var continueButton: UIButton = {
         return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -55,7 +55,7 @@ class OWCancelView: UIView, OWThemeStyleInjectorProtocol {
             .corner(radius: Metrics.buttonsRadius)
     }()
 
-    fileprivate lazy var cancelButton: UIButton = {
+    private lazy var cancelButton: UIButton = {
         return UIButton()
             .backgroundColor(.clear)
             .textColor(OWDesignColors.G4)
@@ -67,8 +67,8 @@ class OWCancelView: UIView, OWThemeStyleInjectorProtocol {
             .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Metrics.trashIconPadding))
     }()
 
-    fileprivate let viewModel: OWCancelViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWCancelViewViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWCancelViewViewModeling) {
         self.viewModel = viewModel
@@ -83,7 +83,7 @@ class OWCancelView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWCancelView {
+private extension OWCancelView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
@@ -131,7 +131,7 @@ fileprivate extension OWCancelView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton
                     .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
@@ -145,7 +145,7 @@ fileprivate extension OWCancelView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.continueButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
                 self.cancelButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })

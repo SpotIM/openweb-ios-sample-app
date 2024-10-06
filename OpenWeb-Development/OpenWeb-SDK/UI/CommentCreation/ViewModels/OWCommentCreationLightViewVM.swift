@@ -43,16 +43,16 @@ protocol OWCommentCreationLightViewViewModeling {
 }
 
 class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModeling, OWCommentCreationLightViewViewModelingInputs, OWCommentCreationLightViewViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleFontSize: CGFloat = 15.0
     }
 
     var inputs: OWCommentCreationLightViewViewModelingInputs { return self }
     var outputs: OWCommentCreationLightViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationData: OWCommentCreationRequiredData
 
     lazy var userMentionVM: OWUserMentionViewViewModeling = {
         return OWUserMentionViewVM(servicesProvider: servicesProvider)
@@ -82,7 +82,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
     var commentCreationError = PublishSubject<Void>()
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    private lazy var postId = OWManager.manager.postId
 
     var commentType: OWCommentCreationTypeInternal
 
@@ -132,7 +132,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     }
 
     var replyToAttributedString: Observable<NSAttributedString> {
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentCreationData.commentCreationType {
         case .edit(let comment):
             if let postId = self.postId,
@@ -163,7 +163,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
     var shouldShowReplySnippet: Bool {
         guard let postId = self.postId else { return false }
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentType {
         case .edit(let comment):
             if let parentId = comment.parentId,
@@ -206,7 +206,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     }
 }
 
-fileprivate extension OWCommentCreationLightViewViewModel {
+private extension OWCommentCreationLightViewViewModel {
     func setupObservers() {
         commentCreationContentVM.outputs.textViewVM.outputs.replaceData
             .bind(to: userMentionVM.inputs.replaceData)
@@ -248,7 +248,7 @@ fileprivate extension OWCommentCreationLightViewViewModel {
             commentLabelsContainerVM.outputs.isValidSelection,
             commentLabelsContainerVM.outputs.isInitialSelectionChanged
         ) { [weak self] isValidContent, isInitialContentEdited, isValidLabelsSelection, isInitialLabelsSelectionChanged in
-            guard let self = self else { return false }
+            guard let self else { return false }
             let isValidComment = isValidContent && isValidLabelsSelection
             switch self.commentCreationData.commentCreationType {
             case .edit:

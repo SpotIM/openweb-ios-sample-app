@@ -31,9 +31,9 @@ class OWSubscriberIconViewModel: OWSubscriberIconViewModeling,
     var inputs: OWSubscriberIconViewModelingInputs { return self }
     var outputs: OWSubscriberIconViewModelingOutputs { return self }
 
-    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    fileprivate var subscriberBadgeService: OWSubscriberBadgeServicing!
-    fileprivate var servicesProvider: OWSharedServicesProviding
+    private let _user = BehaviorSubject<SPUser?>(value: nil)
+    private var subscriberBadgeService: OWSubscriberBadgeServicing!
+    private var servicesProvider: OWSharedServicesProviding
 
     init (user: SPUser,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -44,12 +44,12 @@ class OWSubscriberIconViewModel: OWSubscriberIconViewModeling,
         _user.onNext(user)
     }
 
-    fileprivate lazy var user: Observable<SPUser> = {
+    private lazy var user: Observable<SPUser> = {
         self._user
             .unwrap()
     }()
 
-    fileprivate lazy var subscriberBadgeConfig: Observable<OWSubscriberBadgeConfiguration> = {
+    private lazy var subscriberBadgeConfig: Observable<OWSubscriberBadgeConfiguration> = {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config in
@@ -62,7 +62,7 @@ class OWSubscriberIconViewModel: OWSubscriberIconViewModeling,
         isSubscriber
             .filter { $0 } // Only start the download of the image (or caching retrieve) if the user is a subscriber
             .withLatestFrom(subscriberBadgeConfig) { [weak self] _, config -> Observable<UIImage>? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.subscriberBadgeService.badgeImage(config: config)
             }
             .unwrap()
@@ -73,6 +73,6 @@ class OWSubscriberIconViewModel: OWSubscriberIconViewModeling,
 
     var isSubscriber: Observable<Bool> {
         return user
-            .map { $0.ssoData?.isSubscriber ?? false}
+            .map { $0.ssoData?.isSubscriber ?? false }
     }
 }
