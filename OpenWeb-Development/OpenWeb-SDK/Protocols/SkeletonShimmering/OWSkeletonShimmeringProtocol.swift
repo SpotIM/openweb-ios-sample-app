@@ -83,35 +83,17 @@ extension UIView {
 
     var registeredSkeletonLayer: CALayer? {
         get {
-            // Check if a dictionary(mapper) is already exist
-            if let registered = objc_getAssociatedObject(self, &OWAssociatedSkeletonShimmering.skeletonLayerIdentifier) as? CALayer {
-                return registered
-            }
-
-            // Create a dictionary
-            let registered = CALayer()
-            return registered
-        }
-        set {
-            objc_setAssociatedObject(self, &OWAssociatedSkeletonShimmering.skeletonLayerIdentifier,
-                                       newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return self.getObjectiveCAssociatedObject(key: &OWAssociatedSkeletonShimmering.skeletonLayerIdentifier) ?? CALayer()
+        } set {
+            self.setObjectiveCAssociatedObject(key: &OWAssociatedSkeletonShimmering.skeletonLayerIdentifier, value: newValue)
         }
     }
 
     var registeredShimmeringLayer: CAGradientLayer? {
         get {
-            // Check if a dictionary(mapper) is already exist
-            if let registered = objc_getAssociatedObject(self, &OWAssociatedSkeletonShimmering.shimmeringLayerIdentifier) as? CAGradientLayer {
-                return registered
-            }
-
-            // Create a dictionary
-            let registered = CAGradientLayer()
-            return registered
-        }
-        set {
-            objc_setAssociatedObject(self, &OWAssociatedSkeletonShimmering.shimmeringLayerIdentifier,
-                                       newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return self.getObjectiveCAssociatedObject(key: &OWAssociatedSkeletonShimmering.shimmeringLayerIdentifier) ?? CAGradientLayer()
+        } set {
+            self.setObjectiveCAssociatedObject(key: &OWAssociatedSkeletonShimmering.shimmeringLayerIdentifier, value: newValue)
         }
     }
 }
