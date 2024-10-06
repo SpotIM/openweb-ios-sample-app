@@ -34,7 +34,7 @@ class OWArticleDescriptionView: UIView {
     private lazy var conversationImageView: UIImageView = {
         return UIImageView()
             .enforceSemanticAttribute()
-            .image(UIImage(spNamed: "imagePlaceholder", supportDarkMode: false)!)
+            .image(UIImage(spNamed: "imagePlaceholderEmpty", supportDarkMode: false)!)
             .contentMode(.scaleAspectFill)
             .clipsToBounds(true)
             .cornerRadius(Metrics.imageCornerRadius)
