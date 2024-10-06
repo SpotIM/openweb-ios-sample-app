@@ -67,37 +67,37 @@ private func descriptionForRelation(_ relation: OWLayoutRelation) -> String {
 }
 
 private func descriptionForAttribute(_ attribute: OWLayoutAttribute) -> String {
-        switch attribute {
-        case .notAnAttribute:       return "notAnAttribute"
-        case .top:                  return "top"
-        case .left:                 return "left"
-        case .bottom:               return "bottom"
-        case .right:                return "right"
-        case .leading:              return "leading"
-        case .trailing:             return "trailing"
-        case .width:                return "width"
-        case .height:               return "height"
-        case .centerX:              return "centerX"
-        case .centerY:              return "centerY"
-        case .lastBaseline:         return "lastBaseline"
-        case .firstBaseline:        return "firstBaseline"
-        case .topMargin:            return "topMargin"
-        case .leftMargin:           return "leftMargin"
-        case .bottomMargin:         return "bottomMargin"
-        case .rightMargin:          return "rightMargin"
-        case .leadingMargin:        return "leadingMargin"
-        case .trailingMargin:       return "trailingMargin"
-        case .centerXWithinMargins: return "centerXWithinMargins"
-        case .centerYWithinMargins: return "centerYWithinMargins"
-        @unknown default:           return "unknown"
+    switch attribute {
+    case .notAnAttribute:       return "notAnAttribute"
+    case .top:                  return "top"
+    case .left:                 return "left"
+    case .bottom:               return "bottom"
+    case .right:                return "right"
+    case .leading:              return "leading"
+    case .trailing:             return "trailing"
+    case .width:                return "width"
+    case .height:               return "height"
+    case .centerX:              return "centerX"
+    case .centerY:              return "centerY"
+    case .lastBaseline:         return "lastBaseline"
+    case .firstBaseline:        return "firstBaseline"
+    case .topMargin:            return "topMargin"
+    case .leftMargin:           return "leftMargin"
+    case .bottomMargin:         return "bottomMargin"
+    case .rightMargin:          return "rightMargin"
+    case .leadingMargin:        return "leadingMargin"
+    case .trailingMargin:       return "trailingMargin"
+    case .centerXWithinMargins: return "centerXWithinMargins"
+    case .centerYWithinMargins: return "centerYWithinMargins"
+    @unknown default:           return "unknown"
     }
 }
 
-private func conditionalOptional<T>(from object: Optional<T>) -> Optional<T> {
+private func conditionalOptional<T>(from object: T?) -> T? {
     return object
 }
 
-private func conditionalOptional<T>(from object: T) -> Optional<T> {
+private func conditionalOptional<T>(from object: T) -> T? {
     return Optional.some(object)
 }
 

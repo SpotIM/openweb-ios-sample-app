@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 internal class CommentMediaView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_media_view_id"
         static let gifIdentifier = "comment_gif_webview_id"
         static let imageIdentifier = "comment_image_view_id"
@@ -64,16 +64,16 @@ internal class CommentMediaView: UIView {
     func configureMedia(imageUrl: URL?, gifUrl: String?) {
         clearExistingMedia()
         // if imageUrl exist, set image and clean gif
-        if let imageUrl = imageUrl {
+        if let imageUrl {
             addSubview(imageView)
             configureImageView()
-            imageView.setImage(with: imageUrl) { [weak self] (image, error) in
+            imageView.setImage(with: imageUrl) { [weak self] image, error in
                 guard error == nil else { return }
                 self?.imageView.image = image
             }
         }
         // if gifUrl exist, set gif and clean image
-        else if let gifUrl = gifUrl {
+        else if let gifUrl {
             addSubview(gifWebView)
             configureGifWebView()
             gifWebView.configure(gifUrl: gifUrl)
@@ -81,7 +81,7 @@ internal class CommentMediaView: UIView {
     }
 }
 
-fileprivate extension CommentMediaView {
+private extension CommentMediaView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         gifWebView.accessibilityIdentifier = Metrics.gifIdentifier

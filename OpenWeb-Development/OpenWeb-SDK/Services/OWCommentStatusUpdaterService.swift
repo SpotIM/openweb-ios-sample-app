@@ -17,10 +17,10 @@ protocol OWCommentStatusUpdaterServicing {
 }
 
 class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private var disposeBag: DisposeBag = DisposeBag()
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let retriesDefault: Int = 12
         static let timeoutDefault: Int = 3000
         static let intervalDefault: Int = 300
@@ -33,18 +33,18 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
         self.setupObservers()
     }
 
-    fileprivate var retries: Int = Metrics.retriesDefault
-    fileprivate var timeout: Int = Metrics.timeoutDefault
-    fileprivate var interval: Int = Metrics.intervalDefault
+    private var retries: Int = Metrics.retriesDefault
+    private var timeout: Int = Metrics.timeoutDefault
+    private var interval: Int = Metrics.intervalDefault
 
-    fileprivate let _statusUpdate = PublishSubject<(OWCommentId, OWCommentStatusType)>()
+    private let _statusUpdate = PublishSubject<(OWCommentId, OWCommentStatusType)>()
     lazy var statusUpdate: Observable<(OWCommentId, OWCommentStatusType)> = {
         _statusUpdate
             .asObserver()
             .share(replay: 1)
     }()
 
-    fileprivate let _fetchStatusFor = PublishSubject<OWComment>()
+    private let _fetchStatusFor = PublishSubject<OWComment>()
     func fetchStatusFor(comment: OWComment) {
         _fetchStatusFor.onNext(comment)
     }
@@ -59,7 +59,7 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     }
 }
 
-fileprivate extension OWCommentStatusUpdaterService {
+private extension OWCommentStatusUpdaterService {
     func getRawStatus(for comment: OWComment) -> Observable<String> {
         guard let commentId = comment.id else { return .empty() }
 
@@ -81,7 +81,7 @@ fileprivate extension OWCommentStatusUpdaterService {
                 switch event {
                 case .next(let status):
                     return status
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil
@@ -95,7 +95,7 @@ fileprivate extension OWCommentStatusUpdaterService {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .subscribe(onNext: { [weak self] config in
-                guard let self = self,
+                guard let self,
                       let convConfig = config.conversation else { return }
                 self.retries = convConfig.statusFetchRetryCount
                 self.interval = convConfig.statusFetchIntervalInMs
@@ -105,13 +105,13 @@ fileprivate extension OWCommentStatusUpdaterService {
 
         _fetchStatusFor
             .flatMap { [weak self] comment -> Observable<(String, OWComment)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.getRawStatus(for: comment)
                     .map { ($0, comment) }
             }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] (status, comment) in
-                guard let self = self,
+            .subscribe(onNext: { [weak self] status, comment in
+                guard let self,
                       let commentId = comment.id
                 else { return }
                 var newComment = comment

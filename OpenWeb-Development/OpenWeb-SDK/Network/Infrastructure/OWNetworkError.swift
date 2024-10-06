@@ -560,10 +560,10 @@ extension OWNetworkError.ResponseSerializationFailureReason {
             return encoding
         case .inputDataNilOrZeroLength,
              .inputFileNil,
-             .inputFileReadFailed(_),
-             .jsonSerializationFailed(_),
-             .decodingFailed(_),
-             .customSerializationFailed(_),
+             .inputFileReadFailed,
+             .jsonSerializationFailed,
+             .decodingFailed,
+             .customSerializationFailed,
              .invalidEmptyResponse:
             return nil
         }

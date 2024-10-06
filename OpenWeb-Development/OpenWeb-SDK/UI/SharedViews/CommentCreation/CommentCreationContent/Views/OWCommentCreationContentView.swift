@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWCommentCreationContentView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_creation_content_id"
         static let prefixIdentifier = "comment_creation_content"
         static let horizontalOffset: CGFloat = 16.0
@@ -21,29 +21,29 @@ class OWCommentCreationContentView: UIView {
         static let becomeFirstResponderDelay = 0 // miliseconds
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWCommentCreationContentViewModeling
+    private let disposeBag = DisposeBag()
+    private let viewModel: OWCommentCreationContentViewModeling
 
-    fileprivate lazy var avatarView: OWAvatarView = {
+    private lazy var avatarView: OWAvatarView = {
         return OWAvatarView()
     }()
 
-    fileprivate lazy var textInput: OWTextView = {
+    private lazy var textInput: OWTextView = {
         let textView = OWTextView(viewModel: viewModel.outputs.textViewVM,
                           prefixIdentifier: Metrics.prefixIdentifier)
         textView.layer.borderColor = UIColor.clear.cgColor
         return textView
     }()
 
-    fileprivate lazy var imagePreview: OWCommentCreationImagePreviewView = {
+    private lazy var imagePreview: OWCommentCreationImagePreviewView = {
         return OWCommentCreationImagePreviewView(with: viewModel.outputs.imagePreviewVM)
     }()
 
-    fileprivate lazy var gifPreview: OWGifPreviewView = {
+    private lazy var gifPreview: OWGifPreviewView = {
         return OWGifPreviewView(with: viewModel.outputs.gifPreviewVM)
     }()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
             .enforceSemanticAttribute()
 
@@ -102,7 +102,7 @@ class OWCommentCreationContentView: UIView {
     }
 }
 
-fileprivate extension OWCommentCreationContentView {
+private extension OWCommentCreationContentView {
     func setupUI() {
         self.enforceSemanticAttribute()
 

@@ -18,11 +18,11 @@ struct SPRankChange {
 
     var operation: String? {
         switch (self.from, self.to) {
-            case (_, .up): return "like"
-            case (.up, .unrank): return "toggle-like"
-            case (_, .down): return "dislike"
-            case (.down, .unrank): return "toggle-dislike"
-            default: return nil
+        case (_, .up): return "like"
+        case (.up, .unrank): return "toggle-like"
+        case (_, .down): return "dislike"
+        case (.down, .unrank): return "toggle-dislike"
+        default: return nil
         }
     }
 }

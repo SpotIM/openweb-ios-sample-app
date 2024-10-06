@@ -46,15 +46,15 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     private let commentCreationFooterScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommentCreationFooterQueue")
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let commentCreationType: OWCommentCreationTypeInternal
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
+    private let commentCreationType: OWCommentCreationTypeInternal
 
     var tapCta = PublishSubject<Void>()
     var tapAddImage = PublishSubject<Void>()
     var tapAddGif = PublishSubject<Void>()
 
-    fileprivate let _triggerCustomizeSubmitButtonUI = BehaviorSubject<UIButton?>(value: nil)
+    private let _triggerCustomizeSubmitButtonUI = BehaviorSubject<UIButton?>(value: nil)
     var triggerCustomizeSubmitButtonUI = PublishSubject<UIButton>()
 
     var customizeSubmitButtonUI: Observable<UIButton> {
@@ -73,7 +73,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             .asObservable()
     }
 
-    fileprivate lazy var _shouldSignUpToPostComment: Observable<Bool> = {
+    private lazy var _shouldSignUpToPostComment: Observable<Bool> = {
         return Observable.combineLatest(
             servicesProvider.authenticationManager().activeUserAvailability,
             servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
@@ -101,7 +101,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         tapCta
             .asObservable()
             .map { [weak self] _ -> OWUserAction? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 switch self.commentCreationType {
                 case .comment:
                     return .commenting
@@ -120,14 +120,14 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             })
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] userAction -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: userAction)
             }
             .do(onNext: { [weak self] _ in
                 self?.submitCommentInProgress.onNext(false)
             })
             .do(onNext: { [weak self] loginToPost in
-                guard let self = self,
+                guard let self,
                       loginToPost == true else { return }
                 self._loginToPostClick.onNext()
             })
@@ -140,7 +140,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     var ctaTitleText: Observable<String> {
         _shouldSignUpToPostComment
             .map { [weak self] shouldSignUpToPost in
-                guard let self = self, !shouldSignUpToPost else {
+                guard let self, !shouldSignUpToPost else {
                     return OWLocalizationManager.shared.localizedString(key: "SignUpToPost")
                 }
 
@@ -195,7 +195,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     }
 }
 
-fileprivate extension OWCommentCreationFooterViewModel {
+private extension OWCommentCreationFooterViewModel {
     func setupObservers() {
         // UI customizations
         triggerCustomizeSubmitButtonUI

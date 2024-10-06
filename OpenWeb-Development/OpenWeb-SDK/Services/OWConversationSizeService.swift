@@ -15,7 +15,7 @@ protocol OWConversationSizeServicing {
 }
 
 class OWConversationSizeService: OWConversationSizeServicing {
-    fileprivate var _conversationTableSize = BehaviorSubject<CGSize>(value: .zero)
+    private var _conversationTableSize = BehaviorSubject<CGSize>(value: .zero)
     var conversationTableSize: Observable<CGSize> {
         return _conversationTableSize
             .asObservable()

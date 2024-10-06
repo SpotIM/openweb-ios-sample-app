@@ -29,8 +29,8 @@ class OWWebTabViewModel: OWWebTabViewModeling, OWWebTabViewModelingInputs, OWWeb
     var inputs: OWWebTabViewModelingInputs { return self }
     var outputs: OWWebTabViewModelingOutputs { return self }
 
-    fileprivate let options: OWWebTabOptions
-    fileprivate let viewableMode: OWViewableMode
+    private let options: OWWebTabOptions
+    private let viewableMode: OWViewableMode
 
     lazy var webTabViewVM: OWWebTabViewViewModeling = {
         return OWWebTabViewViewModel(options: options,
@@ -48,7 +48,7 @@ class OWWebTabViewModel: OWWebTabViewModeling, OWWebTabViewModelingInputs, OWWeb
         viewDidLoad.asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init(options: OWWebTabOptions, viewableMode: OWViewableMode) {
         self.options = options

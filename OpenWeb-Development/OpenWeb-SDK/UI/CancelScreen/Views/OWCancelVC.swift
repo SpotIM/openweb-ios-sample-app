@@ -15,7 +15,7 @@ class OWCancelVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
         fatalError("init(coder:) has not been implemented")
     }
 
-    fileprivate let viewModel: OWCancelViewModeling
+    private let viewModel: OWCancelViewModeling
     let disposeBag = DisposeBag()
 
     init(cancelViewModel: OWCancelViewModeling) {
@@ -38,15 +38,17 @@ class OWCancelVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 }
 
-fileprivate extension OWCancelVC {
+private extension OWCancelVC {
     func setupViews() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)

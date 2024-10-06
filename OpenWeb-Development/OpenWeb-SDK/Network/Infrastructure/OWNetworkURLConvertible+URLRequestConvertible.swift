@@ -40,7 +40,7 @@ extension URLComponents: OWNetworkURLConvertible {
     /// - Returns: The `URL` from the `url` property.
     /// - Throws:  An `AFError.invalidURL` instance.
     func asURL() throws -> URL {
-        guard let url = url else { throw OWNetworkError.invalidURL(url: self) }
+        guard let url else { throw OWNetworkError.invalidURL(url: self) }
 
         return url
     }

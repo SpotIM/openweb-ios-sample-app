@@ -44,7 +44,7 @@ class OWRealtimeNewCommentsViewModel: OWRealtimeNewCommentsViewModeling,
             .asObservable()
     }()
 
-    fileprivate var realtimeIndicatorService: OWRealtimeIndicatorServicing
+    private var realtimeIndicatorService: OWRealtimeIndicatorServicing
 
     init(realtimeIndicatorService: OWRealtimeIndicatorServicing = OWSharedServicesProvider.shared.realtimeIndicatorService()) {
         self.realtimeIndicatorService = realtimeIndicatorService

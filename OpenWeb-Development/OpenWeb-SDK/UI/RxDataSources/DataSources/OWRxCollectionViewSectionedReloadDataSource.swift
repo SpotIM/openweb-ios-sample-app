@@ -17,7 +17,7 @@ class OWRxCollectionViewSectionedReloadDataSource<Section: OWSectionModelType>: 
 
     func collectionView(_ collectionView: UICollectionView, observedEvent: Event<Element>) {
         Binder(self) { [weak collectionView] dataSource, element in
-            guard let collectionView = collectionView else { return }
+            guard let collectionView else { return }
 
             #if DEBUG
                 dataSource._dataSourceBound = true

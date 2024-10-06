@@ -10,15 +10,15 @@ import UIKit
 import Foundation
 
 class OWLoadingCell: UITableViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "loading_cell_id"
         static let indicatorIdentifier = "loading_cell_indicator_id"
         static let indicatorVerticalPadding: CGFloat = 10
     }
 
-    fileprivate var viewModel: OWLoadingCellViewModeling!
+    private var viewModel: OWLoadingCellViewModeling!
 
-    fileprivate lazy var indicator: UIActivityIndicatorView = {
+    private lazy var indicator: UIActivityIndicatorView = {
         return UIActivityIndicatorView()
     }()
 
@@ -41,7 +41,7 @@ class OWLoadingCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWLoadingCell {
+private extension OWLoadingCell {
     func setupViews() {
         self.contentView.addSubview(indicator)
         self.contentView.backgroundColor = .clear

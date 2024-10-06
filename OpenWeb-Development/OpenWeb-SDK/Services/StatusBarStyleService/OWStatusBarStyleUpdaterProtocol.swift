@@ -19,7 +19,7 @@ extension OWStatusBarStyleUpdaterProtocol where Self: UIViewController {
         OWSharedServicesProvider.shared.statusBarStyleService()
             .forceStatusBarUpdate
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.setNeedsStatusBarAppearanceUpdate()
             })
             .disposed(by: disposeBag)

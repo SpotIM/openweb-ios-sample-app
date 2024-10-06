@@ -25,7 +25,6 @@ class NetworkTestingUtil {
                 url: environment.baseURL.appendingPathComponent(endpoint.path),
                 method: method
             ), { request in
-                // swiftlint:disable:next force_try
                 let response = HTTPURLResponse(url: request.url!, statusCode: statusCode, httpVersion: "2.0", headerFields: nil)!
                 return (response, data)
             }

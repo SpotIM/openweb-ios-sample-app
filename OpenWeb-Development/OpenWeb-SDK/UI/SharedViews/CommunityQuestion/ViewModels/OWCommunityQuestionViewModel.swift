@@ -40,9 +40,9 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeQuestionTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
-    fileprivate let _triggerCustomizeQuestionContainerViewUI = BehaviorSubject<UIView?>(value: nil)
-    fileprivate let _triggerCustomizeQuestionTitleTextViewUI = BehaviorSubject<UITextView?>(value: nil)
+    private let _triggerCustomizeQuestionTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeQuestionContainerViewUI = BehaviorSubject<UIView?>(value: nil)
+    private let _triggerCustomizeQuestionTitleTextViewUI = BehaviorSubject<UITextView?>(value: nil)
 
     var triggerCustomizeQuestionTitleLabelUI = PublishSubject<UILabel>()
     var triggerCustomizeQuestionContainerViewUI = PublishSubject<UIView>()
@@ -93,7 +93,7 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
 
     let style: OWCommunityQuestionStyle
     let spacing: OWVerticalSpacing
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init(style: OWCommunityQuestionStyle,
          spacing: OWVerticalSpacing) {
@@ -108,11 +108,11 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
     }
 }
 
-fileprivate extension OWCommunityQuestionViewModel {
+private extension OWCommunityQuestionViewModel {
     func setupObservers() {
         communityQuestion
             .subscribe(onNext: { [weak self] question in
-                guard let self = self else { return }
+                guard let self else { return }
                 let shouldShow = (!question.isEmpty) && (self.style != .none)
                 self._shouldShowView.onNext(shouldShow)
             })
@@ -121,7 +121,7 @@ fileprivate extension OWCommunityQuestionViewModel {
         conversationFetched
             .map { $0.conversation?.communityQuestion }
             .subscribe(onNext: { [weak self] question in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._communityQuestion.onNext(question)
             })
             .disposed(by: disposeBag)

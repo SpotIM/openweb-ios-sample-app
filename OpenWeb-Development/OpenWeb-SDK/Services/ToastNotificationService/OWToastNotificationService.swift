@@ -16,19 +16,19 @@ protocol OWToastNotificationServicing {
 }
 
 class OWToastNotificationService: OWToastNotificationServicing {
-    fileprivate let queue = OWQueue<OWToastNotificationPresentData>()
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var mapToastToActionPublishSubject: [String: PublishSubject<Void>?] = [:]
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
-    fileprivate var newToastDisposeBag: DisposeBag = DisposeBag()
-    fileprivate var _toastToShow = BehaviorSubject<OWToastNotificationCombinedData?>(value: nil)
+    private let queue = OWQueue<OWToastNotificationPresentData>()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private var mapToastToActionPublishSubject: [String: PublishSubject<Void>?] = [:]
+    private var disposeBag: DisposeBag = DisposeBag()
+    private var newToastDisposeBag: DisposeBag = DisposeBag()
+    private var _toastToShow = BehaviorSubject<OWToastNotificationCombinedData?>(value: nil)
     var toastToShow: Observable<OWToastNotificationCombinedData?> {
         return _toastToShow
             .asObservable()
     }
 
-    fileprivate var triggerWaitNextToastInQueue = PublishSubject<Void>()
-    fileprivate var presentToastFromQueue = PublishSubject<Void>()
+    private var triggerWaitNextToastInQueue = PublishSubject<Void>()
+    private var presentToastFromQueue = PublishSubject<Void>()
 
     var clearCurrentToast = PublishSubject<Void>()
 
@@ -45,13 +45,13 @@ class OWToastNotificationService: OWToastNotificationServicing {
     }
 }
 
-fileprivate extension OWToastNotificationService {
+private extension OWToastNotificationService {
     func setupObservers() {
         clearCurrentToast
             .withLatestFrom(toastToShow)
             .unwrap()
             .subscribe(onNext: { [weak self] currentToast in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.newToastDisposeBag = DisposeBag()
                 self.setupNewToastObservable()
                 self._toastToShow.onNext(nil)
@@ -63,7 +63,7 @@ fileprivate extension OWToastNotificationService {
 
         triggerWaitNextToastInQueue
             .flatMap { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.blockerServicing().waitForNonBlocker(for: [.toastNotification])
             }
             .bind(to: presentToastFromQueue)
@@ -73,14 +73,14 @@ fileprivate extension OWToastNotificationService {
     func setupNewToastObservable() {
         presentToastFromQueue
             .map { [weak self] _ -> OWToastNotificationPresentData? in
-                guard let self = self,
+                guard let self,
                       !self.queue.isEmpty(),
                       let toastPresentData = self.queue.popFirst() else { return nil }
                 return toastPresentData
             }
             .unwrap()
             .do(onNext: { [weak self] toastPresentData in
-                guard let self = self else { return }
+                guard let self else { return }
                 // Block before showing toast to prevent more toasts from showing
                 let action = OWDefaultBlockerAction(blockerType: .toastNotification)
                 self.servicesProvider.blockerServicing().add(blocker: action)
@@ -94,7 +94,7 @@ fileprivate extension OWToastNotificationService {
                     .delay(.seconds(toastPresentData.durationInSec), scheduler: MainScheduler.instance)
             }
             .do(onNext: { [weak self] toastPresentData in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let _ = self.mapToastToActionPublishSubject[toastPresentData.uuid] {
                     self._toastToShow.onNext(nil)
                 }

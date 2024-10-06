@@ -10,11 +10,11 @@ import UIKit
 
 class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let avatarSize: CGFloat = 36.0
-        static let userNameWidthRatio: CGFloat = 1/6
+        static let userNameWidthRatio: CGFloat = 1 / 6
         static let userNameHeight: CGFloat = 13
-        static let timeWidthRatio: CGFloat = 1/4
+        static let timeWidthRatio: CGFloat = 1 / 4
         static let timeHeight: CGFloat = 12
         static let spaceBetweenUserNameAndTime: CGFloat = 5
         static let messageHeight: CGFloat = 10
@@ -26,9 +26,9 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         static let skeletonViewIdentifier = "comment_skeleton_view_id"
     }
 
-    fileprivate var viewModel: OWCommentSkeletonShimmeringCellViewModeling!
+    private var viewModel: OWCommentSkeletonShimmeringCellViewModeling!
 
-    fileprivate lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
+    private lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
         view.enforceSemanticAttribute()
 
@@ -67,9 +67,9 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         }
 
         // Adding "between"" message lines
-        for i in 1...(messageLinesSkeleton.count-2) {
+        for i in 1...(messageLinesSkeleton.count - 2) {
             let currentLine = messageLinesSkeleton[i]
-            let lineBefore = messageLinesSkeleton[i-1]
+            let lineBefore = messageLinesSkeleton[i - 1]
             view.addSubview(currentLine)
             currentLine.OWSnp.makeConstraints { make in
                 make.top.equalTo(lineBefore.OWSnp.bottom).offset(Metrics.spaceBetweenMessageLines)
@@ -92,7 +92,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var avatarSkeleton: UIView = {
+    private lazy var avatarSkeleton: UIView = {
         let view = UIView()
             .corner(radius: Metrics.avatarSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
@@ -101,7 +101,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var userNameSkeleton: UIView = {
+    private lazy var userNameSkeleton: UIView = {
         let view = UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -109,7 +109,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var timeSkeleton: UIView = {
+    private lazy var timeSkeleton: UIView = {
         let view = UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -117,7 +117,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var messageLinesSkeleton: [UIView] = {
+    private lazy var messageLinesSkeleton: [UIView] = {
         let color = OWColorPalette.shared.color(type: .skeletonColor,
                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
@@ -144,7 +144,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         self.viewModel = vm
 
         mainSkeletonShimmeringView.OWSnp.updateConstraints { [weak self] make in
-            guard let self = self else { return }
+            guard let self else { return }
             make.leading.equalToSuperview().inset(Metrics.horizontalOffset + CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
         }
 
@@ -159,7 +159,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWCommentSkeletonShimmeringCell {
+private extension OWCommentSkeletonShimmeringCell {
     func setupUI() {
         self.selectionStyle = .none
         backgroundColor = .clear

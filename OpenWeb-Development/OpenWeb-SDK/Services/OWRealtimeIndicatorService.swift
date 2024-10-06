@@ -18,18 +18,18 @@ protocol OWRealtimeIndicatorServicing {
 
 class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
 
-    fileprivate var _shouldRealtimeIndicatorUpdate = BehaviorSubject<OWRealtimeIndicatorState>(value: .disable)
-    fileprivate var _newCommentsCache = BehaviorSubject<[String: OWComment]>(value: [:])
+    private var _shouldRealtimeIndicatorUpdate = BehaviorSubject<OWRealtimeIndicatorState>(value: .disable)
+    private var _newCommentsCache = BehaviorSubject<[String: OWComment]>(value: [:])
 
-    fileprivate var postId: OWPostId {
+    private var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
 
-    fileprivate var spotId: OWSpotId {
+    private var spotId: OWSpotId {
         return OWManager.manager.spotId
     }
 
-    fileprivate lazy var isBlitzEnabled: Observable<Bool> = {
+    private lazy var isBlitzEnabled: Observable<Bool> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: self.spotId)
             .map { [weak self] config -> Bool? in
@@ -40,7 +40,7 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
             .asObservable()
     }()
 
-    fileprivate lazy var isRealtimeIndicatorEnabled: Observable<Bool> = {
+    private lazy var isRealtimeIndicatorEnabled: Observable<Bool> = {
         return _shouldRealtimeIndicatorUpdate
             .withLatestFrom(isBlitzEnabled) { shouldUpdate, isblitzEnabled in
                 return isblitzEnabled && shouldUpdate == .enable
@@ -50,10 +50,10 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
             .share()
     }()
 
-    fileprivate lazy var typingCount: Observable<Int> = {
+    private lazy var typingCount: Observable<Int> = {
         return realtimeService.realtimeData
             .map { [weak self] realtimeData -> Int? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return realtimeData.data?.rootCommentsTypingCount(forPostId: self.postId)
             }
             .unwrap()
@@ -62,10 +62,10 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
             .share()
     }()
 
-    fileprivate var newCommentsObservable: Observable<[OWComment]> {
+    private var newCommentsObservable: Observable<[OWComment]> {
         return realtimeService.realtimeData
             .withLatestFrom(isRealtimeIndicatorEnabled) { [weak self] realtimeData, isEnabled -> [OWComment]? in
-                guard let self = self,
+                guard let self,
                       isEnabled else { return nil }
                 return realtimeData.data?.newComments(forPostId: self.postId)
             }
@@ -76,7 +76,7 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
     var newComments: Observable<[OWComment]> {
         return _newCommentsCache.map { comments in
             comments.values
-                .sorted { (lhsComment, rhsComment) in
+                .sorted { lhsComment, rhsComment in
                     switch (lhsComment.writtenAt, rhsComment.writtenAt) {
                     case let (lhsDate?, rhsDate?):
                         return lhsDate > rhsDate
@@ -125,9 +125,9 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
         .share()
     }()
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let realtimeService: OWRealtimeServicing
-    fileprivate let disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let realtimeService: OWRealtimeServicing
+    private let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding) {
         self.servicesProvider = servicesProvider
@@ -151,15 +151,15 @@ extension OWRealtimeIndicatorService {
     func setupObservers() {
         newCommentsObservable
             .subscribe(onNext: { [weak self] newComments in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 var updateUsers: [SPUser] = []
 
                 newComments.forEach { comment in
                     // make sure comment is not reply and not already in conversation
-                    guard (comment.parentId == nil || (comment.parentId?.isEmpty ?? false)),
+                    guard comment.parentId == nil || (comment.parentId?.isEmpty ?? false),
                           let commentId = comment.id,
-                            (self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId) == nil),
+                            self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId) == nil,
                     let userId = comment.userId else { return }
 
                     var commentUser: SPUser?

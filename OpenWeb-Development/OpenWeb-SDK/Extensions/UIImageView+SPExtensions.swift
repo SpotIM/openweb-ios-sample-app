@@ -15,9 +15,9 @@ internal extension UIImageView {
     @discardableResult
     func setImage(with url: URL?, completion: ImageLoadingCompletion? = nil) -> OWNetworkDataRequest? {
         return UIImage.load(with: url) { image, error in
-            if let completion = completion {
+            if let completion {
                 completion(image, error)
-            } else if (error != nil) {
+            } else if error != nil {
                 self.image = nil
             } else {
                 self.image = image
@@ -29,7 +29,7 @@ internal extension UIImageView {
 internal extension UIImage {
     @discardableResult
     static func load(with url: URL?, completion: ImageLoadingCompletion? = nil) -> OWNetworkDataRequest? {
-        guard let url = url else {
+        guard let url else {
             completion?(nil, OWError.custom(description: "No image URL"))
             return nil
         }
@@ -48,7 +48,7 @@ internal extension UIImage {
                         let image = UIImage(data: data)
 
                         imageCacheService[url.absoluteString] = image
-                        if let completion = completion {
+                        if let completion {
                             completion(image, nil)
                         }
                     case .failure(let error):
@@ -61,9 +61,9 @@ internal extension UIImage {
     static func load(with url: URL) -> Observable<UIImage> {
         return Observable.create { observer in
             let dataRequest = UIImage.load(with: url, completion: { image, error in
-                if let error = error {
+                if let error {
                     observer.onError(error)
-                } else if let image = image {
+                } else if let image {
                     observer.onNext(image)
                     observer.onCompleted()
                 }

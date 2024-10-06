@@ -11,10 +11,10 @@ import UIKit
 import RxSwift
 
 class OWCommentTextLabel: UILabel {
-    fileprivate var viewModel: OWCommentTextViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWCommentTextViewModeling!
+    private var disposeBag: DisposeBag!
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         tap.delegate = self
         self.addGestureRecognizer(tap)
@@ -37,12 +37,12 @@ class OWCommentTextLabel: UILabel {
     }
 }
 
-fileprivate extension OWCommentTextLabel {
+private extension OWCommentTextLabel {
 
     func setupObservers() {
         viewModel.outputs.attributedString
             .subscribe(onNext: { [weak self] attString in
-                guard let self = self else { return }
+                guard let self else { return }
                 OWScheduler.runOnMainThreadIfNeeded {
                     self.attributedText = attString
                 }
@@ -51,7 +51,7 @@ fileprivate extension OWCommentTextLabel {
 
         tapGesture.rx.event
             .subscribe(onNext: { [weak self] tap in
-                guard let self = self else { return }
+                guard let self else { return }
                 let tapLocation = tap.location(in: self)
                 let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
                 self.viewModel.inputs.labelClickIndex.onNext(index)

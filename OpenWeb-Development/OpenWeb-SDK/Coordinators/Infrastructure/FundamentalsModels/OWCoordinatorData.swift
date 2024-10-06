@@ -10,5 +10,5 @@ import Foundation
 
 struct OWCoordinatorData {
     let deepLink: OWDeepLinkOptions
-    var source: OWViewSourceType? = nil
+    var source: OWViewSourceType?
 }

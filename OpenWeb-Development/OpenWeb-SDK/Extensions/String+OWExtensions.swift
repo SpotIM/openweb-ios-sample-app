@@ -12,7 +12,7 @@ extension String {
     var locateURLInText: URL? {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
 
-        var url: URL? = nil
+        var url: URL?
         if let detector = try? NSDataDetector(types: linkType.rawValue) {
             let matches = detector.matches(
                 in: self,

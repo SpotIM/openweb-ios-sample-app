@@ -37,7 +37,7 @@ extension OWPresenterServicing {
 }
 
 class OWPresenterService: OWPresenterServicing {
-    fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
+    private unowned let sharedServicesProvider: OWSharedServicesProviding
 
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
@@ -83,12 +83,12 @@ class OWPresenterService: OWPresenterServicing {
             let isLeftSection = senderLocationFrame.x < (presenterVC.view.frame.width / 2)
 
             var menuConstraintsMapper: [OWMenuConstraintOption: OWConstraintItem] = [:]
-            if (isTopSection) {
+            if isTopSection {
                 menuConstraintsMapper[.top] = sender.OWSnp.centerY
             } else {
                 menuConstraintsMapper[.bottom] = sender.OWSnp.centerY
             }
-            if (isLeftSection) {
+            if isLeftSection {
                 menuConstraintsMapper[.left] = sender.OWSnp.centerX
             } else {
                 menuConstraintsMapper[.right] = sender.OWSnp.centerX
@@ -141,9 +141,9 @@ class OWPresenterService: OWPresenterServicing {
     }
 }
 
-fileprivate extension OWPresenterService {
+private extension OWPresenterService {
     func getPresenterVC(for viewableMode: OWViewableMode) -> UIViewController? {
-        switch(viewableMode) {
+        switch viewableMode {
         case .independent:
             return (OWManager.manager.uiLayer as? OWCompactRouteringCompatible)?.compactRoutering.topController
         case .partOfFlow:

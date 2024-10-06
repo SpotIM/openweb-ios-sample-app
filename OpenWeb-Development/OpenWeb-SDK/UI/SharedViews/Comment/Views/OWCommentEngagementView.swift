@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWCommentEngagementView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let baseOffset: CGFloat = 14
         static let dotDividerSize: CGFloat = 3
         static let shareButtonSize: CGFloat = 24
@@ -22,38 +22,38 @@ class OWCommentEngagementView: UIView {
         static let shareButtonIdentifier = "comment_actions_view_share_button_id"
     }
 
-    fileprivate var viewModel: OWCommentEngagementViewModeling!
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
+    private var viewModel: OWCommentEngagementViewModeling!
+    private var disposeBag: DisposeBag = DisposeBag()
 
-    fileprivate var replyZeroWidthConstraint: OWConstraint? = nil
-    fileprivate var votingTrailingConstraint: OWConstraint? = nil
-    fileprivate var votingLeadingConstraint: OWConstraint? = nil
-    fileprivate var shareLeadingWithVotingConstraint: OWConstraint? = nil
-    fileprivate var shareLeadingWithReplyConstraint: OWConstraint? = nil
+    private var replyZeroWidthConstraint: OWConstraint?
+    private var votingTrailingConstraint: OWConstraint?
+    private var votingLeadingConstraint: OWConstraint?
+    private var shareLeadingWithVotingConstraint: OWConstraint?
+    private var shareLeadingWithReplyConstraint: OWConstraint?
 
-    fileprivate lazy var replyButton: UIButton = {
+    private lazy var replyButton: UIButton = {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
             .wrapContent()
     }()
 
-    fileprivate lazy var replyDotDivider: UIView = {
+    private lazy var replyDotDivider: UIView = {
         return UIView()
-            .corner(radius: Metrics.dotDividerSize/2)
+            .corner(radius: Metrics.dotDividerSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var votingView: OWCommentRatingView = {
+    private lazy var votingView: OWCommentRatingView = {
         return OWCommentRatingView()
     }()
 
-    fileprivate lazy var votingDotDivider: UIView = {
+    private lazy var votingDotDivider: UIView = {
         return UIView()
-            .corner(radius: Metrics.dotDividerSize/2)
+            .corner(radius: Metrics.dotDividerSize / 2)
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
 
-    fileprivate lazy var shareButton: UIButton = {
+    private lazy var shareButton: UIButton = {
         return UIButton()
             .hugContent(axis: .horizontal)
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
@@ -87,7 +87,7 @@ class OWCommentEngagementView: UIView {
     }
 }
 
-fileprivate extension OWCommentEngagementView {
+private extension OWCommentEngagementView {
     func setupUI() {
         self.enforceSemanticAttribute()
         self.addSubviews(replyButton, votingView)
@@ -134,7 +134,7 @@ fileprivate extension OWCommentEngagementView {
     func setupObservers() {
         viewModel.outputs.shareButtonStyle
             .subscribe(onNext: { [weak self] shareButtonStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch shareButtonStyle {
                 case .text:
                     self.shareButton
@@ -150,7 +150,7 @@ fileprivate extension OWCommentEngagementView {
 
         viewModel.outputs.votesPosition
             .subscribe(onNext: { [weak self] position in
-                guard let self = self else { return }
+                guard let self else { return }
                 OWScheduler.runOnMainThreadIfNeeded {
                     switch position {
                     case .default:
@@ -181,7 +181,7 @@ fileprivate extension OWCommentEngagementView {
         viewModel.outputs.showReplyButton
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showReply in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.replyButton.isHidden = !showReply
                 self.replyDotDivider.isHidden = !showReply
                 self.replyZeroWidthConstraint?.isActive = !showReply
@@ -197,7 +197,7 @@ fileprivate extension OWCommentEngagementView {
             .style
             .withLatestFrom(viewModel.outputs.commentActionsColor) { ($0, $1) }
             .subscribe(onNext: { [weak self] currentStyle, commentActionsColor in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.replyDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.votingDotDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 switch commentActionsColor {
@@ -213,7 +213,7 @@ fileprivate extension OWCommentEngagementView {
             }).disposed(by: disposeBag)
 
         let setButtonsFont = { [weak self] (commentActionsFontStyle: OWCommentActionsFontStyle) in
-            guard let self = self else { return }
+            guard let self else { return }
             switch commentActionsFontStyle {
             case .default:
                 self.replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)

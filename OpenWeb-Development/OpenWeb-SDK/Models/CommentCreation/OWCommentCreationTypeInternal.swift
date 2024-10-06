@@ -19,9 +19,9 @@ extension OWCommentCreationTypeInternal {
         switch self {
         case .comment:
             return "comment"
-        case .edit(_):
+        case .edit:
             return "edit_comment"
-        case .replyToComment(_):
+        case .replyToComment:
             return "reply_to_comment"
         }
     }

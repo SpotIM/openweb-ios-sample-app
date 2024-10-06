@@ -44,9 +44,9 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     var inputs: OWCommentCreationRegularViewViewModelingInputs { return self }
     var outputs: OWCommentCreationRegularViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationData: OWCommentCreationRequiredData
 
     lazy var userMentionVM: OWUserMentionViewViewModeling = {
         return OWUserMentionViewVM(servicesProvider: servicesProvider)
@@ -76,7 +76,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     var commentCreationError = PublishSubject<Void>()
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    private lazy var postId = OWManager.manager.postId
 
     var commentType: OWCommentCreationTypeInternal
 
@@ -116,7 +116,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     lazy var titleAttributedString: Observable<NSAttributedString> = {
         let commentingOnText = OWLocalizationManager.shared.localizedString(key: "CommentingOn")
 
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentCreationData.commentCreationType {
         case .edit(let comment):
             if let postId = self.postId,
@@ -147,7 +147,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     var shouldShowReplySnippet: Bool {
         guard let postId = self.postId else { return false }
-        var replyToComment: OWComment? = nil
+        var replyToComment: OWComment?
         switch commentType {
         case .edit(let comment):
             if let parentId = comment.parentId,
@@ -190,7 +190,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }
 }
 
-fileprivate extension OWCommentCreationRegularViewViewModel {
+private extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
         commentCreationContentVM.outputs.textViewVM.outputs.replaceData
             .bind(to: userMentionVM.inputs.replaceData)
@@ -232,7 +232,7 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
             commentLabelsContainerVM.outputs.isValidSelection,
             commentLabelsContainerVM.outputs.isInitialSelectionChanged
         ) { [weak self] isValidContent, isInitialContentEdited, isValidLabelsSelection, isInitialLabelsSelectionChanged in
-            guard let self = self else { return false }
+            guard let self else { return false }
             let isValidComment = isValidContent && isValidLabelsSelection
             switch self.commentCreationData.commentCreationType {
             case .edit:

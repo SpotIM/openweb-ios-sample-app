@@ -80,7 +80,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var cancelAdditionalInfoTapped: Observable<Void> {
         return cancelAdditionalInfoTap
             .flatMap { [weak self] _ -> Observable<String> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewVM.outputs.textViewText
                     .take(1)
             }
@@ -92,7 +92,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var closeReportReasonTapped: Observable<Void> {
         return cancelAdditionalInfoTap
             .flatMap { [weak self] _ -> Observable<String> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewVM.outputs.textViewText
                     .take(1)
             }
@@ -152,7 +152,7 @@ fileprivate extension OWAdditionalInfoViewViewModel {
 
         isTextRequired
             .flatMap { [weak self] isTextRequired -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewVM.outputs.textViewText.map {
                     isTextRequired && !$0.isEmpty || !isTextRequired
                 }

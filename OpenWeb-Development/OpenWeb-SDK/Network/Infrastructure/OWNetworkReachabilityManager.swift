@@ -161,7 +161,7 @@ class OWNetworkReachabilityManager {
                                                    release: nil,
                                                    copyDescription: nil)
         let callback: SCNetworkReachabilityCallBack = { _, flags, info in
-            guard let info = info else { return }
+            guard let info else { return }
 
             let instance = Unmanaged<OWNetworkReachabilityManager>.fromOpaque(info).takeUnretainedValue()
             instance.notifyListener(flags)

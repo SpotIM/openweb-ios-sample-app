@@ -78,7 +78,7 @@ extension OWLogMethod: Hashable {
             return hasher.combine(1)
         case .osLog:
             return hasher.combine(2)
-        case .file(_):
+        case .file:
             return hasher.combine(3)
         }
     }
@@ -90,7 +90,7 @@ class OWLogger {
         static let defaultLogFilesNumber = 20
     }
 
-    fileprivate struct PrivateMetrics {
+    private struct PrivateMetrics {
         static let osLoggersSubsystem = "com.OpenWeb.sdk"
         static let failedToWriteLogFileDescription = "Failure when trying to write log file"
         static let failedToDeleteLogFileDescription = "Failure when trying to delete log file"
@@ -102,20 +102,20 @@ class OWLogger {
         return _logLevel
     }
 
-    fileprivate let _logLevel: OWLogLevel
-    fileprivate let logMethods: [OWLogMethod]
-    fileprivate let queue: DispatchQueue
-    fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
-    fileprivate let prefix: String
-    fileprivate var osLoggers = [String: OSLog]()
-    fileprivate let sdkVer: String
-    fileprivate let hostBundleName: String
-    fileprivate let maxItemsPerLogFile: Int
-    fileprivate var maxLogFilesNumber: Int
-    fileprivate var logItems = [String]()
+    private let _logLevel: OWLogLevel
+    private let logMethods: [OWLogMethod]
+    private let queue: DispatchQueue
+    private let appLifeCycle: OWRxAppLifeCycleProtocol
+    private let prefix: String
+    private var osLoggers = [String: OSLog]()
+    private let sdkVer: String
+    private let hostBundleName: String
+    private let maxItemsPerLogFile: Int
+    private var maxLogFilesNumber: Int
+    private var logItems = [String]()
     // Non DI as those should be constant
-    fileprivate let fileCreationQueue = DispatchQueue(label: "OpenWebSDKLoggerFileCreationQueue", qos: .background) // Serial queue
-    fileprivate let disposeBag = DisposeBag()
+    private let fileCreationQueue = DispatchQueue(label: "OpenWebSDKLoggerFileCreationQueue", qos: .background) // Serial queue
+    private let disposeBag = DisposeBag()
 
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -155,7 +155,7 @@ class OWLogger {
         }) {
             // Make sure we don't have a greater log files which exist than the requested new max of log files
             fileCreationQueue.async { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.removeExceedingLogFilesIfNeeded()
             }
         }
@@ -168,7 +168,7 @@ class OWLogger {
         let runQueue = queue ?? self.queue
 
         runQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             guard level != .none && self._logLevel != .none else { return } // Continue only if the log level is different than none
             guard level.rank <= self._logLevel.rank else { return } // Continue only if the log level rank appropriate
 
@@ -182,7 +182,7 @@ class OWLogger {
     // I intentionally decided to do nothing in such case, i.e NOT saving the log in case the publisher decided to change configuration
 }
 
-fileprivate extension OWLogger {
+private extension OWLogger {
     func log(level: OWLogLevel, _ text: String, prefix: String, file: String = #file, line: Int = #line) {
         let fileName: String
         if let startIndex = file.range(of: "/", options: .backwards)?.upperBound {
@@ -202,11 +202,11 @@ fileprivate extension OWLogger {
                 let osLogger = osLoggers[prefix] ?? OSLog(subsystem: PrivateMetrics.osLoggersSubsystem, category: prefix)
                 let textToLog = format + text
                 os_log("%@", log: osLogger, type: level.osLevel, textToLog)
-            case .file(_):
+            case .file:
                 let textToLog = "\(time()) \(hostBundleName) \(prefix) \(format)\(text)"
                 // Write on the file creation serial queue
                 fileCreationQueue.async { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.logItems.append(textToLog)
                     // Write lof file if needed
                     guard self.logItems.count >= self.maxItemsPerLogFile else { return }
@@ -246,7 +246,7 @@ fileprivate extension OWLogger {
 
     func removeOldestLogFileIfNeeded() {
         let numberOfLogsWritten = retrieveNumberOfSavedLogs()
-        if (numberOfLogsWritten >= maxLogFilesNumber) {
+        if numberOfLogsWritten >= maxLogFilesNumber {
             // Remove oldest
             removeOldestLogFiles(numOfFilesToRemove: 1)
         }
@@ -254,7 +254,7 @@ fileprivate extension OWLogger {
 
     func removeExceedingLogFilesIfNeeded() {
         let numberOfLogsWritten = retrieveNumberOfSavedLogs()
-        if (numberOfLogsWritten > maxLogFilesNumber) {
+        if numberOfLogsWritten > maxLogFilesNumber {
             // Remove exceeding
             let numToRemove = numberOfLogsWritten - maxLogFilesNumber
             removeOldestLogFiles(numOfFilesToRemove: numToRemove)
@@ -322,17 +322,17 @@ fileprivate extension OWLogger {
 }
 
 // Rx
-fileprivate extension OWLogger {
+private extension OWLogger {
     func setupObservers() {
         appLifeCycle.didEnterBackground
             .filter { [weak self] in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.needsToWriteLogFile()
             }
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.fileCreationQueue.async { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.writeLogFile()
                 }
             })
@@ -348,4 +348,3 @@ fileprivate extension OWLogger {
         })
     }
 }
-
