@@ -51,9 +51,9 @@ extension OWUserMentionsCellOption: Equatable {
 
     static func == (lhs: OWUserMentionsCellOption, rhs: OWUserMentionsCellOption) -> Bool {
         switch (lhs, rhs) {
-        case (.mention(_), .mention(_)):
+        case (.mention, .mention):
             return lhs.identifier == rhs.identifier
-        case (.loading(_), .loading(_)):
+        case (.loading, .loading):
             return lhs.identifier == rhs.identifier
         default:
             return false

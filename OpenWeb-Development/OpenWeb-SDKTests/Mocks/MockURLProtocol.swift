@@ -24,7 +24,7 @@ class MockURLProtocol: URLProtocol {
 
     typealias RequestHandler = (URLRequest) throws -> (HTTPURLResponse, Data)
 
-    private static var requestHandlers: [RequestKey: RequestHandler] = [:]
+    fileprivate static var requestHandlers: [RequestKey: RequestHandler] = [:]
 
     override class func canInit(with request: URLRequest) -> Bool {
         return true

@@ -71,13 +71,13 @@ extension OWPreConversationCellOption: Equatable {
 
     static func == (lhs: OWPreConversationCellOption, rhs: OWPreConversationCellOption) -> Bool {
         switch (lhs, rhs) {
-        case (.comment(_), .comment(_)):
+        case (.comment, .comment):
             return lhs.identifier == rhs.identifier
-        case (.commentSkeletonShimmering(_), .commentSkeletonShimmering(_)):
+        case (.commentSkeletonShimmering, .commentSkeletonShimmering):
             return lhs.identifier == rhs.identifier
-        case (.commentThreadActions(_), .commentThreadActions(_)):
+        case (.commentThreadActions, .commentThreadActions):
             return lhs.identifier == rhs.identifier
-        case (.spacer(_), .spacer(_)):
+        case (.spacer, .spacer):
             return lhs.identifier == rhs.identifier
         default:
             return false

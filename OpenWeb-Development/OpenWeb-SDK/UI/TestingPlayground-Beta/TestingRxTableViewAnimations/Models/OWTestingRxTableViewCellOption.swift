@@ -60,11 +60,11 @@ extension OWTestingRxTableViewCellOption: Equatable {
 
     static func == (lhs: OWTestingRxTableViewCellOption, rhs: OWTestingRxTableViewCellOption) -> Bool {
         switch (lhs, rhs) {
-        case (.red(_), .red(_)):
+        case (.red, .red):
             return lhs.identifier == rhs.identifier && lhs.viewModel === rhs.viewModel
-        case (.blue(_), .blue(_)):
+        case (.blue, .blue):
             return lhs.identifier == rhs.identifier && lhs.viewModel === rhs.viewModel
-        case (.green(_), .green(_)):
+        case (.green, .green):
             return lhs.identifier == rhs.identifier && lhs.viewModel === rhs.viewModel
         default:
             return false
