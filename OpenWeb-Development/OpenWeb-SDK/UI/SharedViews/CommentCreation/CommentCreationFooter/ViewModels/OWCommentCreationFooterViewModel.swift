@@ -118,11 +118,11 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
                 // This prevents multiple authentication screens being opened after tapping a few times on the post button.
                 self?.submitCommentInProgress.onNext(true)
             })
+            .observe(on: MainScheduler.instance)
             .flatMap { [weak self] userAction -> Observable<Bool> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: userAction)
             }
-            .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 self?.submitCommentInProgress.onNext(false)
             })
