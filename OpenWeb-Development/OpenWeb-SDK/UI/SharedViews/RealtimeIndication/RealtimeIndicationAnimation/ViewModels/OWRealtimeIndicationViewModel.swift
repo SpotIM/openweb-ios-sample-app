@@ -41,7 +41,7 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
     let panHorisontalPositionDidChange = PublishSubject<CGFloat>()
     let panHorisontalPositionChangeDidEnd = PublishSubject<Void>()
 
-    fileprivate let _tapped = PublishSubject<Void>()
+    private let _tapped = PublishSubject<Void>()
     var tapped: Observable<Void> {
         _tapped
             .asObservable()
@@ -55,14 +55,14 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
         panHorisontalPositionChangeDidEnd.asObservable()
     }
 
-    fileprivate let _shouldShowTypingLabel = BehaviorSubject<Bool>(value: false)
+    private let _shouldShowTypingLabel = BehaviorSubject<Bool>(value: false)
     var shouldShowTypingLabel: Observable<Bool> {
         return _shouldShowTypingLabel
             .distinctUntilChanged()
             .asObservable()
     }
 
-    fileprivate let _shouldShowNewCommentsLabel = BehaviorSubject<Bool>(value: false)
+    private let _shouldShowNewCommentsLabel = BehaviorSubject<Bool>(value: false)
     var shouldShowNewCommentsLabel: Observable<Bool> {
         return _shouldShowNewCommentsLabel
             .distinctUntilChanged()
@@ -77,8 +77,8 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
         return OWRealtimeNewCommentsViewModel()
     }()
 
-    fileprivate var realtimeIndicatorService: OWRealtimeIndicatorServicing
-    fileprivate let disposeBag = DisposeBag()
+    private var realtimeIndicatorService: OWRealtimeIndicatorServicing
+    private let disposeBag = DisposeBag()
 
     init(realtimeIndicatorService: OWRealtimeIndicatorServicing = OWSharedServicesProvider.shared.realtimeIndicatorService()) {
         self.realtimeIndicatorService = realtimeIndicatorService
@@ -91,7 +91,7 @@ extension OWRealtimeIndicationViewModel {
         realtimeIndicatorService.realtimeIndicatorType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
+                guard let self else { return }
                 let (shouldShowTyping, shouldShowNewComments) = self.displaySettings(for: type)
 
                 self._shouldShowTypingLabel.onNext(shouldShowTyping)
@@ -105,7 +105,7 @@ extension OWRealtimeIndicationViewModel {
             }
             .subscribe(onNext: { [weak self] newCommentsCount in
                 guard newCommentsCount > 0,
-                      let self = self else { return }
+                      let self else { return }
                 self._tapped.onNext()
             })
             .disposed(by: disposeBag)

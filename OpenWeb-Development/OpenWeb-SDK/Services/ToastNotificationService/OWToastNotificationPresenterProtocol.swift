@@ -30,13 +30,13 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
 
     mutating func presentToast(requiredData: OWToastRequiredData, completions: [OWToastCompletion: PublishSubject<Void>?], disposeBag: DisposeBag) {
         OWScheduler.runOnMainThreadIfNeeded { [weak self] in
-            guard var self = self else { return }
+            guard var self else { return }
             // Make sure no old toast is visible
             self.removeToast()
 
             let toastVM = OWToastViewModel(requiredData: requiredData, completions: completions)
             self.toastView = OWToastView(viewModel: toastVM)
-            guard let toastView = toastView else { return }
+            guard let toastView else { return }
 
             self.addSubview(toastView)
             toastView.OWSnp.makeConstraints { make in
@@ -75,12 +75,12 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
         }
     }
 
-    fileprivate func setupToastObservers(disposeBag: DisposeBag) {
+    private func setupToastObservers(disposeBag: DisposeBag) {
         let panGesture = UIPanGestureRecognizer()
         panGesture.name = ToastMetrics.panGestureName
         panGesture.rx.event
             .subscribe(onNext: { [weak self] recognizer in
-                guard let self = self,
+                guard let self,
                       let toastView = self.toastView,
                       let superView = toastView.superview else { return }
 
@@ -122,7 +122,7 @@ extension OWToastNotificationPresenterProtocol where Self: UIView {
     }
 }
 
-fileprivate extension OWToastNotificationPresenterProtocol where Self: UIView {
+private extension OWToastNotificationPresenterProtocol where Self: UIView {
     mutating func removeToast() {
         guard let toastView = self.toastView else { return }
         toastView.removeFromSuperview()

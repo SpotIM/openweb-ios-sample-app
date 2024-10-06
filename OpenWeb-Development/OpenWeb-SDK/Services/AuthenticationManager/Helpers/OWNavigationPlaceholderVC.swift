@@ -11,7 +11,7 @@ import UIKit
 
 class OWNavigationPlaceholderVC: UIViewController {
 
-    fileprivate let viewModel: OWNavigationPlaceholderViewModeling
+    private let viewModel: OWNavigationPlaceholderViewModeling
 
     init(viewModel: OWNavigationPlaceholderViewModeling) {
         self.viewModel = viewModel

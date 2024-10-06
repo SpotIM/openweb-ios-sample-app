@@ -34,11 +34,11 @@ enum OWCommentThreadActionsCellMode {
 }
 
 class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModeling, OWCommentThreadActionsCellViewModelingInputs, OWCommentThreadActionsCellViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let expandCommentsCount: Int = 5
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     var inputs: OWCommentThreadActionsCellViewModelingInputs { return self }
     var outputs: OWCommentThreadActionsCellViewModelingOutputs { return self }
@@ -52,7 +52,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
     var triggerUpdateActionType = PublishSubject<Void>()
 
-    fileprivate let spacing: OWVerticalSpacing
+    private let spacing: OWVerticalSpacing
 
     lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread,
                                                                                                  commentId: self.commentPresentationData.id,
@@ -100,11 +100,11 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
     }
 }
 
-fileprivate extension OWCommentThreadActionsCellViewModel {
+private extension OWCommentThreadActionsCellViewModel {
     func setupObservers() {
         triggerUpdateActionType
             .map({ [weak self] _ -> OWCommentThreadActionType? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
 
                 switch mode {
                 case .collapse:
@@ -127,7 +127,7 @@ fileprivate extension OWCommentThreadActionsCellViewModel {
         let extendedRepliesCount = min(visibleRepliesCount + Metrics.expandCommentsCount, totalRepliesCount)
 
         let commentThreadActionType: OWCommentThreadActionType
-        if (visibleRepliesCount == 0 && totalRepliesCount < Metrics.expandCommentsCount) {
+        if visibleRepliesCount == 0 && totalRepliesCount < Metrics.expandCommentsCount {
             commentThreadActionType = .viewMoreReplies(count: extendedRepliesCount)
         } else {
             commentThreadActionType = .viewMoreRepliesRange(from: extendedRepliesCount, to: totalRepliesCount)

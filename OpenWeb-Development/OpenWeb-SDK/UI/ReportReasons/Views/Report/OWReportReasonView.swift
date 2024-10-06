@@ -12,7 +12,7 @@ import RxSwift
 import Foundation
 
 class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "report_reason_view_id"
         static let cancelButtonIdentifier = "report_reason_cancel_button_id"
         static let submitButtonIdentifier = "report_reason_submit_button_id"
@@ -35,35 +35,35 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let animateTextViewAlphaDuration: CGFloat = 0.7
     }
 
-    fileprivate var textViewHeightConstraint: OWConstraint? = nil
+    private var textViewHeightConstraint: OWConstraint?
 
-    fileprivate lazy var titleView: OWTitleView = {
+    private lazy var titleView: OWTitleView = {
         return OWTitleView(title: viewModel.outputs.titleText,
                            prefixIdentifier: Metrics.prefixIdentifier,
                            viewModel: viewModel.outputs.titleViewVM)
     }()
 
-    fileprivate lazy var footerView: UIView = {
+    private lazy var footerView: UIView = {
         let footerView = UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             footerView.apply(shadow: .standard, direction: .up)
         return footerView
     }()
 
-    fileprivate lazy var textView: OWTextView = {
+    private lazy var textView: OWTextView = {
         return OWTextView(viewModel: viewModel.outputs.textViewVM,
                           prefixIdentifier: Metrics.prefixIdentifier)
                 .alpha(0)
     }()
 
-    fileprivate lazy var footerStackView: UIStackView = {
+    private lazy var footerStackView: UIStackView = {
         return UIStackView()
             .spacing(Metrics.buttonsPadding)
             .axis(.horizontal)
             .distribution(.fillEqually)
     }()
 
-    fileprivate lazy var cancelButton: UIButton = {
+    private lazy var cancelButton: UIButton = {
         return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -71,7 +71,7 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
             .corner(radius: Metrics.buttonsRadius)
     }()
 
-    fileprivate lazy var submitButton: OWLoaderButton = {
+    private lazy var submitButton: OWLoaderButton = {
         return OWLoaderButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .textColor(.white)
@@ -80,12 +80,12 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
             .alpha(Metrics.submitDisabledOpacity)
     }()
 
-    fileprivate lazy var tableHeaderView: UIView = {
+    private lazy var tableHeaderView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var tableViewReasons: UITableView = {
+    private lazy var tableViewReasons: UITableView = {
         return UITableView(frame: .zero, style: .grouped)
             .delegate(self)
             .separatorStyle(.none)
@@ -93,14 +93,14 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var tableHeaderLabel: UILabel = {
+    private lazy var tableHeaderLabel: UILabel = {
         return UILabel()
             .backgroundColor(.clear)
             .numberOfLines(0)
     }()
 
-    fileprivate let viewModel: OWReportReasonViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWReportReasonViewViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWReportReasonViewViewModeling) {
         self.viewModel = viewModel
@@ -115,7 +115,7 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWReportReasonView {
+private extension OWReportReasonView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         cancelButton.accessibilityIdentifier = Metrics.cancelButtonIdentifier
@@ -160,7 +160,7 @@ fileprivate extension OWReportReasonView {
         footerView.addSubview(footerStackView)
 
         textView.OWSnp.makeConstraints { [weak self] make in
-            guard let self = self else { return }
+            guard let self else { return }
             make.top.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewHorizontalPadding)
             // Low priority so that when the next line textViewHeightConstraint will be active it will take over this constraint
             make.height.equalTo(0).priority(1)
@@ -188,7 +188,7 @@ fileprivate extension OWReportReasonView {
     func setupObservers() {
         // TableView binding
         viewModel.outputs.reportReasonCellViewModels
-            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWReportReasonCell.self.identifierName, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
+            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWReportReasonCell.self.identifierName, cellType: OWReportReasonCell.self)) { _, viewModel, cell in
                 cell.configure(with: viewModel)
             }
             .disposed(by: disposeBag)
@@ -207,7 +207,7 @@ fileprivate extension OWReportReasonView {
 
         tableViewReasons.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
             })
             .disposed(by: disposeBag)
@@ -221,8 +221,8 @@ fileprivate extension OWReportReasonView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .withLatestFrom(viewModel.outputs.tableViewHeaderAttributedText) { ($0, $1) }
-            .subscribe(onNext: { [weak self] (currentStyle, tableViewHeaderAttributedText) in
-                guard let self = self else { return }
+            .subscribe(onNext: { [weak self] currentStyle, tableViewHeaderAttributedText in
+                guard let self else { return }
                 self.titleView
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                                  themeStyle: currentStyle))
@@ -244,7 +244,7 @@ fileprivate extension OWReportReasonView {
                 self.tableHeaderLabel
                     .attributedText(tableViewHeaderAttributedText)
                     .addRangeGesture(targetRange: self.viewModel.outputs.tableViewHeaderTapText) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.viewModel.inputs.learnMoreTap.onNext()
                     }
 
@@ -270,7 +270,7 @@ fileprivate extension OWReportReasonView {
 
         viewModel.outputs.isSubmitEnabled
             .map { [weak self] isSubmitEnabled -> Bool in
-                guard let self = self else { return isSubmitEnabled }
+                guard let self else { return isSubmitEnabled }
                 self.submitButton.alpha = isSubmitEnabled ? 1 : Metrics.submitDisabledOpacity
                 return isSubmitEnabled
             }
@@ -284,7 +284,7 @@ fileprivate extension OWReportReasonView {
         viewModel.outputs.selectedReason
             .subscribe(onNext: { [weak self] selectedReason in
                 // Show textView after selection
-                guard let self = self,
+                guard let self,
                       self.textViewHeightConstraint?.isActive == false
                 else { return }
 

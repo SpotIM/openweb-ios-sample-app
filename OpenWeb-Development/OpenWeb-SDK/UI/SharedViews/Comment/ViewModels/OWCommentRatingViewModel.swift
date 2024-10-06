@@ -42,18 +42,18 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     var inputs: OWCommentRatingViewModelingInputs { return self }
     var outputs: OWCommentRatingViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let sharedServiceProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
+    private let sharedServiceProvider: OWSharedServicesProviding
 
     var rankChanged = PublishSubject<SPRankChange>()
     var tapRankUp = PublishSubject<Void>()
     var tapRankDown = PublishSubject<Void>()
 
-    fileprivate let _rankUp = BehaviorSubject<Int?>(value: nil)
-    fileprivate let _rankDown = BehaviorSubject<Int?>(value: nil)
-    fileprivate let _rankedByUser = BehaviorSubject<Int?>(value: nil)
+    private let _rankUp = BehaviorSubject<Int?>(value: nil)
+    private let _rankDown = BehaviorSubject<Int?>(value: nil)
+    private let _rankedByUser = BehaviorSubject<Int?>(value: nil)
 
-    fileprivate var _voteSymbolType: Observable<OWVotesType> {
+    private var _voteSymbolType: Observable<OWVotesType> {
         self.sharedServiceProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> OWVotesType in
@@ -88,7 +88,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
         return Observable.merge(rankUpTriggeredObservable, rankDownTriggeredObservable)
     }
 
-    fileprivate let commentId: String
+    private let commentId: String
 
     init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
@@ -97,7 +97,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
         commentId = ""
     }
 
-    fileprivate let customizationsLayer: OWCustomizations
+    private let customizationsLayer: OWCustomizations
 
     init(model: OWCommentVotingModel,
          commentId: String,
@@ -123,7 +123,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .unwrap()
             .withLatestFrom(_voteSymbolType) { rankUpCount, votesType in
                 let formattedRankCount = rankUpCount.kmFormatted
-                if (votesType == .recommend) {
+                if votesType == .recommend {
                     let recommendText = OWLocalizationManager.shared.localizedString(key: "Recommend")
                     return "\(recommendText) (\(formattedRankCount))"
                 } else {
@@ -146,16 +146,16 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
                 guard let convConfig = config.conversation
                 else { return voteTypesToShow }
 
-                if (convConfig.disableVoteUp == true) {
+                if convConfig.disableVoteUp == true {
                     voteTypesToShow.removeAll { $0 == .voteUp }
                 }
-                if (convConfig.disableVoteDown == true) {
+                if convConfig.disableVoteDown == true {
                     voteTypesToShow.removeAll { $0 == .voteDown }
                 }
                 return voteTypesToShow
             }
             .withLatestFrom(_voteSymbolType) { voteTypes, availableTypes -> [OWVoteType] in
-                if([OWVotesType.heart, OWVotesType.recommend].contains(availableTypes)) {
+                if [OWVotesType.heart, OWVotesType.recommend].contains(availableTypes) {
                     return voteTypes.filter { $0 == .voteUp }
                 }
                 return voteTypes
@@ -226,25 +226,25 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     }
 }
 
-fileprivate extension OWCommentRatingViewModel {
+private extension OWCommentRatingViewModel {
     func setupObservers() {
         let rankChangedLocallyObservable: Observable<SPRankChange> = rankChanged
             .flatMapLatest { [weak self] rankChange -> Observable<SPRankChange> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 return Observable.combineLatest(self._rankUp, self._rankDown)
                     .take(1)
                     .do(onNext: { [weak self] rankUp, rankDown in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.updateChangeLocally(rankChange: rankChange, rankUp: rankUp ?? 0, rankDown: rankDown ?? 0)
                     })
-                    .map { _ in rankChange}
+                    .map { _ in rankChange }
             }
 
         // Updating Network/Remote about rank change
         rankChangedLocallyObservable
             .flatMapLatest { [weak self] rankChange -> Observable<Event<EmptyDecodable>> in
-                guard let self = self,
+                guard let self,
                       let postId = OWManager.manager.postId,
                       let operation = rankChange.operation
                 else { return .empty() }

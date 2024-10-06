@@ -12,12 +12,12 @@ import RxSwift
 
 class OWSpacerCell: UITableViewCell {
 
-    fileprivate lazy var spacerView: OWSpacerView = {
+    private lazy var spacerView: OWSpacerView = {
         return OWSpacerView()
     }()
 
-    fileprivate var viewModel: OWSpacerCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWSpacerCellViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -39,7 +39,7 @@ class OWSpacerCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWSpacerCell {
+private extension OWSpacerCell {
     func setupUI() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
                                                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
@@ -55,7 +55,7 @@ fileprivate extension OWSpacerCell {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

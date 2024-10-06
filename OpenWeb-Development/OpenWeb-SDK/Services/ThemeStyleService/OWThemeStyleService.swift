@@ -23,10 +23,10 @@ protocol OWThemeStyleServicing {
 }
 
 class OWThemeStyleService: OWThemeStyleServicing {
-    fileprivate let _style = BehaviorSubject<OWThemeStyle>(value: .light)
-    fileprivate var _currentStyle: OWThemeStyle = .light
-    fileprivate var _enforcement: OWThemeStyleEnforcement = .none
-    fileprivate let disposeBag = DisposeBag()
+    private let _style = BehaviorSubject<OWThemeStyle>(value: .light)
+    private var _currentStyle: OWThemeStyle = .light
+    private var _enforcement: OWThemeStyleEnforcement = .none
+    private let disposeBag = DisposeBag()
 
     init() {
         setupObservers()
@@ -60,7 +60,7 @@ class OWThemeStyleService: OWThemeStyleServicing {
     }
 }
 
-fileprivate extension OWThemeStyleService {
+private extension OWThemeStyleService {
     func setupObservers() {
         style
             .subscribe(onNext: { [weak self] themeStyle in
@@ -69,4 +69,3 @@ fileprivate extension OWThemeStyleService {
             .disposed(by: disposeBag)
     }
 }
-

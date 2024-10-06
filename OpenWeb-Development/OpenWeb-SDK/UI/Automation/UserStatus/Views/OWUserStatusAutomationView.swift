@@ -14,7 +14,7 @@ import RxCocoa
 
 class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalOffset: CGFloat = 20
         static let verticalOffset: CGFloat = 20
         static let activeSpotIdBaseText: String = OWLocalizationManager.shared.localizedString(key: "ActiveSpotId") + ": "
@@ -26,10 +26,10 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
         static let userStatusIdentifier = "user_status_id"
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate var viewModel: OWUserStatusAutomationViewViewModeling!
+    private let disposeBag = DisposeBag()
+    private var viewModel: OWUserStatusAutomationViewViewModeling!
 
-    fileprivate lazy var activeSpotIdLbl: UILabel = {
+    private lazy var activeSpotIdLbl: UILabel = {
         return UILabel()
             .text(Metrics.activeSpotIdBaseText)
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -37,7 +37,7 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
             .numberOfLines(0)
     }()
 
-    fileprivate lazy var activePostIdLbl: UILabel = {
+    private lazy var activePostIdLbl: UILabel = {
         return UILabel()
             .text(Metrics.activePostIdBaseText)
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -45,7 +45,7 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
             .numberOfLines(0)
     }()
 
-    fileprivate lazy var userStatusLbl: UILabel = {
+    private lazy var userStatusLbl: UILabel = {
         return UILabel()
             .text(Metrics.userStatusBaseText)
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -53,7 +53,7 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
             .numberOfLines(0)
     }()
 
-    fileprivate lazy var warningLbl: UILabel = {
+    private lazy var warningLbl: UILabel = {
         return UILabel()
             .text(OWLocalizationManager.shared.localizedString(key: "SDKNotInitializedWarning"))
             .font(OWFontBook.shared.font(typography: .bodySpecial))
@@ -76,7 +76,7 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWUserStatusAutomationView {
+private extension OWUserStatusAutomationView {
     func setupUI() {
         self.useAsThemeStyleInjector()
 
@@ -109,7 +109,7 @@ fileprivate extension OWUserStatusAutomationView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 let font = OWFontBook.shared.font(typography: .bodyText)
                 self.activeSpotIdLbl.font = font
                 self.activePostIdLbl.font = font
@@ -120,7 +120,7 @@ fileprivate extension OWUserStatusAutomationView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 let textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.activeSpotIdLbl.textColor = textColor
                 self.activePostIdLbl.textColor = textColor

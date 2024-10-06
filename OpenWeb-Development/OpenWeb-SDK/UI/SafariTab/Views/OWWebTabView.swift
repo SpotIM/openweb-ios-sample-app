@@ -11,14 +11,14 @@ import RxSwift
 import WebKit
 
 class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalOffset: CGFloat = 16.0
         static let titleViewHeight: CGFloat = 56
         static let identifier = "web_tab_view_id"
         static let titleHeaderIdentifier = "web_tab_title_header"
     }
 
-    fileprivate lazy var loader: UIActivityIndicatorView = {
+    private lazy var loader: UIActivityIndicatorView = {
         let style: UIActivityIndicatorView.Style
         if #available(iOS 13.0, *) {
             style = .large
@@ -30,7 +30,7 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
         return loader
     }()
 
-    fileprivate lazy var webView: WKWebView = {
+    private lazy var webView: WKWebView = {
         let preferences = WKPreferences()
 
         // uncomment if you want to inspect the webview with safari
@@ -55,15 +55,15 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
         return webView
     }()
 
-    fileprivate lazy var titleView: OWTitleView = {
+    private lazy var titleView: OWTitleView = {
         let titleView = OWTitleView(title: viewModel.outputs.options.title,
                                     prefixIdentifier: Metrics.titleHeaderIdentifier,
                                     viewModel: viewModel.outputs.titleViewVM)
         return titleView
     }()
 
-    fileprivate let viewModel: OWWebTabViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWWebTabViewViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -78,7 +78,7 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWWebTabView {
+private extension OWWebTabView {
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
@@ -115,7 +115,7 @@ fileprivate extension OWWebTabView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -132,7 +132,7 @@ fileprivate extension OWWebTabView {
         // Observe the title property
         webView.rx.title
             .subscribe(onNext: { [weak self] title in
-                guard let self = self else { return }
+                guard let self else { return }
                 // Set the title of the view controller to the webview's title
                 let webTitle = self.webView.canGoBack ? title : self.viewModel.outputs.options.title
                 self.viewModel.inputs.setTitle.onNext(webTitle)
@@ -142,7 +142,7 @@ fileprivate extension OWWebTabView {
         viewModel.outputs
             .backTapped
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.webView.goBack()
             })
             .disposed(by: disposeBag)

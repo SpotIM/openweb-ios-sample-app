@@ -28,13 +28,13 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
     var inputs: OWPreConversationFooterViewModelingInputs { return self }
     var outputs: OWPreConversationFooterViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
     }
 
-    fileprivate lazy var mobileSdkConfigObservable: Observable<SPConfigurationSDKStatus> = {
+    private lazy var mobileSdkConfigObservable: Observable<SPConfigurationSDKStatus> = {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationSDKStatus? in

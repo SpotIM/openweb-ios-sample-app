@@ -11,7 +11,7 @@ import UIKit
 import Foundation
 
 class OWErrorStateView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let borderWidth: CGFloat = 1
         static let borderRadius: CGFloat = 12
         static let verticalMainPadding: CGFloat = 12
@@ -31,21 +31,21 @@ class OWErrorStateView: UIView {
         static let ctaViewIdentifier = "error_state_cta_view_id"
     }
 
-    fileprivate var disposeBag = DisposeBag()
-    fileprivate var viewModel: OWErrorStateViewViewModeling!
+    private var disposeBag = DisposeBag()
+    private var viewModel: OWErrorStateViewViewModeling!
 
-    fileprivate lazy var containerView: UIView = {
+    private lazy var containerView: UIView = {
        return UIView()
             .backgroundColor(.clear)
     }()
 
-    fileprivate lazy var headerIcon: UIImageView = {
+    private lazy var headerIcon: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
             .image(UIImage(spNamed: "errorStateIcon", supportDarkMode: true))
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
        return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteLink, forceOpenWebFont: false))
             .numberOfLines(0)
@@ -54,13 +54,13 @@ class OWErrorStateView: UIView {
             .baselineAdjustment(.alignCenters)
     }()
 
-    fileprivate lazy var ctaView: OWErrorRetryCTAView = {
+    private lazy var ctaView: OWErrorRetryCTAView = {
         let tryAgainView = OWErrorRetryCTAView()
         tryAgainView.addGestureRecognizer(ctaTapGesture)
         return tryAgainView
     }()
 
-    fileprivate lazy var ctaTapGesture: UITapGestureRecognizer = {
+    private lazy var ctaTapGesture: UITapGestureRecognizer = {
         return UITapGestureRecognizer()
     }()
 
@@ -90,7 +90,7 @@ class OWErrorStateView: UIView {
     }
 }
 
-fileprivate extension OWErrorStateView {
+private extension OWErrorStateView {
     func setupUI() {
         self.corner(radius: Metrics.borderRadius)
 
@@ -133,7 +133,7 @@ fileprivate extension OWErrorStateView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 let borderColor: UIColor = self.viewModel.outputs.shouldHaveBorder ? OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle) : .clear
                 self.border(width: Metrics.borderWidth, color: borderColor)
                 self.headerIcon.image = UIImage(spNamed: "errorStateIcon", supportDarkMode: true)
@@ -149,7 +149,7 @@ fileprivate extension OWErrorStateView {
         viewModel.outputs.height
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] newHeight in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.OWSnp.updateConstraints { make in
                     // We use here greaterThen since the default newHeight is 0 in this constraint
                     // So that it will be tied to the components constraints inside this view
@@ -165,7 +165,7 @@ fileprivate extension OWErrorStateView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteLink)
             })
             .disposed(by: disposeBag)

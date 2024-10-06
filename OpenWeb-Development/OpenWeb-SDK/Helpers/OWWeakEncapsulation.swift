@@ -22,7 +22,7 @@ class OWWeakEncapsulation<T: AnyObject & Equatable>: Hashable {
         return ObjectIdentifier(value).hash(into: &hasher)
     }
 
-    weak fileprivate var _value: T?
+    weak private var _value: T?
 
     init(value: T) {
         self._value = value

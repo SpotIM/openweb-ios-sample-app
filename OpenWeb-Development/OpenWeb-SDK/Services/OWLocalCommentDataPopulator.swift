@@ -23,7 +23,7 @@ class OWLocalCommentDataPopulator: OWLocalCommentDataPopulating {
             updatedComment.users = [userId: user]
         }
 
-        if let additionalData = additionalData {
+        if let additionalData {
             updatedComment.additionalData = additionalData
         }
 

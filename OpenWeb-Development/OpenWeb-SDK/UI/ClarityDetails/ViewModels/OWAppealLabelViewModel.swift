@@ -37,17 +37,17 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     var inputs: OWAppealLabelViewModelingInputs { return self }
     var outputs: OWAppealLabelViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
-    fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
+    private var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
     var viewType: Observable<OWAppealLabelViewType> {
         _viewType
             .asObservable()
     }
 
-    fileprivate var _appealReasons = PublishSubject<Array<OWAppealReason>>()
-    fileprivate var appealReasons: Observable<Array<OWAppealReason>> {
+    private var _appealReasons = PublishSubject<[OWAppealReason]>()
+    private var appealReasons: Observable<[OWAppealReason]> {
         _appealReasons
             .asObservable()
     }
@@ -97,7 +97,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             servicesProvider.themeStyleService().style,
             accessibilityChange
         ) { [weak self] style, _ in
-            guard let self = self else { return nil }
+            guard let self else { return nil }
             let string = OWLocalizationManager.shared.localizedString(key: "AppealLabel")
             let attributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),
@@ -198,8 +198,8 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             .asObservable()
     }
 
-    fileprivate let commentId: OWCommentId
-    fileprivate let clarityDetailsType: OWClarityDetailsType
+    private let commentId: OWCommentId
+    private let clarityDetailsType: OWClarityDetailsType
     init(commentId: OWCommentId,
          clarityDetailsType: OWClarityDetailsType,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -211,12 +211,12 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     }
 
     // Show view according to config & appeal type
-    fileprivate lazy var shouldShowAppealView: Observable<Bool> = {
+    private lazy var shouldShowAppealView: Observable<Bool> = {
         let configurationService = servicesProvider.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
             .map { [weak self] config -> Bool in
-                guard let self = self,
+                guard let self,
                       let conversationConfig = config.conversation,
                       conversationConfig.isAppealEnabled == true
                 else {
@@ -229,7 +229,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     }()
 }
 
-fileprivate extension OWAppealLabelViewModel {
+private extension OWAppealLabelViewModel {
     func setupObservers() {
         shouldShowAppealView
             .subscribe(onNext: { [weak self] shouldShow in
@@ -312,12 +312,12 @@ fileprivate extension OWAppealLabelViewModel {
             }
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager()
                     .ifNeededTriggerAuthenticationUI(for: .commenterAppeal)
             }
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .commenterAppeal)
             }
             .filter { $0 }

@@ -19,17 +19,17 @@ class OWRealtimeIndicationAnimationView: UIView {
         static let showAndDismissAnimationSpringVelocity: CGFloat = 0.5
     }
 
-    fileprivate var indicationViewBottomConstraint: OWConstraint?
-    fileprivate var indicationViewCenterConstraint: OWConstraint?
-    fileprivate var indicationViewCurrentCenterOffset: CGFloat?
-    fileprivate var indicationViewCurrentBottomOffset: CGFloat?
+    private var indicationViewBottomConstraint: OWConstraint?
+    private var indicationViewCenterConstraint: OWConstraint?
+    private var indicationViewCurrentCenterOffset: CGFloat?
+    private var indicationViewCurrentBottomOffset: CGFloat?
 
-    fileprivate lazy var realtimeIndicationView: OWRealtimeIndicationView = {
+    private lazy var realtimeIndicationView: OWRealtimeIndicationView = {
         return OWRealtimeIndicationView(viewModel: viewModel.outputs.realtimeIndicationViewModel)
     }()
 
-    fileprivate var viewModel: OWRealtimeIndicationAnimationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWRealtimeIndicationAnimationViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWRealtimeIndicationAnimationViewModeling) {
         self.viewModel = viewModel
@@ -64,7 +64,7 @@ class OWRealtimeIndicationAnimationView: UIView {
     }
 }
 
-fileprivate extension OWRealtimeIndicationAnimationView {
+private extension OWRealtimeIndicationAnimationView {
     func setupUI() {
         self.clipsToBounds = true
 
@@ -79,7 +79,7 @@ fileprivate extension OWRealtimeIndicationAnimationView {
         viewModel.outputs
             .shouldShow
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.animate(shouldShow)
             })
             .disposed(by: disposeBag)
@@ -88,7 +88,7 @@ fileprivate extension OWRealtimeIndicationAnimationView {
             .outputs.horisontalPositionDidChange
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] transition in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.indicationViewCurrentCenterOffset = transition
                 self.indicationViewCenterConstraint?.update(offset: transition)
             })
@@ -98,7 +98,7 @@ fileprivate extension OWRealtimeIndicationAnimationView {
             .outputs.horisontalPositionChangeDidEnd
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                guard let self = self,
+                guard let self,
                       let currentCenter = self.indicationViewCurrentCenterOffset else { return }
 
                 if currentCenter > (self.bounds.width / Metrics.swipeThresholdToDismiss) || currentCenter < -(self.bounds.width / Metrics.swipeThresholdToDismiss) {
@@ -117,7 +117,7 @@ fileprivate extension OWRealtimeIndicationAnimationView {
 
     func animate(_ isShown: Bool) {
         guard let indicationViewCurrentBottomOffset = self.indicationViewCurrentBottomOffset else { return }
-        let offset = isShown ? -indicationViewCurrentBottomOffset/3 : indicationViewCurrentBottomOffset
+        let offset = isShown ? -indicationViewCurrentBottomOffset / 3 : indicationViewCurrentBottomOffset
         self.indicationViewBottomConstraint?.update(offset: offset)
 
         UIView.animate(
@@ -138,7 +138,7 @@ fileprivate extension OWRealtimeIndicationAnimationView {
                        animations: { [weak self] in
             self?.layoutIfNeeded()
         }, completion: { [ weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.reset()
             self.viewModel.inputs.swiped()
         })

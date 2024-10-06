@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "menu_selection_view_id"
 
         static let menuWidth: CGFloat = 180
@@ -20,7 +20,7 @@ class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
         static let tableInset: CGFloat = 8
     }
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
@@ -35,8 +35,8 @@ class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
         return tableView
     }()
 
-    fileprivate var viewModel: OWMenuSelectionViewModeling
-    fileprivate var disposeBag: DisposeBag = DisposeBag()
+    private var viewModel: OWMenuSelectionViewModeling
+    private var disposeBag: DisposeBag = DisposeBag()
 
     init(viewModel: OWMenuSelectionViewModeling) {
         self.viewModel = viewModel
@@ -51,7 +51,7 @@ class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWMenuSelectionView {
+private extension OWMenuSelectionView {
     func setupViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light)
         self.layer.borderWidth = 1
@@ -78,7 +78,7 @@ fileprivate extension OWMenuSelectionView {
             .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(cellIdentifier: OWMenuSelectionCell.identifierName,
                                          cellType: OWMenuSelectionCell.self)) { [weak self] index, viewModel, cell in
-                guard let self = self else { return }
+                guard let self else { return }
                 cell.configure(with: viewModel)
                 if index == self.tableView.numberOfRows(inSection: 0) - 1 {
                     // Hide separator for the last cell
@@ -99,7 +99,7 @@ fileprivate extension OWMenuSelectionView {
         tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
             .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
                     make.height.equalTo(height)
                 }
@@ -109,7 +109,7 @@ fileprivate extension OWMenuSelectionView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.tableView.separatorColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
                 self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor

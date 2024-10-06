@@ -11,7 +11,7 @@ import Foundation
 class OWUserMentionHelper {
     static var mentionsEnabled = true
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let mentionString = "@"
         static let mentionCharecter: Character = "@"
         static let jsonRegexPattern = "\\@\\{(.*?)\\}"
@@ -25,16 +25,16 @@ class OWUserMentionHelper {
         let commentsCacheService = servicesProvider.commentsInMemoryCacheService()
         switch commentCreationType {
         case .comment:
-            guard let postId = postId,
+            guard let postId,
                   let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
             userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         case .replyToComment(originComment: let originComment):
-            guard let postId = postId,
+            guard let postId,
                   let originCommentId = originComment.id,
                   let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)] else { return }
             userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         case .edit(comment: let comment):
-            guard let postId = postId,
+            guard let postId,
                   let commentId = comment.id,
                   let commentCreationCache = commentsCacheService[.edit(postId: postId, commentId: commentId)] else { return }
             userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
@@ -163,7 +163,7 @@ class OWUserMentionHelper {
             }
         }
 
-        if let currentMentionRange = currentMentionRange,
+        if let currentMentionRange,
            let range = textViewText.nsRange(from: currentMentionRange) {
             attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
                                         value: brandColor,
@@ -232,7 +232,7 @@ class OWUserMentionHelper {
 
     static func addUserMentionDisplayNames(to text: String, mentions: [OWUserMentionObject]?) -> String {
         guard OWUserMentionHelper.mentionsEnabled else { return text }
-        guard let mentions = mentions else { return text }
+        guard let mentions else { return text }
         var text = text
         for mention in mentions {
             text = text.replacingOccurrences(of: mention.jsonString, with: mention.text)
@@ -268,7 +268,7 @@ class OWUserMentionHelper {
     }
 
     // Parsing jsons @{} in text with comment content ids
-    fileprivate static func parseJsonsInText(text: String) -> [(String, Range<String.Index>)] {
+    private static func parseJsonsInText(text: String) -> [(String, Range<String.Index>)] {
         guard OWUserMentionHelper.mentionsEnabled else { return [] }
         var results = [(String, Range<String.Index>)]()
         do {
@@ -295,7 +295,7 @@ class OWUserMentionHelper {
 
     static func filterUserMentions(in text: String, userMentions: [OWUserMentionObject], readMoreRange: NSRange?) -> [OWUserMentionObject] {
         guard OWUserMentionHelper.mentionsEnabled else { return [] }
-        guard let readMoreRange = readMoreRange else { return userMentions }
+        guard let readMoreRange else { return userMentions }
         let utf16Count = text.utf16.count
         var filtered = userMentions.filter { $0.range.location <= utf16Count }
         if let last = filtered.last {
@@ -316,12 +316,12 @@ class OWUserMentionHelper {
         comment.userMentions["f42518e26df91e6af00fb62ce8a39a2f"] = OWComment.Content.UserMention(id: "f42518e26df91e6af00fb62ce8a39a2f", userId: "4567", displayName: "Alon")
         let user1 = SPUser()
         user1.id = "1234"
-        user1.userId  = "1234"
+        user1.userId = "1234"
         user1.displayName = "Refael Sommer"
 
         let user2 = SPUser()
         user2.id = "4567"
-        user2.userId  = "4567"
+        user2.userId = "4567"
         user2.displayName = "Alon Haiut"
 
         comment.users = comment.users ?? [:]

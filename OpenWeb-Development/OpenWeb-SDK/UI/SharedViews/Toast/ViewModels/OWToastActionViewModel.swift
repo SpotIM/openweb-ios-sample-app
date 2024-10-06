@@ -31,14 +31,14 @@ class OWToastActionViewModel: OWToastActionViewModeling, OWToastActionViewModeli
     var icon: UIImage?
     var action: OWToastAction
 
-    fileprivate var _color = BehaviorSubject<UIColor>(value: OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
+    private var _color = BehaviorSubject<UIColor>(value: OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
     var color: Observable<UIColor> {
         _color
             .asObservable()
     }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var disposeBag: DisposeBag
+    private let servicesProvider: OWSharedServicesProviding
+    private var disposeBag: DisposeBag
 
     init(action: OWToastAction, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -51,9 +51,9 @@ class OWToastActionViewModel: OWToastActionViewModeling, OWToastActionViewModeli
     }
 }
 
-fileprivate extension OWToastActionViewModel {
+private extension OWToastActionViewModel {
     func title(for action: OWToastAction) -> String {
-        switch(action) {
+        switch action {
         case .learnMore:
             return OWLocalizationManager.shared.localizedString(key: "LearnMore")
         case .tryAgain:
@@ -68,7 +68,7 @@ fileprivate extension OWToastActionViewModel {
     }
 
     func icon(for action: OWToastAction) -> UIImage? {
-        switch(action) {
+        switch action {
         case .learnMore:
             return nil
         case .tryAgain:
@@ -86,7 +86,7 @@ fileprivate extension OWToastActionViewModel {
         servicesProvider.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch self.action {
                 case .undo, .learnMore, .tryAgain:
                     self._color.onNext(OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle))
@@ -99,4 +99,3 @@ fileprivate extension OWToastActionViewModel {
             .disposed(by: disposeBag)
     }
 }
-

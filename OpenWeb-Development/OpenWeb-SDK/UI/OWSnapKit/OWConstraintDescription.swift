@@ -11,10 +11,10 @@ import UIKit
 class OWConstraintDescription {
     let item: OWLayoutConstraintItem
     var attributes: OWConstraintAttributes
-    var relation: OWConstraintRelation? = nil
-    var sourceLocation: (String, UInt)? = nil
-    var label: String? = nil
-    var related: OWConstraintItem? = nil
+    var relation: OWConstraintRelation?
+    var sourceLocation: (String, UInt)?
+    var label: String?
+    var related: OWConstraintItem?
     var multiplier: OWConstraintMultiplierTarget = 1.0
     var constant: OWConstraintConstantTarget = 0.0
     var priority: OWConstraintPriorityTarget = 1000.0
@@ -44,4 +44,3 @@ class OWConstraintDescription {
         self.attributes = attributes
     }
 }
-

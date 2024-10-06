@@ -36,11 +36,11 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     var inputs: OWCommentStatusViewModelingInputs { return self }
     var outputs: OWCommentStatusViewModelingOutputs { return self }
 
-    fileprivate let _status = BehaviorSubject<OWCommentStatusType>(value: .none)
-    fileprivate let commentId: OWCommentId
+    private let _status = BehaviorSubject<OWCommentStatusType>(value: .none)
+    private let commentId: OWCommentId
 
-    fileprivate let sharedServicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let sharedServicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
     init (status: OWCommentStatusType, commentId: OWCommentId, sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServicesProvider = sharedServicesProvider
@@ -61,14 +61,14 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
         Observable.combineLatest(
             status,
             sharedServicesProvider.themeStyleService().style) { [weak self] status, _ in
-                switch(status) {
+                switch status {
                 case .none: return nil
                 case .rejected: return UIImage(spNamed: "rejectedIcon", supportDarkMode: false)
                 case .pending: return UIImage(spNamed: "pendingIcon", supportDarkMode: true)
                 case .appealed: return UIImage(spNamed: "appealIcon", supportDarkMode: true)
                 case .appealRejected: return UIImage(spNamed: "appealRejectedIcon", supportDarkMode: false)
                 }
-            }
+        }
             .unwrap()
     }()
 
@@ -87,9 +87,9 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             isCommentOfActiveUser,
             sharedServicesProvider.themeStyleService().style,
             accessibilityChange) { [weak self] status, isCommentOfActiveUser, style, _ in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let messageString: String
-                switch(status) {
+                switch status {
                 case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
                 case .appealed: messageString = OWLocalizationManager.shared.localizedString(key: "AppealedCommentStatusMessage")
                 case .appealRejected: messageString = OWLocalizationManager.shared.localizedString(key: "AppealRejectedCommentStatusMessage")
@@ -115,14 +115,14 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 }
 
                 return messageAttributedString
-            }
+        }
             .unwrap()
     }
 
     var learnMoreTap = PublishSubject<Void>()
     var learnMoreClicked: Observable<OWClarityDetailsType> {
         return learnMoreTap
-            .withLatestFrom(status) { (_, status) in
+            .withLatestFrom(status) { _, status in
                 return status
             }
             .map { status -> OWClarityDetailsType? in
@@ -145,12 +145,12 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     }
 }
 
-fileprivate extension OWCommentStatusViewModel {
+private extension OWCommentStatusViewModel {
     func setupObservers() {
         sharedServicesProvider.commentStatusUpdaterService()
             .statusUpdate
             .filter { [weak self] commentId, _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return commentId == self.commentId
             }
             .subscribe(onNext: { [weak self] _, status in

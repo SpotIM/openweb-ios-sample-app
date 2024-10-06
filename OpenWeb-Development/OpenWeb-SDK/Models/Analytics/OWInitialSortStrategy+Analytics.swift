@@ -10,7 +10,7 @@ import Foundation
 
 extension OWInitialSortStrategy {
     var analyticsPayload: OWAnalyticEventPayload {
-        switch (self) {
+        switch self {
         case .use(let sortOption):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.initialSort: sortOption.rawValue])
         case .useServerConfig:

@@ -11,13 +11,13 @@ import RxSwift
 import RxCocoa
 
 class OWClarityDetailsVC: UIViewController {
-    fileprivate lazy var clarityDetailsView: OWClarityDetailsView = {
+    private lazy var clarityDetailsView: OWClarityDetailsView = {
         return OWClarityDetailsView(viewModel: viewModel.outputs.clarityDetailsViewViewModel)
     }()
 
-    fileprivate weak var dismissNavigationController: UINavigationController?
+    private weak var dismissNavigationController: UINavigationController?
 
-    fileprivate let viewModel: OWClarityDetailsViewModeling
+    private let viewModel: OWClarityDetailsViewModeling
     let disposeBag: DisposeBag = DisposeBag()
 
     init(viewModel: OWClarityDetailsViewModeling) {
@@ -38,10 +38,12 @@ class OWClarityDetailsVC: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         // If modalPresentationStyle is pageSheet and animated by pulling down the VC
         // we want to bring back the navigation bar after the VC is dismissed
         // Fixes navigation bar showing over title bar.
@@ -62,7 +64,7 @@ class OWClarityDetailsVC: UIViewController {
     }
 }
 
-fileprivate extension OWClarityDetailsVC {
+private extension OWClarityDetailsVC {
     func setupViews() {
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light)
 
@@ -77,7 +79,7 @@ fileprivate extension OWClarityDetailsVC {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

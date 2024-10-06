@@ -22,4 +22,3 @@ enum OWUserAction {
     case loginPrompt
     case commenterAppeal
 }
-

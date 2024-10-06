@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
         static let ctaViewSlideAnimationDelay = 50
         static let ctaViewSlideAnimationDuration: Double = 0.25
@@ -33,56 +33,56 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let animateHideShowFilterTabsDuration: CGFloat = 0.3
     }
 
-    fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
+    private let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
 
-    var toastView: OWToastView? = nil
+    var toastView: OWToastView?
 
-    fileprivate lazy var filterTabsView: OWFilterTabsView = {
+    private lazy var filterTabsView: OWFilterTabsView = {
         return OWFilterTabsView(viewModel: self.viewModel.outputs.filterTabsVM)
     }()
 
-    fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
+    private lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var articleDescriptionView: OWArticleDescriptionView = {
+    private lazy var articleDescriptionView: OWArticleDescriptionView = {
         return OWArticleDescriptionView(viewModel: self.viewModel.outputs.articleDescriptionViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var loginPromptView: OWLoginPromptView = {
+    private lazy var loginPromptView: OWLoginPromptView = {
         return OWLoginPromptView(with: self.viewModel.outputs.loginPromptViewModel)
     }()
 
-    fileprivate lazy var conversationSummaryView: OWConversationSummaryView = {
+    private lazy var conversationSummaryView: OWConversationSummaryView = {
         return OWConversationSummaryView(viewModel: self.viewModel.outputs.conversationSummaryViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var commentingCTATopHorizontalSeparator: UIView = {
+    private lazy var commentingCTATopHorizontalSeparator: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var commentingCTAContainerView: UIView = {
+    private lazy var commentingCTAContainerView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
+    private lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+    private lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
         return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
     }()
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
@@ -101,7 +101,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         return tableView
     }()
 
-    fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
+    private lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
         refresh.tintColor(OWColorPalette.shared.color(type: .loaderColor,
                                                       themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -109,12 +109,12 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         return refresh
     }()
 
-    fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
+    private lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
-            guard let self = self else { return .reload }
+            guard let self else { return .reload }
             return self.viewModel.outputs.dataSourceTransition
         }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
-            guard let self = self else { return UITableViewCell() }
+            guard let self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             OWScheduler.runOnMainThreadIfNeeded {
@@ -130,14 +130,14 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         return dataSource
     }()
 
-    fileprivate var loginPromptPortraitConstraints: [OWConstraint] = []
-    fileprivate var loginPromptLandscapeConstraints: [OWConstraint] = []
-    fileprivate var summaryPortraitLeadingConstraint: OWConstraint? = nil
-    fileprivate var summaryLandscapeLeadingConstraint: OWConstraint? = nil
-    fileprivate var filterTabsHeightConstraint: OWConstraint? = nil
+    private var loginPromptPortraitConstraints: [OWConstraint] = []
+    private var loginPromptLandscapeConstraints: [OWConstraint] = []
+    private var summaryPortraitLeadingConstraint: OWConstraint?
+    private var summaryLandscapeLeadingConstraint: OWConstraint?
+    private var filterTabsHeightConstraint: OWConstraint?
 
-    fileprivate let viewModel: OWConversationViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWConversationViewViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -153,7 +153,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     }
 }
 
-fileprivate extension OWConversationView {
+private extension OWConversationView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -272,7 +272,7 @@ fileprivate extension OWConversationView {
     func setupObservers() {
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] data in
-                guard var self = self else { return }
+                guard var self else { return }
                 let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
                 self.presentToast(requiredData: data.presentData.data,
                                   completions: completions,
@@ -289,7 +289,7 @@ fileprivate extension OWConversationView {
         viewModel.outputs.shouldShowFilterTabsView
             .subscribe(onNext: { [weak self] shouldShowFilterTabsView in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     if let filterTabsHeightConstraint = self.filterTabsHeightConstraint,
                        filterTabsHeightConstraint.isActive,
                        shouldShowFilterTabsView {
@@ -311,7 +311,7 @@ fileprivate extension OWConversationView {
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.commentingCTAContainerView.OWSnp.updateConstraints { make in
                         if shouldShowErrorLoadingComments {
                             let bottomPadding: CGFloat = self.window?.safeAreaInsets.bottom ?? 0
@@ -346,7 +346,7 @@ fileprivate extension OWConversationView {
             .unwrap()
             .map { $0.y }
             .subscribe(onNext: { [weak self] value in
-                guard let self = self else { return }
+                guard let self else { return }
                 OWScheduler.runOnMainThreadIfNeeded {
                     self.viewModel.inputs.tableViewContentOffsetY.onNext(value)
                 }
@@ -367,7 +367,7 @@ fileprivate extension OWConversationView {
         viewModel.outputs.conversationDataSourceSections
             .do(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.tableViewRefreshControl.endRefreshing()
                 }
             })
@@ -378,7 +378,7 @@ fileprivate extension OWConversationView {
                                  OWSharedServicesProvider.shared.orientationService().orientation)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
                 let isLandscape = currentOrientation == .landscape
 
                 self.backgroundColor = isLandscape ? .clear : OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
@@ -392,7 +392,7 @@ fileprivate extension OWConversationView {
         viewModel.outputs.performTableViewAnimation
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
                         self.tableView.beginUpdates()
                         self.tableView.endUpdates()
@@ -407,21 +407,21 @@ fileprivate extension OWConversationView {
 
         tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
             .flatMapLatest { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.tableView.rx.didEndDecelerating
                     .asObservable()
                     .take(1)
             }
             .do(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.tableView.setContentOffset(.zero, animated: true)
                 }
             })
             .delay(.milliseconds(Metrics.delayPullToRefreshDuration), scheduler: conversationViewScheduler)
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.viewModel.inputs.pullToRefresh.onNext()
                 }
             })
@@ -433,7 +433,7 @@ fileprivate extension OWConversationView {
             .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
                 }
             })
@@ -452,7 +452,7 @@ fileprivate extension OWConversationView {
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.tableView.beginUpdates()
                     // it looks like set the content offset behave better when scroll to top
                     self.tableView.setContentOffset(.zero, animated: true)
@@ -476,7 +476,7 @@ fileprivate extension OWConversationView {
         viewModel.outputs.scrollToCellIndex
             .do(onNext: { [weak self] index in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     let cellIndexPath = IndexPath(row: index, section: 0)
                     self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
                 }
@@ -486,7 +486,7 @@ fileprivate extension OWConversationView {
 
         viewModel.outputs.scrollToCellIndexIfNotVisible
             .do(onNext: { [weak self] index in
-                guard let self = self else { return }
+                guard let self else { return }
                 OWScheduler.runOnMainThreadIfNeeded {
                     let cellIndexPath = IndexPath(row: index, section: 0)
 
@@ -504,7 +504,7 @@ fileprivate extension OWConversationView {
             })
             .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] index -> Observable<Int> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.tableView.rx.didEndScrollingAnimation
                     .asObservable()
                     .take(1)
@@ -512,7 +512,7 @@ fileprivate extension OWConversationView {
             }
             .subscribe(onNext: { [weak self] index in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.tableView.isUserInteractionEnabled = true
                     self.viewModel.inputs.scrolledToCellIndex.onNext(index)
                 }
@@ -522,7 +522,7 @@ fileprivate extension OWConversationView {
         viewModel.outputs.highlightCellsIndexes
             .subscribe(onNext: { [weak self] indexes in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self,
+                    guard let self,
                           let indexPathsForVisibleRows = self.tableView.indexPathsForVisibleRows else { return }
 
                     // Create a filtered and mapped array of non-nil cells
@@ -553,7 +553,7 @@ fileprivate extension OWConversationView {
         viewModel.outputs.reloadCellIndex
             .subscribe(onNext: { [weak self] index in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
                 }
             })
@@ -565,7 +565,7 @@ fileprivate extension OWConversationView {
                                  viewModel.outputs.loginPromptViewModel.outputs.shouldShowView)
             .subscribe(onNext: { [weak self] currentOrientation, shouldShowLoginPrompt in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
 
                     if currentOrientation == .portrait || !shouldShowLoginPrompt {
                         self.summaryPortraitLeadingConstraint?.activate()
@@ -586,7 +586,7 @@ fileprivate extension OWConversationView {
             .skip(1)
             .subscribe(onNext: { [weak self] currentOrientation in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     let isLandscape = currentOrientation == .landscape
 
                     self.tableView.OWSnp.updateConstraints { make in

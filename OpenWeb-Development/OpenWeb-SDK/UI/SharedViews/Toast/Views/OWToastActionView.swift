@@ -12,14 +12,14 @@ import RxSwift
 import RxCocoa
 
 class OWToastActionView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "toast_action_view_id"
 
         static let textSize: CGFloat = 15
         static let iconLeadingPadding: CGFloat = 4
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let attributedString = NSAttributedString(
             string: viewModel.outputs.title,
             attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
@@ -30,14 +30,14 @@ class OWToastActionView: UIView {
         return label
     }()
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         return UIImageView()
             .image(viewModel.outputs.icon?.withRenderingMode(.alwaysTemplate))
             .tintAdjustmentMode(.normal)
     }()
 
-    fileprivate var viewModel: OWToastActionViewModeling
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWToastActionViewModeling
+    private var disposeBag = DisposeBag()
 
     init(viewModel: OWToastActionViewModeling) {
         self.viewModel = viewModel
@@ -52,7 +52,7 @@ class OWToastActionView: UIView {
     }
 }
 
-fileprivate extension OWToastActionView {
+private extension OWToastActionView {
     func setupViews() {
         self.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
@@ -69,7 +69,7 @@ fileprivate extension OWToastActionView {
     func setupObservers() {
         viewModel.outputs.color
             .subscribe(onNext: { [weak self] color in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.textColor = color
                 self.iconImageView.tintColor = color
             })
@@ -78,7 +78,7 @@ fileprivate extension OWToastActionView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)

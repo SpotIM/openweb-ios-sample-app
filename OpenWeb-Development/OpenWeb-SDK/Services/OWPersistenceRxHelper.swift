@@ -17,7 +17,7 @@ protocol OWRawableKey<T> {
 class OWRxHelperKey<T: Codable>: OWRawableKey {
     var rawValue: String
 
-    init<T>(key: any OWRawableKey<T>) {
+    init(key: any OWRawableKey) {
         self.rawValue = key.rawValue
     }
 }
@@ -37,7 +37,7 @@ class OWPersistenceRxHelper: OWPersistenceRxHelperProtocol {
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
 
-    fileprivate var rxObjects: [String: OWRxHelperModel] = [:]
+    private var rxObjects: [String: OWRxHelperModel] = [:]
 
     init(decoder: JSONDecoder, encoder: JSONEncoder) {
         self.decoder = decoder
@@ -45,9 +45,9 @@ class OWPersistenceRxHelper: OWPersistenceRxHelperProtocol {
     }
 
     func observable<T>(key: OWRxHelperKey<T>, value: Data?, defaultValue: T? = nil) -> Observable<T> {
-        var defaultValueData: Data? = nil
+        var defaultValueData: Data?
         if value == nil,
-           let defaultValue = defaultValue,
+           let defaultValue,
            let encodedData = try? encoder.encode(defaultValue) {
             defaultValueData = encodedData
         }
@@ -76,7 +76,7 @@ class OWPersistenceRxHelper: OWPersistenceRxHelperProtocol {
     }
 }
 
-fileprivate extension OWPersistenceRxHelper {
+private extension OWPersistenceRxHelper {
     func getBinderObservable<T>(key: OWRxHelperKey<T>) -> Observable<Data?> {
         guard let observer = rxObject(key: key).binderObservable else {
             let observer = Observable<Data?>.create { _ in

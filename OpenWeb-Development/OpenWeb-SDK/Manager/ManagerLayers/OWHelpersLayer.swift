@@ -14,13 +14,13 @@ protocol OWHelpersInternalProtocol {
 
 class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
 
-    fileprivate let localizationManager: OWLocalizationManagerConfigurable
-    fileprivate var configurations: [OWAdditionalConfiguration] = []
-    fileprivate var loggerConfigurationLayer: OWLoggerConfiguration = OWLoggerConfigurationLayer()
-    fileprivate var _languageStrategy: OWLanguageStrategy = OWLanguageStrategy.default
-    fileprivate var _localeStrategy: OWLocaleStrategy = OWLocaleStrategy.default
-    fileprivate var _orientationEnforcement: OWOrientationEnforcement = OWOrientationEnforcement.enableAll
-    fileprivate let sharedServicesProvider: OWSharedServicesProviding
+    private let localizationManager: OWLocalizationManagerConfigurable
+    private var configurations: [OWAdditionalConfiguration] = []
+    private var loggerConfigurationLayer: OWLoggerConfiguration = OWLoggerConfigurationLayer()
+    private var _languageStrategy: OWLanguageStrategy = OWLanguageStrategy.default
+    private var _localeStrategy: OWLocaleStrategy = OWLocaleStrategy.default
+    private var _orientationEnforcement: OWOrientationEnforcement = OWOrientationEnforcement.enableAll
+    private let sharedServicesProvider: OWSharedServicesProviding
 
     init(localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared,
          sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -101,7 +101,7 @@ extension OWHelpersLayer {
     }
 }
 
-fileprivate extension OWHelpersLayer {
+private extension OWHelpersLayer {
     func validateSpotIdExist<T: Any>(completion: @escaping (Result<T, OWError>) -> Void) -> Bool {
         let spotId = OpenWeb.manager.spotId
         guard !spotId.isEmpty else {

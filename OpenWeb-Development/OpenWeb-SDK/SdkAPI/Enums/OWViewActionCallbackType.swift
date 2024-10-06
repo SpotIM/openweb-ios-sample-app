@@ -79,4 +79,3 @@ extension OWViewActionCallbackType: Equatable {
         }
     }
 }
-
