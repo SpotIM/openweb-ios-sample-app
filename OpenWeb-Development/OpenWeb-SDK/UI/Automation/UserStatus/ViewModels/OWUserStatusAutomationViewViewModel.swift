@@ -51,7 +51,7 @@ class OWUserStatusAutomationViewViewModel: OWUserStatusAutomationViewViewModelin
         let authenticationManager = OWSharedServicesProvider.shared.authenticationManager()
         return authenticationManager.userAuthenticationStatus
             .map { [weak self] status in
-                guard let self = self,
+                guard let self,
                       status == .notAutenticated else { return false }
                 return self.activeSpotId.isEmpty
             }

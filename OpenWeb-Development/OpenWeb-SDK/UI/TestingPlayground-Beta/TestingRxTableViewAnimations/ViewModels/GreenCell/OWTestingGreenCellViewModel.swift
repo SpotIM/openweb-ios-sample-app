@@ -34,9 +34,9 @@ class OWTestingGreenCellViewModel: OWTestingGreenCellViewModeling,
     var inputs: OWTestingGreenCellViewModelingInputs { return self }
     var outputs: OWTestingGreenCellViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
+    private let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
     var changedCellState: Observable<OWTestingCellState> {
         return cellState
             .distinctUntilChanged()
@@ -71,7 +71,7 @@ class OWTestingGreenCellViewModel: OWTestingGreenCellViewModeling,
     }
 }
 
-fileprivate extension OWTestingGreenCellViewModel {
+private extension OWTestingGreenCellViewModel {
     func setupObservers() {
         changeCellStateTap
             .withLatestFrom(cellState)

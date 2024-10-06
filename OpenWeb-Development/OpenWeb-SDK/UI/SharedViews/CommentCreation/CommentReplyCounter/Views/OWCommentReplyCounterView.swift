@@ -10,23 +10,23 @@ import UIKit
 import RxSwift
 
 class OWCommentReplyCounterView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_creation_reply_counter_id"
         static let labelIdentifier = "comment_creation_reply_counter_label_id"
 
         static let counterHeight = 24.0
     }
 
-    fileprivate lazy var counterLabel: UILabel = {
+    private lazy var counterLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
     }()
 
-    fileprivate var viewHeightConstraint: OWConstraint?
+    private var viewHeightConstraint: OWConstraint?
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWCommentReplyCounterViewModeling
+    private let disposeBag = DisposeBag()
+    private let viewModel: OWCommentReplyCounterViewModeling
 
     init(with viewModel: OWCommentReplyCounterViewModeling) {
         self.viewModel = viewModel
@@ -42,7 +42,7 @@ class OWCommentReplyCounterView: UIView {
     }
 }
 
-fileprivate extension OWCommentReplyCounterView {
+private extension OWCommentReplyCounterView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
@@ -60,7 +60,7 @@ fileprivate extension OWCommentReplyCounterView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
@@ -77,8 +77,8 @@ fileprivate extension OWCommentReplyCounterView {
                                  isLanscapeObsarvable)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showCounter, isLanscape in
-                guard let self = self else { return }
-                if (showCounter) {
+                guard let self else { return }
+                if showCounter {
                     self.viewHeightConstraint?.update(offset: isLanscape ? 0 : Metrics.counterHeight)
                 }
             })
@@ -87,7 +87,7 @@ fileprivate extension OWCommentReplyCounterView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.counterLabel.font = OWFontBook.shared.font(typography: .footnoteText)
             })
             .disposed(by: disposeBag)

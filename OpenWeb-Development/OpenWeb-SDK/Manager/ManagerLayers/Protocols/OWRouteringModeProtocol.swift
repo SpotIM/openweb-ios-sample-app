@@ -11,4 +11,3 @@ import Foundation
 protocol OWRouteringModeProtocol {
     var activeRouteringMode: OWRouteringModeInternal { get }
 }
-

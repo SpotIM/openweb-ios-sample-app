@@ -11,17 +11,17 @@ import UIKit
 import RxSwift
 
 class OWErrorStateCell: UITableViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let padding: CGFloat = 16
         static let depthOffset: CGFloat = 23
     }
 
-    fileprivate lazy var errorStateView: OWErrorStateView = {
+    private lazy var errorStateView: OWErrorStateView = {
         return OWErrorStateView()
     }()
 
-    fileprivate var viewModel: OWErrorStateCellViewModel!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWErrorStateCellViewModel!
+    private var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,7 +41,7 @@ class OWErrorStateCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWErrorStateCell {
+private extension OWErrorStateCell {
     func updateUI() {
         let depth = min(self.viewModel.outputs.depth, OWCommentCell.ExternalMetrics.maxDepth)
         errorStateView.OWSnp.updateConstraints { make in

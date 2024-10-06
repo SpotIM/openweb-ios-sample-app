@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWCommentHeaderView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let avatarSideSize: CGFloat = 36.0
         static let avatarImageViewTrailingOffset: CGFloat = 8.0
         static let subscriberVerticalPadding: CGFloat = 7
@@ -31,15 +31,15 @@ class OWCommentHeaderView: UIView {
         static let hiddenMessageLabelIdentifier = "comment_header_hidden_message_label_id"
     }
 
-    fileprivate var viewModel: OWCommentHeaderViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWCommentHeaderViewModeling!
+    private var disposeBag: DisposeBag!
 
-    fileprivate lazy var avatarImageView: OWAvatarView = {
+    private lazy var avatarImageView: OWAvatarView = {
         return OWAvatarView()
             .backgroundColor(.clear)
     }()
 
-    fileprivate lazy var userNameLabel: UILabel = {
+    private lazy var userNameLabel: UILabel = {
         let userNameLabel = UILabel()
             .userInteractionEnabled(true)
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
@@ -50,35 +50,35 @@ class OWCommentHeaderView: UIView {
         return userNameLabel
     }()
 
-    fileprivate lazy var userNameTapGesture: UITapGestureRecognizer = {
+    private lazy var userNameTapGesture: UITapGestureRecognizer = {
         return UITapGestureRecognizer()
     }()
 
-    fileprivate lazy var badgeTagContainer: UIView = {
+    private lazy var badgeTagContainer: UIView = {
         return UIView()
             .border(width: 1, color: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .corner(radius: 3)
             .isHidden(true)
     }()
 
-    fileprivate lazy var badgeTagLabel: UILabel = {
+    private lazy var badgeTagLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .infoText))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var subscriberBadgeView: OWSubscriberIconView = {
+    private lazy var subscriberBadgeView: OWSubscriberIconView = {
         return OWSubscriberIconView()
     }()
 
-    fileprivate lazy var subtitleLabel: UILabel = {
+    private lazy var subtitleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .metaText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
 
-    fileprivate lazy var seperatorBetweenSubtitleAndDateLabel: UILabel = {
+    private lazy var seperatorBetweenSubtitleAndDateLabel: UILabel = {
         return UILabel()
             .text(" · ")
             .font(OWFontBook.shared.font(typography: .metaText))
@@ -86,7 +86,7 @@ class OWCommentHeaderView: UIView {
             .userInteractionEnabled(false)
     }()
 
-    fileprivate lazy var dateLabel: UILabel = {
+    private lazy var dateLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .metaText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
@@ -94,7 +94,7 @@ class OWCommentHeaderView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
+    private lazy var hiddenCommentReasonLabel: UILabel = {
         return UILabel()
             .isHidden(true)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
@@ -136,7 +136,7 @@ class OWCommentHeaderView: UIView {
     }
 }
 
-fileprivate extension OWCommentHeaderView {
+private extension OWCommentHeaderView {
     func setupViews() {
         self.enforceSemanticAttribute()
 
@@ -200,7 +200,6 @@ fileprivate extension OWCommentHeaderView {
         }
     }
 
-    // swiftlint:disable function_body_length
     func setupObservers() {
         userNameTapGesture.rx.event
             .voidify()
@@ -239,14 +238,14 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowSubtitleSeperator
-            .map { $0 ? " · " : ""}
+            .map { $0 ? " · " : "" }
             .bind(to: seperatorBetweenSubtitleAndDateLabel.rx.text)
             .disposed(by: disposeBag)
 
         viewModel.outputs.hiddenCommentReasonText
             .subscribe(onNext: { [weak self] text in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.hiddenCommentReasonLabel.text = text
                 }
             })
@@ -255,7 +254,7 @@ fileprivate extension OWCommentHeaderView {
         viewModel.outputs.shouldShowHiddenCommentMessage
             .subscribe(onNext: { [weak self] isHiddenMessage in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
 
                     self.dateLabel.isHidden = isHiddenMessage
                     self.subscriberBadgeView.isHidden = isHiddenMessage
@@ -271,7 +270,7 @@ fileprivate extension OWCommentHeaderView {
             .outputs.isSubscriber
             .subscribe(onNext: { [weak self] isVisible in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.subscriberBadgeView.OWSnp.updateConstraints { make in
                         make.leading.equalTo(self.userNameLabel.OWSnp.trailing).offset(isVisible ? Metrics.subscriberVerticalPadding : 0)
                     }
@@ -282,7 +281,7 @@ fileprivate extension OWCommentHeaderView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.userNameLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.seperatorBetweenSubtitleAndDateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
@@ -292,8 +291,8 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
-            .subscribe(onNext: { [weak self] (style, colorMapper) in
-                guard let self = self else { return }
+            .subscribe(onNext: { [weak self] style, colorMapper in
+                guard let self else { return }
                 if let owBrandColor = colorMapper[.brandColor] {
                     let brandColor = owBrandColor.color(forThemeStyle: style)
                     self.badgeTagLabel.textColor = brandColor
@@ -305,7 +304,7 @@ fileprivate extension OWCommentHeaderView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.userNameLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
                 self.badgeTagLabel.font = OWFontBook.shared.font(typography: .infoText)
                 self.subtitleLabel.font = OWFontBook.shared.font(typography: .metaText)
@@ -315,12 +314,11 @@ fileprivate extension OWCommentHeaderView {
             })
             .disposed(by: disposeBag)
     }
-    // swiftlint:enable function_body_length
 }
 
 // MARK: Accessibility
 
-fileprivate extension OWCommentHeaderView {
+private extension OWCommentHeaderView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier

@@ -538,7 +538,8 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
                                   didValidateRequest: urlRequest,
                                   response: response,
                                   fileURL: fileURL,
-                                  withResult: result) }
+                                  withResult: result)
+        }
     }
 
     func request(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<URL?, OWNetworkError>) {

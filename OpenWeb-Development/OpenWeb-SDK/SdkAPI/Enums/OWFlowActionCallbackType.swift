@@ -14,4 +14,3 @@ public enum OWFlowActionCallbackType: Codable {
 }
 
 extension OWFlowActionCallbackType: Equatable {}
-

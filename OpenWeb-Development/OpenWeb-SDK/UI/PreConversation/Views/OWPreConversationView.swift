@@ -36,52 +36,52 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
 
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
-    // TODO: fileprivate lazy var adBannerView: SPAdBannerView
+    // TODO: private lazy var adBannerView: SPAdBannerView
 
-    var toastView: OWToastView? = nil
+    var toastView: OWToastView?
 
-    fileprivate lazy var preConversationSummary: OWPreConversationSummaryView = {
+    private lazy var preConversationSummary: OWPreConversationSummaryView = {
         return OWPreConversationSummaryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
     }()
 
-    fileprivate lazy var loginPromptView: OWLoginPromptView = {
+    private lazy var loginPromptView: OWLoginPromptView = {
         return OWLoginPromptView(with: self.viewModel.outputs.loginPromptViewModel)
     }()
 
-    fileprivate lazy var filterTabsView: OWFilterTabsView = {
+    private lazy var filterTabsView: OWFilterTabsView = {
         return OWFilterTabsView(viewModel: self.viewModel.outputs.filterTabsVM)
     }()
 
-    fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
+    private lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
         return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
     }()
 
-    fileprivate lazy var communityQuestionBottomDevider: UIView = {
+    private lazy var communityQuestionBottomDevider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
     }()
 
-    fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
+    private lazy var communityQuestionView: OWCommunityQuestionView = {
         return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
     }()
 
-    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+    private lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
         return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
     }()
 
-    fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
+    private lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
             .wrapContent()
     }()
 
-    fileprivate var commentingCTAZeroHeightConstraint: OWConstraint? = nil
+    private var commentingCTAZeroHeightConstraint: OWConstraint?
 
-    fileprivate lazy var errorStateView: OWErrorStateView = {
+    private lazy var errorStateView: OWErrorStateView = {
         return OWErrorStateView(with: viewModel.outputs.errorStateViewModel)
     }()
-    fileprivate var errorStateZeroHeightConstraint: OWConstraint? = nil
+    private var errorStateZeroHeightConstraint: OWConstraint?
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
@@ -96,12 +96,12 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
         return tableView
     }()
 
-    fileprivate lazy var tableBottomDivider: UIView = {
+    private lazy var tableBottomDivider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
 
-    fileprivate lazy var btnCTAConversation: UIButton = {
+    private lazy var btnCTAConversation: UIButton = {
         return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)
@@ -110,23 +110,23 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
             .font(OWFontBook.shared.font(typography: .bodyContext))
     }()
 
-    fileprivate var ctaZeroHeightConstraint: OWConstraint? = nil
+    private var ctaZeroHeightConstraint: OWConstraint?
 
-    fileprivate lazy var footerTopDevider: UIView = {
+    private lazy var footerTopDevider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
 
-    fileprivate lazy var footerView: OWPreConversationFooterView = {
+    private lazy var footerView: OWPreConversationFooterView = {
         return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
     }()
 
-    fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
+    private lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
-            guard let self = self else { return .reload }
+            guard let self else { return .reload }
             return self.viewModel.outputs.dataSourceTransition
         }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
-            guard let self = self else { return UITableViewCell() }
+            guard let self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             cell.configure(with: item.viewModel)
@@ -139,13 +139,13 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
         return dataSource
     }()
 
-    fileprivate lazy var compactContentView: OWPreConversationCompactContentView = {
+    private lazy var compactContentView: OWPreConversationCompactContentView = {
         return OWPreConversationCompactContentView(viewModel: viewModel.outputs.compactCommentVM)
     }()
 
-    fileprivate lazy var compactTapGesture: UITapGestureRecognizer = {
+    private lazy var compactTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
-        if (viewModel.outputs.shouldAddContentTapRecognizer) {
+        if viewModel.outputs.shouldAddContentTapRecognizer {
             self.addGestureRecognizer(tap)
             self.isUserInteractionEnabled = true
         }
@@ -154,9 +154,9 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
 
     private var tableViewHeightConstraint: OWConstraint?
     private var commentingCTAHeightConstraint: OWConstraint?
-    fileprivate var filterTabsHeightConstraint: OWConstraint? = nil
-    fileprivate let viewModel: OWPreConversationViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var filterTabsHeightConstraint: OWConstraint?
+    private let viewModel: OWPreConversationViewViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -172,7 +172,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
     }
 }
 
-fileprivate extension OWPreConversationView {
+private extension OWPreConversationView {
     func applyAccessibility() {
         self.accessibilityIdentifier = viewModel.outputs.viewAccessibilityIdentifier
         btnCTAConversation.accessibilityIdentifier = Metrics.moreCommentsButtonIdentifier
@@ -188,7 +188,7 @@ fileprivate extension OWPreConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
-        if (viewModel.outputs.shouldShowComapactView) {
+        if viewModel.outputs.shouldShowComapactView {
             self.addSubview(compactContentView)
             compactContentView.OWSnp.makeConstraints { make in
                 make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.compactContentTopPedding)
@@ -268,7 +268,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(self.realtimeIndicationAnimationView)
         realtimeIndicationAnimationView.OWSnp.makeConstraints { [weak self] make in
-            guard let self = self else { return }
+            guard let self else { return }
             make.bottom.equalTo(self.tableView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
@@ -305,7 +305,7 @@ fileprivate extension OWPreConversationView {
 
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] data in
-                guard var self = self else { return }
+                guard var self else { return }
                 let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
                 self.presentToast(requiredData: data.presentData.data,
                                   completions: completions,
@@ -322,7 +322,7 @@ fileprivate extension OWPreConversationView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor5 : .backgroundColor2, themeStyle: currentStyle)
                 self.tableBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.footerTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
@@ -334,7 +334,7 @@ fileprivate extension OWPreConversationView {
             .summaryTopPadding
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] padding in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.preConversationSummary.OWSnp.updateConstraints { make in
                     make.top.equalToSuperview().offset(padding)
                 }
@@ -353,13 +353,13 @@ fileprivate extension OWPreConversationView {
 
         Observable.combineLatest(shouldShowQuestion, shouldShowGuidelines)
             .observe(on: MainScheduler.instance)
-            .flatMap { (shouldShowQuestion, shouldShowGuidelines) -> Observable<Bool> in
+            .flatMap { shouldShowQuestion, shouldShowGuidelines -> Observable<Bool> in
                 // Return devider Obsevable
                 return Observable.just(shouldShowQuestion && shouldShowGuidelines)
             }
             .do(onNext: { [weak self] shouldShowDevider in
                 // Update devider constraints
-                guard let self = self else { return }
+                guard let self else { return }
                 self.communityQuestionBottomDevider.OWSnp.updateConstraints { make in
                     make.height.equalTo(shouldShowDevider ? Metrics.separatorHeight : 0)
                 }
@@ -380,9 +380,9 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.performTableViewAnimation
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     UIView.animate(withDuration: Metrics.tableViewAnimationDuration) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.tableView.beginUpdates()
                         self.tableView.endUpdates()
                     }
@@ -411,7 +411,7 @@ fileprivate extension OWPreConversationView {
                 .map { !$0 }
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] isActive in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     constraint.rx.isActive.onNext(isActive)
                     UIView.animate(withDuration: 0.2) {
                         self.layoutSubviews()
@@ -423,7 +423,7 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.shouldShowCommentingCTAView
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.commentingCTAView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.communityGuidelinesView.OWSnp.bottom).offset(shouldShow ? Metrics.commentingCTATopPadding : 0)
                 }
@@ -460,7 +460,7 @@ fileprivate extension OWPreConversationView {
             .bind(to: btnCTAConversation.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if let ctaZeroHeightConstraint = ctaZeroHeightConstraint {
+        if let ctaZeroHeightConstraint {
             viewModel.outputs.shouldShowCTAButton
                 .map { !$0 }
                 .bind(to: ctaZeroHeightConstraint.rx.isActive)
@@ -470,7 +470,7 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.shouldShowCTAButton
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.btnCTAConversation.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.tableBottomDivider.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
                 }
@@ -485,7 +485,7 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.shouldShowFooter
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.footerView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.footerTopDevider.OWSnp.bottom).offset(isVisible ? Metrics.footerTopPadding : 0)
                     make.bottom.equalToSuperview().offset(isVisible ? -Metrics.bottomPadding : 0)
@@ -494,8 +494,8 @@ fileprivate extension OWPreConversationView {
             .disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
-            .subscribe(onNext: { [weak self] (style, colorMapper) in
-                guard let self = self else { return }
+            .subscribe(onNext: { [weak self] style, colorMapper in
+                guard let self else { return }
 
                 if let owBrandColor = colorMapper[.brandColor] {
                     let brandColor = owBrandColor.color(forThemeStyle: style)
@@ -524,7 +524,7 @@ fileprivate extension OWPreConversationView {
 
         tableViewHeightChangeObservable
             .subscribe(onNext: { [weak self] result in
-                guard let self = self,
+                guard let self,
                       let height = result.0 else { return }
                 let realtimeIsShown = result.1
 
@@ -532,7 +532,7 @@ fileprivate extension OWPreConversationView {
                     // Only when we shown the realtime indicator we should animate the table view height change
                     self.tableViewHeightConstraint?.update(offset: height)
                     UIView.animate(withDuration: Metrics.tableViewHeightAnimationDuration) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.layoutIfNeeded()
                     }
                 } else {
@@ -545,7 +545,7 @@ fileprivate extension OWPreConversationView {
 
         tableView.rx.itemSelected
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.fullConversationTap.onNext()
             })
             .disposed(by: disposeBag)
@@ -553,7 +553,7 @@ fileprivate extension OWPreConversationView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.btnCTAConversation.titleLabel?.font = OWFontBook.shared.font(typography: .bodyContext)
             })
             .disposed(by: disposeBag)

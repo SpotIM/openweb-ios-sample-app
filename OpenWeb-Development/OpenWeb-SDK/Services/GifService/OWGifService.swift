@@ -20,10 +20,10 @@ protocol OWGifServicing {
 }
 
 class OWGifService: OWGifServicing {
-    fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
+    private unowned let sharedServicesProvider: OWSharedServicesProviding
     let giphyBridge: OWGiphySDKBridge
 
-    fileprivate var giphyApiKey: String? {
+    private var giphyApiKey: String? {
         if let path = Bundle.openWeb.path(forResource: "GiphyConfiguration", ofType: "plist") {
             let dictionary: NSDictionary?
             dictionary = NSDictionary(contentsOfFile: path)
@@ -32,19 +32,19 @@ class OWGifService: OWGifServicing {
         return nil
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     var isGiphyAvailable: Bool {
         OWGiphySDKBridge.isGiphySDKAvailable()
     }
 
-    fileprivate var _didCancel = PublishSubject<Void>()
+    private var _didCancel = PublishSubject<Void>()
     var didCancel: Observable<Void> {
         return _didCancel
             .asObservable()
     }
 
-    fileprivate var _didSelectMedia = PublishSubject<OWCommentGif>()
+    private var _didSelectMedia = PublishSubject<OWCommentGif>()
     var didSelectMedia: Observable<OWCommentGif> {
         return _didSelectMedia
             .asObservable()
@@ -65,7 +65,7 @@ class OWGifService: OWGifServicing {
     }
 }
 
-fileprivate extension OWGifService {
+private extension OWGifService {
     func configure() {
         guard let giphyApiKey else { return }
         giphyBridge.configure(giphyApiKey)
@@ -75,7 +75,7 @@ fileprivate extension OWGifService {
         sharedServicesProvider.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.giphyBridge.setIsDarkMode(style == .dark ? true : false)
             })
             .disposed(by: disposeBag)

@@ -128,7 +128,7 @@ extension UILabel {
         paragraph.alignment = textAlignment
 
         let text: NSMutableAttributedString
-        if let attributedText = attributedText {
+        if let attributedText {
             text = NSMutableAttributedString(attributedString: attributedText)
         } else {
             text = NSMutableAttributedString(string: self.text ?? "")
@@ -142,7 +142,7 @@ extension UILabel {
 
     @discardableResult func letterSpacing(_ spacing: CGFloat) -> UILabel {
         let text: NSMutableAttributedString
-        if let attributedText = attributedText {
+        if let attributedText {
             text = NSMutableAttributedString(attributedString: attributedText)
         } else {
             text = NSMutableAttributedString(string: self.text ?? "")
@@ -257,7 +257,7 @@ extension UIButton {
         return self
     }
 
-    fileprivate func setBackgroundColor(color: UIColor, forState: UIControl.State) {
+    private func setBackgroundColor(color: UIColor, forState: UIControl.State) {
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
         UIGraphicsGetCurrentContext()?.setFillColor(color.cgColor)
         UIGraphicsGetCurrentContext()?.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -369,8 +369,8 @@ extension String {
 
         guard let attributedString = try? NSMutableAttributedString(data: data, options: options, documentAttributes: nil) else { return nil }
 
-        var linkedString: String? = nil
-        attributedString.enumerateAttribute(.link, in: NSRange(location: 0, length: attributedString.length), options: []) { (value, range, _) in
+        var linkedString: String?
+        attributedString.enumerateAttribute(.link, in: NSRange(location: 0, length: attributedString.length), options: []) { value, range, _ in
             if let _ = value as? URL {
                 linkedString = attributedString.attributedSubstring(from: range).string
             }

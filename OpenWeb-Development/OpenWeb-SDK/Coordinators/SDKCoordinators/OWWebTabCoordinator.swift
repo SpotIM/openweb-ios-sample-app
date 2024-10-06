@@ -25,11 +25,11 @@ enum OWWebTabCoordinatorResult: OWCoordinatorResultProtocol {
 
 class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
 
-    fileprivate let router: OWRoutering?
-    fileprivate let options: OWWebTabOptions
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate var viewableMode: OWViewableMode!
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let router: OWRoutering?
+    private let options: OWWebTabOptions
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private var viewableMode: OWViewableMode!
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .webView)
     }()
 
@@ -40,7 +40,7 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWWebTabCoordinatorResult> {
-        guard let router = router else { return .empty() }
+        guard let router else { return .empty() }
         viewableMode = .partOfFlow
         let webTabVM = OWWebTabViewModel(options: options,
                                             viewableMode: .partOfFlow)
@@ -61,7 +61,7 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
         let partOfFlowPresentedWebClosedObservable = webTabVM.outputs
             .closeWebTab
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.router?.pop(popStyle: .dismiss, animated: false)
             })
 
@@ -86,7 +86,7 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
     }
 }
 
-fileprivate extension OWWebTabCoordinator {
+private extension OWWebTabCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWWebTabViewViewModeling) {
         let closeObservable = viewModel.outputs.closeTapped
             .voidify()
@@ -97,7 +97,7 @@ fileprivate extension OWWebTabCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .subscribe(onNext: { [weak self] viewAction in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewActionsService.append(viewAction: viewAction)
             })
             .disposed(by: disposeBag)

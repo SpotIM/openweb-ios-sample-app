@@ -13,10 +13,10 @@ import RxSwift
 
 class OWFontsAutomationVC: UIViewController {
 
-    fileprivate let viewModel: OWFontsAutomationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWFontsAutomationViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var fontsAutomationView: OWFontsAutomationView = {
+    private lazy var fontsAutomationView: OWFontsAutomationView = {
         return OWFontsAutomationView(viewModel: viewModel.outputs.viewVM)
     }()
 
@@ -40,7 +40,7 @@ class OWFontsAutomationVC: UIViewController {
     }
 }
 
-fileprivate extension OWFontsAutomationVC {
+private extension OWFontsAutomationVC {
     func setupUI() {
         view.addSubview(fontsAutomationView)
         fontsAutomationView.OWSnp.makeConstraints { make in
@@ -53,7 +53,7 @@ fileprivate extension OWFontsAutomationVC {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

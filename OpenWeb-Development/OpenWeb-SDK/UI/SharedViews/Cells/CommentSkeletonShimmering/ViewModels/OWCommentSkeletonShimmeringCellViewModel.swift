@@ -44,4 +44,3 @@ extension OWCommentSkeletonShimmeringCellViewModel {
         return OWCommentSkeletonShimmeringCellViewModel()
     }
 }
-

@@ -11,7 +11,7 @@ import Foundation
 import RxSwift
 
 class OWUserMentionView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "user_mention_view_id"
         static let rowHeight: CGFloat = 56
         static let maxNumberOfCellsHeight = 2.7
@@ -20,10 +20,10 @@ class OWUserMentionView: UIView {
         static let heightLowPriority = 250
     }
 
-    fileprivate let viewModel: OWUserMentionViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWUserMentionViewViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
             .separatorStyle(.singleLine)
             .separatorColor(OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light))
@@ -36,7 +36,7 @@ class OWUserMentionView: UIView {
         return tableView
     }()
 
-    fileprivate var heightContraint: OWConstraint?
+    private var heightContraint: OWConstraint?
 
     init(viewModel: OWUserMentionViewViewModeling = OWUserMentionViewVM()) {
         self.viewModel = viewModel
@@ -50,11 +50,11 @@ class OWUserMentionView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    fileprivate lazy var userMentionsDataSource: OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel> = {
+    private lazy var userMentionsDataSource: OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<UserMentionsDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
             return .reload
         }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
-            guard let self = self else { return UITableViewCell() }
+            guard let self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             cell.configure(with: item.viewModel)
@@ -68,7 +68,7 @@ class OWUserMentionView: UIView {
     }()
 }
 
-fileprivate extension OWUserMentionView {
+private extension OWUserMentionView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -93,7 +93,7 @@ fileprivate extension OWUserMentionView {
             .delay(.milliseconds(Metrics.delayFrameChanged), scheduler: MainScheduler.instance)
             .unwrap()
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.viewFrameChanged.onNext(self.frame)
             })
             .disposed(by: disposeBag)
@@ -108,7 +108,7 @@ fileprivate extension OWUserMentionView {
 
         tableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.inputs.tappedMentionIndex.onNext(indexPath.item)
             })
             .disposed(by: disposeBag)
@@ -117,7 +117,7 @@ fileprivate extension OWUserMentionView {
             .map { $0.isEmpty ? 0 : $0[0].items.count }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] cellsCount in
-                guard let self = self else { return }
+                guard let self else { return }
                 let maxHeight = CGFloat(Metrics.maxNumberOfCellsHeight) * Metrics.rowHeight
                 let wantedHeight = CGFloat(cellsCount) * Metrics.rowHeight
                 let newHeight = min(maxHeight, wantedHeight)
@@ -134,7 +134,7 @@ fileprivate extension OWUserMentionView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.tableView.separatorColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

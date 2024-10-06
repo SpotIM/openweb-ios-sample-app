@@ -12,10 +12,10 @@ import RxSwift
 import RxCocoa
 
 class OWAdditionalInfoVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
-    fileprivate let additionalInfoViewViewModel: OWAdditionalInfoViewViewModeling
+    private let additionalInfoViewViewModel: OWAdditionalInfoViewViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var additionalInfoView: OWAdditionalInfoView = {
+    private lazy var additionalInfoView: OWAdditionalInfoView = {
         return OWAdditionalInfoView(viewModel: additionalInfoViewViewModel)
     }()
 
@@ -43,7 +43,7 @@ class OWAdditionalInfoVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 }
 
-fileprivate extension OWAdditionalInfoVC {
+private extension OWAdditionalInfoVC {
     func setupViews() {
         self.title = additionalInfoViewViewModel.outputs.titleText
         self.navigationItem.largeTitleDisplayMode = .never

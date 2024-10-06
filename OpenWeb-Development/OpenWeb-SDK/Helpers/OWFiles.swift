@@ -33,7 +33,7 @@ class OWFiles {
         guard let url = url(forFolder: folder, subfolder: subfolder) else { return false }
 
         // Create directory if needed
-        if let folder = folder, !FileManager.default.fileExists(atPath: url.path) {
+        if let folder, !FileManager.default.fileExists(atPath: url.path) {
             let dirCreationResult = createFolder(folder, subfolder: subfolder)
             if !dirCreationResult { return false }
         }
@@ -85,15 +85,15 @@ class OWFiles {
     }
 }
 
-fileprivate extension OWFiles {
+private extension OWFiles {
     static func url(forFolder folder: String?, subfolder: String?) -> URL? {
         // Documnet path
         guard var url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
         // Adding folder and subfoler if exist
-        if let folder = folder {
+        if let folder {
             url = url.appendingPathComponent("\(folder)/")
             // Adding subfolder only if folder exist
-            if let subfolder = subfolder {
+            if let subfolder {
                 url = url.appendingPathComponent("\(subfolder)/")
             }
         }

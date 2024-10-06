@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWCommentCreationImagePreviewView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_image_preview_id"
         static let imageViewIdentifier = "comment_image_preview_image_view_id"
         static let loaderViewIdentifier = "comment_image_preview_loader_view_id"
@@ -23,7 +23,7 @@ class OWCommentCreationImagePreviewView: UIView {
         static let loadingCoverViewOpacity: CGFloat = 0.2
     }
 
-    fileprivate lazy var imageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
             .contentMode(.scaleAspectFit)
             .image(UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false)) // Placeholder
@@ -34,16 +34,16 @@ class OWCommentCreationImagePreviewView: UIView {
         return imageView
     }()
 
-    fileprivate lazy var imageViewLoadingCoverView: UIView = {
+    private lazy var imageViewLoadingCoverView: UIView = {
         return UIView()
             .backgroundColor(UIColor.black.withAlphaComponent(Metrics.loadingCoverViewOpacity))
     }()
 
-    fileprivate lazy var loaderView: UIActivityIndicatorView = {
+    private lazy var loaderView: UIActivityIndicatorView = {
         return UIActivityIndicatorView(style: .whiteLarge)
     }()
 
-    fileprivate lazy var removeButton: UIButton = {
+    private lazy var removeButton: UIButton = {
         let button = UIButton()
             .image(UIImage(spNamed: "removeImageIcon", supportDarkMode: false), state: .normal)
         button.contentHorizontalAlignment = .right
@@ -51,8 +51,8 @@ class OWCommentCreationImagePreviewView: UIView {
         return button
     }()
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWCommentCreationImagePreviewViewModeling
+    private let disposeBag = DisposeBag()
+    private let viewModel: OWCommentCreationImagePreviewViewModeling
 
     init(with viewModel: OWCommentCreationImagePreviewViewModeling) {
         self.viewModel = viewModel
@@ -68,7 +68,7 @@ class OWCommentCreationImagePreviewView: UIView {
     }
 }
 
-fileprivate extension OWCommentCreationImagePreviewView {
+private extension OWCommentCreationImagePreviewView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
@@ -98,7 +98,7 @@ fileprivate extension OWCommentCreationImagePreviewView {
         viewModel.outputs.imageOutput
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch imageType {
                 case .image(let image):
                     self.isHidden = false
@@ -120,7 +120,7 @@ fileprivate extension OWCommentCreationImagePreviewView {
         viewModel.outputs.shouldShowLoadingState
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowLoader in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.loaderView.isHidden = !shouldShowLoader
                 self.imageViewLoadingCoverView.isHidden = !shouldShowLoader
                 if shouldShowLoader {

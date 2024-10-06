@@ -16,15 +16,15 @@ protocol OWSkeletonShimmeringServicing {
 }
 
 class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
-    fileprivate let config: OWSkeletonShimmeringConfiguration
-    fileprivate let scheduler: SchedulerType
-    fileprivate var weakViews: [OWWeakEncapsulation<UIView>] = []
-    fileprivate var serviceDisposeBag: DisposeBag!
-    fileprivate let generalDisposeBag = DisposeBag()
-    fileprivate let isServiceRunning = BehaviorSubject<Bool>(value: false)
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    private let config: OWSkeletonShimmeringConfiguration
+    private let scheduler: SchedulerType
+    private var weakViews: [OWWeakEncapsulation<UIView>] = []
+    private var serviceDisposeBag: DisposeBag!
+    private let generalDisposeBag = DisposeBag()
+    private let isServiceRunning = BehaviorSubject<Bool>(value: false)
+    private unowned let servicesProvider: OWSharedServicesProviding
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static var animationKey = "transform.translation.x"
     }
 
@@ -61,7 +61,7 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
             .observe(on: scheduler)
             .filter { !$0 }
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.isServiceRunning.onNext(true)
                 self.startService()
             })
@@ -82,7 +82,7 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
                 .observe(on: scheduler)
                 .filter { $0 }
                 .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.stopService()
                     self.isServiceRunning.onNext(false)
                 })
@@ -99,13 +99,13 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
     }
 }
 
-fileprivate extension OWSkeletonShimmeringService {
+private extension OWSkeletonShimmeringService {
     func stopService() {
         _ = Observable.just(())
             .take(1)
             .observe(on: scheduler)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.serviceDisposeBag = nil // Cancel existing run of the service
                 self.isServiceRunning.onNext(false)
             })
@@ -123,7 +123,7 @@ fileprivate extension OWSkeletonShimmeringService {
             .delay(.milliseconds(10), scheduler: scheduler)
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     // Apply animation on each skeleton view
                     self.weakViews.forEach { weakView in
                         guard let skeletonShimmeringView = weakView.value(),
@@ -148,7 +148,7 @@ fileprivate extension OWSkeletonShimmeringService {
         servicesProvider.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 let backgroundColor = OWColorPalette.shared.color(type: self.config.backgroundColor,
                                                                   themeStyle: style)
                 let highlightColor = OWColorPalette.shared.color(type: self.config.highlightColor,

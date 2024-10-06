@@ -30,7 +30,6 @@ extension Reactive where Base: UIView {
         return observe(CGRect.self, "bounds")
             .filter { $0 != nil }
             .unwrap()
-            .map { $0 }
             .distinctUntilChanged()
     }
 }

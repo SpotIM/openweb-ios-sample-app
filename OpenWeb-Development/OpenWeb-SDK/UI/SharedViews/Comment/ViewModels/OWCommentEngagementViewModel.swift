@@ -42,10 +42,10 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     var outputs: OWCommentEngagementViewModelingOutputs { return self }
 
     let votingVM: OWCommentRatingViewModeling
-    fileprivate let sharedServiceProvider: OWSharedServicesProviding
+    private let sharedServiceProvider: OWSharedServicesProviding
 
-    fileprivate let commentId: String
-    fileprivate let parentCommentId: String?
+    private let commentId: String
+    private let parentCommentId: String?
 
     var replyClicked = PublishSubject<Void>()
     var replyClickedOutput: Observable<Void> {
@@ -57,7 +57,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     var shareCommentUrl: Observable<URL> {
         shareClicked
             .flatMap({ [weak self] _ -> Observable<Event<OWShareLink>> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.sharedServiceProvider.networkAPI()
                     .conversation
                     .commentShare(id: self.commentId, parentId: self.parentCommentId)
@@ -68,7 +68,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
                 switch event {
                 case .next(let shareLink):
                     return shareLink.reference
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil
@@ -113,7 +113,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }()
 
-    fileprivate let customizationsLayer: OWCustomizations
+    private let customizationsLayer: OWCustomizations
 
     init(comment: OWComment,
          sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,

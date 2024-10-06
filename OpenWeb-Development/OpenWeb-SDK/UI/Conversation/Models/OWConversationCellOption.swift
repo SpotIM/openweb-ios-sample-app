@@ -120,15 +120,15 @@ extension OWConversationCellOption: Equatable {
 
     static func == (lhs: OWConversationCellOption, rhs: OWConversationCellOption) -> Bool {
         switch (lhs, rhs) {
-        case (.comment(_), .comment(_)):
+        case (.comment, .comment):
             return lhs.identifier == rhs.identifier
-        case (.commentSkeletonShimmering(_), .commentSkeletonShimmering(_)):
+        case (.commentSkeletonShimmering, .commentSkeletonShimmering):
             return lhs.identifier == rhs.identifier
-        case (.commentThreadActions(_), .commentThreadActions(_)):
+        case (.commentThreadActions, .commentThreadActions):
             return lhs.identifier == rhs.identifier
-        case (.ad(_), .ad(_)):
+        case (.ad, .ad):
             return lhs.identifier == rhs.identifier
-        case (.spacer(_), .spacer(_)):
+        case (.spacer, .spacer):
             return lhs.identifier == rhs.identifier
         default:
             return false
@@ -141,4 +141,3 @@ extension OWConversationCellOption: OWIdentifiableType {
         return self.identifier
     }
 }
-

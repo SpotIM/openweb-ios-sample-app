@@ -12,17 +12,17 @@ import UIKit
 
 class OWTestingRedFirstLevel: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let insetForSecondLevel: CGFloat = 5.0
         static let roundCorners: CGFloat = 10.0
         static let borderWidth: CGFloat = 2.0
     }
 
-    fileprivate lazy var secondLevelView: OWTestingRedSecondLevel = {
+    private lazy var secondLevelView: OWTestingRedSecondLevel = {
         return OWTestingRedSecondLevel()
     }()
 
-    fileprivate var viewModel: OWTestingRedFirstLevelViewModeling!
+    private var viewModel: OWTestingRedFirstLevelViewModeling!
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -39,7 +39,7 @@ class OWTestingRedFirstLevel: UIView {
     }
 }
 
-fileprivate extension OWTestingRedFirstLevel {
+private extension OWTestingRedFirstLevel {
     func setupUI() {
         self .backgroundColor(.red)
             .border(width: Metrics.borderWidth, color: .gray)

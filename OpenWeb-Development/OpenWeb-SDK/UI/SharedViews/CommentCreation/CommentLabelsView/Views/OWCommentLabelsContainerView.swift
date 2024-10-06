@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWCommentLabelsContainerView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_labels_container_id"
 
         static let titleLabelSpacing: CGFloat = 10.0
@@ -19,7 +19,7 @@ class OWCommentLabelsContainerView: UIView {
         static let commentLabelViewHeight: CGFloat = 28.0
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .numberOfLines(1)
             .font(OWFontBook.shared.font(typography: .footnoteContext))
@@ -28,19 +28,19 @@ class OWCommentLabelsContainerView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var labelsContainerStackView: UIStackView = {
+    private lazy var labelsContainerStackView: UIStackView = {
         return UIStackView()
             .axis(.horizontal)
             .spacing(Metrics.labelsContainerStackViewSpacing)
             .distribution(.equalSpacing)
     }()
 
-    fileprivate var titleZeroHeightConstraint: OWConstraint?
-    fileprivate var labelsHeightConstraint: OWConstraint?
-    fileprivate var labelsTopConstraint: OWConstraint?
+    private var titleZeroHeightConstraint: OWConstraint?
+    private var labelsHeightConstraint: OWConstraint?
+    private var labelsTopConstraint: OWConstraint?
 
-    fileprivate var viewModel: OWCommentLabelsContainerViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    private var viewModel: OWCommentLabelsContainerViewModeling!
+    private var disposeBag: DisposeBag!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,7 +66,7 @@ class OWCommentLabelsContainerView: UIView {
     }
 }
 
-fileprivate extension OWCommentLabelsContainerView {
+private extension OWCommentLabelsContainerView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
@@ -88,14 +88,14 @@ fileprivate extension OWCommentLabelsContainerView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
         viewModel.outputs.commentLabelsTitle
             .subscribe(onNext: { [weak self] title in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.titleLabel.text = title
                     self.titleZeroHeightConstraint?.isActive = title == nil
                     self.labelsTopConstraint?.update(offset: title == nil ? 0 : Metrics.titleLabelSpacing)
@@ -105,7 +105,7 @@ fileprivate extension OWCommentLabelsContainerView {
         viewModel.outputs.commentLabelsViewModels
             .subscribe(onNext: { [weak self] viewModels in
                 OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
+                    guard let self else { return }
                     // clean stackview if needed
                     self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
 
@@ -117,7 +117,7 @@ fileprivate extension OWCommentLabelsContainerView {
                         return commentLabel
                     }
                     commentLabelsViews.forEach { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.labelsContainerStackView.addArrangedSubview($0)
                     }
                 }
@@ -127,7 +127,7 @@ fileprivate extension OWCommentLabelsContainerView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
             })
             .disposed(by: disposeBag)
@@ -135,7 +135,7 @@ fileprivate extension OWCommentLabelsContainerView {
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let isLandscape = currentOrientation == .landscape
                 self.titleLabel.isHidden = isLandscape
@@ -147,4 +147,3 @@ fileprivate extension OWCommentLabelsContainerView {
             .disposed(by: disposeBag)
     }
 }
-

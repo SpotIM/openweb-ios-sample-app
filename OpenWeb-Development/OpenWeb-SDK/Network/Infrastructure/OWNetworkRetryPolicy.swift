@@ -39,6 +39,8 @@ class OWNetworkRetryPolicy: OWNetworkRequestInterceptor {
                                                             504 // [Gateway Timeout](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.5)
     ]
 
+    // swiftlint:disable collection_alignment
+
     /// The default URL error codes to retry.
     static let defaultRetryableURLErrorCodes: Set<URLError.Code> = [// [Security] App Transport Security disallowed a connection because there is no secure network connection.
         //   - [Disabled] ATS settings do not change at runtime.
@@ -242,6 +244,8 @@ class OWNetworkRetryPolicy: OWNetworkRequestInterceptor {
         //   - [Disabled] The server is unlikely to provide data during the retry window.
         // .zeroByteResource,
     ]
+
+    // swiftlint:enable collection_alignment
 
     /// The total number of times the request is allowed to be retried.
     let retryLimit: UInt

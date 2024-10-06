@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWRealtimeTypingView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalMargin: CGFloat = 10
         static let animationViewWidth: CGFloat = 19
         static let animationViewHeight: CGFloat = 18
@@ -20,10 +20,10 @@ class OWRealtimeTypingView: UIView {
         static let titleLabelTextColor: OWColor.OWType = .textColor3
     }
 
-    fileprivate var viewModel: OWRealtimeTypingViewModeling!
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWRealtimeTypingViewModeling!
+    private let disposeBag = DisposeBag()
 
-    fileprivate let typingAnimationView: OWTypingAnimationView = {
+    private let typingAnimationView: OWTypingAnimationView = {
         let animationView = OWTypingAnimationView()
         animationView.startAnimating()
 
@@ -31,14 +31,14 @@ class OWRealtimeTypingView: UIView {
             .userInteractionEnabled(false)
     }()
 
-    fileprivate lazy var typingLabel: UILabel = {
+    private lazy var typingLabel: UILabel = {
         return UILabel()
             .font(font)
             .textColor(OWColorPalette.shared.color(type: Metrics.titleLabelTextColor,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var font: UIFont {
+    private var font: UIFont {
         return OWFontBook.shared.font(typography: .footnoteText)
     }
 
@@ -54,7 +54,7 @@ class OWRealtimeTypingView: UIView {
     }
 }
 
-fileprivate extension OWRealtimeTypingView {
+private extension OWRealtimeTypingView {
     func setupUI() {
         self.addSubview(typingAnimationView)
         typingAnimationView.OWSnp.makeConstraints { make in
@@ -78,7 +78,7 @@ fileprivate extension OWRealtimeTypingView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.typingLabel.textColor = OWColorPalette.shared.color(type: Metrics.titleLabelTextColor,
                                                                         themeStyle: currentStyle)
             })
@@ -87,7 +87,7 @@ fileprivate extension OWRealtimeTypingView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.typingLabel.font = self.font
             })
             .disposed(by: disposeBag)

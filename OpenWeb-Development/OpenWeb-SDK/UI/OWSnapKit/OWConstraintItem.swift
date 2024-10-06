@@ -39,4 +39,3 @@ func == (lhs: OWConstraintItem, rhs: OWConstraintItem) -> Bool {
 
     return true
 }
-

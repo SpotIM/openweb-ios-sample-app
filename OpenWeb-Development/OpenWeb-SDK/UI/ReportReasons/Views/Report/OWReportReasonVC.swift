@@ -11,22 +11,22 @@ import RxSwift
 import RxCocoa
 
 class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let closeButtonSize: CGFloat = 40
 
         static let closeButtonIdentidier = "report_reason_close_button_id"
         static let closeCrossIcon = "closeCrossIcon"
     }
 
-    fileprivate let viewModel: OWReportReasonViewModeling
+    private let viewModel: OWReportReasonViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var reportReasonView: OWReportReasonView = {
+    private lazy var reportReasonView: OWReportReasonView = {
         let reportReasonView = OWReportReasonView(viewModel: viewModel.outputs.reportReasonViewViewModel)
         return reportReasonView
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         let closeButton = UIButton()
             .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             .contentMode(.center)
@@ -69,7 +69,7 @@ class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 }
 
-fileprivate extension OWReportReasonVC {
+private extension OWReportReasonVC {
     func setupViews() {
         self.title = viewModel.outputs.title
         let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
@@ -105,7 +105,7 @@ fileprivate extension OWReportReasonVC {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             })
@@ -139,7 +139,7 @@ fileprivate extension OWReportReasonVC {
         Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
             .subscribe(onNext: { [weak self] displayMode in
                 let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
-                guard let self = self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
+                guard let self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
 
                 let isLargeTitleGoingToBeDisplay = displayMode == .always
                 self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)

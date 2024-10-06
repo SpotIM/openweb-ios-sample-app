@@ -13,7 +13,7 @@ import RxCocoa
 import NaturalLanguage
 
 class OWTextView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let suffixIdentifier = "_text_view_view_id"
         static let textViewSuffixIdentifier = "_textview_id"
         static let placeholderLabelSuffixIdentifier = "_placeholder_label_id"
@@ -38,9 +38,9 @@ class OWTextView: UIView {
     }
 
     let viewModel: OWTextViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var textView: UITextView = {
+    private lazy var textView: UITextView = {
         let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
         let textView = UITextView()
             .font(OWFontBook.shared.font(typography: .bodyText))
@@ -59,7 +59,7 @@ class OWTextView: UIView {
         return textView
     }()
 
-    fileprivate lazy var charectersCountLabel: UILabel = {
+    private lazy var charectersCountLabel: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(typography: .footnoteText))
                 .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -67,7 +67,7 @@ class OWTextView: UIView {
                 .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var textViewPlaceholder: UILabel = {
+    private lazy var textViewPlaceholder: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -100,7 +100,7 @@ extension OWTextView: UITextViewDelegate {
     }
 }
 
-fileprivate extension OWTextView {
+private extension OWTextView {
     func applyAccessibility(prefixId: String) {
         self.accessibilityIdentifier = prefixId + Metrics.suffixIdentifier
         textView.accessibilityIdentifier = prefixId + Metrics.textViewSuffixIdentifier
@@ -149,7 +149,7 @@ fileprivate extension OWTextView {
     func setupObservers() {
         viewModel.outputs.maxLinesChanged
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 let height = self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
                                                      maxLines: self.viewModel.outputs.maxLines)
                 self.textView.OWSnp.updateConstraints { make in
@@ -162,7 +162,7 @@ fileprivate extension OWTextView {
         viewModel.outputs.attributedTextChanged
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] attributedText in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.addAttributes(from: attributedText)
             })
             .disposed(by: disposeBag)
@@ -170,12 +170,12 @@ fileprivate extension OWTextView {
         textView.rx.didChange
             .withLatestFrom(viewModel.outputs.internalReplaceData)
             .subscribe(onNext: { [weak self] replaceData in
-                guard let self = self,
+                guard let self,
                       let originalText = replaceData.originalText,
                       let replacedRange = Range(replaceData.range, in: originalText) else { return }
                 let afterReplacedText = originalText.replacingOccurrences(of: originalText[replacedRange], with: replaceData.text, range: replacedRange)
                 let currentText = self.textView.text
-                if let currentText = currentText,
+                if let currentText,
                    !(currentText.utf16.count == afterReplacedText.utf16.count &&
                      replaceData.range.length == 0) {
                     self.viewModel.inputs.replacedData.onNext(replaceData)
@@ -210,7 +210,7 @@ fileprivate extension OWTextView {
             // delay so that textView.rx.text is updated with updated text
             .delay(.milliseconds(Metrics.didChangeSelectionDelay), scheduler: MainScheduler.instance)
             .map { [weak self] _ -> Range<String.Index>? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 if !firstSelectRangeDone {
                     firstSelectRangeDone = true
                     return Range(NSRange(location: self.textView.text.count, length: 0), in: self.textView.text)
@@ -224,7 +224,7 @@ fileprivate extension OWTextView {
         viewModel.outputs.cursorRange
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] cursorRange in
-                guard let self = self,
+                guard let self,
                       let range = self.textView.text?.nsRange(from: cursorRange) else { return }
                 let savedDelegate = self.textView.delegate
                 self.textView.delegate = nil // Fixes looping cursor range
@@ -236,7 +236,7 @@ fileprivate extension OWTextView {
         viewModel.outputs.cursorRangeExternalChanged
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] range in
-                guard let self = self,
+                guard let self,
                       let nsRange = self.textView.text?.nsRange(from: range) else { return }
                 let savedDelegate = self.textView.delegate
                 self.textView.delegate = nil // Fixes looping cursor range
@@ -264,7 +264,7 @@ fileprivate extension OWTextView {
 
         viewModel.outputs.placeholderText
             .subscribe(onNext: { [weak self] placeholderText in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textViewPlaceholder.text = placeholderText
             })
             .disposed(by: disposeBag)
@@ -282,7 +282,7 @@ fileprivate extension OWTextView {
                     .delay(.milliseconds(Metrics.delayTextViewExpand), scheduler: MainScheduler.instance)
                     .subscribe(onNext: { [weak self] _ in
                         OWScheduler.runOnMainThreadIfNeeded {
-                            guard let self = self else { return }
+                            guard let self else { return }
                             UIView.animate(withDuration: Metrics.expandAnimationDuration) {
                                 self.textView.OWSnp.updateConstraints { make in
                                     make.height.equalTo(self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
@@ -302,7 +302,7 @@ fileprivate extension OWTextView {
             textView.rx.didBeginEditing
                 .delay(.microseconds(Metrics.didBeginEditDelay), scheduler: MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.textView.resignFirstResponder()
                 })
                 .disposed(by: disposeBag)
@@ -310,14 +310,14 @@ fileprivate extension OWTextView {
 
         viewModel.outputs.becomeFirstResponderCalledWithDelay
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textView.becomeFirstResponder()
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.resignFirstResponderCalled
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textView.resignFirstResponder()
             })
             .disposed(by: disposeBag)
@@ -325,7 +325,7 @@ fileprivate extension OWTextView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 if viewModel.outputs.hasBorder {
                     self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
                 }
@@ -339,7 +339,7 @@ fileprivate extension OWTextView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textView.font = OWFontBook.shared.font(typography: .bodyText)
                 self.charectersCountLabel.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.textViewPlaceholder.font = OWFontBook.shared.font(typography: .bodyText)
@@ -349,7 +349,7 @@ fileprivate extension OWTextView {
         viewModel.outputs.hasSuggestionsBarChanged
             .withLatestFrom(viewModel.outputs.cursorRange) { ($0, $1) }
             .subscribe(onNext: { [weak self] hasSuggestionsBar, selectedRange in
-                guard let self = self,
+                guard let self,
                       let selecedNSRange = self.textView.text?.nsRange(from: selectedRange) else { return }
                 textView.spellCheckingType(hasSuggestionsBar ? .default : .no)
                 textView.autocorrectionType(hasSuggestionsBar ? .default : .no)
@@ -395,7 +395,7 @@ fileprivate extension OWTextView {
 
         let paragraphStyle = NSMutableParagraphStyle()
 
-        paragraphStyle.baseWritingDirection =  NSMutableParagraphStyle.defaultWritingDirection(forLanguage: detectedLanguage(for: String(attributedText.string)))
+        paragraphStyle.baseWritingDirection = NSMutableParagraphStyle.defaultWritingDirection(forLanguage: detectedLanguage(for: String(attributedText.string)))
 
         updatedAttributedText.addAttribute(.font, value: font, range: nsRange)
         updatedAttributedText.addAttribute(.foregroundColor, value: textColor, range: nsRange)
@@ -419,7 +419,7 @@ fileprivate extension OWTextView {
     }
 }
 
-fileprivate extension UITextView {
+private extension UITextView {
     func newHeight(withBaseHeight baseHeight: CGFloat, maxLines: Int) -> CGFloat {
         // Calculate the required size of the textview
         let fixedWidth = frame.size.width

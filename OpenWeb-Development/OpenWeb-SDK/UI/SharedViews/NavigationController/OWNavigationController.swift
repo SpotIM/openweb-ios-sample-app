@@ -22,7 +22,7 @@ class OWNavigationController: UINavigationController, OWNavigationControllerProt
         return navController
     }()
 
-    fileprivate let _dismissed = PublishSubject<Void>()
+    private let _dismissed = PublishSubject<Void>()
     var dismissed: Observable<Void> {
         return _dismissed
             .asObservable()

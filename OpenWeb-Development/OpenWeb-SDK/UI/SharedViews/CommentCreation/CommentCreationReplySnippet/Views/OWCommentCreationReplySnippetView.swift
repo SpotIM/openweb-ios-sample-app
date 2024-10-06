@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWCommentCreationReplySnippetView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "comment_creation_reply_snippet_id"
         static let labelIdentifier = "comment_creation_reply_snippet_label_id"
 
@@ -20,7 +20,7 @@ class OWCommentCreationReplySnippetView: UIView {
         static let replySnippetNumberOfLines: Int = 2
     }
 
-    fileprivate lazy var replySnippetLabel: UILabel = {
+    private lazy var replySnippetLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
@@ -28,14 +28,14 @@ class OWCommentCreationReplySnippetView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var bottomSeparatorView: UIView = {
+    private lazy var bottomSeparatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWCommentCreationReplySnippetViewModeling
+    private let disposeBag = DisposeBag()
+    private let viewModel: OWCommentCreationReplySnippetViewModeling
 
     init(with viewModel: OWCommentCreationReplySnippetViewModeling) {
         self.viewModel = viewModel
@@ -51,7 +51,7 @@ class OWCommentCreationReplySnippetView: UIView {
     }
 }
 
-fileprivate extension OWCommentCreationReplySnippetView {
+private extension OWCommentCreationReplySnippetView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
@@ -73,7 +73,7 @@ fileprivate extension OWCommentCreationReplySnippetView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.replySnippetLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.bottomSeparatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
@@ -90,7 +90,7 @@ fileprivate extension OWCommentCreationReplySnippetView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.replySnippetLabel.font = OWFontBook.shared.font(typography: .footnoteText)
             })
             .disposed(by: disposeBag)

@@ -11,25 +11,25 @@ import RxSwift
 
 class OWCommentingCTAView: UIView {
 
-    fileprivate lazy var skelatonView: OWCommentingCTASkeletonView = {
+    private lazy var skelatonView: OWCommentingCTASkeletonView = {
         return OWCommentingCTASkeletonView()
     }()
 
-    fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
+    private lazy var commentCreationEntryView: OWCommentCreationEntryView = {
         return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
             .enforceSemanticAttribute()
             .wrapContent()
     }()
 
-    fileprivate lazy var commentingReadOnlyView: OWCommentingReadOnlyView = {
+    private lazy var commentingReadOnlyView: OWCommentingReadOnlyView = {
         return OWCommentingReadOnlyView(with: self.viewModel.outputs.commentingReadOnlyViewModel)
             .wrapContent()
     }()
 
-    fileprivate var currentStyleView: UIView? = nil
-    fileprivate var heightConstraint: OWConstraint? = nil
-    fileprivate var viewModel: OWCommentingCTAViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var currentStyleView: UIView?
+    private var heightConstraint: OWConstraint?
+    private var viewModel: OWCommentingCTAViewModeling!
+    private var disposeBag = DisposeBag()
 
     init(with viewModel: OWCommentingCTAViewModeling) {
         self.viewModel = viewModel
@@ -48,7 +48,7 @@ class OWCommentingCTAView: UIView {
     }
 }
 
-fileprivate extension OWCommentingCTAView {
+private extension OWCommentingCTAView {
     func setupViews() {
         self.enforceSemanticAttribute()
 
@@ -64,7 +64,7 @@ fileprivate extension OWCommentingCTAView {
         viewModel.outputs.style
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.subviews.forEach { $0.removeFromSuperview() }
 
                 let view = self.view(forStyle: style)
@@ -77,7 +77,7 @@ fileprivate extension OWCommentingCTAView {
             })
             .disposed(by: disposeBag)
 
-        if let heightConstraint = heightConstraint {
+        if let heightConstraint {
             viewModel.outputs.shouldShowView
                 .map { !$0 }
                 .bind(to: heightConstraint.rx.isActive)
@@ -87,7 +87,7 @@ fileprivate extension OWCommentingCTAView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -104,4 +104,3 @@ fileprivate extension OWCommentingCTAView {
         }
     }
 }
-

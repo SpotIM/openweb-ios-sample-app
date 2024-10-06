@@ -26,41 +26,41 @@ protocol OWLocalizationManagerConfigurable {
 
 class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManagerConfigurable {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let defaultLocaleIdentifier: String = "en-US"
         static let localizationFileType: String = "lproj"
     }
 
     static let shared: OWLocalizationManagerProtocol & OWLocalizationManagerConfigurable = OWLocalizationManager()
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
-    fileprivate var spotId: OWSpotId? = nil
-    fileprivate var _locale = Locale(identifier: Metrics.defaultLocaleIdentifier)
-    fileprivate var localizationBundle: Bundle? = nil
+    private var spotId: OWSpotId?
+    private var _locale = Locale(identifier: Metrics.defaultLocaleIdentifier)
+    private var localizationBundle: Bundle?
 
-    fileprivate let _languageStrategy = BehaviorSubject<OWLanguageStrategy>(value: OWLanguageStrategy.default)
-    fileprivate var languageStrategy: Observable<OWLanguageStrategy> {
+    private let _languageStrategy = BehaviorSubject<OWLanguageStrategy>(value: OWLanguageStrategy.default)
+    private var languageStrategy: Observable<OWLanguageStrategy> {
         return _languageStrategy
             .distinctUntilChanged()
     }
 
-    fileprivate let _localeStrategy = BehaviorSubject<OWLocaleStrategy>(value: OWLocaleStrategy.default)
-    fileprivate var localeStrategy: Observable<OWLocaleStrategy> {
+    private let _localeStrategy = BehaviorSubject<OWLocaleStrategy>(value: OWLocaleStrategy.default)
+    private var localeStrategy: Observable<OWLocaleStrategy> {
         return _localeStrategy
             .distinctUntilChanged()
     }
 
-    fileprivate var _currentLanguageNonRx: OWSupportedLanguage = OWSupportedLanguage.default
-    fileprivate let _currentLanguage = BehaviorSubject<OWSupportedLanguage?>(value: nil)
+    private var _currentLanguageNonRx: OWSupportedLanguage = OWSupportedLanguage.default
+    private let _currentLanguage = BehaviorSubject<OWSupportedLanguage?>(value: nil)
     var currentLanguage: Observable<OWSupportedLanguage> {
         return _currentLanguage
             .unwrap()
     }
 
-    fileprivate let _currentLocale = BehaviorSubject<Locale?>(value: nil)
-    fileprivate var currentLocale: Observable<Locale> {
+    private let _currentLocale = BehaviorSubject<Locale?>(value: nil)
+    private var currentLocale: Observable<Locale> {
         return _currentLocale
             .unwrap()
     }
@@ -135,7 +135,7 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
     }
 }
 
-fileprivate extension OWLocalizationManager {
+private extension OWLocalizationManager {
     func setupObservers() {
         languageStrategy
             .distinctUntilChanged()
@@ -144,7 +144,7 @@ fileprivate extension OWLocalizationManager {
                  Guard will prevent us from immediately trying to dictate the language.
                  This way we allow changing the strategy before or after the `spotId` setup from `OpenWeb.Manager.spotId`
                  */
-                guard let self = self,
+                guard let self,
                       let spotId = self.spotId,
                       spotId == OpenWeb.manager.spotId else { return .empty() }
 
@@ -162,7 +162,7 @@ fileprivate extension OWLocalizationManager {
                  Guard will prevent us from immediately trying to dictate the locale.
                  This way we allow changing the strategy before or after the `spotId` setup from `OpenWeb.Manager.spotId`
                  */
-                guard let self = self,
+                guard let self,
                       let spotId = self.spotId,
                       spotId == OpenWeb.manager.spotId else { return .empty() }
 
@@ -195,7 +195,7 @@ fileprivate extension OWLocalizationManager {
             .map { $0.mobileSdk.locale ?? Metrics.defaultLocaleIdentifier }
             .flatMap { [weak self] serverLocaleIdentifier -> Observable<(OWLanguageStrategy, String)> in
                 // 2. Take into account language strategy
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.languageStrategy
                     .take(1)
                     .map { ($0, serverLocaleIdentifier) }
@@ -236,7 +236,7 @@ fileprivate extension OWLocalizationManager {
             .map { $0.mobileSdk.locale ?? Metrics.defaultLocaleIdentifier }
             .flatMap { [weak self] serverLocaleIdentifier -> Observable<(OWLocaleStrategy, String)> in
                 // 2. Take into account language strategy
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.localeStrategy
                     .take(1)
                     .map { ($0, serverLocaleIdentifier) }

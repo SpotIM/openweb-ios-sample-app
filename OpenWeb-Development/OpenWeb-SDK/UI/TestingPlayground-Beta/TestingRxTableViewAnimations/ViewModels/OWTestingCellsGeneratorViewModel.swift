@@ -38,7 +38,7 @@ class OWTestingCellsGeneratorViewModel: OWTestingCellsGeneratorViewModeling,
     var inputs: OWTestingCellsGeneratorViewModelingInputs { return self }
     var outputs: OWTestingCellsGeneratorViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let defaultCellsToAdd: Int = 1
         static let minCellsToAdd: Int = 1
         static let maxCellsToAdd: Int = 99
@@ -49,7 +49,7 @@ class OWTestingCellsGeneratorViewModel: OWTestingCellsGeneratorViewModeling,
     let removeAllTap = PublishSubject<Void>()
     var textFieldFinish = PublishSubject<String>()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init(requiredData: OWTestingCellsGeneratorRequiredData) {
         _mainText.onNext(requiredData.title)
@@ -57,19 +57,19 @@ class OWTestingCellsGeneratorViewModel: OWTestingCellsGeneratorViewModeling,
         setupObservers()
     }
 
-    fileprivate let _mainText = BehaviorSubject<String?>(value: nil)
+    private let _mainText = BehaviorSubject<String?>(value: nil)
     var mainText: Observable<String> {
         return _mainText
             .unwrap()
     }
 
-    fileprivate let _mainTextColor = BehaviorSubject<UIColor?>(value: nil)
+    private let _mainTextColor = BehaviorSubject<UIColor?>(value: nil)
     var mainTextColor: Observable<UIColor> {
         return _mainTextColor
             .unwrap()
     }
 
-    fileprivate let _numberOfCellsToAdd = BehaviorSubject<Int>(value: Metrics.defaultCellsToAdd)
+    private let _numberOfCellsToAdd = BehaviorSubject<Int>(value: Metrics.defaultCellsToAdd)
     var textFieldNumberString: Observable<String> {
         return _numberOfCellsToAdd
             .map { "\($0)" }
@@ -92,7 +92,7 @@ class OWTestingCellsGeneratorViewModel: OWTestingCellsGeneratorViewModeling,
     }
 }
 
-fileprivate extension OWTestingCellsGeneratorViewModel {
+private extension OWTestingCellsGeneratorViewModel {
     func setupObservers() {
         textFieldFinish
             .map { numberText -> Int in
