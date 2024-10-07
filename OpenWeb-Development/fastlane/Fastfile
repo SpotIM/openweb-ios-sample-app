@@ -145,7 +145,7 @@ platform :ios do
       build_high: internal_sample_app_build_high_threshold
     )
     # Set a specific version number
-    set_version(version:options[:version])
+    set_version(version: options[:version], app_only: true)
     build_release_ipa(app:"internal", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json", skip_waiting_for_build_processing: true)
     upload_debug_symbols_to_crashlytics(version:options[:version])
@@ -163,7 +163,7 @@ platform :ios do
       build_high: beta_sample_app_build_high_threshold
     )
     # Set a specific version number
-    set_version(version:options[:version])
+    set_version(version: options[:version], app_only: true)
     build_release_ipa(app:"beta", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json", skip_waiting_for_build_processing: true)
     upload_debug_symbols_to_crashlytics(version:options[:version])
@@ -181,7 +181,7 @@ platform :ios do
       build_high: public_sample_app_build_high_threshold
     )
     # Set a specific version number
-    set_version(version:options[:version])
+    set_version(version: options[:version], app_only: true)
     build_release_ipa(app:"public", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json", skip_waiting_for_build_processing: true)
     upload_debug_symbols_to_crashlytics(version:options[:version])
@@ -202,13 +202,15 @@ platform :ios do
   lane :set_version do |options|
     increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-Development.xcodeproj")
     increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
-    # Set version inside OpenWebSettings plist
-    update_plist(
-        plist_path: "OpenWeb-SDK/Resources/OpenWebSettings.plist",
-        block: proc do |plist|
-            plist[:sdkVersion] = options[:version]
-        end
-    )
+    unless options[:app_only]
+      # Set version inside OpenWebSettings plist
+      update_plist(
+          plist_path: "OpenWeb-SDK/Resources/OpenWebSettings.plist",
+          block: proc do |plist|
+              plist[:sdkVersion] = options[:version]
+          end
+      )
+      end
   end
 
   # Excpect parameters `build_low` and `build_high`
