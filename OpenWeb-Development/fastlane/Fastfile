@@ -139,7 +139,11 @@ platform :ios do
     # Set a build in the following range
     internal_sample_app_build_low_threshold = 100
     internal_sample_app_build_high_threshold = 500
-    increment_build_in_range(build_low:internal_sample_app_build_low_threshold, build_high:internal_sample_app_build_high_threshold)
+    increment_build_in_range(
+      version: options[:version],
+      build_low: internal_sample_app_build_low_threshold,
+      build_high: internal_sample_app_build_high_threshold
+    )
     # Set a specific version number
     set_version(version:options[:version])
     build_release_ipa(app:"internal", type:"app-store")
@@ -153,7 +157,11 @@ platform :ios do
     # Set a build in the following range
     beta_sample_app_build_low_threshold = 1
     beta_sample_app_build_high_threshold = 500
-    increment_build_in_range(build_low:beta_sample_app_build_low_threshold, build_high:beta_sample_app_build_high_threshold)
+    increment_build_in_range(
+      version: options[:version],
+      build_low: beta_sample_app_build_low_threshold,
+      build_high: beta_sample_app_build_high_threshold
+    )
     # Set a specific version number
     set_version(version:options[:version])
     build_release_ipa(app:"beta", type:"app-store")
@@ -167,7 +175,11 @@ platform :ios do
     # Set a build in the following range
     public_sample_app_build_low_threshold = 200
     public_sample_app_build_high_threshold = 500
-    increment_build_in_range(build_low:public_sample_app_build_low_threshold, build_high:public_sample_app_build_high_threshold)
+    increment_build_in_range(
+      version: options[:version],
+      build_low: public_sample_app_build_low_threshold,
+      build_high: public_sample_app_build_high_threshold
+    )
     # Set a specific version number
     set_version(version:options[:version])
     build_release_ipa(app:"public", type:"app-store")
@@ -202,7 +214,11 @@ platform :ios do
   # Excpect parameters `build_low` and `build_high`
   desc "Increment build if it is in range, or set build to lower end"
   lane :increment_build_in_range do |options|
-    current_build_number = get_build_number()
+    current_build_number = latest_testflight_build_number(
+      version: options[:version], 
+      initial_build_number: 0, 
+      api_key_path: "apple_api_key.json"
+    )
     puts current_build_number
     if current_build_number.to_i < options[:build_low].to_i || current_build_number.to_i >= options[:build_high].to_i
       puts "Set build number to lower range which is #{options[:build_low]}"
