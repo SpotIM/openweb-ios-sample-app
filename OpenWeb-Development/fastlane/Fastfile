@@ -143,7 +143,7 @@ platform :ios do
     # Set a specific version number
     set_version(version:options[:version])
     build_release_ipa(app:"internal", type:"app-store")
-    upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_to_testflight(api_key_path: "apple_api_key.json", skip_waiting_for_build_processing: true)
     upload_debug_symbols_to_crashlytics(version:options[:version])
   end
 
@@ -157,7 +157,7 @@ platform :ios do
     # Set a specific version number
     set_version(version:options[:version])
     build_release_ipa(app:"beta", type:"app-store")
-    upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_to_testflight(api_key_path: "apple_api_key.json", skip_waiting_for_build_processing: true)
     upload_debug_symbols_to_crashlytics(version:options[:version])
   end
 
@@ -171,7 +171,7 @@ platform :ios do
     # Set a specific version number
     set_version(version:options[:version])
     build_release_ipa(app:"public", type:"app-store")
-    upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_to_testflight(api_key_path: "apple_api_key.json", skip_waiting_for_build_processing: true)
     upload_debug_symbols_to_crashlytics(version:options[:version])
   end
 
