@@ -54,7 +54,7 @@ enum OWAnalyticEventType {
     case configureLanguageStrategy(strategy: OWLanguageStrategy)
     case localeStrategy(strategy: OWLocaleStrategy)
     case orientationEnforcement(enforcement: OWOrientationEnforcement)
-    case viewableTime(milliseconds: Int)
+    case viewableTime(timeInS: TimeInterval)
     case commentViewed(commentId: OWCommentId)
     case cameraIconClickedOpen
     case cameraIconClickedTakePhoto
@@ -376,8 +376,8 @@ extension OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.strategy: strategy])
         case .orientationEnforcement(let enforcement):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.enforcement: enforcement])
-        case .viewableTime(let milliseconds):
-            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.milliseconds: milliseconds])
+        case .viewableTime(let timeInS):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.timeInS: timeInS])
         case .commentViewed(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .rejectedCommentNoticeView(let commentId):
