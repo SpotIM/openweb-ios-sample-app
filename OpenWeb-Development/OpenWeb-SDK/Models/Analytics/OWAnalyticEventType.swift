@@ -54,7 +54,7 @@ enum OWAnalyticEventType {
     case configureLanguageStrategy(strategy: OWLanguageStrategy)
     case localeStrategy(strategy: OWLocaleStrategy)
     case orientationEnforcement(enforcement: OWOrientationEnforcement)
-    case readingTime(milliseconds: Int)
+    case viewableTime(milliseconds: Int)
     case commentViewed(commentId: OWCommentId)
     case cameraIconClickedOpen
     case cameraIconClickedTakePhoto
@@ -166,8 +166,8 @@ extension OWAnalyticEventType {
             return "localeStrategy"
         case .orientationEnforcement:
             return "orientationEnforcement"
-        case .readingTime:
-            return "readingTime"
+        case .viewableTime:
+            return "viewableTime"
         case .commentViewed:
             return "commentViewed"
         case .cameraIconClickedOpen:
@@ -211,7 +211,7 @@ extension OWAnalyticEventType {
             return .loaded
         case .fullConversationViewed,
              .preConversationViewed,
-             .readingTime,
+             .viewableTime,
              .commentViewed:
             return .viewed
         case .commentMenuClicked,
@@ -376,7 +376,7 @@ extension OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.strategy: strategy])
         case .orientationEnforcement(let enforcement):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.enforcement: enforcement])
-        case .readingTime(let milliseconds):
+        case .viewableTime(let milliseconds):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.milliseconds: milliseconds])
         case .commentViewed(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
