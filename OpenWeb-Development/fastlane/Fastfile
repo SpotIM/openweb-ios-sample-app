@@ -190,13 +190,6 @@ platform :ios do
   lane :set_version do |options|
     increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-Development.xcodeproj")
     increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
-    # Set version inside OpenWebSettings plist
-    update_plist(
-        plist_path: "OpenWeb-SDK/Resources/OpenWebSettings.plist",
-        block: proc do |plist|
-            plist[:sdkVersion] = options[:version]
-        end
-    )
   end
 
   # Excpect parameters `build_low` and `build_high`

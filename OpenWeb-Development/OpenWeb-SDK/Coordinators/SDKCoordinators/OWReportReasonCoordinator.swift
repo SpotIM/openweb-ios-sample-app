@@ -33,10 +33,10 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
     fileprivate let reportData: OWReportReasonsRequiredData
     fileprivate let router: OWRoutering?
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .reportReason)
+        return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .reportReason)
     }()
 
     fileprivate let reportReasonPopped = PublishSubject<Void>()
@@ -47,12 +47,12 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
     init(reportData: OWReportReasonsRequiredData,
          router: OWRoutering? = nil,
-         actionsCallbacks: OWViewActionsCallbacks?,
+         viewActionsCallbacks: OWViewActionsCallbacks?,
          presentationalMode: OWPresentationalModeCompact = .none,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.reportData = reportData
         self.router = router
-        self.actionsCallbacks = actionsCallbacks
+        self.viewActionsCallbacks = viewActionsCallbacks
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
     }
@@ -112,7 +112,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
                                                  title: "")
                 let safariCoordinator = OWWebTabCoordinator(router: router,
                                                                options: options,
-                                                               actionsCallbacks: self.actionsCallbacks)
+                                                               viewActionsCallbacks: self.viewActionsCallbacks)
                 return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .flatMap { _ -> Observable<OWReportReasonCoordinatorResult> in

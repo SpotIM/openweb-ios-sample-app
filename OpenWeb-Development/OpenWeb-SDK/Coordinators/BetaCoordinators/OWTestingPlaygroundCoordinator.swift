@@ -37,7 +37,7 @@ class OWTestingPlaygroundCoordinator: OWBaseCoordinator<OWTestingPlaygroundCoord
     fileprivate let router: OWRoutering!
     fileprivate let testingPlaygroundData: OWTestingPlaygroundRequiredData
 
-    init(router: OWRoutering! = nil, testingPlaygroundData: OWTestingPlaygroundRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil, testingPlaygroundData: OWTestingPlaygroundRequiredData) {
         self.router = router
         self.testingPlaygroundData = testingPlaygroundData
     }
