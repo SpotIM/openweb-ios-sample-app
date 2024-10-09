@@ -36,7 +36,7 @@ class OWFontsCoordinator: OWBaseCoordinator<OWFontsCoordinatorResult> {
     fileprivate let router: OWRoutering!
     fileprivate let automationData: OWAutomationRequiredData
 
-    init(router: OWRoutering! = nil, automationData: OWAutomationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil, automationData: OWAutomationRequiredData) {
         self.router = router
         self.automationData = automationData
     }

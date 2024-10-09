@@ -27,7 +27,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 
     func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
                                   presentationalMode: OWPresentationalMode,
-                                  callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+                                  flowCallbacks: OWFlowActionsCallbacks?) -> Observable<OWShowable> {
 
         return Observable.just(())
             .observe(on: MainScheduler.instance)
@@ -42,7 +42,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 
                 let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
                                                                               preConversationData: preConversationData,
-                                                                              actionsCallbacks: callbacks,
+                                                                              flowActionsCallbacks: flowCallbacks,
                                                                               viewableMode: .partOfFlow)
                 self.store(coordinator: preConversationCoordinator)
 
@@ -52,7 +52,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 
     func startConversationFlow(conversationData: OWConversationRequiredData,
                                presentationalMode: OWPresentationalMode,
-                               callbacks: OWViewActionsCallbacks?,
+                               flowCallbacks: OWFlowActionsCallbacks?,
                                coordinatorData: OWCoordinatorData? = nil) -> Observable<OWConversationCoordinatorResult> {
         invalidateExistingFlows()
         generateNewPageViewId()
@@ -60,7 +60,8 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 
         let conversationCoordinator = OWConversationCoordinator(router: router,
                                                                 conversationData: conversationData,
-                                                                actionsCallbacks: callbacks)
+                                                                viewActionsCallbacks: nil,
+                                                                flowActionsCallbacks: flowCallbacks)
 
         return coordinate(to: conversationCoordinator, coordinatorData: coordinatorData)
             .do { [weak self] coordinatorResult in
@@ -74,40 +75,38 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     func startCommentCreationFlow(conversationData: OWConversationRequiredData,
                                   commentCreationData: OWCommentCreationRequiredData,
                                   presentationalMode: OWPresentationalMode,
-                                  callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
+                                  flowCallbacks: OWFlowActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
         let coordinatorData = OWCoordinatorData(deepLink: .commentCreation(commentCreationData: commentCreationData),
                                             source: .conversation)
         return startConversationFlow(conversationData: conversationData,
                                      presentationalMode: presentationalMode,
-                                     callbacks: callbacks,
+                                     flowCallbacks: flowCallbacks,
                                      coordinatorData: coordinatorData)
     }
 
     func startCommentThreadFlow(conversationData: OWConversationRequiredData,
                                 commentThreadData: OWCommentThreadRequiredData,
                                 presentationalMode: OWPresentationalMode,
-                                callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
+                                flowCallbacks: OWFlowActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
         let coordinatorData = OWCoordinatorData(deepLink: .commentThread(commentThreadData: commentThreadData))
         return startConversationFlow(conversationData: conversationData,
                                      presentationalMode: presentationalMode,
-                                     callbacks: callbacks,
+                                     flowCallbacks: flowCallbacks,
                                      coordinatorData: coordinatorData)
     }
 
 #if BETA
     func startTestingPlaygroundFlow(testingPlaygroundData: OWTestingPlaygroundRequiredData,
                                     presentationalMode: OWPresentationalMode,
-                                    callbacks: OWViewActionsCallbacks?,
                                     coordinatorData: OWCoordinatorData? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
 
         let testingPlaygroundCoordinator = OWTestingPlaygroundCoordinator(router: router,
-                                                                          testingPlaygroundData: testingPlaygroundData,
-                                                                          actionsCallbacks: callbacks)
+                                                                          testingPlaygroundData: testingPlaygroundData)
 
         return coordinate(to: testingPlaygroundCoordinator, coordinatorData: coordinatorData)
     }
@@ -116,30 +115,26 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 #if AUTOMATION
     func startFontsFlow(automationData: OWAutomationRequiredData,
                         presentationalMode: OWPresentationalMode,
-                        callbacks: OWViewActionsCallbacks?,
                         coordinatorData: OWCoordinatorData? = nil) -> Observable<OWFontsCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
 
         let fontsAutomationCoordinator = OWFontsCoordinator(router: router,
-                                                            automationData: automationData,
-                                                            actionsCallbacks: callbacks)
+                                                            automationData: automationData)
 
         return coordinate(to: fontsAutomationCoordinator, coordinatorData: coordinatorData)
     }
 
     func startUserStatusFlow(automationData: OWAutomationRequiredData,
                              presentationalMode: OWPresentationalMode,
-                             callbacks: OWViewActionsCallbacks?,
                              coordinatorData: OWCoordinatorData? = nil) -> Observable<OWUserStatusCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
 
         let userStatusCoordinator = OWUserStatusCoordinator(router: router,
-                                                            automationData: automationData,
-                                                            actionsCallbacks: callbacks)
+                                                            automationData: automationData)
 
         return coordinate(to: userStatusCoordinator, coordinatorData: coordinatorData)
     }
