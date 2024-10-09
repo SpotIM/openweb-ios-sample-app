@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum OWModalPresentationStyle {
+public enum OWModalPresentationStyle: Codable {
     case fullScreen
     case pageSheet
 }

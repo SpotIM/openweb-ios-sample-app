@@ -31,9 +31,9 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     }
 
     fileprivate let router: OWRoutering?
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commenterAppeal)
+        return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .commenterAppeal)
     }()
 
     let presentationalMode: OWPresentationalModeCompact
@@ -44,10 +44,10 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 
     init(router: OWRoutering? = nil,
          appealData: OWAppealRequiredData,
-         actionsCallbacks: OWViewActionsCallbacks?,
+         viewActionsCallbacks: OWViewActionsCallbacks?,
          presentationalMode: OWPresentationalModeCompact = .none) {
         self.router = router
-        self.actionsCallbacks = actionsCallbacks
+        self.viewActionsCallbacks = viewActionsCallbacks
         self.presentationalMode = presentationalMode
         self.data = appealData
     }
@@ -423,7 +423,7 @@ fileprivate extension OWCommenterAppealCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {
         guard viewModel.outputs.viewableMode == .independent else { return }
 
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+        guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let closeButtonClick = viewModel.outputs.closeButtonPopped
             .map { OWViewActionCallbackType.closeClarityDetails }
