@@ -44,6 +44,8 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     var inputs: OWCommentCreationFooterViewModelingInputs { return self }
     var outputs: OWCommentCreationFooterViewModelingOutputs { return self }
 
+    private let commentCreationFooterScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommentCreationFooterQueue")
+
     private let servicesProvider: OWSharedServicesProviding
     private let disposeBag = DisposeBag()
     private let commentCreationType: OWCommentCreationTypeInternal
@@ -110,10 +112,20 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
                 }
             }
             .unwrap()
+            .observe(on: commentCreationFooterScheduler)
+            .do(onNext: { [weak self] _ in
+                // Disable post button while checking ifNeededTriggerAuthenticationUI to prevent multiple taps.
+                // This prevents multiple authentication screens being opened after tapping a few times on the post button.
+                self?.submitCommentInProgress.onNext(true)
+            })
+            .observe(on: MainScheduler.instance)
             .flatMap { [weak self] userAction -> Observable<Bool> in
                 guard let self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: userAction)
             }
+            .do(onNext: { [weak self] _ in
+                self?.submitCommentInProgress.onNext(false)
+            })
             .do(onNext: { [weak self] loginToPost in
                 guard let self,
                       loginToPost == true else { return }
