@@ -4,7 +4,7 @@
 "Appeal" = "Recurso";
 "AppealAuthorizationRequiredMessage" = "É necessário estar conectado para continuar com seu recurso. Não é membro? Você precisará se registrar primeiro.";
 "AppealAuthorizationRequiredTitle" = "Autorização necessária";
-"AppealLabel" = "Sinta-se à vontade para reescrever e repostar seu comentário ou, se desejar, você pode recorrer e nós reavaliaremos nossa decisão.";
+"AppealLabel" = "Fique à vontade para reescrever seu comentário ou, se desejar, você pode recurso, e analisaremos nossa decisão novamente.";
 "AppealLabelError" = "As informações do recurso não estão disponíveis no momento. Solicitamos que verifique sua conexão com a Internet ou tente novamente mais tarde.";
 "AppealLabelNotAvailable" = "O comentário que você denunciou não está mais disponível.";
 "AppealRejectedCommentStatusMessage" = "Seu recurso foi rejeitado.";
@@ -86,7 +86,6 @@
 "Newest" = "Mais recente";
 "No" = "Não";
 "NotAuthorPendingCommentStatusMessage" = "Este comentário está aguardando revisão.";
-"OK" = "OK";
 "Oldest" = "Mais antigo";
 "OpenSettings" = "Abrir configurações";
 "OptionsMenu" = "Menu de opções";
