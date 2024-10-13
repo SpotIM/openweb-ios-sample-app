@@ -173,7 +173,7 @@ private extension OWFlowsSDKCoordinator {
                                                                               animated: presentAnimated)
         case .push(let navigationController):
             navController = navigationController
-            presentationalModeExtended = OWPresentationalModeExtended.push(navigationController: navController)
+            presentationalModeExtended = OWPresentationalModeExtended.push(navigationControllerWeakEncapsulation: OWWeakEncapsulation(value: navController))
             shouldCustomizeNavController = navCustomizerService.shouldCustomizeNavigationController()
         }
 

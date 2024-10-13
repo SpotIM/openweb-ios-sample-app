@@ -340,10 +340,12 @@ class OWNetworkRequest {
 
     /// Asynchronously calls any stored `cURLHandler` and then removes it from `mutableState`.
     private func callCURLHandlerIfNecessary() {
-        $mutableState.write { mutableState in
+        $mutableState.write { [weak self] mutableState in
             guard let cURLHandler = mutableState.cURLHandler else { return }
 
-            cURLHandler.queue.async { cURLHandler.handler(self.cURLDescription()) }
+            cURLHandler.queue.async { [weak self] in
+                guard let self else { return }
+                cURLHandler.handler(self.cURLDescription()) }
 
             mutableState.cURLHandler = nil
         }
@@ -525,11 +527,17 @@ class OWNetworkRequest {
             }
 
             if mutableState.responseSerializerProcessingFinished {
-                underlyingQueue.async { self.processNextResponseSerializer() }
+                underlyingQueue.async { [weak self] in
+                    guard let self else { return }
+                    self.processNextResponseSerializer()
+                }
             }
 
             if mutableState.state.canTransitionTo(.resumed) {
-                underlyingQueue.async { if self.delegate?.startImmediately == true { self.resume() } }
+                underlyingQueue.async { [weak self] in
+                    guard let self else { return }
+                    if self.delegate?.startImmediately == true { self.resume() }
+                }
             }
         }
     }
@@ -619,7 +627,10 @@ class OWNetworkRequest {
         uploadProgress.totalUnitCount = totalBytesExpectedToSend
         uploadProgress.completedUnitCount = totalBytesSent
 
-        uploadProgressHandler?.queue.async { self.uploadProgressHandler?.handler(self.uploadProgress) }
+        uploadProgressHandler?.queue.async { [weak self] in
+            guard let self else { return }
+            self.uploadProgressHandler?.handler(self.uploadProgress)
+        }
     }
 
     /// Perform a closure on the current `state` while locked.
@@ -658,17 +669,26 @@ class OWNetworkRequest {
 
             mutableState.state = .cancelled
 
-            underlyingQueue.async { self.didCancel() }
+            underlyingQueue.async { [weak self] in
+                guard let self else { return }
+                self.didCancel()
+            }
 
             guard let task = mutableState.tasks.last, task.state != .completed else {
-                underlyingQueue.async { self.finish() }
+                underlyingQueue.async { [weak self] in
+                    guard let self else { return }
+                    self.finish()
+                }
                 return
             }
 
             // Resume to ensure metrics are gathered.
             task.resume()
             task.cancel()
-            underlyingQueue.async { self.didCancelTask(task) }
+            underlyingQueue.async { [weak self] in
+                guard let self else { return }
+                self.didCancelTask(task)
+            }
         }
 
         return self
@@ -684,12 +704,18 @@ class OWNetworkRequest {
 
             mutableState.state = .suspended
 
-            underlyingQueue.async { self.didSuspend() }
+            underlyingQueue.async { [weak self] in
+                guard let self else { return }
+                self.didSuspend()
+            }
 
             guard let task = mutableState.tasks.last, task.state != .completed else { return }
 
             task.suspend()
-            underlyingQueue.async { self.didSuspendTask(task) }
+            underlyingQueue.async { [weak self] in
+                guard let self else { return }
+                self.didSuspendTask(task)
+            }
         }
 
         return self
@@ -705,12 +731,18 @@ class OWNetworkRequest {
 
             mutableState.state = .resumed
 
-            underlyingQueue.async { self.didResume() }
+            underlyingQueue.async { [weak self] in
+                guard let self else { return }
+                self.didResume()
+            }
 
             guard let task = mutableState.tasks.last, task.state != .completed else { return }
 
             task.resume()
-            underlyingQueue.async { self.didResumeTask(task) }
+            underlyingQueue.async { [weak self] in
+                guard let self else { return }
+                self.didResumeTask(task)
+            }
         }
 
         return self
@@ -830,7 +862,10 @@ class OWNetworkRequest {
     func cURLDescription(on queue: DispatchQueue, calling handler: @escaping (String) -> Void) -> Self {
         $mutableState.write { mutableState in
             if mutableState.requests.last != nil {
-                queue.async { handler(self.cURLDescription()) }
+                queue.async { [weak self] in
+                    guard let self else { return }
+                    handler(self.cURLDescription())
+                }
             } else {
                 mutableState.cURLHandler = (queue, handler)
             }
@@ -851,7 +886,10 @@ class OWNetworkRequest {
     func cURLDescription(calling handler: @escaping (String) -> Void) -> Self {
         $mutableState.write { mutableState in
             if mutableState.requests.last != nil {
-                underlyingQueue.async { handler(self.cURLDescription()) }
+                underlyingQueue.async { [weak self] in
+                    guard let self else { return }
+                    handler(self.cURLDescription())
+                }
             } else {
                 mutableState.cURLHandler = (underlyingQueue, handler)
             }
@@ -1139,7 +1177,10 @@ class OWNetworkDataRequest: OWNetworkRequest {
         downloadProgress.totalUnitCount = totalBytesExpected
         downloadProgress.completedUnitCount = totalBytesReceived
 
-        downloadProgressHandler?.queue.async { self.downloadProgressHandler?.handler(self.downloadProgress) }
+        downloadProgressHandler?.queue.async { [weak self] in
+            guard let self else { return }
+            self.downloadProgressHandler?.handler(self.downloadProgress)
+        }
     }
 
     /// Validates the request, using the specified closure.
@@ -1376,8 +1417,10 @@ final class OWNetworkDataStreamRequest: OWNetworkRequest {
 
     func appendStreamCompletion<Success, Failure>(on queue: DispatchQueue,
                                                   stream: @escaping Handler<Success, Failure>) {
-        appendResponseSerializer {
-            self.underlyingQueue.async {
+        appendResponseSerializer { [weak self] in
+            guard let self else { return }
+            self.underlyingQueue.async { [weak self] in
+                guard let self else { return }
                 self.responseSerializerDidComplete {
                     self.$streamMutableState.write { state in
                         guard state.numberOfExecutingStreams == 0 else {
@@ -1397,7 +1440,8 @@ final class OWNetworkDataStreamRequest: OWNetworkRequest {
 
     func enqueueCompletion<Success, Failure>(on queue: DispatchQueue,
                                              stream: @escaping Handler<Success, Failure>) {
-        queue.async {
+        queue.async { [weak self] in
+            guard let self else { return }
             do {
                 let completion = Completion(request: self.request,
                                             response: self.response,
@@ -1610,7 +1654,10 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
         downloadProgress.totalUnitCount = totalBytesExpectedToWrite
         downloadProgress.completedUnitCount += bytesWritten
 
-        downloadProgressHandler?.queue.async { self.downloadProgressHandler?.handler(self.downloadProgress) }
+        downloadProgressHandler?.queue.async { [weak self] in
+            guard let self else { return }
+            self.downloadProgressHandler?.handler(self.downloadProgress)
+        }
     }
 
     override func task(for request: URLRequest, using session: URLSession) -> URLSessionTask {
@@ -1674,22 +1721,30 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
     ///
     /// - Returns:                     The instance.
     private func cancel(optionallyProducingResumeData completionHandler: ((_ resumeData: Data?) -> Void)?) -> Self {
-        $mutableState.write { mutableState in
-            guard mutableState.state.canTransitionTo(.cancelled) else { return }
+        $mutableState.write { [weak self] mutableState in
+            guard let self,
+                  mutableState.state.canTransitionTo(.cancelled) else { return }
 
             mutableState.state = .cancelled
 
-            underlyingQueue.async { self.didCancel() }
+            underlyingQueue.async { [weak self] in
+                guard let self else { return }
+                self.didCancel()
+            }
 
             guard let task = mutableState.tasks.last as? URLSessionDownloadTask, task.state != .completed else {
-                underlyingQueue.async { self.finish() }
+                underlyingQueue.async { [weak self] in
+                    guard let self else { return }
+                    self.finish()
+                }
                 return
             }
 
             if let completionHandler {
                 // Resume to ensure metrics are gathered.
                 task.resume()
-                task.cancel { resumeData in
+                task.cancel { [weak self] resumeData in
+                    guard let self else { return }
                     self.$mutableDownloadState.resumeData = resumeData
                     self.underlyingQueue.async { self.didCancelTask(task) }
                     completionHandler(resumeData)
@@ -1698,7 +1753,10 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
                 // Resume to ensure metrics are gathered.
                 task.resume()
                 task.cancel()
-                self.underlyingQueue.async { self.didCancelTask(task) }
+                self.underlyingQueue.async { [weak self] in
+                    guard let self else { return }
+                    self.didCancelTask(task)
+                }
             }
         }
 
