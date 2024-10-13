@@ -38,7 +38,6 @@
 "CommunityGuidelines" = "Richtlijnen van de community";
 "CommunityModerator" = "Moderator voor de community";
 "ConnectivityErrorMessage" = "Oei! Zo te zien \nis er iets mis \nmet de verbinding.";
-"Continue Writing" = "Doorgaan met schrijven";
 "Controversial" = "Controversieel";
 "Conversation" = "Gesprek";
 "CopyrightInfringementSubtitle" = "Gebruik van auteursrechtelijk beschermde inhoud zonder toestemming";
@@ -162,53 +161,3 @@
 "WhatDoYouThink" = "Voeg een reactie toe...";
 "Worst rated" = "Slechtst beoordeeld";
 "Yes" = "Ja";
-
-// Old API
-"Add a Comment" = "Voeg een opmerking toe";
-"Are you sure you want to log out?" = "Weet je zeker dat je wilt uitloggen?";
-"Authentication error" = "Verificatiefout";
-"Be the first to comment" = "Wees de eerste met een reactie";
-"Comment reported successfully" = "Automatisch melding gemaakt van opmerking";
-"Continue Writing" = "Doorgaan met schrijven";
-"Copy Comment to Clipboard" = "Opmerking kopiëren naar klembord";
-"Edit a Comment" = "Bewerk een opmerking";
-"Empty response" = "Geen antwoord gegeven";
-"Hide Replies" = "Reacties verbergen";
-"Hide Reply" = "Reactie verbergen";
-"It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "Zo te zien is je opmerking in strijd met ons beleid. We adviseren om hem opnieuw te schrijven.";
-"It seems we are experiencing technical issues. Please try again" = "Zo te zien hebben we te maken met technische problemen. Probeer het opnieuw";
-"Leave Page" = "Pagina verlaten";
-"Leave this page?" = "Deze pagina verlaten?";
-"Loading" = "Laden";
-"Log In" = "Inloggen";
-"Log Out" = "Uitloggen";
-"New Comment" = "Nieuwe opmerking";
-"New Comments" = "Nieuwe opmerkingen";
-"Oops..." = "O jee!";
-"Please provide Code B" = "Vermeld Code B";
-"Please provide Spot Key" = "Vermeld de Spot Key";
-"Report Comment" = "Opmerking aangeven";
-"Reporting this comment will send it for review and hide it from your view" = "Als je melding maakt van deze opmerking, dan gaan we deze beoordelen en verbergen we hem van je weergave";
-"Retry" = "Opnieuw proberen";
-"Staff" = "Staf";
-"Text copied to clipboard" = "Tekst gekopieerd naar klembord";
-"The Internet connection appears to be offline." = "Zo te zien is er iets mis met de verbinding.";
-"The text you entered might be deleted if not published." = "De tekst die je hebt ingevoerd, wordt verwijderd als je hem niet publiceert.";
-"Typing" = "Typen nu";
-"User is already logged in." = "Gebruiker is al ingelogd.";
-"View Previous Replies" = "Bekijk vorige antwoorden";
-"View Previous Reply" = "Bekijk vorig antwoord";
-"View Replies" = "Bekijk reacties";
-"View Reply" = "Bekijk reactie";
-"We are unable to load comments\nright now." = "We kunnen de opmerkingen\nnu niet laden.";
-"Write a Comment" = "Schrijf een opmerking";
-"Your comment is waiting for approval due to the site’s policy." = "Je opmerking moet nog worden goedgekeurd op basis van het beleid van de site.";
-"Your Username" = "Je gebruikersnaam";
-
-// Not used
-"Admin" = "Beheerder";
-"Be the first to comment on this article." = "Wees de eerste die een opmerking plaatst bij dit artikel.";
-"Close editor?" = "Editor sluiten?";
-"Journalist" = "Journalist";
-"Moderator" = "Moderator";
-"This message was rejected." = "Dit bericht is afgewezen.";

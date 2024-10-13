@@ -72,6 +72,7 @@
 "InappropriateLanguageTitle" = "Inappropriate Language";
 "JustNow" = "Just now";
 "LearnMore" = "Learn more";
+"Loading" = "Loading";
 "LoginPromptTitle" = "Authorize to participate";
 "Minutes" = "m";
 "MisunderstandingAppealTitle" = "I believe you misunderstood the intent or context of my comment";
@@ -141,6 +142,7 @@
 "SortBy" = "Sort by";
 "SpamSubtitle" = "Advertising, phishing, scamming, bots, or repetitive posts.";
 "SpamTitle" = "Spam";
+"Staff" = "Staff";
 "Submit" = "Submit";
 "TakeAPhoto" = "Take a Photo";
 "Terms" = "Terms";
@@ -162,57 +164,6 @@
 "WhatDoYouThink" = "What do you think?";
 "Worst rated" = "Worst rated";
 "Yes" = "Yes";
-
-// Old API
-"Add a Comment" = "Add a Comment";
-"Are you sure you want to log out?" = "Are you sure you want to log out?";
-"Authentication error" = "Authentication error";
-"Be the first to comment" = "Be the first to comment";
-"Comment reported successfully" = "Comment reported successfully";
-"Continue Writing" = "Continue Writing";
-"Copy Comment to Clipboard" = "Copy Comment to Clipboard";
-"Edit a Comment" = "Edit a Comment";
-"Empty response" = "Empty response";
-"Hide Replies" = "Hide Replies";
-"Hide Reply" = "Hide Reply";
-"It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "It seems like your comment has violated our policy. We recommend you try again with different phrasing.";
-"It seems we are experiencing technical issues. Please try again" = "It seems we are experiencing technical issues. Please try again";
-"Leave Page" = "Leave Page";
-"Leave this page?" = "Leave this page?";
-"Loading" = "Loading";
-"Log In" = "Log In";
-"Log Out" = "Log Out";
-"New Comment" = "New Comment";
-"New Comments" = "New Comments";
-"Oops..." = "Whoops!";
-"Please provide Code B" = "Please provide Code B";
-"Please provide Spot Key" = "Please provide Spot Key";
-"Report Comment" = "Report Comment";
-"Reporting this comment will send it for review and hide it from your view" = "Reporting this comment will send it for review and hide it from your view";
-"Retry" = "Retry";
-"Staff" = "Staff";
-"Text copied to clipboard" = "Text copied to clipboard";
-"The Internet connection appears to be offline." = "Looks like we’re experiencing some connectivity issues.";
-"The text you entered might be deleted if not published." = "The text you entered might be deleted if not published.";
-"Typing" = "Typing Now";
-"User is already logged in." = "User is already logged in.";
-"View Previous Replies" = "View Previous Replies";
-"View Previous Reply" = "View Previous Reply";
-"View Replies" = "View Replies";
-"View Reply" = "View Reply";
-"We are unable to load comments\nright now." = "We are unable to load comments\nright now.";
-"Write a Comment" = "Write a Comment";
-"Your comment is waiting for approval due to the site’s policy." = "Your comment is waiting for approval due to the site’s policy.";
-"Your Username" = "Your Username";
-
-// Not used
-"Admin" = "Admin";
-"Be the first to comment on this article." = "Be the first to comment on this article.";
-"Close editor?" = "Close editor?";
-"Journalist" = "Journalist";
-"Moderator" = "Moderator";
-"This message was rejected." = "This message was rejected.";
-
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";
