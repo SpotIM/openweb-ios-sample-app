@@ -6,6 +6,7 @@
 //  Copyright © 2022 OpenWeb. All rights reserved.
 //
 
+// swiftlint:disable file_length
 // swiftlint:disable self_capture_in_blocks
 
 import Foundation
@@ -345,7 +346,8 @@ class OWNetworkRequest {
 
             cURLHandler.queue.async { [weak self] in
                 guard let self else { return }
-                cURLHandler.handler(self.cURLDescription()) }
+                cURLHandler.handler(self.cURLDescription())
+            }
 
             mutableState.cURLHandler = nil
         }
