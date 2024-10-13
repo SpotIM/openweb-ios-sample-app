@@ -4,7 +4,7 @@
 "Appeal" = "Beschwerde einlegen";
 "AppealAuthorizationRequiredMessage" = "Vergewissern Sie sich, dass Sie angemeldet sind, um Ihren Einspruch fortzusetzen. Sie sind kein Mitglied? Dann müssen Sie sich erst registrieren.";
 "AppealAuthorizationRequiredTitle" = "Autorisierung erforderlich";
-"AppealLabel" = "Sie können Ihren Kommentar neu schreiben und erneut veröffentlichen oder, wenn Sie möchten, Einspruch erheben, damit wir unsere Entscheidung erneut überprüfen können.";
+"AppealLabel" = "Sie können Ihren Kommentar gerne umschreiben und erneut veröffentlichen, oder, wenn Sie möchten, können Sie Beschwerde einlegen und wir werden unsere Entscheidung noch einmal überprüfen.";
 "AppealLabelError" = "Die Informationen zur Beschwerde sind derzeit nicht verfügbar. Bitte überprüfe deine Internetverbindung oder versuche es später noch einmal.";
 "AppealLabelNotAvailable" = "The comment you reported is no longer available.";
 "AppealRejectedCommentStatusMessage" = "Ihr Einspruch wurde abgelehnt";
@@ -86,7 +86,6 @@
 "Newest" = "Neueste";
 "No" = "Nein";
 "NotAuthorPendingCommentStatusMessage" = "Dieser Kommentar wartet auf Überprüfung.";
-"OK" = "OK";
 "Oldest" = "Älteste";
 "OpenSettings" = "Einstellungen öffnen";
 "OptionsMenu" = "Optionsmenü";
@@ -100,8 +99,8 @@
 "Popular" = "Beliebt";
 "Post" = "Beitrag erstellen";
 "PostAComment" = "Post a Comment";
-"PoweredBy" = "Powered by";
-"PoweredByOpenWeb" = "Powered by OpenWeb";
+"PoweredBy" = "Angetrieben von";
+"PoweredByOpenWeb" = "Angetrieben von OpenWeb";
 "Privacy" = "Datenschutz";
 "ProfileImage" = "Profilbild";
 "ProfileSubtitle" = "Unangemessener Benutzername, Avatar, Lebenslauf, Vortäuschung einer anderen Person";
