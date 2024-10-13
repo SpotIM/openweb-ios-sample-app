@@ -58,6 +58,7 @@ class OWRouter: NSObject, OWRoutering {
         static let transitionDuration = 0.5
         static let childAnimationDuration = 0.3
     }
+    private let originNavDelegate: UINavigationControllerDelegate?
     private var completions: [UIViewController: PublishSubject<Void>]
     private var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
@@ -73,6 +74,7 @@ class OWRouter: NSObject, OWRoutering {
         self.completions = [:]
         self.pushedVCStyles = [:]
         self.presentationalMode = presentationalMode
+        self.originNavDelegate = self.navigationController?.delegate
         super.init()
         self.navigationController?.delegate = self
         if let sdkNavigationController = self.navigationController as? OWNavigationControllerProtocol {
@@ -213,6 +215,15 @@ class OWRouter: NSObject, OWRoutering {
         return childs.isEmpty
     }
 
+    func noSDKViewControllersExistInNav() -> Bool {
+        return completions.isEmpty
+    }
+
+    func returnNavigationDelegateToPublisherIfNeeded() {
+        guard noSDKViewControllersExistInNav() else { return }
+        self.navigationController?.delegate = originNavDelegate
+    }
+
     var numberOfActiveViewControllers: Int {
         return navigationController?.viewControllers.count ?? 0
     }
@@ -220,6 +231,9 @@ class OWRouter: NSObject, OWRoutering {
 
 extension OWRouter: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        defer {
+            originNavDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+        }
         // Ensure the view controller is popping
         guard let poppedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
                 !navigationController.viewControllers.contains(poppedViewController) else {
@@ -251,6 +265,9 @@ extension OWRouter: UINavigationControllerDelegate {
 
 private extension OWRouter {
     func runCompletion(for controller: UIViewController) {
+        defer {
+            returnNavigationDelegateToPublisherIfNeeded()
+        }
         guard let completion = completions[controller] else {
             return
         }
