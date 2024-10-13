@@ -4,7 +4,7 @@
 "Appeal" = "Bezwaar";
 "AppealAuthorizationRequiredMessage" = "Zorg dat je ingelogd bent om je bezwaar af te ronden. Heb je geen abonnement, registreer je dan eerst.";
 "AppealAuthorizationRequiredTitle" = "Verificatie verplicht";
-"AppealLabel" = "Herschrijf je opmerking gerust en publiceer hem opnieuw. Je mag ook bezwaar maken, waarna wij onze besluit heroverwegen.";
+"AppealLabel" = "Voel je vrij om je commentaar te herschrijven en opnieuw te posten, of, als je dat wilt, kun je Bezwaar, en dan zullen we onze beslissing heroverwegen.";
 "AppealLabelError" = "De informatie over het bezwaar is momenteel niet beschikbaar. Gelieve je internetverbinding te controleren of het later opnieuw te proberen.";
 "AppealLabelNotAvailable" = "De opmerking die je maakte is niet meer beschikbaar.";
 "AppealRejectedCommentStatusMessage" = "Je bezwaar is afgewezen.";
@@ -24,7 +24,7 @@
 "ClarityDetailsRejectedTopParagraph" = "Je reactie lijkt in strijd te zijn met de richtlijnen van onze community en is daarom geweigerd. Je kunt hem alleen zelf zien.";
 "ClarityPendingReasonsTitle" = "Je opmerking is mogelijk voor beoordeling gestuurd om een van de volgende redenen:";
 "CloseEditor" = "Editor sluiten?";
-"ClosedAndEmptyConversation" = "Dit gesprek is voorbij en je kunt geen opmerkingen meer plaatsen.";
+"ClosedAndEmptyConversation" = "Dit gesprek is beëindigd en commentaar wordt niet meer geaccepteerd.";
 "CollapseThread" = "Discussielijn samenvouwen";
 "Comment" = "Opmerking";
 "CommentFollowsGuidelinesAppealTitle" = "Ik geloof dat mijn opmerking de richtlijnen van de community volgt";
@@ -37,7 +37,7 @@
 "CommmenterAppealCancelSubtitle" = "Weet je zeker dat je je bezwaar wilt intrekken en de reden die je hebt opgegeven wilt verwijderen?";
 "CommunityGuidelines" = "Richtlijnen van de community";
 "CommunityModerator" = "Moderator voor de community";
-"ConnectivityErrorMessage" = "Oei! Zo te zien \nis er iets mis \nmet de verbinding.";
+"ConnectivityErrorMessage" = "Oeps! Het lijkt erop dat we \n last hebben van wat \n verbindingsproblemen.";
 "Controversial" = "Controversieel";
 "Conversation" = "Gesprek";
 "CopyrightInfringementSubtitle" = "Gebruik van auteursrechtelijk beschermde inhoud zonder toestemming";
@@ -52,9 +52,9 @@
 "DownVoteButton" = "Knop negatieve beoordelingen";
 "Edit" = "Aanpassen";
 "EditComment" = "Bewerk een opmerking";
-"Edited" = "(Aangepast)";
+"Edited" = " (Aangepast)";
 "EditingComment" = "Bezig met bewerken van opmerking";
-"EmptyConversation" = "Ga het gesprek aan en deel je gedachten en ideeën met de community.";
+"EmptyConversation" = "Begin het gesprek en deel je gedachten en ideeën met de gemeenschap.";
 "ErrorStateLoadComments" = "We kunnen de opmerkingen op dit moment niet laden";
 "ErrorStateLoadReplies" = "We kunnen de reacties op dit moment niet laden";
 "ErrorStatePostComment" = "We konden je opmerking niet publiceren";
@@ -72,6 +72,7 @@
 "InappropriateLanguageTitle" = "Ongepaste taal";
 "JustNow" = "Op dit moment";
 "LearnMore" = "Meer informatie";
+"Loading" = "Laden";
 "LoginPromptTitle" = "Geef toestemming om deel te nemen";
 "Minutes" = "m";
 "MisunderstandingAppealTitle" = "Ik geloof dat jullie de bedoeling of context van mijn opmerking verkeerd hebben begrepen";
@@ -93,7 +94,7 @@
 "OtherTitle" = "Anders";
 "PendingCommentStatusMessage" = "Even geduld, je opmerking wacht op goedkeuring.";
 "PendingReasonPerformanceReview" = "Bepaalde opmerkingen worden naar een beoordeling van de interne productprestaties gestuurd (het ligt niet aan jou, het ligt aan ons)";
-"PendingResonCommunityGuidelines" = "Je opmerking is automatisch gemarkeerd omdat deze misschien niet in overeenstemming met onze Richtlijnen voor de Community is (je kunt je opmerking te allen tijde herzien)";
+"PendingResonCommunityGuidelines" = "Je opmerking is automatisch gemarkeerd omdat hij mogelijk niet overeenkomt met onze Richtlijnen van de community (je kunt je opmerking op elk gewenst moment herzien).";
 "PendingResonManualApproval" = "Alle opmerkingen op de site moeten handmatig worden goedgekeurd (dus niets persoonlijks)";
 "Popular" = "Populair";
 "Post" = "Bericht";
@@ -129,7 +130,7 @@
 "ReportSubmissionFailedMessage" = "Je melding kon niet worden ingediend. Controleer je verbinding en probeer het later opnieuw.";
 "ReportSubmissionFailedTitle" = "Indienen van melding mislukt";
 "ReportedCommentMessage" = "Dit bericht is gerapporteerd";
-"SeeMore" = " Meer informatie ";
+"SeeMore" = " Bekijk meer ";
 "SexualActivitySubtitle" = "Seksueel expliciet, pornografie, flirten, seksuele agressie";
 "SexualActivityTitle" = "Seksuele activiteit";
 "Share" = "Deel";
@@ -140,6 +141,7 @@
 "SortBy" = "Sorteer op";
 "SpamSubtitle" = "Adverteren, phishing, scamming, bots, repeterende posts";
 "SpamTitle" = "Spam";
+"Staff" = "Staf";
 "Submit" = "Verzenden";
 "TakeAPhoto" = "Neem een foto";
 "Terms" = "Voorwaarden";
