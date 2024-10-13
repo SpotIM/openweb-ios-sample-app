@@ -58,7 +58,7 @@ class OWRouter: NSObject, OWRoutering {
         static let transitionDuration = 0.5
         static let childAnimationDuration = 0.3
     }
-    private let originNavDelegate: UINavigationControllerDelegate?
+    private weak var originNavDelegate: UINavigationControllerDelegate?
     private var completions: [UIViewController: PublishSubject<Void>]
     private var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
