@@ -64,9 +64,7 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     }
 
     func cleanCache() {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         self._mapPostIdToReportedCommentIds.removeAll()
         savePersistant()
@@ -75,9 +73,7 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
 
 private extension OWReportedCommentsService {
     func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         if let existingCommentIdsForPostId = _mapPostIdToReportedCommentIds[postId] {
             // merge and replacing current comments
@@ -100,9 +96,7 @@ private extension OWReportedCommentsService {
     }
 
     func isReported(commentId id: OWCommentId, postId: OWPostId) -> Bool {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
         return _mapPostIdToReportedCommentIds[postId]?.contains(id) ?? false
     }
 
@@ -112,9 +106,7 @@ private extension OWReportedCommentsService {
             let keychain = self.servicesProvider.keychain()
 
             if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
-                // swiftlint:disable self_capture_in_blocks
                 self.lock.lock(); defer { self.lock.unlock() }
-                // swiftlint:enable self_capture_in_blocks
                 self._mapPostIdToReportedCommentIds = reportedCommentsMapper
             }
         }

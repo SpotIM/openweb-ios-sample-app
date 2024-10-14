@@ -169,7 +169,7 @@ custom_rules:
         name: "Self Capture In Blocks" # rule name. optional.
         message: "Self captured in block" # violation message. optional.
         included: ".*.swift"
-        regex: '(\{ self\.)' # matching pattern
+        regex: '(?<!defer )\{ self\.' # matching pattern
         match_kinds:
           - identifier
           - keyword
