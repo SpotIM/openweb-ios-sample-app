@@ -22,9 +22,11 @@ class OWTestingRedSecondLevel: UIView {
         static let collapsedCellContentHeight: CGFloat = 110.0
         static let expandedCellContentHeight: CGFloat = 170.0
         static let shortText = "This is a short text"
-        // swiftlint:disable line_length
-        static let longText = "This is a long text just to show how a cell can change it's height via a change in a UILabel length.\nA new line just to make it longer.\nAre you still reading that nonsense?"
-        // swiftlint:enable line_length
+        static let longText = """
+            This is a long text just to show how a cell can change it's height via a change in a UILabel length.
+            A new line just to make it longer.
+            Are you still reading that nonsense?
+            """
     }
 
     private lazy var lblIdentifier: UILabel = {
