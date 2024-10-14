@@ -176,25 +176,22 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
         Array(min...max).map { String($0) }
     }()
 
-    // swiftlint:disable closure_parameter_position
     private lazy var customStyleModeObservable: Observable<OWPreConversationStyle> = {
-        return Observable.combineLatest(customStyleModeSelectedIndex,
-                                        customStyleModeSelectedNumberOfComments,
-                                        communityGuidelinesStyleSelectedIndex,
-                                        communityQuestionsStyleModeSelectedIndex) {
-            styleIndex,
-            numberOfComments,
-            communityGuidelinesStyleIndex,
-            questionStyleIndex -> OWPreConversationStyle in
-
-            return OWPreConversationStyle.preConversationStyle(fromIndex: styleIndex,
-                                                               numberOfComments: numberOfComments,
-                                                               communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
-                                                               communityQuestionsStyleIndex: questionStyleIndex)
+        return Observable.combineLatest(
+            customStyleModeSelectedIndex,
+            customStyleModeSelectedNumberOfComments,
+            communityGuidelinesStyleSelectedIndex,
+            communityQuestionsStyleModeSelectedIndex
+        ) { styleIndex, numberOfComments, communityGuidelinesStyleIndex, questionStyleIndex -> OWPreConversationStyle in
+            return OWPreConversationStyle.preConversationStyle(
+                fromIndex: styleIndex,
+                numberOfComments: numberOfComments,
+                communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
+                communityQuestionsStyleIndex: questionStyleIndex
+            )
         }
-                                        .asObservable()
+        .asObservable()
     }()
-    // swiftlint:enable closure_parameter_position
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
