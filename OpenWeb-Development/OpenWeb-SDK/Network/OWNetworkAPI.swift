@@ -98,8 +98,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
 
         let request = requestAfterPerformingMiddlewares(with: route.urlRequest!, additionalMiddlewares: route.endpoint.additionalMiddlewares ?? [])
 
-        let response = Observable<T>.create { [weak self] observer in
-            guard let self else { return Disposables.create() }
+        let response = Observable<T>.create { observer in
             let task = self.session.afSession.request(request)
                 .validate()
                 .downloadProgress(closure: { prog in
