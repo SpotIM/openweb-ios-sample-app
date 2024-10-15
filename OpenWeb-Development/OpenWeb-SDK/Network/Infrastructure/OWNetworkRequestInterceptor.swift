@@ -236,8 +236,7 @@ class OWNetworkInterceptor: OWNetworkRequestInterceptor {
 
         let adapter = pendingAdapters.removeFirst()
 
-        adapter.adapt(urlRequest, for: session) { [weak self] result in
-            guard let self else { return }
+        adapter.adapt(urlRequest, for: session) { result in
             switch result {
             case let .success(urlRequest):
                 self.adapt(urlRequest, for: session, using: pendingAdapters, completion: completion)

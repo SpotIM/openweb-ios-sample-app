@@ -57,9 +57,7 @@ class OWProtected<T> {
     ///
     /// - Returns:           The return value of the closure passed.
     func read<U>(_ closure: (T) throws -> U) rethrows -> U {
-        try lock.around { [unowned self] in
-            try closure(self.value)
-        }
+        try lock.around { try closure(self.value) }
     }
 
     /// Synchronously modify the protected value.
@@ -69,9 +67,7 @@ class OWProtected<T> {
     /// - Returns:           The modified value.
     @discardableResult
     func write<U>(_ closure: (inout T) throws -> U) rethrows -> U {
-        try lock.around { [unowned self] in
-            try closure(&self.value)
-        }
+        try lock.around { try closure(&self.value) }
     }
 
     subscript<Property>(dynamicMember keyPath: WritableKeyPath<T, Property>) -> Property {
