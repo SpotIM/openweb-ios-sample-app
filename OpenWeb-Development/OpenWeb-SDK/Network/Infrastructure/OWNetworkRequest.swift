@@ -1173,6 +1173,10 @@ class OWNetworkDataRequest: OWNetworkRequest {
 
 // MARK: - DataStreamRequest
 
+#if hasFeature(RetroactiveAttribute)
+extension OutputStream: @unchecked @retroactive Sendable {} // silence warning in Xcode 16
+#endif
+
 /// `Request` subclass which streams HTTP response `Data` through a `Handler` closure.
 final class OWNetworkDataStreamRequest: OWNetworkRequest {
     /// Closure type handling `DataStreamRequest.Stream` values.
