@@ -506,9 +506,7 @@ class OWNetworkRequest {
 
         $mutableState.isFinishing = true
 
-        if let error {
-            self.error = error
-        }
+        if let error { self.error = error }
 
         // Start response handlers
         processNextResponseSerializer()
@@ -530,15 +528,11 @@ class OWNetworkRequest {
             }
 
             if mutableState.responseSerializerProcessingFinished {
-                underlyingQueue.async { [weak self] in
-                    guard let self else { return }
-                    self.processNextResponseSerializer()
-                }
+                underlyingQueue.async { self.processNextResponseSerializer() }
             }
 
             if mutableState.state.canTransitionTo(.resumed) {
-                underlyingQueue.async { [weak self] in
-                    guard let self else { return }
+                underlyingQueue.async {
                     if self.delegate?.startImmediately == true {
                         self.resume()
                     }
@@ -1169,9 +1163,7 @@ class OWNetworkDataRequest: OWNetworkRequest {
 
             let result = validation(self.request, response, self.data)
 
-            if case let .failure(error) = result {
-                self.error = error.asOWNetworkError(or: .responseValidationFailed(reason: .customValidationFailed(error: error)))
-            }
+            if case let .failure(error) = result { self.error = error.asOWNetworkError(or: .responseValidationFailed(reason: .customValidationFailed(error: error))) }
 
             self.eventMonitor?.request(self,
                                        didValidateRequest: self.request,
@@ -1706,10 +1698,7 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
                 task.resume()
                 task.cancel { resumeData in
                     self.$mutableDownloadState.resumeData = resumeData
-                    self.underlyingQueue.async { [weak self] in
-                        guard let self else { return }
-                        self.didCancelTask(task)
-                    }
+                    self.underlyingQueue.async { self.didCancelTask(task) }
                     completionHandler(resumeData)
                 }
             } else {
