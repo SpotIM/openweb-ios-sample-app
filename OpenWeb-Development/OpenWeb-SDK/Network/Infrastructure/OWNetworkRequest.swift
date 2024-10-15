@@ -340,13 +340,10 @@ class OWNetworkRequest {
 
     /// Asynchronously calls any stored `cURLHandler` and then removes it from `mutableState`.
     private func callCURLHandlerIfNecessary() {
-        $mutableState.write { [weak self] mutableState in
+        $mutableState.write { mutableState in
             guard let cURLHandler = mutableState.cURLHandler else { return }
 
-            cURLHandler.queue.async { [weak self] in
-                guard let self else { return }
-                cURLHandler.handler(self.cURLDescription())
-            }
+            cURLHandler.queue.async { cURLHandler.handler(self.cURLDescription()) }
 
             mutableState.cURLHandler = nil
         }
@@ -532,11 +529,7 @@ class OWNetworkRequest {
             }
 
             if mutableState.state.canTransitionTo(.resumed) {
-                underlyingQueue.async {
-                    if self.delegate?.startImmediately == true {
-                        self.resume()
-                    }
-                }
+                underlyingQueue.async { if self.delegate?.startImmediately == true { self.resume() } }
             }
         }
     }
