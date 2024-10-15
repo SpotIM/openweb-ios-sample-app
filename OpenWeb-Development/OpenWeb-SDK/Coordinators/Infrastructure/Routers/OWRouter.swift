@@ -58,7 +58,7 @@ class OWRouter: NSObject, OWRoutering {
         static let transitionDuration = 0.5
         static let childAnimationDuration = 0.3
     }
-    private weak var originNavDelegate: UINavigationControllerDelegate?
+    private weak var originalNavigationControllerDelegate: UINavigationControllerDelegate?
     private var completions: [UIViewController: PublishSubject<Void>]
     private var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
@@ -74,7 +74,7 @@ class OWRouter: NSObject, OWRoutering {
         self.completions = [:]
         self.pushedVCStyles = [:]
         self.presentationalMode = presentationalMode
-        self.originNavDelegate = self.navigationController?.delegate
+        self.originalNavigationControllerDelegate = self.navigationController?.delegate
         super.init()
         self.navigationController?.delegate = self
         if let sdkNavigationController = self.navigationController as? OWNavigationControllerProtocol {
@@ -219,9 +219,9 @@ class OWRouter: NSObject, OWRoutering {
         return completions.isEmpty
     }
 
-    func returnNavigationDelegateToPublisherIfNeeded() {
+    func restoreOriginalNavigationControllerDelegateIfNeeded() {
         guard noSDKViewControllersExistInNav() else { return }
-        self.navigationController?.delegate = originNavDelegate
+        self.navigationController?.delegate = originalNavigationControllerDelegate
     }
 
     var numberOfActiveViewControllers: Int {
@@ -232,7 +232,7 @@ class OWRouter: NSObject, OWRoutering {
 extension OWRouter: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         defer {
-            originNavDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+            originalNavigationControllerDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
         }
         // Ensure the view controller is popping
         guard let poppedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
@@ -266,7 +266,7 @@ extension OWRouter: UINavigationControllerDelegate {
 private extension OWRouter {
     func runCompletion(for controller: UIViewController) {
         defer {
-            returnNavigationDelegateToPublisherIfNeeded()
+            restoreOriginalNavigationControllerDelegateIfNeeded()
         }
         guard let completion = completions[controller] else {
             return
