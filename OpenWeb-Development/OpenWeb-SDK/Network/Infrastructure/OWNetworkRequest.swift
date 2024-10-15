@@ -7,6 +7,7 @@
 //
 
 // swiftlint:disable file_length
+// swiftlint:disable self_capture_in_blocks
 
 import Foundation
 
