@@ -260,8 +260,7 @@ class OWNetworkInterceptor: OWNetworkRequestInterceptor {
 
         let adapter = pendingAdapters.removeFirst()
 
-        adapter.adapt(urlRequest, using: state) { [weak self] result in
-            guard let self else { return }
+        adapter.adapt(urlRequest, using: state) { result in
             switch result {
             case let .success(urlRequest):
                 self.adapt(urlRequest, using: state, adapters: pendingAdapters, completion: completion)
@@ -289,8 +288,7 @@ class OWNetworkInterceptor: OWNetworkRequestInterceptor {
 
         let retrier = pendingRetriers.removeFirst()
 
-        retrier.retry(request, for: session, dueTo: error) { [weak self] result in
-            guard let self else { return }
+        retrier.retry(request, for: session, dueTo: error) { result in
             switch result {
             case .retry, .retryWithDelay, .doNotRetryWithError:
                 completion(result)
