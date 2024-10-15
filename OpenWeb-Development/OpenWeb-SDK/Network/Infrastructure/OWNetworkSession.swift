@@ -977,9 +977,8 @@ class OWNetworkSession {
     ///
     /// - Parameter request: The `Request` to perform.
     func perform(_ request: OWNetworkRequest) {
-        rootQueue.async { [weak self] in
-            guard let self,
-                  !request.isCancelled else { return }
+        rootQueue.async {
+            guard !request.isCancelled else { return }
 
             self.activeRequests.insert(request)
 
@@ -1011,8 +1010,7 @@ class OWNetworkSession {
     func performUploadRequest(_ request: OWNetworkUploadRequest) {
         dispatchPrecondition(condition: .onQueue(requestQueue))
 
-        performSetupOperations(for: request, convertible: request.convertible) { [weak self] in
-            guard let self else { return false }
+        performSetupOperations(for: request, convertible: request.convertible) {
             do {
                 let uploadable = try request.upload.createUploadable()
                 self.rootQueue.async { request.didCreateUploadable(uploadable) }
@@ -1056,17 +1054,13 @@ class OWNetworkSession {
 
         guard let adapter = adapter(for: request) else {
             guard shouldCreateTask() else { return }
-            rootQueue.async { [weak self] in
-                guard let self else { return }
-                self.didCreateURLRequest(initialRequest, for: request)
-            }
+            rootQueue.async { self.didCreateURLRequest(initialRequest, for: request) }
             return
         }
 
         let adapterState = OWNetworkRequestAdapterState(requestID: request.id, session: self)
 
-        adapter.adapt(initialRequest, using: adapterState) { [weak self] result in
-            guard let self else { return }
+        adapter.adapt(initialRequest, using: adapterState) { result in
             do {
                 let adaptedRequest = try result.get()
                 try adaptedRequest.validate()
@@ -1181,8 +1175,7 @@ extension OWNetworkSession: OWNetworkRequestDelegate {
             return
         }
 
-        retrier.retry(request, for: self, dueTo: error) { [weak self] retryResult in
-            guard let self else { completion(retryResult); return }
+        retrier.retry(request, for: self, dueTo: error) { retryResult in
             self.rootQueue.async {
                 guard let retryResultError = retryResult.error else { completion(retryResult); return }
 
@@ -1193,8 +1186,7 @@ extension OWNetworkSession: OWNetworkRequestDelegate {
     }
 
     func retryRequest(_ request: OWNetworkRequest, withDelay timeDelay: TimeInterval?) {
-        rootQueue.async { [weak self] in
-            guard let self else { return }
+        rootQueue.async {
             let retry: () -> Void = {
                 guard !request.isCancelled else { return }
 
