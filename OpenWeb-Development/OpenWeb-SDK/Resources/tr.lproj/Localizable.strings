@@ -4,7 +4,7 @@
 "Appeal" = "İtiraz";
 "AppealAuthorizationRequiredMessage" = "İtirazınıza devam etmek için oturum açtığınızdan emin olun. Üye değil misiniz? O zaman önce kayıt olmanız gerekir.";
 "AppealAuthorizationRequiredTitle" = "Yetkilendirme Gerekli";
-"AppealLabel" = "İsterseniz yorumunuzu yeniden yazıp yayınlayabilirsiniz. Dilerseniz itiraz da edebilirsiniz, biz de kararımızı gözden geçiririz.";
+"AppealLabel" = "Yorumunu tekrar yazıp yeniden paylaşmaktan çekinme veya istersen İtiraz yapabilirsin; biz de kararımızı yeniden inceleriz.";
 "AppealLabelError" = "İtiraz bilgileri şu anda kullanılamıyor. Lütfen internet bağlantınızı kontrol edin veya daha sonra tekrar deneyin.";
 "AppealLabelNotAvailable" = "Bildirdiğiniz yorum artık mevcut değil.";
 "AppealRejectedCommentStatusMessage" = "İtirazınız reddedildi.";
@@ -86,7 +86,6 @@
 "Newest" = "En Yeni";
 "No" = "Hayır";
 "NotAuthorPendingCommentStatusMessage" = "Bu yorum incelenmeyi bekliyor.";
-"OK" = "OK";
 "Oldest" = "En Eski";
 "OpenSettings" = "Ayarları aç";
 "OptionsMenu" = "Seçenekler menüsü";
@@ -101,7 +100,7 @@
 "Post" = "Yayınla";
 "PostAComment" = "Bir Yorum Yayınla";
 "PoweredBy" = "Destekleyen";
-"PoweredByOpenWeb" = "OpenWeb tarafından desteklenmektedir";
+"PoweredByOpenWeb" = "Destekleyen OpenWeb";
 "Privacy" = "Gizlilik";
 "ProfileImage" = "Profil görseli";
 "ProfileSubtitle" = "Uygunsuz kullanıcı adı, avatar, biyografi, kimlik taklidi";
