@@ -4,7 +4,7 @@
 "Appeal" = "Khiếu nại";
 "AppealAuthorizationRequiredMessage" = "Đảm bảo bạn đã đăng nhập để tiếp tục khiếu nại. Bạn không phải là thành viên? Trước tiên, bạn sẽ cần phải đăng ký.";
 "AppealAuthorizationRequiredTitle" = "Yêu cầu ủy quyền";
-"AppealLabel" = "Vui lòng viết lại và đăng lại bình luận của bạn, hoặc nếu muốn, bạn có thể khiếu nại và chúng tôi sẽ xem xét lại quyết định của mình.";
+"AppealLabel" = "Bạn có thể thoải mái viết lại và đăng lại bình luận của mình, hoặc nếu muốn, bạn có thể khiếu nại và chúng tôi sẽ xem xét lại quyết định của mình.";
 "AppealLabelError" = "Hiện không có thông tin khiếu nại. Vui lòng kiểm tra kết nối Internet hoặc thử lại sau.";
 "AppealLabelNotAvailable" = "Bình luận bạn đã báo cáo không còn tồn tại.";
 "AppealRejectedCommentStatusMessage" = "Khiếu nại của bạn đã bị từ chối.";
@@ -86,7 +86,6 @@
 "Newest" = "Mới nhất";
 "No" = "Không";
 "NotAuthorPendingCommentStatusMessage" = "Bình luận này đang chờ xem xét.";
-"OK" = "OK";
 "Oldest" = "Cũ nhất";
 "OpenSettings" = "Mở cài đặt";
 "OptionsMenu" = "Menu tùy chọn";
