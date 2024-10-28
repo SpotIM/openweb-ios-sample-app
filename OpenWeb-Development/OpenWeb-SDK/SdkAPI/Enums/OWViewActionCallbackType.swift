@@ -31,6 +31,8 @@ public enum OWViewActionCallbackType: Codable {
     case openCommenterAppeal(data: OWAppealRequiredData)
     case openCommentThread(commentId: OWCommentId, performActionType: OWCommentThreadPerformActionType)
     case closeCommentThread
+    case termsTapped
+    case privacyTapped
 }
 
 extension OWViewActionCallbackType: Equatable {
@@ -73,6 +75,10 @@ extension OWViewActionCallbackType: Equatable {
         case (.openLinkInComment(let lhsUrl), .openLinkInComment(let rhsUrl)):
             return lhsUrl == rhsUrl
         case (.openCommenterAppeal, .openCommenterAppeal):
+            return true
+        case (.termsTapped, .termsTapped):
+            return true
+        case (.privacyTapped, .privacyTapped):
             return true
         default:
             return false
