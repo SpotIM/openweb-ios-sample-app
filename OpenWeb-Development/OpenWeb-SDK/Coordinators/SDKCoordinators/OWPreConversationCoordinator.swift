@@ -251,6 +251,12 @@ private extension OWPreConversationCoordinator {
         let contentPressed = viewModel.outputs.openFullConversation
             .map { OWViewActionCallbackType.contentPressed }
 
+        let termsTapped = viewModel.outputs.termsTapped
+            .map { OWViewActionCallbackType.termsTapped }
+
+        let privacyTapped = viewModel.outputs.privacyTapped
+            .map { OWViewActionCallbackType.privacyTapped }
+
         let openPublisherProfile = viewModel.outputs.openProfile
             .map { openProfileType in
                 switch openProfileType {
@@ -291,7 +297,9 @@ private extension OWPreConversationCoordinator {
                          openPublisherProfile,
                          openReportReason,
                          communityGuidelinesObservable,
-                         commentCreationObservable)
+                         commentCreationObservable,
+                         termsTapped,
+                         privacyTapped)
             .subscribe(onNext: { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             })
