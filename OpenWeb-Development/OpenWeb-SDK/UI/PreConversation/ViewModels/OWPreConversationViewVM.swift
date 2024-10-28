@@ -61,6 +61,8 @@ protocol OWPreConversationViewViewModelingOutputs {
     var hideToast: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
     var shouldShowFilterTabsView: Observable<Bool> { get }
+    var termsTapped: Observable<Void> { get }
+    var privacyTapped: Observable<Void> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -273,6 +275,16 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                                 realtimeIndicationTapped,
                                 filterTabOpenConversation)
             .asObservable()
+    }
+
+    private var privacyTap = PublishSubject<Void>()
+    var privacyTapped: Observable<Void> {
+        return footerViewViewModel.outputs.privacyTapped
+    }
+
+    private var termsTap = PublishSubject<Void>()
+    var termsTapped: Observable<Void> {
+        return footerViewViewModel.outputs.termsTapped
     }
 
     private var _openProfile = PublishSubject<OWOpenProfileType>()
