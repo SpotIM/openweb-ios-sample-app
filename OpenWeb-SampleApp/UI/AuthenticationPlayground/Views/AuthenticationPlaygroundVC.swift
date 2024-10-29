@@ -87,6 +87,14 @@ class AuthenticationPlaygroundVC: UIViewController {
                              accessibilityPrefixId: Metrics.switchAutomaticallyDismissIdentifier, isOn: true)
     }()
 
+    private lazy var customAuthStackView: UIStackView = {
+        let customAuthStackView = UIStackView()
+        customAuthStackView.axis = .vertical
+        customAuthStackView.spacing = Metrics.verticalMargin
+        return customAuthStackView
+    }()
+
+
     private lazy var lblGenericSSOStatus: UILabel = statusLabel
     private lazy var lblThirdPartySSOStatus: UILabel = statusLabel
     private lazy var lblLogoutStatus: UILabel = statusLabel
@@ -212,37 +220,21 @@ private extension AuthenticationPlaygroundVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
-        scrollView.addSubview(switchAuthenticationWithCustomFields)
-        switchAuthenticationWithCustomFields.snp.makeConstraints { make in
+        scrollView.addSubview(customAuthStackView)
+        customAuthStackView.snp.makeConstraints { make in
             make.top.equalTo(pickerGenericSSO.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
-        scrollView.addSubview(textFieldSSOToken)
-        textFieldSSOToken.snp.makeConstraints { make in
-            make.top.equalTo(switchAuthenticationWithCustomFields.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
-        }
-
-        scrollView.addSubview(textFieldUsername)
-        textFieldUsername.snp.makeConstraints { make in
-            make.top.equalTo(textFieldSSOToken.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
-        }
-
-        scrollView.addSubview(textFieldPassword)
-        textFieldPassword.snp.makeConstraints { make in
-            make.top.equalTo(textFieldUsername.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
-        }
+        customAuthStackView.addArrangedSubview(switchAuthenticationWithCustomFields)
+        customAuthStackView.addArrangedSubview(textFieldSSOToken)
+        customAuthStackView.addArrangedSubview(textFieldUsername)
+        customAuthStackView.addArrangedSubview(textFieldPassword)
 
         scrollView.addSubview(lblGenericSSOStatus)
         lblGenericSSOStatus.snp.makeConstraints { make in
-            make.top.equalTo(textFieldPassword.snp.bottom).offset(2 * Metrics.verticalMargin)
+            make.top.equalTo(customAuthStackView.snp.bottom).offset(2 * Metrics.verticalMargin)
             make.leading.equalTo(pickerGenericSSO).offset(Metrics.horizontalMargin)
         }
 
