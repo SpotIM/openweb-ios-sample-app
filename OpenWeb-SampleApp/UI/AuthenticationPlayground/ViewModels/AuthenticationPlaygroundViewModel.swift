@@ -240,8 +240,8 @@ private extension AuthenticationPlaygroundViewModel {
                                          customUsername,
                                          customPassword,
                                          customSSOToken)
-            ) { (genericSSO, latestValues) in
-                (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3, latestValues.4)
+            ) { genericSSO, latestValues in
+                return (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3, latestValues.4)
             }
             .flatMapLatest { genericSSO, shouldInitializeSDK, customAuthOn, customUsername, customPassword, customSSOToken -> Observable<GenericSSOAuthentication> in
                 // 2. Initialize SDK with appropriate spotId if needed
