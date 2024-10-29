@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+@_exported import OpenWebSDKAdapter
 
 // Internal protocol
 protocol OWManagerInternalProtocol: AnyObject {
