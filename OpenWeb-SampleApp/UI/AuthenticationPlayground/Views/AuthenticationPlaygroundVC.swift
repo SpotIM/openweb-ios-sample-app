@@ -94,7 +94,6 @@ class AuthenticationPlaygroundVC: UIViewController {
         return customAuthStackView
     }()
 
-
     private lazy var lblGenericSSOStatus: UILabel = statusLabel
     private lazy var lblThirdPartySSOStatus: UILabel = statusLabel
     private lazy var lblLogoutStatus: UILabel = statusLabel
@@ -176,9 +175,7 @@ private extension AuthenticationPlaygroundVC {
         view.accessibilityIdentifier = Metrics.identifier
     }
 
-    // swiftlint:disable function_body_length
     func setupViews() {
-    // swiftlint:enable function_body_length
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 
