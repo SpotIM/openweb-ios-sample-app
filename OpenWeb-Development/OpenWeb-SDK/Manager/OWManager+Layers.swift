@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OpenWebSDKAdapter
 
 extension OWManager {
     var ui: OWUI {

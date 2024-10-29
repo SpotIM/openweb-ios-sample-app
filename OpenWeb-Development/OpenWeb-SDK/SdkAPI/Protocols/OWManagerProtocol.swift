@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OpenWebSDKAdapter
 
 public protocol OWManagerProtocol {
     var spotId: OWSpotId { get set }
