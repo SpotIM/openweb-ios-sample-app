@@ -168,7 +168,9 @@ private extension AuthenticationPlaygroundVC {
         view.accessibilityIdentifier = Metrics.identifier
     }
 
+    // swiftlint:disable function_body_length
     func setupViews() {
+    // swiftlint:enable function_body_length
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 
