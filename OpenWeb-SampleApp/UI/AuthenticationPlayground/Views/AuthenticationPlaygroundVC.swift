@@ -17,6 +17,11 @@ class AuthenticationPlaygroundVC: UIViewController {
         static let pickerGenericSSOIdentifier = "generic_sso"
         static let pickerThirdPartySSOIdentifier = "third_party_sso"
         static let switchAutomaticallyDismissIdentifier = "automatically_dismiss"
+        static let textFieldSpotIdIdentifier = "text_field_spot_id"
+        static let textFieldSSOTokenIdentifier = "text_field_sso_token"
+        static let textFieldUsernameIdentifier = "text_field_username"
+        static let textFieldPasswordIdentifier = "text_field_password"
+        static let textFieldUserIdIdentifier = "text_field_user_id"
         static let verticalMargin: CGFloat = 20
         static let verticalBigMargin: CGFloat = 60
         static let horizontalMargin: CGFloat = 10
@@ -50,6 +55,26 @@ class AuthenticationPlaygroundVC: UIViewController {
     private lazy var pickerGenericSSO: PickerSetting = {
         let title = NSLocalizedString("GenericSSO", comment: "") + ":"
         return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerGenericSSOIdentifier)
+    }()
+
+    private lazy var switchAuthenticationWithCustomFields: SwitchSetting = {
+        let title = NSLocalizedString("AuthWithCustomFields", comment: "") + ":"
+        return SwitchSetting(title: title, accessibilityPrefixId: Metrics.textFieldSSOTokenIdentifier)
+    }()
+
+    private lazy var textFieldSSOToken: TextFieldSetting = {
+        let title = NSLocalizedString("SSOToken", comment: "") + ":"
+        return TextFieldSetting(title: title, accessibilityPrefixId: Metrics.textFieldSSOTokenIdentifier, font: FontBook.paragraph)
+    }()
+
+    private lazy var textFieldUsername: TextFieldSetting = {
+        let title = NSLocalizedString("Username", comment: "") + ":"
+        return TextFieldSetting(title: title, accessibilityPrefixId: Metrics.textFieldUsernameIdentifier, font: FontBook.paragraph)
+    }()
+
+    private lazy var textFieldPassword: TextFieldSetting = {
+        let title = NSLocalizedString("Password", comment: "") + ":"
+        return TextFieldSetting(title: title, accessibilityPrefixId: Metrics.textFieldPasswordIdentifier, font: FontBook.paragraph)
     }()
 
     private lazy var pickerThirdPartySSO: PickerSetting = {
@@ -185,9 +210,37 @@ private extension AuthenticationPlaygroundVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
+        scrollView.addSubview(switchAuthenticationWithCustomFields)
+        switchAuthenticationWithCustomFields.snp.makeConstraints { make in
+            make.top.equalTo(pickerGenericSSO.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
+
+        scrollView.addSubview(textFieldSSOToken)
+        textFieldSSOToken.snp.makeConstraints { make in
+            make.top.equalTo(switchAuthenticationWithCustomFields.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
+
+        scrollView.addSubview(textFieldUsername)
+        textFieldUsername.snp.makeConstraints { make in
+            make.top.equalTo(textFieldSSOToken.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
+
+        scrollView.addSubview(textFieldPassword)
+        textFieldPassword.snp.makeConstraints { make in
+            make.top.equalTo(textFieldUsername.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
+
         scrollView.addSubview(lblGenericSSOStatus)
         lblGenericSSOStatus.snp.makeConstraints { make in
-            make.top.equalTo(pickerGenericSSO.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(textFieldPassword.snp.bottom).offset(2 * Metrics.verticalMargin)
             make.leading.equalTo(pickerGenericSSO).offset(Metrics.horizontalMargin)
         }
 
@@ -262,6 +315,25 @@ private extension AuthenticationPlaygroundVC {
             .map { $0.row }
             .distinctUntilChanged()
             .bind(to: viewModel.inputs.selectedGenericSSOOptionIndex)
+            .disposed(by: disposeBag)
+
+        switchAuthenticationWithCustomFields.rx.isOn
+            .bind(to: viewModel.inputs.customAuthOn)
+            .disposed(by: disposeBag)
+
+        textFieldSSOToken.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.customSSOToken)
+            .disposed(by: disposeBag)
+
+        textFieldUsername.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.customUsername)
+            .disposed(by: disposeBag)
+
+        textFieldPassword.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.customPassword)
             .disposed(by: disposeBag)
 
         pickerThirdPartySSO.rx.selectedPickerIndex

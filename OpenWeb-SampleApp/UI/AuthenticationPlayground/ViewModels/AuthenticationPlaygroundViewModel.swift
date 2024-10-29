@@ -21,6 +21,10 @@ protocol AuthenticationPlaygroundViewModelingInputs {
     var automaticallyDismissToggled: PublishSubject<Bool> { get }
     var dismissing: PublishSubject<Void> { get }
     var closeClick: PublishSubject<Void> { get }
+    var customSSOToken: PublishSubject<String> { get }
+    var customUsername: PublishSubject<String> { get }
+    var customPassword: PublishSubject<String> { get }
+    var customAuthOn: PublishSubject<Bool> { get }
 }
 
 protocol AuthenticationPlaygroundViewModelingOutputs {
@@ -67,6 +71,11 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
 
     var genericSSOAuthenticatePressed = PublishSubject<Void>()
     var thirdPartySSOAuthenticatePressed = PublishSubject<Void>()
+
+    var customAuthOn = PublishSubject<Bool>()
+    var customSSOToken = PublishSubject<String>()
+    var customUsername = PublishSubject<String>()
+    var customPassword = PublishSubject<String>()
 
     lazy var title: String = {
         return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
@@ -225,13 +234,24 @@ private extension AuthenticationPlaygroundViewModel {
                 self?._thirdPartySSOAuthenticationStatus.onNext(.initial)
                 self?._logoutAuthenticationStatus.onNext(.initial)
             })
-            .withLatestFrom(shouldInitializeSDK) { genericSSO, shouldInitializeSDK -> GenericSSOAuthentication in
+            .withLatestFrom(shouldInitializeSDK) { ($0, $1) }
+            .withLatestFrom(customAuthOn) { ($0.0, $0.1, $1) }
+            .withLatestFrom(customUsername) { ($0.0, $0.1, $0.2, $1) }
+            .withLatestFrom(customPassword) { ($0.0, $0.1, $0.2, $0.3, $1) }
+            .withLatestFrom(customSSOToken) { ($0.0, $0.1, $0.2, $0.3, $0.4, $1) }
+            .flatMapLatest { genericSSO, shouldInitializeSDK, customAuthOn, customUsername, customPassword, customSSOToken -> Observable<GenericSSOAuthentication> in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if shouldInitializeSDK {
                     var manager = OpenWeb.manager
                     manager.spotId = genericSSO.spotId
                 }
-                return genericSSO
+                var genericSSO = genericSSO
+                if customAuthOn {
+                    genericSSO.user.username = customUsername
+                    genericSSO.user.password = customPassword
+                    genericSSO.ssoToken = customSSOToken
+                }
+                return Observable.just(genericSSO)
             }
             .flatMapLatest { [weak self] genericSSO -> Observable<(String, GenericSSOAuthentication)> in
                 // 3. Login user if needed
