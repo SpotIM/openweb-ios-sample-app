@@ -59,6 +59,8 @@
 		164047A829E420D1001DD35B /* OWConversationReadRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164047A729E420D1001DD35B /* OWConversationReadRM.swift */; };
 		1640F2C028ACDA0100FB863B /* OWCommentCreationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1640F2BF28ACDA0100FB863B /* OWCommentCreationCoordinator.swift */; };
 		166555B92CBD563900AC257E /* OpenWebSDKAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16047ED02CBD51330086E606 /* OpenWebSDKAdapter.framework */; };
+		166555C22CBD57DC00AC257E /* OWMonetization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166555C12CBD57DC00AC257E /* OWMonetization.swift */; };
+		166555C42CBD61BD00AC257E /* OWMonetizationLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166555C32CBD61BD00AC257E /* OWMonetizationLayer.swift */; };
 		16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16670C6F25E68EEE00822D2D /* SPSSOData.swift */; };
 		166CCCA42A2E362F00C7143F /* UIActivityViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCA32A2E362F00C7143F /* UIActivityViewController+Rx.swift */; };
 		166CCCA62A30CD5000C7143F /* OWCommentCreationRegularView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCA52A30CD5000C7143F /* OWCommentCreationRegularView.swift */; };
@@ -604,10 +606,6 @@
 		3DDA9A63290808F600FE3B86 /* OWSkeletonShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A62290808F600FE3B86 /* OWSkeletonShimmeringView.swift */; };
 		3DDA9A652913E7E800FE3B86 /* OWColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A642913E7E800FE3B86 /* OWColorPalette.swift */; };
 		3DDA9A6A2913EA2600FE3B86 /* OWColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A692913EA2600FE3B86 /* OWColor+Extensions.swift */; };
-		3DDA9A6C2919160900FE3B86 /* OWMonetization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A6B2919160900FE3B86 /* OWMonetization.swift */; };
-		3DDA9A6E2919164300FE3B86 /* OWMonetizationLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A6D2919164300FE3B86 /* OWMonetizationLayer.swift */; };
-		3DDA9A712919169400FE3B86 /* OWGoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A702919169400FE3B86 /* OWGoogleAdsProvider.swift */; };
-		3DDA9A75291917E600FE3B86 /* OWAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A74291917E600FE3B86 /* OWAdsProvider.swift */; };
 		3DDA9A772919370200FE3B86 /* OWUIAuthenticationLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A762919370200FE3B86 /* OWUIAuthenticationLayer.swift */; };
 		3DDA9A792919374C00FE3B86 /* OWUIAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A782919374C00FE3B86 /* OWUIAuthentication.swift */; };
 		3DDA9A7B29196CC200FE3B86 /* OWAuthenticationFlowCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A7A29196CC200FE3B86 /* OWAuthenticationFlowCallback.swift */; };
@@ -968,6 +966,8 @@
 		164047A529E4206E001DD35B /* OWConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversation.swift; sourceTree = "<group>"; };
 		164047A729E420D1001DD35B /* OWConversationReadRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationReadRM.swift; sourceTree = "<group>"; };
 		1640F2BF28ACDA0100FB863B /* OWCommentCreationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationCoordinator.swift; sourceTree = "<group>"; };
+		166555C12CBD57DC00AC257E /* OWMonetization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMonetization.swift; sourceTree = "<group>"; };
+		166555C32CBD61BD00AC257E /* OWMonetizationLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMonetizationLayer.swift; sourceTree = "<group>"; };
 		16670C6F25E68EEE00822D2D /* SPSSOData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPSSOData.swift; sourceTree = "<group>"; };
 		166CCCA32A2E362F00C7143F /* UIActivityViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIActivityViewController+Rx.swift"; sourceTree = "<group>"; };
 		166CCCA52A30CD5000C7143F /* OWCommentCreationRegularView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationRegularView.swift; sourceTree = "<group>"; };
@@ -1520,10 +1520,6 @@
 		3DDA9A62290808F600FE3B86 /* OWSkeletonShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSkeletonShimmeringView.swift; sourceTree = "<group>"; };
 		3DDA9A642913E7E800FE3B86 /* OWColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWColorPalette.swift; sourceTree = "<group>"; };
 		3DDA9A692913EA2600FE3B86 /* OWColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWColor+Extensions.swift"; sourceTree = "<group>"; };
-		3DDA9A6B2919160900FE3B86 /* OWMonetization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMonetization.swift; sourceTree = "<group>"; };
-		3DDA9A6D2919164300FE3B86 /* OWMonetizationLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMonetizationLayer.swift; sourceTree = "<group>"; };
-		3DDA9A702919169400FE3B86 /* OWGoogleAdsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWGoogleAdsProvider.swift; sourceTree = "<group>"; };
-		3DDA9A74291917E600FE3B86 /* OWAdsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdsProvider.swift; sourceTree = "<group>"; };
 		3DDA9A762919370200FE3B86 /* OWUIAuthenticationLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUIAuthenticationLayer.swift; sourceTree = "<group>"; };
 		3DDA9A782919374C00FE3B86 /* OWUIAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUIAuthentication.swift; sourceTree = "<group>"; };
 		3DDA9A7A29196CC200FE3B86 /* OWAuthenticationFlowCallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationFlowCallback.swift; sourceTree = "<group>"; };
@@ -1910,6 +1906,7 @@
 		16047EDE2CBD52960086E606 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				166555C12CBD57DC00AC257E /* OWMonetization.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -1917,6 +1914,7 @@
 		16047EDF2CBD52E90086E606 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				166555C32CBD61BD00AC257E /* OWMonetizationLayer.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -3028,7 +3026,6 @@
 				3D3150572A4DD76500EF6575 /* Protocols */,
 				3D3150542A4DD72F00EF6575 /* Models */,
 				3D7E3D6C28884B2C00DDBE0B /* InternalLayers */,
-				3DDA9A6D2919164300FE3B86 /* OWMonetizationLayer.swift */,
 				3DFA6B9A29216DAE0047E313 /* OWAuthenticationLayer.swift */,
 				3D08E0762875E24100E6F1AC /* OWUILayer.swift */,
 				3D08E0792875E30D00E6F1AC /* OWAnalyticsLayer.swift */,
@@ -3354,7 +3351,6 @@
 		3D611B8F28C643C9003960CE /* Layers */ = {
 			isa = PBXGroup;
 			children = (
-				3DDA9A6B2919160900FE3B86 /* OWMonetization.swift */,
 				3DFA6B9E29216E8D0047E313 /* OWAuthentication.swift */,
 				3D08E06B2875BAEC00E6F1AC /* OWUI.swift */,
 				3D08E0692875BA9A00E6F1AC /* OWUIFlows.swift */,
@@ -3939,15 +3935,6 @@
 			path = SkeletonShimmering;
 			sourceTree = "<group>";
 		};
-		3DDA9A6F2919168600FE3B86 /* Monetization */ = {
-			isa = PBXGroup;
-			children = (
-				3DDA9A702919169400FE3B86 /* OWGoogleAdsProvider.swift */,
-				3DDA9A74291917E600FE3B86 /* OWAdsProvider.swift */,
-			);
-			path = Monetization;
-			sourceTree = "<group>";
-		};
 		3DDA9A82291A59D700FE3B86 /* Sorting */ = {
 			isa = PBXGroup;
 			children = (
@@ -4308,7 +4295,6 @@
 				24E22FFF2A0102BE00D9BE8A /* Profile */,
 				3D0AFC9829C7389A002670D1 /* SSO */,
 				3DDA9A82291A59D700FE3B86 /* Sorting */,
-				3DDA9A6F2919168600FE3B86 /* Monetization */,
 				3D611BBA28C8B628003960CE /* Article */,
 				3DF941802A559F2200A687BD /* ReportReasons */,
 				3D611BA428C745AA003960CE /* PreConversation */,
@@ -5445,6 +5431,7 @@
 				TargetAttributes = {
 					16047ECF2CBD51330086E606 = {
 						CreatedOnToolsVersion = 15.4;
+						LastSwiftMigration = 1540;
 					};
 					3DA1DEC02C6CCB0300EBFA7D = {
 						CreatedOnToolsVersion = 15.4;
@@ -5668,6 +5655,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				166555C42CBD61BD00AC257E /* OWMonetizationLayer.swift in Sources */,
+				166555C22CBD57DC00AC257E /* OWMonetization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5762,7 +5751,6 @@
 				3D301BDE2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift in Sources */,
 				3D50D8E72B1608BD00FD3232 /* OWCommentThreadCellOption.swift in Sources */,
 				166CCCAE2A30CDCB00C7143F /* OWCommentCreationLightViewVM.swift in Sources */,
-				3DDA9A712919169400FE3B86 /* OWGoogleAdsProvider.swift in Sources */,
 				9E0C60522A780246001B8D5D /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				249DF2A3296D95C500F5D69A /* OWImageProvider.swift in Sources */,
 				24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */,
@@ -5807,7 +5795,6 @@
 				24CC974529ACA60B00608A15 /* OWTextState.swift in Sources */,
 				24CE6DFC2B0B8FF6005B7023 /* OWSubmittedViewType.swift in Sources */,
 				247EE9832AF10FFE0000D640 /* OWAppealLabelView.swift in Sources */,
-				3DDA9A75291917E600FE3B86 /* OWAdsProvider.swift in Sources */,
 				9E4B4E602AA604D100F4425F /* OWProfileService.swift in Sources */,
 				3DB3B94D29F462A000C50192 /* OWTestingPlaygroundCoordinator.swift in Sources */,
 				8DD33B1D2A24C203001E0A2E /* OWEmptyStateCommentingEndedCustomizableElement.swift in Sources */,
@@ -5852,7 +5839,6 @@
 				3D33C0EA29460CAF0062BFC9 /* OWDummyThemeStyleUpdaterView.swift in Sources */,
 				4454189823685154001D0ED0 /* SPSpotConfiguration.swift in Sources */,
 				161270DB29ACD9EF001F9715 /* OWCommentThreadSettingsProtocol.swift in Sources */,
-				3DDA9A6C2919160900FE3B86 /* OWMonetization.swift in Sources */,
 				3DDA9A602907D5C100FE3B86 /* OWConfigurableCell.swift in Sources */,
 				3DFA6BAB29217B870047E313 /* OWUserAuthenticationStatusCompletion.swift in Sources */,
 				8DE52F5129EBEBAC00D3985C /* OWSpacerViewModel.swift in Sources */,
@@ -5994,7 +5980,6 @@
 				8D358D5929C9FB1B00E229A3 /* OWCommunityQuestionCellViewModel.swift in Sources */,
 				9EA319042B30766300DF1F54 /* OWScheduler.swift in Sources */,
 				3D611BA328C74569003960CE /* OWConversationSettings.swift in Sources */,
-				3DDA9A6E2919164300FE3B86 /* OWMonetizationLayer.swift in Sources */,
 				4454189923685154001D0ED0 /* SPConfigurationSSO.swift in Sources */,
 				162B83592A766582002290EE /* OWCachedCommentKey.swift in Sources */,
 				3DDA9A81291A565200FE3B86 /* OWConversationSpacing.swift in Sources */,
@@ -6626,7 +6611,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -6644,7 +6629,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6718,7 +6703,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -6730,7 +6715,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6749,6 +6734,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -6803,7 +6789,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -6815,7 +6801,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6834,6 +6820,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -6888,7 +6875,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -6900,7 +6887,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6973,7 +6960,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -6985,7 +6972,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7058,7 +7045,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7070,7 +7057,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7151,7 +7138,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MAIN_STORY_BOARD = "";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -7190,7 +7177,7 @@
 				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7276,7 +7263,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MAIN_STORY_BOARD = "";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -7315,7 +7302,7 @@
 				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7394,7 +7381,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MAIN_STORY_BOARD = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -7433,7 +7420,7 @@
 				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7512,7 +7499,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MAIN_STORY_BOARD = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -7551,7 +7538,7 @@
 				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7648,7 +7635,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7736,7 +7723,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7823,7 +7810,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7910,7 +7897,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7997,7 +7984,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -8084,7 +8071,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 OpenWeb. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -8137,7 +8124,7 @@
 				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -8184,7 +8171,7 @@
 				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -8258,7 +8245,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MAIN_STORY_BOARD = "";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -8319,7 +8306,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MAIN_STORY_BOARD = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
