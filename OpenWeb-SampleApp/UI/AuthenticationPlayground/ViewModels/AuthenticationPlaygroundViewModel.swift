@@ -234,11 +234,15 @@ private extension AuthenticationPlaygroundViewModel {
                 self?._thirdPartySSOAuthenticationStatus.onNext(.initial)
                 self?._logoutAuthenticationStatus.onNext(.initial)
             })
-            .withLatestFrom(shouldInitializeSDK) { ($0, $1) }
-            .withLatestFrom(customAuthOn) { ($0.0, $0.1, $1) }
-            .withLatestFrom(customUsername) { ($0.0, $0.1, $0.2, $1) }
-            .withLatestFrom(customPassword) { ($0.0, $0.1, $0.2, $0.3, $1) }
-            .withLatestFrom(customSSOToken) { ($0.0, $0.1, $0.2, $0.3, $0.4, $1) }
+            .withLatestFrom(
+                Observable.combineLatest(shouldInitializeSDK,
+                                         customAuthOn,
+                                         customUsername,
+                                         customPassword,
+                                         customSSOToken)
+            ) { (genericSSO, latestValues) in
+                (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3, latestValues.4)
+            }
             .flatMapLatest { genericSSO, shouldInitializeSDK, customAuthOn, customUsername, customPassword, customSSOToken -> Observable<GenericSSOAuthentication> in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if shouldInitializeSDK {
