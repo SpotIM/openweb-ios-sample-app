@@ -109,23 +109,12 @@ class OWUserMentionHelper {
         return nil
     }
 
-    static func areOverlapingRanges(range1: NSRange, range2: NSRange) -> Bool {
-        return (range1.lowerBound == range1.upperBound &&
-                range1.location > range2.location &&
-                range1.location < range2.location + range2.length) ||
-        (range1.lowerBound != range1.upperBound &&
-         range2.contains(range1.location + 1) ||
-         range2.contains(range1.location + range1.length - 1) ||
-         range1.contains(range2.location + 1) ||
-         range1.contains(range2.location + range2.length - 1))
-    }
-
     static func updateCurrentCursorRange(with cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index> {
         guard !mentions.isEmpty,
               !text.isEmpty,
               var cursorNSRange = text.nsRange(from: cursorRange) else { return cursorRange }
         let mentionsToCheck: [OWUserMentionObject] = mentions.filter {
-            areOverlapingRanges(range1: cursorNSRange, range2: $0.range)
+            NSIntersectionRange(cursorNSRange, $0.range).length > 0
         }
         for mention in mentionsToCheck {
             let cursorEndIndex = cursorNSRange.location + cursorNSRange.length
