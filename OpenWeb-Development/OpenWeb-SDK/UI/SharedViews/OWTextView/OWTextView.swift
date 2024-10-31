@@ -213,7 +213,7 @@ private extension OWTextView {
                 guard let self else { return nil }
                 if !firstSelectRangeDone {
                     firstSelectRangeDone = true
-                    return Range(NSRange(location: self.textView.text.count, length: 0), in: self.textView.text)
+                    return self.textView.text.endIndex ..< self.textView.text.endIndex
                 }
                 return Range(self.textView.selectedRange, in: self.textView.text)
             }

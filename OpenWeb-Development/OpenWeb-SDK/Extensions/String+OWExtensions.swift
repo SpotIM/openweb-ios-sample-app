@@ -35,10 +35,9 @@ extension String {
     }
 
     func nsRange(from range: Range<String.Index>) -> NSRange? {
-        guard let from = range.lowerBound.samePosition(in: utf16),
-              let to = range.upperBound.samePosition(in: utf16) else { return nil }
-        return NSRange(location: utf16.distance(from: utf16.startIndex, to: from),
-                       length: utf16.distance(from: from, to: to))
+        let startIndex = range.lowerBound.utf16Offset(in: self)
+        let endIndex = range.upperBound.utf16Offset(in: self)
+        return NSRange(location: startIndex, length: endIndex - startIndex)
     }
 
     func getAttributedText(textColor: UIColor,
