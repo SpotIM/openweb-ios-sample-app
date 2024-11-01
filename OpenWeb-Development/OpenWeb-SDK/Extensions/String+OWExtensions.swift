@@ -17,7 +17,7 @@ extension String {
             let matches = detector.matches(
                 in: self,
                 options: [],
-                range: NSRange(location: 0, length: self.count)
+                range: NSRange(self.startIndex..., in: self)
             )
 
             for match in matches {
@@ -53,7 +53,7 @@ extension String {
             .font: textFont,
             .foregroundColor: textColor
         ]
-        attributedString.addAttributes(defaultAttributes, range: NSRange(location: 0, length: self.count))
+        attributedString.addAttributes(defaultAttributes, range: NSRange(self.startIndex..., in: self))
 
         // Search for the linkedText in the main text
         if let _ = linkURL,
