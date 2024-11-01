@@ -274,7 +274,7 @@ private extension OWCommentTextViewModel {
             let matches = detector.matches(
                 in: rawText,
                 options: [],
-                range: NSRange(location: 0, length: rawText.count)
+                range: NSRange(rawText.startIndex..., in: rawText)
             )
 
             for match in matches {

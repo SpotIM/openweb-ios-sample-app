@@ -387,7 +387,7 @@ private extension OWTextView {
     func addAttributes(from attributedText: NSAttributedString) {
         guard let font = self.textView.font else { return }
 
-        let nsRange = NSRange(location: 0, length: attributedText.string.utf16.count)
+        let nsRange = NSRange(location: 0, length: attributedText.length)
         let textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
         let updatedAttributedText = NSMutableAttributedString(string: attributedText.string)
