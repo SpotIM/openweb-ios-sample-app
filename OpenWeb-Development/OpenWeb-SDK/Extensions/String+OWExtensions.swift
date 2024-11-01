@@ -34,12 +34,6 @@ extension String {
         return NSMutableAttributedString(string: self)
     }
 
-    func nsRange(from range: Range<String.Index>) -> NSRange? {
-        let startIndex = range.lowerBound.utf16Offset(in: self)
-        let endIndex = range.upperBound.utf16Offset(in: self)
-        return NSRange(location: startIndex, length: endIndex - startIndex)
-    }
-
     func getAttributedText(textColor: UIColor,
                            textFont: UIFont,
                            linkedText: String?,
