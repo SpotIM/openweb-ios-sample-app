@@ -224,8 +224,8 @@ private extension OWTextView {
         viewModel.outputs.cursorRange
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] cursorRange in
-                guard let self,
-                      let range = self.textView.text?.nsRange(from: cursorRange) else { return }
+                guard let self, let text = self.textView.text else { return }
+                let range = NSRange(cursorRange, in: text)
                 let savedDelegate = self.textView.delegate
                 self.textView.delegate = nil // Fixes looping cursor range
                 self.textView.selectedRange = range
@@ -236,8 +236,8 @@ private extension OWTextView {
         viewModel.outputs.cursorRangeExternalChanged
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] range in
-                guard let self,
-                      let nsRange = self.textView.text?.nsRange(from: range) else { return }
+                guard let self, let text = self.textView.text else { return }
+                let nsRange = NSRange(range, in: text)
                 let savedDelegate = self.textView.delegate
                 self.textView.delegate = nil // Fixes looping cursor range
                 self.textView.selectedRange = nsRange
@@ -349,8 +349,8 @@ private extension OWTextView {
         viewModel.outputs.hasSuggestionsBarChanged
             .withLatestFrom(viewModel.outputs.cursorRange) { ($0, $1) }
             .subscribe(onNext: { [weak self] hasSuggestionsBar, selectedRange in
-                guard let self,
-                      let selecedNSRange = self.textView.text?.nsRange(from: selectedRange) else { return }
+                guard let self, let text = self.textView.text else { return }
+                let selecedNSRange = NSRange(selectedRange, in: text)
                 textView.spellCheckingType(hasSuggestionsBar ? .default : .no)
                 textView.autocorrectionType(hasSuggestionsBar ? .default : .no)
 
@@ -366,7 +366,6 @@ private extension OWTextView {
                 let savedDelegate = self.textView.delegate
                 self.textView.delegate = nil
                 let attributedText = self.textView.attributedText
-                let text = self.textView.text ?? ""
                 self.textView.text = text + " "
                 self.textView.text = text
                 if attributedText?.length ?? 0 > 0 {
