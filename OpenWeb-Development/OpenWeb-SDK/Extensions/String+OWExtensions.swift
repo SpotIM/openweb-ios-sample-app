@@ -17,7 +17,7 @@ extension String {
             let matches = detector.matches(
                 in: self,
                 options: [],
-                range: NSRange(location: 0, length: self.count)
+                range: NSRange(self.startIndex..., in: self)
             )
 
             for match in matches {
@@ -32,13 +32,6 @@ extension String {
 
     var attributedString: NSMutableAttributedString {
         return NSMutableAttributedString(string: self)
-    }
-
-    func nsRange(from range: Range<String.Index>) -> NSRange? {
-        guard let from = range.lowerBound.samePosition(in: utf16),
-              let to = range.upperBound.samePosition(in: utf16) else { return nil }
-        return NSRange(location: utf16.distance(from: utf16.startIndex, to: from),
-                       length: utf16.distance(from: from, to: to))
     }
 
     func getAttributedText(textColor: UIColor,
@@ -60,7 +53,7 @@ extension String {
             .font: textFont,
             .foregroundColor: textColor
         ]
-        attributedString.addAttributes(defaultAttributes, range: NSRange(location: 0, length: self.count))
+        attributedString.addAttributes(defaultAttributes, range: NSRange(self.startIndex..., in: self))
 
         // Search for the linkedText in the main text
         if let _ = linkURL,
