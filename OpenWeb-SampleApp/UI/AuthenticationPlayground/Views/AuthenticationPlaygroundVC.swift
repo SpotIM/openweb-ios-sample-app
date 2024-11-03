@@ -224,10 +224,12 @@ private extension AuthenticationPlaygroundVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
+        #if !PUBLIC_DEMO_APP
         customAuthStackView.addArrangedSubview(switchAuthenticationWithCustomFields)
         customAuthStackView.addArrangedSubview(textFieldSSOToken)
         customAuthStackView.addArrangedSubview(textFieldUsername)
         customAuthStackView.addArrangedSubview(textFieldPassword)
+        #endif
 
         scrollView.addSubview(lblGenericSSOStatus)
         lblGenericSSOStatus.snp.makeConstraints { make in
