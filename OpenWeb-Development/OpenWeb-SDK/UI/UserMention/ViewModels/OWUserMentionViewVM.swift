@@ -340,11 +340,7 @@ private extension OWUserMentionViewVM {
         do {
             let regex = try NSRegularExpression(pattern: "\\@[^\\@]*$", options: [])
             var results = [String]()
-            let range = searchText.startIndex..<searchText.endIndex
-            guard let nsRange = searchText.nsRange(from: range) else {
-                _users.onNext([])
-                return
-            }
+            let nsRange = NSRange(searchText.startIndex..., in: searchText)
 
             regex.enumerateMatches(in: searchText, range: nsRange) { [weak self] result, _, _ in
                 guard let self else { return }
