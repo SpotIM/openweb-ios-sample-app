@@ -3,8 +3,8 @@ inhibit_all_warnings!
 use_frameworks!
 
 workspace 'OpenWeb-Development'
-xcodeproj 'OpenWeb-Development.xcodeproj'
-xcodeproj 'OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj'
+project 'OpenWeb-Development.xcodeproj'
+project 'OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj'
 
 def rx_pods
   pod 'RxSwift', '6.7.0'
@@ -13,7 +13,7 @@ def rx_pods
 end
 
 target 'OpenWeb-SampleApp' do
-  xcodeproj 'OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj'
+  project 'OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj'
   pod 'SnapKit', '~> 5.6.0'
   pod 'Google-Mobile-Ads-SDK', '= 8.0'
   pod 'Alamofire', '~> 5.6.2'
@@ -22,12 +22,12 @@ target 'OpenWeb-SampleApp' do
 end
 
 target 'OpenWebSDK' do
-  xcodeproj 'OpenWeb-Development.xcodeproj'
+  project 'OpenWeb-Development.xcodeproj'
   rx_pods
 end
 
 target 'OpenWebSDKTests' do
-  xcodeproj 'OpenWeb-Development.xcodeproj'
+  project 'OpenWeb-Development.xcodeproj'
   pod 'Quick', '~> 5.0.1'
   pod 'Nimble', '~> 10.0.0'
 end
