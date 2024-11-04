@@ -90,7 +90,8 @@ class OWCommentEngagementView: UIView {
 private extension OWCommentEngagementView {
     func setupUI() {
         self.enforceSemanticAttribute()
-        self.addSubviews(replyButton, votingView)
+        self.addSubview(replyButton)
+        self.addSubview(votingView)
 
         replyButton.OWSnp.makeConstraints { make in
             make.centerY.leading.equalToSuperview()

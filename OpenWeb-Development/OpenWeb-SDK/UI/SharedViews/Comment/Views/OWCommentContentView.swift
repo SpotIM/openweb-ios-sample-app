@@ -68,7 +68,8 @@ class OWCommentContentView: UIView {
 private extension OWCommentContentView {
     func setupViews() {
         self.enforceSemanticAttribute()
-        self.addSubviews(textLabel, mediaView)
+        self.addSubview(textLabel)
+        self.addSubview(mediaView)
 
         textLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()

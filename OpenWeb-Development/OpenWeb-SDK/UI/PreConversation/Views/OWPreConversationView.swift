@@ -186,7 +186,7 @@ private extension OWPreConversationView {
         self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
-        self.addSubviews(preConversationSummary)
+        self.addSubview(preConversationSummary)
         preConversationSummary.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Metrics.compactSummaryTopPadding)
             make.leading.trailing.equalToSuperview()

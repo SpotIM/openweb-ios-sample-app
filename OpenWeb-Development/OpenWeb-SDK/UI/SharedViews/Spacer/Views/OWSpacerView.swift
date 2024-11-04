@@ -52,7 +52,7 @@ class OWSpacerView: UIView {
 extension OWSpacerView {
     func setupUI() {
         self.backgroundColor = .clear
-        self.addSubviews(seperatorView)
+        self.addSubview(seperatorView)
 
         if viewModel.outputs.shouldShowCommentStyle {
             seperatorView.OWSnp.makeConstraints { make in
