@@ -15,7 +15,6 @@ end
 def general_pods
   pod 'SnapKit', '~> 5.6.0'
   pod 'Alamofire', '~> 5.6.2'
-  pod 'FirebaseCrashlytics', '~> 10.23.0'
 end
 
 target 'OpenWeb-SampleApp' do
