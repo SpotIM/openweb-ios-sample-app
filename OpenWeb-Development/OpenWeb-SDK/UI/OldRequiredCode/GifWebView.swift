@@ -24,7 +24,7 @@ internal final class GifWebView: UIView, WKUIDelegate {
 
     private func setupUI() {
         _ = self.enforceSemanticAttribute()
-        addSubviews(gifWebView)
+        addSubview(gifWebView)
         configureGifWebView()
     }
 

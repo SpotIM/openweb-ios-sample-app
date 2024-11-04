@@ -149,7 +149,7 @@ private extension OWReportReasonView {
             make.leading.trailing.equalToSuperviewSafeArea()
         }
 
-        self.addSubviews(footerView)
+        self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.top.equalTo(tableViewReasons.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
