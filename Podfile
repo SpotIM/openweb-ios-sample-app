@@ -13,8 +13,8 @@ def rx_pods
 end
 
 def general_pods
-  pod 'SnapKit', '~> 5.6.0'
-  pod 'Alamofire', '~> 5.6.2'
+  pod 'SnapKit', '~> 5.7.1'
+  pod 'Alamofire', '~> 5.10.1'
 end
 
 target 'OpenWeb-SampleApp' do
