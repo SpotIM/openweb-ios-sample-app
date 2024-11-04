@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.6.4)
+  - Alamofire (5.10.1)
   - OpenWebSDK (2.4.0):
     - RxCocoa (~> 6.7.0)
     - RxRelay (~> 6.7.0)
@@ -10,15 +10,15 @@ PODS:
   - RxRelay (6.7.0):
     - RxSwift (= 6.7.0)
   - RxSwift (6.7.0)
-  - SnapKit (5.6.0)
+  - SnapKit (5.7.1)
 
 DEPENDENCIES:
-  - Alamofire (~> 5.6.2)
+  - Alamofire (~> 5.10.1)
   - OpenWebSDK (= 2.4.0)
   - RxCocoa (= 6.7.0)
   - RxRelay (= 6.7.0)
   - RxSwift (= 6.7.0)
-  - SnapKit (~> 5.6.0)
+  - SnapKit (~> 5.7.1)
 
 SPEC REPOS:
   trunk:
@@ -30,13 +30,13 @@ SPEC REPOS:
     - SnapKit
 
 SPEC CHECKSUMS:
-  Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
+  Alamofire: 840d2a1ad82355b536ec6ba5f97e5bfa54600ca3
   OpenWebSDK: 55d91b043067cd7e2408b2bc631edcb47fdcd96e
   RxCocoa: fb0aefb9e7229c8ab057acde714136d19117f102
   RxRelay: 5d39f4d8da150ad47a71b9ce11915e3eae2a8f4d
   RxSwift: 6ee35684dc3f7a63938758f4b7708199517dfa97
-  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
-PODFILE CHECKSUM: 319e924ad593732f3a2a74a1e8a2aaecd3b2e991
+PODFILE CHECKSUM: 96dba40be4842a98efe145a1a1ef4430571092e7
 
 COCOAPODS: 1.16.2
