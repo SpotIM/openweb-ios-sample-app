@@ -9,7 +9,7 @@ import RxSwift
 import OpenWebSDK
 import UIKit
 import GoogleMobileAds
-import FirebaseCore
+
 #if !PUBLIC_DEMO_APP
     import OpenWeb_SampleApp_Internal_Configs
 #endif
