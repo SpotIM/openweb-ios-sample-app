@@ -177,12 +177,12 @@ private extension OWFlowsSDKCoordinator {
             shouldCustomizeNavController = navCustomizerService.shouldCustomizeNavigationController()
         }
 
+        router = OWRouter(navigationController: navController, presentationalMode: presentationalModeExtended)
+
         // Customize navigation controller if needed
         if shouldCustomizeNavController {
             navCustomizerService.activeNavigationController(navigationController: navController)
         }
-
-        router = OWRouter(navigationController: navController, presentationalMode: presentationalModeExtended)
     }
 
     func cleanRouter(presentationalMode: OWPresentationalMode) {
