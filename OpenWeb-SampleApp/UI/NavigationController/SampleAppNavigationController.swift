@@ -44,7 +44,7 @@ private extension SampleAppNavigationController {
 
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
+            appearance.configureWithTransparentBackground()
             appearance.backgroundColor = navigationBarBackgroundColor
             appearance.titleTextAttributes = navigationTitleTextAttributes
 
