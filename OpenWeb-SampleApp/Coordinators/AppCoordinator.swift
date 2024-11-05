@@ -42,15 +42,6 @@ private extension AppCoordinator {
 
     func initialVendorsSetup() {
         GADMobileAds.sharedInstance().start(completionHandler: nil)
-
-#if !(DEBUG) && !PUBLIC_DEMO_APP
-        if let firebaseFilePath = Bundle.openWebInternalConfigs
-            .path(forResource: "GoogleService-Info", ofType: "plist"),
-           let firebaseOptions = FirebaseOptions(contentsOfFile: firebaseFilePath) {
-
-            FirebaseApp.configure(options: firebaseOptions)
-        }
-#endif
     }
 
     func initialDataSetup() {
