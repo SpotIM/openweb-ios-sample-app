@@ -27,6 +27,10 @@ extension OWTheme: Codable {
         case secondaryBorderColor
         case loaderColor
         case brandColor
+        case voteUpUnselectedColor
+        case voteDownUnselectedColor
+        case voteUpSelectedColor
+        case voteDownSelectedColor
     }
 
     public init(from decoder: Decoder) throws {
@@ -48,7 +52,11 @@ extension OWTheme: Codable {
             primaryBorderColor: try? values.decode(OWColor?.self, forKey: .primaryBorderColor),
             secondaryBorderColor: try? values.decode(OWColor?.self, forKey: .secondaryBorderColor),
             loaderColor: try? values.decode(OWColor?.self, forKey: .loaderColor),
-            brandColor: try? values.decode(OWColor?.self, forKey: .brandColor))
+            brandColor: try? values.decode(OWColor?.self, forKey: .brandColor),
+            voteUpUnselectedColor: try? values.decode(OWColor?.self, forKey: .voteUpUnselectedColor),
+            voteDownUnselectedColor: try? values.decode(OWColor?.self, forKey: .voteDownUnselectedColor),
+            voteUpSelectedColor: try? values.decode(OWColor?.self, forKey: .voteUpSelectedColor),
+            voteDownSelectedColor: try? values.decode(OWColor?.self, forKey: .voteDownSelectedColor))
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -70,5 +78,9 @@ extension OWTheme: Codable {
         try container.encode(secondaryBorderColor, forKey: .secondaryBorderColor)
         try container.encode(loaderColor, forKey: .loaderColor)
         try container.encode(brandColor, forKey: .brandColor)
+        try container.encode(voteUpUnselectedColor, forKey: .voteUpUnselectedColor)
+        try container.encode(voteDownUnselectedColor, forKey: .voteDownUnselectedColor)
+        try container.encode(voteUpSelectedColor, forKey: .voteUpSelectedColor)
+        try container.encode(voteDownSelectedColor, forKey: .voteDownSelectedColor)
     }
 }
