@@ -21,6 +21,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var dismissToast: PublishSubject<Void> { get }
+    var trackViewableTime: PublishSubject<TimeInterval> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -336,6 +337,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     var dismissToast = PublishSubject<Void>()
+    let trackViewableTime = PublishSubject<TimeInterval>()
 
     private var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
     var displayToast: Observable<OWToastNotificationCombinedData> {
@@ -1566,6 +1568,12 @@ private extension OWPreConversationViewViewModel {
 
         dismissToast
             .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
+            .disposed(by: disposeBag)
+
+        trackViewableTime
+            .subscribe(onNext: { [weak self] duration in
+                self?.sendEvent(for: .viewableTime(timeInS: duration))
+            })
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
