@@ -26,10 +26,58 @@ extension Reactive where Base: UIView {
         }
     }
 
+    var didMoveToSuperview: ControlEvent<Void> {
+        let source = self.methodInvoked(#selector(Base.didMoveToSuperview))
+        return ControlEvent(events: source.voidify())
+    }
+
     var bounds: Observable<CGRect> {
         return observe(CGRect.self, "bounds")
-            .filter { $0 != nil }
             .unwrap()
             .distinctUntilChanged()
+            .share(replay: 0)
+    }
+
+    var center: Observable<CGPoint> {
+        return base.rx.observe(CGPoint.self, "center")
+            .unwrap()
+            .distinctUntilChanged()
+            .share(replay: 0)
+    }
+
+    var isHidden: Observable<Bool> {
+        return base.rx.observe(Bool.self, "hidden")
+            .unwrap()
+            .distinctUntilChanged()
+            .share(replay: 0)
+    }
+
+    var alpha: Observable<CGFloat> {
+        return base.rx.observe(CGFloat.self, "alpha")
+            .unwrap()
+            .distinctUntilChanged()
+            .share(replay: 0)
+    }
+
+    var clipsToBounds: Observable<Bool> {
+        return base.rx.observe(Bool.self, "clipsToBounds")
+            .unwrap()
+            .distinctUntilChanged()
+            .share(replay: 0)
+    }
+
+    /// Change in any property that impacts visibility.
+    ///
+    /// - Note: Uses `bounds` instead of `frame` because it changes with animations like vc-dismiss and app-backgrounding.
+    var didChangeVisibility: Observable<Void> {
+        var visibiltyChanges: [Observable<Void>] = [
+            isHidden.voidify(),
+            alpha.voidify(),
+            clipsToBounds.voidify()
+        ]
+        if !(base is UIScrollView) {
+            visibiltyChanges += [bounds.voidify()]
+        }
+        return Observable.merge(visibiltyChanges)
     }
 }
