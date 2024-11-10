@@ -875,6 +875,9 @@
 		9EE87B462AC8EE9400F11DD2 /* OWRepliesErrorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE87B452AC8EE9400F11DD2 /* OWRepliesErrorState.swift */; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
+		C22803322CE0B66F00E546DA /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */; };
+		C22803342CE0B6AB00E546DA /* DispatchTime+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */; };
+		C22803372CE0B80A00E546DA /* ViewableTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */; };
 		C2DF42B92CAC41AE00BA68CE /* NSObject+AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
@@ -1813,6 +1816,9 @@
 		9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueueDuplicationStrategy.swift; sourceTree = "<group>"; };
 		ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
+		C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchTime+Utils.swift"; sourceTree = "<group>"; };
+		C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewableTimeTracker.swift; sourceTree = "<group>"; };
 		C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+AssociatedObject.swift"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2264,6 +2270,7 @@
 				16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */,
 				16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */,
 				8D4983B22A97B48B0072A4CF /* UIView+Rx.swift */,
+				C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */,
 				8DCC87C02B554DB400E053A4 /* WKWebView+Rx.swift */,
 				24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */,
 			);
@@ -4343,6 +4350,7 @@
 				8DCC87C82B6BAC0000E053A4 /* UIWindow+Utils.swift */,
 				9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */,
 				C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */,
+				C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -4362,6 +4370,7 @@
 				3D33C0E829460C760062BFC9 /* ThemeStyleService */,
 				3DB1D5A42A79115D0012388E /* StatusBarStyleService */,
 				4454187323685154001D0ED0 /* Ads */,
+				C22803352CE0B7D400E546DA /* ViewableTime */,
 				24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */,
 				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
 				3DD72C802818297500117946 /* OWLogger.swift */,
@@ -5198,6 +5207,14 @@
 			path = OWQueue;
 			sourceTree = "<group>";
 		};
+		C22803352CE0B7D400E546DA /* ViewableTime */ = {
+			isa = PBXGroup;
+			children = (
+				C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */,
+			);
+			path = ViewableTime;
+			sourceTree = "<group>";
+		};
 		F6D45AB80C879EE6B5C01DA4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -5895,6 +5912,7 @@
 				3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */,
 				166CCCB72A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift in Sources */,
 				8D358D5B29C9FB3500E229A3 /* OWCommunityGuidelinesCellViewModel.swift in Sources */,
+				C22803322CE0B66F00E546DA /* UIViewController+Rx.swift in Sources */,
 				24EF864429C9D7FF00327394 /* OWCompactContentType.swift in Sources */,
 				9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */,
 				9E5A05742C0DEB2F00713B39 /* CollectionView+Registration.swift in Sources */,
@@ -5928,6 +5946,7 @@
 				24A24A18291BAC7C00D72755 /* OWWebTabOptions.swift in Sources */,
 				160E42E22988103000EDC5A1 /* OWCommentThreadView.swift in Sources */,
 				3DA2647A2951E3B200688FFF /* OWNetworkRedirectHandler.swift in Sources */,
+				C22803372CE0B80A00E546DA /* ViewableTimeTracker.swift in Sources */,
 				3DB3B97729F7DAFB00C50192 /* OWTestingBlueCellViewModel.swift in Sources */,
 				3D31FB8E29AB6505002B88E0 /* OWSupportedLanguage.swift in Sources */,
 				24993F8E28CF0CC000452AF8 /* OWAnalyticsService.swift in Sources */,
@@ -6065,6 +6084,7 @@
 				3DDA9A4E28F86A4100FE3B86 /* Double+Equal.swift in Sources */,
 				3DA264782951E3B200688FFF /* OWNetworkSession.swift in Sources */,
 				3DDA9A4A28F8582100FE3B86 /* OWSkeletonShimmeringService.swift in Sources */,
+				C22803342CE0B6AB00E546DA /* DispatchTime+Utils.swift in Sources */,
 				3D7E3D6B288849EC00DDBE0B /* OWAdditionalConfiguration.swift in Sources */,
 				24E230012A0102D200D9BE8A /* OWProfileOption.swift in Sources */,
 				3DA264742951E3B200688FFF /* OWNetworkParameterEncoder.swift in Sources */,
