@@ -60,6 +60,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
     func conversationSizeService() -> OWConversationSizeServicing
     func gifService() -> OWGifServicing
+    func viewableTimeService() -> OWViewableTimeServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -105,6 +106,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     private lazy var _lastCommentTypeInMemoryCacheService: OWCacheService<OWPostId, OWCachedLastCommentType> = {
         return OWCacheService<OWPostId, OWCachedLastCommentType>()
+    }()
+
+    private lazy var _viewableTimeService: OWViewableTimeServicing = {
+        return OWViewableTimeService()
     }()
 
     private lazy var _networkAPI: OWNetworkAPIProtocol = {
@@ -405,6 +410,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func gifService() -> OWGifServicing {
         return _gifService
+    }
+
+    func viewableTimeService() -> OWViewableTimeServicing {
+        return _viewableTimeService
     }
 }
 
