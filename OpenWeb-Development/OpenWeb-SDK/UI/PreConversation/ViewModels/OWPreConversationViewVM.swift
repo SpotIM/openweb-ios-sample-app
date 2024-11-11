@@ -21,8 +21,6 @@ protocol OWPreConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var dismissToast: PublishSubject<Void> { get }
-
-    func trackViewability(view: UIView)
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -67,7 +65,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var privacyTapped: Observable<Void> { get }
 }
 
-protocol OWPreConversationViewViewModeling: AnyObject {
+protocol OWPreConversationViewViewModeling: OWViewableTimeConsumer {
     var inputs: OWPreConversationViewViewModelingInputs { get }
     var outputs: OWPreConversationViewViewModelingOutputs { get }
 }
@@ -339,16 +337,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     var dismissToast = PublishSubject<Void>()
 
-    func trackViewability(view: UIView) {
-        servicesProvider.viewableTimeService().inputs.track(consumer: self, view: view)
-
-        servicesProvider.viewableTimeService().outputs.viewabilityDidEnd(consumer: self)
-            .subscribe(onNext: { [weak self] duration in
-                self?.sendEvent(for: .viewableTime(timeInS: duration))
-            })
-            .disposed(by: disposeBag)
-    }
-
     private var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
     var displayToast: Observable<OWToastNotificationCombinedData> {
         return _displayToast
@@ -513,11 +501,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             setupObservers()
 
             sendEvent(for: .preConversationViewed)
-    }
-
-    deinit {
-        servicesProvider.viewableTimeService().inputs
-            .endTracking(consumer: self)
     }
 }
 
@@ -1614,17 +1597,13 @@ private extension OWPreConversationViewViewModel {
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalMode),
                 component: .preConversation)
     }
+}
 
+extension OWPreConversationViewViewModel: OWViewableTimeConsumer {
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
         servicesProvider
             .analyticsService()
             .sendAnalyticEvents(events: [event])
-    }
-}
-
-extension OWPreConversationViewViewModel: OWViewableTimeConsumer {
-    static func == (lhs: OWPreConversationViewViewModel, rhs: OWPreConversationViewViewModel) -> Bool {
-        return lhs === rhs
     }
 }

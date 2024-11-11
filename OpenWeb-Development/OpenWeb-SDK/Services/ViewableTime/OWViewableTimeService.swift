@@ -8,7 +8,20 @@
 
 import RxSwift
 
-protocol OWViewableTimeConsumer: AnyObject, Equatable {}
+protocol OWAnalyticEventSender {
+    func sendEvent(for eventType: OWAnalyticEventType)
+}
+
+/// Add conformance for view models that should be tracked for viewability, and implement `sendEvent(for:)`.
+protocol OWViewableTimeConsumer: AnyObject, Equatable, OWAnalyticEventSender {}
+
+/// Add conformance for `UIView`s that should be tracked for viewability. Then
+/// call `trackViewability(viewModel:)` in `setupObservers()` or on cell reuse (no need to implement it),
+/// and call `endTrackingViewability()` in `deinit` or on ending cell reuse (no need to implement it).
+protocol OWViewabilityTrackable {
+    func trackViewability(viewModel: any OWViewableTimeConsumer)
+    func endTrackingViewability(viewModel: any OWViewableTimeConsumer)
+}
 
 protocol OWViewableTimeServicingInputs {
     func track<Consumer: OWViewableTimeConsumer>(consumer: Consumer, view: UIView)
@@ -16,8 +29,11 @@ protocol OWViewableTimeServicingInputs {
 }
 
 protocol OWViewableTimeServicingOutputs {
-    func viewabilityDidStart<Consumer: OWViewableTimeConsumer>(consumer: Consumer) -> Observable<Void> // (for debuggung) consumer is viewModel
-    func viewabilityDidEnd<Consumer: OWViewableTimeConsumer>(consumer: Consumer) -> Observable<TimeInterval> // consumer is viewModel
+    /// For debugging purposes. Emits when the tracked view becomes viewable.
+    func viewabilityDidStart<Consumer: OWViewableTimeConsumer>(consumer: Consumer) -> Observable<Void>
+
+    /// Emits the duration that the tracked view was viewable, when it disappears or scrolls off the screen.
+    func viewabilityDidEnd<Consumer: OWViewableTimeConsumer>(consumer: Consumer) -> Observable<TimeInterval>
 }
 
 protocol OWViewableTimeServicing {
@@ -29,11 +45,20 @@ class OWViewableTimeService: OWViewableTimeServicing, OWViewableTimeServicingInp
     var inputs: OWViewableTimeServicingInputs { return self }
     var outputs: OWViewableTimeServicingOutputs { return self }
 
+    /// maps weak references of `OWViewableTimeConsumer`s to trackers
+    private var trackers = [AnyHashable: ViewableTimeTracker]()
+    private let disposeBag = DisposeBag()
+
     func track<Consumer: OWViewableTimeConsumer>(consumer: Consumer, view: UIView) {
         cleanup()
         let tracker = ViewableTimeTracker()
         tracker.trackedView = view
         trackers[OWWeakEncapsulation(value: consumer)] = tracker
+        tracker.viewabilityDidEnd
+            .subscribe(onNext: { [weak consumer] duration in
+                consumer?.sendEvent(for: .viewableTime(timeInS: duration))
+            })
+            .disposed(by: disposeBag)
     }
 
     func endTracking<Consumer: OWViewableTimeConsumer>(consumer: Consumer) {
@@ -58,13 +83,31 @@ class OWViewableTimeService: OWViewableTimeServicing, OWViewableTimeServicingInp
             return .empty()
         }
     }
-
-    /// maps weak references to `ViewableTimeConsumer`s to trackers
-    private var trackers = [AnyHashable: ViewableTimeTracker]()
 }
 
 private extension OWViewableTimeService {
     func cleanup() {
         trackers = trackers.filter { $0.value.trackedView != nil }
+        if trackers.isEmpty {
+            disposeBag = DisposeBag()
+        }
+    }
+}
+
+extension OWViewabilityTrackable where Self: UIView {
+    func trackViewability(viewModel: any OWViewableTimeConsumer) {
+        OWSharedServicesProvider.shared.viewableTimeService().inputs
+            .track(consumer: viewModel, view: self)
+    }
+
+    func endTrackingViewability(viewModel: any OWViewableTimeConsumer) {
+        OWSharedServicesProvider.shared.viewableTimeService().inputs
+            .endTracking(consumer: viewModel)
+    }
+}
+
+extension OWViewableTimeConsumer {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs === rhs
     }
 }
