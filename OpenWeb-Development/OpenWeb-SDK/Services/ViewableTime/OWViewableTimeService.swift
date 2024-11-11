@@ -26,6 +26,7 @@ protocol OWViewabilityTrackable {
 protocol OWViewableTimeServicingInputs {
     func track<Consumer: OWViewableTimeConsumer>(consumer: Consumer, view: UIView)
     func endTracking<Consumer: OWViewableTimeConsumer>(consumer: Consumer)
+    func clearAllTracking()
 }
 
 protocol OWViewableTimeServicingOutputs {
@@ -47,7 +48,7 @@ class OWViewableTimeService: OWViewableTimeServicing, OWViewableTimeServicingInp
 
     /// maps weak references of `OWViewableTimeConsumer`s to trackers
     private var trackers = [AnyHashable: ViewableTimeTracker]()
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     func track<Consumer: OWViewableTimeConsumer>(consumer: Consumer, view: UIView) {
         cleanup()
@@ -64,6 +65,11 @@ class OWViewableTimeService: OWViewableTimeServicing, OWViewableTimeServicingInp
     func endTracking<Consumer: OWViewableTimeConsumer>(consumer: Consumer) {
         trackers.removeValue(forKey: OWWeakEncapsulation(value: consumer))
         cleanup()
+    }
+
+    func clearAllTracking() {
+        trackers.removeAll()
+        disposeBag = DisposeBag()
     }
 
     func viewabilityDidStart<Consumer: OWViewableTimeConsumer>(consumer: Consumer) -> Observable<Void> {
