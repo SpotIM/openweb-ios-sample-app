@@ -32,38 +32,33 @@ extension Reactive where Base: UIView {
     }
 
     var bounds: Observable<CGRect> {
-        return observe(CGRect.self, "bounds")
+        return observeWeakly(CGRect.self, "bounds", options: [.new])
             .unwrap()
             .distinctUntilChanged()
-            .share(replay: 0)
     }
 
     var center: Observable<CGPoint> {
-        return base.rx.observe(CGPoint.self, "center")
+        return base.rx.observeWeakly(CGPoint.self, "center", options: [.new])
             .unwrap()
             .distinctUntilChanged()
-            .share(replay: 0)
     }
 
     var isHidden: Observable<Bool> {
-        return base.rx.observe(Bool.self, "hidden")
+        return base.rx.observeWeakly(Bool.self, "hidden", options: [.new])
             .unwrap()
             .distinctUntilChanged()
-            .share(replay: 0)
     }
 
     var alpha: Observable<CGFloat> {
-        return base.rx.observe(CGFloat.self, "alpha")
+        return base.rx.observeWeakly(CGFloat.self, "alpha", options: [.new])
             .unwrap()
             .distinctUntilChanged()
-            .share(replay: 0)
     }
 
     var clipsToBounds: Observable<Bool> {
-        return base.rx.observe(Bool.self, "clipsToBounds")
+        return base.rx.observeWeakly(Bool.self, "clipsToBounds", options: [.new])
             .unwrap()
             .distinctUntilChanged()
-            .share(replay: 0)
     }
 
     /// Change in any property that impacts visibility.
