@@ -877,7 +877,7 @@
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
 		C22803322CE0B66F00E546DA /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */; };
 		C22803342CE0B6AB00E546DA /* DispatchTime+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */; };
-		C22803372CE0B80A00E546DA /* ViewableTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */; };
+		C22803372CE0B80A00E546DA /* OWViewableTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803362CE0B80A00E546DA /* OWViewableTimeTracker.swift */; };
 		C22803732CE1F56E00E546DA /* OWViewableTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */; };
 		C2DF42B92CAC41AE00BA68CE /* NSObject+AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
@@ -1819,7 +1819,7 @@
 		B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
 		C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchTime+Utils.swift"; sourceTree = "<group>"; };
-		C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewableTimeTracker.swift; sourceTree = "<group>"; };
+		C22803362CE0B80A00E546DA /* OWViewableTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableTimeTracker.swift; sourceTree = "<group>"; };
 		C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableTimeService.swift; sourceTree = "<group>"; };
 		C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+AssociatedObject.swift"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
@@ -5213,7 +5213,7 @@
 			isa = PBXGroup;
 			children = (
 				C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */,
-				C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */,
+				C22803362CE0B80A00E546DA /* OWViewableTimeTracker.swift */,
 			);
 			path = ViewableTime;
 			sourceTree = "<group>";
@@ -5950,7 +5950,7 @@
 				24A24A18291BAC7C00D72755 /* OWWebTabOptions.swift in Sources */,
 				160E42E22988103000EDC5A1 /* OWCommentThreadView.swift in Sources */,
 				3DA2647A2951E3B200688FFF /* OWNetworkRedirectHandler.swift in Sources */,
-				C22803372CE0B80A00E546DA /* ViewableTimeTracker.swift in Sources */,
+				C22803372CE0B80A00E546DA /* OWViewableTimeTracker.swift in Sources */,
 				3DB3B97729F7DAFB00C50192 /* OWTestingBlueCellViewModel.swift in Sources */,
 				3D31FB8E29AB6505002B88E0 /* OWSupportedLanguage.swift in Sources */,
 				24993F8E28CF0CC000452AF8 /* OWAnalyticsService.swift in Sources */,

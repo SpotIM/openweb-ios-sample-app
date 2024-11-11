@@ -1,5 +1,5 @@
 //
-//  ViewableTimeTracker.swift
+//  OWViewableTimeTracker.swift
 //  OpenWebSDK
 //
 //  Created by Yonat Sharon on 10/11/2024.
@@ -9,23 +9,23 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-protocol ViewableTimeTrackingInputs {
+protocol OWViewableTimeTrackingInputs {
     var trackedView: UIView? { get set }
 }
 
-protocol ViewableTimeTrackingOutputs {
+protocol OWViewableTimeTrackingOutputs {
     var viewabilityDidStart: Observable<Void> { get }
     var viewabilityDidEnd: Observable<TimeInterval> { get }
 }
 
-protocol ViewableTimeTracking {
-    var inputs: ViewableTimeTrackingInputs { get }
-    var outputs: ViewableTimeTrackingOutputs { get }
+protocol OWViewableTimeTracking {
+    var inputs: OWViewableTimeTrackingInputs { get }
+    var outputs: OWViewableTimeTrackingOutputs { get }
 }
 
-class ViewableTimeTracker: ViewableTimeTracking, ViewableTimeTrackingInputs, ViewableTimeTrackingOutputs {
-    var inputs: ViewableTimeTrackingInputs { return self }
-    var outputs: ViewableTimeTrackingOutputs { return self }
+class OWViewableTimeTracker: OWViewableTimeTracking, OWViewableTimeTrackingInputs, OWViewableTimeTrackingOutputs {
+    var inputs: OWViewableTimeTrackingInputs { return self }
+    var outputs: OWViewableTimeTrackingOutputs { return self }
 
     private enum Metrics {
         /// Minimum height and width that needs to be visible for a view to be considered viewable
@@ -68,7 +68,7 @@ class ViewableTimeTracker: ViewableTimeTracking, ViewableTimeTrackingInputs, Vie
     private var viewabilityStartTime: DispatchTime?
 }
 
-private extension ViewableTimeTracker {
+private extension OWViewableTimeTracker {
     var isViewable: Bool {
         get { viewabilityStartTime != nil }
         set {
