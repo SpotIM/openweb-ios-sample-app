@@ -156,7 +156,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
     private var commentingCTAHeightConstraint: OWConstraint?
     private var filterTabsHeightConstraint: OWConstraint?
     private let viewModel: OWPreConversationViewViewModeling
-    private let tracker = ViewableTimeTracker()
     private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
@@ -299,6 +298,8 @@ private extension OWPreConversationView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.inputs.trackViewability(view: self)
+
         compactTapGesture.rx.event
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
@@ -563,13 +564,6 @@ private extension OWPreConversationView {
             .unwrap()
             .map { $0.size }
             .bind(to: viewModel.inputs.tableViewSize)
-            .disposed(by: disposeBag)
-
-        tracker.trackedView = self
-        tracker.outputs.viewabilityDidEnd
-            .subscribe(onNext: { [weak self] duration in
-                self?.viewModel.inputs.trackViewableTime.onNext(duration)
-            })
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
