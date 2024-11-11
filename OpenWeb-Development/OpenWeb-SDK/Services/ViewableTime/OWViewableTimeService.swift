@@ -47,12 +47,12 @@ class OWViewableTimeService: OWViewableTimeServicing, OWViewableTimeServicingInp
     var outputs: OWViewableTimeServicingOutputs { return self }
 
     /// maps weak references of `OWViewableTimeConsumer`s to trackers
-    private var trackers = [AnyHashable: ViewableTimeTracker]()
+    private var trackers = [AnyHashable: OWViewableTimeTracker]()
     private var disposeBag = DisposeBag()
 
     func track<Consumer: OWViewableTimeConsumer>(consumer: Consumer, view: UIView) {
         cleanup()
-        let tracker = ViewableTimeTracker()
+        let tracker = OWViewableTimeTracker()
         tracker.trackedView = view
         trackers[OWWeakEncapsulation(value: consumer)] = tracker
         tracker.viewabilityDidEnd
