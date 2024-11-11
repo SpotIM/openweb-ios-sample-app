@@ -878,6 +878,7 @@
 		C22803322CE0B66F00E546DA /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */; };
 		C22803342CE0B6AB00E546DA /* DispatchTime+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */; };
 		C22803372CE0B80A00E546DA /* ViewableTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */; };
+		C22803732CE1F56E00E546DA /* OWViewableTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */; };
 		C2DF42B92CAC41AE00BA68CE /* NSObject+AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
@@ -1819,6 +1820,7 @@
 		C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
 		C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchTime+Utils.swift"; sourceTree = "<group>"; };
 		C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewableTimeTracker.swift; sourceTree = "<group>"; };
+		C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableTimeService.swift; sourceTree = "<group>"; };
 		C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+AssociatedObject.swift"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5210,6 +5212,7 @@
 		C22803352CE0B7D400E546DA /* ViewableTime */ = {
 			isa = PBXGroup;
 			children = (
+				C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */,
 				C22803362CE0B80A00E546DA /* ViewableTimeTracker.swift */,
 			);
 			path = ViewableTime;
@@ -5925,6 +5928,7 @@
 				3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */,
 				3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */,
 				8D0DB71D2A937AC60014AD1B /* OWRealtimeNewCommentsView.swift in Sources */,
+				C22803732CE1F56E00E546DA /* OWViewableTimeService.swift in Sources */,
 				3D50D9222B1653D400FD3232 /* NSAttributedString+Extensions.swift in Sources */,
 				3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */,
 				9E0C605E2A839863001B8D5D /* OWCachedLastCommentType.swift in Sources */,

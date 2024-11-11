@@ -21,7 +21,8 @@ protocol OWPreConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var dismissToast: PublishSubject<Void> { get }
-    var trackViewableTime: PublishSubject<TimeInterval> { get }
+
+    func trackViewability(view: UIView)
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -337,7 +338,16 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     var dismissToast = PublishSubject<Void>()
-    let trackViewableTime = PublishSubject<TimeInterval>()
+
+    func trackViewability(view: UIView) {
+        servicesProvider.viewableTimeService().inputs.track(consumer: self, view: view)
+
+        servicesProvider.viewableTimeService().outputs.viewabilityDidEnd(consumer: self)
+            .subscribe(onNext: { [weak self] duration in
+                self?.sendEvent(for: .viewableTime(timeInS: duration))
+            })
+            .disposed(by: disposeBag)
+    }
 
     private var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
     var displayToast: Observable<OWToastNotificationCombinedData> {
@@ -503,6 +513,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             setupObservers()
 
             sendEvent(for: .preConversationViewed)
+    }
+
+    deinit {
+        servicesProvider.viewableTimeService().inputs
+            .endTracking(consumer: self)
     }
 }
 
@@ -1569,12 +1584,6 @@ private extension OWPreConversationViewViewModel {
         dismissToast
             .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
-
-        trackViewableTime
-            .subscribe(onNext: { [weak self] duration in
-                self?.sendEvent(for: .viewableTime(timeInS: duration))
-            })
-            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 
@@ -1611,5 +1620,11 @@ private extension OWPreConversationViewViewModel {
         servicesProvider
             .analyticsService()
             .sendAnalyticEvents(events: [event])
+    }
+}
+
+extension OWPreConversationViewViewModel: OWViewableTimeConsumer {
+    static func == (lhs: OWPreConversationViewViewModel, rhs: OWPreConversationViewViewModel) -> Bool {
+        return lhs === rhs
     }
 }
