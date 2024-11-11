@@ -452,6 +452,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _commentsInMemoryCacheService.cleanCache()
         _lastCommentTypeInMemoryCacheService.cleanCache()
         _commentStatusUpdaterService.spotChanged(newSpotId: spotId)
+        _viewableTimeService.inputs.clearAllTracking()
     }
 
     func resetNetworkEnvironment() {
