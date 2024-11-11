@@ -95,7 +95,6 @@ private extension ViewableTimeTracker {
     }
 
     func setupObservers() {
-        // app open/close
         UIApplication.rx.didBecomeActive
             .subscribe(onNext: { [weak self] in
                 self?.updateViewability()
@@ -106,8 +105,6 @@ private extension ViewableTimeTracker {
                 self?.isViewable = false
             })
             .disposed(by: disposeBag)
-
-        setupViewHierarchyObservers()
     }
 
     func setupViewHierarchyObservers() {
@@ -129,7 +126,15 @@ private extension ViewableTimeTracker {
         }
 
         let superviews = trackedView.superviews
-        let superviewHierarchy = [trackedView] + superviews
+
+        // superview hierarchy changes - must come before other rx property changes, otherwise we get a KVO conflict error
+        let hierarchyEvents = superviews.map { $0.rx.didMoveToSuperview.voidify() }
+        Observable.merge(hierarchyEvents)
+            .debounce(.milliseconds(0), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.updateViewHierarchy()
+            })
+            .disposed(by: viewHierarchyDisposeBag)
 
         // superview scrolling
         let containingScrollViews = superviews.compactMap { $0 as? UIScrollView }
@@ -143,20 +148,11 @@ private extension ViewableTimeTracker {
         }
 
         // visibility changes
-        let visibilityEvents = superviewHierarchy.map { $0.rx.didChangeVisibility }
+        let visibilityEvents = superviews.map { $0.rx.didChangeVisibility }
         Observable.merge(visibilityEvents)
             .debounce(.milliseconds(0), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 self?.updateViewability()
-            })
-            .disposed(by: viewHierarchyDisposeBag)
-
-        // superview hierarchy changes
-        let hierarchyEvents = superviewHierarchy.map { $0.rx.didMoveToSuperview.voidify() }
-        Observable.merge(hierarchyEvents)
-            .debounce(.milliseconds(0), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                self?.updateViewHierarchy()
             })
             .disposed(by: viewHierarchyDisposeBag)
     }
