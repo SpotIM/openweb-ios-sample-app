@@ -48,7 +48,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var tableViewSizeChanged: Observable<CGSize> { get }
 }
 
-protocol OWCommentThreadViewViewModeling {
+protocol OWCommentThreadViewViewModeling: OWViewableTimeConsumer {
     var inputs: OWCommentThreadViewViewModelingInputs { get }
     var outputs: OWCommentThreadViewViewModelingOutputs { get }
 }
@@ -1869,7 +1869,9 @@ private extension OWCommentThreadViewViewModel {
                 layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalMode),
                 component: .commentCreation)
     }
+}
 
+extension OWCommentThreadViewViewModel: OWViewableTimeConsumer {
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
         servicesProvider

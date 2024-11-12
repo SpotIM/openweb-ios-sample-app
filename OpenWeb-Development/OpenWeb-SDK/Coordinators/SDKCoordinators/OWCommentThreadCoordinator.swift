@@ -224,7 +224,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
     override func showableComponent() -> Observable<OWShowable> {
         viewableMode = .independent
-        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
+        let commentThreadViewVM: any OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
         let commentThreadView = OWCommentThreadView(viewModel: commentThreadViewVM)
         setupObservers(forViewModel: commentThreadViewVM)
         setupViewActionsCallbacks(forViewModel: commentThreadViewVM)
@@ -258,7 +258,7 @@ private extension OWCommentThreadCoordinator {
             .disposed(by: disposeBag)
     }
 
-    func setupObservers(forViewModel viewModel: OWCommentThreadViewViewModeling) {
+    func setupObservers(forViewModel viewModel: any OWCommentThreadViewViewModeling) {
         let actionsCallbacksNotifier = self.servicesProvider.actionsCallbacksNotifier()
 
         actionsCallbacksNotifier.openCommentThread
@@ -272,7 +272,7 @@ private extension OWCommentThreadCoordinator {
             .disposed(by: disposeBag)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
+    func setupViewActionsCallbacks(forViewModel viewModel: any OWCommentThreadViewViewModeling) {
         guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         // Close Comment Thread

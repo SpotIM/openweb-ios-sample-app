@@ -402,7 +402,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     override func showableComponent() -> Observable<OWShowable> {
         viewableMode = .independent
-        let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData,
+        let conversationViewVM: any OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData,
                                                                                              viewableMode: viewableMode)
         let conversationView = OWConversationView(viewModel: conversationViewVM)
         setupObservers(forViewModel: conversationViewVM)
@@ -449,13 +449,13 @@ private extension OWConversationCoordinator {
             .disposed(by: disposeBag)
     }
 
-    func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
+    func setupObservers(forViewModel viewModel: any OWConversationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
 
         setupCustomizationElements(forViewModel: viewModel)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
+    func setupViewActionsCallbacks(forViewModel viewModel: any OWConversationViewViewModeling) {
         guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let actionsCallbacksNotifier = self.servicesProvider.actionsCallbacksNotifier()
@@ -550,7 +550,7 @@ private extension OWConversationCoordinator {
     }
 
     // swiftlint:disable function_body_length
-    func setupCustomizationElements(forViewModel viewModel: OWConversationViewViewModeling) {
+    func setupCustomizationElements(forViewModel viewModel: any OWConversationViewViewModeling) {
         // swiftlint:enable function_body_length
 
         // Set customized title header
