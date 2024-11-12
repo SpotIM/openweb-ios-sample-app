@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 75;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		24ED932C2BB457420090D1FF /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2EE6559280D523AC782FC3C9 /* Pods_OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */; };
 		3361A1AE3A23C3CE64FF21A2 /* Pods_OpenWebSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */; };
 		3DA1DF052C6DF7E800EBFA7D /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
@@ -65,7 +64,6 @@
 		133F93A08504745B0BB2D928 /* Pods-Shared-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		1AF45D96E33A5B5C236A46BC /* Pods-Shared-OpenWebSDKTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.beta.xcconfig"; sourceTree = "<group>"; };
 		232820FD5EB04EAF2F142596 /* Pods-Shared-OpenWeb-SampleApp.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.public.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.public.xcconfig"; sourceTree = "<group>"; };
-		24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = GiphyUISDK.xcframework; sourceTree = "<group>"; };
 		2CC69106E0D8187B462460E3 /* Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		3D4C321BC227EF1517971E69 /* Pods-Shared-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
@@ -117,12 +115,22 @@
 			);
 			target = 3DA1DEC02C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */;
 		};
+		C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			attributesByRelativePath = {
+				GiphyUISDK.xcframework = (
+					Weak,
+				);
+			};
+			target = 44C8788C23608BC100E0E662 /* OpenWebSDK */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDK"; sourceTree = "<group>"; };
 		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKTests"; sourceTree = "<group>"; };
 		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SampleApp-Internal-Configs"; sourceTree = "<group>"; };
+		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Vendor-Frameworks"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +146,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24ED932C2BB457420090D1FF /* GiphyUISDK.xcframework in Frameworks */,
 				2EE6559280D523AC782FC3C9 /* Pods_OpenWebSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,14 +162,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		16EA82822B8CDC8A004D6FF2 /* Vendor-Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */,
-			);
-			path = "Vendor-Frameworks";
-			sourceTree = "<group>";
-		};
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
@@ -170,7 +169,7 @@
 				C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */,
 				C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */,
 				5D697A3C22B65106001AD556 /* Products */,
-				16EA82822B8CDC8A004D6FF2 /* Vendor-Frameworks */,
+				C2280B812CE379B800E546DA /* Vendor-Frameworks */,
 				5D697A6A22B6586C001AD556 /* Frameworks */,
 				F6D45AB80C879EE6B5C01DA4 /* Pods */,
 			);
@@ -286,6 +285,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				C22807FD2CE378C400E546DA /* OpenWeb-SDK */,
+				C2280B812CE379B800E546DA /* Vendor-Frameworks */,
 			);
 			name = OpenWebSDK;
 			productName = SpotImCore;
@@ -339,7 +339,6 @@
 				};
 			};
 			buildConfigurationList = 5D697A3622B65106001AD556 /* Build configuration list for PBXProject "OpenWeb-Development" */;
-			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -363,6 +362,7 @@
 				vi,
 			);
 			mainGroup = 5D697A3222B65106001AD556;
+			preferredProjectObjectVersion = 50;
 			productRefGroup = 5D697A3C22B65106001AD556 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
