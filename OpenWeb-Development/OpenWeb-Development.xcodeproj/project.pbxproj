@@ -25,10 +25,6 @@
 		2EE6559280D523AC782FC3C9 /* Pods_OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */; };
 		3361A1AE3A23C3CE64FF21A2 /* Pods_OpenWebSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */; };
 		3D11D9232C760B5A003794C6 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11D9222C760B5A003794C6 /* Bundle+Extensions.swift */; };
-		3D301BDA2A823D530012B526 /* OWThemeStyleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */; };
-		3D301BDC2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */; };
-		3D301BE62A8BBE580012B526 /* RandomGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BE52A8BBE580012B526 /* RandomGenerator.swift */; };
-		3D301BE82A8C0F330012B526 /* NetworkTestingUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BE72A8C0F330012B526 /* NetworkTestingUtil.swift */; };
 		3DA1DEC52C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEC42C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc */; };
 		3DA1DED12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DA1DEC32C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3DA1DEE62C6DE53300EBFA7D /* DevelopmentConversationPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEE52C6DE53300EBFA7D /* DevelopmentConversationPreset.swift */; };
@@ -40,14 +36,6 @@
 		3DA1DF052C6DF7E800EBFA7D /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 		3DF446592C6E4D62008A47CE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3DF446582C6E4D62008A47CE /* GoogleService-Info.plist */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
-		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
-		F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */; };
-		F9529B302A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */; };
-		F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */; };
-		F9529B362A7F01E70070EDC2 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */; };
-		F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */; };
-		F99EC4962A810DCB00099DB4 /* MockEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99EC4952A810DCB00099DB4 /* MockEndpoints.swift */; };
-		F99EC4982A810DFD00099DB4 /* MockUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99EC4972A810DFD00099DB4 /* MockUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,10 +79,6 @@
 		2CC69106E0D8187B462460E3 /* Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		3D11D9222C760B5A003794C6 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
-		3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleServiceTests.swift; sourceTree = "<group>"; };
-		3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycleTests.swift; sourceTree = "<group>"; };
-		3D301BE52A8BBE580012B526 /* RandomGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomGenerator.swift; sourceTree = "<group>"; };
-		3D301BE72A8C0F330012B526 /* NetworkTestingUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTestingUtil.swift; sourceTree = "<group>"; };
 		3D4C321BC227EF1517971E69 /* Pods-Shared-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3DA1DEC12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DA1DEC32C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenWeb_SampleApp_Internal_Configs.h; sourceTree = "<group>"; };
@@ -125,14 +109,6 @@
 		B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsTests.swift; sourceTree = "<group>"; };
-		F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringServiceTests.swift; sourceTree = "<group>"; };
-		F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelperTests.swift; sourceTree = "<group>"; };
-		F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAPITests.swift; sourceTree = "<group>"; };
-		F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
-		F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkInterceptor.swift; sourceTree = "<group>"; };
-		F99EC4952A810DCB00099DB4 /* MockEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEndpoints.swift; sourceTree = "<group>"; };
-		F99EC4972A810DFD00099DB4 /* MockUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -158,6 +134,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDK"; sourceTree = "<group>"; };
+		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKTests"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,7 +244,7 @@
 			isa = PBXGroup;
 			children = (
 				C22807FD2CE378C400E546DA /* OpenWeb-SDK */,
-				F92DD7B82A7E8B9E00A2BE5B /* OpenWeb-SDKTests */,
+				C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */,
 				3DA1DEC22C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */,
 				5D697A3C22B65106001AD556 /* Products */,
 				16EA82822B8CDC8A004D6FF2 /* Vendor-Frameworks */,
@@ -324,33 +301,6 @@
 				874F2EDF6E51FB58E23D0C08 /* Pods-OpenWebSDK.releasepublic.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		F92DD7B82A7E8B9E00A2BE5B /* OpenWeb-SDKTests */ = {
-			isa = PBXGroup;
-			children = (
-				F9529B372A7F01EC0070EDC2 /* Mocks */,
-				3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */,
-				3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */,
-				F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */,
-				F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */,
-				F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */,
-				F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */,
-			);
-			path = "OpenWeb-SDKTests";
-			sourceTree = "<group>";
-		};
-		F9529B372A7F01EC0070EDC2 /* Mocks */ = {
-			isa = PBXGroup;
-			children = (
-				F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */,
-				F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */,
-				F99EC4952A810DCB00099DB4 /* MockEndpoints.swift */,
-				F99EC4972A810DFD00099DB4 /* MockUser.swift */,
-				3D301BE52A8BBE580012B526 /* RandomGenerator.swift */,
-				3D301BE72A8C0F330012B526 /* NetworkTestingUtil.swift */,
-			);
-			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -432,6 +382,9 @@
 			);
 			dependencies = (
 				F92DD7BD2A7E8B9E00A2BE5B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */,
 			);
 			name = OpenWebSDKTests;
 			productName = OpenWebCoreTests;
@@ -670,18 +623,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D301BDA2A823D530012B526 /* OWThemeStyleServiceTests.swift in Sources */,
-				F99EC4982A810DFD00099DB4 /* MockUser.swift in Sources */,
-				F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */,
-				F9529B302A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift in Sources */,
-				F99EC4962A810DCB00099DB4 /* MockEndpoints.swift in Sources */,
-				3D301BE62A8BBE580012B526 /* RandomGenerator.swift in Sources */,
-				F9529B362A7F01E70070EDC2 /* MockURLProtocol.swift in Sources */,
-				F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */,
-				F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */,
-				3D301BE82A8C0F330012B526 /* NetworkTestingUtil.swift in Sources */,
-				3D301BDC2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift in Sources */,
-				F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
