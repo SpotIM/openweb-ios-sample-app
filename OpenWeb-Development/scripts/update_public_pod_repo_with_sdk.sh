@@ -9,12 +9,24 @@ rm -fr OpenWebSDK.xcframework
 ls -l
 cp -r ../Release/OpenWebSDK.xcframework .
 ls -l
-PREVIOUS_SDK_VERSION=`cat OpenWebSDK.podspec | grep -m 1 s.version |  cut -d "=" -f2 | cut -d \" -f2 | cut -d \' -f2`
-echo "OpenWebSDK.podspec - replacing previous version ($PREVIOUS_SDK_VERSION) with current version ($RELEASE_VERSION)"
-sed -i '' -e "s/${PREVIOUS_SDK_VERSION}/${RELEASE_VERSION}/g" OpenWebSDK.podspec
+
 PREVIOUS_SDK_VERSION_IN_README=`cat README.md | grep pod\ \'OpenWebSDK\' | cut -d , -f2 | cut -d \' -f2`
 echo "README.md - replacing previous version ($PREVIOUS_SDK_VERSION_IN_README) with current version ($RELEASE_VERSION)"
 sed -i '' -e "s/${PREVIOUS_SDK_VERSION_IN_README}/${RELEASE_VERSION}/g" README.md
+
+PREVIOUS_SDK_VERSION=`cat OpenWebSDK.podspec | grep -m 1 s.version |  cut -d "=" -f2 | cut -d \" -f2 | cut -d \' -f2`
+echo "OpenWebSDK.podspec - replacing previous version ($PREVIOUS_SDK_VERSION) with current version ($RELEASE_VERSION)"
+sed -i '' -e "/s.version *= /s/'${PREVIOUS_SDK_VERSION}'/'${RELEASE_VERSION}'/" OpenWebSDK.podspec
+
+echo "OpenWebSDKAdapter.podspec - replacing previous version ($PREVIOUS_SDK_VERSION) with current version ($RELEASE_VERSION)"
+sed -i '' -e "/s.version *= /s/'${PREVIOUS_SDK_VERSION}'/'${RELEASE_VERSION}'/" OpenWebSDKAdapter.podspec
+
+echo "Update OpenWebSDKAdapter files"
+if [ -d "OpenWebSDKAdapter" ]; then
+rm -rf "OpenWebSDKAdapter"
+fi
+cp -r ../OpenWeb-Development/OpenWeb-SDKAdapter OpenWebSDKAdapter
+
 git status
 git add .
 git status
