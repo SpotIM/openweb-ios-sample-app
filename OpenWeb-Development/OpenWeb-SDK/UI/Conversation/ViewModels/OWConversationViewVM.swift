@@ -75,7 +75,7 @@ protocol OWConversationViewViewModelingOutputs {
     var shouldShowFilterTabsView: Observable<Bool> { get }
 }
 
-protocol OWConversationViewViewModeling {
+protocol OWConversationViewViewModeling: OWViewableTimeConsumer {
     var inputs: OWConversationViewViewModelingInputs { get }
     var outputs: OWConversationViewViewModelingOutputs { get }
 }
@@ -1419,12 +1419,12 @@ private extension OWConversationViewViewModel {
             .flatMap { [weak self] sortOption, offset, filterTabId -> Observable<Event<OWConversationReadRM>> in
                 guard let self else { return .empty() }
                 return self.servicesProvider
-                .networkAPI()
-                .conversation
-                .conversationRead(mode: sortOption, filterTabId: filterTabId, page: OWPaginationPage.next, parentId: "", offset: offset)
-                .response
-                .materialize() // Required to keep the final subscriber even if errors arrived from the network
-                .observe(on: self.conversationViewVMScheduler)
+                    .networkAPI()
+                    .conversation
+                    .conversationRead(mode: sortOption, filterTabId: filterTabId, page: OWPaginationPage.next, parentId: "", offset: offset)
+                    .response
+                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
+                    .observe(on: self.conversationViewVMScheduler)
             }
 
         let loadMoreCommentsReadFetched = loadMoreCommentsReadObservable
@@ -1490,7 +1490,7 @@ private extension OWConversationViewViewModel {
                 }
                 .unwrap()
 
-                 return Observable.just(guidelinesCellsVms)
+                return Observable.just(guidelinesCellsVms)
             }
             .share(replay: 1)
 
@@ -1579,7 +1579,7 @@ private extension OWConversationViewViewModel {
                 }
                 .unwrap()
 
-                 return Observable.just(commentCellsVms)
+                return Observable.just(commentCellsVms)
             }
             .share(replay: 1)
 
@@ -1641,9 +1641,9 @@ private extension OWConversationViewViewModel {
         .subscribe(onNext: { commentCellsVms, isReadOnly in
             commentCellsVms.forEach {
                 $0.outputs.commentVM
-                .outputs.commentEngagementVM
-                .inputs.isReadOnly
-                .onNext(isReadOnly)
+                    .outputs.commentEngagementVM
+                    .inputs.isReadOnly
+                    .onNext(isReadOnly)
             }
         })
         .disposed(by: disposeBag)
@@ -2585,22 +2585,22 @@ private extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-            refreshConversationObservable
-                .subscribe(onNext: { [weak self] _ in
-                    OWScheduler.runOnMainThreadIfNeeded {
-                        guard let self else { return }
-                        self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
-                    }
-                })
-                .disposed(by: disposeBag)
+        refreshConversationObservable
+            .subscribe(onNext: { [weak self] _ in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self else { return }
+                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                }
+            })
+            .disposed(by: disposeBag)
 
-            servicesProvider
-                .activeArticleService()
-                .articleExtraData
-                .subscribe(onNext: { [weak self] article in
-                    self?.articleUrl = article.url.absoluteString
-                })
-                .disposed(by: disposeBag)
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
 
         let scrollToLastCellErrorLoadingMore = shouldShowErrorLoadingMoreComments
             .filter { $0 }
@@ -2653,7 +2653,9 @@ private extension OWConversationViewViewModel {
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalMode),
                 component: .conversation)
     }
+}
 
+extension OWConversationViewViewModel: OWViewableTimeConsumer {
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
         servicesProvider
