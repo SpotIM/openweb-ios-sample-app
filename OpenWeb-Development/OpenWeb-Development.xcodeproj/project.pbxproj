@@ -24,17 +24,7 @@
 		24ED932C2BB457420090D1FF /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2EE6559280D523AC782FC3C9 /* Pods_OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */; };
 		3361A1AE3A23C3CE64FF21A2 /* Pods_OpenWebSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */; };
-		3D11D9232C760B5A003794C6 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11D9222C760B5A003794C6 /* Bundle+Extensions.swift */; };
-		3DA1DEC52C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEC42C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc */; };
-		3DA1DED12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DA1DEC32C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3DA1DEE62C6DE53300EBFA7D /* DevelopmentConversationPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEE52C6DE53300EBFA7D /* DevelopmentConversationPreset.swift */; };
-		3DA1DEEA2C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEE92C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift */; };
-		3DA1DEF22C6DF11600EBFA7D /* DevelopmentCommentThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEF12C6DF11600EBFA7D /* DevelopmentCommentThread.swift */; };
-		3DA1DEF62C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEF52C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift */; };
-		3DA1DEF82C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEF72C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift */; };
-		3DA1DEFF2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1DEFE2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift */; };
 		3DA1DF052C6DF7E800EBFA7D /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
-		3DF446592C6E4D62008A47CE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3DF446582C6E4D62008A47CE /* GoogleService-Info.plist */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -78,18 +68,8 @@
 		24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = GiphyUISDK.xcframework; sourceTree = "<group>"; };
 		2CC69106E0D8187B462460E3 /* Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
-		3D11D9222C760B5A003794C6 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		3D4C321BC227EF1517971E69 /* Pods-Shared-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3DA1DEC12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3DA1DEC32C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenWeb_SampleApp_Internal_Configs.h; sourceTree = "<group>"; };
-		3DA1DEC42C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = OpenWeb_SampleApp_Internal_Configs.docc; sourceTree = "<group>"; };
-		3DA1DEE52C6DE53300EBFA7D /* DevelopmentConversationPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentConversationPreset.swift; sourceTree = "<group>"; };
-		3DA1DEE92C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentSDKConversationDataModel.swift; sourceTree = "<group>"; };
-		3DA1DEF12C6DF11600EBFA7D /* DevelopmentCommentThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentCommentThread.swift; sourceTree = "<group>"; };
-		3DA1DEF52C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentGenericSSOAuthentication.swift; sourceTree = "<group>"; };
-		3DA1DEF72C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentUserAuthentication.swift; sourceTree = "<group>"; };
-		3DA1DEFE2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentThirdPartySSOAuthentication.swift; sourceTree = "<group>"; };
-		3DF446582C6E4D62008A47CE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3EDBB759704EE447EE4D4A77 /* Pods-OpenWebSDKTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.internal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.internal.xcconfig"; sourceTree = "<group>"; };
 		43A00F0329A6155C4CEFB584 /* Pods-OpenWebSDKTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.beta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.beta.xcconfig"; sourceTree = "<group>"; };
 		44C8788D23608BC100E0E662 /* OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,11 +110,19 @@
 			);
 			target = F92DD7B62A7E8B9E00A2BE5B /* OpenWebSDKTests */;
 		};
+		C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			publicHeaders = (
+				Resources/OpenWeb_SampleApp_Internal_Configs.h,
+			);
+			target = 3DA1DEC02C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDK"; sourceTree = "<group>"; };
 		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKTests"; sourceTree = "<group>"; };
+		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SampleApp-Internal-Configs"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,77 +163,12 @@
 			path = "Vendor-Frameworks";
 			sourceTree = "<group>";
 		};
-		3D11D9212C760B33003794C6 /* Extentions */ = {
-			isa = PBXGroup;
-			children = (
-				3D11D9222C760B5A003794C6 /* Bundle+Extensions.swift */,
-			);
-			path = Extentions;
-			sourceTree = "<group>";
-		};
-		3DA1DEC22C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */ = {
-			isa = PBXGroup;
-			children = (
-				3DA1DEFD2C6DF58500EBFA7D /* DevelopmentThirdPartySSOAuthentication */,
-				3DA1DEF42C6DF31900EBFA7D /* DevelopmentGenericSSOAuthentication */,
-				3DA1DEE72C6DE92D00EBFA7D /* DevelopmentConversationPreset */,
-				3DA1DEF32C6DF17200EBFA7D /* DevelopmentVariousSettings */,
-				3D11D9212C760B33003794C6 /* Extentions */,
-				3DA1DEE42C6CCBE700EBFA7D /* Resources */,
-			);
-			path = "OpenWeb-SampleApp-Internal-Configs";
-			sourceTree = "<group>";
-		};
-		3DA1DEE42C6CCBE700EBFA7D /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				3DF446582C6E4D62008A47CE /* GoogleService-Info.plist */,
-				3DA1DEC32C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h */,
-				3DA1DEC42C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		3DA1DEE72C6DE92D00EBFA7D /* DevelopmentConversationPreset */ = {
-			isa = PBXGroup;
-			children = (
-				3DA1DEE52C6DE53300EBFA7D /* DevelopmentConversationPreset.swift */,
-				3DA1DEE92C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift */,
-			);
-			path = DevelopmentConversationPreset;
-			sourceTree = "<group>";
-		};
-		3DA1DEF32C6DF17200EBFA7D /* DevelopmentVariousSettings */ = {
-			isa = PBXGroup;
-			children = (
-				3DA1DEF12C6DF11600EBFA7D /* DevelopmentCommentThread.swift */,
-			);
-			path = DevelopmentVariousSettings;
-			sourceTree = "<group>";
-		};
-		3DA1DEF42C6DF31900EBFA7D /* DevelopmentGenericSSOAuthentication */ = {
-			isa = PBXGroup;
-			children = (
-				3DA1DEF52C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift */,
-				3DA1DEF72C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift */,
-			);
-			path = DevelopmentGenericSSOAuthentication;
-			sourceTree = "<group>";
-		};
-		3DA1DEFD2C6DF58500EBFA7D /* DevelopmentThirdPartySSOAuthentication */ = {
-			isa = PBXGroup;
-			children = (
-				3DA1DEFE2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift */,
-			);
-			path = DevelopmentThirdPartySSOAuthentication;
-			sourceTree = "<group>";
-		};
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
 				C22807FD2CE378C400E546DA /* OpenWeb-SDK */,
 				C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */,
-				3DA1DEC22C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */,
+				C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */,
 				5D697A3C22B65106001AD556 /* Products */,
 				16EA82822B8CDC8A004D6FF2 /* Vendor-Frameworks */,
 				5D697A6A22B6586C001AD556 /* Frameworks */,
@@ -310,7 +233,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DA1DED12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +261,9 @@
 			);
 			dependencies = (
 				3DA1DF082C6DF7E800EBFA7D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */,
 			);
 			name = "OpenWeb-SampleApp-Internal-Configs";
 			productName = "OpenWeb-SampleApp-Internal-Configs";
@@ -455,7 +380,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DF446592C6E4D62008A47CE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -601,14 +525,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DA1DEC52C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.docc in Sources */,
-				3DA1DEE62C6DE53300EBFA7D /* DevelopmentConversationPreset.swift in Sources */,
-				3DA1DEF82C6DF35900EBFA7D /* DevelopmentUserAuthentication.swift in Sources */,
-				3DA1DEFF2C6DF59100EBFA7D /* DevelopmentThirdPartySSOAuthentication.swift in Sources */,
-				3DA1DEF62C6DF32D00EBFA7D /* DevelopmentGenericSSOAuthentication.swift in Sources */,
-				3DA1DEEA2C6DE9FD00EBFA7D /* DevelopmentSDKConversationDataModel.swift in Sources */,
-				3DA1DEF22C6DF11600EBFA7D /* DevelopmentCommentThread.swift in Sources */,
-				3D11D9232C760B5A003794C6 /* Bundle+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
