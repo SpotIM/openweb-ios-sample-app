@@ -124,7 +124,6 @@
 		241AF9F1295B22A900A941C1 /* OWCommentTextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F0295B22A900A941C1 /* OWCommentTextViewModel.swift */; };
 		241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */; };
 		241AF9F5295B382A00A941C1 /* OWCommentEngagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */; };
-		241B07572643CCA000253944 /* image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 241B07562643CCA000253944 /* image_placeholder.png */; };
 		242316532B0116D40002BCD2 /* OWClarityDetailsRequireData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316522B0116D40002BCD2 /* OWClarityDetailsRequireData.swift */; };
 		242316552B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316542B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift */; };
 		242316582B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316572B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift */; };
@@ -879,6 +878,7 @@
 		C22803342CE0B6AB00E546DA /* DispatchTime+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */; };
 		C22803372CE0B80A00E546DA /* OWViewableTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803362CE0B80A00E546DA /* OWViewableTimeTracker.swift */; };
 		C22803732CE1F56E00E546DA /* OWViewableTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */; };
+		C22803752CE375DE00E546DA /* image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = C22803742CE375DE00E546DA /* image_placeholder.png */; };
 		C2DF42B92CAC41AE00BA68CE /* NSObject+AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
@@ -1031,7 +1031,6 @@
 		241AF9F0295B22A900A941C1 /* OWCommentTextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentTextViewModel.swift; sourceTree = "<group>"; };
 		241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementView.swift; sourceTree = "<group>"; };
 		241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementViewModel.swift; sourceTree = "<group>"; };
-		241B07562643CCA000253944 /* image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = image_placeholder.png; path = SPAssets.xcassets/image_placeholder.imageset/image_placeholder.png; sourceTree = "<group>"; };
 		242316522B0116D40002BCD2 /* OWClarityDetailsRequireData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsRequireData.swift; sourceTree = "<group>"; };
 		242316542B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationPlaceholderVC.swift; sourceTree = "<group>"; };
 		242316572B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationPlaceholderViewModel.swift; sourceTree = "<group>"; };
@@ -1821,6 +1820,7 @@
 		C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchTime+Utils.swift"; sourceTree = "<group>"; };
 		C22803362CE0B80A00E546DA /* OWViewableTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableTimeTracker.swift; sourceTree = "<group>"; };
 		C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableTimeService.swift; sourceTree = "<group>"; };
+		C22803742CE375DE00E546DA /* image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image_placeholder.png; sourceTree = "<group>"; };
 		C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+AssociatedObject.swift"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4142,7 +4142,7 @@
 				4416C65A237ABE3D00D3F7B9 /* Localizable.strings */,
 				4454179F236850C0001D0ED0 /* Fonts */,
 				2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */,
-				241B07562643CCA000253944 /* image_placeholder.png */,
+				C22803742CE375DE00E546DA /* image_placeholder.png */,
 				24ED931A2BB432DC0090D1FF /* OpenWebSDK.modulemap */,
 			);
 			path = Resources;
@@ -5443,8 +5443,8 @@
 				3DDA9A3828F5897C00FE3B86 /* OpenSans-Medium.ttf in Resources */,
 				3DDA9A3728F5897C00FE3B86 /* OpenSans-Regular.ttf in Resources */,
 				9E8BA7E42C0339F2009C2164 /* GiphyConfiguration.plist in Resources */,
+				C22803752CE375DE00E546DA /* image_placeholder.png in Resources */,
 				3DA0AA05292A88DD00CED855 /* OpenWebSettings.plist in Resources */,
-				241B07572643CCA000253944 /* image_placeholder.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
