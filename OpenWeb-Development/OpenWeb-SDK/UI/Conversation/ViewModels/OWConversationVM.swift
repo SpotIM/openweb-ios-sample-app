@@ -23,7 +23,7 @@ protocol OWConversationViewModelingInputs {
 protocol OWConversationViewModelingOutputs {
     var customizeNavigationItemUI: Observable<UINavigationItem> { get }
     var customizeNavigationBarUI: Observable<UINavigationBar> { get }
-    var conversationViewVM: OWConversationViewViewModeling { get }
+    var conversationViewVM: any OWConversationViewViewModeling { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
     var shouldShowCloseButton: Bool { get }
@@ -73,7 +73,7 @@ class OWConversationViewModel: OWConversationViewModeling,
             .asObservable()
     }
 
-    lazy var conversationViewVM: OWConversationViewViewModeling = {
+    lazy var conversationViewVM: any OWConversationViewViewModeling = {
         return OWConversationViewViewModel(conversationData: conversationData,
                                            viewableMode: self.viewableMode)
     }()
