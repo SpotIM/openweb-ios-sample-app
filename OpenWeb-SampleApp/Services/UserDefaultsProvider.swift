@@ -115,6 +115,8 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case selectedSpotId = "selectedSpotId"
         case selectedPostId = "selectedPostId"
         case deeplinkOption = "deeplinkOption"
+        case commentActionsColor = "commentActionsColor"
+        case commentActionsFontStyle = "commentActionsFontStyle"
     }
 }
 
@@ -202,6 +204,10 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the current post id"
         case .deeplinkOption:
             return "Key which stores the SampleApp deeplink option"
+        case .commentActionsColor:
+            return "Key which stores the comment action's color"
+        case .commentActionsFontStyle:
+            return "Key which stores the comment action's font style"
         }
     }
 }
