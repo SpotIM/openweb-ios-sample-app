@@ -13,6 +13,7 @@ import OpenWebSDK
 
 protocol SampleAppSettingsViewModelingInputs {
     var deeplinkOptionSelected: BehaviorSubject<SampleAppDeeplink> { get }
+    var flowsLoggerEnable: BehaviorSubject<Bool> { get }
 }
 
 protocol SampleAppSettingsViewModelingOutputs {
@@ -20,6 +21,8 @@ protocol SampleAppSettingsViewModelingOutputs {
     var appDeeplinkTitle: String { get }
     var appDeeplinkSettings: [String] { get }
     var deeplinkOption: Observable<SampleAppDeeplink> { get }
+    var flowsLoggerSwitchTitle: String { get }
+    var flowsLoggerEnabled: Observable<Bool> { get }
 }
 
 protocol SampleAppSettingsViewModeling {
@@ -32,9 +35,13 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
     var outputs: SampleAppSettingsViewModelingOutputs { return self }
 
     var deeplinkOptionSelected = BehaviorSubject<SampleAppDeeplink>(value: SampleAppDeeplink.default)
-
     var deeplinkOption: Observable<SampleAppDeeplink> {
         return userDefaultsProvider.values(key: .deeplinkOption, defaultValue: SampleAppDeeplink.default)
+    }
+
+    var flowsLoggerEnable = BehaviorSubject<Bool>(value: false)
+    var flowsLoggerEnabled: Observable<Bool> {
+        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
     }
 
     lazy var title: String = {
@@ -43,6 +50,10 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
 
     lazy var appDeeplinkTitle: String = {
         return NSLocalizedString("Deeplink", comment: "")
+    }()
+
+    lazy var flowsLoggerSwitchTitle: String = {
+        return NSLocalizedString("UIFlowsLogger", comment: "")
     }()
 
     lazy var appDeeplinkSettings: [String] = {
@@ -70,6 +81,12 @@ private extension SampleAppSettingsVM {
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption))
+            .disposed(by: disposeBag)
+
+        flowsLoggerEnable
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<Bool>.flowsLoggerEnabled))
             .disposed(by: disposeBag)
     }
 }

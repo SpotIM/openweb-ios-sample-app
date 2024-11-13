@@ -80,41 +80,42 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
     }
 
     enum UDKey<T: Codable>: String {
-        case shouldShowOpenFullConversation = "shouldShowOpenFullConversation"
-        case shouldPresentInNewNavStack = "shouldPresentInNewNavStack"
-        case shouldOpenComment = "shouldOpenComment"
+        case shouldShowOpenFullConversation
+        case shouldPresentInNewNavStack
+        case shouldOpenComment
         case isCustomDarkModeEnabled = "demo.isCustomDarkModeEnabled"
         case isReadOnlyEnabled = "demo.isReadOnlyEnabled"
         case interfaceStyle = "demo.interfaceStyle"
-        case spotIdKey = "spotIdKey"
-        case articleHeaderStyle = "articleHeaderStyle"
-        case articleInformationStrategy = "articleInformationStrategy"
-        case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
-        case colorCustomizationStyleIndex = "colorCustomizationStyleIndex"
-        case colorCustomizationCustomTheme = "colorCustomizationCustomTheme"
-        case readOnlyModeIndex = "readOnlyModeIndex"
+        case spotIdKey
+        case articleHeaderStyle
+        case articleInformationStrategy
+        case elementsCustomizationStyleIndex
+        case colorCustomizationStyleIndex
+        case colorCustomizationCustomTheme
+        case readOnlyModeIndex
         case themeModeIndex = "themeModeSelectedIndex"
-        case statusBarStyleIndex = "statusBarStyleIndex"
-        case navigationBarStyleIndex = "navigationBarStyleIndex"
-        case modalStyleIndex = "modalStyleIndex"
-        case initialSortIndex = "initialSortIndex"
-        case fontGroupType = "fontGroupType"
-        case articleAssociatedURL = "articleAssociatedURL"
-        case articleSection = "articleSection"
+        case statusBarStyleIndex
+        case navigationBarStyleIndex
+        case modalStyleIndex
+        case initialSortIndex
+        case fontGroupType
+        case articleAssociatedURL
+        case articleSection
         case preConversationStyle = "preConversationCustomStyle"
         case conversationStyle = "conversationCustomStyleModeSelected"
         case commentCreationStyle = "commentCreationCustomStyleModeSelected"
         case networkEnvironment = "networkEnvironmentSelected"
-        case languageStrategy = "languageStrategy"
-        case localeStrategy = "localeStrategy"
-        case openCommentId = "openCommentId"
-        case showLoginPrompt = "showLoginPrompt"
-        case orientationEnforcement = "orientationEnforcement"
-        case selectedSpotId = "selectedSpotId"
-        case selectedPostId = "selectedPostId"
-        case deeplinkOption = "deeplinkOption"
-        case commentActionsColor = "commentActionsColor"
-        case commentActionsFontStyle = "commentActionsFontStyle"
+        case languageStrategy
+        case localeStrategy
+        case openCommentId
+        case showLoginPrompt
+        case orientationEnforcement
+        case selectedSpotId
+        case selectedPostId
+        case deeplinkOption
+        case commentActionsColor
+        case commentActionsFontStyle
+        case flowsLoggerEnabled
     }
 }
 
@@ -206,6 +207,8 @@ private extension UserDefaultsProvider.UDKey {
             return "Key which stores the comment action's color"
         case .commentActionsFontStyle:
             return "Key which stores the comment action's font style"
+        case .flowsLoggerEnabled:
+            return "Key which stores the flows logger enabled state"
         }
     }
 }

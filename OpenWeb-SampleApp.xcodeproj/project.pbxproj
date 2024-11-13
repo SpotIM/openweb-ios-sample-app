@@ -197,6 +197,8 @@
 		3DA1E6D52C6E299A00EBFA7D /* OpenWebSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D12C6E299A00EBFA7D /* OpenWebSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3DA1E6D82C6E29B600EBFA7D /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D72C6E29B600EBFA7D /* GiphyUISDK.xcframework */; };
 		3DA1E6D92C6E29B600EBFA7D /* GiphyUISDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D72C6E29B600EBFA7D /* GiphyUISDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9EB423BF2CDB7F7900ACAC09 /* OWFloatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB423BE2CDB7F6900ACAC09 /* OWFloatingView.swift */; };
+		9EB423C12CDB92E900ACAC09 /* OWFloatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB423C02CDB92E100ACAC09 /* OWFloatingViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -409,6 +411,8 @@
 		79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWeb_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		848D05A62E8E58EC0D6D0D41 /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		8C415B3F6B78213DDE6D8B0D /* Pods-OpenWeb-SampleApp.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		9EB423BE2CDB7F6900ACAC09 /* OWFloatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFloatingView.swift; sourceTree = "<group>"; };
+		9EB423C02CDB92E100ACAC09 /* OWFloatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFloatingViewModel.swift; sourceTree = "<group>"; };
 		D814DA2AF7AA9338F34E5D7F /* Pods-OpenWeb-SampleApp.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		DC3435E48547944AFCF7CE91 /* Pods-OpenWeb-SampleApp.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.public.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.public.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -729,6 +733,7 @@
 		3DA1E5582C6E221800EBFA7D /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				9EB423C02CDB92E100ACAC09 /* OWFloatingViewModel.swift */,
 				3DA1E5572C6E221800EBFA7D /* UILoggerViewModel.swift */,
 			);
 			path = ViewModels;
@@ -737,6 +742,7 @@
 		3DA1E55A2C6E221800EBFA7D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9EB423BE2CDB7F6900ACAC09 /* OWFloatingView.swift */,
 				3DA1E5592C6E221800EBFA7D /* UILoggerView.swift */,
 			);
 			path = Views;
@@ -1487,6 +1493,7 @@
 				3DA1E68E2C6E221800EBFA7D /* GeneralSettingsView.swift in Sources */,
 				3DA1E63D2C6E221800EBFA7D /* CoordinatorData.swift in Sources */,
 				3DA1E6882C6E221800EBFA7D /* SettingsViewModel.swift in Sources */,
+				9EB423BF2CDB7F7900ACAC09 /* OWFloatingView.swift in Sources */,
 				3DA1E6252C6E221800EBFA7D /* SettingsElementsCustomizationStyle+Extension.swift in Sources */,
 				3DA1E63F2C6E221800EBFA7D /* MainPageCoordinator.swift in Sources */,
 				3DA1E6412C6E221800EBFA7D /* MockArticleFlowCoordinator.swift in Sources */,
@@ -1561,6 +1568,7 @@
 				3DA1E64D2C6E221800EBFA7D /* AboutViewModel.swift in Sources */,
 				3DA1E6522C6E221800EBFA7D /* ThirdPartySSOAuthentication.swift in Sources */,
 				3DA1E6092C6E221800EBFA7D /* OWCommunityQuestionsStyle+Extensions.swift in Sources */,
+				9EB423C12CDB92E900ACAC09 /* OWFloatingViewModel.swift in Sources */,
 				3DA1E67C2C6E221800EBFA7D /* SettingsGroupVMProtocol.swift in Sources */,
 				3DA1E6C32C6E221800EBFA7D /* FontBook.swift in Sources */,
 				3DA1E6552C6E221800EBFA7D /* AuthenticationPlaygroundVC.swift in Sources */,
