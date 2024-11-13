@@ -32,6 +32,8 @@ protocol GeneralSettingsViewModelingInputs {
     var localeStrategySelectedIndex: BehaviorSubject<Int> { get }
     var showLoginPromptSelected: BehaviorSubject<Bool> { get }
     var openColorsCustomizationClicked: PublishSubject<Void> { get }
+    var commentActionsColorSelected: BehaviorSubject<OWCommentActionsColor> { get }
+    var commentActionsFontStyleSelected: BehaviorSubject<OWCommentActionsFontStyle> { get }
 }
 
 protocol GeneralSettingsViewModelingOutputs {
@@ -101,6 +103,13 @@ protocol GeneralSettingsViewModelingOutputs {
     var orientationEnforcement: Observable<OWOrientationEnforcement> { get }
     var orientationEnforcementTitle: String { get }
     var orientationEnforcementSettings: [String] { get }
+
+    var commentActionsColor: Observable<OWCommentActionsColor> { get }
+    var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> { get }
+    var commentActionsColorTitle: String { get }
+    var commentActionsFontStyleTitle: String { get }
+    var commentActionsColorSettings: [String] { get }
+    var commentActionsFontStyleSettings: [String] { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -131,6 +140,8 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
     var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.default.index)
     var showLoginPromptSelected = BehaviorSubject<Bool>(value: false)
+    var commentActionsColorSelected = BehaviorSubject<OWCommentActionsColor>(value: .default)
+    var commentActionsFontStyleSelected = BehaviorSubject<OWCommentActionsFontStyle>(value: .default)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate var manager: OWManagerProtocol
@@ -179,6 +190,14 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var orientationEnforcement: Observable<OWOrientationEnforcement> {
         return userDefaultsProvider.values(key: .orientationEnforcement, defaultValue: OWOrientationEnforcement.default)
+    }
+
+    var commentActionsColor: Observable<OWCommentActionsColor> {
+        return userDefaultsProvider.values(key: .commentActionsColor, defaultValue: OWCommentActionsColor.default)
+    }
+
+    var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> {
+        return userDefaultsProvider.values(key: .commentActionsFontStyle, defaultValue: OWCommentActionsFontStyle.default)
     }
 
     var readOnlyModeIndex: Observable<Int> {
@@ -354,6 +373,28 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     lazy var orientationEnforcementTitle: String = {
         return NSLocalizedString("OrientationEnforcement", comment: "")
+    }()
+
+    lazy var commentActionsColorTitle: String = {
+        return NSLocalizedString("CommentActionsColor", comment: "")
+    }()
+
+    lazy var commentActionsFontStyleTitle: String = {
+        return NSLocalizedString("CommentActionsFontStyle", comment: "")
+    }()
+
+    lazy var commentActionsColorSettings: [String] = {
+        let _default = NSLocalizedString("Default", comment: "")
+        let _brandColor = NSLocalizedString("BrandColor", comment: "")
+
+        return [_default, _brandColor]
+    }()
+
+    lazy var commentActionsFontStyleSettings: [String] = {
+        let _default = NSLocalizedString("Default", comment: "")
+        let _semiBold = NSLocalizedString("SemiBold", comment: "")
+
+        return [_default, _semiBold]
     }()
 
     lazy var elementsCustomizationStyleTitle: String = {
@@ -563,6 +604,18 @@ fileprivate extension GeneralSettingsVM {
                 .setValues(key: UserDefaultsProvider.UDKey<OWOrientationEnforcement>.orientationEnforcement))
             .disposed(by: disposeBag)
 
+        commentActionsColorSelected
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWCommentActionsColor>.commentActionsColor))
+            .disposed(by: disposeBag)
+
+        commentActionsFontStyleSelected
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWCommentActionsFontStyle>.commentActionsFontStyle))
+            .disposed(by: disposeBag)
+
         elementsCustomizationStyleSelectedIndex
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
@@ -698,5 +751,7 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
         languageStrategySelectedIndex.onNext(OWLanguageStrategy.defaultStrategyIndex)
         showLoginPromptSelected.onNext(false)
         orientationSelectedEnforcement.onNext(OWOrientationEnforcement.default)
+        commentActionsColorSelected.onNext(OWCommentActionsColor.default)
+        commentActionsFontStyleSelected.onNext(OWCommentActionsFontStyle.default)
     }
 }

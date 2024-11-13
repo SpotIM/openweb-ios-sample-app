@@ -50,7 +50,11 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             ThemeColorItem(title: "Primary Border", initialColor: initialColorTheme.primaryBorderColor),
             ThemeColorItem(title: "Secondary Border", initialColor: initialColorTheme.secondaryBorderColor),
             ThemeColorItem(title: "Loader", initialColor: initialColorTheme.loaderColor),
-            ThemeColorItem(title: "Brand Color", initialColor: initialColorTheme.brandColor)
+            ThemeColorItem(title: "Brand Color", initialColor: initialColorTheme.brandColor),
+            ThemeColorItem(title: "Vote Up Unselected", initialColor: initialColorTheme.voteUpUnselectedColor),
+            ThemeColorItem(title: "Vote Down Unselected", initialColor: initialColorTheme.voteDownUnselectedColor),
+            ThemeColorItem(title: "Vote Up Selected", initialColor: initialColorTheme.voteUpSelectedColor),
+            ThemeColorItem(title: "Vote Down Selected", initialColor: initialColorTheme.voteDownSelectedColor)
         ]
     }()
 
@@ -120,7 +124,11 @@ fileprivate extension ColorsCustomizationViewModel {
             primaryBorderColor: colors[12],
             secondaryBorderColor: colors[13],
             loaderColor: colors[14],
-            brandColor: colors[15])
+            brandColor: colors[15],
+            voteUpUnselectedColor: colors[16],
+            voteDownUnselectedColor: colors[17],
+            voteUpSelectedColor: colors[18],
+            voteDownSelectedColor: colors[19])
     }
 }
 
