@@ -408,6 +408,7 @@ private extension OWTextView {
         }
 
         updatedAttributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: nsRange)
+        updatedAttributedText.removeAttachmentChar()
 
         let savedDelegate = self.textView.delegate
         self.textView.delegate = nil // Fixes looping cursor range
