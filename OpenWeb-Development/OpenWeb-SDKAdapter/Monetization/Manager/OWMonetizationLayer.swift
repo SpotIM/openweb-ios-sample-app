@@ -7,18 +7,21 @@
 //
 
 import Foundation
-#if canImport(OpenWebIAUSDK)
-@_exported import OpenWebIAUSDK
-#endif
 
 #if canImport(OpenWebIAUSDK)
+
+@_exported import OpenWebIAUSDK
+
 public class OWMonetizationLayer: OWMonetization {
     // TODO - lmplementation
     public init() {}
 }
+
 #else
+
 public class OWMonetizationLayer: OWMonetization {
     public init() {}
 }
+
 #endif
 

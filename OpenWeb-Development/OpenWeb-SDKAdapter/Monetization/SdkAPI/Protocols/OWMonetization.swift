@@ -7,16 +7,19 @@
 //
 
 import Foundation
-#if canImport(OpenWebIAUSDK)
-import OpenWebIAUSDK
-#endif
 
 #if canImport(OpenWebIAUSDK)
+
+import OpenWebIAUSDK
+
 public protocol OWMonetization {
     // TODO - lmplementation
 }
+
 #else
+
 public protocol OWMonetization {
 
 }
+
 #endif
