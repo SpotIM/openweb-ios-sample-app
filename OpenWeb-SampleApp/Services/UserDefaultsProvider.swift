@@ -115,6 +115,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case deeplinkOption = "deeplinkOption"
         case commentActionsColor = "commentActionsColor"
         case commentActionsFontStyle = "commentActionsFontStyle"
+        case flowsLoggerEnabled = "flowsLoggerEnabled"
     }
 }
 
@@ -206,6 +207,8 @@ private extension UserDefaultsProvider.UDKey {
             return "Key which stores the comment action's color"
         case .commentActionsFontStyle:
             return "Key which stores the comment action's font style"
+        case .flowsLoggerEnabled:
+            return "Key which stores the flows logger enabled state"
         }
     }
 }
