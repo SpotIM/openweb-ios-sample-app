@@ -9,6 +9,14 @@
 import UIKit
 
 extension String {
+    init?(unicodeCodePoint: Int) {
+        if let unicodeScalar = UnicodeScalar(unicodeCodePoint) {
+            self.init(unicodeScalar)
+        } else {
+            return nil
+        }
+    }
+
     var locateURLInText: URL? {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
 
