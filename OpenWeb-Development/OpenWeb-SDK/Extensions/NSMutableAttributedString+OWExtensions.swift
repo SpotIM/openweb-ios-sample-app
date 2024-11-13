@@ -24,8 +24,8 @@ extension NSMutableAttributedString {
         if let range = self.string.range(of: text) {
             let nsRange = NSRange(range, in: self.string)
             self.addAttribute(NSAttributedString.Key.foregroundColor,
-                                        value: color,
-                                        range: nsRange)
+                              value: color,
+                              range: nsRange)
         }
         return self
     }
@@ -37,5 +37,13 @@ extension NSMutableAttributedString {
             self.addAttribute(.underlineStyle, value: style, range: nsRange)
         }
         return self
+    }
+
+    /// Removes attachemnt placeholder char that the OS adds after dismissing dictation.
+    func removeAttachmentChar() {
+        guard let attachmentChar = String(unicodeCodePoint: NSTextAttachment.character) else { return }
+        let attachmentCharRange = mutableString.range(of: attachmentChar)
+        guard attachmentCharRange.location != NSNotFound else { return }
+        replaceCharacters(in: attachmentCharRange, with: "")
     }
 }
