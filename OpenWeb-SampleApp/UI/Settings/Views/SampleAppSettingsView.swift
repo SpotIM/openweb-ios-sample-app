@@ -44,8 +44,7 @@ class SampleAppSettingsView: UIView {
 
     private lazy var switchFlowsLogger: SwitchSetting = {
         let title = viewModel.outputs.flowsLoggerSwitchTitle
-        return SwitchSetting(title: title,
-                                       accessibilityPrefixId: Metrics.flowsLoggerIdentifier)
+        return SwitchSetting(title: title, accessibilityPrefixId: Metrics.flowsLoggerIdentifier)
     }()
 
     private let viewModel: SampleAppSettingsViewModeling

@@ -8,9 +8,7 @@
 import RxSwift
 import RxCocoa
 
-protocol OWFloatingViewModelOutputs {
-    var contentView: Observable<UIView> { get }
-}
+protocol OWFloatingViewModelOutputs { }
 
 protocol OWFloatingViewModelInputs {
     var setContentView: PublishSubject<UIView> { get }
@@ -18,6 +16,7 @@ protocol OWFloatingViewModelInputs {
 
 protocol OWFloatingViewModeling {
     var inputs: OWFloatingViewModelInputs { get }
+    var outputs: OWFloatingViewModelOutputs { get }
 }
 
 class OWFloatingViewModel: OWFloatingViewModeling, OWFloatingViewModelOutputs, OWFloatingViewModelInputs {
@@ -25,10 +24,6 @@ class OWFloatingViewModel: OWFloatingViewModeling, OWFloatingViewModelOutputs, O
     var outputs: OWFloatingViewModelOutputs { return self }
 
     var setContentView = PublishSubject<UIView>()
-    var contentView: Observable<UIView> {
-        return setContentView
-            .asObservable()
-    }
 
     init() {
     }

@@ -12,7 +12,7 @@ import SnapKit
 
 class OWFloatingView: UIView {
     private var panGesture: UIPanGestureRecognizer!
-    private var disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     private let viewModel: OWFloatingViewModeling
     private var targetCenter: CGPoint = .zero
     private var isDraggging = false
@@ -55,7 +55,7 @@ class OWFloatingView: UIView {
             make.edges.top.bottom.equalToSuperview()
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             guard let self,
                   let superview else { return }
             self.targetCenter.x = superview.bounds.width + self.frame.width / 2 - Metrics.pullOutFromEdgeWidth
