@@ -24,10 +24,25 @@ class MockArticleFlowsVC: UIViewController {
         static let buttonHeight: CGFloat = 50
         static let identifier = "mock_article_flows_vc_id"
         static let viewIdentifier = "mock_article_flows_view_id"
+        static let loggerViewWidth: CGFloat = 300
+        static let loggerViewHeight: CGFloat = 250
+        static let loggerInitialTopPadding: CGFloat = 50
+    }
+
+    deinit {
+        floatingLoggerView.removeFromSuperview()
     }
 
     private let viewModel: MockArticleFlowsViewModeling
     private let disposeBag = DisposeBag()
+
+    private lazy var loggerView: UILoggerView = {
+        return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
+    }()
+
+    private lazy var floatingLoggerView: OWFloatingView = {
+        return OWFloatingView(viewModel: viewModel.outputs.floatingViewViewModel)
+    }()
 
     private lazy var articleScrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -159,11 +174,30 @@ private extension MockArticleFlowsVC {
         articleScrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
+
+        if #available(iOS 13.0, *) {
+            #if !PUBLIC_DEMO_APP
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                // Add it to the window
+                floatingLoggerView.isHidden = true
+                keyWindow.addSubview(floatingLoggerView)
+                floatingLoggerView.snp.makeConstraints { make in
+                    make.width.equalTo(Metrics.loggerViewWidth)
+                    make.height.equalTo(Metrics.loggerViewHeight)
+                    make.top.equalToSuperview().offset(Metrics.loggerInitialTopPadding)
+                    make.centerX.equalToSuperview()
+                }
+            }
+            #endif
+        }
     }
 
     // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
+
+        viewModel.outputs.floatingViewViewModel.inputs.setContentView.onNext(loggerView)
 
         // Setting those in the VM for integration with the SDK
         viewModel.inputs.setNavigationController(self.navigationController)
@@ -298,6 +332,15 @@ private extension MockArticleFlowsVC {
         viewModel.outputs.showError
             .subscribe(onNext: { [weak self] message in
                 self?.showError(message: message)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.loggerEnabled
+            .delay(.milliseconds(10), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] loggerEnabled in
+                guard let self else { return }
+                self.floatingLoggerView.isHidden = !loggerEnabled
             })
             .disposed(by: disposeBag)
     }

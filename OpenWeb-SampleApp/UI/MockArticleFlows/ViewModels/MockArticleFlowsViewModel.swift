@@ -31,6 +31,9 @@ protocol MockArticleFlowsViewModelingOutputs {
     var articleImageURL: Observable<URL> { get }
     var showError: Observable<String> { get }
     var preConversationHorizontalMargin: CGFloat { get }
+    var loggerViewModel: UILoggerViewModeling { get }
+    var floatingViewViewModel: OWFloatingViewModeling { get }
+    var loggerEnabled: Observable<Bool> { get }
 }
 
 protocol MockArticleFlowsViewModeling {
@@ -41,6 +44,18 @@ protocol MockArticleFlowsViewModeling {
 class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsViewModelingInputs, MockArticleFlowsViewModelingOutputs {
     var inputs: MockArticleFlowsViewModelingInputs { return self }
     var outputs: MockArticleFlowsViewModelingOutputs { return self }
+
+    lazy var loggerViewModel: UILoggerViewModeling = {
+        return UILoggerViewModel(title: "Flows Logger")
+    }()
+
+    lazy var floatingViewViewModel: OWFloatingViewModeling = {
+        return OWFloatingViewModel()
+    }()
+
+    lazy var loggerEnabled: Observable<Bool> = {
+        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
+    }()
 
     private struct Metrics {
         static let preConversationCompactHorizontalMargin: CGFloat = 16.0
@@ -71,12 +86,6 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
             .asObservable()
     }
 
-    private let loggerViewTitle: String
-
-    lazy var loggerViewModel: UILoggerViewModeling = {
-        return UILoggerViewModel(title: loggerViewTitle)
-    }()
-
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
@@ -87,19 +96,6 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
         _actionSettings.onNext(actionSettings)
-
-        switch actionSettings.actionType {
-
-        case .preConversation:
-            loggerViewTitle = "Pre conversation logger"
-        case .fullConversation:
-            loggerViewTitle = "Conversation logger"
-        case .commentCreation:
-            loggerViewTitle = "Comment creation logger"
-        case .commentThread:
-            loggerViewTitle = "Comment thread logger"
-        }
-
         setupObservers()
     }
 
