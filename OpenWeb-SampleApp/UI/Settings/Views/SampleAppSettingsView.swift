@@ -14,6 +14,7 @@ class SampleAppSettingsView: UIView {
     private struct Metrics {
         static let identifier = "sample_app_settings_view_id"
         static let deeplinkIdentifier = "deeplink_selection_id"
+        static let flowsLoggerIdentifier = "flows_logger_switch_id"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -39,6 +40,11 @@ class SampleAppSettingsView: UIView {
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.deeplinkIdentifier,
                                        items: items)
+    }()
+
+    private lazy var switchFlowsLogger: SwitchSetting = {
+        let title = viewModel.outputs.flowsLoggerSwitchTitle
+        return SwitchSetting(title: title, accessibilityPrefixId: Metrics.flowsLoggerIdentifier)
     }()
 
     private let viewModel: SampleAppSettingsViewModeling
@@ -75,6 +81,7 @@ private extension SampleAppSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedDeeplink)
+        stackView.addArrangedSubview(switchFlowsLogger)
     }
 
     func setupObservers() {
@@ -86,6 +93,14 @@ private extension SampleAppSettingsView {
         segmentedDeeplink.rx.selectedSegmentIndex
             .map { SampleAppDeeplink.deeplink(fromIndex: $0) }
             .bind(to: viewModel.inputs.deeplinkOptionSelected)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.flowsLoggerEnabled
+            .bind(to: switchFlowsLogger.rx.isOn)
+            .disposed(by: disposeBag)
+
+        switchFlowsLogger.rx.isOn
+            .bind(to: viewModel.inputs.flowsLoggerEnable)
             .disposed(by: disposeBag)
     }
 }
