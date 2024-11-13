@@ -19,20 +19,6 @@ sed -i '' -e "/s.version *= /s/'${PREVIOUS_SDK_VERSION}'/'${RELEASE_VERSION}'/" 
 echo "OpenWebSDK.podspec - update source tag to $TAG"
 sed -i '' -e "s/tag => s.version.to_s/tag => '${TAG}'/g" OpenWebSDK.podspec
 
-echo "OpenWebSDK.podspec - update OpenWebSDKAdapter dependency to use tag - $TAG"
-sed -i '' -e "/s.dependency 'OpenWebSDKAdapter'/s|,.*|, :git => 'https://github.com/SpotIM/openweb-ios-sdk-pod.git', :tag => '${TAG}'|" OpenWebSDK.podspec
-
-echo "OpenWebSDKAdapter.podspec - replacing previous version ($PREVIOUS_SDK_VERSION) with current version ($RELEASE_VERSION)"
-sed -i '' -e "/s.version *= /s/'${PREVIOUS_SDK_VERSION}'/'${RELEASE_VERSION}'/" OpenWebSDKAdapter.podspec
-echo "OpenWebSDKAdapter.podspec - update source tag to $TAG"
-sed -i '' -e "s/tag => s.version.to_s/tag => '${TAG}'/g" OpenWebSDKAdapter.podspec
-
-echo "Update OpenWebSDKAdapter files"
-if [ -d "OpenWebSDKAdapter" ]; then
-rm -rf "OpenWebSDKAdapter"
-fi
-cp -r ../OpenWeb-Development/OpenWeb-SDKAdapter OpenWebSDKAdapter
-
 git status
 git add .
 git status
