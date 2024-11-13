@@ -65,7 +65,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var privacyTapped: Observable<Void> { get }
 }
 
-protocol OWPreConversationViewViewModeling: AnyObject {
+protocol OWPreConversationViewViewModeling: OWViewableTimeConsumer {
     var inputs: OWPreConversationViewViewModelingInputs { get }
     var outputs: OWPreConversationViewViewModelingOutputs { get }
 }
@@ -1597,7 +1597,9 @@ private extension OWPreConversationViewViewModel {
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalMode),
                 component: .preConversation)
     }
+}
 
+extension OWPreConversationViewViewModel: OWViewableTimeConsumer {
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
         servicesProvider

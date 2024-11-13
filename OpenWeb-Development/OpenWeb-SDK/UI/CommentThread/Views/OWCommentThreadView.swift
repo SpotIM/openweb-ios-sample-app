@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
+class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol, OWViewabilityTrackable {
 
     private struct Metrics {
         static let horizontalOffset: CGFloat = 16.0
@@ -117,20 +117,24 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
         return refresh
     }()
 
-    private let viewModel: OWCommentThreadViewViewModeling
+    private let viewModel: any OWCommentThreadViewViewModeling
     private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(viewModel: OWCommentThreadViewViewModeling) {
+    init(viewModel: any OWCommentThreadViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
         applyAccessibility()
+    }
+
+    deinit {
+        endTrackingViewability(viewModel: viewModel)
     }
 }
 
@@ -169,6 +173,8 @@ private extension OWCommentThreadView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
+        trackViewability(viewModel: viewModel)
+
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] data in
                 guard var self else { return }
