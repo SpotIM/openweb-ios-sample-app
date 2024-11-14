@@ -45,6 +45,7 @@ class OWFlowActionsService: OWFlowActionsServicing {
         self.flowActionsCallbacks = flowActionsCallbacks
         self.servicesProvider = servicesProvider
         self.viewSourceType = viewSourceType
+        setupBlockerServiceObservers() // to ensure serviceQueueEmpty is setup when there are no action callbacks
     }
 
     func append(flowAction: OWFlowActionCallbackType) {
