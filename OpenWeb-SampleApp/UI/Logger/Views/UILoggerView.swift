@@ -40,6 +40,17 @@ class UILoggerView: UIView {
         return textView
     }()
 
+    private lazy var clearButton: UIButton = {
+        let this = UIButton()
+        if #available(iOS 13.0, *) {
+            this.setImage(UIImage(systemName: "trash"), for: .normal)
+        } else {
+            this.setTitle("Clear", for: .normal)
+        }
+        this.tintColor = .black
+        return this
+    }()
+
     private let viewModel: UILoggerViewModeling
     private let disposeBag = DisposeBag()
 
@@ -68,7 +79,13 @@ private extension UILoggerView {
 
         self.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.leading.trailing.top.equalTo(self).inset(Metrics.horizontalOffset)
+            make.leading.top.equalTo(self).inset(Metrics.horizontalOffset)
+        }
+
+        self.addSubview(clearButton)
+        clearButton.snp.makeConstraints { make in
+            make.trailing.top.equalTo(self).inset(Metrics.horizontalOffset)
+            make.centerY.equalTo(titleLabel)
         }
 
         self.addSubview(loggerTextView)
@@ -96,6 +113,12 @@ private extension UILoggerView {
 
         viewModel.outputs.title
             .bind(to: titleLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        clearButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.inputs.clear()
+            })
             .disposed(by: disposeBag)
     }
 
