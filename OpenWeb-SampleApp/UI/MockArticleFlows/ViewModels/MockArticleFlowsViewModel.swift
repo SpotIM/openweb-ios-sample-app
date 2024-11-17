@@ -96,6 +96,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
         _actionSettings.onNext(actionSettings)
+        setupBICallaback()
         setupObservers()
     }
 
@@ -213,11 +214,11 @@ private extension MockArticleFlowsViewModel {
                 }
 
                 flows.preConversation(postId: postId,
-                                   article: article,
-                                   presentationalMode: presentationalMode,
-                                   additionalSettings: additionalSettings,
-                                   callbacks: actionsCallbacks,
-                                   completion: { [weak self] result in
+                                      article: article,
+                                      presentationalMode: presentationalMode,
+                                      additionalSettings: additionalSettings,
+                                      callbacks: actionsCallbacks,
+                                      completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success(let preConversationView):
@@ -436,5 +437,16 @@ private extension MockArticleFlowsViewModel {
         case .push:
             return OWPresentationalMode.push(navigationController: navController)
         }
+    }
+
+    func setupBICallaback() {
+        let analytics: OWAnalytics = OpenWeb.manager.analytics
+
+        let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
+            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
+            self?.loggerViewModel.inputs.log(text: log)
+        }
+
+        analytics.addBICallback(BIClosure)
     }
 }
