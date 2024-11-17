@@ -98,8 +98,7 @@ private extension OWFlowActionsService {
         // Ensure callbacks are triggered from main thread
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            while !self.queue.isEmpty(),
-                  let action = self.queue.popFirst() {
+            while let action = self.queue.popFirst() {
                 self.flowActionsCallbacks?(action, self.viewSourceType, postId)
             }
             _serviceQueueEmpty.onNext()
