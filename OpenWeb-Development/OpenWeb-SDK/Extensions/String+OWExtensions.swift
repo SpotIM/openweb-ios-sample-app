@@ -17,6 +17,26 @@ extension String {
         }
     }
 
+    var stripHTML: String {
+        let regex = try? NSRegularExpression(pattern: "<[^>]+>", options: .caseInsensitive)
+        let range = NSRange(location: 0, length: self.count)
+        return regex?.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: "") ?? self
+    }
+
+    var linkAnchors: [String] {
+        // swiftlint:disable:next force_try
+        let regex = try! NSRegularExpression(pattern: "<a[^>]*>([^<]+)</a>", options: .caseInsensitive)
+        let matches = regex.matches(in: self, options: [], range: NSRange(startIndex..., in: self))
+
+        return matches.compactMap { match in
+            // Capture group 1 contains the link text
+            guard match.numberOfRanges > 1, let range = Range(match.range(at: 1), in: self) else {
+                return nil
+            }
+            return String(self[range])
+        }
+    }
+
     var locateURLInText: URL? {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
 
