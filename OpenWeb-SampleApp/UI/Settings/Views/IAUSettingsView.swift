@@ -13,7 +13,6 @@ class IAUSettingsView: UIView {
 
     private struct Metrics {
         static let identifier = "iau_settings_view_id"
-        static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
 

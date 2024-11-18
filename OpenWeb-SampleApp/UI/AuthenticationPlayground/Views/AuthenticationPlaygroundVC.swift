@@ -17,16 +17,13 @@ class AuthenticationPlaygroundVC: UIViewController {
         static let pickerGenericSSOIdentifier = "generic_sso"
         static let pickerThirdPartySSOIdentifier = "third_party_sso"
         static let switchAutomaticallyDismissIdentifier = "automatically_dismiss"
-        static let textFieldSpotIdIdentifier = "text_field_spot_id"
         static let textFieldSSOTokenIdentifier = "text_field_sso_token"
         static let textFieldUsernameIdentifier = "text_field_username"
         static let textFieldPasswordIdentifier = "text_field_password"
-        static let textFieldUserIdIdentifier = "text_field_user_id"
         static let verticalMargin: CGFloat = 20
         static let verticalBigMargin: CGFloat = 60
         static let horizontalMargin: CGFloat = 10
         static let horizontalSmallMargin: CGFloat = 6
-        static let roundCornerRadius: CGFloat = 10
         static let btnPadding: CGFloat = 12
     }
 

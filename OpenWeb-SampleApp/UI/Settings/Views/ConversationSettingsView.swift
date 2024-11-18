@@ -18,7 +18,6 @@ class ConversationSettingsView: UIView {
         static let segmentedCommunityQuestionsStyleModeIdentifier = "community_questions_style_mode"
         static let segmentedConversationSpacingModeIdentifier = "conversation_spacing_style_mode"
         static let textFieldBetweenCommentsSpacingIdentifier = "between_comments_spacing"
-        static let textFieldBelowHeaderSpacingIdentifier = "below_header_spacing"
         static let textFieldBelowCommunityGuidelinesSpacingIdentifier = "below_community_guidelines_spacing"
         static let textFieldBelowCommunityQuestionsSpacingIdentifier = "below_community_questions_spacing"
         static let verticalOffset: CGFloat = 40
