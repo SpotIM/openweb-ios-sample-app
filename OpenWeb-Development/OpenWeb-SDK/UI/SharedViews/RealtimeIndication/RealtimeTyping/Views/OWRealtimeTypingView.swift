@@ -18,7 +18,7 @@ class OWRealtimeTypingView: UIView {
         static let animationViewHeight: CGFloat = 18
 
         static let titleLabelTextColor: OWColor.OWType = .textColor3
-        
+
         static let identifier = "realtime_typing_view_id"
         static let typingAnimationViewIdentifier = "realtime_typing_animation_view_id"
         static let typingLabelIdentifier = "realtime_typing_label_id"
@@ -97,7 +97,7 @@ private extension OWRealtimeTypingView {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         typingAnimationView.accessibilityIdentifier = Metrics.typingAnimationViewIdentifier
