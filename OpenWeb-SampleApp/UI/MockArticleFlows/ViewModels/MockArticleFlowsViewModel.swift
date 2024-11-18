@@ -193,11 +193,15 @@ private extension MockArticleFlowsViewModel {
             .unwrap()
             // Small delay so the navigation controller will be set from the view controller
             .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
+                return (result.0, result.1, loggerEnabled)
+            }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
+                let loggerEnabled = result.2
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
@@ -207,17 +211,11 @@ private extension MockArticleFlowsViewModel {
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
-                let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self else { return }
-                    let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                    self.loggerViewModel.inputs.log(text: log)
-                }
-
                 flows.preConversation(postId: postId,
                                       article: article,
                                       presentationalMode: presentationalMode,
                                       additionalSettings: additionalSettings,
-                                      callbacks: actionsCallbacks,
+                                      callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
                                       completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
@@ -238,11 +236,15 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
                 return (mode, settings.postId)
             }
+            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
+                return (result.0, result.1, loggerEnabled)
+            }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
+                let loggerEnabled = result.2
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
@@ -252,17 +254,11 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: manager.spotId)
 
-                let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self else { return }
-                    let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                    self.loggerViewModel.inputs.log(text: log)
-                }
-
                 flows.conversation(postId: postId,
                                    article: article,
                                    presentationalMode: presentationalMode,
                                    additionalSettings: additionalSettings,
-                                   callbacks: actionsCallbacks,
+                                   callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
                                    completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
@@ -284,11 +280,15 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
                 return (mode, settings.postId)
             }
+            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
+                return (result.0, result.1, loggerEnabled)
+            }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
+                let loggerEnabled = result.2
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
@@ -298,17 +298,11 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-                let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self else { return }
-                    let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                    self.loggerViewModel.inputs.log(text: log)
-                }
-
                 flows.commentCreation(postId: postId,
                                       article: article,
                                       presentationalMode: presentationalMode,
                                       additionalSettings: additionalSettings,
-                                      callbacks: actionsCallbacks,
+                                      callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
                                       completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
@@ -330,11 +324,15 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
                 return (mode, settings.postId)
             }
+            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
+                return (result.0, result.1, loggerEnabled)
+            }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
+                let loggerEnabled = result.2
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
@@ -344,18 +342,12 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-                let actionsCallbacks: OWFlowActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-                    guard let self else { return }
-                    let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                    self.loggerViewModel.inputs.log(text: log)
-                }
-
                 flows.commentThread(postId: postId,
                                     article: article,
                                     commentId: self.commonCreatorService.commentThreadCommentId(),
                                     presentationalMode: presentationalMode,
                                     additionalSettings: additionalSettings,
-                                    callbacks: actionsCallbacks,
+                                    callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
                                     completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
@@ -448,5 +440,14 @@ private extension MockArticleFlowsViewModel {
         }
 
         analytics.addBICallback(BIClosure)
+    }
+
+    func loggerActionCallbacks(loggerEnabled: Bool) -> OWFlowActionsCallbacks? {
+        guard loggerEnabled else { return nil }
+        return { [weak self] callbackType, sourceType, postId in
+            guard let self else { return }
+            let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+            self.loggerViewModel.inputs.log(text: log)
+        }
     }
 }
