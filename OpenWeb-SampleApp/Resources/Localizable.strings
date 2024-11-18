@@ -160,4 +160,4 @@
 "Authentication" = "Authentication";
 "Explore" = "Explore";
 "DescriptionText" = "Discover how the OpenWeb iOS SDK integrates with your app. Dive into the settings to explore and experience its full potential.";
-"UIFlowsLogger" = "UIFlows Logger";
+"UIFlowsLogger" = "Flows actions callbacks";
