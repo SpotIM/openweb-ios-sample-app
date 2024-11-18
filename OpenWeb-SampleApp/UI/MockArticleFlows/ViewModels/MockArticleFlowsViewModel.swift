@@ -96,6 +96,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
         _actionSettings.onNext(actionSettings)
+        setupBICallaback()
         setupObservers()
     }
 
@@ -428,6 +429,17 @@ private extension MockArticleFlowsViewModel {
         case .push:
             return OWPresentationalMode.push(navigationController: navController)
         }
+    }
+
+    func setupBICallaback() {
+        let analytics: OWAnalytics = OpenWeb.manager.analytics
+
+        let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
+            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
+            self?.loggerViewModel.inputs.log(text: log)
+        }
+
+        analytics.addBICallback(BIClosure)
     }
 
     func loggerActionCallbacks(loggerEnabled: Bool) -> OWFlowActionsCallbacks? {
