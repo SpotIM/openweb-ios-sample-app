@@ -18,6 +18,10 @@ class OWRealtimeNewCommentsView: UIView {
 
         static let textColor: OWColor.OWType = .textColor3
         static let iconImgaeName: String = "newCommentsArrow"
+        
+        static let identifier = "realtime_new_comment_view_id"
+        static let iconImageViewIdentifier = "realtime_new_comment_arrow_icon_id"
+        static let titleLabelIdentifier = "realtime_new_comment_title_label_id"
     }
 
     private let viewModel: OWRealtimeNewCommentsViewModeling
@@ -49,6 +53,7 @@ class OWRealtimeNewCommentsView: UIView {
         super.init(frame: .zero)
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 }
 
@@ -89,5 +94,11 @@ private extension OWRealtimeNewCommentsView {
                 self.titleLabel.font = self.font
             })
             .disposed(by: disposeBag)
+    }
+    
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        iconImageView.accessibilityIdentifier = Metrics.iconImageViewIdentifier
+        titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
     }
 }
