@@ -960,6 +960,14 @@ private extension OWConversationViewViewModel {
             .share(replay: 1)
 
         filterTabsObservable
+            .map { filterTabId in
+                return OWFilterTabObject.defaultTabId != filterTabId &&
+                       OWFilterTabObject.defaultNewestTabId != filterTabId
+            }
+            .bind(to: self.realtimeIndicationAnimationViewModel.inputs.forceDisable)
+            .disposed(by: disposeBag)
+
+        filterTabsObservable
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
                 self?._serverCommentsLoadingState.onNext(.loading(triggredBy: .filterTabChanged))
