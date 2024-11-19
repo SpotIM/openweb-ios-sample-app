@@ -276,6 +276,20 @@ private extension OWConversationView {
     func setupObservers() {
         trackViewability(viewModel: viewModel)
 
+        let isViewableObserver = OWSharedServicesProvider.shared.viewableTimeService()
+            .outputs.viewabilityDidStart(consumer: viewModel)
+            .map { return true }
+
+        let isNotViewableObserver = OWSharedServicesProvider.shared.viewableTimeService()
+            .outputs.viewabilityDidEnd(consumer: viewModel)
+            .map { _ in
+                return false
+            }
+
+        Observable.merge(isViewableObserver, isNotViewableObserver)
+            .bind(to: viewModel.inputs.viewIsViewable)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] data in
                 guard var self else { return }
