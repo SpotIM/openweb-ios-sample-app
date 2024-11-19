@@ -21,6 +21,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var dismissToast: PublishSubject<Void> { get }
+    var viewIsViewable: PublishSubject<Bool> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -97,6 +98,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     private let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
     private var articleUrl: String = ""
+
+    var viewIsViewable = PublishSubject<Bool>()
 
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
     private var cellsViewModels: Observable<[OWPreConversationCellOption]> {
@@ -509,6 +512,17 @@ private extension OWPreConversationViewViewModel {
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
 
+        viewIsViewable
+            .subscribe(onNext: { [weak self] isViewable in
+                guard let self else { return }
+                if isViewable {
+                    self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+                } else {
+                    self.servicesProvider.realtimeService().stopFetchingData()
+                }
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.toastNotificationService()
             .toastToShow
             .observe(on: MainScheduler.instance)
@@ -528,14 +542,6 @@ private extension OWPreConversationViewViewModel {
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
-
-        // Subscribing to start realtime service
-        Observable.merge(viewInitialized, tryAgainAfterInitialError.voidify())
-            .subscribe(onNext: { [weak self] in
-                guard let self else { return }
-                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
-            })
-            .disposed(by: disposeBag)
 
         // Realtime Indicator
         realtimeIndicationTapped

@@ -246,8 +246,8 @@ private extension OWCommunityGuidelinesViewModel {
             let compactLinkedText = Metrics.communityGuidelinesTitle
             return (compactString, compactLinkedText)
         case .regular:
-            let regularString = text.stringWithoutURL
-            let regularLinkedText = text.linkedText
+            let regularString = text.stripHTML.trimmingCharacters(in: .whitespacesAndNewlines)
+            let regularLinkedText = text.linkAnchors.first
             return (regularString, regularLinkedText)
         case .none:
             return (nil, nil)
