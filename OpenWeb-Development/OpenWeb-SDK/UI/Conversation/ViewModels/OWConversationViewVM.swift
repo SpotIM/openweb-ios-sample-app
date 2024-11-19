@@ -28,6 +28,7 @@ protocol OWConversationViewViewModelingInputs {
     var tableViewDragBeginContentOffsetY: BehaviorSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
     var dismissToast: PublishSubject<Void> { get }
+    var viewIsViewable: PublishSubject<Bool> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -108,6 +109,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
         static let filterTabsHideMinimumOffset: CGFloat = 50
     }
+
+    var viewIsViewable = PublishSubject<Bool>()
 
     private var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
@@ -895,6 +898,17 @@ private extension OWConversationViewViewModel {
 private extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewIsViewable
+            .subscribe(onNext: { [weak self] isViewable in
+                guard let self else { return }
+                if isViewable {
+                    self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+                } else {
+                    self.servicesProvider.realtimeService().stopFetchingData()
+                }
+            })
+            .disposed(by: disposeBag)
+
         tableViewContentOffsetYChanged
             .withLatestFrom(tableViewDragBeginContentOffsetYChanged) { ($0, $1) }
             .withLatestFrom(scrollingDown) { ($0.0, $0.1, $1) }
@@ -933,14 +947,6 @@ private extension OWConversationViewViewModel {
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
-
-        // Subscribing to start realtime service
-        Observable.merge(viewInitialized, tryAgainAfterInitialError.voidify())
-            .subscribe(onNext: { [weak self] in
-                guard let self else { return }
-                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
-            })
-            .disposed(by: disposeBag)
 
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider

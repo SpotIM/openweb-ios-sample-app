@@ -304,6 +304,20 @@ private extension OWPreConversationView {
     func setupObservers() {
         trackViewability(viewModel: viewModel)
 
+        let isViewableObserver = OWSharedServicesProvider.shared.viewableTimeService()
+            .outputs.viewabilityDidStart(consumer: viewModel)
+            .map { return true }
+
+        let isNotViewableObserver = OWSharedServicesProvider.shared.viewableTimeService()
+            .outputs.viewabilityDidEnd(consumer: viewModel)
+            .map { _ in
+                return false
+            }
+
+        Observable.merge(isViewableObserver, isNotViewableObserver)
+            .bind(to: viewModel.inputs.viewIsViewable)
+            .disposed(by: disposeBag)
+
         compactTapGesture.rx.event
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
