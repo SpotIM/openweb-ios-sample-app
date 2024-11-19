@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
+class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol, OWViewabilityTrackable {
     private struct Metrics {
         static let identifier = "comment_creation_view_id"
     }
@@ -35,19 +35,23 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
         return tap
     }()
 
-    private let viewModel: OWCommentCreationViewViewModeling
+    private let viewModel: any OWCommentCreationViewViewModeling
     private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(viewModel: OWCommentCreationViewViewModeling) {
+    init(viewModel: any OWCommentCreationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
         applyAccessibility()
         setupObservers()
+    }
+
+    deinit {
+        endTrackingViewability(viewModel: viewModel)
     }
 
     private func applyAccessibility() {
@@ -106,6 +110,8 @@ private extension OWCommentCreationView {
     }
 
     func setupObservers() {
+        trackViewability(viewModel: viewModel)
+
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
                                  OWSharedServicesProvider.shared.orientationService().orientation)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
