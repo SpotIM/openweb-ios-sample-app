@@ -1867,7 +1867,7 @@ private extension OWCommentThreadViewViewModel {
                 for: eventType,
                 articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalMode),
-                component: .commentCreation)
+                component: .commentThread)
     }
 }
 
