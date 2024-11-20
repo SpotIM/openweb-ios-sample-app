@@ -26,7 +26,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var customizeSubmitButtonUI: Observable<UIButton> { get }
 }
 
-protocol OWCommentCreationViewViewModeling {
+protocol OWCommentCreationViewViewModeling: OWViewableTimeConsumer {
     var inputs: OWCommentCreationViewViewModelingInputs { get }
     var outputs: OWCommentCreationViewViewModelingOutputs { get }
 }
@@ -454,8 +454,8 @@ private extension OWCommentCreationViewViewModel {
         Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
                          commentCreationRegularViewVm.outputs.dismissedToast,
                          commentCreationLightViewVm.outputs.dismissedToast)
-            .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
-            .disposed(by: disposeBag)
+        .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
+        .disposed(by: disposeBag)
 
         servicesProvider.activeArticleService().updateStrategy(commentCreationData.article.articleInformationStrategy)
 
@@ -726,7 +726,9 @@ private extension OWCommentCreationViewViewModel {
                 layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),
                 component: .commentCreation)
     }
+}
 
+extension OWCommentCreationViewViewModel {
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
         servicesProvider
