@@ -138,7 +138,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
+        let commentCreationViewVM: any OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
                                                                                                 viewableMode: .independent)
         let commentCreationView = OWCommentCreationView(viewModel: commentCreationViewVM)
         setupObservers(forViewModel: commentCreationViewVM)
@@ -152,12 +152,12 @@ private extension OWCommentCreationCoordinator {
         setupObservers(forViewModel: viewModel.outputs.commentCreationViewVM)
     }
 
-    func setupObservers(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+    func setupObservers(forViewModel viewModel: any OWCommentCreationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
         setupCustomizationElements(forViewModel: viewModel)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+    func setupViewActionsCallbacks(forViewModel viewModel: any OWCommentCreationViewViewModeling) {
         guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let userLoggedInWhileReplyingToComment = viewModel.outputs.userJustLoggedIn
@@ -205,7 +205,7 @@ private extension OWCommentCreationCoordinator {
             .disposed(by: disposeBag)
     }
 
-    func setupCustomizationElements(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+    func setupCustomizationElements(forViewModel viewModel: any OWCommentCreationViewViewModeling) {
         // Set customized pre conversation summary header
         let submitCustomizeButton = viewModel.outputs.customizeSubmitButtonUI
             .map { OWCustomizableElement.commentCreationSubmit(element: .button(button: $0)) }
