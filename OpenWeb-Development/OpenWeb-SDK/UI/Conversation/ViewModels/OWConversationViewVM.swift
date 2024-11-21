@@ -344,9 +344,15 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     lazy var shouldShowFilterTabsView: Observable<Bool> = {
         return Observable.combineLatest(filterTabsVM.outputs.shouldShowFilterTabs,
                                         scrollingDown)
-        .withLatestFrom(tableViewContentOffsetYChanged) { ($0.0, $0.1, $1) }
-        .map { shouldShowFilterTabs, scrollingDown, tableViewContentOffsetY in
-            return shouldShowFilterTabs && (!scrollingDown || tableViewContentOffsetY < Metrics.filterTabsHideMinimumOffset)
+        .withLatestFrom(Observable.combineLatest(tableViewContentOffsetYChanged,
+                                                 tableViewHeightChanged,
+                                                 tableViewContentSizeHeight)) { element, latestValues in
+            (element.0, element.1, latestValues.0, latestValues.1, latestValues.2)
+        }
+        .map { shouldShowFilterTabs, scrollingDown, tableViewContentOffsetY, tableViewHeight, tableViewContentSizeHeight in
+            return shouldShowFilterTabs &&
+                !(tableViewContentOffsetY + tableViewHeight > tableViewContentSizeHeight) &&
+                (!scrollingDown || tableViewContentOffsetY < Metrics.filterTabsHideMinimumOffset)
         }
         .distinctUntilChanged()
         .asObservable()
