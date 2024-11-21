@@ -113,22 +113,16 @@ class OWUserMentionHelper {
         guard !mentions.isEmpty,
               !text.isEmpty  else { return cursorRange }
         var cursorNSRange = NSRange(cursorRange, in: text)
-        let mentionsToCheck: [OWUserMentionObject] = mentions.filter {
-            NSIntersectionRange(cursorNSRange, $0.range).length > 0
-        }
-        for mention in mentionsToCheck {
-            let cursorEndIndex = cursorNSRange.location + cursorNSRange.length
-            let mentionEndIndex = mention.range.location + mention.range.length
-            if cursorRange.lowerBound == cursorRange.upperBound,
-               cursorNSRange.location != mention.range.location {
-                cursorNSRange.location = mentionEndIndex
-            } else {
-                if cursorNSRange.location > mention.range.location {
-                    cursorNSRange.location = mention.range.location
+        for mention in mentions {
+            if mention.range.isCut(by: cursorNSRange.lowerBound) {
+                if cursorRange.isEmpty {
+                    cursorNSRange.location = mention.range.upperBound
+                    break // no need to check other mentions, empty range can only cut once
                 }
-                if cursorEndIndex < mentionEndIndex {
-                    cursorNSRange.length += mentionEndIndex - cursorEndIndex
-                }
+                cursorNSRange.extend(downTo: mention.range.lowerBound)
+            }
+            if mention.range.isCut(by: cursorNSRange.upperBound) {
+                cursorNSRange.extend(upTo: mention.range.upperBound)
             }
         }
         let range = Range(cursorNSRange, in: text) ?? cursorRange
