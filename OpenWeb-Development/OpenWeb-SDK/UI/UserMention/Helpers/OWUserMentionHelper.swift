@@ -109,9 +109,8 @@ class OWUserMentionHelper {
         return nil
     }
 
-    static func updateCurrentCursorRange(with cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index> {
-        guard !mentions.isEmpty,
-              !text.isEmpty  else { return cursorRange }
+    static func modifiedCursorRange(from cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index>? {
+        guard !mentions.isEmpty, !text.isEmpty else { return nil }
         var cursorNSRange = NSRange(cursorRange, in: text)
         let mentionsToCheck: [OWUserMentionObject] = mentions.filter {
             NSIntersectionRange(cursorNSRange, $0.range).length > 0
@@ -131,8 +130,8 @@ class OWUserMentionHelper {
                 }
             }
         }
-        let range = Range(cursorNSRange, in: text) ?? cursorRange
-        return range
+        let range = Range(cursorNSRange, in: text)
+        return range != cursorRange ? range : nil
     }
 
     static func getAttributedText(for textViewText: String,
