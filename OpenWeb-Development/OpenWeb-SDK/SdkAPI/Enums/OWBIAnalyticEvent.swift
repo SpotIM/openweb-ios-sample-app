@@ -43,6 +43,7 @@ public enum OWBIAnalyticEvent {
     case commentCreationLeavePage
     case commentCreationContinueWriting
     case loginPromptClicked
+    case viewableTime(timeInS: TimeInterval)
     case commentViewed(commentId: String)
     case cameraIconClickedOpen
     case cameraIconClickedTakePhoto
