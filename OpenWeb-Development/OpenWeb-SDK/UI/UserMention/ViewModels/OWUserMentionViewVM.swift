@@ -239,8 +239,9 @@ private extension OWUserMentionViewVM {
                     self.getUsersForName = ""
                     self._users.onNext([])
                 }
-                let updatedRange = OWUserMentionHelper.updateCurrentCursorRange(with: cursorRange, mentions: mentionsData.mentions, text: text)
-                self.cursorRangeChange.onNext(updatedRange)
+                if let updatedRange = OWUserMentionHelper.modifiedCursorRange(from: cursorRange, mentions: mentionsData.mentions, text: text) {
+                    self.cursorRangeChange.onNext(updatedRange)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -316,7 +317,7 @@ private extension OWUserMentionViewVM {
                 if let textData = OWUserMentionHelper.updateMentionRanges(with: textData, mentionsData: mentionsData) {
                     guard let self else { return }
                     self.textChange.onNext(textData.text)
-                    DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
+                    DispatchQueue.main.async { [weak self] in
                         self?.cursorRangeChange.onNext(textData.cursorRange)
                     }
                 }
