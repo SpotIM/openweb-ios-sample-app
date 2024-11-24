@@ -61,7 +61,6 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - superfluous_disable_command
   - switch_case_alignment
   - syntactic_sugar
-  - trailing_comma
   - trailing_newline
   - trailing_semicolon
   - trailing_whitespace
