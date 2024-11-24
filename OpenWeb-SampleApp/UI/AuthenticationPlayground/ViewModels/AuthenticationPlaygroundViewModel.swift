@@ -21,10 +21,9 @@ protocol AuthenticationPlaygroundViewModelingInputs {
     var automaticallyDismissToggled: PublishSubject<Bool> { get }
     var dismissing: PublishSubject<Void> { get }
     var closeClick: PublishSubject<Void> { get }
-    var customSSOToken: PublishSubject<String> { get }
-    var customUsername: PublishSubject<String> { get }
-    var customPassword: PublishSubject<String> { get }
-    var customAuthOn: PublishSubject<Bool> { get }
+    var customSSOToken: BehaviorSubject<String> { get }
+    var customUsername: BehaviorSubject<String> { get }
+    var customPassword: BehaviorSubject<String> { get }
 }
 
 protocol AuthenticationPlaygroundViewModelingOutputs {
@@ -36,6 +35,9 @@ protocol AuthenticationPlaygroundViewModelingOutputs {
     var logoutAuthenticationStatus: Observable<AuthenticationStatus> { get }
     var dismissVC: PublishSubject<Void> { get }
     var dismissed: Observable<Void> { get }
+    var customSSOTokenChanged: Observable<String> { get }
+    var customUsernameChanged: Observable<String> { get }
+    var customPasswordChanged: Observable<String> { get }
 }
 
 protocol AuthenticationPlaygroundViewModeling {
@@ -51,6 +53,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
 
     private struct Metrics {
         static let delayUntilDismissVC = 500 // milliseconds
+        static let delayInsertSSOPresetData = 100 // milliseconds
     }
 
     private let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
@@ -72,10 +75,24 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     var genericSSOAuthenticatePressed = PublishSubject<Void>()
     var thirdPartySSOAuthenticatePressed = PublishSubject<Void>()
 
-    var customAuthOn = PublishSubject<Bool>()
-    var customSSOToken = PublishSubject<String>()
-    var customUsername = PublishSubject<String>()
-    var customPassword = PublishSubject<String>()
+    var customSSOToken = BehaviorSubject<String>(value: "")
+    var customUsername = BehaviorSubject<String>(value: "")
+    var customPassword = BehaviorSubject<String>(value: "")
+
+    lazy var customSSOTokenChanged: Observable<String> = {
+        return customSSOToken
+            .asObservable()
+    }()
+
+    lazy var customUsernameChanged: Observable<String> = {
+        return customUsername
+            .asObservable()
+    }()
+
+    lazy var customPasswordChanged: Observable<String> = {
+        return customPassword
+            .asObservable()
+    }()
 
     lazy var title: String = {
         return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
@@ -160,6 +177,24 @@ private extension AuthenticationPlaygroundViewModel {
             .bind(to: _selectedGenericSSOOptionIndex)
             .disposed(by: disposeBag)
 
+        _selectedGenericSSOOptionIndex
+            .delay(.milliseconds(Metrics.delayInsertSSOPresetData), scheduler: MainScheduler.instance)
+            .withLatestFrom(genericSSOOptions) { index, options -> GenericSSOAuthentication? in
+                guard !options.isEmpty else {
+                    DLog("There isn't any generic SSO preset")
+                    return nil
+                }
+                return options[index]
+            }
+            .unwrap()
+            .subscribe(onNext: { [weak self] genericSSOAuthentication in
+                guard let self else { return }
+                self.customUsername.onNext(genericSSOAuthentication.user.username)
+                self.customPassword.onNext(genericSSOAuthentication.user.password)
+                self.customSSOToken.onNext(genericSSOAuthentication.ssoToken)
+            })
+            .disposed(by: disposeBag)
+
         // Different Third-party SSO selected
         selectedThirdPartySSOOptionIndex
             .do(onNext: { [weak self] _ in
@@ -236,25 +271,22 @@ private extension AuthenticationPlaygroundViewModel {
             })
             .withLatestFrom(
                 Observable.combineLatest(shouldInitializeSDK,
-                                         customAuthOn,
                                          customUsername,
                                          customPassword,
                                          customSSOToken)
             ) { genericSSO, latestValues in
-                return (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3, latestValues.4)
+                return (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3)
             }
-            .flatMapLatest { genericSSO, shouldInitializeSDK, customAuthOn, customUsername, customPassword, customSSOToken -> Observable<GenericSSOAuthentication> in
+            .flatMapLatest { genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> Observable<GenericSSOAuthentication> in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if shouldInitializeSDK {
                     var manager = OpenWeb.manager
                     manager.spotId = genericSSO.spotId
                 }
                 var genericSSO = genericSSO
-                if customAuthOn {
-                    genericSSO.user.username = customUsername
-                    genericSSO.user.password = customPassword
-                    genericSSO.ssoToken = customSSOToken
-                }
+                genericSSO.user.username = customUsername
+                genericSSO.user.password = customPassword
+                genericSSO.ssoToken = customSSOToken
                 return Observable.just(genericSSO)
             }
             .flatMapLatest { [weak self] genericSSO -> Observable<(String, GenericSSOAuthentication)> in
