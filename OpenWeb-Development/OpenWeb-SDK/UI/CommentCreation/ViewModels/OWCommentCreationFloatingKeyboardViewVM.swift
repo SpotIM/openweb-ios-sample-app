@@ -417,7 +417,7 @@ private extension OWCommentCreationFloatingKeyboardViewViewModel {
                         var nsRange = NSRange(currentSelectedRange, in: currentText)
                         nsRange.location += textToAppend.utf16.count
                         if let range = Range(nsRange, in: newRequestedText) {
-                            DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
+                            DispatchQueue.main.async { [weak self] in
                                 self?.textViewVM.inputs.cursorRangeExternalChange.onNext(range)
                             }
                         }
