@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWRealtimeIndicationAnimationViewModelingInputs {
     func swiped()
+    var forceDisable: BehaviorSubject<Bool> { get }
 }
 
 protocol OWRealtimeIndicationAnimationViewModelingOutputs {
@@ -30,6 +31,12 @@ class OWRealtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewM
     var inputs: OWRealtimeIndicationAnimationViewModelingInputs { return self }
     var outputs: OWRealtimeIndicationAnimationViewModelingOutputs { return self }
 
+    var forceDisable = BehaviorSubject<Bool>(value: false)
+    lazy var forceDisabled: Observable<Bool> = {
+        return forceDisable
+            .asObservable()
+    }()
+
     lazy var realtimeIndicationViewModel: OWRealtimeIndicationViewModeling = {
         return OWRealtimeIndicationViewModel()
     }()
@@ -37,9 +44,11 @@ class OWRealtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewM
     private let _isRealtimeIndicatorEnabled = BehaviorSubject<Bool>(value: false)
     private let _isThereAnyDataToShow = BehaviorSubject<Bool>(value: false)
     lazy var shouldShow: Observable<Bool> = {
-        return Observable.combineLatest(_isThereAnyDataToShow,
-                                        _isRealtimeIndicatorEnabled) { isThereAnyDataToShow, isRealtimeIndicatorEnabled -> Bool in
-            guard isRealtimeIndicatorEnabled else { return false }
+        return Observable.combineLatest(forceDisabled,
+                                        _isThereAnyDataToShow,
+                                        _isRealtimeIndicatorEnabled) { forceDisabled, isThereAnyDataToShow, isRealtimeIndicatorEnabled -> Bool in
+            guard !forceDisabled,
+                  isRealtimeIndicatorEnabled else { return false }
             return isThereAnyDataToShow
         }
         .distinctUntilChanged()
