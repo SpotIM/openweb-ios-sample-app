@@ -45,7 +45,6 @@ class OWCommentContentView: UIView {
 
     private var viewModel: OWCommentContentViewModeling!
     private var disposeBag: DisposeBag!
-    private var textHeightConstraint: OWConstraint?
     private var editedLabelHeightConstraint: OWConstraint?
 
     required init?(coder aDecoder: NSCoder) {
@@ -123,14 +122,6 @@ private extension OWCommentContentView {
         viewModel.outputs.mediaSize
             .map { $0 == .zero }
             .bind(to: mediaView.rx.isHidden)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.collapsableLabelViewModel
-            .outputs.height
-            .subscribe(onNext: { [weak self] newHeight in
-                guard let self else { return }
-                self.textHeightConstraint?.update(offset: newHeight)
-            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.isEdited
