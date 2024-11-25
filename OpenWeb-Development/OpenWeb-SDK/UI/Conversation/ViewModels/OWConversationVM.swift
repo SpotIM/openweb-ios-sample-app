@@ -18,6 +18,7 @@ protocol OWConversationViewModelingInputs {
     var viewDidLoad: PublishSubject<Void> { get }
     var closeConversationTapped: PublishSubject<Void> { get }
     var changeIsLargeTitleDisplay: PublishSubject<Bool> { get }
+    var scrollToCommentId: PublishSubject<String> { get }
 }
 
 protocol OWConversationViewModelingOutputs {
@@ -56,6 +57,8 @@ class OWConversationViewModel: OWConversationViewModeling,
 
     var triggerCustomizeNavigationItemUI = PublishSubject<UINavigationItem>()
     var triggerCustomizeNavigationBarUI = PublishSubject<UINavigationBar>()
+
+    var scrollToCommentId = PublishSubject<String>()
 
     lazy var title: String = {
         return OWLocalizationManager.shared.localizedString(key: "Conversation")
@@ -145,6 +148,10 @@ private extension OWConversationViewModel {
 
         changeIsLargeTitleDisplay
             .bind(to: _isLargeTitleDisplay)
+            .disposed(by: disposeBag)
+
+        scrollToCommentId
+            .bind(to: conversationViewVM.inputs.scrollToCommentId)
             .disposed(by: disposeBag)
     }
 }
