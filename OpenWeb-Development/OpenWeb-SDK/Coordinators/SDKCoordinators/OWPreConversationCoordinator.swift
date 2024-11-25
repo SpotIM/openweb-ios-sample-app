@@ -58,7 +58,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData,
+        let preConversationViewVM: any OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData,
                                                                                                       viewableMode: .independent)
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
@@ -82,7 +82,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
 
 private extension OWPreConversationCoordinator {
     // swiftlint:disable function_body_length
-    func setupObservers(forViewModel viewModel: OWPreConversationViewViewModeling) {
+    func setupObservers(forViewModel viewModel: any OWPreConversationViewViewModeling) {
     // swiftlint:enable function_body_length
         dismissInitialVC
             .subscribe(onNext: { [weak self] in
@@ -225,7 +225,7 @@ private extension OWPreConversationCoordinator {
         setupCustomizationElements(forViewModel: viewModel)
     }
 
-    func setupFlowActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
+    func setupFlowActionsCallbacks(forViewModel viewModel: any OWPreConversationViewViewModeling) {
         guard flowActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let openPublisherProfile = viewModel.outputs.openProfile
@@ -245,11 +245,17 @@ private extension OWPreConversationCoordinator {
             .disposed(by: disposeBag)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
+    func setupViewActionsCallbacks(forViewModel viewModel: any OWPreConversationViewViewModeling) {
         guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let contentPressed = viewModel.outputs.openFullConversation
             .map { OWViewActionCallbackType.contentPressed }
+
+        let termsTapped = viewModel.outputs.termsTapped
+            .map { OWViewActionCallbackType.termsTapped }
+
+        let privacyTapped = viewModel.outputs.privacyTapped
+            .map { OWViewActionCallbackType.privacyTapped }
 
         let openPublisherProfile = viewModel.outputs.openProfile
             .map { openProfileType in
@@ -291,7 +297,9 @@ private extension OWPreConversationCoordinator {
                          openPublisherProfile,
                          openReportReason,
                          communityGuidelinesObservable,
-                         commentCreationObservable)
+                         commentCreationObservable,
+                         termsTapped,
+                         privacyTapped)
             .subscribe(onNext: { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             })
@@ -299,7 +307,7 @@ private extension OWPreConversationCoordinator {
     }
 
     // swiftlint:disable function_body_length
-    func setupCustomizationElements(forViewModel viewModel: OWPreConversationViewViewModeling) {
+    func setupCustomizationElements(forViewModel viewModel: any OWPreConversationViewViewModeling) {
         // swiftlint:enable function_body_length
 
         // Set customized pre conversation summary header

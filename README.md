@@ -3,6 +3,9 @@ In this repository:
 * Development SDK for our publishers and clients
 * Demo app for testing the SDK
 
+First time? Execute:
+`$ OpenWeb-Development/scripts/setup-git.sh`
+
 ## Scheme - OpenWeb-SampleApp
 This project is for OpenWeb iOS Demo App and SDK development.
 

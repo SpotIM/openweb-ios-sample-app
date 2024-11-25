@@ -109,11 +109,11 @@ private extension OWPreConversationFooterView {
 
     func setupObservers() {
         termsButton.rx.tap
-            .bind(to: viewModel.inputs.termsTapped)
+            .bind(to: viewModel.inputs.termsTap)
             .disposed(by: disposeBag)
 
         privacyButton.rx.tap
-            .bind(to: viewModel.inputs.privacyTapped)
+            .bind(to: viewModel.inputs.privacyTap)
             .disposed(by: disposeBag)
 
         poweredByOWButton.rx.tap

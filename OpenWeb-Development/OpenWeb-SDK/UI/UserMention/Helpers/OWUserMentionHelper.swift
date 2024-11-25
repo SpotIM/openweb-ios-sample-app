@@ -61,8 +61,8 @@ class OWUserMentionHelper {
 
     static func updateMentionRanges(with textData: OWUserMentionTextData, mentionsData: OWUserMentionData) -> OWUserMentionTextData? {
         guard OWUserMentionHelper.mentionsEnabled else { return nil }
-        guard let replacingText = textData.replacingText,
-              let cursorRange = textData.text.nsRange(from: textData.cursorRange) else { return nil }
+        guard let replacingText = textData.replacingText else { return nil }
+        let cursorRange = NSRange(textData.cursorRange, in: textData.text)
         var mentions: [OWUserMentionObject] = mentionsData.mentions.filter { cursorRange.location >= $0.range.location + $0.range.length }
         let mentionsToCheck = mentionsData.mentions.filter { cursorRange.location <= $0.range.location }
         var mentionsToDelete: [OWUserMentionObject] = mentionsData.mentions.filter { cursorRange.location < $0.range.location + $0.range.length }
@@ -109,41 +109,23 @@ class OWUserMentionHelper {
         return nil
     }
 
-    static func areOverlapingRanges(range1: NSRange, range2: NSRange) -> Bool {
-        return (range1.lowerBound == range1.upperBound &&
-                range1.location > range2.location &&
-                range1.location < range2.location + range2.length) ||
-        (range1.lowerBound != range1.upperBound &&
-         range2.contains(range1.location + 1) ||
-         range2.contains(range1.location + range1.length - 1) ||
-         range1.contains(range2.location + 1) ||
-         range1.contains(range2.location + range2.length - 1))
-    }
-
-    static func updateCurrentCursorRange(with cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index> {
-        guard !mentions.isEmpty,
-              !text.isEmpty,
-              var cursorNSRange = text.nsRange(from: cursorRange) else { return cursorRange }
-        let mentionsToCheck: [OWUserMentionObject] = mentions.filter {
-            areOverlapingRanges(range1: cursorNSRange, range2: $0.range)
-        }
-        for mention in mentionsToCheck {
-            let cursorEndIndex = cursorNSRange.location + cursorNSRange.length
-            let mentionEndIndex = mention.range.location + mention.range.length
-            if cursorRange.lowerBound == cursorRange.upperBound,
-               cursorNSRange.location != mention.range.location {
-                cursorNSRange.location = mentionEndIndex
-            } else {
-                if cursorNSRange.location > mention.range.location {
-                    cursorNSRange.location = mention.range.location
+    static func modifiedCursorRange(from cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index>? {
+        guard !mentions.isEmpty, !text.isEmpty else { return nil }
+        var cursorNSRange = NSRange(cursorRange, in: text)
+        for mention in mentions {
+            if mention.range.isCut(by: cursorNSRange.lowerBound) {
+                if cursorRange.isEmpty {
+                    cursorNSRange.location = mention.range.upperBound
+                    break // no need to check other mentions, empty range can only cut once
                 }
-                if cursorEndIndex < mentionEndIndex {
-                    cursorNSRange.length += mentionEndIndex - cursorEndIndex
-                }
+                cursorNSRange.extend(downTo: mention.range.lowerBound)
+            }
+            if mention.range.isCut(by: cursorNSRange.upperBound) {
+                cursorNSRange.extend(upTo: mention.range.upperBound)
             }
         }
-        let range = Range(cursorNSRange, in: text) ?? cursorRange
-        return range
+        let range = Range(cursorNSRange, in: text)
+        return range != cursorRange ? range : nil
     }
 
     static func getAttributedText(for textViewText: String,
@@ -163,8 +145,8 @@ class OWUserMentionHelper {
             }
         }
 
-        if let currentMentionRange,
-           let range = textViewText.nsRange(from: currentMentionRange) {
+        if let currentMentionRange {
+            let range = NSRange(currentMentionRange, in: textViewText)
             attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
                                         value: brandColor,
                                         range: range)
@@ -179,7 +161,7 @@ class OWUserMentionHelper {
         guard let indexOfMention = textToCursor.lastIndex(of: Metrics.mentionCharecter) else { return }
         let textWithMention = String(textToCursor[..<indexOfMention]) + mentionDisplayText
         let range = indexOfMention..<textWithMention.endIndex
-        guard let selectedRange = textWithMention.nsRange(from: range) else { return }
+        let selectedRange = NSRange(range, in: textWithMention)
         let userMentionObject = OWUserMentionObject(id: randomGenerator.generateSuperiorUUID(),
                                                     userId: id,
                                                     text: mentionDisplayText,
@@ -249,8 +231,8 @@ class OWUserMentionHelper {
         var rangeLocationAccumulate = 0
         let originalText = text
         for (contentId, jsonRange) in jsonRanges {
-            if let userMention = comment.userMentions[contentId],
-               var mentionRange = originalText.nsRange(from: jsonRange) {
+            if let userMention = comment.userMentions[contentId] {
+                var mentionRange = NSRange(jsonRange, in: originalText)
                 var jsonNSRange = mentionRange
                 let displayName = Metrics.mentionString + userMention.displayName
                 mentionRange.length = displayName.utf16.count

@@ -61,9 +61,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         guard let color = colors[type] else {
             // We should never get here. I chose to work with non-optional so as a default value we will return "clear"
@@ -97,9 +95,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func blockForOverride(color: OWColor.OWType) {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         self.blockedForOverride.insert(color)
     }

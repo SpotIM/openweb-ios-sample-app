@@ -15,7 +15,7 @@ protocol OWCommentThreadViewModelingInputs {
 }
 
 protocol OWCommentThreadViewModelingOutputs {
-    var commentThreadViewVM: OWCommentThreadViewViewModeling { get }
+    var commentThreadViewVM: any OWCommentThreadViewViewModeling { get }
     var loadedToScreen: Observable<Void> { get }
     var title: String { get }
     var isLargeTitleDisplay: Observable<Bool> { get }
@@ -35,7 +35,7 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     private let commentThreadData: OWCommentThreadRequiredData
     private let viewableMode: OWViewableMode
 
-    lazy var commentThreadViewVM: OWCommentThreadViewViewModeling = {
+    lazy var commentThreadViewVM: any OWCommentThreadViewViewModeling = {
         return OWCommentThreadViewViewModel(commentThreadData: commentThreadData,
                                             servicesProvider: self.servicesProvider,
                                             viewableMode: self.viewableMode)

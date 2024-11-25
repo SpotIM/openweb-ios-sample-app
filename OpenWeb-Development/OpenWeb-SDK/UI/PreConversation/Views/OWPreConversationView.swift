@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
+class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol, OWViewabilityTrackable {
     internal struct Metrics {
         static let commentingCTATopPadding: CGFloat = 8
         static let horizontalOffset: CGFloat = 16.0
@@ -155,20 +155,24 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
     private var tableViewHeightConstraint: OWConstraint?
     private var commentingCTAHeightConstraint: OWConstraint?
     private var filterTabsHeightConstraint: OWConstraint?
-    private let viewModel: OWPreConversationViewViewModeling
+    private let viewModel: any OWPreConversationViewViewModeling
     private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(viewModel: OWPreConversationViewViewModeling) {
+    init(viewModel: any OWPreConversationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
         applyAccessibility()
+    }
+
+    deinit {
+        endTrackingViewability(viewModel: viewModel)
     }
 }
 
@@ -298,6 +302,22 @@ private extension OWPreConversationView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
+        trackViewability(viewModel: viewModel)
+
+        let isViewableObserver = OWSharedServicesProvider.shared.viewableTimeService()
+            .outputs.viewabilityDidStart(consumer: viewModel)
+            .map { return true }
+
+        let isNotViewableObserver = OWSharedServicesProvider.shared.viewableTimeService()
+            .outputs.viewabilityDidEnd(consumer: viewModel)
+            .map { _ in
+                return false
+            }
+
+        Observable.merge(isViewableObserver, isNotViewableObserver)
+            .bind(to: viewModel.inputs.viewIsViewable)
+            .disposed(by: disposeBag)
+
         compactTapGesture.rx.event
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)

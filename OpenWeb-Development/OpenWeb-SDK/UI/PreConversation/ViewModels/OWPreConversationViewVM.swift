@@ -21,6 +21,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var dismissToast: PublishSubject<Void> { get }
+    var viewIsViewable: PublishSubject<Bool> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -61,9 +62,11 @@ protocol OWPreConversationViewViewModelingOutputs {
     var hideToast: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
     var shouldShowFilterTabsView: Observable<Bool> { get }
+    var termsTapped: Observable<Void> { get }
+    var privacyTapped: Observable<Void> { get }
 }
 
-protocol OWPreConversationViewViewModeling: AnyObject {
+protocol OWPreConversationViewViewModeling: OWViewableTimeConsumer {
     var inputs: OWPreConversationViewViewModelingInputs { get }
     var outputs: OWPreConversationViewViewModelingOutputs { get }
 }
@@ -95,6 +98,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     private let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
     private var articleUrl: String = ""
+
+    var viewIsViewable = PublishSubject<Bool>()
 
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
     private var cellsViewModels: Observable<[OWPreConversationCellOption]> {
@@ -273,6 +278,16 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                                 realtimeIndicationTapped,
                                 filterTabOpenConversation)
             .asObservable()
+    }
+
+    private var privacyTap = PublishSubject<Void>()
+    var privacyTapped: Observable<Void> {
+        return footerViewViewModel.outputs.privacyTapped
+    }
+
+    private var termsTap = PublishSubject<Void>()
+    var termsTapped: Observable<Void> {
+        return footerViewViewModel.outputs.termsTapped
     }
 
     private var _openProfile = PublishSubject<OWOpenProfileType>()
@@ -497,6 +512,17 @@ private extension OWPreConversationViewViewModel {
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
 
+        viewIsViewable
+            .subscribe(onNext: { [weak self] isViewable in
+                guard let self else { return }
+                if isViewable {
+                    self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+                } else {
+                    self.servicesProvider.realtimeService().stopFetchingData()
+                }
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.toastNotificationService()
             .toastToShow
             .observe(on: MainScheduler.instance)
@@ -516,14 +542,6 @@ private extension OWPreConversationViewViewModel {
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
-
-        // Subscribing to start realtime service
-        Observable.merge(viewInitialized, tryAgainAfterInitialError.voidify())
-            .subscribe(onNext: { [weak self] in
-                guard let self else { return }
-                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
-            })
-            .disposed(by: disposeBag)
 
         // Realtime Indicator
         realtimeIndicationTapped
@@ -1585,7 +1603,9 @@ private extension OWPreConversationViewViewModel {
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalMode),
                 component: .preConversation)
     }
+}
 
+extension OWPreConversationViewViewModel: OWViewableTimeConsumer {
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
         servicesProvider
