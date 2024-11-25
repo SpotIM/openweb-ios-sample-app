@@ -18,7 +18,6 @@ class UIViewsExamplesVC: UIViewController {
         static let btnConversationBelowVideoIdentifier = "btn_conversation_below_video_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
-        static let buttonVerticalMargin: CGFloat = 20
         static let buttonHeight: CGFloat = 50
     }
 
