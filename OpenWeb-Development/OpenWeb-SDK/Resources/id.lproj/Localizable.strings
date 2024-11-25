@@ -4,7 +4,7 @@
 "Appeal" = "Banding";
 "AppealAuthorizationRequiredMessage" = "Pastikan Anda masuk untuk melanjutkan banding. Bukan anggota? Daftarkan diri Anda terlebih dahulu.";
 "AppealAuthorizationRequiredTitle" = "Diperlukan Izin";
-"AppealLabel" = "Jangan malu menulis ulang dan memposting ulang komentar Anda, atau, jika Anda mau, kirim banding, dan kami akan meninjau kembali keputusan kami.";
+"AppealLabel" = "Jangan ragu untuk menulis ulang dan memposting ulang komentar Anda, atau, jika Anda mau, Anda dapat banding, dan kami akan memeriksa kembali keputusan kami.";
 "AppealLabelError" = "Informasi banding saat ini tidak tersedia. Harap periksa koneksi internet Anda atau coba lagi nanti.";
 "AppealLabelNotAvailable" = "Komentar yang Anda laporkan tidak lagi tersedia.";
 "AppealRejectedCommentStatusMessage" = "Banding Anda ditolak.";
@@ -50,7 +50,7 @@
 "DisagreeGuidelinesAppealTitle" = "Saya tidak setuju dengan panduan komunitas";
 "DontUnderstandGuidelinesAppealTitle" = "Saya tidak memahami panduan komunitas";
 "DownVoteButton" = "Tombol pilih menurun";
-"Edit" = "Edit";
+"Edit" = "Sunting";
 "EditComment" = "Edit komentar";
 "Edited" = " (Diedit)";
 "EditingComment" = "Mengedit komentar";
@@ -86,7 +86,6 @@
 "Newest" = "Terbaru";
 "No" = "Tidak";
 "NotAuthorPendingCommentStatusMessage" = "Komentar ini sedang menunggu peninjauan.";
-"OK" = "OK";
 "Oldest" = "Terlama";
 "OpenSettings" = "Buka pengaturan";
 "OptionsMenu" = "Menu opsi";

@@ -60,7 +60,7 @@ platform :ios do
     )
   end
 
-  # Excpect parameters `version` and `configuration`
+  # Expect parameters `version` and `configuration`
   desc "Build a release version of the SDK"
   lane :build_release_sdk do |options|
     set_version(version:options[:version]) # Set a specific version number
@@ -133,7 +133,7 @@ platform :ios do
     end
   end
 
-  # Excpect parameter `version`
+  # Expect parameter `version`
   desc "Release Sample App (internal preset)"
   lane :release_demo_app do |options|
     # Set a build in the following range
@@ -151,7 +151,7 @@ platform :ios do
     upload_debug_symbols_to_crashlytics(version:options[:version])
   end
 
-  # Excpect parameter `version`
+  # Expect parameter `version`
   desc "Release Sample App (beta preset)"
   lane :release_beta_demo_app do |options|
     # Set a build in the following range
@@ -169,7 +169,7 @@ platform :ios do
     upload_debug_symbols_to_crashlytics(version:options[:version])
   end
 
-  # Excpect parameter `version`
+  # Expect parameter `version`
   desc "Release Sample App (public preset)"
   lane :release_public_demo_app do |options|
     # Set a build in the following range
@@ -187,7 +187,7 @@ platform :ios do
     upload_debug_symbols_to_crashlytics(version:options[:version])
   end
 
-  # Excpect parameter `version`
+  # Expect parameter `version`
   desc "Upload debug symbols to Crashlytics"
   lane :upload_debug_symbols_to_crashlytics do |options|
     upload_symbols_to_crashlytics(
@@ -197,7 +197,7 @@ platform :ios do
     )
   end
 
-  # Excpect parameter `version`
+  # Expect parameter `version`
   desc "Set version in xcode target and project plists"
   lane :set_version do |options|
     increment_version_number(version_number: options[:version], xcodeproj: "./OpenWeb-Development.xcodeproj")
@@ -213,7 +213,7 @@ platform :ios do
       end
   end
 
-  # Excpect parameters `build_low` and `build_high`
+  # Expect parameters `build_low` and `build_high`
   desc "Increment build if it is in range, or set build to lower end"
   lane :increment_build_in_range do |options|
     current_build_number = latest_testflight_build_number(
@@ -224,20 +224,25 @@ platform :ios do
     puts current_build_number
     if current_build_number.to_i < options[:build_low].to_i || current_build_number.to_i >= options[:build_high].to_i
       puts "Set build number to lower range which is #{options[:build_low]}"
-      set_build(build: options[:build_low])
+      set_build(build: options[:build_low], version: options[:version])
     else
       # Increment build by one
       new_build_number = current_build_number.to_i + 1
       puts "Set build number to #{new_build_number}"
-      set_build(build: new_build_number)
+      set_build(build: new_build_number, version: options[:version])
     end
   end
 
-  # This method used for internal testing. Decided to keep it here for convenient. Excpect parameter `build`.
+  # This method used for internal testing. Decided to keep it here for convenient. Expect parameter `build` and `version`.
   desc "Set build to specific number"
   lane :set_build do |options|
-    increment_build_number(build_number: options[:build], xcodeproj: "./OpenWeb-Development.xcodeproj")
-    increment_build_number(build_number: options[:build], xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
+    version = options[:version]
+    build = options[:build]
+    tag = "app-#{version}-#{build}"
+    sh("git tag #{tag}")
+    sh("git push origin #{tag}")
+    increment_build_number(build_number: build, xcodeproj: "./OpenWeb-Development.xcodeproj")
+    increment_build_number(build_number: build, xcodeproj: "./OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj")
   end
 
   private_lane :sign_xcframework do |options|

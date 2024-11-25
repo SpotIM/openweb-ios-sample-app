@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
+class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol, OWViewabilityTrackable {
     private struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
         static let ctaViewSlideAnimationDelay = 50
@@ -136,20 +136,24 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     private var summaryLandscapeLeadingConstraint: OWConstraint?
     private var filterTabsHeightConstraint: OWConstraint?
 
-    private let viewModel: OWConversationViewViewModeling
+    private let viewModel: any OWConversationViewViewModeling
     private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(viewModel: OWConversationViewViewModeling) {
+    init(viewModel: any OWConversationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
         setupUI()
         applyAccessibility()
         setupObservers()
+    }
+
+    deinit {
+        endTrackingViewability(viewModel: viewModel)
     }
 }
 
@@ -270,6 +274,22 @@ private extension OWConversationView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
+        trackViewability(viewModel: viewModel)
+
+        let isViewableObserver = OWSharedServicesProvider.shared.viewableTimeService()
+            .outputs.viewabilityDidStart(consumer: viewModel)
+            .map { return true }
+
+        let isNotViewableObserver = OWSharedServicesProvider.shared.viewableTimeService()
+            .outputs.viewabilityDidEnd(consumer: viewModel)
+            .map { _ in
+                return false
+            }
+
+        Observable.merge(isViewableObserver, isNotViewableObserver)
+            .bind(to: viewModel.inputs.viewIsViewable)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] data in
                 guard var self else { return }
