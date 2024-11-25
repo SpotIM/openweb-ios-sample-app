@@ -57,11 +57,6 @@ class AuthenticationPlaygroundVC: UIViewController {
         return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerGenericSSOIdentifier)
     }()
 
-    private lazy var switchAuthenticationWithCustomFields: SwitchSetting = {
-        let title = NSLocalizedString("AuthWithCustomFields", comment: "") + ":"
-        return SwitchSetting(title: title, accessibilityPrefixId: Metrics.textFieldSSOTokenIdentifier)
-    }()
-
     private lazy var textFieldSSOToken: TextFieldSetting = {
         let title = NSLocalizedString("SSOToken", comment: "") + ":"
         return TextFieldSetting(title: title, accessibilityPrefixId: Metrics.textFieldSSOTokenIdentifier, font: FontBook.paragraph)
@@ -225,7 +220,6 @@ private extension AuthenticationPlaygroundVC {
         }
 
         #if !PUBLIC_DEMO_APP
-        customAuthStackView.addArrangedSubview(switchAuthenticationWithCustomFields)
         customAuthStackView.addArrangedSubview(textFieldSSOToken)
         customAuthStackView.addArrangedSubview(textFieldUsername)
         customAuthStackView.addArrangedSubview(textFieldPassword)
@@ -310,10 +304,6 @@ private extension AuthenticationPlaygroundVC {
             .bind(to: viewModel.inputs.selectedGenericSSOOptionIndex)
             .disposed(by: disposeBag)
 
-        switchAuthenticationWithCustomFields.rx.isOn
-            .bind(to: viewModel.inputs.customAuthOn)
-            .disposed(by: disposeBag)
-
         textFieldSSOToken.rx.textFieldText
             .unwrap()
             .bind(to: viewModel.inputs.customSSOToken)
@@ -382,6 +372,18 @@ private extension AuthenticationPlaygroundVC {
 
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeClick)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.customSSOTokenChanged
+            .bind(to: textFieldSSOToken.rx.textFieldText)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.customPasswordChanged
+            .bind(to: textFieldPassword.rx.textFieldText)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.customUsernameChanged
+            .bind(to: textFieldUsername.rx.textFieldText)
             .disposed(by: disposeBag)
 
         /*
