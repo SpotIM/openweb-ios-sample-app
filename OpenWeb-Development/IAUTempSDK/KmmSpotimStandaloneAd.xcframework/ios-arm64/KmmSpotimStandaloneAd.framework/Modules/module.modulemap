@@ -1,0 +1,8 @@
+framework module KmmSpotimStandaloneAd {
+    umbrella header "KmmSpotimStandaloneAd.h"
+
+    export *
+    module * { export * }
+
+    use Foundation
+}
