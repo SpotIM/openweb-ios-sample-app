@@ -22,6 +22,7 @@ protocol OWConversationViewViewModelingInputs {
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var scrolledToTop: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
+    var scrollToCommentId: PublishSubject<String> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var tableViewContentOffsetY: BehaviorSubject<CGFloat> { get }
@@ -108,6 +109,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
         static let filterTabsHideMinimumOffset: CGFloat = 50
+        static let delayScrollToCommentId: Int = 500 // ms
+        static let delayHighlightComment: Int = 350 // ms
     }
 
     var viewIsViewable = PublishSubject<Bool>()
@@ -259,6 +262,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         _reloadCellIndex
             .asObservable()
     }
+
+    var scrollToCommentId = PublishSubject<String>()
 
     private lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
     private lazy var isReadOnly: Observable<Bool> = {
@@ -904,6 +909,29 @@ private extension OWConversationViewViewModel {
 private extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        Observable.zip(scrollToCommentId,
+                       serverCommentsLoadingState.filter { $0 == .notLoading },
+                       pendingLocalComments.filter { $0 == nil })
+            .delay(.milliseconds(Metrics.delayScrollToCommentId), scheduler: MainScheduler.instance)
+            .withLatestFrom(cellsViewModels) { ($0.0, $1) }
+            .map { commentId, cellViewModels -> Int? in
+                let index = cellViewModels.firstIndex { cellViewModel in
+                    if case .comment(let commentCellViewModel) = cellViewModel {
+                        return commentCellViewModel.outputs.commentVM.outputs.comment.id == commentId
+                    }
+                    return false
+                }
+                return index
+            }
+            .unwrap()
+            .do(onNext: { [weak self] index in
+                self?._scrollToCellIndex.onNext(index)
+            })
+            .map { [$0] }
+            .delay(.milliseconds(Metrics.delayHighlightComment), scheduler: MainScheduler.instance)
+            .bind(to: _highlightCellsIndexes)
+            .disposed(by: disposeBag)
+
         viewIsViewable
             .subscribe(onNext: { [weak self] isViewable in
                 guard let self else { return }
