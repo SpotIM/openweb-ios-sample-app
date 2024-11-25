@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1374959E2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374959D2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift */; };
+		137495A32CF4CC1500F639D5 /* MonetizationViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */; };
+		137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */; };
 		2F113A104F74133456A49735 /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */; };
 		3D11D9252C7C9D7B003794C6 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D11D9242C7C9D7B003794C6 /* Colors.xcassets */; };
 		3D11D9272C7CA5D9003794C6 /* ColorAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11D9262C7CA5D9003794C6 /* ColorAsset.swift */; };
@@ -218,6 +221,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1374959D2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationScreenCoordinator.swift; sourceTree = "<group>"; };
+		137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewVC.swift; sourceTree = "<group>"; };
+		137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewViewModel.swift; sourceTree = "<group>"; };
 		1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3D11D9242C7C9D7B003794C6 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		3D11D9262C7CA5D9003794C6 /* ColorAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorAsset.swift; sourceTree = "<group>"; };
@@ -432,6 +438,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1374959F2CF4CBC800F639D5 /* Monetization */ = {
+			isa = PBXGroup;
+			children = (
+				137495A12CF4CBE100F639D5 /* Views */,
+				137495A02CF4CBD800F639D5 /* ViewModels */,
+			);
+			path = Monetization;
+			sourceTree = "<group>";
+		};
+		137495A02CF4CBD800F639D5 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		137495A12CF4CBE100F639D5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		3DA1DF0A2C6E200300EBFA7D = {
 			isa = PBXGroup;
 			children = (
@@ -568,6 +599,7 @@
 		3DA1E5342C6E221800EBFA7D /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
+				1374959D2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift */,
 				3DA1E5212C6E221800EBFA7D /* AboutCoordinator.swift */,
 				3DA1E5222C6E221800EBFA7D /* AppCoordinator.swift */,
 				3DA1E5232C6E221800EBFA7D /* AuthenticationPlaygroundCoordinator.swift */,
@@ -1219,6 +1251,7 @@
 		3DA1E5F42C6E221800EBFA7D /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1374959F2CF4CBC800F639D5 /* Monetization */,
 				3DA1E53D2C6E221800EBFA7D /* About */,
 				3DA1E5482C6E221800EBFA7D /* AuthenticationPlayground */,
 				3DA1E54D2C6E221800EBFA7D /* Automation */,
@@ -1516,6 +1549,7 @@
 				3DA1E63F2C6E221800EBFA7D /* MainPageCoordinator.swift in Sources */,
 				3DA1E6412C6E221800EBFA7D /* MockArticleFlowCoordinator.swift in Sources */,
 				3DA1E60F2C6E221800EBFA7D /* OWLocaleStrategy+Extensions.swift in Sources */,
+				137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */,
 				3DA1E6192C6E221800EBFA7D /* DevelopmentConversationPreset+Extensions.swift in Sources */,
 				3DA1E62C2C6E221800EBFA7D /* UIView+Extensions.swift in Sources */,
 				3DA1E60C2C6E221800EBFA7D /* OWFontGroupFamily+Extensions.swift in Sources */,
@@ -1556,6 +1590,7 @@
 				3DA1E6A62C6E221800EBFA7D /* ToolbarCollectionCell.swift in Sources */,
 				3DA1E6712C6E221800EBFA7D /* OWConversationStyleIndexer.swift in Sources */,
 				3DA1E69F2C6E221800EBFA7D /* TestingPlaygroundIndependentViewVC.swift in Sources */,
+				1374959E2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift in Sources */,
 				3DA1E6BC2C6E221800EBFA7D /* DemoUserAuthentication.swift in Sources */,
 				3DA1E6852C6E221800EBFA7D /* NetworkSettingsVM.swift in Sources */,
 				3DA1E6652C6E221800EBFA7D /* SDKUIFlowActionSettings.swift in Sources */,
@@ -1591,6 +1626,7 @@
 				3DA1E6C32C6E221800EBFA7D /* FontBook.swift in Sources */,
 				3DA1E6552C6E221800EBFA7D /* AuthenticationPlaygroundVC.swift in Sources */,
 				3D11D9272C7CA5D9003794C6 /* ColorAsset.swift in Sources */,
+				137495A32CF4CC1500F639D5 /* MonetizationViewVC.swift in Sources */,
 				3DA1E6AB2C6E221800EBFA7D /* UIViewsExamplesViewModel.swift in Sources */,
 				3DA1E6272C6E221800EBFA7D /* String+Extensions.swift in Sources */,
 				3DA1E6782C6E221800EBFA7D /* SettingsColorCustomizationStyle.swift in Sources */,

@@ -52,7 +52,7 @@
 "CommentCreation" = "Comment Creation";
 "CommentThread" = "Comment Thread";
 "ClarityDetails" = "Clarity Details";
-"IndependentAdUnit" = "IAU - Independent Ad Unit";
+"IndependentAdUnit" = "Monetization - IAU";
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";
 "Settings" = "Settings";
@@ -161,3 +161,6 @@
 "Explore" = "Explore";
 "DescriptionText" = "Discover how the OpenWeb iOS SDK integrates with your app. Dive into the settings to explore and experience its full potential.";
 "UIFlowsLogger" = "UIFlows Logger";
+"PreConversationExample" = "PreConversation Example";
+"SocialMonetizationExample" = "Social Monetization Example";
+"IndependentMonetizationExample" = "Independent Monetization Example";

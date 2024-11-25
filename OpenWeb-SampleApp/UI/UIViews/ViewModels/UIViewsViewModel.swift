@@ -24,6 +24,7 @@ protocol UIViewsViewModelingOutputs {
     var title: String { get }
     var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> { get }
     var openExamplesScreen: Observable<OWPostId> { get }
+    var openMonetizationScreen: Observable<OWPostId> { get }
 }
 
 protocol UIViewsViewModeling {
@@ -57,6 +58,13 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     private let _openExamplesScreen = BehaviorSubject<OWPostId?>(value: nil)
     var openExamplesScreen: Observable<OWPostId> {
         return _openExamplesScreen
+            .unwrap()
+            .asObservable()
+    }
+
+    private let _openMonetizationScreen = BehaviorSubject<OWPostId?>(value: nil)
+    var openMonetizationScreen: Observable<OWPostId> {
+        return _openMonetizationScreen
             .unwrap()
             .asObservable()
     }
@@ -109,21 +117,13 @@ private extension UIViewsViewModel {
                 let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
                 return model
             }
-
-        let independentAdUnitTappedModel = independentAdUnitTapped
-            .map { _ -> SDKUIIndependentViewsActionSettings in
-                let viewType = SDKUIIndependentViewType.independentAdUnit
-                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
-                return model
-            }
-
+        
         Observable.merge(
             fullConversationTappedModel,
             commentCreationTappedModel,
             commentThreadTappedModel,
             clarityDetailsTappedModel,
-            preConversationTappedModel,
-            independentAdUnitTappedModel)
+            preConversationTappedModel)
         .bind(to: _openMockArticleScreen)
         .disposed(by: disposeBag)
 
@@ -131,6 +131,12 @@ private extension UIViewsViewModel {
             .asObservable()
             .map { postId }
             .bind(to: _openExamplesScreen)
+            .disposed(by: disposeBag)
+        
+        independentAdUnitTapped
+            .asObservable()
+            .map { postId }
+            .bind(to: _openMonetizationScreen)
             .disposed(by: disposeBag)
     }
 }
