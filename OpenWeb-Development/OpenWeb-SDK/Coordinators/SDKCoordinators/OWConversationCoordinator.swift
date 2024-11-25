@@ -140,7 +140,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let coordinateCommentCreationObservable = Observable.merge(
             openCommentCreationObservable,
             deepLinkToCommentCreation.unwrap().asObservable())
-
             .filter { [weak self] _ in
                 guard let self else { return false }
                 return self.viewableMode == .partOfFlow
@@ -160,8 +159,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .do(onNext: { [weak self] result in
                 guard let self else { return }
                 switch result {
-                case .commentCreated:
-                    break
+                case .commentCreated(let comment):
+                    guard let commentId = comment.id else { return }
+                    conversationVM.inputs.scrollToCommentId.onNext(commentId)
                 case let .userLoggedInWhileWritingReplyToComment(commentId):
                     self._openCommentThread.onNext((commentId, .reply))
                 case .loadedToScreen:
