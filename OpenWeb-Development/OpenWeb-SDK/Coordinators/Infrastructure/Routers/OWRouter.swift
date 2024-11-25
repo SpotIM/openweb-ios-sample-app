@@ -58,6 +58,8 @@ class OWRouter: NSObject, OWRoutering {
         static let transitionDuration = 0.5
         static let childAnimationDuration = 0.3
     }
+    private var originalNavigationAppearance: AnyObject?
+    private weak var originalNavigationControllerDelegate: UINavigationControllerDelegate?
     private var completions: [UIViewController: PublishSubject<Void>]
     private var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
@@ -69,10 +71,14 @@ class OWRouter: NSObject, OWRoutering {
     }
 
     init(navigationController: UINavigationController, presentationalMode: OWPresentationalModeExtended) {
+        if #available(iOS 13.0, *) {
+            self.originalNavigationAppearance = OWNavigationAppearanceSettings(from: navigationController.navigationBar)
+        }
         self.navigationController = navigationController
         self.completions = [:]
         self.pushedVCStyles = [:]
         self.presentationalMode = presentationalMode
+        self.originalNavigationControllerDelegate = self.navigationController?.delegate
         super.init()
         self.navigationController?.delegate = self
         if let sdkNavigationController = self.navigationController as? OWNavigationControllerProtocol {
@@ -86,6 +92,7 @@ class OWRouter: NSObject, OWRoutering {
 
     func start() {
         guard let navigationController else { return }
+        self.navigationController?.delegate = self
         switch presentationalMode {
         case .present(let viewControllerWeakEncapsulation, _, let animated):
             viewControllerWeakEncapsulation.value()?.present(navigationController, animated: animated)
@@ -213,6 +220,19 @@ class OWRouter: NSObject, OWRoutering {
         return childs.isEmpty
     }
 
+    func noSDKViewControllersExistInNav() -> Bool {
+        return completions.isEmpty
+    }
+
+    func restoreOriginalNavigationControllerIfNeeded() {
+        guard noSDKViewControllersExistInNav() else { return }
+        self.navigationController?.delegate = originalNavigationControllerDelegate
+        if #available(iOS 13.0, *),
+           let originalNavigationAppearance = originalNavigationAppearance as? OWNavigationAppearanceSettings {
+            originalNavigationAppearance.apply(to: self.navigationController?.navigationBar)
+        }
+    }
+
     var numberOfActiveViewControllers: Int {
         return navigationController?.viewControllers.count ?? 0
     }
@@ -220,6 +240,9 @@ class OWRouter: NSObject, OWRoutering {
 
 extension OWRouter: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        defer {
+            originalNavigationControllerDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+        }
         // Ensure the view controller is popping
         guard let poppedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
                 !navigationController.viewControllers.contains(poppedViewController) else {
@@ -251,6 +274,9 @@ extension OWRouter: UINavigationControllerDelegate {
 
 private extension OWRouter {
     func runCompletion(for controller: UIViewController) {
+        defer {
+            restoreOriginalNavigationControllerIfNeeded()
+        }
         guard let completion = completions[controller] else {
             return
         }

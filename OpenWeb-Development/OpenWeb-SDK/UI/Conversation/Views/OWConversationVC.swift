@@ -110,7 +110,9 @@ private extension OWConversationVC {
 
         let isContentBiggerThanTableView = conversationContentSizeHeight
             .withLatestFrom(conversationHeight) { ($0, $1) }
-            .map { $0 > $1 }
+            .map { [weak self] in
+                $0 > $1 + (self?.navigationController?.navigationBar.frame.height ?? 0)
+            }
             .share()
 
         let shouldShouldChangeToLargeTitleDisplay = conversationOffset

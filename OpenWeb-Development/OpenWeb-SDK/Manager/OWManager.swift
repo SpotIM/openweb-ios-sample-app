@@ -165,10 +165,11 @@ private extension OWManager {
             })
             .filter { $0.0 } // Continue only if scan return `true` in the first variable
             .map { $0.1 } // Map back to the spotId
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] spotId in
                 // SpotId was re-set to the same spotId
                 guard let self else { return }
                 self.resetSpotId()
+                self.servicesProvider.spotConfigurationService().spotChanged(spotId: spotId)
             })
             .disposed(by: disposeBag)
 

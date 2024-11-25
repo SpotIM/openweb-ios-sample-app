@@ -4,7 +4,7 @@
 "Appeal" = "異議を申し立てる";
 "AppealAuthorizationRequiredMessage" = "引き続き異議を申し立てるには、ログインしていることを確認してください。メンバーではありませんか？まず、登録する必要があります。";
 "AppealAuthorizationRequiredTitle" = "承認が必要";
-"AppealLabel" = "コメントを書き直して再投稿するのも、ご希望であれば、異議を申し立てることも自由です。決定を再検討いたします。";
+"AppealLabel" = "コメントの書き直しや再投稿はお気軽に行ってください。ご希望でしたら,異議を申し立てるが可能で,私たちは決定を見直します。";
 "AppealLabelError" = "異議申し立て情報は現在利用できません。インターネット接続を確認するか,後ほど再試行してください。";
 "AppealLabelNotAvailable" = "報告したコメントは利用できなくなりました。";
 "AppealRejectedCommentStatusMessage" = "異議は却下されました。";
@@ -86,7 +86,6 @@
 "Newest" = "最新";
 "No" = "いいえ";
 "NotAuthorPendingCommentStatusMessage" = "このコメントはレビュー待ちです。";
-"OK" = "OK";
 "Oldest" = "最も古い";
 "OpenSettings" = "設定を開く";
 "OptionsMenu" = "オプションメニュー";
@@ -101,7 +100,7 @@
 "Post" = "投稿";
 "PostAComment" = "コメントを投稿";
 "PoweredBy" = "提供：";
-"PoweredByOpenWeb" = "提供：OpenWeb";
+"PoweredByOpenWeb" = "提供： OpenWeb";
 "Privacy" = "プライバシー";
 "ProfileImage" = "プロフィール画像";
 "ProfileSubtitle" = "不適切なユーザー名、アバター、プロフィール、なりすまし";

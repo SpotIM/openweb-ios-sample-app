@@ -173,16 +173,16 @@ private extension OWFlowsSDKCoordinator {
                                                                               animated: presentAnimated)
         case .push(let navigationController):
             navController = navigationController
-            presentationalModeExtended = OWPresentationalModeExtended.push(navigationController: navController)
+            presentationalModeExtended = OWPresentationalModeExtended.push(navigationControllerWeakEncapsulation: OWWeakEncapsulation(value: navController))
             shouldCustomizeNavController = navCustomizerService.shouldCustomizeNavigationController()
         }
+
+        router = OWRouter(navigationController: navController, presentationalMode: presentationalModeExtended)
 
         // Customize navigation controller if needed
         if shouldCustomizeNavController {
             navCustomizerService.activeNavigationController(navigationController: navController)
         }
-
-        router = OWRouter(navigationController: navController, presentationalMode: presentationalModeExtended)
     }
 
     func cleanRouter(presentationalMode: OWPresentationalMode) {

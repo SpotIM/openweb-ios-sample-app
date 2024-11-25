@@ -28,6 +28,7 @@ protocol OWConversationViewViewModelingInputs {
     var tableViewDragBeginContentOffsetY: BehaviorSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
     var dismissToast: PublishSubject<Void> { get }
+    var viewIsViewable: PublishSubject<Bool> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -75,7 +76,7 @@ protocol OWConversationViewViewModelingOutputs {
     var shouldShowFilterTabsView: Observable<Bool> { get }
 }
 
-protocol OWConversationViewViewModeling {
+protocol OWConversationViewViewModeling: OWViewableTimeConsumer {
     var inputs: OWConversationViewViewModelingInputs { get }
     var outputs: OWConversationViewViewModelingOutputs { get }
 }
@@ -108,6 +109,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
         static let filterTabsHideMinimumOffset: CGFloat = 50
     }
+
+    var viewIsViewable = PublishSubject<Bool>()
 
     private var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
@@ -341,9 +344,15 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     lazy var shouldShowFilterTabsView: Observable<Bool> = {
         return Observable.combineLatest(filterTabsVM.outputs.shouldShowFilterTabs,
                                         scrollingDown)
-        .withLatestFrom(tableViewContentOffsetYChanged) { ($0.0, $0.1, $1) }
-        .map { shouldShowFilterTabs, scrollingDown, tableViewContentOffsetY in
-            return shouldShowFilterTabs && (!scrollingDown || tableViewContentOffsetY < Metrics.filterTabsHideMinimumOffset)
+        .withLatestFrom(Observable.combineLatest(tableViewContentOffsetYChanged,
+                                                 tableViewHeightChanged,
+                                                 tableViewContentSizeHeight)) { element, latestValues in
+            (element.0, element.1, latestValues.0, latestValues.1, latestValues.2)
+        }
+        .map { shouldShowFilterTabs, scrollingDown, tableViewContentOffsetY, tableViewHeight, tableViewContentSizeHeight in
+            return shouldShowFilterTabs &&
+                !(tableViewContentOffsetY + tableViewHeight > tableViewContentSizeHeight) &&
+                (!scrollingDown || tableViewContentOffsetY < Metrics.filterTabsHideMinimumOffset)
         }
         .distinctUntilChanged()
         .asObservable()
@@ -895,6 +904,17 @@ private extension OWConversationViewViewModel {
 private extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewIsViewable
+            .subscribe(onNext: { [weak self] isViewable in
+                guard let self else { return }
+                if isViewable {
+                    self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+                } else {
+                    self.servicesProvider.realtimeService().stopFetchingData()
+                }
+            })
+            .disposed(by: disposeBag)
+
         tableViewContentOffsetYChanged
             .withLatestFrom(tableViewDragBeginContentOffsetYChanged) { ($0, $1) }
             .withLatestFrom(scrollingDown) { ($0.0, $0.1, $1) }
@@ -933,14 +953,6 @@ private extension OWConversationViewViewModel {
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
-
-        // Subscribing to start realtime service
-        Observable.merge(viewInitialized, tryAgainAfterInitialError.voidify())
-            .subscribe(onNext: { [weak self] in
-                guard let self else { return }
-                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
-            })
-            .disposed(by: disposeBag)
 
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
@@ -1419,12 +1431,12 @@ private extension OWConversationViewViewModel {
             .flatMap { [weak self] sortOption, offset, filterTabId -> Observable<Event<OWConversationReadRM>> in
                 guard let self else { return .empty() }
                 return self.servicesProvider
-                .networkAPI()
-                .conversation
-                .conversationRead(mode: sortOption, filterTabId: filterTabId, page: OWPaginationPage.next, parentId: "", offset: offset)
-                .response
-                .materialize() // Required to keep the final subscriber even if errors arrived from the network
-                .observe(on: self.conversationViewVMScheduler)
+                    .networkAPI()
+                    .conversation
+                    .conversationRead(mode: sortOption, filterTabId: filterTabId, page: OWPaginationPage.next, parentId: "", offset: offset)
+                    .response
+                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
+                    .observe(on: self.conversationViewVMScheduler)
             }
 
         let loadMoreCommentsReadFetched = loadMoreCommentsReadObservable
@@ -1490,7 +1502,7 @@ private extension OWConversationViewViewModel {
                 }
                 .unwrap()
 
-                 return Observable.just(guidelinesCellsVms)
+                return Observable.just(guidelinesCellsVms)
             }
             .share(replay: 1)
 
@@ -1579,7 +1591,7 @@ private extension OWConversationViewViewModel {
                 }
                 .unwrap()
 
-                 return Observable.just(commentCellsVms)
+                return Observable.just(commentCellsVms)
             }
             .share(replay: 1)
 
@@ -1641,9 +1653,9 @@ private extension OWConversationViewViewModel {
         .subscribe(onNext: { commentCellsVms, isReadOnly in
             commentCellsVms.forEach {
                 $0.outputs.commentVM
-                .outputs.commentEngagementVM
-                .inputs.isReadOnly
-                .onNext(isReadOnly)
+                    .outputs.commentEngagementVM
+                    .inputs.isReadOnly
+                    .onNext(isReadOnly)
             }
         })
         .disposed(by: disposeBag)
@@ -2585,22 +2597,22 @@ private extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-            refreshConversationObservable
-                .subscribe(onNext: { [weak self] _ in
-                    OWScheduler.runOnMainThreadIfNeeded {
-                        guard let self else { return }
-                        self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
-                    }
-                })
-                .disposed(by: disposeBag)
+        refreshConversationObservable
+            .subscribe(onNext: { [weak self] _ in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self else { return }
+                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                }
+            })
+            .disposed(by: disposeBag)
 
-            servicesProvider
-                .activeArticleService()
-                .articleExtraData
-                .subscribe(onNext: { [weak self] article in
-                    self?.articleUrl = article.url.absoluteString
-                })
-                .disposed(by: disposeBag)
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
 
         let scrollToLastCellErrorLoadingMore = shouldShowErrorLoadingMoreComments
             .filter { $0 }
@@ -2653,7 +2665,9 @@ private extension OWConversationViewViewModel {
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalMode),
                 component: .conversation)
     }
+}
 
+extension OWConversationViewViewModel: OWViewableTimeConsumer {
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
         servicesProvider
