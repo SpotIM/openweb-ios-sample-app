@@ -73,7 +73,6 @@ private extension OWCommentContentView {
 
         textLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            textHeightConstraint = make.height.equalTo(0).constraint
         }
 
         mediaView.OWSnp.makeConstraints { make in
