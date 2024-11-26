@@ -17,10 +17,9 @@ class MonetizationScreenCoordinator: BaseCoordinator<Void> {
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
                         coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
-
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
-            fatalError("ViewsExamplesCoordinator requires coordinatorData from `CoordinatorData.postId` type")
+            fatalError("MonetizationScreenCoordinator requires coordinatorData from `CoordinatorData.postId` type")
         }
 
         let monetizationViewModel: MonetizationViewViewModeling = MonetizationViewViewModel(postId: postId)
@@ -44,41 +43,25 @@ private extension MonetizationScreenCoordinator {
         viewModel.outputs.openIndependentMonetizationExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
-                print("$$$ IndependentMonetizationExample Tapped")
-                // TODO: PUSH IndependentMonetizationExample VIEW
-//                let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
-//                let conversationBelowVideoVC = ConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
-//                self.router.push(conversationBelowVideoVC,
-//                                 animated: true,
-//                                 completion: nil)
+                let independentMonetizationExampleViewModel = IndependentMonetizationExampleViewModel()
+                let independentMonetizationExampleVC = IndependentMonetizationExampleVC(viewModel: independentMonetizationExampleViewModel)
+                self.router.push(independentMonetizationExampleVC,
+                                 animated: true,
+                                 completion: nil)
             })
             .disposed(by: disposeBag)
         
         viewModel.outputs.openSocialMonetizationExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
-                print("$$$ SocialMonetizationExample Tapped")
                 // TODO: PUSH SocialMonetizationExample VIEW
-
-//                let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
-//                let conversationBelowVideoVC = ConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
-//                self.router.push(conversationBelowVideoVC,
-//                                 animated: true,
-//                                 completion: nil)
             })
             .disposed(by: disposeBag)
         
         viewModel.outputs.openPreConversationExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
-                print("$$$ PreConversationExample Tapped")
                 // TODO: PUSH PreConversationExample VIEW
-
-//                let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
-//                let conversationBelowVideoVC = ConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
-//                self.router.push(conversationBelowVideoVC,
-//                                 animated: true,
-//                                 completion: nil)
             })
             .disposed(by: disposeBag)
     }
