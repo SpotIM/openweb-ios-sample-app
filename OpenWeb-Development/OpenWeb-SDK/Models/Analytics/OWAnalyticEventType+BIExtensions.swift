@@ -80,6 +80,8 @@ extension OWAnalyticEventType {
             return.commentCreationContinueWriting
         case .loginPromptClicked:
             return.loginPromptClicked
+        case .viewableTime(let timeInS):
+            return.viewableTime(timeInS: timeInS)
         case .commentViewed(let commentId):
             return.commentViewed(commentId: commentId)
         case .cameraIconClickedOpen:
