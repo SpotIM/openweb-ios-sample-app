@@ -58,6 +58,7 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
             .unwrap()
             .asObservable()
     }
+    
     lazy var title: String = {
         return NSLocalizedString("Monetization", comment: "")
     }()
