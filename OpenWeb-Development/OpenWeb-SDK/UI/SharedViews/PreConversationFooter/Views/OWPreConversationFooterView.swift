@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-internal class OWPreConversationFooterView: UIView {
+class OWPreConversationFooterView: UIView {
     private struct Metrics {
         static let identifier = "pre_conversation_footer_id"
         static let termsButtonIdentifier = "pre_conversation_footer_show_terms_button_id"

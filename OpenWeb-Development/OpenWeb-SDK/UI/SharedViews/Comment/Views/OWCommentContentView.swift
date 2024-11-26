@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 class OWCommentContentView: UIView {
-    internal struct Metrics {
+    struct Metrics {
         static let commentMediaTopPadding: CGFloat = 6.0
         static let emptyCommentMediaTopPadding: CGFloat = 0
         static let paragraphLineSpacing: CGFloat = 3.5
