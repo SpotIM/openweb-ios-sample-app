@@ -225,6 +225,7 @@ private extension OWCommentHeaderView {
         .disposed(by: disposeBag)
 
         viewModel.outputs.subtitleText
+            .map { $0.isEmpty ? .zeroLengthSpace : $0 }
             .bind(to: subtitleLabel.rx.text)
             .disposed(by: disposeBag)
 
