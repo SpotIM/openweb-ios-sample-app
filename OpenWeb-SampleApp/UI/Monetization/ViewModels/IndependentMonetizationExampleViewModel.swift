@@ -8,10 +8,9 @@
 import Foundation
 import OpenWebIAUSDK
 import RxSwift
+import OpenWebSDK
 
-protocol IndependentMonetizationExampleViewModelingInputs {
-   
-}
+protocol IndependentMonetizationExampleViewModelingInputs {}
 
 protocol IndependentMonetizationExampleViewModelingOutputs {
     var title: String { get }
@@ -39,26 +38,20 @@ class IndependentMonetizationExampleViewModel: IndependentMonetizationExampleVie
         return NSLocalizedString("Independent Example", comment: "")
     }()
     
-    init() {
+    private let postId: OWPostId
+
+    init(postId: OWPostId) {
+        self.postId = postId
         setupObservers()
     }
 }
 
 private extension IndependentMonetizationExampleViewModel {
     func setupObservers() {
-        // TODO: Remove this code to app delegate when the iau handle switching spot
-        // Init IAU sdk
-        let exampleStoreURL = "https://apps.apple.com/us/app/spotim-demo/id1234567"
-        var manager = OpenWebIAU.manager
-        manager.spotId = "sp_PPSI75uf"
-        var settingsBuilder = OWIAUSettingsBuilder()
-        settingsBuilder.storeURL(exampleStoreURL)
-        manager.settings = settingsBuilder.build()
-        
         let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0))
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
     
-        manager.ui.ad(postId: "", //TODO: Send postid
+        manager.ui.ad(postId: postId,
                       settings: adSettings,
                       viewEventCallbacks: nil,
                       actionsCallbacks: nil,
