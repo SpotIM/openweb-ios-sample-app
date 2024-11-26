@@ -43,7 +43,7 @@ private extension MonetizationScreenCoordinator {
         viewModel.outputs.openIndependentMonetizationExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
-                let independentMonetizationExampleViewModel = IndependentMonetizationExampleViewModel()
+                let independentMonetizationExampleViewModel = IndependentMonetizationExampleViewModel(postId: postId)
                 let independentMonetizationExampleVC = IndependentMonetizationExampleVC(viewModel: independentMonetizationExampleViewModel)
                 self.router.push(independentMonetizationExampleVC,
                                  animated: true,
@@ -54,7 +54,11 @@ private extension MonetizationScreenCoordinator {
         viewModel.outputs.openSocialMonetizationExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
-                // TODO: PUSH SocialMonetizationExample VIEW
+                let socialMonetizationExampleViewModel = SocialMonetizationExampleViewModel()
+                let socialMonetizationExampleVC = SocialMonetizationExampleVC(viewModel: socialMonetizationExampleViewModel)
+                self.router.push(socialMonetizationExampleVC,
+                                 animated: true,
+                                 completion: nil)
             })
             .disposed(by: disposeBag)
         
