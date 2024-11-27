@@ -54,7 +54,7 @@ private extension MonetizationCoordinator {
         viewModel.outputs.openSocialMonetizationExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
-                let socialMonetizationExampleViewModel = SocialMonetizationExampleViewModel()
+                let socialMonetizationExampleViewModel = SocialMonetizationExampleViewModel(postId: postId)
                 let socialMonetizationExampleVC = SocialMonetizationExampleVC(viewModel: socialMonetizationExampleViewModel)
                 self.router.push(socialMonetizationExampleVC,
                                  animated: true,
