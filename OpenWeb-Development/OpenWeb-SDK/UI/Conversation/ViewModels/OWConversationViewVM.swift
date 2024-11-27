@@ -37,7 +37,6 @@ protocol OWConversationViewViewModelingOutputs {
     var shouldShowArticleDescription: Bool { get }
     var shouldShowErrorLoadingComments: Observable<Bool> { get }
     var shouldShowErrorLoadingMoreComments: Observable<Bool> { get }
-    var shouldShowErrorCommentDelete: Observable<Bool> { get }
     var shouldShowErrorMuteUser: Observable<Bool> { get }
     var shouldShowConversationEmptyState: Observable<Bool> { get }
 
@@ -183,12 +182,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    private var _shouldShowErrorCommentDelete = BehaviorSubject<Bool>(value: false)
-    var shouldShowErrorCommentDelete: Observable<Bool> {
-        return _shouldShowErrorCommentDelete
-            .asObservable()
-    }
-
     private var _shouldShowErrorMuteUser = BehaviorSubject<Bool>(value: false)
     var shouldShowErrorMuteUser: Observable<Bool> {
         return _shouldShowErrorMuteUser
@@ -292,6 +285,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     private var deleteComment = PublishSubject<OWCommentViewModeling>()
     private var muteCommentUser = PublishSubject<OWCommentViewModeling>()
     private var retryMute = PublishSubject<Void>()
+    private var retryDelete = PublishSubject<Void>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -2430,10 +2424,6 @@ private extension OWConversationViewViewModel {
         // Deleting comment from network
         commentDeletedLocallyObservable
             .observe(on: MainScheduler.asyncInstance)
-            .do(onNext: { [weak self] _ in
-                guard let self else { return }
-                self._shouldShowErrorCommentDelete.onNext(false)
-            })
             .flatMap { [weak self] commentVm -> Observable<Event<OWCommentDelete>> in
                 let comment = commentVm.outputs.comment
                 guard let self,
@@ -2454,8 +2444,10 @@ private extension OWConversationViewViewModel {
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return commentDelete
                 case .error:
-                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
-                    self._shouldShowErrorCommentDelete.onNext(true)
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: self.retryDelete))
                     return nil
                 default:
                     return nil
@@ -2586,14 +2578,16 @@ private extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Retry when triggerd
+        // Retry mute when triggerd
         retryMute
-            .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
-                return comment
-            }
-            .subscribe(onNext: { [weak self] comment in
-                self?.muteCommentUser.onNext(comment)
-            })
+            .withLatestFrom(muteCommentUser)
+            .bind(to: muteCommentUser)
+            .disposed(by: disposeBag)
+
+        // Retry delete when triggerd
+        retryDelete
+            .withLatestFrom(deleteComment)
+            .bind(to: deleteComment)
             .disposed(by: disposeBag)
 
         // Handling muting comments "locally" of a muted user
