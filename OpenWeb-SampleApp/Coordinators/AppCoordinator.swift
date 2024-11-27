@@ -9,6 +9,7 @@ import RxSwift
 import OpenWebSDK
 import UIKit
 import GoogleMobileAds
+import OpenWebIAUSDK
 
 #if !PUBLIC_DEMO_APP
     import OpenWeb_SampleApp_Internal_Configs
@@ -38,6 +39,7 @@ private extension AppCoordinator {
         initialVendorsSetup()
         initialDataSetup()
         initialUIAppearance()
+        initialIAUSetup()
     }
 
     func initialVendorsSetup() {
@@ -55,5 +57,14 @@ private extension AppCoordinator {
         window.rootViewController = navigation
         window.makeKeyAndVisible()
         router = Router(navigationController: navigation)
+    }
+    
+    func initialIAUSetup() {
+        let exampleStoreURL = "https://apps.apple.com/us/app/spotim-demo/id1234567"
+        var manager = OpenWebIAU.manager
+        manager.spotId = "sp_PPSI75uf" //TODO: When the spots of the example app will have the option to show an ad, we will switch here to the current spot of the application app.
+        var settingsBuilder = OWIAUSettingsBuilder()
+        settingsBuilder.storeURL(exampleStoreURL)
+        manager.settings = settingsBuilder.build()
     }
 }

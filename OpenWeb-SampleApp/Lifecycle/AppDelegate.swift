@@ -8,7 +8,6 @@
 
 import UIKit
 import RxSwift
-import OpenWebIAUSDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -32,13 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .start(deepLinkOptions: deeplink.toDeepLinkOptions)
             .take(1)
             .subscribe()
-
-        let exampleStoreURL = "https://apps.apple.com/us/app/spotim-demo/id1234567"
-        var manager = OpenWebIAU.manager
-        manager.spotId = "sp_PPSI75uf"
-        var settingsBuilder = OWIAUSettingsBuilder()
-        settingsBuilder.storeURL(exampleStoreURL)
-        manager.settings = settingsBuilder.build()
         
         return true
     }
