@@ -320,6 +320,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     private var deleteComment = PublishSubject<OWCommentViewModeling>()
     private var muteCommentUser = PublishSubject<OWCommentViewModeling>()
     private var retryMute = PublishSubject<Void>()
+    private var retryDelete = PublishSubject<Void>()
 
     var viewInitialized = PublishSubject<Void>()
     private lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
@@ -1499,13 +1500,17 @@ private extension OWCommentThreadViewViewModel {
                     .response
                     .materialize()
             }
-            .map { event -> OWCommentDelete? in
+            .map { [weak self] event -> OWCommentDelete? in
+                guard let self else { return nil }
                 switch event {
                 case .next(let commentDelete):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return commentDelete
                 case .error:
-                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: self.retryDelete))
                     return nil
                 default:
                     return nil
@@ -1698,14 +1703,16 @@ private extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Retry when triggerd
+        // Retry mute when triggerd
         retryMute
-            .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
-                return comment
-            }
-            .subscribe(onNext: { [weak self] comment in
-                self?.muteCommentUser.onNext(comment)
-            })
+            .withLatestFrom(muteCommentUser)
+            .bind(to: muteCommentUser)
+            .disposed(by: disposeBag)
+
+        // Retry delete when triggerd
+        retryDelete
+            .withLatestFrom(deleteComment)
+            .bind(to: deleteComment)
             .disposed(by: disposeBag)
 
         // Handling muting comments "locally" of a muted user
