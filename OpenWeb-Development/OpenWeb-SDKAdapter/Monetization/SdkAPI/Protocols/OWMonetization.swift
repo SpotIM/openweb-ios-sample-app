@@ -13,7 +13,10 @@ import Foundation
 import OpenWebIAUSDK
 
 public protocol OWMonetization {
-    // TODO - lmplementation
+    var ui: OWIAUUI { get }
+    var analytics: OWIAUAnalytics { get }
+    var settings: OWIAUSettingsProtocol { get set }
+    var helpers: OWIAUHelpers { get }
 }
 
 #else
