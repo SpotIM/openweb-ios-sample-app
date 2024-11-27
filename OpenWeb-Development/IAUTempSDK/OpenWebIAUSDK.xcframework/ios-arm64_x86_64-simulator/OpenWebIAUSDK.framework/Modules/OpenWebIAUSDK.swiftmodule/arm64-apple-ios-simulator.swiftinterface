@@ -118,42 +118,47 @@ public enum OWIAUViewEventCallbackType {
   }
 }
 public enum OWIAUViewEventCallbackVideoType {
-  case videoAdServerCalled
-  case videoInventory
-  case videoViewableImpression
-  case videoSourceLoaded
-  case videoImpression
-  case videoProgress
-  case videoFullScreenToggleRequested
-  case videoMovedToFullscreen
-  case videoMovedFromFullscreen
-  case videoClickThrough
-  case videoSkippableStateChange
-  case videoAdPaused
-  case videoClosed
-  case videoError
-  case videoGeneric
+  case adServerCalled
+  case inventory
+  case viewableImpression
+  case sourceLoaded
+  case impression
+  case progress(_: OpenWebIAUSDK.OWIAUVideoProgress)
+  case fullScreenToggleRequested
+  case movedToFullscreen
+  case movedFromFullscreen
+  case clickThrough
+  case skippableStateChange
+  case adPaused
+  case closed
+  case error(_: Swift.String)
+  case generic(_: Swift.String)
   public var description: Swift.String {
-    get
-  }
-  public static func == (a: OpenWebIAUSDK.OWIAUViewEventCallbackVideoType, b: OpenWebIAUSDK.OWIAUViewEventCallbackVideoType) -> Swift.Bool
-  public func hash(into hasher: inout Swift.Hasher)
-  public var hashValue: Swift.Int {
     get
   }
 }
 public enum OWIAUViewEventCallbackDisplayType {
-  case displayInventory
-  case displaySourceLoaded
-  case displayError
-  case displayImpression
-  case displayViewableImpression
-  case displayClickThrough
-  case displayClosed
+  case inventory
+  case sourceLoaded
+  case error(_: Swift.String)
+  case impression
+  case viewableImpression
+  case clickThrough
+  case closed
   public var description: Swift.String {
     get
   }
-  public static func == (a: OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType, b: OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType) -> Swift.Bool
+}
+public enum OWIAUVideoProgress {
+  case started
+  case firstQuartile
+  case midpoint
+  case thirdQuartile
+  case complete
+  public var description: Swift.String {
+    get
+  }
+  public static func == (a: OpenWebIAUSDK.OWIAUVideoProgress, b: OpenWebIAUSDK.OWIAUVideoProgress) -> Swift.Bool
   public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
@@ -241,10 +246,8 @@ extension OpenWebIAUSDK.OWIAURequestMethod : Swift.RawRepresentable {}
 extension OpenWebIAUSDK.OWIAUBIAnalyticEvent : Swift.Equatable {}
 extension OpenWebIAUSDK.OWIAUBIAnalyticEvent : Swift.Hashable {}
 extension OpenWebIAUSDK.OWIAUBIAnalyticEvent : Swift.RawRepresentable {}
-extension OpenWebIAUSDK.OWIAUViewEventCallbackVideoType : Swift.Equatable {}
-extension OpenWebIAUSDK.OWIAUViewEventCallbackVideoType : Swift.Hashable {}
-extension OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType : Swift.Equatable {}
-extension OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType : Swift.Hashable {}
+extension OpenWebIAUSDK.OWIAUVideoProgress : Swift.Equatable {}
+extension OpenWebIAUSDK.OWIAUVideoProgress : Swift.Hashable {}
 extension OpenWebIAUSDK.OWIAUViewSourceType : Swift.Equatable {}
 extension OpenWebIAUSDK.OWIAUViewSourceType : Swift.Hashable {}
 extension OpenWebIAUSDK.OWIAULogLevel : Swift.Equatable {}
