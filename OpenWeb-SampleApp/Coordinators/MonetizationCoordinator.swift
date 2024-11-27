@@ -1,5 +1,5 @@
 //
-//  MonetizationScreenCoordinator.swift
+//  MonetizationCoordinator.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Anael on 25/11/2024.
@@ -7,7 +7,7 @@
 
 import RxSwift
 
-class MonetizationScreenCoordinator: BaseCoordinator<Void> {
+class MonetizationCoordinator: BaseCoordinator<Void> {
 
     private let router: Routering
 
@@ -19,7 +19,7 @@ class MonetizationScreenCoordinator: BaseCoordinator<Void> {
                         coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
-            fatalError("MonetizationScreenCoordinator requires coordinatorData from `CoordinatorData.postId` type")
+            fatalError("MonetizationCoordinator requires coordinatorData from `CoordinatorData.postId` type")
         }
 
         let monetizationViewModel: MonetizationViewViewModeling = MonetizationViewViewModel(postId: postId)
@@ -38,7 +38,7 @@ class MonetizationScreenCoordinator: BaseCoordinator<Void> {
     }
 }
 
-private extension MonetizationScreenCoordinator {
+private extension MonetizationCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MonetizationViewViewModeling) {
         viewModel.outputs.openIndependentMonetizationExample
             .subscribe(onNext: { [weak self] postId in
