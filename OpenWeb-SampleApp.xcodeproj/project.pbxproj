@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1374959E2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374959D2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift */; };
+		1374959E2CF4C8EF00F639D5 /* MonetizationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */; };
 		137495A32CF4CC1500F639D5 /* MonetizationViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */; };
 		137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */; };
 		137495B92CF5F5DA00F639D5 /* IndependentMonetizationExampleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495B82CF5F5DA00F639D5 /* IndependentMonetizationExampleVC.swift */; };
@@ -224,7 +224,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1374959D2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationScreenCoordinator.swift; sourceTree = "<group>"; };
+		1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationCoordinator.swift; sourceTree = "<group>"; };
 		137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewVC.swift; sourceTree = "<group>"; };
 		137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewViewModel.swift; sourceTree = "<group>"; };
 		137495B82CF5F5DA00F639D5 /* IndependentMonetizationExampleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndependentMonetizationExampleVC.swift; sourceTree = "<group>"; };
@@ -626,7 +626,7 @@
 				3DA1E5302C6E221800EBFA7D /* TestingPlaygroundCoordinator.swift */,
 				3DA1E5312C6E221800EBFA7D /* UIFlowsCoordinator.swift */,
 				3DA1E5322C6E221800EBFA7D /* UIViewsCoordinator.swift */,
-				1374959D2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift */,
+				1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */,
 				3DA1E5332C6E221800EBFA7D /* ViewsExamplesCoordinator.swift */,
 			);
 			path = Coordinators;
@@ -1601,7 +1601,7 @@
 				3DA1E6A62C6E221800EBFA7D /* ToolbarCollectionCell.swift in Sources */,
 				3DA1E6712C6E221800EBFA7D /* OWConversationStyleIndexer.swift in Sources */,
 				3DA1E69F2C6E221800EBFA7D /* TestingPlaygroundIndependentViewVC.swift in Sources */,
-				1374959E2CF4C8EF00F639D5 /* MonetizationScreenCoordinator.swift in Sources */,
+				1374959E2CF4C8EF00F639D5 /* MonetizationCoordinator.swift in Sources */,
 				3DA1E6BC2C6E221800EBFA7D /* DemoUserAuthentication.swift in Sources */,
 				3DA1E6852C6E221800EBFA7D /* NetworkSettingsVM.swift in Sources */,
 				3DA1E6652C6E221800EBFA7D /* SDKUIFlowActionSettings.swift in Sources */,
