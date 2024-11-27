@@ -4039,8 +4039,8 @@
         "children": [
           {
             "kind": "Var",
-            "name": "videoAdServerCalled",
-            "printedName": "videoAdServerCalled",
+            "name": "adServerCalled",
+            "printedName": "adServerCalled",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4070,14 +4070,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO19videoAdServerCalledyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO19videoAdServerCalledyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO14adServerCalledyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO14adServerCalledyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoInventory",
-            "printedName": "videoInventory",
+            "name": "inventory",
+            "printedName": "inventory",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4107,14 +4107,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO14videoInventoryyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO14videoInventoryyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO9inventoryyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO9inventoryyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoViewableImpression",
-            "printedName": "videoViewableImpression",
+            "name": "viewableImpression",
+            "printedName": "viewableImpression",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4144,14 +4144,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO23videoViewableImpressionyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO23videoViewableImpressionyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO18viewableImpressionyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO18viewableImpressionyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoSourceLoaded",
-            "printedName": "videoSourceLoaded",
+            "name": "sourceLoaded",
+            "printedName": "sourceLoaded",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4181,14 +4181,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO17videoSourceLoadedyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO17videoSourceLoadedyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO12sourceLoadedyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO12sourceLoadedyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoImpression",
-            "printedName": "videoImpression",
+            "name": "impression",
+            "printedName": "impression",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4218,25 +4218,38 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO15videoImpressionyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO15videoImpressionyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO10impressionyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO10impressionyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoProgress",
-            "printedName": "videoProgress",
+            "name": "progress",
+            "printedName": "progress",
             "children": [
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(OpenWebIAUSDK.OWIAUViewEventCallbackVideoType.Type) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                "printedName": "(OpenWebIAUSDK.OWIAUViewEventCallbackVideoType.Type) -> (OpenWebIAUSDK.OWIAUVideoProgress) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
                 "children": [
                   {
-                    "kind": "TypeNominal",
-                    "name": "OWIAUViewEventCallbackVideoType",
-                    "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
-                    "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO"
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OpenWebIAUSDK.OWIAUVideoProgress) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUViewEventCallbackVideoType",
+                        "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                        "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUVideoProgress",
+                        "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                        "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                      }
+                    ]
                   },
                   {
                     "kind": "TypeNominal",
@@ -4255,14 +4268,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO13videoProgressyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO13videoProgressyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO8progressyAcA18OWIAUVideoProgressOcACmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO8progressyAcA18OWIAUVideoProgressOcACmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoFullScreenToggleRequested",
-            "printedName": "videoFullScreenToggleRequested",
+            "name": "fullScreenToggleRequested",
+            "printedName": "fullScreenToggleRequested",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4292,14 +4305,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO30videoFullScreenToggleRequestedyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO30videoFullScreenToggleRequestedyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO25fullScreenToggleRequestedyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO25fullScreenToggleRequestedyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoMovedToFullscreen",
-            "printedName": "videoMovedToFullscreen",
+            "name": "movedToFullscreen",
+            "printedName": "movedToFullscreen",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4329,14 +4342,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO22videoMovedToFullscreenyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO22videoMovedToFullscreenyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO17movedToFullscreenyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO17movedToFullscreenyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoMovedFromFullscreen",
-            "printedName": "videoMovedFromFullscreen",
+            "name": "movedFromFullscreen",
+            "printedName": "movedFromFullscreen",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4366,14 +4379,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO24videoMovedFromFullscreenyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO24videoMovedFromFullscreenyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO19movedFromFullscreenyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO19movedFromFullscreenyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoClickThrough",
-            "printedName": "videoClickThrough",
+            "name": "clickThrough",
+            "printedName": "clickThrough",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4403,14 +4416,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO17videoClickThroughyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO17videoClickThroughyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO12clickThroughyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO12clickThroughyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoSkippableStateChange",
-            "printedName": "videoSkippableStateChange",
+            "name": "skippableStateChange",
+            "printedName": "skippableStateChange",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4440,14 +4453,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO25videoSkippableStateChangeyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO25videoSkippableStateChangeyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO20skippableStateChangeyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO20skippableStateChangeyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoAdPaused",
-            "printedName": "videoAdPaused",
+            "name": "adPaused",
+            "printedName": "adPaused",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4477,14 +4490,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO13videoAdPausedyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO13videoAdPausedyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO8adPausedyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO8adPausedyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoClosed",
-            "printedName": "videoClosed",
+            "name": "closed",
+            "printedName": "closed",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4514,25 +4527,38 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO11videoClosedyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO11videoClosedyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO6closedyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO6closedyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoError",
-            "printedName": "videoError",
+            "name": "error",
+            "printedName": "error",
             "children": [
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(OpenWebIAUSDK.OWIAUViewEventCallbackVideoType.Type) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                "printedName": "(OpenWebIAUSDK.OWIAUViewEventCallbackVideoType.Type) -> (Swift.String) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
                 "children": [
                   {
-                    "kind": "TypeNominal",
-                    "name": "OWIAUViewEventCallbackVideoType",
-                    "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
-                    "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO"
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.String) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUViewEventCallbackVideoType",
+                        "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                        "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
                   },
                   {
                     "kind": "TypeNominal",
@@ -4551,25 +4577,38 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO10videoErroryA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO10videoErroryA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO5erroryACSScACmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO5erroryACSScACmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "videoGeneric",
-            "printedName": "videoGeneric",
+            "name": "generic",
+            "printedName": "generic",
             "children": [
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(OpenWebIAUSDK.OWIAUViewEventCallbackVideoType.Type) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                "printedName": "(OpenWebIAUSDK.OWIAUViewEventCallbackVideoType.Type) -> (Swift.String) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
                 "children": [
                   {
-                    "kind": "TypeNominal",
-                    "name": "OWIAUViewEventCallbackVideoType",
-                    "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
-                    "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO"
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.String) -> OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUViewEventCallbackVideoType",
+                        "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
+                        "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
                   },
                   {
                     "kind": "TypeNominal",
@@ -4588,8 +4627,8 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO12videoGenericyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO12videoGenericyA2CmF",
+            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO7genericyACSScACmF",
+            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO7genericyACSScACmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
@@ -4631,102 +4670,6 @@
                 "accessorKind": "get"
               }
             ]
-          },
-          {
-            "kind": "Function",
-            "name": "==",
-            "printedName": "==(_:_:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Bool",
-                "printedName": "Swift.Bool",
-                "usr": "s:Sb"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "OWIAUViewEventCallbackVideoType",
-                "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
-                "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "OWIAUViewEventCallbackVideoType",
-                "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackVideoType",
-                "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO2eeoiySbAC_ACtFZ",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO2eeoiySbAC_ACtFZ",
-            "moduleName": "OpenWebIAUSDK",
-            "static": true,
-            "implicit": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Var",
-            "name": "hashValue",
-            "printedName": "hashValue",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "usr": "s:Si"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO9hashValueSivp",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO9hashValueSivp",
-            "moduleName": "OpenWebIAUSDK",
-            "implicit": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int",
-                    "printedName": "Swift.Int",
-                    "usr": "s:Si"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO9hashValueSivg",
-                "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO9hashValueSivg",
-                "moduleName": "OpenWebIAUSDK",
-                "implicit": true,
-                "accessorKind": "get"
-              }
-            ]
-          },
-          {
-            "kind": "Function",
-            "name": "hash",
-            "printedName": "hash(into:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Hasher",
-                "printedName": "Swift.Hasher",
-                "paramValueOwnership": "InOut",
-                "usr": "s:s6HasherV"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO4hash4intoys6HasherVz_tF",
-            "mangledName": "$s13OpenWebIAUSDK31OWIAUViewEventCallbackVideoTypeO4hash4intoys6HasherVz_tF",
-            "moduleName": "OpenWebIAUSDK",
-            "implicit": true,
-            "funcSelfKind": "NonMutating"
           }
         ],
         "declKind": "Enum",
@@ -4750,20 +4693,6 @@
             "printedName": "Escapable",
             "usr": "s:s9EscapableP",
             "mangledName": "$ss9EscapableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Equatable",
-            "printedName": "Equatable",
-            "usr": "s:SQ",
-            "mangledName": "$sSQ"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Hashable",
-            "printedName": "Hashable",
-            "usr": "s:SH",
-            "mangledName": "$sSH"
           }
         ]
       },
@@ -4774,8 +4703,8 @@
         "children": [
           {
             "kind": "Var",
-            "name": "displayInventory",
-            "printedName": "displayInventory",
+            "name": "inventory",
+            "printedName": "inventory",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4805,14 +4734,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO16displayInventoryyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO16displayInventoryyA2CmF",
+            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO9inventoryyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO9inventoryyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "displaySourceLoaded",
-            "printedName": "displaySourceLoaded",
+            "name": "sourceLoaded",
+            "printedName": "sourceLoaded",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4842,25 +4771,38 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO19displaySourceLoadedyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO19displaySourceLoadedyA2CmF",
+            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO12sourceLoadedyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO12sourceLoadedyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "displayError",
-            "printedName": "displayError",
+            "name": "error",
+            "printedName": "error",
             "children": [
               {
                 "kind": "TypeFunc",
                 "name": "Function",
-                "printedName": "(OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType.Type) -> OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType",
+                "printedName": "(OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType.Type) -> (Swift.String) -> OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType",
                 "children": [
                   {
-                    "kind": "TypeNominal",
-                    "name": "OWIAUViewEventCallbackDisplayType",
-                    "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType",
-                    "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO"
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.String) -> OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUViewEventCallbackDisplayType",
+                        "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType",
+                        "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
                   },
                   {
                     "kind": "TypeNominal",
@@ -4879,14 +4821,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO12displayErroryA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO12displayErroryA2CmF",
+            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO5erroryACSScACmF",
+            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO5erroryACSScACmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "displayImpression",
-            "printedName": "displayImpression",
+            "name": "impression",
+            "printedName": "impression",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4916,14 +4858,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO17displayImpressionyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO17displayImpressionyA2CmF",
+            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO10impressionyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO10impressionyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "displayViewableImpression",
-            "printedName": "displayViewableImpression",
+            "name": "viewableImpression",
+            "printedName": "viewableImpression",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4953,14 +4895,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO25displayViewableImpressionyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO25displayViewableImpressionyA2CmF",
+            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO18viewableImpressionyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO18viewableImpressionyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "displayClickThrough",
-            "printedName": "displayClickThrough",
+            "name": "clickThrough",
+            "printedName": "clickThrough",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -4990,14 +4932,14 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO19displayClickThroughyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO19displayClickThroughyA2CmF",
+            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO12clickThroughyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO12clickThroughyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
             "kind": "Var",
-            "name": "displayClosed",
-            "printedName": "displayClosed",
+            "name": "closed",
+            "printedName": "closed",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -5027,8 +4969,8 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO13displayClosedyA2CmF",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO13displayClosedyA2CmF",
+            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO6closedyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO6closedyA2CmF",
             "moduleName": "OpenWebIAUSDK"
           },
           {
@@ -5070,6 +5012,261 @@
                 "accessorKind": "get"
               }
             ]
+          }
+        ],
+        "declKind": "Enum",
+        "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO",
+        "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO",
+        "moduleName": "OpenWebIAUSDK",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "OWIAUVideoProgress",
+        "printedName": "OWIAUVideoProgress",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "started",
+            "printedName": "started",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(OpenWebIAUSDK.OWIAUVideoProgress.Type) -> OpenWebIAUSDK.OWIAUVideoProgress",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OWIAUVideoProgress",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                    "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUVideoProgress",
+                        "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                        "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO7startedyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO7startedyA2CmF",
+            "moduleName": "OpenWebIAUSDK"
+          },
+          {
+            "kind": "Var",
+            "name": "firstQuartile",
+            "printedName": "firstQuartile",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(OpenWebIAUSDK.OWIAUVideoProgress.Type) -> OpenWebIAUSDK.OWIAUVideoProgress",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OWIAUVideoProgress",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                    "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUVideoProgress",
+                        "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                        "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO13firstQuartileyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO13firstQuartileyA2CmF",
+            "moduleName": "OpenWebIAUSDK"
+          },
+          {
+            "kind": "Var",
+            "name": "midpoint",
+            "printedName": "midpoint",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(OpenWebIAUSDK.OWIAUVideoProgress.Type) -> OpenWebIAUSDK.OWIAUVideoProgress",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OWIAUVideoProgress",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                    "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUVideoProgress",
+                        "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                        "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO8midpointyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO8midpointyA2CmF",
+            "moduleName": "OpenWebIAUSDK"
+          },
+          {
+            "kind": "Var",
+            "name": "thirdQuartile",
+            "printedName": "thirdQuartile",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(OpenWebIAUSDK.OWIAUVideoProgress.Type) -> OpenWebIAUSDK.OWIAUVideoProgress",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OWIAUVideoProgress",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                    "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUVideoProgress",
+                        "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                        "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO13thirdQuartileyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO13thirdQuartileyA2CmF",
+            "moduleName": "OpenWebIAUSDK"
+          },
+          {
+            "kind": "Var",
+            "name": "complete",
+            "printedName": "complete",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(OpenWebIAUSDK.OWIAUVideoProgress.Type) -> OpenWebIAUSDK.OWIAUVideoProgress",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OWIAUVideoProgress",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                    "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "OpenWebIAUSDK.OWIAUVideoProgress.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OWIAUVideoProgress",
+                        "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                        "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO8completeyA2CmF",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO8completeyA2CmF",
+            "moduleName": "OpenWebIAUSDK"
+          },
+          {
+            "kind": "Var",
+            "name": "description",
+            "printedName": "description",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO11descriptionSSvp",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO11descriptionSSvp",
+            "moduleName": "OpenWebIAUSDK",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO11descriptionSSvg",
+                "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO11descriptionSSvg",
+                "moduleName": "OpenWebIAUSDK",
+                "accessorKind": "get"
+              }
+            ]
           },
           {
             "kind": "Function",
@@ -5084,20 +5281,20 @@
               },
               {
                 "kind": "TypeNominal",
-                "name": "OWIAUViewEventCallbackDisplayType",
-                "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType",
-                "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO"
+                "name": "OWIAUVideoProgress",
+                "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
               },
               {
                 "kind": "TypeNominal",
-                "name": "OWIAUViewEventCallbackDisplayType",
-                "printedName": "OpenWebIAUSDK.OWIAUViewEventCallbackDisplayType",
-                "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO"
+                "name": "OWIAUVideoProgress",
+                "printedName": "OpenWebIAUSDK.OWIAUVideoProgress",
+                "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO"
               }
             ],
             "declKind": "Func",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO2eeoiySbAC_ACtFZ",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO2eeoiySbAC_ACtFZ",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO2eeoiySbAC_ACtFZ",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO2eeoiySbAC_ACtFZ",
             "moduleName": "OpenWebIAUSDK",
             "static": true,
             "implicit": true,
@@ -5116,8 +5313,8 @@
               }
             ],
             "declKind": "Var",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO9hashValueSivp",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO9hashValueSivp",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO9hashValueSivp",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO9hashValueSivp",
             "moduleName": "OpenWebIAUSDK",
             "implicit": true,
             "accessors": [
@@ -5134,8 +5331,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO9hashValueSivg",
-                "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO9hashValueSivg",
+                "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO9hashValueSivg",
+                "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO9hashValueSivg",
                 "moduleName": "OpenWebIAUSDK",
                 "implicit": true,
                 "accessorKind": "get"
@@ -5161,16 +5358,16 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO4hash4intoys6HasherVz_tF",
-            "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO4hash4intoys6HasherVz_tF",
+            "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO4hash4intoys6HasherVz_tF",
+            "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO4hash4intoys6HasherVz_tF",
             "moduleName": "OpenWebIAUSDK",
             "implicit": true,
             "funcSelfKind": "NonMutating"
           }
         ],
         "declKind": "Enum",
-        "usr": "s:13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO",
-        "mangledName": "$s13OpenWebIAUSDK33OWIAUViewEventCallbackDisplayTypeO",
+        "usr": "s:13OpenWebIAUSDK18OWIAUVideoProgressO",
+        "mangledName": "$s13OpenWebIAUSDK18OWIAUVideoProgressO",
         "moduleName": "OpenWebIAUSDK",
         "declAttributes": [
           "AccessControl"
@@ -7949,812 +8146,812 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
       "kind": "StringLiteral",
       "offset": 462,
       "length": 7,
       "value": "\"https\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
       "kind": "StringLiteral",
       "offset": 479,
       "length": 17,
       "value": "\"api-2-0.spot.im\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
       "kind": "StringLiteral",
       "offset": 661,
       "length": 23,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
       "kind": "StringLiteral",
       "offset": 671,
       "length": 1,
       "value": "\":\/\/\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Environment\/OWIAUEnvironment.swift",
       "kind": "StringLiteral",
       "offset": 683,
       "length": 1,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Generated\/Versions.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Generated\/Versions.swift",
       "kind": "StringLiteral",
       "offset": 118,
       "length": 7,
       "value": "\"1.3.0\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Generated\/Versions.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Generated\/Versions.swift",
       "kind": "IntegerLiteral",
       "offset": 147,
       "length": 2,
       "value": "49"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusDisplayAd.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusDisplayAd.swift",
       "kind": "IntegerLiteral",
       "offset": 803,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusDisplayAd.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusDisplayAd.swift",
       "kind": "BooleanLiteral",
       "offset": 5296,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusDisplayAd.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusDisplayAd.swift",
       "kind": "IntegerLiteral",
       "offset": 5416,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusInitializer.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusInitializer.swift",
       "kind": "BooleanLiteral",
       "offset": 393,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusInitializer.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/Nimbus\/OWIAUNimbusInitializer.swift",
       "kind": "StringLiteral",
       "offset": 2025,
       "length": 525,
       "value": "\"OpenWebIAUSDK: NimbusSDK setup is invalid!\nPlease ensure NimbusSDK 'BUILD_LIBRARY_FOR_DISTRIBUTION' is set to 'YES'\nIf you're using Cocoa Pods then you might want to add it in the post-install script:\n\npost_install do |installer|\n  installer.pods_project.targets.each do |target|\n    target.build_configurations.each do |config|\n      if target.name == 'NimbusSDK'\n        config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'\n      end\n    end\n  end\nend\n\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/OWIAUOpenWrapDisplayAd.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/OWIAUOpenWrapDisplayAd.swift",
       "kind": "IntegerLiteral",
       "offset": 775,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/OWIAUOpenWrapDisplayAd.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/KMDependencies\/DisplayAdsSource\/OWIAUOpenWrapDisplayAd.swift",
       "kind": "BooleanLiteral",
       "offset": 3825,
       "length": 4,
       "value": "true"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Manager\/ManagerLayers\/OWIAUAnalyticsLayer.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Manager\/ManagerLayers\/OWIAUAnalyticsLayer.swift",
       "kind": "IntegerLiteral",
       "offset": 397,
       "length": 2,
       "value": "10"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Manager\/ManagerLayers\/OWIAUAnalyticsLayer.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Manager\/ManagerLayers\/OWIAUAnalyticsLayer.swift",
       "kind": "StringLiteral",
       "offset": 510,
       "length": 28,
       "value": "\"OpenWebIAUSDKEventCallback\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Manager\/ManagerLayers\/OWIAUAnalyticsLayer.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Manager\/ManagerLayers\/OWIAUAnalyticsLayer.swift",
       "kind": "Dictionary",
       "offset": 597,
       "length": 3,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Analytics\/OWBIAnalyticAdditionalInfo.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Analytics\/OWBIAnalyticAdditionalInfo.swift",
       "kind": "Dictionary",
       "offset": 297,
       "length": 3,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseCampaign.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseCampaign.swift",
       "kind": "StringLiteral",
       "offset": 291,
       "length": 11,
       "value": "\"is_sticky\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseCampaign.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseCampaign.swift",
       "kind": "StringLiteral",
       "offset": 334,
       "length": 19,
       "value": "\"is_video_takeover\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
       "kind": "StringLiteral",
       "offset": 535,
       "length": 19,
       "value": "\"Video_floor_price\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
       "kind": "StringLiteral",
       "offset": 585,
       "length": 10,
       "value": "\"owAdUnit\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
       "kind": "StringLiteral",
       "offset": 628,
       "length": 10,
       "value": "\"adUnitId\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
       "kind": "StringLiteral",
       "offset": 672,
       "length": 11,
       "value": "\"profileId\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUResponseDisplayCode.swift",
       "kind": "StringLiteral",
       "offset": 719,
       "length": 13,
       "value": "\"publisherId\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfiguration.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfiguration.swift",
       "kind": "StringLiteral",
       "offset": 254,
       "length": 17,
       "value": "\"monetization_id\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfiguration.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfiguration.swift",
       "kind": "StringLiteral",
       "offset": 296,
       "length": 11,
       "value": "\"client_ip\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationCampaigns.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationCampaigns.swift",
       "kind": "StringLiteral",
       "offset": 236,
       "length": 9,
       "value": "\"sdk_iau\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationCampaigns.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationCampaigns.swift",
       "kind": "Array",
       "offset": 296,
       "length": 2,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationSpot.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationSpot.swift",
       "kind": "StringLiteral",
       "offset": 228,
       "length": 13,
       "value": "\"pub_spot_id\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationSpot.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationSpot.swift",
       "kind": "StringLiteral",
       "offset": 270,
       "length": 16,
       "value": "\"mcm_network_id\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationSpot.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Models\/Configs\/OWIAUSpotConfigurationSpot.swift",
       "kind": "StringLiteral",
       "offset": 311,
       "length": 11,
       "value": "\"seller_id\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Constants\/OWIAUNetworkConstants.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Constants\/OWIAUNetworkConstants.swift",
       "kind": "StringLiteral",
       "offset": 177,
       "length": 34,
       "value": "\"https:\/\/events-collector.spot.im\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 269,
       "length": 20,
       "value": "\"CFBundleExecutable\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 373,
       "length": 3,
       "value": "\"\/\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 412,
       "length": 9,
       "value": "\"Unknown\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 449,
       "length": 20,
       "value": "\"CFBundleIdentifier\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 485,
       "length": 9,
       "value": "\"Unknown\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 526,
       "length": 28,
       "value": "\"CFBundleShortVersionString\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 570,
       "length": 9,
       "value": "\"Unknown\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 609,
       "length": 17,
       "value": "\"CFBundleVersion\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 642,
       "length": 9,
       "value": "\"Unknown\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 804,
       "length": 73,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 828,
       "length": 1,
       "value": "\".\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 852,
       "length": 1,
       "value": "\".\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 876,
       "length": 1,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 912,
       "length": 5,
       "value": "\"iOS\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 950,
       "length": 28,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 960,
       "length": 1,
       "value": "\" \""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 977,
       "length": 1,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1069,
       "length": 33,
       "value": "\"OpenWebSDKNetwork\/\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1101,
       "length": 1,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1136,
       "length": 96,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1150,
       "length": 1,
       "value": "\"\/\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1164,
       "length": 1,
       "value": "\" (\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1175,
       "length": 1,
       "value": "\"; build:\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1194,
       "length": 1,
       "value": "\"; \""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1212,
       "length": 1,
       "value": "\") \""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAUNetworkHTTPHeaders.swift",
       "kind": "StringLiteral",
       "offset": 1231,
       "length": 1,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
       "kind": "StringLiteral",
       "offset": 168,
       "length": 8,
       "value": "\"DELETE\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
       "kind": "StringLiteral",
       "offset": 192,
       "length": 5,
       "value": "\"GET\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
       "kind": "StringLiteral",
       "offset": 215,
       "length": 7,
       "value": "\"PATCH\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
       "kind": "StringLiteral",
       "offset": 239,
       "length": 6,
       "value": "\"POST\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Infrastructure\/OWIAURequestMethod.swift",
       "kind": "StringLiteral",
       "offset": 261,
       "length": 5,
       "value": "\"PUT\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Middleware\/OWIAUHTTPHeaderRequestMiddleware.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Middleware\/OWIAUHTTPHeaderRequestMiddleware.swift",
       "kind": "StringLiteral",
       "offset": 190,
       "length": 18,
       "value": "\"application\/json\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Models\/OWIAUHTTPHeaderType.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Models\/OWIAUHTTPHeaderType.swift",
       "kind": "StringLiteral",
       "offset": 168,
       "length": 14,
       "value": "\"Content-Type\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Models\/OWIAUHTTPHeaderType.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Network\/Models\/OWIAUHTTPHeaderType.swift",
       "kind": "StringLiteral",
       "offset": 204,
       "length": 12,
       "value": "\"User-Agent\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 362,
       "length": 18,
       "value": "\"GeneralSdkLoaded\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 597,
       "length": 31,
       "value": "\"GeneralCampaignConfigsFetched\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 807,
       "length": 31,
       "value": "\"GeneralEngineMonetizationLoad\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 892,
       "length": 26,
       "value": "\"GeneralMonetizedPageView\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 980,
       "length": 33,
       "value": "\"GeneralMonetizedPageViewDelayed\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 1159,
       "length": 25,
       "value": "\"DfpEngineWillInitialize\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 1304,
       "length": 18,
       "value": "\"DfpSlotRequested\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 1500,
       "length": 10,
       "value": "\"DfpEmpty\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 1645,
       "length": 23,
       "value": "\"DfpImpressionViewable\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 1809,
       "length": 25,
       "value": "\"DfpSlotResponseReceived\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 1941,
       "length": 15,
       "value": "\"DfpSlotOnLoad\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 2082,
       "length": 20,
       "value": "\"DfpSlotRenderEnded\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 2243,
       "length": 24,
       "value": "\"DfpInitialLoadDisabled\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 2420,
       "length": 29,
       "value": "\"AniviewEngineWillInitialize\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 2542,
       "length": 28,
       "value": "\"AniviewAdClickThroughVideo\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 2698,
       "length": 19,
       "value": "\"AniviewEngineDone\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 2800,
       "length": 21,
       "value": "\"AniviewEngineClosed\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 2909,
       "length": 25,
       "value": "\"AniviewAdInventoryVideo\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 3023,
       "length": 23,
       "value": "\"AniviewContentClicked\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 3140,
       "length": 25,
       "value": "\"AniviewContentCompleted\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 3262,
       "length": 26,
       "value": "\"AniviewContentImpression\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 3413,
       "length": 20,
       "value": "\"AniviewEngineError\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 3524,
       "length": 25,
       "value": "\"AniviewEngineImpression\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 3897,
       "length": 30,
       "value": "\"AniviewEngineInitializeError\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 4134,
       "length": 26,
       "value": "\"AniviewEngineInitialized\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/SdkAPI\/Enums\/OWIAUBIAnalyticEvent.swift",
       "kind": "StringLiteral",
       "offset": 4261,
       "length": 27,
       "value": "\"AniviewImpressionViewable\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUAppLifeCycle.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUAppLifeCycle.swift",
       "kind": "StringLiteral",
       "offset": 588,
       "length": 32,
       "value": "\"OpenWebIAUSDKAppLifeCycleQueue\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUCacheService.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUCacheService.swift",
       "kind": "IntegerLiteral",
       "offset": 196,
       "length": 2,
       "value": "24"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUCacheService.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUCacheService.swift",
       "kind": "IntegerLiteral",
       "offset": 201,
       "length": 2,
       "value": "60"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUCacheService.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUCacheService.swift",
       "kind": "IntegerLiteral",
       "offset": 206,
       "length": 2,
       "value": "60"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUCacheService.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUCacheService.swift",
       "kind": "IntegerLiteral",
       "offset": 261,
       "length": 2,
       "value": "50"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAULogger.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAULogger.swift",
       "kind": "StringLiteral",
       "offset": 1386,
       "length": 21,
       "value": "\"com.OpenWeb.IAU.sdk\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAULogger.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAULogger.swift",
       "kind": "StringLiteral",
       "offset": 1877,
       "length": 26,
       "value": "\"OpenWebIAUSDKLoggerQueue\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAULogger.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAULogger.swift",
       "kind": "StringLiteral",
       "offset": 1947,
       "length": 21,
       "value": "\"OpenWebIAUSDKLogger\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUPageViewIdHolder.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUPageViewIdHolder.swift",
       "kind": "StringLiteral",
       "offset": 399,
       "length": 2,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAURandomGenerator.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAURandomGenerator.swift",
       "kind": "IntegerLiteral",
       "offset": 663,
       "length": 1,
       "value": "8"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAURandomGenerator.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAURandomGenerator.swift",
       "kind": "IntegerLiteral",
       "offset": 712,
       "length": 1,
       "value": "1"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAURandomGenerator.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAURandomGenerator.swift",
       "kind": "IntegerLiteral",
       "offset": 761,
       "length": 2,
       "value": "10"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUScreenMpvTrackerService.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUScreenMpvTrackerService.swift",
       "kind": "Dictionary",
       "offset": 576,
       "length": 3,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUSharedServicesProvider.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUSharedServicesProvider.swift",
       "kind": "StringLiteral",
       "offset": 1528,
       "length": 20,
       "value": "\"Logger initialized\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUSpotConfigurationService.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUSpotConfigurationService.swift",
       "kind": "BooleanLiteral",
       "offset": 744,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUSpotConfigurationService.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUSpotConfigurationService.swift",
       "kind": "IntegerLiteral",
       "offset": 883,
       "length": 2,
       "value": "30"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUSpotConfigurationService.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Services\/OWIAUSpotConfigurationService.swift",
       "kind": "IntegerLiteral",
       "offset": 888,
       "length": 2,
       "value": "60"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/UI\/Placement\/ViewModels\/OWIAUPlacementViewModel.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/UI\/Placement\/ViewModels\/OWIAUPlacementViewModel.swift",
       "kind": "BooleanLiteral",
       "offset": 1868,
       "length": 4,
       "value": "true"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/UI\/Placement\/ViewModels\/OWIAUPlacementViewModel.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/UI\/Placement\/ViewModels\/OWIAUPlacementViewModel.swift",
       "kind": "BooleanLiteral",
       "offset": 1940,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/UI\/Placement\/ViewModels\/OWIAUPlacementViewModel.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/UI\/Placement\/ViewModels\/OWIAUPlacementViewModel.swift",
       "kind": "BooleanLiteral",
       "offset": 2012,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/UI\/Placement\/ViewModels\/OWIAUPlacementViewModel.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/UI\/Placement\/ViewModels\/OWIAUPlacementViewModel.swift",
       "kind": "StringLiteral",
       "offset": 2147,
       "length": 25,
       "value": "\"OWIAUPlacementViewModel\""
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Utils\/OWIAUDIContainer.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Utils\/OWIAUDIContainer.swift",
       "kind": "Dictionary",
       "offset": 507,
       "length": 3,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/alonshprung\/Work\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Utils\/OWIAUPlacementProviderImpl.swift",
+      "filePath": "\/Users\/anael\/OpenWeb\/spotim-iau-sdk\/iOS\/OpenWeb-IAU-Development\/OpenWebIAU-SDK\/Utils\/OWIAUPlacementProviderImpl.swift",
       "kind": "Dictionary",
       "offset": 414,
       "length": 3,

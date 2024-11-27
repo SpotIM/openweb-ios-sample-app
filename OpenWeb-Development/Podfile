@@ -20,6 +20,11 @@ target 'OpenWeb-SampleApp' do
   rx_pods
 end
 
+target 'OpenWebSDKAdapter' do
+  project 'OpenWeb-Development.xcodeproj'
+  pod 'OpenWebIAU', :path => 'IAUTempSDK'
+end
+
 target 'OpenWebSDK' do
   project 'OpenWeb-Development.xcodeproj'
   rx_pods
