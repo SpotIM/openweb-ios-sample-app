@@ -17,16 +17,13 @@ class AuthenticationPlaygroundVC: UIViewController {
         static let pickerGenericSSOIdentifier = "generic_sso"
         static let pickerThirdPartySSOIdentifier = "third_party_sso"
         static let switchAutomaticallyDismissIdentifier = "automatically_dismiss"
-        static let textFieldSpotIdIdentifier = "text_field_spot_id"
         static let textFieldSSOTokenIdentifier = "text_field_sso_token"
         static let textFieldUsernameIdentifier = "text_field_username"
         static let textFieldPasswordIdentifier = "text_field_password"
-        static let textFieldUserIdIdentifier = "text_field_user_id"
         static let verticalMargin: CGFloat = 20
         static let verticalBigMargin: CGFloat = 60
         static let horizontalMargin: CGFloat = 10
         static let horizontalSmallMargin: CGFloat = 6
-        static let roundCornerRadius: CGFloat = 10
         static let btnPadding: CGFloat = 12
     }
 
@@ -55,11 +52,6 @@ class AuthenticationPlaygroundVC: UIViewController {
     private lazy var pickerGenericSSO: PickerSetting = {
         let title = NSLocalizedString("GenericSSO", comment: "") + ":"
         return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerGenericSSOIdentifier)
-    }()
-
-    private lazy var switchAuthenticationWithCustomFields: SwitchSetting = {
-        let title = NSLocalizedString("AuthWithCustomFields", comment: "") + ":"
-        return SwitchSetting(title: title, accessibilityPrefixId: Metrics.textFieldSSOTokenIdentifier)
     }()
 
     private lazy var textFieldSSOToken: TextFieldSetting = {
@@ -225,7 +217,6 @@ private extension AuthenticationPlaygroundVC {
         }
 
         #if !PUBLIC_DEMO_APP
-        customAuthStackView.addArrangedSubview(switchAuthenticationWithCustomFields)
         customAuthStackView.addArrangedSubview(textFieldSSOToken)
         customAuthStackView.addArrangedSubview(textFieldUsername)
         customAuthStackView.addArrangedSubview(textFieldPassword)
@@ -310,10 +301,6 @@ private extension AuthenticationPlaygroundVC {
             .bind(to: viewModel.inputs.selectedGenericSSOOptionIndex)
             .disposed(by: disposeBag)
 
-        switchAuthenticationWithCustomFields.rx.isOn
-            .bind(to: viewModel.inputs.customAuthOn)
-            .disposed(by: disposeBag)
-
         textFieldSSOToken.rx.textFieldText
             .unwrap()
             .bind(to: viewModel.inputs.customSSOToken)
@@ -382,6 +369,18 @@ private extension AuthenticationPlaygroundVC {
 
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeClick)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.customSSOTokenChanged
+            .bind(to: textFieldSSOToken.rx.textFieldText)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.customPasswordChanged
+            .bind(to: textFieldPassword.rx.textFieldText)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.customUsernameChanged
+            .bind(to: textFieldUsername.rx.textFieldText)
             .disposed(by: disposeBag)
 
         /*

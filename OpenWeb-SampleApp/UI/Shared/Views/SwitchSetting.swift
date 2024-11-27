@@ -13,7 +13,6 @@ import RxCocoa
 class SwitchSetting: UIView {
 
     private struct Metrics {
-        static let titleFontSize: CGFloat = 20
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 10
         static let switchMinWidth: CGFloat = 50
