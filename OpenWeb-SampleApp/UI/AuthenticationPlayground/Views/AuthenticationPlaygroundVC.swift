@@ -11,12 +11,17 @@ import RxSwift
 import SnapKit
 
 class AuthenticationPlaygroundVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "authentication_playground_new_api_vc_id"
         static let switchInitializeSDKIdentifier = "initialize_sdk"
         static let pickerGenericSSOIdentifier = "generic_sso"
         static let pickerThirdPartySSOIdentifier = "third_party_sso"
         static let switchAutomaticallyDismissIdentifier = "automatically_dismiss"
+        static let textFieldSpotIdIdentifier = "text_field_spot_id"
+        static let textFieldSSOTokenIdentifier = "text_field_sso_token"
+        static let textFieldUsernameIdentifier = "text_field_username"
+        static let textFieldPasswordIdentifier = "text_field_password"
+        static let textFieldUserIdIdentifier = "text_field_user_id"
         static let verticalMargin: CGFloat = 20
         static let verticalBigMargin: CGFloat = 60
         static let horizontalMargin: CGFloat = 10
@@ -25,62 +30,89 @@ class AuthenticationPlaygroundVC: UIViewController {
         static let btnPadding: CGFloat = 12
     }
 
-    fileprivate let viewModel: AuthenticationPlaygroundViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: AuthenticationPlaygroundViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var switchInitializeSDK: SwitchSetting = {
+    private lazy var switchInitializeSDK: SwitchSetting = {
         return SwitchSetting(title: NSLocalizedString("InitializeSDKFirst", comment: "") + ":",
                              accessibilityPrefixId: Metrics.switchInitializeSDKIdentifier)
     }()
 
-    fileprivate lazy var lblAutomaticallyDismissDescription: UILabel = {
+    private lazy var lblAutomaticallyDismissDescription: UILabel = {
         return NSLocalizedString("AutomaticallyDismissAfterLoginDescription", comment: "")
             .label
             .font(FontBook.helperLight)
             .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
 
-    fileprivate lazy var pickerGenericSSO: PickerSetting = {
+    private lazy var pickerGenericSSO: PickerSetting = {
         let title = NSLocalizedString("GenericSSO", comment: "") + ":"
         return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerGenericSSOIdentifier)
     }()
 
-    fileprivate lazy var pickerThirdPartySSO: PickerSetting = {
+    private lazy var switchAuthenticationWithCustomFields: SwitchSetting = {
+        let title = NSLocalizedString("AuthWithCustomFields", comment: "") + ":"
+        return SwitchSetting(title: title, accessibilityPrefixId: Metrics.textFieldSSOTokenIdentifier)
+    }()
+
+    private lazy var textFieldSSOToken: TextFieldSetting = {
+        let title = NSLocalizedString("SSOToken", comment: "") + ":"
+        return TextFieldSetting(title: title, accessibilityPrefixId: Metrics.textFieldSSOTokenIdentifier, font: FontBook.paragraph)
+    }()
+
+    private lazy var textFieldUsername: TextFieldSetting = {
+        let title = NSLocalizedString("Username", comment: "") + ":"
+        return TextFieldSetting(title: title, accessibilityPrefixId: Metrics.textFieldUsernameIdentifier, font: FontBook.paragraph)
+    }()
+
+    private lazy var textFieldPassword: TextFieldSetting = {
+        let title = NSLocalizedString("Password", comment: "") + ":"
+        return TextFieldSetting(title: title, accessibilityPrefixId: Metrics.textFieldPasswordIdentifier, font: FontBook.paragraph)
+    }()
+
+    private lazy var pickerThirdPartySSO: PickerSetting = {
         let title = NSLocalizedString("ThirdPartySSO", comment: "") + ":"
         return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerThirdPartySSOIdentifier)
     }()
 
-    fileprivate lazy var switchAutomaticallyDismiss: SwitchSetting = {
+    private lazy var switchAutomaticallyDismiss: SwitchSetting = {
         return SwitchSetting(title: NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":",
                              accessibilityPrefixId: Metrics.switchAutomaticallyDismissIdentifier, isOn: true)
     }()
 
-    fileprivate lazy var lblGenericSSOStatus: UILabel = statusLabel
-    fileprivate lazy var lblThirdPartySSOStatus: UILabel = statusLabel
-    fileprivate lazy var lblLogoutStatus: UILabel = statusLabel
+    private lazy var customAuthStackView: UIStackView = {
+        let customAuthStackView = UIStackView()
+        customAuthStackView.axis = .vertical
+        customAuthStackView.spacing = Metrics.verticalMargin
+        return customAuthStackView
+    }()
 
-    fileprivate lazy var btnGenericSSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
-    fileprivate lazy var btnThirdPartySSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
-    fileprivate lazy var btnLogout: UIButton = blueRoundedButton(key: "Logout")
+    private lazy var lblGenericSSOStatus: UILabel = statusLabel
+    private lazy var lblThirdPartySSOStatus: UILabel = statusLabel
+    private lazy var lblLogoutStatus: UILabel = statusLabel
 
-    fileprivate lazy var lblGenericSSOStatusSymbol: UILabel = statusSymbol
-    fileprivate lazy var lblThirdPartySSOStatusSymbol: UILabel = statusSymbol
-    fileprivate lazy var lblLogoutStatusSymbol: UILabel = statusSymbol
+    private lazy var btnGenericSSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
+    private lazy var btnThirdPartySSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
+    private lazy var btnLogout: UIButton = blueRoundedButton(key: "Logout")
 
-    fileprivate func blueRoundedButton(key: String) -> UIButton {
+    private lazy var lblGenericSSOStatusSymbol: UILabel = statusSymbol
+    private lazy var lblThirdPartySSOStatusSymbol: UILabel = statusSymbol
+    private lazy var lblLogoutStatusSymbol: UILabel = statusSymbol
+
+    private func blueRoundedButton(key: String) -> UIButton {
         NSLocalizedString(key, comment: "")
             .blueRoundedButton
             .withPadding(Metrics.btnPadding)
     }
 
-    fileprivate var statusLabel: UILabel {
+    private var statusLabel: UILabel {
         let text = NSLocalizedString("Status", comment: "") + ":"
         return text
             .label
@@ -88,13 +120,13 @@ class AuthenticationPlaygroundVC: UIViewController {
             .textColor(ColorPalette.shared.color(type: .darkGrey))
     }
 
-    fileprivate var statusSymbol: UILabel {
+    private var statusSymbol: UILabel {
         return ""
             .label
             .font(FontBook.paragraph)
     }
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         var closeButton = UIButton()
         closeButton.setImage(UIImage(named: "closeButton"), for: .normal)
         return closeButton
@@ -138,7 +170,7 @@ class AuthenticationPlaygroundVC: UIViewController {
     }
 }
 
-fileprivate extension AuthenticationPlaygroundVC {
+private extension AuthenticationPlaygroundVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
     }
@@ -157,7 +189,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         // Initialize SDK section
         scrollView.addSubview(switchInitializeSDK)
         switchInitializeSDK.snp.makeConstraints { make in
-            make.top.equalTo(scrollView.contentLayoutGuide).offset(2*Metrics.verticalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(2 * Metrics.verticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
@@ -173,7 +205,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         scrollView.addSubview(lblAutomaticallyDismissDescription)
         lblAutomaticallyDismissDescription.snp.makeConstraints { make in
             make.top.equalTo(switchAutomaticallyDismiss.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(scrollView).offset(2*Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(2 * Metrics.horizontalMargin)
             make.trailing.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
@@ -185,22 +217,36 @@ fileprivate extension AuthenticationPlaygroundVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
+        scrollView.addSubview(customAuthStackView)
+        customAuthStackView.snp.makeConstraints { make in
+            make.top.equalTo(pickerGenericSSO.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
+
+        #if !PUBLIC_DEMO_APP
+        customAuthStackView.addArrangedSubview(switchAuthenticationWithCustomFields)
+        customAuthStackView.addArrangedSubview(textFieldSSOToken)
+        customAuthStackView.addArrangedSubview(textFieldUsername)
+        customAuthStackView.addArrangedSubview(textFieldPassword)
+        #endif
+
         scrollView.addSubview(lblGenericSSOStatus)
         lblGenericSSOStatus.snp.makeConstraints { make in
-            make.top.equalTo(pickerGenericSSO.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(customAuthStackView.snp.bottom).offset(2 * Metrics.verticalMargin)
             make.leading.equalTo(pickerGenericSSO).offset(Metrics.horizontalMargin)
         }
 
         scrollView.addSubview(lblGenericSSOStatusSymbol)
         lblGenericSSOStatusSymbol.snp.makeConstraints { make in
             make.centerY.equalTo(lblGenericSSOStatus)
-            make.leading.equalTo(lblGenericSSOStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblGenericSSOStatus.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         scrollView.addSubview(btnGenericSSOAuthenticate)
         btnGenericSSOAuthenticate.snp.makeConstraints { make in
             make.centerY.equalTo(lblGenericSSOStatusSymbol)
-            make.leading.equalTo(lblGenericSSOStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblGenericSSOStatusSymbol.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         // Third-party SSO section
@@ -220,13 +266,13 @@ fileprivate extension AuthenticationPlaygroundVC {
         scrollView.addSubview(lblThirdPartySSOStatusSymbol)
         lblThirdPartySSOStatusSymbol.snp.makeConstraints { make in
             make.centerY.equalTo(lblThirdPartySSOStatus)
-            make.leading.equalTo(lblThirdPartySSOStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblThirdPartySSOStatus.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         scrollView.addSubview(btnThirdPartySSOAuthenticate)
         btnThirdPartySSOAuthenticate.snp.makeConstraints { make in
             make.centerY.equalTo(lblThirdPartySSOStatusSymbol)
-            make.leading.equalTo(lblThirdPartySSOStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblThirdPartySSOStatusSymbol.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         // Logout
@@ -239,13 +285,13 @@ fileprivate extension AuthenticationPlaygroundVC {
         scrollView.addSubview(lblLogoutStatusSymbol)
         lblLogoutStatusSymbol.snp.makeConstraints { make in
             make.centerY.equalTo(lblLogoutStatus)
-            make.leading.equalTo(lblLogoutStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblLogoutStatus.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
         }
 
         scrollView.addSubview(btnLogout)
         btnLogout.snp.makeConstraints { make in
             make.centerY.equalTo(lblLogoutStatusSymbol)
-            make.leading.equalTo(lblLogoutStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+            make.leading.equalTo(lblLogoutStatusSymbol.snp.trailing).offset(2 * Metrics.horizontalSmallMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
 
@@ -262,6 +308,25 @@ fileprivate extension AuthenticationPlaygroundVC {
             .map { $0.row }
             .distinctUntilChanged()
             .bind(to: viewModel.inputs.selectedGenericSSOOptionIndex)
+            .disposed(by: disposeBag)
+
+        switchAuthenticationWithCustomFields.rx.isOn
+            .bind(to: viewModel.inputs.customAuthOn)
+            .disposed(by: disposeBag)
+
+        textFieldSSOToken.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.customSSOToken)
+            .disposed(by: disposeBag)
+
+        textFieldUsername.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.customUsername)
+            .disposed(by: disposeBag)
+
+        textFieldPassword.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.customPassword)
             .disposed(by: disposeBag)
 
         pickerThirdPartySSO.rx.selectedPickerIndex
@@ -325,7 +390,7 @@ fileprivate extension AuthenticationPlaygroundVC {
          */
         viewModel.outputs.dismissVC
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let navController = self.navigationController {
                     navController.popViewController(animated: true)
                 } else {

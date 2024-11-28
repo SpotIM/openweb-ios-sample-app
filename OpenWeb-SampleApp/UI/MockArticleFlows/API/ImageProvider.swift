@@ -13,7 +13,7 @@ protocol ImageProviding {
 }
 
 class ImageProvider: ImageProviding {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let imageSize: Int = 600
         static let baseURL: String = "https://picsum.photos/id"
         static let maxId: Int = 100

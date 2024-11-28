@@ -19,7 +19,7 @@ protocol CommonCreatorServicing {
 }
 
 class CommonCreatorService: CommonCreatorServicing {
-    fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -37,7 +37,7 @@ class CommonCreatorService: CommonCreatorServicing {
         // 3. Comment creation related
         var commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
         // Inject toolbar if needed
-        var newToolbarVM: CommentCreationToolbarViewModeling? = nil
+        var newToolbarVM: CommentCreationToolbarViewModeling?
         if case OWCommentCreationStyle.floatingKeyboard(let accessoryViewStrategy) = commentCreationStyle,
            case OWAccessoryViewStrategy.bottomToolbar = accessoryViewStrategy {
             // Since we can't actually save the toolbar UIView in the memory, we will re-create it
@@ -66,7 +66,7 @@ class CommonCreatorService: CommonCreatorServicing {
 
     func commentThreadCommentId() -> String {
         let commentId = self.userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
-        if (commentId.isEmpty) {
+        if commentId.isEmpty {
             // If value is empty on user defaults, we want to use the default comment ID
             return OWCommentThreadSettings.defaultCommentId
         } else {
@@ -85,7 +85,7 @@ class CommonCreatorService: CommonCreatorServicing {
 
         var section = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
                                                                           defaultValue: nil)
-        if (section == nil || section?.isEmpty == true) {
+        if section == nil || section?.isEmpty == true {
             section = self.getSectionFromPreset(for: postId)
         }
 

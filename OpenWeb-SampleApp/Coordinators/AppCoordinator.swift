@@ -15,8 +15,8 @@ import UIKit
 
 class AppCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let window: UIWindow
-    fileprivate var router: Routering!
+    private let window: UIWindow
+    private var router: Routering!
 
     init(window: UIWindow) {
         self.window = window
@@ -32,7 +32,7 @@ class AppCoordinator: BaseCoordinator<Void> {
     }
 }
 
-fileprivate extension AppCoordinator {
+private extension AppCoordinator {
     func initialSetup() {
         initialVendorsSetup()
         initialDataSetup()
@@ -40,14 +40,6 @@ fileprivate extension AppCoordinator {
     }
 
     func initialVendorsSetup() {
-#if !(DEBUG) && !PUBLIC_DEMO_APP
-        if let firebaseFilePath = Bundle.openWebInternalConfigs
-            .path(forResource: "GoogleService-Info", ofType: "plist"),
-           let firebaseOptions = FirebaseOptions(contentsOfFile: firebaseFilePath) {
-
-            FirebaseApp.configure(options: firebaseOptions)
-        }
-#endif
     }
 
     func initialDataSetup() {
@@ -63,4 +55,3 @@ fileprivate extension AppCoordinator {
         router = Router(navigationController: navigation)
     }
 }
-

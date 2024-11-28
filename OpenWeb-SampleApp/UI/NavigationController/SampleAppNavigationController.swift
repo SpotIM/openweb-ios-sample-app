@@ -31,7 +31,7 @@ class SampleAppNavigationController: UINavigationController {
     }
 }
 
-fileprivate extension SampleAppNavigationController {
+private extension SampleAppNavigationController {
     func setupNavigationBarStyle() {
         let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationBar.tintColor = ColorPalette.shared.color(type: .text)
@@ -44,7 +44,7 @@ fileprivate extension SampleAppNavigationController {
 
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
+            appearance.configureWithTransparentBackground()
             appearance.backgroundColor = navigationBarBackgroundColor
             appearance.titleTextAttributes = navigationTitleTextAttributes
 

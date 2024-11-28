@@ -11,21 +11,21 @@ import RxSwift
 
 class IAUSettingsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "iau_settings_view_id"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
     }()
 
-    fileprivate let viewModel: IAUSettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: IAUSettingsViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: IAUSettingsViewModeling) {
         self.viewModel = viewModel
@@ -40,7 +40,7 @@ class IAUSettingsView: UIView {
     }
 }
 
-fileprivate extension IAUSettingsView {
+private extension IAUSettingsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }

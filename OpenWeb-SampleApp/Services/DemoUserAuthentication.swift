@@ -18,7 +18,7 @@ internal class DemoUserAuthentication {
      The actual server responses arriving and implemented in `sso-mock-server` github repository.
      */
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let baseUrlPath = "https://api.spot.im/sso-mock-server"
         static let loginURLPath = "\(baseUrlPath)/api/login"
         static let codeBURLPath = "\(baseUrlPath)/api/spotim-sso"

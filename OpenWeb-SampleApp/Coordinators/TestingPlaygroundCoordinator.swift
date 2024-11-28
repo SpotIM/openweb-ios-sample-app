@@ -13,7 +13,7 @@ import RxSwift
 
 class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let router: Routering
+    private let router: Routering
 
     init(router: Routering) {
         self.router = router
@@ -43,11 +43,11 @@ class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
     }
 }
 
-fileprivate extension TestingPlaygroundCoordinator {
+private extension TestingPlaygroundCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: TestingPlaygroundViewModeling) {
         viewModel.outputs.openTestingPlaygroundIndependent
             .subscribe(onNext: { [weak self] dataModel in
-                guard let self = self else { return }
+                guard let self else { return }
                 let testingPlaygroundIndependentVM = TestingPlaygroundIndependentViewModel(dataModel: dataModel)
                 let testingPlaygroundIndependentVC = TestingPlaygroundIndependentViewVC(viewModel: testingPlaygroundIndependentVM)
                 self.router.push(testingPlaygroundIndependentVC,

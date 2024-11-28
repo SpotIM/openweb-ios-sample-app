@@ -27,19 +27,19 @@ protocol SettingsViewModeling {
 class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, SettingsViewModelingOutputs {
     var inputs: SettingsViewModelingInputs { return self }
     var outputs: SettingsViewModelingOutputs { return self }
-    fileprivate var settingViewTypes: [SettingsGroupType]
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
-    fileprivate var manager: OWManagerProtocol
+    private var settingViewTypes: [SettingsGroupType]
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var manager: OWManagerProtocol
 
     lazy var settingsVMs: [SettingsGroupVMProtocol] = {
         let settingsVMs: [SettingsGroupVMProtocol] = settingViewTypes.map { [weak self] type in
-            guard let self = self else { return nil }
+            guard let self else { return nil }
             return type.createAppropriateVM(userDefaultsProvider: self.userDefaultsProvider, manager: self.manager)
         }.unwrap()
         return settingsVMs
     }()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("Settings", comment: "")
@@ -57,11 +57,11 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     }
 }
 
-fileprivate extension SettingsViewModel {
+private extension SettingsViewModel {
     func setupObservers() {
         resetToDefaultTap
             .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.settingsVMs.forEach { $0.resetToDefault() }
             })
             .disposed(by: disposeBag)

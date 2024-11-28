@@ -21,6 +21,10 @@ protocol AuthenticationPlaygroundViewModelingInputs {
     var automaticallyDismissToggled: PublishSubject<Bool> { get }
     var dismissing: PublishSubject<Void> { get }
     var closeClick: PublishSubject<Void> { get }
+    var customSSOToken: PublishSubject<String> { get }
+    var customUsername: PublishSubject<String> { get }
+    var customPassword: PublishSubject<String> { get }
+    var customAuthOn: PublishSubject<Bool> { get }
 }
 
 protocol AuthenticationPlaygroundViewModelingOutputs {
@@ -45,20 +49,20 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     var inputs: AuthenticationPlaygroundViewModelingInputs { return self }
     var outputs: AuthenticationPlaygroundViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayUntilDismissVC = 500 // milliseconds
     }
 
-    fileprivate let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
+    private let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedGenericSSOOptionIndex = PublishSubject<Int>()
 
-    fileprivate let _selectedThirdPartySSOOptionIndex = BehaviorSubject(value: 0)
+    private let _selectedThirdPartySSOOptionIndex = BehaviorSubject(value: 0)
     var selectedThirdPartySSOOptionIndex = PublishSubject<Int>()
 
-    fileprivate let shouldInitializeSDK = BehaviorSubject(value: false)
+    private let shouldInitializeSDK = BehaviorSubject(value: false)
     var initializeSDKToggled = PublishSubject<Bool>()
 
-    fileprivate let shouldAutomaticallyDismiss = BehaviorSubject(value: true)
+    private let shouldAutomaticallyDismiss = BehaviorSubject(value: true)
     var automaticallyDismissToggled = PublishSubject<Bool>()
 
     var logoutPressed = PublishSubject<Void>()
@@ -67,6 +71,11 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
 
     var genericSSOAuthenticatePressed = PublishSubject<Void>()
     var thirdPartySSOAuthenticatePressed = PublishSubject<Void>()
+
+    var customAuthOn = PublishSubject<Bool>()
+    var customSSOToken = PublishSubject<String>()
+    var customUsername = PublishSubject<String>()
+    var customPassword = PublishSubject<String>()
 
     lazy var title: String = {
         return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
@@ -82,7 +91,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
         return models
     }()
 
-    fileprivate lazy var _genericSSOOptions = BehaviorSubject(value: genericSSOAuthenticationModels)
+    private lazy var _genericSSOOptions = BehaviorSubject(value: genericSSOAuthenticationModels)
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> {
         return _genericSSOOptions
             .asObservable()
@@ -98,25 +107,25 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
         return models
     }()
 
-    fileprivate lazy var _thirdPartySSOOptions = BehaviorSubject(value: thirdPartySSOAuthenticationModels)
+    private lazy var _thirdPartySSOOptions = BehaviorSubject(value: thirdPartySSOAuthenticationModels)
     var thirdPartySSOOptions: Observable<[ThirdPartySSOAuthentication]> {
         return _thirdPartySSOOptions
             .asObservable()
     }
 
-    fileprivate let _genericSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
+    private let _genericSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _genericSSOAuthenticationStatus
             .asObservable()
     }
 
-    fileprivate let _thirdPartySSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
+    private let _thirdPartySSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var thirdPartySSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _thirdPartySSOAuthenticationStatus
             .asObservable()
     }
 
-    fileprivate let _logoutAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
+    private let _logoutAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var logoutAuthenticationStatus: Observable<AuthenticationStatus> {
         return _logoutAuthenticationStatus
             .asObservable()
@@ -130,9 +139,9 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
 
     var closeClick = PublishSubject<Void>()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate var spotIdToFilterBy: OWSpotId?
+    private var spotIdToFilterBy: OWSpotId?
 
     init(filterBySpotId spotId: OWSpotId? = nil) {
         spotIdToFilterBy = spotId
@@ -140,7 +149,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     }
 }
 
-fileprivate extension AuthenticationPlaygroundViewModel {
+private extension AuthenticationPlaygroundViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Different generic SSO selected
@@ -190,7 +199,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     DLog("Before logout \(loginStatus))")
                     authentication.logout { [weak self] result in
                         switch result {
-                        case .success(_):
+                        case .success:
                             authentication.userStatus { loginStatus in
                                 DLog("After logout \(loginStatus))")
                             }
@@ -208,7 +217,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
         genericSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
                 // 1. Retrieving selected generic SSO
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self._selectedGenericSSOOptionIndex
                     .take(1)
             }
@@ -225,17 +234,32 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 self?._thirdPartySSOAuthenticationStatus.onNext(.initial)
                 self?._logoutAuthenticationStatus.onNext(.initial)
             })
-            .withLatestFrom(shouldInitializeSDK) { genericSSO, shouldInitializeSDK -> GenericSSOAuthentication in
+            .withLatestFrom(
+                Observable.combineLatest(shouldInitializeSDK,
+                                         customAuthOn,
+                                         customUsername,
+                                         customPassword,
+                                         customSSOToken)
+            ) { genericSSO, latestValues in
+                return (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3, latestValues.4)
+            }
+            .flatMapLatest { genericSSO, shouldInitializeSDK, customAuthOn, customUsername, customPassword, customSSOToken -> Observable<GenericSSOAuthentication> in
                 // 2. Initialize SDK with appropriate spotId if needed
-                if (shouldInitializeSDK) {
+                if shouldInitializeSDK {
                     var manager = OpenWeb.manager
                     manager.spotId = genericSSO.spotId
                 }
-                return genericSSO
+                var genericSSO = genericSSO
+                if customAuthOn {
+                    genericSSO.user.username = customUsername
+                    genericSSO.user.password = customPassword
+                    genericSSO.ssoToken = customSSOToken
+                }
+                return Observable.just(genericSSO)
             }
             .flatMapLatest { [weak self] genericSSO -> Observable<(String, GenericSSOAuthentication)> in
                 // 3. Login user if needed
-                guard let self = self else { return.just(("", genericSSO)) }
+                guard let self else { return.just(("", genericSSO)) }
                 return self.login(user: genericSSO.user)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -250,7 +274,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] token, genericSSO -> Observable<(String, String, GenericSSOAuthentication)> in
                 // 4. Start SSO
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 return self.startSSO()
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -264,7 +288,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] codeA, token, genericSSO -> Observable<String> in
             // 5. Retrieving Code B
-            guard let self = self else { return Observable.empty() }
+            guard let self else { return Observable.empty() }
                 return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -277,7 +301,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] codeB -> Observable<Void> in
                 // 6. Complete SSO
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 return self.completeSSO(codeB: codeB)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil)
@@ -306,7 +330,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
         thirdPartySSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
                 // 1. Retrieving selected Third-party SSO
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self._selectedThirdPartySSOOptionIndex
                     .take(1)
             }
@@ -325,7 +349,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .withLatestFrom(shouldInitializeSDK) { thirdPartySSO, shouldInitializeSDK -> ThirdPartySSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
-                if (shouldInitializeSDK) {
+                if shouldInitializeSDK {
                     var manager = OpenWeb.manager
                     manager.spotId = thirdPartySSO.spotId
                 }
@@ -333,7 +357,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] thirdPartySSO -> Observable<String> in
                 // 4. Perform SSO with token
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 return self.sso(provider: thirdPartySSO.provider, token: thirdPartySSO.token)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -421,7 +445,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
     func login(user: UserAuthentication) -> Observable<String?> {
         return Observable.create { observer in
             DemoUserAuthentication.logIn(with: user.username, password: user.password) { token, error in
-                guard let token = token else {
+                guard let token else {
                     let loginError = error != nil ? error! : AuthenticationError.userLoginFailed
                     DLog("Failed in 'login(user:)' with error: \(loginError)")
                     observer.onError(loginError)
@@ -440,7 +464,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                                             accessToken: token,
                                             username: genericSSO.user.username,
                                             accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
-                guard let codeB = codeB else {
+                guard let codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")
                     observer.onError(codeBError)

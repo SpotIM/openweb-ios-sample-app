@@ -10,7 +10,6 @@ import Foundation
 import OpenWebSDK
 
 extension OWConversationStyle {
-    // swiftlint:disable function_parameter_count
     static func conversationStyle(fromIndex index: Int,
                                   communityGuidelinesStyleIndex: Int,
                                   communityQuestionsStyleIndex: Int,
@@ -18,7 +17,6 @@ extension OWConversationStyle {
                                   betweenComments: CGFloat,
                                   belowCommunityGuidelines: CGFloat,
                                   belowCommunityQuestions: CGFloat) -> OWConversationStyle {
-        // swiftlint:enable function_parameter_count
 
         switch index {
         case OWConversationStyleIndexer.regular.index: return .regular

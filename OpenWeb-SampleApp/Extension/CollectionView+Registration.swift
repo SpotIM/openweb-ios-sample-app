@@ -34,7 +34,7 @@ extension UICollectionView {
     }
 }
 
-fileprivate extension UICollectionView {
+private extension UICollectionView {
     func registerIfNeeded<T: UICollectionViewCell>(cellClass: T.Type) {
         if registeredCellsIdentifiers.contains(cellClass.identifierName) {
             return
@@ -45,20 +45,14 @@ fileprivate extension UICollectionView {
 
     var registeredCellsIdentifiers: Set<String> {
         get {
-            // Check if it was already set
-            // swiftlint:disable line_length
-            if let registered = objc_getAssociatedObject(self, &AssociatedCells.registeredCellsIdentifiers) as? Set<String> {
-                // swiftlint:enable line_length
-                return registered
-            }
-
-            // Create set
-            let registered = Set<String>()
-            return registered
+            return withUnsafePointer(to: &AssociatedCells.registeredCellsIdentifiers) {
+                return objc_getAssociatedObject(self, $0) as? Set<String>
+            } ?? Set<String>()
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedCells.registeredCellsIdentifiers,
-                                       newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            withUnsafePointer(to: &AssociatedCells.registeredCellsIdentifiers) {
+                objc_setAssociatedObject(self, $0, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
         }
     }
 }

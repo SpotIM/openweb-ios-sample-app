@@ -1,5 +1,5 @@
 //
-//  DevelopmentUserAuthentication+Extensions .swift
+//  DevelopmentUserAuthentication+Extensions.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Alon Haiut on 15/08/2024.

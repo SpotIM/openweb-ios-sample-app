@@ -25,8 +25,8 @@ class ClarityDetailsSettingsVM: ClarityDetailsSettingsViewModeling, ClarityDetai
     var inputs: ClarityDetailsSettingsViewModelingInputs { return self }
     var outputs: ClarityDetailsSettingsViewModelingOutputs { return self }
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
-    fileprivate let disposeBag = DisposeBag()
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("ClarityDetailsSettings", comment: "")
@@ -38,7 +38,7 @@ class ClarityDetailsSettingsVM: ClarityDetailsSettingsViewModeling, ClarityDetai
     }
 }
 
-fileprivate extension ClarityDetailsSettingsVM {
+private extension ClarityDetailsSettingsVM {
     func setupObservers() {
     }
 }

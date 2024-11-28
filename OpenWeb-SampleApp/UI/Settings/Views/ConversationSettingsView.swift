@@ -11,7 +11,7 @@ import RxSwift
 
 class ConversationSettingsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "conversation_settings_view_id"
         static let segmentedStyleModeIdentifier = "style_mode"
         static let segmentedCommunityGuidelinesStyleModeIdentifier = "community_guidelines_style_mode"
@@ -25,21 +25,21 @@ class ConversationSettingsView: UIView {
         static let horizontalOffset: CGFloat = 10
     }
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metrics.verticalOffset
         return stackView
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedStyleMode: SegmentedControlSetting = {
+    private lazy var segmentedStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.styleModeTitle
         let items = viewModel.outputs.styleModeSettings
 
@@ -48,7 +48,7 @@ class ConversationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedCommunityGuidelinesStyleMode: SegmentedControlSetting = {
+    private lazy var segmentedCommunityGuidelinesStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.communityGuidelinesStyleModeTitle
         let items = viewModel.outputs.communityGuidelinesModeSettings
 
@@ -57,7 +57,7 @@ class ConversationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedCommunityQuestionsStyleMode: SegmentedControlSetting = {
+    private lazy var segmentedCommunityQuestionsStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.communityQuestionsStyleModeTitle
         let items = viewModel.outputs.communityQuestionsStyleModeSettings
 
@@ -66,7 +66,7 @@ class ConversationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var segmentedConversationSpacingMode: SegmentedControlSetting = {
+    private lazy var segmentedConversationSpacingMode: SegmentedControlSetting = {
         let title = viewModel.outputs.conversationSpacingModeTitle
         let items = viewModel.outputs.conversationSpacingSettings
 
@@ -75,26 +75,26 @@ class ConversationSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate lazy var textFieldBetweenCommentsSpacing: TextFieldSetting = {
+    private lazy var textFieldBetweenCommentsSpacing: TextFieldSetting = {
         return TextFieldSetting(title: viewModel.outputs.betweenCommentsSpacingTitle,
                                 accessibilityPrefixId: Metrics.textFieldBetweenCommentsSpacingIdentifier,
                                 font: FontBook.paragraph)
     }()
 
-    fileprivate lazy var textFieldCommunityGuidelinesSpacing: TextFieldSetting = {
+    private lazy var textFieldCommunityGuidelinesSpacing: TextFieldSetting = {
         return TextFieldSetting(title: viewModel.outputs.communityGuidelinesSpacingTitle,
                                 accessibilityPrefixId: Metrics.textFieldBelowCommunityGuidelinesSpacingIdentifier,
                                 font: FontBook.paragraph)
     }()
 
-    fileprivate lazy var textFieldCommunityQuestionsSpacing: TextFieldSetting = {
+    private lazy var textFieldCommunityQuestionsSpacing: TextFieldSetting = {
         return TextFieldSetting(title: viewModel.outputs.communityQuestionsGuidelinesSpacingTitle,
                                 accessibilityPrefixId: Metrics.textFieldBelowCommunityQuestionsSpacingIdentifier,
                                 font: FontBook.paragraph)
     }()
 
-    fileprivate let viewModel: ConversationSettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: ConversationSettingsViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: ConversationSettingsViewModeling) {
         self.viewModel = viewModel
@@ -109,7 +109,7 @@ class ConversationSettingsView: UIView {
     }
 }
 
-fileprivate extension ConversationSettingsView {
+private extension ConversationSettingsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }

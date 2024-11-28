@@ -45,7 +45,7 @@ class BaseCoordinator<ResultType> {
         return coordinator.start(deepLinkOptions: deepLinkOptions,
                                  coordinatorData: coordinatorData)
             .do(onNext: { [weak self, weak coordinator] _ in
-                guard let self = self,
+                guard let self,
                     let coord = coordinator else { return }
                 self.free(coordinator: coord)
             })
@@ -58,4 +58,3 @@ class BaseCoordinator<ResultType> {
     }
 
 }
-
