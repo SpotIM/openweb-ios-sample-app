@@ -11,7 +11,7 @@ import RxSwift
 
 class UIFlowsCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let router: Routering
+    private let router: Routering
 
     init(router: Routering) {
         self.router = router
@@ -36,7 +36,7 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
 
         let mockArticleFlowCoordinator = flowsVM.outputs.openMockArticleScreen
             .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
                 let coordinator = MockArticleFlowCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)

@@ -14,7 +14,7 @@ import SnapKit
 #if AUTOMATION
 
 class AutomationVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "automation_vc_id"
         static let btnFontsIdentifier = "btn_fonts_id"
         static let btnUserInformationIdentifier = "btn_user_information_id"
@@ -25,21 +25,21 @@ class AutomationVC: UIViewController {
         static let buttonHeight: CGFloat = 50
     }
 
-    fileprivate let viewModel: AutomationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: AutomationViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var btnFonts: UIButton = {
+    private lazy var btnFonts: UIButton = {
         return NSLocalizedString("Fonts", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var btnUserInformation: UIButton = {
+    private lazy var btnUserInformation: UIButton = {
         return NSLocalizedString("UserInformation", comment: "").blueRoundedButton
     }()
 
@@ -64,7 +64,7 @@ class AutomationVC: UIViewController {
     }
 }
 
-fileprivate extension AutomationVC {
+private extension AutomationVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnFonts.accessibilityIdentifier = Metrics.btnFontsIdentifier
@@ -103,7 +103,6 @@ fileprivate extension AutomationVC {
 
     }
 
-    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
 

@@ -58,7 +58,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         ]
     }()
 
-    fileprivate let _selectedTheme = PublishSubject<OWTheme>()
+    private let _selectedTheme = PublishSubject<OWTheme>()
     var selectedTheme: Observable<OWTheme> {
         return _selectedTheme
             .asObservable()
@@ -70,9 +70,9 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         })
     }()
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate var initialColorTheme: OWTheme
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
+    private let disposeBag = DisposeBag()
+    private var initialColorTheme: OWTheme
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -82,7 +82,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
 }
 
 @available(iOS 14.0, *)
-fileprivate extension ColorsCustomizationViewModel {
+private extension ColorsCustomizationViewModel {
     func setupObservers() {
         cellsViewModels
             .map { cellsVms -> [Observable<OWColor?>] in
@@ -92,7 +92,7 @@ fileprivate extension ColorsCustomizationViewModel {
             }
             .map { colors in
                 return Observable.combineLatest(colors) { [weak self] colorsValues -> OWTheme in
-                    guard let self = self else { return OWTheme() }
+                    guard let self else { return OWTheme() }
                     return self.getTheme(from: colorsValues)
                 }
             }

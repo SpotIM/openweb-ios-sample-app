@@ -29,9 +29,9 @@ class MiscellaneousViewModel: MiscellaneousViewModeling,
     var inputs: MiscellaneousViewModelingInputs { return self }
     var outputs: MiscellaneousViewModelingOutputs { return self }
 
-    fileprivate let dataModel: SDKConversationDataModel
+    private let dataModel: SDKConversationDataModel
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     let conversationCounterTapped = PublishSubject<Void>()
     var openConversationCounters: Observable<Void> {
@@ -49,7 +49,7 @@ class MiscellaneousViewModel: MiscellaneousViewModeling,
     }
 }
 
-fileprivate extension MiscellaneousViewModel {
+private extension MiscellaneousViewModel {
 
     func setupObservers() { }
 }

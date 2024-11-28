@@ -30,7 +30,7 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
     var inputs: CommentCreationToolbarViewModelingInputs { return self }
     var outputs: CommentCreationToolbarViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     var _toolbarCellsVM = BehaviorSubject<[ToolbarCollectionCellViewModeling]?>(value: nil)
     var toolbarCellsVM: Observable<[ToolbarCollectionCellViewModeling]> {
@@ -46,24 +46,24 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
 
     var modelSelected = PublishSubject<ToolbarCollectionCellViewModeling>()
 
-    fileprivate var commentCreationSettings: OWCommentCreationSettingsProtocol?
+    private var commentCreationSettings: OWCommentCreationSettingsProtocol?
     func setCommentCreationSettings(_ settings: OWCommentCreationSettingsProtocol) {
         commentCreationSettings = settings
     }
 }
 
-fileprivate extension CommentCreationToolbarViewModel {
+private extension CommentCreationToolbarViewModel {
     func setupObservers() {
         modelSelected
             .subscribe(onNext: { [weak self] cellViewModel in
-                guard let self = self,
-                        let settings = self.commentCreationSettings else { return }
+                guard let self,
+                      let settings = self.commentCreationSettings else { return }
                 settings.request(.manipulateUserInputText(completion: { result in
                     let action = cellViewModel.outputs.action
                     switch (result, action) {
-                    case (.success(let manipulateTextModel), .append(let textToAppend)):
+                    case (.success, .append(let textToAppend)):
                         return textToAppend
-                    case (.success(_), .removeAll):
+                    case (.success, .removeAll):
                         return ""
                     default:
                         let textToLog = "Received an error when tried to request `manipulateUserInputText` request option"

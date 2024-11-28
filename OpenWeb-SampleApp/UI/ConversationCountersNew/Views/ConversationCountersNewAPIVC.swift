@@ -12,7 +12,7 @@ import RxCocoa
 import SnapKit
 
 class ConversationCountersNewAPIVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "conversation_counters_new_api_vc_id"
         static let txtFieldPostIdsIdentifier = "post_ids"
         static let btnExecuteIdentifier = "execute_btn"
@@ -25,16 +25,16 @@ class ConversationCountersNewAPIVC: UIViewController {
         static let btnTopPadding: CGFloat = 40
     }
 
-    fileprivate let viewModel: ConversationCountersNewAPIViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: ConversationCountersNewAPIViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var txtFieldPostIds: TextFieldSetting = {
+    private lazy var txtFieldPostIds: TextFieldSetting = {
         let txtField = TextFieldSetting(title: NSLocalizedString("PostIdOrIds", comment: "") + ":",
                                         accessibilityPrefixId: Metrics.txtFieldPostIdsIdentifier)
         return txtField
     }()
 
-    fileprivate lazy var lblDescription: UILabel = {
+    private lazy var lblDescription: UILabel = {
         let txt = NSLocalizedString("ConversationCounterMultiplePostIdsDescription", comment: "")
 
         return txt
@@ -44,13 +44,13 @@ class ConversationCountersNewAPIVC: UIViewController {
             .numberOfLines(0)
     }()
 
-    fileprivate lazy var btnExecute: UIButton = {
+    private lazy var btnExecute: UIButton = {
         return NSLocalizedString("Execute", comment: "")
             .blueRoundedButton
             .withPadding(Metrics.btnPadding)
     }()
 
-    fileprivate lazy var loader: UIActivityIndicatorView = {
+    private lazy var loader: UIActivityIndicatorView = {
         let style: UIActivityIndicatorView.Style
         if #available(iOS 13.0, *) {
             style = .large
@@ -62,7 +62,7 @@ class ConversationCountersNewAPIVC: UIViewController {
         return loader
     }()
 
-    fileprivate lazy var counterTableView: UITableView = {
+    private lazy var counterTableView: UITableView = {
         let tblView = UITableView()
             .separatorStyle(.none)
 
@@ -96,7 +96,7 @@ class ConversationCountersNewAPIVC: UIViewController {
     }
 }
 
-fileprivate extension ConversationCountersNewAPIVC {
+private extension ConversationCountersNewAPIVC {
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
@@ -110,7 +110,7 @@ fileprivate extension ConversationCountersNewAPIVC {
 
         self.view.addSubview(lblDescription)
         lblDescription.snp.makeConstraints { make in
-            make.top.equalTo(txtFieldPostIds.snp.bottom).offset(Metrics.verticalMargin/2)
+            make.top.equalTo(txtFieldPostIds.snp.bottom).offset(Metrics.verticalMargin / 2)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalMargin)
         }
 

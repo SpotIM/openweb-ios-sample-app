@@ -12,7 +12,7 @@ import RxCocoa
 import SnapKit
 
 class MockArticleIndependentViewsVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
@@ -21,10 +21,10 @@ class MockArticleIndependentViewsVC: UIViewController {
         static let settingsBarItemIdentifier = "settings_bar_item_id"
     }
 
-    fileprivate let viewModel: MockArticleIndependentViewsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: MockArticleIndependentViewsViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var articleView: UIView = {
+    private lazy var articleView: UIView = {
         let article = UIView()
 
         article.addSubview(loggerView)
@@ -38,7 +38,7 @@ class MockArticleIndependentViewsVC: UIViewController {
         return article
     }()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
 
         scroll.contentLayoutGuide.snp.makeConstraints { make in
@@ -48,16 +48,16 @@ class MockArticleIndependentViewsVC: UIViewController {
         return scroll
     }()
 
-    fileprivate var independentView: UIView? = nil
+    private var independentView: UIView?
 
-    fileprivate lazy var settingsBarItem: UIBarButtonItem = {
+    private lazy var settingsBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
                                style: .plain,
                                target: nil,
                                action: nil)
     }()
 
-    fileprivate lazy var loggerView: UILoggerView = {
+    private lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
     }()
 
@@ -88,7 +88,7 @@ class MockArticleIndependentViewsVC: UIViewController {
     }
 }
 
-fileprivate extension MockArticleIndependentViewsVC {
+private extension MockArticleIndependentViewsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         articleView.accessibilityIdentifier = Metrics.viewIdentifier
@@ -120,7 +120,7 @@ fileprivate extension MockArticleIndependentViewsVC {
 
         viewModel.outputs.showComponent
             .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 let view = result.0
                 let type = result.1
 

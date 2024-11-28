@@ -13,7 +13,7 @@ import RxSwift
 
 class AutomationCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let router: Routering
+    private let router: Routering
 
     init(router: Routering) {
         self.router = router

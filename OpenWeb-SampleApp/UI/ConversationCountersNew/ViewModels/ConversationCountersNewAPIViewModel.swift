@@ -33,7 +33,7 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
     var inputs: ConversationCountersNewAPIViewModelingInputs { return self }
     var outputs: ConversationCountersNewAPIViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let parsingSeparator: String = ", "
     }
 
@@ -43,21 +43,21 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
     let userPostIdsInput = BehaviorSubject<String>(value: "")
     let loadConversationCounter = PublishSubject<Void>()
 
-    fileprivate let _showLoader = BehaviorSubject<Bool?>(value: nil)
+    private let _showLoader = BehaviorSubject<Bool?>(value: nil)
     var showLoader: Observable<Bool> {
         return _showLoader
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let _showError = BehaviorSubject<String?>(value: nil)
+    private let _showError = BehaviorSubject<String?>(value: nil)
     var showError: Observable<String> {
         return _showError
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let _cellsViewModels = BehaviorSubject<[ConversationCounterNewAPICellViewModeling]?>(value: nil)
+    private let _cellsViewModels = BehaviorSubject<[ConversationCounterNewAPICellViewModeling]?>(value: nil)
     var cellsViewModels: Observable<[ConversationCounterNewAPICellViewModeling]> {
         _cellsViewModels
             .unwrap()
@@ -65,14 +65,14 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
             .startWith([])
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init() {
         setupObservers()
     }
 }
 
-fileprivate extension ConversationCountersNewAPIViewModel {
+private extension ConversationCountersNewAPIViewModel {
     func setupObservers() {
         loadConversationCounter
             .do(onNext: { [weak self] _ in
@@ -81,19 +81,19 @@ fileprivate extension ConversationCountersNewAPIViewModel {
                 self?._cellsViewModels.onNext([])
             })
             .flatMapLatest { [weak self] _ -> Observable<String> in
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 return self.userPostIdsInput
                     .take(1)
             }
             .map { [weak self] userInput -> [String] in
-                guard let self = self else { return [] }
+                guard let self else { return [] }
                 return self.parse(postIds: userInput)
             }
             .subscribe(onNext: { [weak self] postIds in
-                guard let self = self else { return }
+                guard let self else { return }
                 let helper = OpenWeb.manager.helpers
                 helper.conversationCounters(forPostIds: postIds) { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self._showLoader.onNext(false)
 
                     switch result {

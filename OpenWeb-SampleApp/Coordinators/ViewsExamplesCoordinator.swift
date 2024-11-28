@@ -11,7 +11,7 @@ import RxSwift
 
 class ViewsExamplesCoordinator: BaseCoordinator<Void> {
 
-    fileprivate let router: Routering
+    private let router: Routering
 
     init(router: Routering) {
         self.router = router
@@ -41,11 +41,11 @@ class ViewsExamplesCoordinator: BaseCoordinator<Void> {
     }
 }
 
-fileprivate extension ViewsExamplesCoordinator {
+private extension ViewsExamplesCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: UIViewsExamplesViewModeling) {
         viewModel.outputs.openConversationBelowVideo
             .subscribe(onNext: { [weak self] postId in
-                guard let self = self else { return }
+                guard let self else { return }
                 let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
                 let conversationBelowVideoVC = ConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
                 self.router.push(conversationBelowVideoVC,

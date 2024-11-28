@@ -35,9 +35,9 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     var inputs: UIViewsViewModelingInputs { return self }
     var outputs: UIViewsViewModelingOutputs { return self }
 
-    fileprivate let dataModel: SDKConversationDataModel
+    private let dataModel: SDKConversationDataModel
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     let preConversationTapped = PublishSubject<Void>()
     let fullConversationTapped = PublishSubject<Void>()
@@ -47,14 +47,14 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     let independentAdUnitTapped = PublishSubject<Void>()
     let examplesTapped = PublishSubject<Void>()
 
-    fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
+    private let _openMockArticleScreen = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
     var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> {
         return _openMockArticleScreen
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let _openExamplesScreen = BehaviorSubject<OWPostId?>(value: nil)
+    private let _openExamplesScreen = BehaviorSubject<OWPostId?>(value: nil)
     var openExamplesScreen: Observable<OWPostId> {
         return _openExamplesScreen
             .unwrap()
@@ -71,7 +71,7 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     }
 }
 
-fileprivate extension UIViewsViewModel {
+private extension UIViewsViewModel {
     func setupObservers() {
         let postId = dataModel.postId
 
@@ -124,7 +124,6 @@ fileprivate extension UIViewsViewModel {
             clarityDetailsTappedModel,
             preConversationTappedModel,
             independentAdUnitTappedModel)
-        .map { return $0 }
         .bind(to: _openMockArticleScreen)
         .disposed(by: disposeBag)
 

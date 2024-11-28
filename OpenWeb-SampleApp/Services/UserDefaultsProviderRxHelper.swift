@@ -24,7 +24,7 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
 
-    fileprivate var rxObjects: [String: RxHelperModel] = [:]
+    private var rxObjects: [String: RxHelperModel] = [:]
 
     init(decoder: JSONDecoder, encoder: JSONEncoder) {
         self.decoder = decoder
@@ -32,16 +32,14 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
     }
 
     func observable<T>(key: UserDefaultsProvider.UDKey<T>, value: Data?, defaultValue: T? = nil) -> Observable<T> {
-        var defaultValueData: Data? = nil
+        var defaultValueData: Data?
         if value == nil,
-           let defaultValue = defaultValue,
+           let defaultValue,
            let encodedData = try? encoder.encode(defaultValue) {
             defaultValueData = encodedData
         }
 
-        // swiftlint:disable line_length
         let subscribable = rxObjects[key.rawValue]?.subscribableObservable ?? BehaviorSubject<Data?>(value: value ?? defaultValueData)
-        // swiftlint:enable line_length
         addSubscribableIfNeeded(key: key, subscribable: subscribable)
         return subscribable
             .unwrap()
@@ -65,7 +63,7 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
     }
 }
 
-fileprivate extension UserDefaultsProviderRxHelper {
+private extension UserDefaultsProviderRxHelper {
     func getBinderObservable<T>(key: UserDefaultsProvider.UDKey<T>) -> Observable<Data?> {
         guard let observer = rxObject(key: key).binderObservable else {
             let observer = Observable<Data?>.create { _ in

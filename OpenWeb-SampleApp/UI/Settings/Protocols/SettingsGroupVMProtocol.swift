@@ -11,4 +11,3 @@ import Foundation
 protocol SettingsGroupVMProtocol {
     func resetToDefault()
 }
-
