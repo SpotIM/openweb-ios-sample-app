@@ -41,11 +41,11 @@ protocol OWAdditionalInfoViewViewModeling {
 }
 
 class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWAdditionalInfoViewViewModelingOutputs, OWAdditionalInfoViewViewModeling {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let defaultTextViewMaxCharecters = 280
     }
 
-    fileprivate var disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     var inputs: OWAdditionalInfoViewViewModelingInputs { return self }
     var outputs: OWAdditionalInfoViewViewModelingOutputs { return self }
@@ -80,7 +80,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var cancelAdditionalInfoTapped: Observable<Void> {
         return cancelAdditionalInfoTap
             .flatMap { [weak self] _ -> Observable<String> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewVM.outputs.textViewText
                     .take(1)
             }
@@ -92,7 +92,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var closeReportReasonTapped: Observable<Void> {
         return cancelAdditionalInfoTap
             .flatMap { [weak self] _ -> Observable<String> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewVM.outputs.textViewText
                     .take(1)
             }
@@ -147,7 +147,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     }
 }
 
-fileprivate extension OWAdditionalInfoViewViewModel {
+private extension OWAdditionalInfoViewViewModel {
     func setupObservers(minimumTextLength: Observable<Int>, isTextRequired: Observable<Bool>, submitInProgress: Observable<Bool>, submitText: Observable<String>) {
         submitInProgress
             .bind(to: self.inputs.submitInProgress)
@@ -156,7 +156,7 @@ fileprivate extension OWAdditionalInfoViewViewModel {
         isTextRequired
             .withLatestFrom(minimumTextLength) { ($0, $1) }
             .flatMap { [weak self] isTextRequired, minimumTextLength -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 var minimumTextLength = minimumTextLength
                 minimumTextLength = minimumTextLength > 0 ? minimumTextLength : 1
                 return self.textViewVM.outputs.textViewText.map {

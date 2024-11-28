@@ -20,8 +20,8 @@ protocol OWPageViewIdHolderProtocol {
 
 class OWPageViewIdHolder: OWPageViewIdHolderProtocol {
 
-    fileprivate var _pageViewId: String = ""
-    fileprivate let randomGenerator: OWRandomGeneratorProtocol
+    private var _pageViewId: String = ""
+    private let randomGenerator: OWRandomGeneratorProtocol
 
     init(randomGenerator: OWRandomGeneratorProtocol = OWRandomGenerator()) {
         self.randomGenerator = randomGenerator

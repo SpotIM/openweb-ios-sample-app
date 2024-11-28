@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class OWCommunityQuestionView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let fontSize: CGFloat = 15.0
         static let questionHorizontalOffset: CGFloat = 12.0
         static let questionVerticalOffset: CGFloat = 8.0
@@ -20,7 +20,7 @@ class OWCommunityQuestionView: UIView {
         static let identifier = "community_question_id"
     }
 
-    fileprivate lazy var questionLabel: UILabel = {
+    private lazy var questionLabel: UILabel = {
         return OWItalicLabel(top: Metrics.questionLabelInsets.top,
                              left: Metrics.questionLabelInsets.left,
                              bottom: Metrics.questionLabelInsets.bottom,
@@ -32,16 +32,16 @@ class OWCommunityQuestionView: UIView {
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var questionContainer: UIView = {
+    private lazy var questionContainer: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .corner(radius: Metrics.containerCorderRadius)
             .border(width: 1, color: OWColorPalette.shared.color(type: .borderColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var heightConstraint: OWConstraint? = nil
-    fileprivate var viewModel: OWCommunityQuestionViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var heightConstraint: OWConstraint?
+    private var viewModel: OWCommunityQuestionViewModeling!
+    private var disposeBag = DisposeBag()
 
     // For init when using in Views and not in cells
     init(with viewModel: OWCommunityQuestionViewModeling) {
@@ -71,7 +71,7 @@ class OWCommunityQuestionView: UIView {
     }
 }
 
-fileprivate extension OWCommunityQuestionView {
+private extension OWCommunityQuestionView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -96,7 +96,6 @@ fileprivate extension OWCommunityQuestionView {
                 make.top.equalToSuperview().inset(viewModel.outputs.spacing.top)
                 make.bottom.equalToSuperview().inset(viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
-                heightConstraint = make.height.equalTo(0).constraint
             }
 
             questionContainer.addSubview(questionLabel)
@@ -112,8 +111,11 @@ fileprivate extension OWCommunityQuestionView {
                 make.top.equalToSuperview().inset(viewModel.outputs.spacing.top)
                 make.bottom.equalToSuperview().inset(viewModel.outputs.spacing.bottom)
                 make.leading.trailing.equalToSuperview()
-                heightConstraint = make.height.equalTo(0).constraint
             }
+        }
+
+        self.OWSnp.makeConstraints { make in
+            heightConstraint = make.height.equalTo(0).constraint
         }
     }
 
@@ -127,7 +129,7 @@ fileprivate extension OWCommunityQuestionView {
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if let heightConstraint = heightConstraint {
+        if let heightConstraint {
             viewModel.outputs.shouldShowView
                 .map { !$0 }
                 .bind(to: heightConstraint.rx.isActive)
@@ -137,7 +139,7 @@ fileprivate extension OWCommunityQuestionView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.questionLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.questionContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: currentStyle)
                 self.questionContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1, themeStyle: currentStyle).cgColor
@@ -148,7 +150,7 @@ fileprivate extension OWCommunityQuestionView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.questionLabel.font = self.viewModel.outputs.titleFont
             })
             .disposed(by: disposeBag)

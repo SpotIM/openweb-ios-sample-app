@@ -45,7 +45,6 @@
 		1628A75E28EB0E770019B5EC /* OWCommentCreationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75C28EB0E770019B5EC /* OWCommentCreationVC.swift */; };
 		162A67A22AA0D0F2008BD16B /* OWImageOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162A67A12AA0D0F2008BD16B /* OWImageOption.swift */; };
 		162B83532A688BDC002290EE /* OWCommentCreationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162B83522A688BDC002290EE /* OWCommentCreationType.swift */; };
-		162B83552A715729002290EE /* OWCloseEditorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162B83542A715729002290EE /* OWCloseEditorAlert.swift */; };
 		162B83592A766582002290EE /* OWCachedCommentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162B83582A766582002290EE /* OWCachedCommentKey.swift */; };
 		162B835D2A7A4D94002290EE /* OWConversationUpdaterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162B835C2A7A4D94002290EE /* OWConversationUpdaterService.swift */; };
 		162B835F2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162B835E2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift */; };
@@ -422,7 +421,6 @@
 		3D50D8F62B162BED00FD3232 /* SPImagesFacade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D8F32B162BED00FD3232 /* SPImagesFacade.swift */; };
 		3D50D8F72B162BED00FD3232 /* SPCommentRankUpdateRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D8F42B162BED00FD3232 /* SPCommentRankUpdateRM.swift */; };
 		3D50D8F82B162BED00FD3232 /* SPNetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D8F52B162BED00FD3232 /* SPNetworkConstants.swift */; };
-		3D50D8FA2B162C9800FD3232 /* OWKeyPathParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D8F92B162C9800FD3232 /* OWKeyPathParser.swift */; };
 		3D50D8FD2B1636BA00FD3232 /* SPAnimatedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D8FC2B1636BA00FD3232 /* SPAnimatedButton.swift */; };
 		3D50D90E2B163C9D00FD3232 /* CommentMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D90D2B163C9D00FD3232 /* CommentMediaView.swift */; };
 		3D50D9102B163D5D00FD3232 /* GifWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D90F2B163D5D00FD3232 /* GifWebView.swift */; };
@@ -707,7 +705,6 @@
 		445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187523685154001D0ED0 /* DefaultAdsProvider.swift */; };
 		44689B7D237414850024EFC1 /* SPABData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7C237414850024EFC1 /* SPABData.swift */; };
 		44F0FD262369EEBC003525E0 /* SPAdsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F0FD252369EEBC003525E0 /* SPAdsConfiguration.swift */; };
-		6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */; };
 		73B0DE8127A90EC4008EBCE7 /* OWSubscriberBadgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B0DE8027A90EC4008EBCE7 /* OWSubscriberBadgeService.swift */; };
 		73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */; };
 		8D05B44D2B1497C700354380 /* OWOrientationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D05B44C2B1497C700354380 /* OWOrientationService.swift */; };
@@ -808,7 +805,6 @@
 		9E36BFEB29ED353A00478D06 /* OWReportReasonVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEA29ED353A00478D06 /* OWReportReasonVM.swift */; };
 		9E36BFED29ED7E5F00478D06 /* OWRoundCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */; };
 		9E36BFEF29F160E600478D06 /* OWReportReasonCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEE29F160E600478D06 /* OWReportReasonCoordinator.swift */; };
-		9E36BFF129F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */; };
 		9E3B8B6929FFB944006BB207 /* OWAdditionalInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B6829FFB944006BB207 /* OWAdditionalInfoView.swift */; };
 		9E3B8B6B29FFB95B006BB207 /* OWAdditionalInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B6A29FFB95B006BB207 /* OWAdditionalInfoVC.swift */; };
 		9E3B8B6D29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B6C29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift */; };
@@ -856,6 +852,7 @@
 		9E8FA4822AB84B36004510EA /* OWLoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8FA4812AB84B36004510EA /* OWLoadingCell.swift */; };
 		9E8FA4862AB84E11004510EA /* OWLoadingCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8FA4852AB84E11004510EA /* OWLoadingCellViewModel.swift */; };
 		9EA319042B30766300DF1F54 /* OWScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA319032B30766300DF1F54 /* OWScheduler.swift */; };
+		9EB423BD2CD917F700ACAC09 /* OWNavigationAppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB423BC2CD917E500ACAC09 /* OWNavigationAppearanceSettings.swift */; };
 		9EBE4E802B8CD38F00D836CF /* OWCoordinatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E7F2B8CD38F00D836CF /* OWCoordinatorData.swift */; };
 		9EBE4E8C2B99ADB600D836CF /* OWTextViewReplaceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */; };
 		9EBE4E8E2B99C0AE00D836CF /* Range+OWExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */; };
@@ -878,6 +875,11 @@
 		9EE87B462AC8EE9400F11DD2 /* OWRepliesErrorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE87B452AC8EE9400F11DD2 /* OWRepliesErrorState.swift */; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
+		C22803322CE0B66F00E546DA /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */; };
+		C22803342CE0B6AB00E546DA /* DispatchTime+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */; };
+		C22803372CE0B80A00E546DA /* OWViewableTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803362CE0B80A00E546DA /* OWViewableTimeTracker.swift */; };
+		C22803732CE1F56E00E546DA /* OWViewableTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */; };
+		C2DF42B92CAC41AE00BA68CE /* NSObject+AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
 		F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */; };
@@ -948,7 +950,6 @@
 		1628A75C28EB0E770019B5EC /* OWCommentCreationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentCreationVC.swift; sourceTree = "<group>"; };
 		162A67A12AA0D0F2008BD16B /* OWImageOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImageOption.swift; sourceTree = "<group>"; };
 		162B83522A688BDC002290EE /* OWCommentCreationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationType.swift; sourceTree = "<group>"; };
-		162B83542A715729002290EE /* OWCloseEditorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCloseEditorAlert.swift; sourceTree = "<group>"; };
 		162B83582A766582002290EE /* OWCachedCommentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCachedCommentKey.swift; sourceTree = "<group>"; };
 		162B835C2A7A4D94002290EE /* OWConversationUpdaterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationUpdaterService.swift; sourceTree = "<group>"; };
 		162B835E2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLocalCommentDataPopulator.swift; sourceTree = "<group>"; };
@@ -1331,7 +1332,6 @@
 		3D50D8F32B162BED00FD3232 /* SPImagesFacade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPImagesFacade.swift; sourceTree = "<group>"; };
 		3D50D8F42B162BED00FD3232 /* SPCommentRankUpdateRM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentRankUpdateRM.swift; sourceTree = "<group>"; };
 		3D50D8F52B162BED00FD3232 /* SPNetworkConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPNetworkConstants.swift; sourceTree = "<group>"; };
-		3D50D8F92B162C9800FD3232 /* OWKeyPathParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWKeyPathParser.swift; sourceTree = "<group>"; };
 		3D50D8FC2B1636BA00FD3232 /* SPAnimatedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPAnimatedButton.swift; sourceTree = "<group>"; };
 		3D50D90D2B163C9D00FD3232 /* CommentMediaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
 		3D50D90F2B163D5D00FD3232 /* GifWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifWebView.swift; sourceTree = "<group>"; };
@@ -1629,7 +1629,6 @@
 		66983D6D252F8903AB630788 /* Pods-Shared-OpenWeb-SampleApp.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.beta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.beta.xcconfig"; sourceTree = "<group>"; };
 		6AD88E67F8531F65F140E53D /* Pods-OpenWebSDK.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		6D430DE824C70EF0008A469A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConversationCounters.swift; sourceTree = "<group>"; };
 		6D92BDEF24C98258005E3683 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6D92BDF024C988B8005E3683 /* ar-001 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-001"; path = "ar-001.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		73B0DE8027A90EC4008EBCE7 /* OWSubscriberBadgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberBadgeService.swift; sourceTree = "<group>"; };
@@ -1738,7 +1737,6 @@
 		9E36BFEA29ED353A00478D06 /* OWReportReasonVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonVM.swift; sourceTree = "<group>"; };
 		9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRoundCheckBox.swift; sourceTree = "<group>"; };
 		9E36BFEE29F160E600478D06 /* OWReportReasonCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonCoordinator.swift; sourceTree = "<group>"; };
-		9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonSettingsProtocol.swift; sourceTree = "<group>"; };
 		9E3B8B6829FFB944006BB207 /* OWAdditionalInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalInfoView.swift; sourceTree = "<group>"; };
 		9E3B8B6A29FFB95B006BB207 /* OWAdditionalInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalInfoVC.swift; sourceTree = "<group>"; };
 		9E3B8B6C29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalInfoViewVM.swift; sourceTree = "<group>"; };
@@ -1794,6 +1792,7 @@
 		9E8FA4812AB84B36004510EA /* OWLoadingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoadingCell.swift; sourceTree = "<group>"; };
 		9E8FA4852AB84E11004510EA /* OWLoadingCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoadingCellViewModel.swift; sourceTree = "<group>"; };
 		9EA319032B30766300DF1F54 /* OWScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWScheduler.swift; sourceTree = "<group>"; };
+		9EB423BC2CD917E500ACAC09 /* OWNavigationAppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationAppearanceSettings.swift; sourceTree = "<group>"; };
 		9EBE4E7F2B8CD38F00D836CF /* OWCoordinatorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCoordinatorData.swift; sourceTree = "<group>"; };
 		9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTextViewReplaceData.swift; sourceTree = "<group>"; };
 		9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Range+OWExtension.swift"; sourceTree = "<group>"; };
@@ -1818,6 +1817,11 @@
 		9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueueDuplicationStrategy.swift; sourceTree = "<group>"; };
 		ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
+		C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchTime+Utils.swift"; sourceTree = "<group>"; };
+		C22803362CE0B80A00E546DA /* OWViewableTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableTimeTracker.swift; sourceTree = "<group>"; };
+		C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableTimeService.swift; sourceTree = "<group>"; };
+		C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+AssociatedObject.swift"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsTests.swift; sourceTree = "<group>"; };
@@ -2268,6 +2272,7 @@
 				16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */,
 				16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */,
 				8D4983B22A97B48B0072A4CF /* UIView+Rx.swift */,
+				C22803312CE0B66F00E546DA /* UIViewController+Rx.swift */,
 				8DCC87C02B554DB400E053A4 /* WKWebView+Rx.swift */,
 				24F828D52B8F6F4200BFD159 /* OWGifPickerPresenterResponseType.swift */,
 			);
@@ -2282,7 +2287,6 @@
 				16F66EC62A2CCCA80089E70E /* OWSortMenu.swift */,
 				16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */,
 				16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */,
-				162B83542A715729002290EE /* OWCloseEditorAlert.swift */,
 				16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */,
 				16D996CC2A8D0BA500748E46 /* OWPickImageActionSheet.swift */,
 			);
@@ -3255,7 +3259,6 @@
 		3D50D8EC2B1615E800FD3232 /* OldRequiredCode */ = {
 			isa = PBXGroup;
 			children = (
-				3D50D8F92B162C9800FD3232 /* OWKeyPathParser.swift */,
 				3D50D8F42B162BED00FD3232 /* SPCommentRankUpdateRM.swift */,
 				3D50D8F32B162BED00FD3232 /* SPImagesFacade.swift */,
 				3D50D8F52B162BED00FD3232 /* SPNetworkConstants.swift */,
@@ -3343,7 +3346,6 @@
 				3D611BB428C8AAF4003960CE /* OWCommentCreationSettingsProtocol.swift */,
 				161270DA29ACD9EF001F9715 /* OWCommentThreadSettingsProtocol.swift */,
 				3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */,
-				9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */,
 				3DB3B95129F468D000C50192 /* OWTestingPlaygroundSettingsProtocol.swift */,
 				3DBFB4EC2AE9514B001105DA /* OWAutomationSettingsProtocol.swift */,
 			);
@@ -4259,6 +4261,7 @@
 				161270D729ACD442001F9715 /* CommentThread */,
 				3DB3B94E29F4630D00C50192 /* TestingPlayground */,
 				44689B7A237414340024EFC1 /* Configs */,
+				9EB423BC2CD917E500ACAC09 /* OWNavigationAppearanceSettings.swift */,
 				4454185523685154001D0ED0 /* SPComment.swift */,
 				16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */,
 				4454185A23685154001D0ED0 /* SPCommentSortMode.swift */,
@@ -4348,6 +4351,8 @@
 				3D50D9112B163E0400FD3232 /* UIColor+Extensions.swift */,
 				8DCC87C82B6BAC0000E053A4 /* UIWindow+Utils.swift */,
 				9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */,
+				C2DF42B82CAC41AE00BA68CE /* NSObject+AssociatedObject.swift */,
+				C22803332CE0B6AB00E546DA /* DispatchTime+Utils.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -4367,6 +4372,7 @@
 				3D33C0E829460C760062BFC9 /* ThemeStyleService */,
 				3DB1D5A42A79115D0012388E /* StatusBarStyleService */,
 				4454187323685154001D0ED0 /* Ads */,
+				C22803352CE0B7D400E546DA /* ViewableTime */,
 				24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */,
 				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
 				3DD72C802818297500117946 /* OWLogger.swift */,
@@ -4435,7 +4441,6 @@
 				4454185723685154001D0ED0 /* SPConversation.swift */,
 				4454185323685154001D0ED0 /* SPConversationReadRM.swift */,
 				44689B7C237414850024EFC1 /* SPABData.swift */,
-				6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */,
 				3D611BA228C74569003960CE /* OWConversationSettings.swift */,
 				3D611BB828C8AC3C003960CE /* OWConversationSettingsBuilder.swift */,
 				3DBEEDD828C9DDAB0076963E /* OWConversationRequiredData.swift */,
@@ -5204,6 +5209,15 @@
 			path = OWQueue;
 			sourceTree = "<group>";
 		};
+		C22803352CE0B7D400E546DA /* ViewableTime */ = {
+			isa = PBXGroup;
+			children = (
+				C22803722CE1F56B00E546DA /* OWViewableTimeService.swift */,
+				C22803362CE0B80A00E546DA /* OWViewableTimeTracker.swift */,
+			);
+			path = ViewableTime;
+			sourceTree = "<group>";
+		};
 		F6D45AB80C879EE6B5C01DA4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -5290,9 +5304,11 @@
 			buildConfigurationList = 3DA1DED22C6CCB0300EBFA7D /* Build configuration list for PBXNativeTarget "OpenWeb-SampleApp-Internal-Configs" */;
 			buildPhases = (
 				3DA1DEBC2C6CCB0300EBFA7D /* Headers */,
+				C26AD9102CA59D7B008F82DE /* SwiftLint autocorrect */,
 				3DA1DEBD2C6CCB0300EBFA7D /* Sources */,
 				3DA1DEBE2C6CCB0300EBFA7D /* Frameworks */,
 				3DA1DEBF2C6CCB0300EBFA7D /* Resources */,
+				C26AD90F2CA58662008F82DE /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -5351,7 +5367,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1210;
+				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = OpenWeb;
 				TargetAttributes = {
 					3DA1DEC02C6CCB0300EBFA7D = {
@@ -5499,26 +5515,44 @@
 			shellPath = /bin/sh;
 			shellScript = "bash -x ./scripts/create_xcframework_script.sh \"${CONFIGURATION}\"\n";
 		};
-		CDEC31B81FD324334EA6AB09 /* [CP] Check Pods Manifest.lock */ = {
+		C26AD90F2CA58662008F82DE /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = SwiftLint;
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OpenWebSDK-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "./swiftlint/xcode-swiftlint.sh\n";
+			showEnvVarsInLog = 0;
+		};
+		C26AD9102CA59D7B008F82DE /* SwiftLint autocorrect */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "SwiftLint autocorrect";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./swiftlint/xcode-swiftlint.sh --fix\n";
 			showEnvVarsInLog = 0;
 		};
 		CDEC31B81FD324334EA6AB09 /* [CP] Check Pods Manifest.lock */ = {
@@ -5567,7 +5601,6 @@
 			files = (
 				3D7F28BA2998FA3B00E9E69E /* OWInitialSortStrategy.swift in Sources */,
 				24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */,
-				9E36BFF129F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift in Sources */,
 				9ED2E58129EBFF3B00B39A00 /* OWReportReasonType.swift in Sources */,
 				3DDA9A88291A5E1F00FE3B86 /* OWThemeStyle.swift in Sources */,
 				3D754F982C43D9CF00283367 /* OWAnalyticEventGeneralDataDynamicPart.swift in Sources */,
@@ -5582,7 +5615,6 @@
 				16D8D4AA28C633F800895FCB /* OWCommentCreationVM.swift in Sources */,
 				8DE129A62B25FF78002DA4B3 /* OWLoginPromptStyle.swift in Sources */,
 				3D31FB9029AB6756002B88E0 /* OWLocaleStrategy.swift in Sources */,
-				6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */,
 				73B0DE8127A90EC4008EBCE7 /* OWSubscriberBadgeService.swift in Sources */,
 				24579ECF288835F200C56F0F /* OWImagesEndpoints.swift in Sources */,
 				240E8FAC2AA5B53400903E51 /* OWArticleExtraData+Extensions.swift in Sources */,
@@ -5758,7 +5790,6 @@
 				24D589792A8B89CF00F611F0 /* OWCustomBIData.swift in Sources */,
 				24C3147D2A8A6B8800F22B8C /* OWBIAnalyticEventCallback.swift in Sources */,
 				2435B83A2B878B90002F9422 /* OWToastType.swift in Sources */,
-				162B83552A715729002290EE /* OWCloseEditorAlert.swift in Sources */,
 				3DF446502C6E30E9008A47CE /* OWUserMentionLoadingCell.swift in Sources */,
 				24B7A2B42A30823900A5D71D /* OWMenuSelectionViewModel.swift in Sources */,
 				3D20A39327B0222C003F8513 /* OWConstraintRelation.swift in Sources */,
@@ -5776,6 +5807,7 @@
 				2484039A2ADD23A000EAD59A /* OWOrientationEnforcement.swift in Sources */,
 				445418AB23685154001D0ED0 /* Int+SPExtensions.swift in Sources */,
 				8D358D4C29C8942E00E229A3 /* OWConversationSortViewModel.swift in Sources */,
+				C2DF42B92CAC41AE00BA68CE /* NSObject+AssociatedObject.swift in Sources */,
 				3D20A36727B00E7D003F8513 /* OWConstraintConstantTarget.swift in Sources */,
 				248835EE2B95B9CE002BC8DD /* OWGifPreviewView.swift in Sources */,
 				3D0AFC9C29C7398A002670D1 /* OWSSOProviderResponse.swift in Sources */,
@@ -5883,6 +5915,7 @@
 				3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */,
 				166CCCB72A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift in Sources */,
 				8D358D5B29C9FB3500E229A3 /* OWCommunityGuidelinesCellViewModel.swift in Sources */,
+				C22803322CE0B66F00E546DA /* UIViewController+Rx.swift in Sources */,
 				24EF864429C9D7FF00327394 /* OWCompactContentType.swift in Sources */,
 				9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */,
 				9E5A05742C0DEB2F00713B39 /* CollectionView+Registration.swift in Sources */,
@@ -5895,6 +5928,7 @@
 				3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */,
 				3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */,
 				8D0DB71D2A937AC60014AD1B /* OWRealtimeNewCommentsView.swift in Sources */,
+				C22803732CE1F56E00E546DA /* OWViewableTimeService.swift in Sources */,
 				3D50D9222B1653D400FD3232 /* NSAttributedString+Extensions.swift in Sources */,
 				3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */,
 				9E0C605E2A839863001B8D5D /* OWCachedLastCommentType.swift in Sources */,
@@ -5916,6 +5950,7 @@
 				24A24A18291BAC7C00D72755 /* OWWebTabOptions.swift in Sources */,
 				160E42E22988103000EDC5A1 /* OWCommentThreadView.swift in Sources */,
 				3DA2647A2951E3B200688FFF /* OWNetworkRedirectHandler.swift in Sources */,
+				C22803372CE0B80A00E546DA /* OWViewableTimeTracker.swift in Sources */,
 				3DB3B97729F7DAFB00C50192 /* OWTestingBlueCellViewModel.swift in Sources */,
 				3D31FB8E29AB6505002B88E0 /* OWSupportedLanguage.swift in Sources */,
 				24993F8E28CF0CC000452AF8 /* OWAnalyticsService.swift in Sources */,
@@ -6053,6 +6088,7 @@
 				3DDA9A4E28F86A4100FE3B86 /* Double+Equal.swift in Sources */,
 				3DA264782951E3B200688FFF /* OWNetworkSession.swift in Sources */,
 				3DDA9A4A28F8582100FE3B86 /* OWSkeletonShimmeringService.swift in Sources */,
+				C22803342CE0B6AB00E546DA /* DispatchTime+Utils.swift in Sources */,
 				3D7E3D6B288849EC00DDBE0B /* OWAdditionalConfiguration.swift in Sources */,
 				24E230012A0102D200D9BE8A /* OWProfileOption.swift in Sources */,
 				3DA264742951E3B200688FFF /* OWNetworkParameterEncoder.swift in Sources */,
@@ -6217,7 +6253,6 @@
 				3D08E0B4287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift in Sources */,
 				3D08E0A928771D0500E6F1AC /* OWChangeset.swift in Sources */,
 				161655772A641597004EBF6F /* OWCommentCreationReplySnippetViewModel.swift in Sources */,
-				3D50D8FA2B162C9800FD3232 /* OWKeyPathParser.swift in Sources */,
 				24993F8A28CF058000452AF8 /* OWAnalyticEventType.swift in Sources */,
 				3DBEEDD928C9DDAB0076963E /* OWConversationRequiredData.swift in Sources */,
 				3DA264732951E3B200688FFF /* OWNetworkServerTrustEvaluating.swift in Sources */,
@@ -6380,6 +6415,7 @@
 				3DBFB5102AE9BBBB001105DA /* OWUserStatusAutomationViewViewModel.swift in Sources */,
 				3D0AFC9A29C73901002670D1 /* OWSSOCompletionResponse.swift in Sources */,
 				3DF446532C6E30E9008A47CE /* OWUserMentionData.swift in Sources */,
+				9EB423BD2CD917F700ACAC09 /* OWNavigationAppearanceSettings.swift in Sources */,
 				249DF2952964140E00F5D69A /* OWCommentCreationTypeInternal.swift in Sources */,
 				9E4163BD29F6C9BB00819BC2 /* OWCancelVC.swift in Sources */,
 				9EC7C3192C205CC1002605D5 /* OWFilterTabsSkeletonCollectionCellVM.swift in Sources */,
@@ -6481,7 +6517,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -6544,15 +6579,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -6567,7 +6593,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PUBLIC_DEMO_APP";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -6615,7 +6641,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -6678,15 +6703,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -6701,7 +6717,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG BETA AUTOMATION";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6748,7 +6764,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -6805,15 +6820,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -6828,7 +6834,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "BETA AUTOMATION";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6875,7 +6881,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -6932,15 +6937,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -6955,7 +6951,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PUBLIC_DEMO_APP;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7001,7 +6997,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7022,7 +7017,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -7095,7 +7090,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7116,7 +7110,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7182,7 +7176,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7203,7 +7196,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7269,7 +7262,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7290,7 +7282,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7356,7 +7348,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7377,7 +7368,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7443,7 +7434,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7464,7 +7454,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7527,15 +7517,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -7550,7 +7531,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7583,15 +7564,6 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxRelay/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxCocoa/ios-arm64_x86_64-simulator",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64",
-					"$(PROJECT_DIR)/OpenWeb-SDK/Vendros/RxSwift/ios-arm64_x86_64-simulator",
-				);
 				INFOPLIST_FILE = "OpenWeb-SDK/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -7606,7 +7578,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -7642,7 +7614,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7709,7 +7680,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7788,7 +7758,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7858,7 +7827,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7922,7 +7890,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -7986,7 +7953,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -8050,7 +8016,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -8114,7 +8079,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

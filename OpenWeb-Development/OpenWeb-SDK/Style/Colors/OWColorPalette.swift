@@ -21,9 +21,9 @@ protocol OWColorPaletteConfigurable {
 }
 
 class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
-    fileprivate var colors = [OWColor.OWType: OWColor]()
-    fileprivate var colorsMapper = BehaviorSubject<[OWColor.OWType: OWColor]>(value: [:])
-    fileprivate var blockedForOverride: Set<OWColor.OWType> = Set()
+    private var colors = [OWColor.OWType: OWColor]()
+    private var colorsMapper = BehaviorSubject<[OWColor.OWType: OWColor]>(value: [:])
+    private var blockedForOverride: Set<OWColor.OWType> = Set()
 
     var colorDriver: Observable<[OWColor.OWType: OWColor]> {
         return colorsMapper
@@ -36,7 +36,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
 
     // Multiple threads / queues access to this class
     // Avoiding "data race" by using a lock
-    fileprivate let lock: OWLock = OWUnfairLock()
+    private let lock: OWLock = OWUnfairLock()
 
     private init() {
         initiateColors()
@@ -61,9 +61,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         guard let color = colors[type] else {
             // We should never get here. I chose to work with non-optional so as a default value we will return "clear"
@@ -74,9 +72,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func setColor(_ color: UIColor, forType type: OWColor.OWType, forThemeStyle themeStyle: OWThemeStyle) {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock()
-        // swiftlint:enable self_capture_in_blocks
         guard var encapsulateColor = colors[type],
               !blockedForOverride.contains(type)
         else {
@@ -92,16 +88,14 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         // And will cause a recursive lock and crash
         self.lock.unlock()
 
-        if (type.shouldUpdateRxObservable) {
+        if type.shouldUpdateRxObservable {
             let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
             colorsMapper.onNext(colorsRx)
         }
     }
 
     func blockForOverride(color: OWColor.OWType) {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         self.blockedForOverride.insert(color)
     }

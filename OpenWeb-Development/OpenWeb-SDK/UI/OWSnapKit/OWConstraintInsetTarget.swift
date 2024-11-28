@@ -37,8 +37,7 @@ extension OWConstraintInsetTarget {
         } else if let amount = self as? UInt {
             return UIEdgeInsets(top: CGFloat(amount), left: CGFloat(amount), bottom: CGFloat(amount), right: CGFloat(amount))
         } else {
-            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            return UIEdgeInsets.zero
         }
     }
 }
-

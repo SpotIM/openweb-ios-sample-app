@@ -26,8 +26,8 @@ protocol OWFontBookProtocolConfigurable {
 class OWFontBook: OWFontBookProtocol, OWFontBookProtocolConfigurable {
 
     static let shared: OWFontBookProtocol & OWFontBookProtocolConfigurable = OWFontBook()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var fontFamilyGroup: OWFontGroupFamily = .default
+    private let servicesProvider: OWSharedServicesProviding
+    private var fontFamilyGroup: OWFontGroupFamily = .default
 
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -57,7 +57,7 @@ class OWFontBook: OWFontBookProtocol, OWFontBookProtocolConfigurable {
     }
 }
 
-fileprivate extension OWFontBook {
+private extension OWFontBook {
     func openWebFont(style: OWFontStyle, size: CGFloat) -> UIFont {
         // As of today, we are using OpenSans as our defualt font
         guard let font = font(family: OWFontGroupFamily.default, style: style, size: size) else {

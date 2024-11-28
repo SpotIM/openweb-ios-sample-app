@@ -33,8 +33,4 @@ struct OWNetworkHTTPMethod: RawRepresentable, Equatable, Hashable {
     static let trace = OWNetworkHTTPMethod(rawValue: "TRACE")
 
     let rawValue: String
-
-    init(rawValue: String) {
-        self.rawValue = rawValue
-    }
 }

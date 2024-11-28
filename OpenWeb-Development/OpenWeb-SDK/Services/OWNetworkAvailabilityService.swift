@@ -17,19 +17,19 @@ protocol OWNetworkAvailabilityServicing {
 class OWNetworkAvailabilityService: OWNetworkAvailabilityServicing {
     static let shared = OWNetworkAvailabilityService()
 
-    fileprivate var networkMonitor: NWPathMonitor
-    fileprivate let networkAvailableSubject = BehaviorSubject<Bool>(value: true)
+    private var networkMonitor: NWPathMonitor
+    private let networkAvailableSubject = BehaviorSubject<Bool>(value: true)
     var networkAvailable: Observable<Bool> {
         return networkAvailableSubject.asObservable()
             .distinctUntilChanged()
     }
-    fileprivate let queue = DispatchQueue(label: "OWInternalNetworkAvailabilityQueue", qos: .background)
+    private let queue = DispatchQueue(label: "OWInternalNetworkAvailabilityQueue", qos: .background)
 
-    fileprivate init() {
+    private init() {
         networkMonitor = NWPathMonitor()
 
         networkMonitor.pathUpdateHandler = { [weak self] path in
-            if let self = self {
+            if let self {
                 let isNetworkAvailable = path.status == .satisfied
                 self.networkAvailableSubject.onNext(isNetworkAvailable)
             }

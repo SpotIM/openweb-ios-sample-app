@@ -24,7 +24,7 @@ struct OWAnalyticEventPayloadKeys {
     static let title = "title"
     static let strategy = "strategy"
     static let enforcement = "enforcement"
-    static let milliseconds = "milliseconds"
+    static let timeInS = "timeInS"
     static let style = "style"
     static let communityGuidelinesStyle = "communityGuidelinesStyle"
     static let communityQuestionsStyle = "communityQuestionsStyle"

@@ -21,14 +21,14 @@ protocol OWUsersServicing {
 }
 
 class OWUsersService: OWUsersServicing {
-    fileprivate var disposeBag = DisposeBag()
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    private var disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
 
     // Multiple threads / queues access to this class
     // Avoiding "data race" by using a lock
-    fileprivate let lock: OWLock = OWUnfairLock()
+    private let lock: OWLock = OWUnfairLock()
 
-    fileprivate var _users = OWUsersMapper()
+    private var _users = OWUsersMapper()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -36,17 +36,13 @@ class OWUsersService: OWUsersServicing {
     }
 
     func get(userId id: String) -> SPUser? {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
         guard let user = _users[id] else { return nil }
         return user
     }
 
     func set(users: [SPUser]) {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         let userIdToUserTupples: [(String, SPUser)] = users.map {
             guard let id = $0.id else { return nil }
@@ -55,22 +51,18 @@ class OWUsersService: OWUsersServicing {
         let userIdsToUser: OWUsersMapper = userIdToUserTupples.reduce(into: [:]) { $0[$1.0] = $1.1 }
 
         // merge and replacing current users
-        _users.merge(userIdsToUser, uniquingKeysWith: {(_, new) in new })
+        _users.merge(userIdsToUser, uniquingKeysWith: { _, new in new })
     }
 
     func set(users: OWUsersMapper) {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         // merge and replacing current users
-        _users.merge(users, uniquingKeysWith: {(_, new) in new })
+        _users.merge(users, uniquingKeysWith: { _, new in new })
     }
 
     func cleanCache() {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         _users.removeAll()
     }
@@ -80,7 +72,7 @@ class OWUsersService: OWUsersServicing {
     }
 }
 
-fileprivate extension OWUsersService {
+private extension OWUsersService {
     func setupObservers() {
         self.servicesProvider.authenticationManager()
             .activeUserAvailability
@@ -94,7 +86,7 @@ fileprivate extension OWUsersService {
             }
             .unwrap()
             .subscribe(onNext: { [weak self] user in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.set(users: [user])
             })
             .disposed(by: disposeBag)

@@ -84,13 +84,13 @@ extension OWCommentThreadCellOption: Equatable {
 
     static func == (lhs: OWCommentThreadCellOption, rhs: OWCommentThreadCellOption) -> Bool {
         switch (lhs, rhs) {
-        case (.comment(_), .comment(_)):
+        case (.comment, .comment):
             return lhs.identifier == rhs.identifier
-        case (.commentSkeletonShimmering(_), .commentSkeletonShimmering(_)):
+        case (.commentSkeletonShimmering, .commentSkeletonShimmering):
             return lhs.identifier == rhs.identifier
-        case (.spacer(_), .spacer(_)):
+        case (.spacer, .spacer):
             return lhs.identifier == rhs.identifier
-        case (.commentThreadActions(_), .commentThreadActions(_)):
+        case (.commentThreadActions, .commentThreadActions):
             return lhs.identifier == rhs.identifier
         default:
             return false
@@ -103,4 +103,3 @@ extension OWCommentThreadCellOption: OWIdentifiableType {
         return self.identifier
     }
 }
-

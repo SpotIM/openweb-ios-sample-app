@@ -11,11 +11,11 @@ import RxSwift
 import RxCocoa
 
 class OWCommenterAppealVC: UIViewController {
-    fileprivate lazy var commenterAppealView: OWCommenterAppealView = {
+    private lazy var commenterAppealView: OWCommenterAppealView = {
         return OWCommenterAppealView(viewModel: viewModel.outputs.commenterAppealViewViewModel)
     }()
 
-    fileprivate let viewModel: OWCommenterAppealViewModeling
+    private let viewModel: OWCommenterAppealViewModeling
     let disposeBag: DisposeBag = DisposeBag()
 
     init(viewModel: OWCommenterAppealViewModeling) {
@@ -36,10 +36,12 @@ class OWCommenterAppealVC: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
@@ -48,7 +50,7 @@ class OWCommenterAppealVC: UIViewController {
     }
 }
 
-fileprivate extension OWCommenterAppealVC {
+private extension OWCommenterAppealVC {
     func setupViews() {
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light)
 
@@ -63,7 +65,7 @@ fileprivate extension OWCommenterAppealVC {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

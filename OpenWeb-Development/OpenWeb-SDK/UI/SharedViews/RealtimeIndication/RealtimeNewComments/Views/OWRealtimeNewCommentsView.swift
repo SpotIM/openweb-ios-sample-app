@@ -12,31 +12,35 @@ import RxSwift
 import RxCocoa
 
 class OWRealtimeNewCommentsView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalPadding: CGFloat = 10
         static let iconSize: CGFloat = 16
 
         static let textColor: OWColor.OWType = .textColor3
         static let iconImgaeName: String = "newCommentsArrow"
+
+        static let identifier = "realtime_new_comment_view_id"
+        static let iconImageViewIdentifier = "realtime_new_comment_arrow_icon_id"
+        static let titleLabelIdentifier = "realtime_new_comment_title_label_id"
     }
 
-    fileprivate let viewModel: OWRealtimeNewCommentsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: OWRealtimeNewCommentsViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         return UIImageView()
             .image(UIImage(spNamed: Metrics.iconImgaeName, supportDarkMode: true)!)
             .wrapContent()
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .font(font)
             .textColor(OWColorPalette.shared.color(type: Metrics.textColor,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var font: UIFont {
+    private var font: UIFont {
         return OWFontBook.shared.font(typography: .footnoteText)
     }
 
@@ -49,10 +53,11 @@ class OWRealtimeNewCommentsView: UIView {
         super.init(frame: .zero)
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 }
 
-fileprivate extension OWRealtimeNewCommentsView {
+private extension OWRealtimeNewCommentsView {
     func setupUI() {
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
@@ -75,7 +80,7 @@ fileprivate extension OWRealtimeNewCommentsView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.iconImageView.image = UIImage(spNamed: Metrics.iconImgaeName, supportDarkMode: true)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: Metrics.textColor,
                                                                               themeStyle: currentStyle)
@@ -85,10 +90,15 @@ fileprivate extension OWRealtimeNewCommentsView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = self.font
             })
             .disposed(by: disposeBag)
     }
-}
 
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        iconImageView.accessibilityIdentifier = Metrics.iconImageViewIdentifier
+        titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
+    }
+}

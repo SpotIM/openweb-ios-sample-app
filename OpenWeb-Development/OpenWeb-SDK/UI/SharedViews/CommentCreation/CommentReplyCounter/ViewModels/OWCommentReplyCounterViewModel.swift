@@ -30,7 +30,7 @@ class OWCommentReplyCounterViewModel: OWCommentReplyCounterViewModeling,
     var inputs: OWCommentReplyCounterViewModelingInputs { return self }
     var outputs: OWCommentReplyCounterViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     var commentTextCount = BehaviorSubject<Int>(value: 0)
 

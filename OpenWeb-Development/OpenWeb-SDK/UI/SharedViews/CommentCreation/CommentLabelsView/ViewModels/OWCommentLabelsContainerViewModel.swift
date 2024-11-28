@@ -35,13 +35,13 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     var inputs: OWCommentLabelsContainerViewModelingInputs { return self }
     var outputs: OWCommentLabelsContainerViewModelingOutputs { return self }
 
-    fileprivate let _comment = BehaviorSubject<OWComment?>(value: nil)
+    private let _comment = BehaviorSubject<OWComment?>(value: nil)
 
-    fileprivate let _maxVisibleCommentLabels = 3 // TODO: do we want to keep it that way?
+    private let _maxVisibleCommentLabels = 3 // TODO: do we want to keep it that way?
 
-    fileprivate let section: String
+    private let section: String
 
-    fileprivate var _selectedLabelIds = BehaviorSubject<Set<String>>(value: [])
+    private var _selectedLabelIds = BehaviorSubject<Set<String>>(value: [])
     var selectedLabelIds: Observable<[String]> {
         _selectedLabelIds
             .map { Array($0) }
@@ -51,7 +51,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     var isInitialSelectionChanged: Observable<Bool> {
         _selectedLabelIds
             .map { [weak self] selectedLabelIds in
-                guard let self = self else { return false }
+                guard let self else { return false }
 
                 if case .edit(let comment) = self.commentCreationType {
                     let initialSelectedLabels = comment.additionalData?.labels
@@ -72,7 +72,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     var isValidSelection: Observable<Bool> {
         Observable.combineLatest(_commentLabelsSection, selectedLabelIds) { ($0, $1) }
             .map { sectionConfig, selectedLabelIds in
-                if let sectionConfig = sectionConfig {
+                if let sectionConfig {
                     return (sectionConfig.minSelected, selectedLabelIds.count)
                 } else {
                     return (0, selectedLabelIds.count)
@@ -82,12 +82,12 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
             .map { $0 <= $1 }
     }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
-    fileprivate let commentCreationType: OWCommentCreationTypeInternal?
+    private let commentCreationType: OWCommentCreationTypeInternal?
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    private lazy var postId = OWManager.manager.postId
 
     init(comment: OWComment? = nil,
          commentCreationType: OWCommentCreationTypeInternal? = nil,
@@ -96,7 +96,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
         self.servicesProvider = servicerProvider
         self.section = section
         self.commentCreationType = commentCreationType
-        if let comment = comment {
+        if let comment {
             _comment.onNext(comment)
         }
 
@@ -119,7 +119,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
         self.commentCreationType = nil
     }
 
-    fileprivate lazy var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration?> = {
+    private lazy var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration?> = {
         self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> CommentLabelsSectionsConfig? in
@@ -130,8 +130,8 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                 return sharedConfig.commentLabels
             }
             .map { [weak self] commentLabelsSectionsConfig in
-                guard let self = self,
-                      let commentLabelsSectionsConfig = commentLabelsSectionsConfig
+                guard let self,
+                      let commentLabelsSectionsConfig
                 else { return nil }
                 if let sectionConfig = commentLabelsSectionsConfig[self.section] {
                     return sectionConfig
@@ -142,11 +142,11 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
             }
     }()
 
-    fileprivate lazy var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> = {
+    private lazy var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> = {
         _comment
             .withLatestFrom(_commentLabelsSection) { [weak self] comment, commentLabelsSection in
-                guard let self = self,
-                      let commentLabelsSection = commentLabelsSection
+                guard let self,
+                      let commentLabelsSection
                 else { return nil }
                 return self.getCommentLabels(comment: comment, commentLabelsSection: commentLabelsSection)
             }.unwrap()
@@ -164,10 +164,10 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var _commentLabelsTitle: Observable<String?> {
+    private var _commentLabelsTitle: Observable<String?> {
         Observable.combineLatest(_comment, _commentLabelsSection) { comment, commentLabelsSection in
             guard comment == nil,
-                  let commentLabelsSection = commentLabelsSection
+                  let commentLabelsSection
             else { return nil }
             return commentLabelsSection.guidelineText
         }
@@ -179,7 +179,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     }
 }
 
-fileprivate extension OWCommentLabelsContainerViewModel {
+private extension OWCommentLabelsContainerViewModel {
     func setupObservers() {
         commentLabelsViewModels
             .flatMapLatest { viewModels -> Observable<OWCommentLabelViewModeling> in
@@ -195,9 +195,9 @@ fileprivate extension OWCommentLabelsContainerViewModel {
             }
             .withLatestFrom(_commentLabelsSection) { ($0.0, $0.1, $1) }
             .withLatestFrom(_selectedLabelIds) { ($0.0, $0.1, $0.2, $1) }
-            .subscribe(onNext: { [weak self] (state, settings, sectionSettings, selectedLabelIds) in
-                guard let self = self,
-                      let sectionSettings = sectionSettings
+            .subscribe(onNext: { [weak self] state, settings, sectionSettings, selectedLabelIds in
+                guard let self,
+                      let sectionSettings
                 else { return }
                 switch state {
                 case .notSelected:
@@ -225,10 +225,10 @@ fileprivate extension OWCommentLabelsContainerViewModel {
     }
 }
 
-fileprivate extension OWCommentLabelsContainerViewModel {
+private extension OWCommentLabelsContainerViewModel {
     func getCommentLabels(comment: OWComment?, commentLabelsSection: SPCommentLabelsSectionConfiguration) -> [OWCommentLabelSettings] {
         var commentLabelsConfig: [SPLabelConfiguration]
-        if let comment = comment {
+        if let comment {
             commentLabelsConfig = getCommentLabelsOfComment(comment: comment, commentLabelsSection: commentLabelsSection)
         } else {
             commentLabelsConfig = commentLabelsSection.labels
@@ -271,7 +271,7 @@ fileprivate extension OWCommentLabelsContainerViewModel {
 
         switch commentCreationType {
         case .comment:
-            guard let postId = postId else { return }
+            guard let postId else { return }
             initialCommentLabelIds = commentsCacheService[.comment(postId: postId)]?.commentLabelIds
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,

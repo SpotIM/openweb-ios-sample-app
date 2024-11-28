@@ -60,7 +60,7 @@ class OWBaseCoordinator<ResultType> {
         store(coordinator: coordinator)
         return coordinator.start(coordinatorData: coordinatorData)
             .do(onNext: { [weak self, weak coordinator] result in
-                guard let self = self,
+                guard let self,
                     let coord = coordinator else { return }
 
                 if !result.loadedToScreen {
@@ -84,4 +84,3 @@ class OWBaseCoordinator<ResultType> {
         fatalError("Method should be implemented.")
     }
 }
-

@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 internal class OWPreConversationFooterView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "pre_conversation_footer_id"
         static let termsButtonIdentifier = "pre_conversation_footer_show_terms_button_id"
         static let privacyButtonIdentifier = "pre_conversation_footer_show_privacy_button_id"
@@ -51,9 +51,9 @@ internal class OWPreConversationFooterView: UIView {
         return btn
     }()
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate let viewModel: OWPreConversationFooterViewModeling
+    private let viewModel: OWPreConversationFooterViewModeling
 
     init(with viewModel: OWPreConversationFooterViewModeling) {
         self.viewModel = viewModel
@@ -73,7 +73,7 @@ internal class OWPreConversationFooterView: UIView {
 
 }
 
-fileprivate extension OWPreConversationFooterView {
+private extension OWPreConversationFooterView {
     func setupUI() {
         self.addSubview(termsButton)
         termsButton.OWSnp.makeConstraints { make in
@@ -109,11 +109,11 @@ fileprivate extension OWPreConversationFooterView {
 
     func setupObservers() {
         termsButton.rx.tap
-            .bind(to: viewModel.inputs.termsTapped)
+            .bind(to: viewModel.inputs.termsTap)
             .disposed(by: disposeBag)
 
         privacyButton.rx.tap
-            .bind(to: viewModel.inputs.privacyTapped)
+            .bind(to: viewModel.inputs.privacyTap)
             .disposed(by: disposeBag)
 
         poweredByOWButton.rx.tap
@@ -123,7 +123,7 @@ fileprivate extension OWPreConversationFooterView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.termsButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
                 self.separator.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
                 self.privacyButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
@@ -135,7 +135,7 @@ fileprivate extension OWPreConversationFooterView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.termsButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.separator.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.privacyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)

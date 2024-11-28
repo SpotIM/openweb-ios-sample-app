@@ -14,7 +14,7 @@ import RxCocoa
 
 class OWTestingRedSecondLevel: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let borderWidth: CGFloat = 2.0
         static let margin: CGFloat = 10.0
         static let roundCorners: CGFloat = 10.0
@@ -22,19 +22,21 @@ class OWTestingRedSecondLevel: UIView {
         static let collapsedCellContentHeight: CGFloat = 110.0
         static let expandedCellContentHeight: CGFloat = 170.0
         static let shortText = "This is a short text"
-        // swiftlint:disable line_length
-        static let longText = "This is a long text just to show how a cell can change it's height via a change in a UILabel length.\nA new line just to make it longer.\nAre you still reading that nonsense?"
-        // swiftlint:enable line_length
+        static let longText = """
+            This is a long text just to show how a cell can change it's height via a change in a UILabel length.
+            A new line just to make it longer.
+            Are you still reading that nonsense?
+            """
     }
 
-    fileprivate lazy var lblIdentifier: UILabel = {
+    private lazy var lblIdentifier: UILabel = {
         return UILabel()
             .textColor(.black)
             .numberOfLines(1)
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var lblLongStuff: UILabel = {
+    private lazy var lblLongStuff: UILabel = {
         return Metrics.shortText
             .label
             .textColor(.black)
@@ -42,7 +44,7 @@ class OWTestingRedSecondLevel: UIView {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var btnRemove: UIButton = {
+    private lazy var btnRemove: UIButton = {
         return "Remove"
             .button
             .backgroundColor(.lightGray)
@@ -52,7 +54,7 @@ class OWTestingRedSecondLevel: UIView {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var btnState: UIButton = {
+    private lazy var btnState: UIButton = {
         return "Expand"
             .button
             .backgroundColor(.lightGray)
@@ -62,8 +64,8 @@ class OWTestingRedSecondLevel: UIView {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate var viewModel: OWTestingRedSecondLevelViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWTestingRedSecondLevelViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -82,7 +84,7 @@ class OWTestingRedSecondLevel: UIView {
     }
 }
 
-fileprivate extension OWTestingRedSecondLevel {
+private extension OWTestingRedSecondLevel {
     func setupUI() {
         self .backgroundColor(.red)
             .border(width: Metrics.borderWidth, color: .gray)
@@ -172,7 +174,7 @@ fileprivate extension OWTestingRedSecondLevel {
        viewModel.outputs.changedCellState
             .take(1)
             .subscribe(onNext: { [weak self] state in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let text: String
                 switch state {

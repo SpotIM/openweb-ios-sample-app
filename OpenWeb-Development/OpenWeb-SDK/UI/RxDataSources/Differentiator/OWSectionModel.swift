@@ -11,11 +11,6 @@ import Foundation
 struct OWSectionModel<Section, ItemType> {
     var model: Section
     var items: [Item]
-
-    init(model: Section, items: [Item]) {
-        self.model = model
-        self.items = items
-    }
 }
 
 extension OWSectionModel: OWSectionModelType {

@@ -54,7 +54,7 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     }
 }
 
-fileprivate extension OWToastViewModel {
+private extension OWToastViewModel {
     func setupObservers() {
         actionClick
             .asObservable()
@@ -76,8 +76,8 @@ fileprivate extension OWToastViewModel {
     }
 
     func iconForType(type: OWToastType) -> UIImage {
-        var image: UIImage? = nil
-        switch(type) {
+        var image: UIImage?
+        switch type {
         case .information: image = UIImage(spNamed: "informationToast", supportDarkMode: false)
         case .success: image = UIImage(spNamed: "successToast", supportDarkMode: false)
         case .error: image = UIImage(spNamed: "errorToast", supportDarkMode: false)
@@ -88,7 +88,7 @@ fileprivate extension OWToastViewModel {
     }
 
     func borderColorForType(type: OWToastType) -> UIColor {
-        switch(type) {
+        switch type {
         case .information:
             return OWDesignColors.G5
         case .success:

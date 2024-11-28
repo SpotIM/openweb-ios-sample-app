@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWArticleDescriptionView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let imageCornerRadius: CGFloat = 10
         static let separatorHeight: CGFloat = 0.5
         static let imageSize: CGFloat = 62
@@ -26,21 +26,21 @@ class OWArticleDescriptionView: UIView {
         static let conversationAuthorIdentifier = "article_header_conversation_author_id"
     }
 
-    fileprivate lazy var topSeparatorView: UIView = {
+    private lazy var topSeparatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var conversationImageView: UIImageView = {
+    private lazy var conversationImageView: UIImageView = {
         return UIImageView()
             .enforceSemanticAttribute()
-            .image(UIImage(spNamed: "imagePlaceholder", supportDarkMode: false)!)
+            .image(UIImage(spNamed: "imagePlaceholderEmpty", supportDarkMode: false)!)
             .contentMode(.scaleAspectFill)
             .clipsToBounds(true)
             .cornerRadius(Metrics.imageCornerRadius)
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
             .wrapContent()
@@ -50,7 +50,7 @@ class OWArticleDescriptionView: UIView {
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var authorLabel: UILabel = {
+    private lazy var authorLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
             .wrapContent()
@@ -60,24 +60,24 @@ class OWArticleDescriptionView: UIView {
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var titlesContainer: UIView = {
+    private lazy var titlesContainer: UIView = {
         return UIView()
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var bottomSeparatorView: UIView = {
+    private lazy var bottomSeparatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         return UITapGestureRecognizer()
     }()
 
-    fileprivate var zeroHeightConstraint: OWConstraint? = nil
-    fileprivate var viewModel: OWArticleDescriptionViewModeling!
-    fileprivate let disposeBag = DisposeBag()
+    private var zeroHeightConstraint: OWConstraint?
+    private var viewModel: OWArticleDescriptionViewModeling!
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWArticleDescriptionViewModeling) {
         self.viewModel = viewModel
@@ -92,7 +92,7 @@ class OWArticleDescriptionView: UIView {
     }
 }
 
-fileprivate extension OWArticleDescriptionView {
+private extension OWArticleDescriptionView {
     func setupUI() {
         self.OWSnp.makeConstraints { make in
             zeroHeightConstraint = make.height.equalTo(0).constraint
@@ -150,7 +150,7 @@ fileprivate extension OWArticleDescriptionView {
         viewModel.outputs.conversationImageType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch imageType {
                 case .custom(let url):
                     self.setImage(with: url)
@@ -174,7 +174,7 @@ fileprivate extension OWArticleDescriptionView {
             .bind(to: viewModel.inputs.tap)
             .disposed(by: disposeBag)
 
-        if let zeroHeightConstraint = zeroHeightConstraint {
+        if let zeroHeightConstraint {
             viewModel.outputs.shouldShow
                 .map { !$0 }
                 .bind(to: zeroHeightConstraint.rx.isActive)
@@ -184,7 +184,7 @@ fileprivate extension OWArticleDescriptionView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
 
                 self.topSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
@@ -202,7 +202,7 @@ fileprivate extension OWArticleDescriptionView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.authorLabel.font = OWFontBook.shared.font(typography: .footnoteText)
             })
@@ -224,11 +224,11 @@ fileprivate extension OWArticleDescriptionView {
 
     func setImage(with url: URL) {
         conversationImageView.setImage(with: url) { [weak self] image, error in
-            guard let self = self else { return }
+            guard let self else { return }
 
             if error != nil {
                 self.setImageConstraints(isVisible: false)
-            } else if let image = image {
+            } else if let image {
                 self.conversationImageView.image = image
                 self.setImageConstraints(isVisible: true)
                 // Only when we have an imgae from article url, we can replace it with customize element

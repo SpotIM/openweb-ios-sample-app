@@ -32,7 +32,7 @@ protocol OWCommentContentViewModeling {
 class OWCommentContentViewModel: OWCommentContentViewModeling,
                                  OWCommentContentViewModelingInputs,
                                  OWCommentContentViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let commentMediaMaxHeight: Float = 226.0
         static let depth0Offset: CGFloat = 0.0
         static let depth1Offset: CGFloat = 25.0
@@ -43,9 +43,9 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var inputs: OWCommentContentViewModelingInputs { return self }
     var outputs: OWCommentContentViewModelingOutputs { return self }
 
-    fileprivate let _comment = BehaviorSubject<OWComment?>(value: nil)
-    fileprivate let lineLimit: Int
-    fileprivate let imageProvider: OWImageProviding
+    private let _comment = BehaviorSubject<OWComment?>(value: nil)
+    private let lineLimit: Int
+    private let imageProvider: OWImageProviding
 
     var collapsableLabelViewModel: OWCommentTextViewModeling
 
@@ -77,14 +77,14 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var image: Observable<OWImageType> {
         _comment
             .flatMap { [weak self] comment -> Observable<URL?> in
-                guard let self = self,
+                guard let self,
                       let imageId = comment?.image?.imageId
                 else { return .empty() }
 
                 return self.imageProvider.imageURL(with: imageId, size: nil)
             }
             .map { url in
-                guard let url = url else { return .defaultImage }
+                guard let url else { return .defaultImage }
                 return .custom(url: url)
             }
             .asObservable()
@@ -92,7 +92,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
 
     var mediaSize: Observable<CGSize> {
         Observable.combineLatest(_commentMediaOriginalSize, _commentLeadingOffset) { [weak self] mediaOriginalSize, leadingOffset -> CGSize in
-            guard let self = self else { return .zero }
+            guard let self else { return .zero }
             return self.getMediaSize(originalSize: mediaOriginalSize, leadingOffset: leadingOffset)
         }.asObservable()
     }
@@ -100,7 +100,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var isEdited: Observable<Bool> {
         _comment
             .map { comment in
-                guard let comment = comment
+                guard let comment
                 else { return false }
 
                 return comment.edited
@@ -108,7 +108,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             .asObservable()
     }
 
-    fileprivate lazy var _commentMediaOriginalSize: Observable<CGSize> = {
+    private lazy var _commentMediaOriginalSize: Observable<CGSize> = {
         _comment
             .map { comment in
                 if let gif = comment?.gif {
@@ -122,18 +122,18 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             .asObservable()
     }()
 
-    fileprivate lazy var _commentLeadingOffset: Observable<CGFloat> = {
+    private lazy var _commentLeadingOffset: Observable<CGFloat> = {
         _comment
             .unwrap()
             .map { [weak self] comment in
-                guard let self = self else { return 0 }
+                guard let self else { return 0 }
                 return self.leadingOffset(perCommentDepth: comment.depth ?? 0)
             }
             .asObservable()
     }()
 }
 
-fileprivate extension OWCommentContentViewModel {
+private extension OWCommentContentViewModel {
     func leadingOffset(perCommentDepth depth: Int) -> CGFloat {
         switch depth {
         case 0: return Metrics.depth0Offset

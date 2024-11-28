@@ -28,4 +28,3 @@ public extension DevelopmentThirdPartySSOAuthentication {
         // swiftlint:enable line_length
     }
 }
-

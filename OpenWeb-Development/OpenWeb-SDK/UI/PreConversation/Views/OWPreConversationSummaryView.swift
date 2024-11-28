@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWPreConversationSummaryView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let counterLeading: CGFloat = 8
         static let nextArrowLeading: CGFloat = 10
         static let onlineViewingUsersBottomLeading: CGFloat = 8
@@ -49,15 +49,15 @@ class OWPreConversationSummaryView: UIView {
             .wrapContent(axis: .horizontal)
     }()
 
-    fileprivate lazy var nextArrow: UIImageView = {
+    private lazy var nextArrow: UIImageView = {
         return UIImageView()
             .image(UIImage(spNamed: "nextArrow", supportDarkMode: true)!)
             .enforceSemanticAttribute()
             .wrapContent(axis: .horizontal)
     }()
 
-    fileprivate var viewModel: OWPreConversationSummaryViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWPreConversationSummaryViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWPreConversationSummaryViewModeling) {
         self.viewModel = viewModel
@@ -72,7 +72,7 @@ class OWPreConversationSummaryView: UIView {
     }
 }
 
-fileprivate extension OWPreConversationSummaryView {
+private extension OWPreConversationSummaryView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
@@ -123,7 +123,7 @@ fileprivate extension OWPreConversationSummaryView {
         }
 
         self.isHidden = !viewModel.outputs.isVisible
-        if (!viewModel.outputs.isVisible) {
+        if !viewModel.outputs.isVisible {
             self.OWSnp.makeConstraints { make in
                 make.height.equalTo(0)
             }
@@ -139,7 +139,7 @@ fileprivate extension OWPreConversationSummaryView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1,
                                                                         themeStyle: currentStyle)
@@ -152,11 +152,10 @@ fileprivate extension OWPreConversationSummaryView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: self.viewModel.outputs.titleFontTypography)
                 self.counterLabel.font = OWFontBook.shared.font(typography: self.viewModel.outputs.counterFontTypography)
             })
             .disposed(by: disposeBag)
     }
 }
-

@@ -82,64 +82,64 @@ struct OWConstraintAttributes: OptionSet, ExpressibleByIntegerLiteral {
 
     var layoutAttributes: [OWLayoutAttribute] {
         var attrs = [OWLayoutAttribute]()
-        if (self.contains(OWConstraintAttributes.left)) {
+        if self.contains(OWConstraintAttributes.left) {
             attrs.append(.left)
         }
-        if (self.contains(OWConstraintAttributes.top)) {
+        if self.contains(OWConstraintAttributes.top) {
             attrs.append(.top)
         }
-        if (self.contains(OWConstraintAttributes.right)) {
+        if self.contains(OWConstraintAttributes.right) {
             attrs.append(.right)
         }
-        if (self.contains(OWConstraintAttributes.bottom)) {
+        if self.contains(OWConstraintAttributes.bottom) {
             attrs.append(.bottom)
         }
-        if (self.contains(OWConstraintAttributes.leading)) {
+        if self.contains(OWConstraintAttributes.leading) {
             attrs.append(.leading)
         }
-        if (self.contains(OWConstraintAttributes.trailing)) {
+        if self.contains(OWConstraintAttributes.trailing) {
             attrs.append(.trailing)
         }
-        if (self.contains(OWConstraintAttributes.width)) {
+        if self.contains(OWConstraintAttributes.width) {
             attrs.append(.width)
         }
-        if (self.contains(OWConstraintAttributes.height)) {
+        if self.contains(OWConstraintAttributes.height) {
             attrs.append(.height)
         }
-        if (self.contains(OWConstraintAttributes.centerX)) {
+        if self.contains(OWConstraintAttributes.centerX) {
             attrs.append(.centerX)
         }
-        if (self.contains(OWConstraintAttributes.centerY)) {
+        if self.contains(OWConstraintAttributes.centerY) {
             attrs.append(.centerY)
         }
-        if (self.contains(OWConstraintAttributes.lastBaseline)) {
+        if self.contains(OWConstraintAttributes.lastBaseline) {
             attrs.append(.lastBaseline)
         }
-        if (self.contains(OWConstraintAttributes.firstBaseline)) {
+        if self.contains(OWConstraintAttributes.firstBaseline) {
             attrs.append(.firstBaseline)
         }
-        if (self.contains(OWConstraintAttributes.leftMargin)) {
+        if self.contains(OWConstraintAttributes.leftMargin) {
             attrs.append(.leftMargin)
         }
-        if (self.contains(OWConstraintAttributes.rightMargin)) {
+        if self.contains(OWConstraintAttributes.rightMargin) {
             attrs.append(.rightMargin)
         }
-        if (self.contains(OWConstraintAttributes.topMargin)) {
+        if self.contains(OWConstraintAttributes.topMargin) {
             attrs.append(.topMargin)
         }
-        if (self.contains(OWConstraintAttributes.bottomMargin)) {
+        if self.contains(OWConstraintAttributes.bottomMargin) {
             attrs.append(.bottomMargin)
         }
-        if (self.contains(OWConstraintAttributes.leadingMargin)) {
+        if self.contains(OWConstraintAttributes.leadingMargin) {
             attrs.append(.leadingMargin)
         }
-        if (self.contains(OWConstraintAttributes.trailingMargin)) {
+        if self.contains(OWConstraintAttributes.trailingMargin) {
             attrs.append(.trailingMargin)
         }
-        if (self.contains(OWConstraintAttributes.centerXWithinMargins)) {
+        if self.contains(OWConstraintAttributes.centerXWithinMargins) {
             attrs.append(.centerXWithinMargins)
         }
-        if (self.contains(OWConstraintAttributes.centerYWithinMargins)) {
+        if self.contains(OWConstraintAttributes.centerYWithinMargins) {
             attrs.append(.centerYWithinMargins)
         }
 

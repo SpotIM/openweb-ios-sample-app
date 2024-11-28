@@ -23,7 +23,7 @@ protocol OWConversationViewModelingInputs {
 protocol OWConversationViewModelingOutputs {
     var customizeNavigationItemUI: Observable<UINavigationItem> { get }
     var customizeNavigationBarUI: Observable<UINavigationBar> { get }
-    var conversationViewVM: OWConversationViewViewModeling { get }
+    var conversationViewVM: any OWConversationViewViewModeling { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
     var shouldShowCloseButton: Bool { get }
@@ -44,15 +44,15 @@ class OWConversationViewModel: OWConversationViewModeling,
     var inputs: OWConversationViewModelingInputs { return self }
     var outputs: OWConversationViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let conversationData: OWConversationRequiredData
-    fileprivate let viewableMode: OWViewableMode
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let conversationData: OWConversationRequiredData
+    private let viewableMode: OWViewableMode
+    private let disposeBag = DisposeBag()
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeNavigationItemUI = BehaviorSubject<UINavigationItem?>(value: nil)
-    fileprivate let _triggerCustomizeNavigationBarUI = BehaviorSubject<UINavigationBar?>(value: nil)
-    fileprivate let _shouldShowCustomizeNavigationItemLabel = BehaviorSubject<Bool?>(value: nil)
+    private let _triggerCustomizeNavigationItemUI = BehaviorSubject<UINavigationItem?>(value: nil)
+    private let _triggerCustomizeNavigationBarUI = BehaviorSubject<UINavigationBar?>(value: nil)
+    private let _shouldShowCustomizeNavigationItemLabel = BehaviorSubject<Bool?>(value: nil)
 
     var triggerCustomizeNavigationItemUI = PublishSubject<UINavigationItem>()
     var triggerCustomizeNavigationBarUI = PublishSubject<UINavigationBar>()
@@ -73,18 +73,18 @@ class OWConversationViewModel: OWConversationViewModeling,
             .asObservable()
     }
 
-    lazy var conversationViewVM: OWConversationViewViewModeling = {
+    lazy var conversationViewVM: any OWConversationViewViewModeling = {
         return OWConversationViewViewModel(conversationData: conversationData,
                                            viewableMode: self.viewableMode)
     }()
 
     var shouldShowCloseButton: Bool {
-        guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalMode else { return false }
+        guard case OWPresentationalModeCompact.present = conversationData.presentationalMode else { return false }
         return true
     }
 
     var highlightComment = PublishSubject<String>()
-    fileprivate var _highlightedComment = BehaviorSubject<String?>(value: nil)
+    private var _highlightedComment = BehaviorSubject<String?>(value: nil)
     var highlightedComment: Observable<String> {
         return _highlightedComment
             .unwrap()
@@ -104,7 +104,7 @@ class OWConversationViewModel: OWConversationViewModeling,
         return closeConversationTapped.asObservable()
     }
 
-    fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
+    private lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
         return BehaviorSubject<Bool>(value: servicesProvider.navigationControllerCustomizer().isLargeTitlesEnabled())
     }()
 
@@ -123,7 +123,7 @@ class OWConversationViewModel: OWConversationViewModeling,
     }
 }
 
-fileprivate extension OWConversationViewModel {
+private extension OWConversationViewModel {
     func setupObservers() {
         // Using BehaviorSubject behind the scene as the view create only after the coordinator initiated `viewModel.inputs.highlightComment.onNext(...)`
         highlightComment

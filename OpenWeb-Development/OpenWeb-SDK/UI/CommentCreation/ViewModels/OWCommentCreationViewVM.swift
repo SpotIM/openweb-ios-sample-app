@@ -26,7 +26,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var customizeSubmitButtonUI: Observable<UIButton> { get }
 }
 
-protocol OWCommentCreationViewViewModeling {
+protocol OWCommentCreationViewViewModeling: OWViewableTimeConsumer {
     var inputs: OWCommentCreationViewViewModelingInputs { get }
     var outputs: OWCommentCreationViewViewModelingOutputs { get }
 }
@@ -35,17 +35,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var inputs: OWCommentCreationViewViewModelingInputs { return self }
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let allowedMediaTypes: [String] = ["public.image"]
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
     }
 
-    fileprivate let commentCreationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "commentCreationViewVMQueue")
+    private let commentCreationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "commentCreationViewVMQueue")
 
-    fileprivate let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
-    fileprivate let disposeBag = DisposeBag()
+    private let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
+    private let disposeBag = DisposeBag()
     let viewableMode: OWViewableMode
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     var customizeSubmitButtonUI: Observable<UIButton> {
         return Observable.merge(commentCreationRegularViewVm.outputs.footerViewModel.outputs.customizeSubmitButtonUI,
@@ -56,24 +56,24 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     // This is the original commentCreationData since
     // the commentCreationData Can be chaged by sub VMs
-    fileprivate var originCommentCreationData: OWCommentCreationRequiredData
+    private var originCommentCreationData: OWCommentCreationRequiredData
 
-    fileprivate var commentCreationData: OWCommentCreationRequiredData
+    private var commentCreationData: OWCommentCreationRequiredData
 
-    fileprivate var articleUrl: String = ""
+    private var articleUrl: String = ""
 
-    fileprivate lazy var postId: OWPostId = OWManager.manager.postId ?? ""
+    private lazy var postId: OWPostId = OWManager.manager.postId ?? ""
 
-    fileprivate let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
-    fileprivate let _commentCreationError = PublishSubject<Void>()
+    private let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
+    private let _commentCreationError = PublishSubject<Void>()
 
-    fileprivate let _userJustLoggedIn = PublishSubject<Void>()
+    private let _userJustLoggedIn = PublishSubject<Void>()
     var userJustLoggedIn: Observable<Void> {
         return _userJustLoggedIn
             .asObservable()
     }
 
-    fileprivate lazy var _commentText: Observable<String> = {
+    private lazy var _commentText: Observable<String> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText
@@ -84,7 +84,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentImage: Observable<OWCommentImage?> = {
+    private lazy var _commentImage: Observable<OWCommentImage?> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentImageOutput
@@ -95,7 +95,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentGif: Observable<OWCommentGif?> = {
+    private lazy var _commentGif: Observable<OWCommentGif?> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.gifPreviewVM.outputs.gifDataOutput
@@ -106,7 +106,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentSelectedLabelIds: Observable<[String]> = {
+    private lazy var _commentSelectedLabelIds: Observable<[String]> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.commentLabelsContainerVM.outputs.selectedLabelIds
@@ -117,7 +117,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentSelectedMentions: Observable<OWUserMentionData> = {
+    private lazy var _commentSelectedMentions: Observable<OWUserMentionData> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             return commentCreationRegularViewVm.outputs.userMentionVM.outputs.mentionsData
@@ -129,7 +129,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     // swiftlint:disable large_tuple
-    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, OWCommentGif?, [String], OWUserMentionData)> = {
+    private lazy var _commentContent: Observable<(String, OWCommentImage?, OWCommentGif?, [String], OWUserMentionData)> = {
         Observable.combineLatest(_commentText,
                                  _commentImage,
                                  _commentGif,
@@ -152,7 +152,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.outputs.popped
                 .do(onNext: { [weak self] commentData in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     let hasText = !commentData.commentContent.text.isEmpty
                     if hasText {
                         self.cacheComment(commentContent: commentData.commentContent, commentLabels: nil, commentUserMentions: commentData.commentUserMentions)
@@ -172,7 +172,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 self?.sendEvent(for: .commentCreationClosePage)
             })
             .flatMap { [weak self] commentText, commentImage, commentGif, commentSelectedLabelIds, commentSelectedMentions -> Observable<Void> in
-                guard let self = self else { return Observable.empty() }
+                guard let self else { return Observable.empty() }
                 let hasText = !commentText.isEmpty
                 let hasImage = commentImage != nil
                 let hasGif = commentGif != nil
@@ -227,8 +227,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         setupObservers()
     }
 
-    fileprivate lazy var _retryCommentCreationSubmitted = PublishSubject<Void>()
-    fileprivate lazy var retryCommentCreationSubmitted: Observable<OWCommentCreationCtaData> = {
+    private lazy var _retryCommentCreationSubmitted = PublishSubject<Void>()
+    private lazy var retryCommentCreationSubmitted: Observable<OWCommentCreationCtaData> = {
         return _retryCommentCreationSubmitted
             .withLatestFrom(Observable.merge(commentCreationRegularViewVm.outputs.performCta,
                                              commentCreationLightViewVm.outputs.performCta,
@@ -242,7 +242,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                                                                 commentCreationLightViewVm.outputs.performCta,
                                                                 commentCreationFloatingKeyboardViewVm.outputs.performCta)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch self.commentCreationData.commentCreationType {
                 case .comment:
                     self.sendEvent(for: .postCommentClicked)
@@ -262,7 +262,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             }
             .map { [weak self] commentCreationData -> (OWCommentCreationCtaData, OWNetworkParameters)? in
                 // 1 - get create comment request params
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return (commentCreationData, self.commentCreatorNetworkHelper.getParametersForCreateCommentRequest(
                     from: commentCreationData,
                     section: self.commentCreationData.article.additionalSettings.section,
@@ -272,13 +272,13 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             }
             .unwrap()
             .do(onNext: { [weak self] _, _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._commentCreationSubmitInProgrss.onNext(true)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentCreationPost)
             })
             .flatMapLatest { [weak self] commentCreationData, networkParameters -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // 2 - perform create comment request
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 let conversationApi = self.servicesProvider.networkAPI().conversation
 
@@ -295,9 +295,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     .materialize()
                     .map { (commentCreationData, $0) }
             }
-            .flatMapLatest({ [weak self] (commentCreationData, event) -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
+            .flatMapLatest({ [weak self] commentCreationData, event -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // Add delay if end time for posting comment is less then delayBeforeTryAgainAfterError
-                guard let self = self else { return Observable.just((commentCreationData, event)) }
+                guard let self else { return Observable.just((commentCreationData, event)) }
                 let timeToPostComment = self.servicesProvider.timeMeasuringService()
                     .timeMeasuringMilliseconds(forKey: .commentCreationPost,
                                                delayDuration: Metrics.delayBeforeTryAgainAfterError)
@@ -308,13 +308,13 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 }
                 return Observable.just((commentCreationData, event))
             })
-            .map { [weak self] (commentCreationData, event) -> (OWCommentCreationCtaData, OWComment)? in
+            .map { [weak self] commentCreationData, event -> (OWCommentCreationCtaData, OWComment)? in
                 // 3 - handle network response
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 switch event {
                 case .next(let comment):
                     return (commentCreationData, comment)
-                case .error(_):
+                case .error:
                     self._commentCreationSubmitInProgrss.onNext(false)
                     self._commentCreationError.onNext()
                     let data = OWToastRequiredData(type: .error, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "ErrorStatePostComment"))
@@ -331,7 +331,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         let prepareLocalCommentObservable = commentCreationNetworkObservable
             .do(onNext: { [weak self] _ in
                 // 4 - clear cached comment if exists
-                guard let self = self else { return }
+                guard let self else { return }
                 let commentCacheService = self.servicesProvider.commentsInMemoryCacheService()
                 switch self.commentCreationData.commentCreationType {
                 case .comment:
@@ -347,7 +347,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             .withLatestFrom(self.servicesProvider.authenticationManager().activeUserAvailability) { ($0.0, $0.1, $1) }
             .map { [weak self] commentCreationData, comment, userAvailability -> OWComment? in
                 // 5 - populate local comment data
-                guard let self = self,
+                guard let self,
                       case let .user(user) = userAvailability
                 else { return nil }
 
@@ -372,7 +372,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         return prepareLocalCommentObservable
             .do(onNext: { [weak self] comment in
                 // 6 - comment created
-                guard let self = self else { return }
+                guard let self else { return }
                 let commentUpdateType: OWConversationUpdateType?
                 switch self.commentCreationData.commentCreationType {
                 case .comment:
@@ -384,7 +384,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     commentUpdateType = .update(commentId: commentId, withComment: updatedComment)
                 case .replyToComment(originComment: let originComment):
                     guard let commentId = originComment.id else { return }
-                    commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)                }
+                    commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)
+                }
                 if let updateType = commentUpdateType {
                     self.servicesProvider
                         .conversationUpdaterService()
@@ -392,7 +393,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 }
             })
             .flatMap({ [weak self] comment -> Observable<OWComment> in
-                guard let self = self,
+                guard let self,
                       case .floatingKeyboard = self.commentCreationData.settings.commentCreationSettings.style
                 else { return Observable.just(comment) }
                 self.commentCreationFloatingKeyboardViewVm.inputs.closeWithDelay.onNext()
@@ -402,7 +403,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     }
             })
             .do(onNext: { [weak self] comment in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.servicesProvider
                     .commentStatusUpdaterService()
                     .fetchStatusFor(comment: comment)
@@ -412,7 +413,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 }
 
-fileprivate extension OWCommentCreationViewViewModel {
+private extension OWCommentCreationViewViewModel {
     static func addDisplayUserMentions(to commentCreationData: inout OWCommentCreationRequiredData) -> [OWUserMentionObject]? {
         switch commentCreationData.commentCreationType {
         case .edit(comment: let comment):
@@ -434,13 +435,13 @@ fileprivate extension OWCommentCreationViewViewModel {
     func addInitialUserMentions(userMentions: [OWUserMentionObject]?) {
         switch self.commentType {
         case .comment, .edit:
-            guard let userMentions = userMentions else { return }
+            guard let userMentions else { return }
             switch commentCreationData.settings.commentCreationSettings.style {
             case .regular:
                 commentCreationRegularViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
             case .light:
                 commentCreationLightViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
-            case .floatingKeyboard(accessoryViewStrategy: _):
+            case .floatingKeyboard:
                 commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.inputs.initialMentions.onNext(userMentions)
             }
         case .replyToComment:
@@ -453,15 +454,15 @@ fileprivate extension OWCommentCreationViewViewModel {
         Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
                          commentCreationRegularViewVm.outputs.dismissedToast,
                          commentCreationLightViewVm.outputs.dismissedToast)
-            .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
-            .disposed(by: disposeBag)
+        .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
+        .disposed(by: disposeBag)
 
         servicesProvider.activeArticleService().updateStrategy(commentCreationData.article.articleInformationStrategy)
 
         if case .floatingKeyboard = commentCreationData.settings.commentCreationSettings.style {
             commentCreationFloatingKeyboardViewVm.outputs.resetTypeToNewCommentChanged
                 .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.commentCreationData.commentCreationType = .comment
                 })
                 .disposed(by: disposeBag)
@@ -476,7 +477,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             self?.sendEvent(for: .signUpToPostClicked)
         })
         .map { [weak self] _ -> OWUserAction? in
-            guard let self = self else { return nil }
+            guard let self else { return nil }
             switch self.commentType {
             case .comment:
                 return .commenting
@@ -488,16 +489,16 @@ fileprivate extension OWCommentCreationViewViewModel {
         }
         .unwrap()
         .flatMapLatest { [weak self] userAction -> Observable<Bool> in
-            guard let self = self else { return .empty() }
+            guard let self else { return .empty() }
             return self.servicesProvider.authenticationManager().waitForAuthentication(for: userAction)
         }
         .filter { $0 }
         .do(onNext: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: self.postId)
         })
         .map { [weak self] _ -> OWCommentId? in
-            guard let self = self else { return nil }
+            guard let self else { return nil }
             if case let .replyToComment(originComment) = self.commentCreationData.commentCreationType {
                 return originComment.id
             } else {
@@ -506,7 +507,7 @@ fileprivate extension OWCommentCreationViewViewModel {
         }
         .withLatestFrom(_commentContent) { ($0, $1) }
         .do(onNext: { [weak self] replyToCommentId, commentContent in
-            guard let self = self else { return }
+            guard let self else { return }
             if replyToCommentId != nil {
                 let commentText = commentContent.0
                 let commentImage = commentContent.1
@@ -520,9 +521,9 @@ fileprivate extension OWCommentCreationViewViewModel {
             }
         })
         .subscribe(onNext: { [weak self] replyToCommentId, _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self._userJustLoggedIn.onNext()
-            if let replyToCommentId = replyToCommentId {
+            if let replyToCommentId {
                 self.servicesProvider.actionsCallbacksNotifier()
                     .openCommentThread(commentId: replyToCommentId,
                                        performAction: .reply)
@@ -535,11 +536,11 @@ fileprivate extension OWCommentCreationViewViewModel {
             commentCreationLightViewVm.outputs.footerViewModel.outputs.addImageTapped
         )
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.sendEvent(for: .cameraIconClickedOpen)
             })
             .flatMap { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return Observable.just(false) }
+                guard let self else { return Observable.just(false) }
                 return self.servicesProvider
                     .permissionsService()
                     .requestPermission(for: .camera, viewableMode: self.viewableMode)
@@ -548,7 +549,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             .voidify()
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "TakeAPhoto"), type: OWPickImageActionSheet.takePhoto),
@@ -568,7 +569,7 @@ fileprivate extension OWCommentCreationViewViewModel {
 
         let userSelectedMediaObservable = selectMediaOptionsObservable
             .map { [weak self] response -> UIImagePickerController.SourceType? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 switch response {
                 case .completion:
                     return nil
@@ -591,7 +592,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             .unwrap()
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] sourceType -> Observable<OWImagePickerPresenterResponseType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider
                     .presenterService()
                     .showImagePicker(mediaTypes: Metrics.allowedMediaTypes, sourceType: sourceType, viewableMode: self.viewableMode)
@@ -611,7 +612,7 @@ fileprivate extension OWCommentCreationViewViewModel {
 
         userSelectedMediaObservable
             .subscribe(onNext: { [weak self] image in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch self.commentCreationData.settings.commentCreationSettings.style {
                 case .regular:
                     self.commentCreationRegularViewVm.outputs.commentCreationContentVM.inputs.imagePicked.onNext(image)
@@ -628,7 +629,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             commentCreationLightViewVm.outputs.footerViewModel.outputs.addGifTapped
         )
         .flatMap { [weak self] _ -> Observable<OWGifPickerPresenterResponseType> in
-            guard let self = self else { return .empty() }
+            guard let self else { return .empty() }
             return self.servicesProvider.presenterService()
                 .showGifPicker(viewableMode: self.viewableMode)
         }
@@ -653,7 +654,7 @@ fileprivate extension OWCommentCreationViewViewModel {
 
         _commentCreationSubmitInProgrss
             .subscribe(onNext: { [weak self] isInProgress in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.commentCreationRegularViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
                 self.commentCreationLightViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
                 self.commentCreationFloatingKeyboardViewVm.inputs.submitCommentInProgress.onNext(isInProgress)
@@ -676,7 +677,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             .toastToShow
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.commentCreationRegularViewVm.inputs.displayToast.onNext(result)
                 self.commentCreationLightViewVm.inputs.displayToast.onNext(result)
                 self.commentCreationFloatingKeyboardViewVm.inputs.displayToast.onNext(result)
@@ -725,7 +726,9 @@ fileprivate extension OWCommentCreationViewViewModel {
                 layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),
                 component: .commentCreation)
     }
+}
 
+extension OWCommentCreationViewViewModel {
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
         servicesProvider

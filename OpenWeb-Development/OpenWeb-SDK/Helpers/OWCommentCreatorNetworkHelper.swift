@@ -68,7 +68,7 @@ class OWCommentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol {
     }
 }
 
-fileprivate extension OWCommentCreatorNetworkHelper {
+private extension OWCommentCreatorNetworkHelper {
     func getContentRequestParam(from commentCreationData: OWCommentCreationCtaData) -> [[String: Any]] {
         var content: [[String: Any]] = []
 

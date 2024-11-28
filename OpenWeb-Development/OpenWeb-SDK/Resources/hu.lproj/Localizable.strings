@@ -4,7 +4,7 @@
 "Appeal" = "Fellebbezés";
 "AppealAuthorizationRequiredMessage" = "A fellebbezés folytatásához győződjön meg arról, hogy be van-e jelentkezve. Nem tag? Először regisztrálnia kell.";
 "AppealAuthorizationRequiredTitle" = "Felhatalmazás szükséges";
-"AppealLabel" = "Hozzászólásodat bármikor átírhatod és újra közzéteheted, illetve, ha azt szeretnéd, fellebbezhetsz is, mi pedig újra megvizsgáljuk a döntésünket.";
+"AppealLabel" = "Nyugodtan írja át, és tegye közzé újra a hozzászólását, vagy ha szeretné, akkor Fellebbezés, és mi felülvizsgáljuk a döntésünket.";
 "AppealLabelError" = "A fellebbezéssel kapcsolatos információk jelenleg nem állnak rendelkezésre. Kérjük, ellenőrizd internetkapcsolatod, vagy próbáld újra később.";
 "AppealLabelNotAvailable" = "A jelentett megjegyzés már nem érhető el.";
 "AppealRejectedCommentStatusMessage" = "A fellebbezése elutasításra került.";
@@ -86,7 +86,6 @@
 "Newest" = "Legújabb";
 "No" = "Nem";
 "NotAuthorPendingCommentStatusMessage" = "Ez a hozzászólás jóváhagyásra vár.";
-"OK" = "OK";
 "Oldest" = "Legrégebbi";
 "OpenSettings" = "Beállítások megnyitása";
 "OptionsMenu" = "Opciók menü";

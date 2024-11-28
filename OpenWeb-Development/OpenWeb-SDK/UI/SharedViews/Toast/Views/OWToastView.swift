@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWToastView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "toast_view_id"
 
         static let cornerRadius: CGFloat = 8
@@ -24,31 +24,31 @@ class OWToastView: UIView, OWThemeStyleInjectorProtocol {
         static let actionLeadingPadding: CGFloat = 12
     }
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         return UIImageView()
             .image(viewModel.outputs.iconImage)
     }()
 
-    fileprivate lazy var messageLabel: UILabel = {
+    private lazy var messageLabel: UILabel = {
         return UILabel()
             .text(viewModel.outputs.title)
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var actionView: OWToastActionView = {
+    private lazy var actionView: OWToastActionView = {
         return OWToastActionView(viewModel: viewModel.outputs.toastActionViewModel)
     }()
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         tap.numberOfTapsRequired = 1
         actionView.addGestureRecognizer(tap)
         return tap
     }()
 
-    fileprivate var viewModel: OWToastViewModeling
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWToastViewModeling
+    private var disposeBag = DisposeBag()
 
     init(viewModel: OWToastViewModeling) {
         self.viewModel = viewModel
@@ -68,7 +68,7 @@ class OWToastView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWToastView {
+private extension OWToastView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
@@ -96,7 +96,7 @@ fileprivate extension OWToastView {
             make.leading.equalTo(messageLabel.OWSnp.trailing).offset(Metrics.actionLeadingPadding)
             make.top.bottom.equalToSuperview()
             make.trailing.equalToSuperview().inset(viewModel.outputs.showAction ? Metrics.horizontalPadding : 0)
-            if (!viewModel.outputs.showAction) {
+            if !viewModel.outputs.showAction {
                 make.width.equalTo(0)
             }
         }
@@ -110,7 +110,7 @@ fileprivate extension OWToastView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.messageLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
@@ -119,7 +119,7 @@ fileprivate extension OWToastView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.messageLabel.text = self.viewModel.outputs.title
             })
             .disposed(by: disposeBag)
