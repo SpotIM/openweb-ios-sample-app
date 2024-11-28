@@ -28,12 +28,12 @@ class UIViewsExamplesViewModel: UIViewsExamplesViewModeling, UIViewsExamplesView
     var inputs: UIViewsExamplesViewModelingInputs { return self }
     var outputs: UIViewsExamplesViewModelingOutputs { return self }
 
-    fileprivate let postId: OWPostId
-    fileprivate let disposeBag = DisposeBag()
+    private let postId: OWPostId
+    private let disposeBag = DisposeBag()
 
     let conversationBelowVideoTapped = PublishSubject<Void>()
 
-    fileprivate let _openConversationBelowVideo = BehaviorSubject<OWPostId?>(value: nil)
+    private let _openConversationBelowVideo = BehaviorSubject<OWPostId?>(value: nil)
     var openConversationBelowVideo: Observable<OWPostId> {
         return _openConversationBelowVideo
             .unwrap()
@@ -50,7 +50,7 @@ class UIViewsExamplesViewModel: UIViewsExamplesViewModeling, UIViewsExamplesView
     }
 }
 
-fileprivate extension UIViewsExamplesViewModel {
+private extension UIViewsExamplesViewModel {
     func setupObservers() {
         conversationBelowVideoTapped
             .asObservable()

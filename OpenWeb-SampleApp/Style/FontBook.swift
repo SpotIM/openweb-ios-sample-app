@@ -43,13 +43,13 @@ class FontBook {
     static let helperLight = font(with: .light, size: 14)
 }
 
-fileprivate extension FontBook {
+private extension FontBook {
     static func font(with type: FontType, size: CGFloat) -> UIFont {
         return UIFont(name: type.fontName, size: size)!
     }
 }
 
-fileprivate enum FontType {
+private enum FontType {
     case regular, medium, bold, light
 
     var fontName: String {

@@ -30,12 +30,12 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     var inputs: NetworkSettingsViewModelingInputs { return self }
     var outputs: NetworkSettingsViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayInsertDataToPersistense = 100
     }
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
-    fileprivate let disposeBag = DisposeBag()
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("NetworkSettings", comment: "")
@@ -63,7 +63,7 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
             .asObservable()
     }
 
-    fileprivate lazy var environmentObservable: Observable<OWNetworkEnvironment> = {
+    private lazy var environmentObservable: Observable<OWNetworkEnvironment> = {
         return networkEnvironmentSelectedIndex
             .map {
                 OWNetworkEnvironment(from: $0)
@@ -77,7 +77,7 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     }
 }
 
-fileprivate extension NetworkSettingsVM {
+private extension NetworkSettingsVM {
     func setupObservers() {
         environmentObservable
             .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)

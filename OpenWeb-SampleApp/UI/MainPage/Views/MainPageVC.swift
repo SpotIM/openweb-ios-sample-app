@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class MainPageVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         static let identifier = "main_page_vc_id"
@@ -27,10 +27,10 @@ class MainPageVC: UIViewController {
         static let buttonHeight: CGFloat = 40
     }
 
-    fileprivate let viewModel: MainPageViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: MainPageViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var welcomeLbl: UILabel = {
+    private lazy var welcomeLbl: UILabel = {
         return UILabel()
             .numberOfLines(0)
             .textColor(ColorAsset.L6.color)
@@ -38,7 +38,7 @@ class MainPageVC: UIViewController {
             .textAlignment(.center)
     }()
 
-    fileprivate lazy var descriptionLbl: UILabel = {
+    private lazy var descriptionLbl: UILabel = {
         return UILabel()
             .numberOfLines(0)
             .textColor(ColorAsset.L6.color)
@@ -46,35 +46,35 @@ class MainPageVC: UIViewController {
             .textAlignment(.center)
     }()
 
-    fileprivate lazy var versionLbl: UILabel = {
+    private lazy var versionLbl: UILabel = {
         return UILabel()
             .textColor(ColorAsset.L5.color)
             .font(FontBook.helper)
     }()
 
-    fileprivate lazy var buildLbl: UILabel = {
+    private lazy var buildLbl: UILabel = {
         return UILabel()
             .textColor(ColorAsset.L5.color)
             .font(FontBook.helper)
     }()
 
-    fileprivate lazy var exploreAPIBtn: UIButton = {
+    private lazy var exploreAPIBtn: UIButton = {
         return NSLocalizedString("Explore", comment: "").blueRoundedButton
     }()
 
-    fileprivate lazy var logoImgView: UIImageView = {
+    private lazy var logoImgView: UIImageView = {
         return UIImageView()
             .image(UIImage(named: "openWebLogo")!)
             .contentMode(.scaleAspectFit)
     }()
 
-    fileprivate lazy var sampleAppImgView: UIImageView = {
+    private lazy var sampleAppImgView: UIImageView = {
         return UIImageView()
             .image(UIImage(named: "sampleApp-illustration")!)
             .contentMode(.scaleAspectFit)
     }()
 
-    fileprivate lazy var aboutBtn: UIButton = {
+    private lazy var aboutBtn: UIButton = {
         let img = UIImage(named: "info-circle")!
         let button = UIButton()
         button.setImage(img, for: .normal)
@@ -107,7 +107,7 @@ class MainPageVC: UIViewController {
     }
 }
 
-fileprivate extension MainPageVC {
+private extension MainPageVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         versionLbl.accessibilityIdentifier = Metrics.versionIdentifier

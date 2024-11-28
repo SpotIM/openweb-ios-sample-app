@@ -11,13 +11,13 @@ import RxSwift
 import RxCocoa
 
 class ToolbarCollectionCell: UICollectionViewCell {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let margin: CGFloat = 5
         static let size: CGFloat = CommentCreationToolbar.ToolbarMetrics.height
         static let accessibilitySurfix = "toolbar_cell_id"
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
             .font(FontBook.mainHeadingBold)
             .textAlignment(.center)
@@ -25,7 +25,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
         return lbl
     }()
 
-    fileprivate lazy var mainArea: UIView = {
+    private lazy var mainArea: UIView = {
         let view = UIView()
 
         view.addSubview(titleLabel)
@@ -36,8 +36,8 @@ class ToolbarCollectionCell: UICollectionViewCell {
         return view
     }()
 
-    fileprivate var disposeBag: DisposeBag!
-    fileprivate var viewModel: ToolbarCollectionCellViewModeling!
+    private var disposeBag: DisposeBag!
+    private var viewModel: ToolbarCollectionCellViewModeling!
 
     func configure(with viewModel: ToolbarCollectionCellViewModeling) {
         self.viewModel = viewModel
@@ -55,11 +55,12 @@ class ToolbarCollectionCell: UICollectionViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         titleLabel.text = ""
     }
 }
 
-fileprivate extension ToolbarCollectionCell {
+private extension ToolbarCollectionCell {
     func setupUI() {
         contentView.addSubview(mainArea)
         mainArea.snp.makeConstraints { make in

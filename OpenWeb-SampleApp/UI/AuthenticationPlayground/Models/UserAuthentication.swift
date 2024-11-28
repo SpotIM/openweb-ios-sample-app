@@ -9,7 +9,7 @@
 import Foundation
 
 struct UserAuthentication {
-    let username: String
-    let password: String
+    var username: String
+    var password: String
     let userId: String
 }

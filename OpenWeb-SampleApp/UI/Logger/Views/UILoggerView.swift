@@ -11,7 +11,7 @@ import Foundation
 import RxSwift
 
 class UILoggerView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "logger_view_id"
         static let loggerTitleIdentifier = "logger_title_id"
         static let loggerTextViewIdentifier = "logger_text_view_id"
@@ -21,14 +21,14 @@ class UILoggerView: UIView {
         static let delayScrollToBottom = 100 // Time in ms
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .font(FontBook.mainHeadingBold)
             .textColor(.black)
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var loggerTextView: UITextView = {
+    private lazy var loggerTextView: UITextView = {
         let textView = UITextView()
             .isEditable(false)
             .isScrollEnabled(true)
@@ -40,8 +40,19 @@ class UILoggerView: UIView {
         return textView
     }()
 
-    fileprivate let viewModel: UILoggerViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private lazy var clearButton: UIButton = {
+        let this = UIButton()
+        if #available(iOS 13.0, *) {
+            this.setImage(UIImage(systemName: "trash"), for: .normal)
+        } else {
+            this.setTitle("Clear", for: .normal)
+        }
+        this.tintColor = .black
+        return this
+    }()
+
+    private let viewModel: UILoggerViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: UILoggerViewModeling = UILoggerViewModel()) {
         self.viewModel = viewModel
@@ -56,7 +67,7 @@ class UILoggerView: UIView {
     }
 }
 
-fileprivate extension UILoggerView {
+private extension UILoggerView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.loggerTitleIdentifier
@@ -68,7 +79,13 @@ fileprivate extension UILoggerView {
 
         self.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.leading.trailing.top.equalTo(self).inset(Metrics.horizontalOffset)
+            make.leading.top.equalTo(self).inset(Metrics.horizontalOffset)
+        }
+
+        self.addSubview(clearButton)
+        clearButton.snp.makeConstraints { make in
+            make.trailing.top.equalTo(self).inset(Metrics.horizontalOffset)
+            make.centerY.equalTo(titleLabel)
         }
 
         self.addSubview(loggerTextView)
@@ -89,13 +106,19 @@ fileprivate extension UILoggerView {
             .throttle(.milliseconds(Metrics.delayScrollToBottom), scheduler: MainScheduler.asyncInstance)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.scrollTextViewToBottom(textView: self.loggerTextView)
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.title
             .bind(to: titleLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        clearButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.inputs.clear()
+            })
             .disposed(by: disposeBag)
     }
 

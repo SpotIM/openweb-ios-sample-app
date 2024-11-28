@@ -12,16 +12,16 @@ import RxCocoa
 
 class PickerSetting: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleFontSize: CGFloat = 20
         static let horizontalOffset: CGFloat = 10
         static let pickerMaxWidth: CGFloat = 220
         static let titleNumberOfLines: Int = 2
     }
 
-    fileprivate let title: String
+    private let title: String
     fileprivate let items = BehaviorSubject<[String]>(value: [])
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     fileprivate lazy var pickerTitleLbl: UILabel = {
         return title
@@ -43,7 +43,7 @@ class PickerSetting: UIView {
         applyAccessibility(prefixId: accessibilityPrefixId)
 
         // Add items if exist after setupObservers since there is a skip(1) for skipping initial BehaviorSubject value
-        if let items = items {
+        if let items {
             self.items.onNext(items)
         }
     }
@@ -54,7 +54,7 @@ class PickerSetting: UIView {
 
 }
 
-fileprivate extension PickerSetting {
+private extension PickerSetting {
     func applyAccessibility(prefixId: String) {
         pickerTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         pickerControl.accessibilityIdentifier = prefixId + "_picker_id"
@@ -81,7 +81,7 @@ fileprivate extension PickerSetting {
         items
             .skip(1) // Skip initialize BehaviorSubject value
             .take(1) // Take first value after initialize
-            .bind(to: pickerControl.rx.itemTitles) { (_, element) in
+            .bind(to: pickerControl.rx.itemTitles) { _, element in
                 return element
             }
             .disposed(by: disposeBag)
@@ -99,7 +99,7 @@ extension Reactive where Base: PickerSetting {
         return value
     }
 
-    fileprivate var value: ControlEvent<(row: Int, component: Int)> {
+    private var value: ControlEvent<(row: Int, component: Int)> {
         return base.pickerControl.rx.itemSelected
     }
 

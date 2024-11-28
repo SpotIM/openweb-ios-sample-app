@@ -32,7 +32,7 @@ protocol CommentCreationSettingsViewModeling {
 }
 
 class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCreationSettingsViewModelingInputs, CommentCreationSettingsViewModelingOutputs {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayInsertDataToPersistense = 100
     }
 
@@ -42,7 +42,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
     var accessoryViewSelectedIndex = BehaviorSubject<Int>(value: 0)
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     var accessoryViewIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
@@ -85,7 +85,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
             .asObservable()
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     lazy var title: String = {
         return NSLocalizedString("CommentCreationSettings", comment: "")
@@ -114,10 +114,10 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return [_none, _toolbar]
     }()
 
-    fileprivate lazy var styleModeObservable: Observable<OWCommentCreationStyle> = {
+    private lazy var styleModeObservable: Observable<OWCommentCreationStyle> = {
         return Observable.combineLatest(customStyleModeSelectedIndex,
                                         accessoryViewSelectedIndex)
-            .map { (customStyleModeIndex, accessoryViewIndex) -> OWCommentCreationStyle in
+            .map { customStyleModeIndex, accessoryViewIndex -> OWCommentCreationStyle in
                 var style = OWCommentCreationStyle.commentCreationStyle(fromIndex: customStyleModeIndex)
                 if case .floatingKeyboard = style {
                     let accessoryViewStrategy = OWAccessoryViewStrategy(index: accessoryViewIndex)
@@ -134,7 +134,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     }
 }
 
-fileprivate extension CommentCreationSettingsVM {
+private extension CommentCreationSettingsVM {
     func setupObservers() {
         styleModeObservable
             .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)

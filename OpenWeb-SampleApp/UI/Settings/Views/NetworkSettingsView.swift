@@ -11,28 +11,28 @@ import RxSwift
 
 class NetworkSettingsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "network_settings_view_id"
         static let segmentedNetworkEnvironmentIdentifier = "network_environment"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metrics.verticalOffset
         return stackView
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedNetworkEnvironment: SegmentedControlSetting = {
+    private lazy var segmentedNetworkEnvironment: SegmentedControlSetting = {
         let title = viewModel.outputs.networkEnvironmentTitle
         let items = viewModel.outputs.networkEnvironmentSettings
 
@@ -41,8 +41,8 @@ class NetworkSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate let viewModel: NetworkSettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: NetworkSettingsViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: NetworkSettingsViewModeling) {
         self.viewModel = viewModel
@@ -57,7 +57,7 @@ class NetworkSettingsView: UIView {
     }
 }
 
-fileprivate extension NetworkSettingsView {
+private extension NetworkSettingsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         self.segmentedNetworkEnvironment.accessibilityIdentifier = Metrics.segmentedNetworkEnvironmentIdentifier

@@ -28,9 +28,9 @@ class ToolbarCollectionCellViewModel: ToolbarCollectionCellViewModeling,
     var inputs: ToolbarCollectionCellViewModelingInputs { return self }
     var outputs: ToolbarCollectionCellViewModelingOutputs { return self }
 
-    fileprivate let model: ToolbarElementModel
+    private let model: ToolbarElementModel
 
-    fileprivate let _emoji = BehaviorSubject<String?>(value: nil)
+    private let _emoji = BehaviorSubject<String?>(value: nil)
     var emoji: Observable<String> {
         return _emoji
             .unwrap()

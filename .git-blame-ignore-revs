@@ -1,0 +1,12 @@
+6e4e83abae823930a90a1e4a37944590b9b671dc # OW-29577 add autocorrected SwiftLint rule control_statement
+3f26c50baa98f9c6ee69a6447516a49bb2f2b5f3 # OW-29577 add autocorrected SwiftLint rule empty_enum_arguments
+35f2db57402bbcfa6c4b2789378576e27b83cbcb # OW-29577 add autocorrected SwiftLint rule redundant_optional_initialization
+b0fca7fedc19144ade1514d0dd9c8d8d71d738d4 # OW-29577 add autocorrected SwiftLint rule trailing_newline
+2ec97409d649b48e9ce9c819c0d39067db844cdc # OW-29577 add autocorrected SwiftLint opt-in rule closure_end_indentation
+809330461c8e5be66161d64c256852e5cbd2ce23 # OW-29577 add autocorrected SwiftLint opt-in rule closure_spacing
+bbb5d7b0b28037c4fda7041b7e7b0b18dd074ba3 # OW-29577 add autocorrected SwiftLint opt-in rule operator_usage_whitespace
+cc61e5681c7932caa4579f9806455096316ed459 # OW-29577 add autocorrected SwiftLint opt-in rule unneeded_parentheses_in_closure_argument
+f5b30626639afb368fd20c56988a322b688ac043 # OW-29577 add autocorrected SwiftLint opt-in rule switch_case_alignment
+b4bc78bc9ff0015c6a0dc76c637f18565a70c23c # OW-29577 add autocorrected SwiftLint rule private_over_fileprivate
+f8f15b58136f0f62914948def2f881383a6090b7 # OW-29577 change most occurrences of fileprivate to private
+9283661ac5ec3bc54bb1dbe7a6881e6b0c9fc4bb # OW-29577 add autocorrected SwiftLint opt-in rule shorthand_optional_binding

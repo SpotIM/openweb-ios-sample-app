@@ -38,7 +38,7 @@
 		3DA1E61A2C6E221800EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E4FE2C6E221800EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift */; };
 		3DA1E61B2C6E221800EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E4FF2C6E221800EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift */; };
 		3DA1E61C2C6E221800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5002C6E221800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift */; };
-		3DA1E61D2C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions .swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5012C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions .swift */; };
+		3DA1E61D2C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5012C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions.swift */; };
 		3DA1E61E2C6E221800EBFA7D /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5032C6E221800EBFA7D /* Array+Unwrap.swift */; };
 		3DA1E61F2C6E221800EBFA7D /* CollectionView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5042C6E221800EBFA7D /* CollectionView+Registration.swift */; };
 		3DA1E6202C6E221800EBFA7D /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5052C6E221800EBFA7D /* Date+extensions.swift */; };
@@ -192,6 +192,8 @@
 		3DA1E6C22C6E221800EBFA7D /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5FE2C6E221800EBFA7D /* ColorPalette.swift */; };
 		3DA1E6C32C6E221800EBFA7D /* FontBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5FF2C6E221800EBFA7D /* FontBook.swift */; };
 		3DA1E6C42C6E221800EBFA7D /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E6002C6E221800EBFA7D /* ThemeStyle.swift */; };
+		9EB423BF2CDB7F7900ACAC09 /* OWFloatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB423BE2CDB7F6900ACAC09 /* OWFloatingView.swift */; };
+		9EB423C12CDB92E900ACAC09 /* OWFloatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB423C02CDB92E100ACAC09 /* OWFloatingViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -228,7 +230,7 @@
 		3DA1E4FE2C6E221800EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DevelopmentGenericSSOAuthentication+Extensions.swift"; sourceTree = "<group>"; };
 		3DA1E4FF2C6E221800EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DevelopmentSDKConversationDataModel+Extensions.swift"; sourceTree = "<group>"; };
 		3DA1E5002C6E221800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DevelopmentThirdPartySSOAuthentication+Extensions.swift"; sourceTree = "<group>"; };
-		3DA1E5012C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions .swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DevelopmentUserAuthentication+Extensions .swift"; sourceTree = "<group>"; };
+		3DA1E5012C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DevelopmentUserAuthentication+Extensions.swift"; sourceTree = "<group>"; };
 		3DA1E5032C6E221800EBFA7D /* Array+Unwrap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DA1E5042C6E221800EBFA7D /* CollectionView+Registration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CollectionView+Registration.swift"; sourceTree = "<group>"; };
 		3DA1E5052C6E221800EBFA7D /* Date+extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+extensions.swift"; sourceTree = "<group>"; };
@@ -389,6 +391,8 @@
 		613A043DFBAAAE6C80E5729B /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		6E5DDD8D9BBC69EAFFE97AC9 /* Pods-OpenWeb-SampleApp.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWeb_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EB423BE2CDB7F6900ACAC09 /* OWFloatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFloatingView.swift; sourceTree = "<group>"; };
+		9EB423C02CDB92E100ACAC09 /* OWFloatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFloatingViewModel.swift; sourceTree = "<group>"; };
 		C95836CE2A071D09D80EEB49 /* Pods-OpenWeb-SampleApp.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.public.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.public.xcconfig"; sourceTree = "<group>"; };
 		FF2B845011A898464D3835FD /* Pods-OpenWeb-SampleApp.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.beta.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.beta.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -475,7 +479,7 @@
 				3DA1E4FE2C6E221800EBFA7D /* DevelopmentGenericSSOAuthentication+Extensions.swift */,
 				3DA1E4FF2C6E221800EBFA7D /* DevelopmentSDKConversationDataModel+Extensions.swift */,
 				3DA1E5002C6E221800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift */,
-				3DA1E5012C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions .swift */,
+				3DA1E5012C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions.swift */,
 			);
 			path = SampleAppInternalConfigs;
 			sourceTree = "<group>";
@@ -707,6 +711,7 @@
 		3DA1E5582C6E221800EBFA7D /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				9EB423C02CDB92E100ACAC09 /* OWFloatingViewModel.swift */,
 				3DA1E5572C6E221800EBFA7D /* UILoggerViewModel.swift */,
 			);
 			path = ViewModels;
@@ -715,6 +720,7 @@
 		3DA1E55A2C6E221800EBFA7D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9EB423BE2CDB7F6900ACAC09 /* OWFloatingView.swift */,
 				3DA1E5592C6E221800EBFA7D /* UILoggerView.swift */,
 			);
 			path = Views;
@@ -1291,9 +1297,9 @@
 		3DA1DF0B2C6E200300EBFA7D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = NO;
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					3DA1DF122C6E200300EBFA7D = {
 						CreatedOnToolsVersion = 15.4;
@@ -1464,6 +1470,7 @@
 				3DA1E68E2C6E221800EBFA7D /* GeneralSettingsView.swift in Sources */,
 				3DA1E63D2C6E221800EBFA7D /* CoordinatorData.swift in Sources */,
 				3DA1E6882C6E221800EBFA7D /* SettingsViewModel.swift in Sources */,
+				9EB423BF2CDB7F7900ACAC09 /* OWFloatingView.swift in Sources */,
 				3DA1E6252C6E221800EBFA7D /* SettingsElementsCustomizationStyle+Extension.swift in Sources */,
 				3DA1E63F2C6E221800EBFA7D /* MainPageCoordinator.swift in Sources */,
 				3DA1E6412C6E221800EBFA7D /* MockArticleFlowCoordinator.swift in Sources */,
@@ -1523,7 +1530,7 @@
 				3DA1E68A2C6E221800EBFA7D /* ColorSelectionItemCell.swift in Sources */,
 				3DA1E6512C6E221800EBFA7D /* GenericSSOAuthentication.swift in Sources */,
 				3DA1E6BF2C6E221800EBFA7D /* UserDefaultsProvider.swift in Sources */,
-				3DA1E61D2C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions .swift in Sources */,
+				3DA1E61D2C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions.swift in Sources */,
 				3DA1E6172C6E221800EBFA7D /* OWTheme+Extensions.swift in Sources */,
 				3DA1E61F2C6E221800EBFA7D /* CollectionView+Registration.swift in Sources */,
 				3DA1E6802C6E221800EBFA7D /* CommentCreationSettingsVM.swift in Sources */,
@@ -1538,6 +1545,7 @@
 				3DA1E64D2C6E221800EBFA7D /* AboutViewModel.swift in Sources */,
 				3DA1E6522C6E221800EBFA7D /* ThirdPartySSOAuthentication.swift in Sources */,
 				3DA1E6092C6E221800EBFA7D /* OWCommunityQuestionsStyle+Extensions.swift in Sources */,
+				9EB423C12CDB92E900ACAC09 /* OWFloatingViewModel.swift in Sources */,
 				3DA1E67C2C6E221800EBFA7D /* SettingsGroupVMProtocol.swift in Sources */,
 				3DA1E6C32C6E221800EBFA7D /* FontBook.swift in Sources */,
 				3DA1E6552C6E221800EBFA7D /* AuthenticationPlaygroundVC.swift in Sources */,
@@ -1636,13 +1644,13 @@
 			baseConfigurationReference = 323895B82FAD6D312F63CB10 /* Pods-OpenWeb-SampleApp.internal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
+				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "OpenWeb-SampleApp/Resources/Info.plist";
@@ -1656,6 +1664,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1717,7 +1726,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
@@ -1729,13 +1737,13 @@
 			baseConfigurationReference = 0DD46F0FA78B38F6277A4A2F /* Pods-OpenWeb-SampleApp.releaseinternal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
+				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "OpenWeb-SampleApp/Resources/Info.plist";
@@ -1749,6 +1757,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1830,13 +1839,13 @@
 			baseConfigurationReference = FF2B845011A898464D3835FD /* Pods-OpenWeb-SampleApp.beta.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
+				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "OpenWeb-SampleApp/Resources/Info.plist";
@@ -1850,6 +1859,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1932,13 +1942,13 @@
 			baseConfigurationReference = C95836CE2A071D09D80EEB49 /* Pods-OpenWeb-SampleApp.public.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
+				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "OpenWeb-SampleApp/Resources/Info.plist";
@@ -1952,6 +1962,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2014,7 +2025,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
@@ -2026,13 +2036,13 @@
 			baseConfigurationReference = 6E5DDD8D9BBC69EAFFE97AC9 /* Pods-OpenWeb-SampleApp.releasebeta.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
+				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "OpenWeb-SampleApp/Resources/Info.plist";
@@ -2046,6 +2056,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2108,7 +2119,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
@@ -2120,13 +2130,13 @@
 			baseConfigurationReference = 613A043DFBAAAE6C80E5729B /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
+				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "OpenWeb-SampleApp/Resources/Info.plist";
@@ -2140,6 +2150,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
