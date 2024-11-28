@@ -4,7 +4,7 @@
 "Appeal" = "Fai ricorso";
 "AppealAuthorizationRequiredMessage" = "Verifica di aver effettuato l'accesso per continuare il tuo ricorso. Se non sei un membro dovrai effettuare l'iscrizione.";
 "AppealAuthorizationRequiredTitle" = "Autorizzazione richiesta";
-"AppealLabel" = "Puoi riscrivere e ripubblicare il tuo commento o, se lo desideri, fare ricorso in modo da richiedere una nuova valutazione della nostra decisione.";
+"AppealLabel" = "Sentiti libero di riscrivere e ripubblicare il tuo commento o, se lo desideri, puoi Fai ricorso e riesamineremo la nostra decisione.";
 "AppealLabelError" = "Le informazioni del ricorso non sono attualmente disponibili. Verifica la tua connessione internet o riprova più tardi.";
 "AppealLabelNotAvailable" = "Il commento che hai segnalato non è più disponibile.";
 "AppealRejectedCommentStatusMessage" = "Il tuo ricorso è stato respinto.";
@@ -86,7 +86,6 @@
 "Newest" = "Il più recente";
 "No" = "No";
 "NotAuthorPendingCommentStatusMessage" = "Questo commento è in attesa di revisione.";
-"OK" = "OK";
 "Oldest" = "Il più vecchio";
 "OpenSettings" = "Apri le impostazioni";
 "OptionsMenu" = "Menu delle opzioni";

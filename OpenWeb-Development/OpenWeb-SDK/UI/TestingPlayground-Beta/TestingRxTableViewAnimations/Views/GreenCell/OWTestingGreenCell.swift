@@ -14,7 +14,7 @@ import RxCocoa
 
 class OWTestingGreenCell: UITableViewCell {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let margin: CGFloat = 20.0
         static let roundCorners: CGFloat = 10.0
         static let padding: CGFloat = 8.0
@@ -22,7 +22,7 @@ class OWTestingGreenCell: UITableViewCell {
         static let expandedCellContentHeight: CGFloat = 180.0
     }
 
-    fileprivate lazy var cellContent: UIView = {
+    private lazy var cellContent: UIView = {
         let view = UIView()
             .backgroundColor(.green)
             .corner(radius: Metrics.roundCorners)
@@ -48,14 +48,14 @@ class OWTestingGreenCell: UITableViewCell {
         return view
     }()
 
-    fileprivate lazy var lblIdentifier: UILabel = {
+    private lazy var lblIdentifier: UILabel = {
         return UILabel()
             .textColor(.black)
             .numberOfLines(1)
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var btnRemove: UIButton = {
+    private lazy var btnRemove: UIButton = {
         return "Remove"
             .button
             .backgroundColor(.lightGray)
@@ -65,7 +65,7 @@ class OWTestingGreenCell: UITableViewCell {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate lazy var btnState: UIButton = {
+    private lazy var btnState: UIButton = {
         return "Expand"
             .button
             .backgroundColor(.lightGray)
@@ -75,8 +75,8 @@ class OWTestingGreenCell: UITableViewCell {
             .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
-    fileprivate var viewModel: OWTestingGreenCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWTestingGreenCellViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -96,7 +96,7 @@ class OWTestingGreenCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWTestingGreenCell {
+private extension OWTestingGreenCell {
     func setupUI() {
         self.backgroundColor = .clear
         self.selectionStyle = .none
@@ -122,7 +122,7 @@ fileprivate extension OWTestingGreenCell {
         viewModel.outputs.changedCellState
             .skip(1)
             .subscribe(onNext: { [weak self] state in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let height: CGFloat
                 switch state {
@@ -168,7 +168,7 @@ fileprivate extension OWTestingGreenCell {
        viewModel.outputs.changedCellState
             .take(1)
             .subscribe(onNext: { [weak self] state in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 let height: CGFloat
                 switch state {

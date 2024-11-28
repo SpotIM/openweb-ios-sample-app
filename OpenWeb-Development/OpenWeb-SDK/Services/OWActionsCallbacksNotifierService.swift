@@ -20,7 +20,7 @@ protocol OWActionsCallbacksNotifierServicing {
 }
 
 class OWActionsCallbacksNotifierService: OWActionsCallbacksNotifierServicing {
-    fileprivate let _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+    private let _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> {
         _openCommentThread
             .asObservable()

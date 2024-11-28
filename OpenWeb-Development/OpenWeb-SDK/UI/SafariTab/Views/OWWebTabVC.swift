@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 
 class OWWebTabVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let closeButtonImageName: String = "closeButton"
         static let backButtonImageName: String = "backButton"
     }
@@ -21,7 +21,7 @@ class OWWebTabVC: UIViewController {
     private let viewModel: OWWebTabViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var safariTabView: OWWebTabView = {
+    private lazy var safariTabView: OWWebTabView = {
         return OWWebTabView(viewModel: self.viewModel.outputs.webTabViewVM)
     }()
 
@@ -29,13 +29,13 @@ class OWWebTabVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
             .horizontalAlignment(.left)
     }()
 
-    fileprivate lazy var backButton: UIButton = {
+    private lazy var backButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: Metrics.backButtonImageName, supportDarkMode: true), state: .normal)
             .horizontalAlignment(.left)
@@ -62,7 +62,7 @@ class OWWebTabVC: UIViewController {
     }
 }
 
-fileprivate extension OWWebTabVC {
+private extension OWWebTabVC {
     func setupUI() {
         self.navigationItem.largeTitleDisplayMode = .never
         self.view.addSubview(safariTabView)
@@ -78,7 +78,7 @@ fileprivate extension OWWebTabVC {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
                 self.backButton.image(UIImage(spNamed: Metrics.backButtonImageName, supportDarkMode: true), state: .normal)
             })
@@ -93,7 +93,7 @@ fileprivate extension OWWebTabVC {
             .outputs
             .shouldShowCloseButton
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
+                guard let self else { return }
                 addCloseButtonIfNeeded(shouldShow)
             })
             .disposed(by: disposeBag)
@@ -106,7 +106,7 @@ fileprivate extension OWWebTabVC {
             .webTabViewVM.outputs
             .shouldShowBackButton
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
+                guard let self else { return }
                 addBackButtonIfNeeded(shouldShow)
             })
             .disposed(by: disposeBag)
@@ -115,7 +115,7 @@ fileprivate extension OWWebTabVC {
             .webTabViewVM.outputs
             .title
             .subscribe(onNext: { [weak self] title in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.title = title
             })
             .disposed(by: disposeBag)

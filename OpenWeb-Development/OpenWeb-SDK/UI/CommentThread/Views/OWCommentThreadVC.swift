@@ -11,14 +11,14 @@ import RxSwift
 import RxCocoa
 
 class OWCommentThreadVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
 
     }
 
-    fileprivate let viewModel: OWCommentThreadViewModeling
+    private let viewModel: OWCommentThreadViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var commentThreadView: OWCommentThreadView = {
+    private lazy var commentThreadView: OWCommentThreadView = {
         let commentThreadView = OWCommentThreadView(viewModel: viewModel.outputs.commentThreadViewVM)
         return commentThreadView
     }()
@@ -52,7 +52,7 @@ class OWCommentThreadVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 }
 
-fileprivate extension OWCommentThreadVC {
+private extension OWCommentThreadVC {
     func setupViews() {
         self.title = viewModel.outputs.title
         let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
@@ -92,7 +92,7 @@ fileprivate extension OWCommentThreadVC {
         Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
             .subscribe(onNext: { [weak self] displayMode in
                 let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
-                guard let self = self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
+                guard let self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
 
                 let isLargeTitleGoingToBeDisplay = displayMode == .always
                 self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
@@ -106,7 +106,7 @@ fileprivate extension OWCommentThreadVC {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

@@ -11,15 +11,15 @@ import Foundation
 import RxSwift
 
 class OWPushOverFullScreenAnimationTransitioning: NSObject, UIViewControllerAnimatedTransitioning {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let transitionDuration: TimeInterval = 0.3
         static let orientationChangeDelay = 10
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate var viewFromOrientation: UIView?
-    fileprivate var viewToOrientation: UIView?
-    fileprivate var presenting: Bool = true
+    private let disposeBag = DisposeBag()
+    private var viewFromOrientation: UIView?
+    private var viewToOrientation: UIView?
+    private var presenting: Bool = true
 
     override init() {
         super.init()
@@ -49,7 +49,7 @@ class OWPushOverFullScreenAnimationTransitioning: NSObject, UIViewControllerAnim
                            animations: {
                 vcTo.view.alpha = 1.0
             }, completion: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
                 container.insertSubview(vcFrom.view, belowSubview: vcTo.view)
                 self.viewFromOrientation = vcFrom.view
@@ -69,13 +69,13 @@ class OWPushOverFullScreenAnimationTransitioning: NSObject, UIViewControllerAnim
     }
 }
 
-fileprivate extension OWPushOverFullScreenAnimationTransitioning {
+private extension OWPushOverFullScreenAnimationTransitioning {
     func setupObservers() {
         NotificationCenter.default.rx
             .notification(UIDevice.orientationDidChangeNotification)
             .delay(.milliseconds(Metrics.orientationChangeDelay), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let viewToOrientation = self.viewToOrientation,
                    let viewFromOrientation = self.viewFromOrientation {
                     viewFromOrientation.frame = viewToOrientation.frame

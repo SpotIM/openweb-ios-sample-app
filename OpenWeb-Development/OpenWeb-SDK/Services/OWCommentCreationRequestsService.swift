@@ -15,7 +15,7 @@ protocol OWCommentCreationRequestsServicing {
 
 class OWCommentCreationRequestsService: OWCommentCreationRequestsServicing {
 
-    fileprivate let _newRequest = PublishSubject<OWCommentCreationRequestOption>()
+    private let _newRequest = PublishSubject<OWCommentCreationRequestOption>()
     var newRequest: Observable<OWCommentCreationRequestOption> {
         return _newRequest
             .asObservable()

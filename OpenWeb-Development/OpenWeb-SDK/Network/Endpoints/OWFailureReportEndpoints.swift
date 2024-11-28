@@ -32,7 +32,7 @@ enum OWFailureReportEndpoints: OWEndpoints {
     // MARK: - Parameters
     var parameters: OWNetworkParameters? {
         switch self {
-        case .error(_):
+        case .error:
             // TODO - create json from the error
             return [:]
         }

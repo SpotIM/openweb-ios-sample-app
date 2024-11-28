@@ -99,7 +99,7 @@ final class SPReplyCreationViewController: SPBaseCommentCreationViewController<S
 
     private func configureModelHandlers() {
         model?.postCompletionHandler = { [weak self] reply in
-            guard let self = self else { return }
+            guard let self else { return }
 
             if reply.status == .block || !reply.published {
                 switch reply.content?.first {
@@ -115,7 +115,7 @@ final class SPReplyCreationViewController: SPBaseCommentCreationViewController<S
         }
 
         model?.errorHandler = { [weak self] error in
-            guard let self = self else { return }
+            guard let self else { return }
 
             self.hideLoader()
             self.showAlert(

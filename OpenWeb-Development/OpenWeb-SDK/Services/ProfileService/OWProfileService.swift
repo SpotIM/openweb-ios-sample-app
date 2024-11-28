@@ -15,8 +15,8 @@ protocol OWProfileServicing {
 }
 
 class OWProfileService: OWProfileServicing {
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
+    private unowned let sharedServicesProvider: OWSharedServicesProviding
 
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
@@ -78,11 +78,11 @@ class OWProfileService: OWProfileServicing {
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 // Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.sharedServicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .viewingSelfProfile)
             }
             .flatMapLatest { [weak self] authenticationTriggered -> Observable<(URL?, Bool)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
 
                 if authenticationTriggered {
                     return Observable.just((nil, true))
@@ -105,7 +105,7 @@ class OWProfileService: OWProfileServicing {
         let userProfileWithoutToken: Observable<URL> = shouldOpenUserProfileWithToken
             .filter { !$0 }
             .map { [weak self] _ -> URL? in
-                guard let self = self,
+                guard let self,
                       let url = self.profileUrl(singleUseTicket: nil, userId: user.id)
                 else { return nil }
                 return url
@@ -119,7 +119,7 @@ class OWProfileService: OWProfileServicing {
                 if authenticationTriggered {
                     return .authenticationTriggered
                 } else {
-                    guard let url = url else { return nil }
+                    guard let url else { return nil }
                     let openProfileType: OWOpenProfileType = .OWProfile(data: OWOpenProfileData(url: url,
                                                                                                 userProfileType: .currentUser,
                                                                                                 userId: userId))
@@ -142,7 +142,7 @@ class OWProfileService: OWProfileServicing {
     }
 }
 
-fileprivate extension OWProfileService {
+private extension OWProfileService {
     func profileUrl(singleUseTicket: String?, userId: String?) -> URL? {
         let baseUrl = URL(string: "https://sdk.openweb.com/index.html")
         guard var url = baseUrl,
@@ -153,7 +153,7 @@ fileprivate extension OWProfileService {
         url.appendQueryParam(name: "spot_id", value: OWManager.manager.spotId)
         url.appendQueryParam(name: "post_id", value: postId)
         url.appendQueryParam(name: "single_use_ticket", value: singleUseTicket)
-        if let userId = userId {
+        if let userId {
             url.appendQueryParam(name: "user_id", value: userId)
         }
         let themeService = sharedServicesProvider.themeStyleService()

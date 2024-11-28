@@ -15,11 +15,11 @@ protocol OWCustomizationsInternalProtocol {
 }
 
 class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let maxCustomizableElementCallbacksNumber: Int = 10
     }
 
-    fileprivate let sharedServicesProvider: OWSharedServicesProviding
+    private let sharedServicesProvider: OWSharedServicesProviding
 
     init(sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServicesProvider = sharedServicesProvider
@@ -120,17 +120,17 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         customizedTheme = OWTheme()
     }
 
-    fileprivate var _fontFamily: OWFontGroupFamily = .default
-    fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
-    fileprivate var _commentActions: OWCommentActionsCustomizations = OWCommentActions()
-    fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
-    fileprivate var _statusBarEnforcement: OWStatusBarEnforcement = .matchTheme
-    fileprivate var _navigationBarEnforcement: OWNavigationBarEnforcement = .style(.largeTitles)
-    fileprivate var _customizedTheme: OWTheme = OWTheme()
-    fileprivate var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
+    private var _fontFamily: OWFontGroupFamily = .default
+    private let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
+    private var _commentActions: OWCommentActionsCustomizations = OWCommentActions()
+    private var _themeEnforcement: OWThemeStyleEnforcement = .none
+    private var _statusBarEnforcement: OWStatusBarEnforcement = .matchTheme
+    private var _navigationBarEnforcement: OWNavigationBarEnforcement = .style(.largeTitles)
+    private var _customizedTheme: OWTheme = OWTheme()
+    private var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
 }
 
-fileprivate extension OWCustomizationsLayer {
+private extension OWCustomizationsLayer {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return sharedServicesProvider
             .analyticsEventCreatorService()
@@ -194,7 +194,7 @@ fileprivate extension OWCustomizationsLayer {
     }
 
     func setColor(color: OWColor?, type: OWColor.OWType) {
-        guard let color = color else { return }
+        guard let color else { return }
         OWColorPalette.shared.setColor(color.lightColor, forType: type, forThemeStyle: .light)
         OWColorPalette.shared.setColor(color.darkColor, forType: type, forThemeStyle: .dark)
     }

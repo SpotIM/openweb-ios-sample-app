@@ -26,30 +26,30 @@ enum OWConversationCoordinatorResult: OWCoordinatorResultProtocol {
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
-    fileprivate let router: OWRoutering!
-    fileprivate let conversationData: OWConversationRequiredData
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let flowActionsCallbacks: OWFlowActionsCallbacks?
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var viewableMode: OWViewableMode!
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let router: OWRoutering!
+    private let conversationData: OWConversationRequiredData
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private let flowActionsCallbacks: OWFlowActionsCallbacks?
+    private let servicesProvider: OWSharedServicesProviding
+    private var viewableMode: OWViewableMode!
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .conversation)
     }()
-    fileprivate lazy var flowActionsService: OWFlowActionsServicing = {
+    private lazy var flowActionsService: OWFlowActionsServicing = {
         return OWFlowActionsService(flowActionsCallbacks: flowActionsCallbacks, viewSourceType: .conversation)
     }()
-    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+    private lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .conversation)
     }()
 
-    fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+    private var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayCommentThreadAfterReport: CGFloat = 0.5
     }
 
-    fileprivate let conversationPopped = PublishSubject<Void>()
-    fileprivate var conversationVC: OWConversationVC?
+    private let conversationPopped = PublishSubject<Void>()
+    private var conversationVC: OWConversationVC?
 
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
@@ -125,7 +125,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWCoordinatorData? in
                 // Here we are generating `OWCommentCreationRequiredData` and new fields in this struct will have default values
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.conversationData.article,
                                                      settings: self.conversationData.settings,
                                                      commentCreationType: type,
@@ -142,23 +142,23 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             deepLinkToCommentCreation.unwrap().asObservable())
 
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
             .flatMapLatest { [weak self] coordinatorData -> Observable<OWCommentCreationCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 switch coordinatorData.deepLink {
-                    case .commentCreation(let commentCreationData):
-                        let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
-                                                                                      commentCreationData: commentCreationData,
-                                                                                      viewActionsCallbacks: self.viewActionsCallbacks)
-                        return self.coordinate(to: commentCreationCoordinator, coordinatorData: coordinatorData)
-                    default:
-                        return .empty()
+                case .commentCreation(let commentCreationData):
+                    let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
+                                                                                  commentCreationData: commentCreationData,
+                                                                                  viewActionsCallbacks: self.viewActionsCallbacks)
+                    return self.coordinate(to: commentCreationCoordinator, coordinatorData: coordinatorData)
+                default:
+                    return .empty()
                 }
             }
             .do(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch result {
                 case .commentCreated:
                     break
@@ -191,11 +191,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let coordinateReportReasonObservable = Observable.merge(deepLinkToReportReason.unwrap(), reportReasonFromConversationObservable)
             .asObservable()
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] reportData -> Observable<OWReportReasonCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
                                                                         router: self.router,
                                                                         viewActionsCallbacks: self.viewActionsCallbacks,
@@ -231,11 +231,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             clarityDetailsFromConversationObservable)
             .asObservable()
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] data -> Observable<OWClarityDetailsCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
                                                                             viewActionsCallbacks: self.viewActionsCallbacks)
@@ -257,7 +257,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let openCommentThreadObservable = Observable.merge(conversationVM.outputs.conversationViewVM.outputs.openCommentThread, _openCommentThread)
             .observe(on: MainScheduler.instance)
             .map { [weak self] commentId, performAction -> OWCommentThreadRequiredData? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
 
                 guard var newAdditionalSettings = self.conversationData.settings as? OWAdditionalSettings,
                       var newCommentThreadSettings = newAdditionalSettings.commentThreadSettings as? OWCommentThreadSettings
@@ -277,11 +277,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let coordinateCommentThreadObservable = Observable.merge(deepLinkToCommentThread.unwrap().asObservable(),
                                                                  openCommentThreadObservable)
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] commentThreadData -> Observable<OWCommentThreadCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let commentThreadCoordinator = OWCommentThreadCoordinator(router: self.router,
                                                                           commentThreadData: commentThreadData,
                                                                           viewActionsCallbacks: self.viewActionsCallbacks,
@@ -331,11 +331,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         let coordinateToSafariObservable = coordinateToSafariObservables
             .filter { [weak self] _ in
-                guard let self = self else { return false }
+                guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let url = tuple.0
                 let title = tuple.1
                 let options = OWWebTabOptions(url: url,
@@ -369,13 +369,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                                                             indipendentConversationClosedObservable,
                                                             partOfFlowPresentedConversationClosedObservable)
             .do(onNext: { [weak self] in
-                guard let self = self,
+                guard let self,
                       let postId = OWManager.manager.postId
                 else { return }
                 self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: postId)
             })
             .flatMap { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 guard self.viewableMode == .partOfFlow else {
                     return Observable.just(())
                 }
@@ -402,7 +402,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     override func showableComponent() -> Observable<OWShowable> {
         viewableMode = .independent
-        let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData,
+        let conversationViewVM: any OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData,
                                                                                              viewableMode: viewableMode)
         let conversationView = OWConversationView(viewModel: conversationViewVM)
         setupObservers(forViewModel: conversationViewVM)
@@ -411,7 +411,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     }
 }
 
-fileprivate extension OWConversationCoordinator {
+private extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
         setupObservers(forViewModel: viewModel.outputs.conversationViewVM)
 
@@ -431,7 +431,7 @@ fileprivate extension OWConversationCoordinator {
         let openPublisherProfile = Observable.merge(viewModel.outputs.conversationViewVM.outputs.openProfile,
                                                     viewModel.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile)
             .map { [weak self] openProfileType -> OWFlowActionCallbackType? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.flowActionsService.getOpenProfileActionCallback(for: self.conversationVC?.navigationController,
                                                                             openProfileType: openProfileType,
                                                                             presentationalModeCompact: self.conversationData.presentationalMode)
@@ -449,13 +449,13 @@ fileprivate extension OWConversationCoordinator {
             .disposed(by: disposeBag)
     }
 
-    func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
+    func setupObservers(forViewModel viewModel: any OWConversationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
 
         setupCustomizationElements(forViewModel: viewModel)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
+    func setupViewActionsCallbacks(forViewModel viewModel: any OWConversationViewViewModeling) {
         guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let actionsCallbacksNotifier = self.servicesProvider.actionsCallbacksNotifier()
@@ -470,7 +470,7 @@ fileprivate extension OWConversationCoordinator {
             viewModel.outputs.commentingCTAViewModel.outputs.openProfile
         )
             .map { openProfileType in
-                switch(openProfileType) {
+                switch openProfileType {
                 case .OWProfile(let data):
                     return OWViewActionCallbackType.openOWProfile(data: data)
                 case .publisherProfile(let ssoPublisherId, let type):
@@ -550,7 +550,7 @@ fileprivate extension OWConversationCoordinator {
     }
 
     // swiftlint:disable function_body_length
-    func setupCustomizationElements(forViewModel viewModel: OWConversationViewViewModeling) {
+    func setupCustomizationElements(forViewModel viewModel: any OWConversationViewViewModeling) {
         // swiftlint:enable function_body_length
 
         // Set customized title header

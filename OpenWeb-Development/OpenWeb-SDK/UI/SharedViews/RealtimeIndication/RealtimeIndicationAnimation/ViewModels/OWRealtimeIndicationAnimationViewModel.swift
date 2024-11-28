@@ -34,8 +34,8 @@ class OWRealtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewM
         return OWRealtimeIndicationViewModel()
     }()
 
-    fileprivate let _isRealtimeIndicatorEnabled = BehaviorSubject<Bool>(value: false)
-    fileprivate let _isThereAnyDataToShow = BehaviorSubject<Bool>(value: false)
+    private let _isRealtimeIndicatorEnabled = BehaviorSubject<Bool>(value: false)
+    private let _isThereAnyDataToShow = BehaviorSubject<Bool>(value: false)
     lazy var shouldShow: Observable<Bool> = {
         return Observable.combineLatest(_isThereAnyDataToShow,
                                         _isRealtimeIndicatorEnabled) { isThereAnyDataToShow, isRealtimeIndicatorEnabled -> Bool in
@@ -52,8 +52,8 @@ class OWRealtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewM
         _isRealtimeIndicatorEnabled.onNext(false)
     }
 
-    fileprivate var realtimeIndicatorService: OWRealtimeIndicatorServicing
-    fileprivate let disposeBag = DisposeBag()
+    private var realtimeIndicatorService: OWRealtimeIndicatorServicing
+    private let disposeBag = DisposeBag()
 
     init(realtimeIndicatorService: OWRealtimeIndicatorServicing = OWSharedServicesProvider.shared.realtimeIndicatorService()) {
         self.realtimeIndicatorService = realtimeIndicatorService
@@ -66,7 +66,7 @@ extension OWRealtimeIndicationAnimationViewModel {
         realtimeIndicatorService.realtimeIndicatorType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
+                guard let self else { return }
                 let isShown = type != .none
                 self._isThereAnyDataToShow.onNext(isShown)
             })
@@ -74,7 +74,7 @@ extension OWRealtimeIndicationAnimationViewModel {
 
         realtimeIndicatorService.state
             .subscribe(onNext: { [weak self] state in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._isRealtimeIndicatorEnabled.onNext(state == .enable)
                 if state == .disable {
                     self.realtimeIndicatorService.cleanCache()

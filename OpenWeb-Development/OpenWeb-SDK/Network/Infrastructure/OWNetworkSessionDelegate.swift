@@ -9,7 +9,7 @@
 import Foundation
 
 /// Class which implements the various `URLSessionDelegate` methods to connect various OpenWebSDKNetwork features.
-class OWNetworkSessionDelegate: NSObject {
+class OWNetworkSessionDelegate: NSObject, @unchecked Sendable {
     private let fileManager: FileManager
 
     weak var stateProvider: OWNetworkSessionStateProvider?

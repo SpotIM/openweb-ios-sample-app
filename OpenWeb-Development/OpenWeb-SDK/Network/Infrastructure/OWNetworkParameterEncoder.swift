@@ -57,7 +57,7 @@ class OWNetworkJSONParameterEncoder: OWNetworkParameterEncoder {
 
     func encode<Parameters: Encodable>(_ parameters: Parameters?,
                                        into request: URLRequest) throws -> URLRequest {
-        guard let parameters = parameters else { return request }
+        guard let parameters else { return request }
 
         var request = request
 
@@ -141,7 +141,7 @@ class OWNetworkURLEncodedFormParameterEncoder: OWNetworkParameterEncoder {
 
     func encode<Parameters: Encodable>(_ parameters: Parameters?,
                                        into request: URLRequest) throws -> URLRequest {
-        guard let parameters = parameters else { return request }
+        guard let parameters else { return request }
 
         var request = request
 

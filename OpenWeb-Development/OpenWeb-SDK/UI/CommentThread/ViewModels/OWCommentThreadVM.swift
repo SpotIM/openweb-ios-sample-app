@@ -15,7 +15,7 @@ protocol OWCommentThreadViewModelingInputs {
 }
 
 protocol OWCommentThreadViewModelingOutputs {
-    var commentThreadViewVM: OWCommentThreadViewViewModeling { get }
+    var commentThreadViewVM: any OWCommentThreadViewViewModeling { get }
     var loadedToScreen: Observable<Void> { get }
     var title: String { get }
     var isLargeTitleDisplay: Observable<Bool> { get }
@@ -30,12 +30,12 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     var inputs: OWCommentThreadViewModelingInputs { return self }
     var outputs: OWCommentThreadViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentThreadData: OWCommentThreadRequiredData
-    fileprivate let viewableMode: OWViewableMode
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentThreadData: OWCommentThreadRequiredData
+    private let viewableMode: OWViewableMode
 
-    lazy var commentThreadViewVM: OWCommentThreadViewViewModeling = {
+    lazy var commentThreadViewVM: any OWCommentThreadViewViewModeling = {
         return OWCommentThreadViewViewModel(commentThreadData: commentThreadData,
                                             servicesProvider: self.servicesProvider,
                                             viewableMode: self.viewableMode)
@@ -50,7 +50,7 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
         return viewDidLoad.asObservable()
     }
 
-    fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
+    private lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
         return BehaviorSubject<Bool>(value: servicesProvider.navigationControllerCustomizer().isLargeTitlesEnabled())
     }()
 
@@ -69,7 +69,7 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     }
 }
 
-fileprivate extension OWCommentThreadViewModel {
+private extension OWCommentThreadViewModel {
     func setupObservers() {
         changeIsLargeTitleDisplay
             .bind(to: _isLargeTitleDisplay)

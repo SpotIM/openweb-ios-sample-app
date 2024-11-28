@@ -12,7 +12,7 @@ import RxCocoa
 import RxSwift
 
 class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let closeButtonSize: CGFloat = 28
         static let navigationTitleTrailingPadding: CGFloat = 8
         static let navigationBottomPadding: CGFloat = 10
@@ -32,7 +32,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         static let gotItButtonIdentifier = "clarity_details_got_it_button_id"
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyContext))
             .text(viewModel.outputs.navigationTitle)
@@ -40,12 +40,12 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
     }()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
@@ -55,7 +55,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         return scrollView
     }()
 
-    fileprivate lazy var topContainerView: UIView = {
+    private lazy var topContainerView: UIView = {
         let topContainerView = UIView()
             .enforceSemanticAttribute()
 
@@ -76,13 +76,13 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         return topContainerView
     }()
 
-    fileprivate lazy var topParagraphLabel: UILabel = {
+    private lazy var topParagraphLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var detailsTitleLabel: UILabel = {
+    private lazy var detailsTitleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
@@ -91,7 +91,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var paragraphsStackView: UIStackView = {
+    private lazy var paragraphsStackView: UIStackView = {
         let stackView = UIStackView()
             .spacing(Metrics.spaceBetweenParagraphs)
             .axis(.vertical)
@@ -102,7 +102,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         return stackView
     }()
 
-    fileprivate lazy var bottomParagraphLabel: UILabel = {
+    private lazy var bottomParagraphLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
@@ -111,11 +111,11 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var appealLabel: OWAppealLabelView = {
+    private lazy var appealLabel: OWAppealLabelView = {
         return OWAppealLabelView(viewModel: viewModel.outputs.appealLabelViewModel)
     }()
 
-    fileprivate lazy var gotItButton: UIButton = {
+    private lazy var gotItButton: UIButton = {
         return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(OWDesignColors.G1)
@@ -125,8 +125,8 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .withPadding(Metrics.buttonTextPadding)
     }()
 
-    fileprivate let viewModel: OWClarityDetailsViewViewModeling
-    fileprivate var disposeBag: DisposeBag
+    private let viewModel: OWClarityDetailsViewViewModeling
+    private var disposeBag: DisposeBag
 
     init(viewModel: OWClarityDetailsViewViewModeling) {
         self.viewModel = viewModel
@@ -143,7 +143,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWClarityDetailsView {
+private extension OWClarityDetailsView {
     func setupViews() {
         self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
@@ -213,11 +213,11 @@ fileprivate extension OWClarityDetailsView {
 
         viewModel.outputs.topParagraphAttributedStringObservable
             .subscribe(onNext: { [weak self] attributedText in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.topParagraphLabel
                     .attributedText(attributedText)
                     .addRangeGesture(targetRange: self.viewModel.outputs.communityGuidelinesClickablePlaceholder) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.viewModel.inputs.communityGuidelinesClick.onNext()
                     }
             })
@@ -226,7 +226,7 @@ fileprivate extension OWClarityDetailsView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
@@ -239,7 +239,7 @@ fileprivate extension OWClarityDetailsView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyContext)
                 self.detailsTitleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
                 self.gotItButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)

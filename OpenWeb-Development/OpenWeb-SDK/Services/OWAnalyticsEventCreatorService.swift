@@ -16,11 +16,11 @@ protocol OWAnalyticsEventCreatorServicing {
 }
 
 class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
-    fileprivate var userStatus: String = ""
-    fileprivate var userId: String = ""
+    private var userStatus: String = ""
+    private var userId: String = ""
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding) {
         self.servicesProvider = servicesProvider
@@ -78,12 +78,12 @@ class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
     }
 }
 
-fileprivate extension OWAnalyticsEventCreatorService {
+private extension OWAnalyticsEventCreatorService {
     func setupObservers() {
         servicesProvider.authenticationManager()
             .currentAuthenticationLevelAvailability
             .subscribe(onNext: { [weak self] availability in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch availability {
                 case .level(let level):
                     switch level {
@@ -103,7 +103,7 @@ fileprivate extension OWAnalyticsEventCreatorService {
         servicesProvider.authenticationManager()
             .activeUserAvailability
             .subscribe(onNext: { [weak self] availability in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch availability {
                 case .notAvailable:
                     self.userId = ""

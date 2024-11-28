@@ -50,13 +50,6 @@ struct OWNetworkRedirector {
 
     /// The `Behavior` of the `Redirector`.
     let behavior: Behavior
-
-    /// Creates a `Redirector` instance from the `Behavior`.
-    ///
-    /// - Parameter behavior: The `Behavior`.
-    init(behavior: Behavior) {
-        self.behavior = behavior
-    }
 }
 
 // MARK: -

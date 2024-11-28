@@ -52,7 +52,7 @@ extension OWNetworkAPI: OWRealtimeAPI {
     }
 }
 
-fileprivate extension OWRealtimeEndpoints {
+private extension OWRealtimeEndpoints {
     func fetchDataParameters(fullConversationId: String) -> [String: Any] {
         let timestamp: Int = Int((Date()).timeIntervalSince1970)
         let conversationId: [String: Any] = [RealtimeAPIKeys.conversationId: fullConversationId]

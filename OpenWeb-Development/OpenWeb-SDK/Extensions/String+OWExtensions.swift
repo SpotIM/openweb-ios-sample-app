@@ -9,15 +9,43 @@
 import UIKit
 
 extension String {
+    init?(unicodeCodePoint: Int) {
+        if let unicodeScalar = UnicodeScalar(unicodeCodePoint) {
+            self.init(unicodeScalar)
+        } else {
+            return nil
+        }
+    }
+
+    var stripHTML: String {
+        let regex = try? NSRegularExpression(pattern: "<[^>]+>", options: .caseInsensitive)
+        let range = NSRange(location: 0, length: self.count)
+        return regex?.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: "") ?? self
+    }
+
+    var linkAnchors: [String] {
+        // swiftlint:disable:next force_try
+        let regex = try! NSRegularExpression(pattern: "<a[^>]*>([^<]+)</a>", options: .caseInsensitive)
+        let matches = regex.matches(in: self, options: [], range: NSRange(startIndex..., in: self))
+
+        return matches.compactMap { match in
+            // Capture group 1 contains the link text
+            guard match.numberOfRanges > 1, let range = Range(match.range(at: 1), in: self) else {
+                return nil
+            }
+            return String(self[range])
+        }
+    }
+
     var locateURLInText: URL? {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
 
-        var url: URL? = nil
+        var url: URL?
         if let detector = try? NSDataDetector(types: linkType.rawValue) {
             let matches = detector.matches(
                 in: self,
                 options: [],
-                range: NSRange(location: 0, length: self.count)
+                range: NSRange(self.startIndex..., in: self)
             )
 
             for match in matches {
@@ -32,13 +60,6 @@ extension String {
 
     var attributedString: NSMutableAttributedString {
         return NSMutableAttributedString(string: self)
-    }
-
-    func nsRange(from range: Range<String.Index>) -> NSRange? {
-        guard let from = range.lowerBound.samePosition(in: utf16),
-              let to = range.upperBound.samePosition(in: utf16) else { return nil }
-        return NSRange(location: utf16.distance(from: utf16.startIndex, to: from),
-                       length: utf16.distance(from: from, to: to))
     }
 
     func getAttributedText(textColor: UIColor,
@@ -60,7 +81,7 @@ extension String {
             .font: textFont,
             .foregroundColor: textColor
         ]
-        attributedString.addAttributes(defaultAttributes, range: NSRange(location: 0, length: self.count))
+        attributedString.addAttributes(defaultAttributes, range: NSRange(self.startIndex..., in: self))
 
         // Search for the linkedText in the main text
         if let _ = linkURL,

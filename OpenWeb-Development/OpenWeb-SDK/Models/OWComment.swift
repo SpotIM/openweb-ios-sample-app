@@ -43,7 +43,7 @@ internal struct OWComment: Decodable, Equatable {
     var strictMode: Bool?
 
     var isReply: Bool {
-        guard let id = id, let rootComment = rootComment else {
+        guard let id, let rootComment else {
             return false
         }
         return id != rootComment
@@ -62,7 +62,7 @@ internal struct OWComment: Decodable, Equatable {
     }
 
     var status: CommentStatus? {
-        guard let rawStatus = rawStatus else { return nil }
+        guard let rawStatus else { return nil }
         let status = CommentStatus(rawValue: rawStatus)
         return status == .unknown ? nil : status
     }
@@ -115,7 +115,7 @@ internal struct OWComment: Decodable, Equatable {
         published = (try? container.decode(Bool.self, forKey: .published)) ?? false
         rank = try? container.decode(Rank.self, forKey: .rank)
         content = try? container.decode([Content].self, forKey: .content)
-        if let content = content {
+        if let content {
             for contentItem in content {
                 switch contentItem {
                 case .text(let textContent):

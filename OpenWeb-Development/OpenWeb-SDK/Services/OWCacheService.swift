@@ -20,7 +20,7 @@ Examples of using this service:
 */
 
 // Defaults
-fileprivate struct DefaultMetrics {
+private struct DefaultMetrics {
     static let defaultEntryLifetime: TimeInterval = 24 * 60 * 60 // 1 day
     static let defaultMaxEntryCount: Int = 50
 }
@@ -32,9 +32,9 @@ enum OWCacheExpirationStrategy {
 }
 
 class OWCacheService<Key: Hashable, Value: Any> {
-    fileprivate let cache = NSCache<OWWrappedKey, OWWrappedValue>()
-    fileprivate let expirationStrategy: OWCacheExpirationStrategy
-    fileprivate let dateProvider: () -> Date
+    private let cache = NSCache<OWWrappedKey, OWWrappedValue>()
+    private let expirationStrategy: OWCacheExpirationStrategy
+    private let dateProvider: () -> Date
 
     init(dateProvider: @escaping () -> Date = Date.init,
          expirationStrategy: OWCacheExpirationStrategy = .time(lifetime: DefaultMetrics.defaultEntryLifetime),
@@ -65,7 +65,7 @@ class OWCacheService<Key: Hashable, Value: Any> {
         switch expirationStrategy {
         case .none:
             break
-        case .time(_):
+        case .time:
             guard case .expiration(let date) = wrappedValue.expiration,
                   dateProvider() < date else {
                       // Such case means that the current date is after the expiration date
@@ -106,7 +106,7 @@ extension OWCacheService {
 }
 
 // OWWrappedKey - Key for NSCache must be from NSObject, that's why we use WrappedKey
-fileprivate extension OWCacheService {
+private extension OWCacheService {
     class OWWrappedKey: NSObject {
         let key: Key
 
@@ -128,7 +128,7 @@ fileprivate extension OWCacheService {
 }
 
 // OWWrappedValue - We wrapped the value so we can add expiration strategy
-fileprivate extension OWCacheService {
+private extension OWCacheService {
     class OWWrappedValue {
         let value: Value
         let expiration: OWWrappedValueExpirationStrategy
@@ -140,8 +140,7 @@ fileprivate extension OWCacheService {
     }
 }
 
-fileprivate enum OWWrappedValueExpirationStrategy {
+private enum OWWrappedValueExpirationStrategy {
     case none
     case expiration(date: Date)
 }
-

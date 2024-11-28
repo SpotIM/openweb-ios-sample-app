@@ -30,7 +30,7 @@ protocol OWCancelViewViewModeling {
 
 class OWCancelViewViewModel: OWCancelViewViewModelingInputs, OWCancelViewViewModelingOutputs, OWCancelViewViewModeling {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let trashIcon = "ReportReasonTrashIcon"
         static let titleIconName = "ReportReasonCancelIcon"
         static let titleViewPrefixIdentifier = "cancel"
@@ -39,8 +39,8 @@ class OWCancelViewViewModel: OWCancelViewViewModelingInputs, OWCancelViewViewMod
     var inputs: OWCancelViewViewModelingInputs { return self }
     var outputs: OWCancelViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let type: OWCancelScreenType
+    private let disposeBag = DisposeBag()
+    private let type: OWCancelScreenType
 
     init(type: OWCancelScreenType) {
         self.type = type

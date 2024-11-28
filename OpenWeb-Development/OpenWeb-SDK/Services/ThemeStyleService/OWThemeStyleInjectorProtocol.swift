@@ -8,7 +8,7 @@
 
 import UIKit
 
-fileprivate struct Metrics {
+private struct Metrics {
     static var dummyViewKey = "DummyViewKey"
 }
 
@@ -38,14 +38,9 @@ extension OWThemeStyleInjectorProtocol where Self: UIView {
 extension OWThemeStyleInjectorProtocol where Self: UIView {
     var isDummyUpdaterViewExist: Bool {
         get {
-            // Check if it was already set
-            if let isExist = objc_getAssociatedObject(self, &Metrics.dummyViewKey) as? Bool {
-                return isExist
-            }
-
-            return false
+            return self.getObjectiveCAssociatedObject(key: &Metrics.dummyViewKey) ?? false
         } set {
-            objc_setAssociatedObject(self, &Metrics.dummyViewKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            self.setObjectiveCAssociatedObject(key: &Metrics.dummyViewKey, value: newValue)
         }
     }
 }

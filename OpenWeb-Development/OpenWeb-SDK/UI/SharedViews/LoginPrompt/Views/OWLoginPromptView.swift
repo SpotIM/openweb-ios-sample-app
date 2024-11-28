@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWLoginPromptView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "login_promt_view_id"
 
         static let labelHorizontalPadding: CGFloat = 4
@@ -22,7 +22,7 @@ class OWLoginPromptView: UIView {
         static let arrowIconSize: CGFloat = 12
     }
 
-    fileprivate lazy var lockIconImangeView: UIImageView = {
+    private lazy var lockIconImangeView: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
             .wrapContent()
@@ -30,7 +30,7 @@ class OWLoginPromptView: UIView {
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .attributedText(
                 OWLocalizationManager.shared.localizedString(key: "LoginPromptTitle")
@@ -41,7 +41,7 @@ class OWLoginPromptView: UIView {
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var arrowIconImangeView: UIImageView = {
+    private lazy var arrowIconImangeView: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
             .wrapContent()
@@ -50,7 +50,7 @@ class OWLoginPromptView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var loginPromptView: UIView = {
+    private lazy var loginPromptView: UIView = {
         let view = UIView()
 
         view.addSubview(lockIconImangeView)
@@ -77,12 +77,12 @@ class OWLoginPromptView: UIView {
         return view
     }()
 
-    fileprivate lazy var seperatorView: UIView = {
+    private lazy var seperatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
     }()
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    private lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         self.addGestureRecognizer(tap)
         self.isUserInteractionEnabled = true
@@ -90,11 +90,11 @@ class OWLoginPromptView: UIView {
         return tap
     }()
 
-    fileprivate var zeroHeightConstraint: OWConstraint? = nil
-    fileprivate var zeroWidthConstraint: OWConstraint? = nil
+    private var zeroHeightConstraint: OWConstraint?
+    private var zeroWidthConstraint: OWConstraint?
 
-    fileprivate var viewModel: OWLoginPromptViewModeling
-    fileprivate var disposeBag: DisposeBag
+    private var viewModel: OWLoginPromptViewModeling
+    private var disposeBag: DisposeBag
 
     init(with viewModel: OWLoginPromptViewModeling) {
         self.viewModel = viewModel
@@ -110,7 +110,7 @@ class OWLoginPromptView: UIView {
     }
 }
 
-fileprivate extension OWLoginPromptView {
+private extension OWLoginPromptView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
@@ -177,7 +177,7 @@ fileprivate extension OWLoginPromptView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
@@ -186,7 +186,7 @@ fileprivate extension OWLoginPromptView {
                                  OWSharedServicesProvider.shared.orientationService().orientation,
                                  OWColorPalette.shared.colorDriver)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation, colorMapper in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: currentOrientation == .landscape ? .separatorColor1 : .separatorColor3, themeStyle: currentStyle)
 
