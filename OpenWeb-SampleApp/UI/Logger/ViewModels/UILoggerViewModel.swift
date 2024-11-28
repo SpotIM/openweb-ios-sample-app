@@ -34,7 +34,7 @@ class UILoggerViewModel: UILoggerViewModeling, UILoggerViewModelingInputs, UILog
                 .asObservable()
     }
 
-    fileprivate let _loggerText = BehaviorSubject<String>(value: "")
+    private let _loggerText = BehaviorSubject<String>(value: "")
     var loggerText: Observable<String> {
         return _loggerText
                 .asObservable()
@@ -48,7 +48,7 @@ class UILoggerViewModel: UILoggerViewModeling, UILoggerViewModelingInputs, UILog
         _ = _loggerText
             .take(1)
             .subscribe(onNext: { [weak self] lastText in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._loggerText.onNext(lastText + "\n" + text)
             })
     }

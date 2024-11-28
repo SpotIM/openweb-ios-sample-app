@@ -16,11 +16,11 @@ class CommentCreationToolbar: UIView {
         static let height: CGFloat = 50
     }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let accessibility = "comment_creation_toolbar_id"
     }
 
-    fileprivate lazy var toolbarCollection: UICollectionView = {
+    private lazy var toolbarCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: ToolbarMetrics.height, height: ToolbarMetrics.height)
@@ -32,8 +32,8 @@ class CommentCreationToolbar: UIView {
         return collection
     }()
 
-    fileprivate let viewModel: CommentCreationToolbarViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: CommentCreationToolbarViewModeling
+    private let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -48,7 +48,7 @@ class CommentCreationToolbar: UIView {
     }
 }
 
-fileprivate extension CommentCreationToolbar {
+private extension CommentCreationToolbar {
     func setupUI() {
         self.addSubview(toolbarCollection)
         toolbarCollection.snp.makeConstraints { make in

@@ -44,109 +44,109 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     var inputs: ConversationBelowVideoViewModelingInputs { return self }
     var outputs: ConversationBelowVideoViewModelingOutputs { return self }
 
-    fileprivate let postId: OWPostId
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let commonCreatorService: CommonCreatorServicing
-    fileprivate let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
+    private let postId: OWPostId
+    private let disposeBag = DisposeBag()
+    private let commonCreatorService: CommonCreatorServicing
+    private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
 
     lazy var title: String = {
         return NSLocalizedString("VideoExample", comment: "")
     }()
 
-    fileprivate let _componentRetrievingError = BehaviorSubject<OWError?>(value: nil)
+    private let _componentRetrievingError = BehaviorSubject<OWError?>(value: nil)
     var componentRetrievingError: Observable<OWError> {
         return _componentRetrievingError
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let _preConversationRetrieved = BehaviorSubject<UIView?>(value: nil)
+    private let _preConversationRetrieved = BehaviorSubject<UIView?>(value: nil)
     var preConversationRetrieved: Observable<UIView> {
         return _preConversationRetrieved
             .unwrap()
             .asObservable()
     }
 
-    fileprivate let _conversationRetrieved = PublishSubject<UIView>()
+    private let _conversationRetrieved = PublishSubject<UIView>()
     var conversationRetrieved: Observable<UIView> {
         return _conversationRetrieved
             .asObservable()
     }
 
-    fileprivate let _commentCreationRetrieved = PublishSubject<UIView>()
+    private let _commentCreationRetrieved = PublishSubject<UIView>()
     var commentCreationRetrieved: Observable<UIView> {
         return _commentCreationRetrieved
             .asObservable()
     }
 
-    fileprivate let _reportReasonsRetrieved = PublishSubject<UIView>()
+    private let _reportReasonsRetrieved = PublishSubject<UIView>()
     var reportReasonsRetrieved: Observable<UIView> {
         return _reportReasonsRetrieved
             .asObservable()
     }
 
-    fileprivate let _commentThreadRetrieved = PublishSubject<UIView>()
+    private let _commentThreadRetrieved = PublishSubject<UIView>()
     var commentThreadRetrieved: Observable<UIView> {
         return _commentThreadRetrieved
             .asObservable()
     }
 
-    fileprivate let _clarityDetailsRetrieved = PublishSubject<UIView>()
+    private let _clarityDetailsRetrieved = PublishSubject<UIView>()
     var clarityDetailsRetrieved: Observable<UIView> {
         return _clarityDetailsRetrieved
             .asObservable()
     }
 
-    fileprivate let _webPageRetrieved = PublishSubject<UIView>()
+    private let _webPageRetrieved = PublishSubject<UIView>()
     var webPageRetrieved: Observable<UIView> {
         return _webPageRetrieved
             .asObservable()
     }
 
-    fileprivate let _removeConversation = PublishSubject<Void>()
+    private let _removeConversation = PublishSubject<Void>()
     var removeConversation: Observable<Void> {
         return _removeConversation
             .asObservable()
     }
 
-    fileprivate let _removeReportReasons = PublishSubject<Void>()
+    private let _removeReportReasons = PublishSubject<Void>()
     var removeReportReasons: Observable<Void> {
         return _removeReportReasons
             .asObservable()
     }
 
-    fileprivate let _removeCommentCreation = PublishSubject<Void>()
+    private let _removeCommentCreation = PublishSubject<Void>()
     var removeCommentCreation: Observable<Void> {
         return _removeCommentCreation
             .asObservable()
     }
 
-    fileprivate let _removeClarityDetails = PublishSubject<Void>()
+    private let _removeClarityDetails = PublishSubject<Void>()
     var removeClarityDetails: Observable<Void> {
         return _removeClarityDetails
             .asObservable()
     }
 
-    fileprivate let _removeCommentThread = PublishSubject<Void>()
+    private let _removeCommentThread = PublishSubject<Void>()
     var removeCommentThread: Observable<Void> {
         return _removeCommentThread
             .asObservable()
     }
 
-    fileprivate let _removeWebPage = PublishSubject<Void>()
+    private let _removeWebPage = PublishSubject<Void>()
     var removeWebPage: Observable<Void> {
         return _removeWebPage
             .asObservable()
     }
 
-    fileprivate let _openAuthentication = PublishSubject<(OWSpotId, OWBasicCompletion)>()
+    private let _openAuthentication = PublishSubject<(OWSpotId, OWBasicCompletion)>()
     var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> {
         return _openAuthentication
             .asObservable()
     }
 
-    fileprivate lazy var actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
-        guard let self = self else { return }
+    private lazy var actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+        guard let self else { return }
 
         let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
         DLog(log)
@@ -197,8 +197,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     }
 
     // Providing `displayAuthenticationFlow` callback
-    fileprivate lazy var authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
-        guard let self = self else { return }
+    private lazy var authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
+        guard let self else { return }
 
         switch routeringMode {
         case .none:
@@ -209,8 +209,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     }
 
     // Providing `renewSSO` callback
-    fileprivate lazy var  renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
-        guard let self = self else { return }
+    private lazy var  renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
+        guard let self else { return }
         #if !PUBLIC_DEMO_APP
         let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
         if OpenWeb.manager.spotId == demoSpotId,
@@ -244,7 +244,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     }
 }
 
-fileprivate extension ConversationBelowVideoViewModel {
+private extension ConversationBelowVideoViewModel {
     func initialSetup() {
         // Setup authentication flow callback
         var authenticationUI = OpenWeb.manager.ui.authenticationUI
@@ -272,7 +272,7 @@ fileprivate extension ConversationBelowVideoViewModel {
                                      callbacks: self.actionsCallbacks,
                                      completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -294,7 +294,7 @@ fileprivate extension ConversationBelowVideoViewModel {
                                   callbacks: self.actionsCallbacks,
                                   completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -326,7 +326,7 @@ fileprivate extension ConversationBelowVideoViewModel {
                                      callbacks: self.actionsCallbacks,
                                      completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -347,7 +347,7 @@ fileprivate extension ConversationBelowVideoViewModel {
                                   callbacks: self.actionsCallbacks,
                                   completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -368,7 +368,7 @@ fileprivate extension ConversationBelowVideoViewModel {
                                     callbacks: self.actionsCallbacks,
                                     completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -388,7 +388,7 @@ fileprivate extension ConversationBelowVideoViewModel {
                                      callbacks: self.actionsCallbacks,
                                      completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -412,7 +412,7 @@ fileprivate extension ConversationBelowVideoViewModel {
                                    callbacks: self.actionsCallbacks,
                                    completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)
@@ -432,7 +432,7 @@ fileprivate extension ConversationBelowVideoViewModel {
                             callbacks: self.actionsCallbacks,
                             completion: { [weak self] result in
 
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.onNext(err)

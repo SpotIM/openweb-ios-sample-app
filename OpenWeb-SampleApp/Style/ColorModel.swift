@@ -92,11 +92,11 @@ struct ColorModel {
 }
 
 extension ColorModel {
-    fileprivate mutating func setLightThemeColor(_ color: UIColor) {
+    private mutating func setLightThemeColor(_ color: UIColor) {
         lightThemeColor = color
     }
 
-    fileprivate mutating func setDarkThemeColor(_ color: UIColor) {
+    private mutating func setDarkThemeColor(_ color: UIColor) {
         darkThemeColor = color
     }
 
@@ -109,4 +109,3 @@ extension ColorModel {
         }
     }
 }
-

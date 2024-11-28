@@ -118,7 +118,7 @@ extension UILabel {
         paragraph.alignment = textAlignment
 
         let text: NSMutableAttributedString
-        if let attributedText = attributedText {
+        if let attributedText {
             text = NSMutableAttributedString(attributedString: attributedText)
         } else {
             text = NSMutableAttributedString(string: self.text ?? "")
@@ -133,7 +133,7 @@ extension UILabel {
 
     @discardableResult func letterSpacing(_ spacing: CGFloat) -> UILabel {
         let text: NSMutableAttributedString
-        if let attributedText = attributedText {
+        if let attributedText {
             text = NSMutableAttributedString(attributedString: attributedText)
         } else {
             text = NSMutableAttributedString(string: self.text ?? "")

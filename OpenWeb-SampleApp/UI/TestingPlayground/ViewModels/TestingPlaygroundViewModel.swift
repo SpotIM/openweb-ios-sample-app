@@ -38,12 +38,12 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
     var inputs: TestingPlaygroundViewModelingInputs { return self }
     var outputs: TestingPlaygroundViewModelingOutputs { return self }
 
-    fileprivate let dataModel: SDKConversationDataModel
+    private let dataModel: SDKConversationDataModel
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
-    fileprivate weak var navController: UINavigationController?
-    fileprivate weak var presentationalVC: UIViewController?
+    private weak var navController: UINavigationController?
+    private weak var presentationalVC: UIViewController?
 
     let playgroundPushModeTapped = PublishSubject<Void>()
     let playgroundPresentModeTapped = PublishSubject<Void>()
@@ -53,22 +53,20 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
         return playgroundIndependentModeTapped
             .asObservable()
             .map { [weak self] _ -> SDKConversationDataModel? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.dataModel
             }
             .unwrap()
     }
 
-    fileprivate let _showError = PublishSubject<String>()
+    private let _showError = PublishSubject<String>()
     var showError: Observable<String> {
         return _showError
             .asObservable()
     }
 
     var present: OWModalPresentationStyle {
-        // swiftlint:disable line_length
         return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
-        // swiftlint:enable line_length
     }
 
     lazy var title: String = {
@@ -89,7 +87,7 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
     }
 }
 
-fileprivate extension TestingPlaygroundViewModel {
+private extension TestingPlaygroundViewModel {
 
     func setupObservers() {
 
@@ -100,7 +98,7 @@ fileprivate extension TestingPlaygroundViewModel {
         let playgroundPresentModeObservable = playgroundPresentModeTapped
             .asObservable()
             .map { [weak self] _ -> PresentationalModeCompact? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return PresentationalModeCompact.present(style: self.present)
             }
             .unwrap()
@@ -108,7 +106,7 @@ fileprivate extension TestingPlaygroundViewModel {
         // Testing playground - Flows
         Observable.merge(playgroundPushModeObservable, playgroundPresentModeObservable)
             .subscribe(onNext: { [weak self] mode in
-                guard let self = self else { return }
+                guard let self else { return }
                 let postId = self.dataModel.postId
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
@@ -121,9 +119,9 @@ fileprivate extension TestingPlaygroundViewModel {
                                         additionalSettings: OWTestingPlaygroundSettings(),
                                         callbacks: nil,
                                         completion: { [weak self] result in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     switch result {
-                    case .success(_):
+                    case .success:
                         // All good
                         break
                     case .failure(let error):

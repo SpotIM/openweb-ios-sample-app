@@ -12,24 +12,39 @@ import RxCocoa
 import SnapKit
 
 class MockArticleFlowsVC: UIViewController {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         // 1.2 * screen height, defualt to 1200
         static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
-        static let articleImageRatio: CGFloat = 2/3
+        static let articleImageRatio: CGFloat = 2 / 3
         static let articelImageViewCornerRadius: CGFloat = 10
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
         static let identifier = "mock_article_flows_vc_id"
         static let viewIdentifier = "mock_article_flows_view_id"
+        static let loggerViewWidth: CGFloat = 300
+        static let loggerViewHeight: CGFloat = 250
+        static let loggerInitialTopPadding: CGFloat = 50
     }
 
-    fileprivate let viewModel: MockArticleFlowsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    deinit {
+        floatingLoggerView.removeFromSuperview()
+    }
 
-    fileprivate lazy var articleScrollView: UIScrollView = {
+    private let viewModel: MockArticleFlowsViewModeling
+    private let disposeBag = DisposeBag()
+
+    private lazy var loggerView: UILoggerView = {
+        return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
+    }()
+
+    private lazy var floatingLoggerView: OWFloatingView = {
+        return OWFloatingView(viewModel: viewModel.outputs.floatingViewViewModel)
+    }()
+
+    private lazy var articleScrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
 
@@ -45,7 +60,7 @@ class MockArticleFlowsVC: UIViewController {
         return scroll
     }()
 
-    fileprivate lazy var articleView: UIView = {
+    private lazy var articleView: UIView = {
         let article = UIView()
 
         article.snp.makeConstraints { make in
@@ -69,14 +84,14 @@ class MockArticleFlowsVC: UIViewController {
         return article
     }()
 
-    fileprivate lazy var imgViewArticle: UIImageView = {
+    private lazy var imgViewArticle: UIImageView = {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
             .corner(radius: Metrics.articelImageViewCornerRadius)
     }()
 
-    fileprivate lazy var lblArticleDescription: UILabel = {
+    private lazy var lblArticleDescription: UILabel = {
         let txt = NSLocalizedString("MockArticleDescription", comment: "")
 
         return txt
@@ -86,7 +101,7 @@ class MockArticleFlowsVC: UIViewController {
             .textColor(ColorPalette.shared.color(type: .text))
     }()
 
-    fileprivate lazy var btnFullConversation: UIButton = {
+    private lazy var btnFullConversation: UIButton = {
         return UIButton()
             .backgroundColor(ColorPalette.shared.color(type: .blue))
             .textColor(ColorPalette.shared.color(type: .extraLightGrey))
@@ -95,7 +110,7 @@ class MockArticleFlowsVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
 
-    fileprivate lazy var btnCommentCreation: UIButton = {
+    private lazy var btnCommentCreation: UIButton = {
         return UIButton()
             .backgroundColor(ColorPalette.shared.color(type: .blue))
             .textColor(ColorPalette.shared.color(type: .extraLightGrey))
@@ -104,7 +119,7 @@ class MockArticleFlowsVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
 
-    fileprivate lazy var btnCommentThread: UIButton = {
+    private lazy var btnCommentThread: UIButton = {
         return UIButton()
             .backgroundColor(ColorPalette.shared.color(type: .blue))
             .textColor(ColorPalette.shared.color(type: .extraLightGrey))
@@ -143,7 +158,7 @@ class MockArticleFlowsVC: UIViewController {
     }
 }
 
-fileprivate extension MockArticleFlowsVC {
+private extension MockArticleFlowsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         articleView.accessibilityIdentifier = Metrics.viewIdentifier
@@ -159,11 +174,30 @@ fileprivate extension MockArticleFlowsVC {
         articleScrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
+
+        if #available(iOS 13.0, *) {
+            #if !PUBLIC_DEMO_APP
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                // Add it to the window
+                floatingLoggerView.isHidden = true
+                keyWindow.addSubview(floatingLoggerView)
+                floatingLoggerView.snp.makeConstraints { make in
+                    make.width.equalTo(Metrics.loggerViewWidth)
+                    make.height.equalTo(Metrics.loggerViewHeight)
+                    make.top.equalToSuperview().offset(Metrics.loggerInitialTopPadding)
+                    make.centerX.equalToSuperview()
+                }
+            }
+            #endif
+        }
     }
 
     // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
+
+        viewModel.outputs.floatingViewViewModel.inputs.setContentView.onNext(loggerView)
 
         // Setting those in the VM for integration with the SDK
         viewModel.inputs.setNavigationController(self.navigationController)
@@ -193,7 +227,7 @@ fileprivate extension MockArticleFlowsVC {
         let btnFullConversationObservable = viewModel.outputs.showFullConversationButton
             .take(1)
             .do(onNext: { [weak self] mode in
-                guard let self = self else { return }
+                guard let self else { return }
                 let btnTitle: String
                 switch mode {
                 case .push:
@@ -205,7 +239,7 @@ fileprivate extension MockArticleFlowsVC {
                 self.btnFullConversation.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.btnFullConversation
             }
             .unwrap()
@@ -214,7 +248,7 @@ fileprivate extension MockArticleFlowsVC {
         let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
             .take(1)
             .do(onNext: { [weak self] mode in
-                guard let self = self else { return }
+                guard let self else { return }
                 let btnTitle: String
                 switch mode {
                 case .push:
@@ -226,7 +260,7 @@ fileprivate extension MockArticleFlowsVC {
                 self.btnCommentCreation.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.btnCommentCreation
             }
             .unwrap()
@@ -235,7 +269,7 @@ fileprivate extension MockArticleFlowsVC {
         let btnCommentThreadObservable = viewModel.outputs.showCommentThreadButton
             .take(1)
             .do(onNext: { [weak self] mode in
-                guard let self = self else { return }
+                guard let self else { return }
                 let btnTitle: String
                 switch mode {
                 case .push:
@@ -247,14 +281,14 @@ fileprivate extension MockArticleFlowsVC {
                 self.btnCommentThread.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.btnCommentThread
             }
             .unwrap()
 
         Observable.merge(btnFullConversationObservable, btnCommentCreationObservable, btnCommentThreadObservable)
             .subscribe(onNext: { [weak self] btn in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)
@@ -276,7 +310,7 @@ fileprivate extension MockArticleFlowsVC {
         // Adding pre conversation
         viewModel.outputs.showPreConversation
             .subscribe(onNext: { [weak self] preConversationView in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)
@@ -298,6 +332,15 @@ fileprivate extension MockArticleFlowsVC {
         viewModel.outputs.showError
             .subscribe(onNext: { [weak self] message in
                 self?.showError(message: message)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.loggerEnabled
+            .delay(.milliseconds(10), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] loggerEnabled in
+                guard let self else { return }
+                self.floatingLoggerView.isHidden = !loggerEnabled
             })
             .disposed(by: disposeBag)
     }

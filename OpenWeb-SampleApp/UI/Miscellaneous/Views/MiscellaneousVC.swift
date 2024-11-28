@@ -13,7 +13,7 @@ import SnapKit
 
 class MiscellaneousVC: UIViewController {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "miscellaneous_vc_id"
         static let btnConversationCounterIdentifier = "btn_conversation_counter_id"
         static let verticalMargin: CGFloat = 40
@@ -21,17 +21,17 @@ class MiscellaneousVC: UIViewController {
         static let buttonHeight: CGFloat = 50
     }
 
-    fileprivate let viewModel: MiscellaneousViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private let viewModel: MiscellaneousViewModeling
+    private let disposeBag = DisposeBag()
 
-    fileprivate lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
 
-    fileprivate lazy var btnConversationCounter: UIButton = {
+    private lazy var btnConversationCounter: UIButton = {
         return NSLocalizedString("ConversationCounter", comment: "").blueRoundedButton
     }()
 
@@ -56,7 +56,7 @@ class MiscellaneousVC: UIViewController {
     }
 }
 
-fileprivate extension MiscellaneousVC {
+private extension MiscellaneousVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnConversationCounter.accessibilityIdentifier = Metrics.btnConversationCounterIdentifier

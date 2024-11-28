@@ -6,9 +6,14 @@
   Copyright © 2022 OpenWeb. All rights reserved.
 */
 
-
 "AuthenticationPlaygroundTitle" = "Authentication Playground";
 "GenericSSO" = "Generic SSO";
+"AuthWithCustomFields" = "Authenticate with custom fields";
+"SpotID" = "Spot Id";
+"Username" = "Username";
+"Password" = "Password";
+"SSOToken" = "SSO Token";
+"UserId" = "User Id";
 "ThirdPartySSO" = "Third-party SSO";
 "Login" = "Login";
 "Logout" = "Logout";
@@ -155,3 +160,4 @@
 "Authentication" = "Authentication";
 "Explore" = "Explore";
 "DescriptionText" = "Discover how the OpenWeb iOS SDK integrates with your app. Dive into the settings to explore and experience its full potential.";
+"UIFlowsLogger" = "Flows actions callbacks";

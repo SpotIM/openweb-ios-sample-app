@@ -11,28 +11,29 @@ import RxSwift
 
 class SampleAppSettingsView: UIView {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let identifier = "sample_app_settings_view_id"
         static let deeplinkIdentifier = "deeplink_selection_id"
+        static let flowsLoggerIdentifier = "flows_logger_switch_id"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
 
-    fileprivate lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metrics.verticalOffset
         return stackView
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedDeeplink: SegmentedControlSetting = {
+    private lazy var segmentedDeeplink: SegmentedControlSetting = {
         let title = viewModel.outputs.appDeeplinkTitle
         let items = viewModel.outputs.appDeeplinkSettings
 
@@ -41,8 +42,13 @@ class SampleAppSettingsView: UIView {
                                        items: items)
     }()
 
-    fileprivate let viewModel: SampleAppSettingsViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private lazy var switchFlowsLogger: SwitchSetting = {
+        let title = viewModel.outputs.flowsLoggerSwitchTitle
+        return SwitchSetting(title: title, accessibilityPrefixId: Metrics.flowsLoggerIdentifier)
+    }()
+
+    private let viewModel: SampleAppSettingsViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: SampleAppSettingsViewModeling) {
         self.viewModel = viewModel
@@ -57,7 +63,7 @@ class SampleAppSettingsView: UIView {
     }
 }
 
-fileprivate extension SampleAppSettingsView {
+private extension SampleAppSettingsView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -75,6 +81,7 @@ fileprivate extension SampleAppSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedDeeplink)
+        stackView.addArrangedSubview(switchFlowsLogger)
     }
 
     func setupObservers() {
@@ -86,6 +93,14 @@ fileprivate extension SampleAppSettingsView {
         segmentedDeeplink.rx.selectedSegmentIndex
             .map { SampleAppDeeplink.deeplink(fromIndex: $0) }
             .bind(to: viewModel.inputs.deeplinkOptionSelected)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.flowsLoggerEnabled
+            .bind(to: switchFlowsLogger.rx.isOn)
+            .disposed(by: disposeBag)
+
+        switchFlowsLogger.rx.isOn
+            .bind(to: viewModel.inputs.flowsLoggerEnable)
             .disposed(by: disposeBag)
     }
 }
