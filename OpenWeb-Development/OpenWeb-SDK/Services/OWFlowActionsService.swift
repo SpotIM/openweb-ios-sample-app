@@ -27,13 +27,13 @@ protocol OWFlowActionsServicing {
 
 class OWFlowActionsService: OWFlowActionsServicing {
 
-    fileprivate var flowActionsCallbacks: OWFlowActionsCallbacks?
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let viewSourceType: OWViewSourceType
-    fileprivate let queue = OWQueue<OWFlowActionCallbackType>(duplicationStrategy: .replaceDuplicates)
-    fileprivate var disposeBag: DisposeBag?
+    private var flowActionsCallbacks: OWFlowActionsCallbacks?
+    private let servicesProvider: OWSharedServicesProviding
+    private let viewSourceType: OWViewSourceType
+    private let queue = OWQueue<OWFlowActionCallbackType>(duplicationStrategy: .replaceDuplicates)
+    private var disposeBag: DisposeBag?
 
-    fileprivate var _serviceQueueEmpty = PublishSubject<Void>()
+    private var _serviceQueueEmpty = PublishSubject<Void>()
     var serviceQueueEmpty: Observable<Void> {
         return _serviceQueueEmpty
             .asObservable()
@@ -45,6 +45,7 @@ class OWFlowActionsService: OWFlowActionsServicing {
         self.flowActionsCallbacks = flowActionsCallbacks
         self.servicesProvider = servicesProvider
         self.viewSourceType = viewSourceType
+        setupBlockerServiceObservers() // to ensure serviceQueueEmpty is setup when there are no action callbacks
     }
 
     func append(flowAction: OWFlowActionCallbackType) {
@@ -55,8 +56,8 @@ class OWFlowActionsService: OWFlowActionsServicing {
     func getOpenProfileActionCallback(for navigationController: UINavigationController?,
                                       openProfileType: OWOpenProfileType,
                                       presentationalModeCompact: OWPresentationalModeCompact) -> OWFlowActionCallbackType? {
-        guard let navigationController = navigationController else { return nil }
-        switch(openProfileType) {
+        guard let navigationController else { return nil }
+        switch openProfileType {
         case .publisherProfile(let ssoPublisherId, let type):
             let presentationMode: OWPresentationalMode? = {
                 switch presentationalModeCompact {
@@ -67,7 +68,7 @@ class OWFlowActionsService: OWFlowActionsServicing {
                     return OWPresentationalMode.push(navigationController: navigationController)
                 }
             }()
-            guard let presentationMode = presentationMode else { return nil }
+            guard let presentationMode else { return nil }
             return OWFlowActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId,
                                                                  type: type,
                                                                  presentationalMode: presentationMode)
@@ -77,7 +78,7 @@ class OWFlowActionsService: OWFlowActionsServicing {
     }
 }
 
-fileprivate extension OWFlowActionsService {
+private extension OWFlowActionsService {
     func setupBlockerServiceObservers() {
         disposeBag = DisposeBag() // Cancel previous subscriptions
         guard let dispose = disposeBag else { return }
@@ -96,7 +97,7 @@ fileprivate extension OWFlowActionsService {
 
         // Ensure callbacks are triggered from main thread
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             while !self.queue.isEmpty(),
                   let action = self.queue.popFirst() {
                 self.flowActionsCallbacks?(action, self.viewSourceType, postId)

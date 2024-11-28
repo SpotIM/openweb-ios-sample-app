@@ -45,7 +45,7 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
 
     func collectionView(_ collectionView: UICollectionView, observedEvent: Event<Element>) {
         Binder(self) { [weak collectionView] dataSource, newSections in
-            guard let collectionView = collectionView else { return }
+            guard let collectionView else { return }
 
             #if DEBUG
                 dataSource._dataSourceBound = true
@@ -83,8 +83,8 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
                         collectionView.reloadData()
                         return
                     }
-                } catch let e {
-                    rxDebugFatalError(e)
+                } catch {
+                    rxDebugFatalError(error)
                     dataSource.setSections(newSections)
                     collectionView.reloadData()
                 }

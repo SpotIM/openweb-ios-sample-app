@@ -12,17 +12,17 @@ import RxSwift
 
 class OWCommunityGuidelinesCell: UITableViewCell {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let edgesPadding: CGFloat = 12
         static let identifier = "community_guidelines_cell_id"
     }
 
-    fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
+    private lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
         return OWCommunityGuidelinesView()
     }()
 
-    fileprivate var viewModel: OWCommunityGuidelinesCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    private var viewModel: OWCommunityGuidelinesCellViewModeling!
+    private var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -45,7 +45,7 @@ class OWCommunityGuidelinesCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWCommunityGuidelinesCell {
+private extension OWCommunityGuidelinesCell {
     func setupUI() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
                                                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
@@ -62,7 +62,7 @@ fileprivate extension OWCommunityGuidelinesCell {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

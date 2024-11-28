@@ -10,13 +10,15 @@ import Foundation
 import RxSwift
 
 protocol OWPreConversationFooterViewModelingInputs {
-    var termsTapped: PublishSubject<Void> { get }
-    var privacyTapped: PublishSubject<Void> { get }
+    var termsTap: PublishSubject<Void> { get }
+    var privacyTap: PublishSubject<Void> { get }
     var poweredByOWTapped: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationFooterViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
+    var termsTapped: Observable<Void> { get }
+    var privacyTapped: Observable<Void> { get }
 }
 
 protocol OWPreConversationFooterViewModeling {
@@ -28,13 +30,13 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
     var inputs: OWPreConversationFooterViewModelingInputs { return self }
     var outputs: OWPreConversationFooterViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
     }
 
-    fileprivate lazy var mobileSdkConfigObservable: Observable<SPConfigurationSDKStatus> = {
+    private lazy var mobileSdkConfigObservable: Observable<SPConfigurationSDKStatus> = {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationSDKStatus? in
@@ -43,9 +45,14 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
             .unwrap()
     }()
 
-    var termsTapped = PublishSubject<Void>()
+    var termsTap = PublishSubject<Void>()
+    var termsTapped: Observable<Void> { // This is used for OWViewActionCallbacks
+        return termsTap
+            .asObservable()
+    }
+
     var _openTerms: Observable<URL> {
-        return termsTapped
+        return termsTap
             .asObserver()
             .withLatestFrom(mobileSdkConfigObservable) { _, sdkConfig -> URL? in
                 return URL(string: sdkConfig.openwebTermsUrl)
@@ -53,9 +60,14 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
             .unwrap()
     }
 
-    var privacyTapped = PublishSubject<Void>()
+    var privacyTap = PublishSubject<Void>()
+    var privacyTapped: Observable<Void> { // This is used for OWViewActionCallbacks
+        return privacyTap
+            .asObservable()
+    }
+
     var _openPrivacy: Observable<URL> {
-        return privacyTapped
+        return privacyTap
             .asObserver()
             .withLatestFrom(mobileSdkConfigObservable) { _, sdkConfig -> URL? in
                 return URL(string: sdkConfig.openwebPrivacyUrl)

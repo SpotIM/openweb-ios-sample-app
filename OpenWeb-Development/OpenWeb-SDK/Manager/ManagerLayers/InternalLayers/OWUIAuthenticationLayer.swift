@@ -14,7 +14,7 @@ protocol OWUIAuthenticationInternalProtocol {
 
 class OWUIAuthenticationLayer: OWUIAuthentication, OWUIAuthenticationInternalProtocol {
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    private let servicesProvider: OWSharedServicesProviding
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -29,7 +29,7 @@ class OWUIAuthenticationLayer: OWUIAuthentication, OWUIAuthenticationInternalPro
         }
     }
 
-    fileprivate var _displayAuthenticationFlow: OWAuthenticationFlowCallback? = nil
+    private var _displayAuthenticationFlow: OWAuthenticationFlowCallback?
 
     func triggerPublisherDisplayAuthenticationFlow(routeringMode: OWRouteringMode, completion: @escaping OWBasicCompletion) {
         guard let callback = _displayAuthenticationFlow else {

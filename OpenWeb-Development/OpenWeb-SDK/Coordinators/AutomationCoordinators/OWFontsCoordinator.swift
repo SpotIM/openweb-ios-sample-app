@@ -33,8 +33,8 @@ class OWFontsCoordinator: OWBaseCoordinator<OWFontsCoordinatorResult> {
 
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
-    fileprivate let router: OWRoutering!
-    fileprivate let automationData: OWAutomationRequiredData
+    private let router: OWRoutering!
+    private let automationData: OWAutomationRequiredData
 
     init(router: OWRoutering! = nil, automationData: OWAutomationRequiredData) {
         self.router = router

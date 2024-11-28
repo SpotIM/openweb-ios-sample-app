@@ -15,10 +15,10 @@ protocol OWConversationUpdaterServicing {
 }
 
 class OWConversationUpdaterService: OWConversationUpdaterServicing {
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var _conversationUpdatesWithPostId = PublishSubject<(OWConversationUpdateType, OWPostId)>()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private var _conversationUpdatesWithPostId = PublishSubject<(OWConversationUpdateType, OWPostId)>()
 
-    fileprivate lazy var _conversationUpdatesWithPostIdShared: Observable<(OWConversationUpdateType, OWPostId)> = {
+    private lazy var _conversationUpdatesWithPostIdShared: Observable<(OWConversationUpdateType, OWPostId)> = {
         _conversationUpdatesWithPostId
             .asObservable()
             .share()
@@ -40,7 +40,7 @@ class OWConversationUpdaterService: OWConversationUpdaterServicing {
     }
 }
 
-fileprivate extension OWConversationUpdaterService {
+private extension OWConversationUpdaterService {
     func cacheUpdatedComments(for updateType: OWConversationUpdateType, postId: OWPostId) {
         let commentsToCache: [OWComment]
         switch updateType {
@@ -67,7 +67,7 @@ fileprivate extension OWConversationUpdaterService {
                 self.servicesProvider.commentsService().set(comments: [parentComment], postId: postId)
             }
         }
-        if (!commentsToCache.isEmpty) {
+        if !commentsToCache.isEmpty {
             self.servicesProvider.commentsService().set(comments: commentsToCache, postId: postId)
         }
     }

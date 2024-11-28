@@ -21,8 +21,8 @@ class OWPermissionsService: OWPermissionsServicing {
         case camera
     }
 
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private unowned let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -48,7 +48,7 @@ class OWPermissionsService: OWPermissionsServicing {
         switch type {
         case .camera:
             let hasRequiredDescription = Bundle.main.hasCameraUsageDescription && Bundle.main.hasPhotoLibraryUsageDescription
-            if (!hasRequiredDescription) {
+            if !hasRequiredDescription {
                 let message = "Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file"
                 self.servicesProvider
                     .logger()
@@ -59,7 +59,7 @@ class OWPermissionsService: OWPermissionsServicing {
     }
 }
 
-fileprivate extension OWPermissionsService {
+private extension OWPermissionsService {
     func openAppSettings() {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(settingsUrl)
@@ -80,7 +80,7 @@ fileprivate extension OWPermissionsService {
                 viewableMode: viewableMode
             )
             .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch result {
                 case .completion:
                     break
@@ -102,7 +102,7 @@ fileprivate extension OWPermissionsService {
 }
 
 // Camera
-fileprivate extension OWPermissionsService {
+private extension OWPermissionsService {
     func requestCameraPermission(result: @escaping (Bool) -> Void, viewableMode: OWViewableMode) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:

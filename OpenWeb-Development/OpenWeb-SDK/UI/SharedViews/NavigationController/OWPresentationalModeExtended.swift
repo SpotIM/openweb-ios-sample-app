@@ -10,5 +10,5 @@ import UIKit
 
 enum OWPresentationalModeExtended {
     case present(viewControllerWeakEncapsulation: OWWeakEncapsulation<UIViewController>, style: OWModalPresentationStyle, animated: Bool)
-    case push(navigationController: UINavigationController)
+    case push(navigationControllerWeakEncapsulation: OWWeakEncapsulation<UINavigationController>)
 }

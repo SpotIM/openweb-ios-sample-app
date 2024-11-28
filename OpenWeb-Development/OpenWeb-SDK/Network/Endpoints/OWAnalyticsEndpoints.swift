@@ -34,9 +34,9 @@ enum OWAnalyticsEndpoints: OWEndpoints {
         case .sendBatchEvents(let events):
             let params = ["events": events]
             let datadata = try? OWEncoder.default.encode(params)
-            guard let datadata = datadata else { return [:] }
+            guard let datadata else { return [:] }
             let json = try? JSONSerialization.jsonObject(with: datadata, options: []) as? [String: Any]
-            guard let json = json else { return [:] }
+            guard let json else { return [:] }
             return json
         }
     }

@@ -21,14 +21,12 @@ class OWCommentsService: OWCommentsServicing {
 
     // Multiple threads / queues access to this class
     // Avoiding "data race" by using a lock
-    fileprivate let lock: OWLock = OWUnfairLock()
+    private let lock: OWLock = OWUnfairLock()
 
-    fileprivate var _mapPostIdToComments = [OWPostId: OWCommentsMapper]()
+    private var _mapPostIdToComments = [OWPostId: OWCommentsMapper]()
 
     func get(commentId id: String, postId: String) -> OWComment? {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         guard let comments = _mapPostIdToComments[postId],
               let comment = comments[id]
@@ -38,24 +36,20 @@ class OWCommentsService: OWCommentsServicing {
     }
 
     func set(comments: [OWComment], postId: OWPostId) {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         // Using `internalSet` function to avoid deadlock
         internalSet(comments: comments, postId: postId)
     }
 
     func cleanCache() {
-        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-        // swiftlint:enable self_capture_in_blocks
 
         _mapPostIdToComments.removeAll()
     }
 }
 
-fileprivate extension OWCommentsService {
+private extension OWCommentsService {
     func internalSet(comments: [OWComment], postId: OWPostId) {
         let commentIdToCommentTupples: [(String, OWComment)] = comments.map {
             guard let id = $0.id else { return nil }
@@ -65,7 +59,7 @@ fileprivate extension OWCommentsService {
 
         if let existingCommentsForPostId = _mapPostIdToComments[postId] {
             // merge and replacing current comments
-            let newPostIdComments: OWCommentsMapper = existingCommentsForPostId.merging(commentIdsToComment, uniquingKeysWith: {(_, new) in new })
+            let newPostIdComments: OWCommentsMapper = existingCommentsForPostId.merging(commentIdsToComment, uniquingKeysWith: { _, new in new })
             _mapPostIdToComments[postId] = newPostIdComments
         } else {
             _mapPostIdToComments[postId] = commentIdsToComment

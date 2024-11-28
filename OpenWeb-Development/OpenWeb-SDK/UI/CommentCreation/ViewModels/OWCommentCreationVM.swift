@@ -14,7 +14,7 @@ protocol OWCommentCreationViewModelingInputs {
 }
 
 protocol OWCommentCreationViewModelingOutputs {
-    var commentCreationViewVM: OWCommentCreationViewViewModeling { get }
+    var commentCreationViewVM: any OWCommentCreationViewViewModeling { get }
     var loadedToScreen: Observable<Void> { get }
 }
 
@@ -27,11 +27,11 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
     var inputs: OWCommentCreationViewModelingInputs { return self }
     var outputs: OWCommentCreationViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
-    fileprivate let viewableMode: OWViewableMode
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationData: OWCommentCreationRequiredData
+    private let viewableMode: OWViewableMode
 
-    lazy var commentCreationViewVM: OWCommentCreationViewViewModeling = {
+    lazy var commentCreationViewVM: any OWCommentCreationViewViewModeling = {
         return OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
                                               viewableMode: viewableMode)
     }()
@@ -53,7 +53,7 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
     }
 }
 
-fileprivate extension OWCommentCreationViewModel {
+private extension OWCommentCreationViewModel {
     func setupObservers() {
 
     }

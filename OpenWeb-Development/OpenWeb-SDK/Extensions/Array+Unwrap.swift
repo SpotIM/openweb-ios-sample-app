@@ -14,4 +14,3 @@ extension Array {
             .map { $0! }
     }
 }
-

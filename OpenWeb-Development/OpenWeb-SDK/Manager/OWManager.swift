@@ -22,12 +22,12 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     static let manager = OWManager()
 
     // Memebers variables
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
-    fileprivate let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
-    fileprivate var _currentNonRxSpotId: OWSpotId? = nil
-    fileprivate var _currentNonRxPostId: OWPostId? = nil
+    private let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
+    private let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
+    private var _currentNonRxSpotId: OWSpotId?
+    private var _currentNonRxPostId: OWPostId?
 
     // Layers
     let analyticsLayer: OWAnalytics
@@ -102,13 +102,13 @@ extension OWManager {
 }
 
 // Extension with access only inside this file and for the OWManager class
-fileprivate extension OWManager {
+private extension OWManager {
     func setupObservers() {
         currentPostId
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
                 // PostId was re-set to another postId
-                guard let self = self else { return }
+                guard let self else { return }
                 self.resetPostId()
             })
             .disposed(by: disposeBag)
@@ -117,7 +117,7 @@ fileprivate extension OWManager {
             .take(1)
             .subscribe(onNext: { [weak self] spotId in
                 // SpotId was set for the first time
-                guard let self = self else { return }
+                guard let self else { return }
                 self.servicesProvider.configure.set(spotId: spotId)
             })
             .disposed(by: disposeBag)
@@ -141,7 +141,7 @@ fileprivate extension OWManager {
             .map { $0.1 } // Map back to the spotId
             .subscribe(onNext: { [weak self] spotId in
                 // SpotId was re-set to another spotId
-                guard let self = self else { return }
+                guard let self else { return }
                 self.resetSpotId()
                 self.servicesProvider.configure.change(spotId: spotId)
             })
@@ -164,10 +164,11 @@ fileprivate extension OWManager {
             })
             .filter { $0.0 } // Continue only if scan return `true` in the first variable
             .map { $0.1 } // Map back to the spotId
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] spotId in
                 // SpotId was re-set to the same spotId
-                guard let self = self else { return }
+                guard let self else { return }
                 self.resetSpotId()
+                self.servicesProvider.spotConfigurationService().spotChanged(spotId: spotId)
             })
             .disposed(by: disposeBag)
 

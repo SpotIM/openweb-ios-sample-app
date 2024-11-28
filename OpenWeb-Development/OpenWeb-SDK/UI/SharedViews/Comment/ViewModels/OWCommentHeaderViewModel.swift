@@ -45,28 +45,28 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var inputs: OWCommentHeaderViewModelingInputs { return self }
     var outputs: OWCommentHeaderViewModelingOutputs { return self }
 
-    fileprivate let disposedBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let userBadgeService: OWUserBadgeServicing
+    private let disposedBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let userBadgeService: OWUserBadgeServicing
 
-    fileprivate let _model = BehaviorSubject<OWComment?>(value: nil)
-    fileprivate var _unwrappedModel: Observable<OWComment> {
+    private let _model = BehaviorSubject<OWComment?>(value: nil)
+    private var _unwrappedModel: Observable<OWComment> {
         _model.unwrap()
     }
 
-    fileprivate var user: SPUser? = nil
-    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    fileprivate var _unwrappedUser: Observable<SPUser> {
+    private var user: SPUser?
+    private let _user = BehaviorSubject<SPUser?>(value: nil)
+    private var _unwrappedUser: Observable<SPUser> {
         _user.unwrap()
     }
 
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
+    private var _openProfile = PublishSubject<OWOpenProfileType>()
     var openProfile: Observable<OWOpenProfileType> {
         _openProfile
             .asObservable()
     }
 
-    fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
+    private let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
     var isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
 
@@ -141,7 +141,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
-    fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
+    private var conversationConfig: Observable<SPConfigurationConversation> {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationConversation? in
@@ -150,10 +150,10 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .unwrap()
     }
 
-    fileprivate var _badgeType: Observable<OWUserBadgeType> {
+    private var _badgeType: Observable<OWUserBadgeType> {
         _unwrappedUser
             .flatMap { [weak self] user -> Observable<OWUserBadgeType> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.userBadgeService.userBadgeText(user: user)
             }
     }
@@ -180,7 +180,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             let localizationKey: String
             if user.isMuted {
                 localizationKey = "MutedCommentMessage"
-            } else if (model.reported && !isCommentOfActiveUser) {
+            } else if model.reported && !isCommentOfActiveUser {
                 localizationKey = "ReportedCommentMessage"
             } else if model.status == .block || model.status == .reject {
                 localizationKey = isCommentOfActiveUser ? "AuthorViolatedPolicyCommentMessage" : "ViolatedPolicyCommentMessage"
@@ -205,7 +205,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 }
 
-fileprivate extension OWCommentHeaderViewModel {
+private extension OWCommentHeaderViewModel {
     func setupObservers() {
         shouldShowHiddenCommentMessage
             .bind(to: avatarVM.inputs.shouldBlockAvatar)
@@ -213,18 +213,18 @@ fileprivate extension OWCommentHeaderViewModel {
 
         userNameTapped
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.shouldShowHiddenCommentMessage
                     .take(1)
             }
             .filter { !$0 }
             .map { [weak self] _ -> SPUser? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.user
             }
             .unwrap()
             .flatMapLatest { [weak self] user -> Observable<OWOpenProfileResult> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.servicesProvider.profileService().openProfileTapped(user: user)
             }
             .map { result -> OWOpenProfileType? in

@@ -31,7 +31,7 @@ class OWSpacerCellViewModel: OWSpacerCellViewModeling,
         return OWSpacerViewModel(style: self.style)
     }()
 
-    fileprivate let style: OWSpacerStyle
+    private let style: OWSpacerStyle
 
     // Unique identifier
     let id: String
@@ -47,4 +47,3 @@ extension OWSpacerCellViewModel {
         return OWSpacerCellViewModel()
     }
 }
-

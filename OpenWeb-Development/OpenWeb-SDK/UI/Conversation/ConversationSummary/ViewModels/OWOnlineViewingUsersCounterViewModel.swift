@@ -33,8 +33,8 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     var outputs: OWOnlineViewingUsersCounterViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
-    fileprivate let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    private let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    private let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
 
     var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
     var triggerCustomizeCounterLabelUI = PublishSubject<UILabel>()
@@ -63,8 +63,8 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
             .asObservable()
     }()
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag = DisposeBag()
+    private let servicesProvider: OWSharedServicesProviding
+    private let disposeBag = DisposeBag()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -72,7 +72,7 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     }
 }
 
-fileprivate extension OWOnlineViewingUsersCounterViewModel {
+private extension OWOnlineViewingUsersCounterViewModel {
     func setupObservers() {
         triggerCustomizeIconImageViewUI
             .bind(to: _triggerCustomizeIconImageViewUI)
@@ -83,4 +83,3 @@ fileprivate extension OWOnlineViewingUsersCounterViewModel {
             .disposed(by: disposeBag)
     }
 }
-

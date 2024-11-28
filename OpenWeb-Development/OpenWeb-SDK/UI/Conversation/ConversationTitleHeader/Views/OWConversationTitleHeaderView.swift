@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWConversationTitleHeaderView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let verticalOffset: CGFloat = 16
         static let closeButtonTopBottomPadding = 7
         static let identifier = "conversation_title_header_view_id"
@@ -19,7 +19,7 @@ class OWConversationTitleHeaderView: UIView {
         static let closeButtonIdentifier = "conversation_title_header_close_button_id"
     }
 
-    fileprivate lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(typography: .titleSmall))
@@ -27,13 +27,13 @@ class OWConversationTitleHeaderView: UIView {
             .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
+    private lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
     }()
 
-    fileprivate var viewModel: OWConversationTitleHeaderViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWConversationTitleHeaderViewModeling
+    private let disposeBag = DisposeBag()
 
     init(viewModel: OWConversationTitleHeaderViewModeling) {
         self.viewModel = viewModel
@@ -48,7 +48,7 @@ class OWConversationTitleHeaderView: UIView {
     }
 }
 
-fileprivate extension OWConversationTitleHeaderView {
+private extension OWConversationTitleHeaderView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
@@ -78,7 +78,7 @@ fileprivate extension OWConversationTitleHeaderView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: "closeButton", supportDarkMode: true), for: .normal)
@@ -89,7 +89,7 @@ fileprivate extension OWConversationTitleHeaderView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .titleSmall)
             })
             .disposed(by: disposeBag)

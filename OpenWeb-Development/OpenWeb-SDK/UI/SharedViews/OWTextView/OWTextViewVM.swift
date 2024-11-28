@@ -68,7 +68,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         static let maxNumberOfLines = 5
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     let hasBorder: Bool
     let isEditable: Bool
@@ -137,7 +137,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var textViewTextCount: Observable<String> {
         return textViewCharectersCount
             .map { [weak self] count in
-                guard let self = self else { return "" }
+                guard let self else { return "" }
                 return "\(count)/" + "\(self.textViewMaxCharecters)"
             }
     }
@@ -201,7 +201,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     }
 }
 
-fileprivate extension OWTextViewViewModel {
+private extension OWTextViewViewModel {
     func setupObservers() {
         maxLinesChange
             .subscribe(onNext: { [weak self] maxLines in
@@ -211,14 +211,14 @@ fileprivate extension OWTextViewViewModel {
 
         textViewMaxCharectersChange
             .subscribe(onNext: { [weak self] limit in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textViewMaxCharecters = limit
             })
             .disposed(by: disposeBag)
 
         charectarsLimitEnabledChange
             .subscribe(onNext: { [weak self] show in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.charectersLimitEnabled = show && self.isEditable
             })
             .disposed(by: disposeBag)
@@ -230,7 +230,7 @@ fileprivate extension OWTextViewViewModel {
 
         let textInternalChangeObservable = textInternalChange
             .flatMap { [weak self] internalText -> Observable<String> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.textViewText
                     .take(1)
                     .filter { internalText != $0 }
@@ -242,7 +242,7 @@ fileprivate extension OWTextViewViewModel {
         Observable.merge(textInternalChangeObservable, textExternalChange)
             .map { [weak self] text -> String in
                 // Length validation
-                guard let self = self else { return text }
+                guard let self else { return text }
                 if self.charectersLimitEnabled {
                     return String(text.prefix(self.textViewMaxCharecters))
                 }
@@ -254,7 +254,7 @@ fileprivate extension OWTextViewViewModel {
         let cursorRangeInternalChangeObservable = cursorRangeInternalChange
             .unwrap()
             .flatMap { [weak self] internalRange -> Observable<Range<String.Index>?> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.cursorRange
                     .take(1)
                     .filter { internalRange != $0 }

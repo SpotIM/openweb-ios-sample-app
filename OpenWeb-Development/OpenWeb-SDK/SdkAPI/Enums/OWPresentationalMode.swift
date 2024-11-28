@@ -19,7 +19,7 @@ public enum OWPresentationalMode: Codable {
         switch self {
         case .present(_, let style):
             return .present(style: style)
-        case .push(_):
+        case .push:
             return .push
         }
     }

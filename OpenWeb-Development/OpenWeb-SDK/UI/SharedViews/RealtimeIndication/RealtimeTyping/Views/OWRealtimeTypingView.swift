@@ -12,18 +12,22 @@ import RxSwift
 import RxCocoa
 
 class OWRealtimeTypingView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let horizontalMargin: CGFloat = 10
         static let animationViewWidth: CGFloat = 19
         static let animationViewHeight: CGFloat = 18
 
         static let titleLabelTextColor: OWColor.OWType = .textColor3
+
+        static let identifier = "realtime_typing_view_id"
+        static let typingAnimationViewIdentifier = "realtime_typing_animation_view_id"
+        static let typingLabelIdentifier = "realtime_typing_label_id"
     }
 
-    fileprivate var viewModel: OWRealtimeTypingViewModeling!
-    fileprivate let disposeBag = DisposeBag()
+    private var viewModel: OWRealtimeTypingViewModeling!
+    private let disposeBag = DisposeBag()
 
-    fileprivate let typingAnimationView: OWTypingAnimationView = {
+    private let typingAnimationView: OWTypingAnimationView = {
         let animationView = OWTypingAnimationView()
         animationView.startAnimating()
 
@@ -31,14 +35,14 @@ class OWRealtimeTypingView: UIView {
             .userInteractionEnabled(false)
     }()
 
-    fileprivate lazy var typingLabel: UILabel = {
+    private lazy var typingLabel: UILabel = {
         return UILabel()
             .font(font)
             .textColor(OWColorPalette.shared.color(type: Metrics.titleLabelTextColor,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var font: UIFont {
+    private var font: UIFont {
         return OWFontBook.shared.font(typography: .footnoteText)
     }
 
@@ -51,10 +55,11 @@ class OWRealtimeTypingView: UIView {
         super.init(frame: .zero)
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 }
 
-fileprivate extension OWRealtimeTypingView {
+private extension OWRealtimeTypingView {
     func setupUI() {
         self.addSubview(typingAnimationView)
         typingAnimationView.OWSnp.makeConstraints { make in
@@ -78,7 +83,7 @@ fileprivate extension OWRealtimeTypingView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.typingLabel.textColor = OWColorPalette.shared.color(type: Metrics.titleLabelTextColor,
                                                                         themeStyle: currentStyle)
             })
@@ -87,9 +92,15 @@ fileprivate extension OWRealtimeTypingView {
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.typingLabel.font = self.font
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        typingAnimationView.accessibilityIdentifier = Metrics.typingAnimationViewIdentifier
+        typingLabel.accessibilityIdentifier = Metrics.typingLabelIdentifier
     }
 }

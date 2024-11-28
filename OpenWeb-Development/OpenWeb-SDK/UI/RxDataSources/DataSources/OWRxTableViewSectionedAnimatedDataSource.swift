@@ -49,7 +49,7 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
 
     func tableView(_ tableView: UITableView, observedEvent: Event<OWElement>) {
         Binder(self) { [weak tableView] dataSource, newSections in
-            guard let tableView = tableView else { return }
+            guard let tableView else { return }
 
 #if DEBUG
             dataSource._dataSourceBound = true
@@ -93,8 +93,8 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
                         tableView.reloadData()
                         return
                     }
-                } catch let e {
-                    rxDebugFatalError(e)
+                } catch {
+                    rxDebugFatalError(error)
                     dataSource.setSections(newSections)
                     tableView.reloadData()
                 }

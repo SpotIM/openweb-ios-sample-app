@@ -43,8 +43,8 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
 
-    fileprivate let disposedBag = DisposeBag()
-    fileprivate let sharedServiceProvider: OWSharedServicesProviding
+    private let disposedBag = DisposeBag()
+    private let sharedServiceProvider: OWSharedServicesProviding
 
     var commentStatusVM: OWCommentStatusViewModeling
     var commentHeaderVM: OWCommentHeaderViewModeling
@@ -56,14 +56,14 @@ class OWCommentViewModel: OWCommentViewModeling,
     var user: SPUser
     var activeUserId: String?
 
-    fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
+    private let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
     var shouldHideCommentContent: Observable<Bool> {
         _shouldHideCommentContent
             .asObservable()
     }
 
-    fileprivate var _isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
-    fileprivate var _currentUser: Observable<SPUser?> {
+    private var _isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
+    private var _currentUser: Observable<SPUser?> {
         sharedServiceProvider
             .authenticationManager()
             .activeUserAvailability
@@ -154,11 +154,11 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 }
 
-fileprivate extension OWCommentViewModel {
+private extension OWCommentViewModel {
     func setupObservers() {
         _currentUser
             .map { [weak self] user -> Bool in
-                guard let self = self, let user = user else { return false }
+                guard let self, let user else { return false }
                 return user.userId == self.comment.userId
             }
             .bind(to: _isCommentOfActiveUser)

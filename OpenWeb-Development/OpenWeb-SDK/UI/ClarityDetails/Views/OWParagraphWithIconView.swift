@@ -12,13 +12,13 @@ import RxCocoa
 import RxSwift
 
 class OWParagraphWithIconView: UIView {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let iconSize: CGFloat = 24
         static let textLeadingPadding: CGFloat = 10
     }
 
-    fileprivate let disposeBag: DisposeBag
-    fileprivate let viewModel: OWParagraphWithIconViewModeling
+    private let disposeBag: DisposeBag
+    private let viewModel: OWParagraphWithIconViewModeling
 
     init(viewModel: OWParagraphWithIconViewModeling) {
         self.viewModel = viewModel
@@ -33,20 +33,20 @@ class OWParagraphWithIconView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    fileprivate lazy var iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         return UIImageView(image: self.viewModel.outputs.icon)
             .tintAdjustmentMode(.normal)
             .tintColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
     }()
 
-    fileprivate lazy var textLabel: UILabel = {
+    private lazy var textLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
             .enforceSemanticAttribute()
     }()
 }
 
-fileprivate extension OWParagraphWithIconView {
+private extension OWParagraphWithIconView {
     func setupViews() {
         self.enforceSemanticAttribute()
 
@@ -70,11 +70,11 @@ fileprivate extension OWParagraphWithIconView {
 
         viewModel.outputs.attributedString
             .subscribe(onNext: { [weak self] attributedString in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.textLabel
                     .attributedText(attributedString)
                     .addRangeGesture(targetRange: self.viewModel.outputs.communityGuidelinesClickablePlaceholder) { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.viewModel.inputs.communityGuidelinesClick.onNext()
                     }
             })
@@ -83,7 +83,7 @@ fileprivate extension OWParagraphWithIconView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)

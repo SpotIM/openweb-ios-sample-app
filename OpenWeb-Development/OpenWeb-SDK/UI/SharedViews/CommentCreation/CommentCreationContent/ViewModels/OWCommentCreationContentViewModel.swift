@@ -40,22 +40,22 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var inputs: OWCommentCreationContentViewModelingInputs { return self }
     var outputs: OWCommentCreationContentViewModelingOutputs { return self }
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let delayAfterLoadingImage = 50
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate var uploadImageDisposeBag = DisposeBag()
-    fileprivate let imageURLProvider: OWImageProviding
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationType: OWCommentCreationTypeInternal
+    private let disposeBag = DisposeBag()
+    private var uploadImageDisposeBag = DisposeBag()
+    private let imageURLProvider: OWImageProviding
+    private let servicesProvider: OWSharedServicesProviding
+    private let commentCreationType: OWCommentCreationTypeInternal
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    private lazy var postId = OWManager.manager.postId
 
     var imagePicked = PublishSubject<UIImage>()
     var gifPicked = PublishSubject<OWCommentGif>()
 
-    fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
+    private let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
     var commentContent: Observable<OWCommentCreationContent> {
         Observable.combineLatest(textViewVM.outputs.textViewText, _imageContent.asObservable(), gifPreviewVM.outputs.gifDataOutput)
@@ -76,7 +76,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         OWAvatarViewModel(imageURLProvider: imageURLProvider)
     }()
 
-    fileprivate lazy var _commentTextCharactersLimit: Observable<Int?> = {
+    private lazy var _commentTextCharactersLimit: Observable<Int?> = {
         return servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
             .materialize()
             .map { event -> Int? in
@@ -109,7 +109,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             gifPreviewVM.inputs.gifData
         )
         .map { [weak self] commentContent, imageContent, gifContent -> Bool in
-            guard let self = self else { return false }
+            guard let self else { return false }
 
             if case .edit(comment: let comment) = self.commentCreationType {
                 if comment.text?.text != commentContent.text ||
@@ -167,10 +167,10 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     }
 }
 
-fileprivate extension OWCommentCreationContentViewModel {
+private extension OWCommentCreationContentViewModel {
     func setupInitialTextIfNeeded() {
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
-        var initialText: String? = nil
+        var initialText: String?
         switch commentCreationType {
         case .comment:
             guard let postId = self.postId,
@@ -185,7 +185,7 @@ fileprivate extension OWCommentCreationContentViewModel {
             if let commentText = comment.text?.text {
                 initialText = commentText
             }
-            if let postId = postId,
+            if let postId,
                let commentId = comment.id,
                let commentCreationCache = commentsCacheService[.edit(postId: postId, commentId: commentId)] {
                 initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
@@ -203,7 +203,7 @@ fileprivate extension OWCommentCreationContentViewModel {
 
         switch commentCreationType {
         case .comment:
-            guard let postId = postId else { return }
+            guard let postId else { return }
             initialImage = commentsCacheService[.comment(postId: postId)]?.commentContent.image
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,
@@ -219,13 +219,13 @@ fileprivate extension OWCommentCreationContentViewModel {
         Observable.just(())
             .do(onNext: { [weak self] _ in
                 // Set a placeholder
-                guard let self = self else { return }
+                guard let self else { return }
                 if let placeholder = UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false) {
                     self.imagePreviewVM.inputs.image.onNext(placeholder)
                 }
             })
             .flatMap { [weak self] _ -> Observable<URL?> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 return self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
             }
             .unwrap()
@@ -236,7 +236,7 @@ fileprivate extension OWCommentCreationContentViewModel {
         // we added delay to fix a case we showed empty image
             .delay(.milliseconds(Metrics.delayAfterLoadingImage), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] image in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.imagePreviewVM.inputs.image.onNext(image)
                 self._imageContent.onNext(imageContent)
             })
@@ -249,7 +249,7 @@ fileprivate extension OWCommentCreationContentViewModel {
 
         switch commentCreationType {
         case .comment:
-            guard let postId = postId else { return }
+            guard let postId else { return }
             initialGif = commentsCacheService[.comment(postId: postId)]?.commentContent.gif
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,
@@ -260,7 +260,7 @@ fileprivate extension OWCommentCreationContentViewModel {
             initialGif = comment.gif
         }
 
-        guard let initialGif = initialGif else { return }
+        guard let initialGif else { return }
 
         gifPreviewVM.inputs.gifData.onNext(initialGif)
     }
@@ -283,8 +283,8 @@ fileprivate extension OWCommentCreationContentViewModel {
         servicesProvider.authenticationManager()
             .activeUserAvailability
             .subscribe(onNext: { [weak self] availability in
-                guard let self = self else { return }
-                switch (availability) {
+                guard let self else { return }
+                switch availability {
                 case .notAvailable:
                     self.avatarViewVM.inputs.userInput.onNext(nil)
                 case .user(let user):
@@ -295,7 +295,7 @@ fileprivate extension OWCommentCreationContentViewModel {
 
         self.imagePreviewVM.outputs.removeButtonTapped
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.uploadImageDisposeBag = DisposeBag()
                 self.setupImageObserver()
                 self._imageContent.onNext(nil)
@@ -305,7 +305,7 @@ fileprivate extension OWCommentCreationContentViewModel {
 
         _commentTextCharactersLimit
             .subscribe(onNext: { [weak self] limit in
-                guard let self = self else { return }
+                guard let self else { return }
                 let limit = limit ?? 0
                 self.textViewVM.inputs.textViewMaxCharectersChange.onNext(limit)
                 self.textViewVM.inputs.charectarsLimitEnabledChange.onNext(limit > 0)
@@ -323,7 +323,7 @@ fileprivate extension OWCommentCreationContentViewModel {
 
         OWSharedServicesProvider.shared.orientationService().orientation
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                guard let self else { return }
                 let isSuggestionBarEnabled = (currentOrientation == .portrait)
                 self.textViewVM.inputs.hasSuggestionsBarChange.onNext(isSuggestionBarEnabled)
             })
@@ -333,7 +333,7 @@ fileprivate extension OWCommentCreationContentViewModel {
     func setupImageObserver() {
         let imageWithCloudinarySignatureObservable = imagePicked
             .do(onNext: { [weak self] image in
-                guard let self = self else { return }
+                guard let self else { return }
                 // Clean selected gif
                 self.gifPreviewVM.inputs.removeButtonTap.onNext()
                 self._imageContent.onNext(nil)
@@ -341,7 +341,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self.imagePreviewVM.inputs.isUploadingImage.onNext(true)
             })
             .flatMapLatest { [weak self] image -> Observable<(Event<SPSignResponse>, UIImage, String, String)> in
-                guard let self = self else { return .empty() }
+                guard let self else { return .empty() }
                 let imageId = UUID().uuidString
                 let timestamp = String(format: "%.3f", NSDate().timeIntervalSince1970)
                 return self.servicesProvider
@@ -356,7 +356,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 switch event {
                 case .next(let signResponse):
                     return (signResponse.signature, image, imageId, timestamp)
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil
@@ -366,7 +366,7 @@ fileprivate extension OWCommentCreationContentViewModel {
 
         let imageContentObservable = imageWithCloudinarySignatureObservable
             .flatMapLatest { [weak self] cloudinarySignature, image, imageId, timestamp -> Observable<(Event<OWUploadImageResponse>, String)> in
-                guard let self = self,
+                guard let self,
                       let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
                 else { return .empty() }
                 return self.servicesProvider
@@ -390,21 +390,21 @@ fileprivate extension OWCommentCreationContentViewModel {
                         originalHeight: uploadResponse.height,
                         imageId: imageId
                     )
-                case .error(_):
+                case .error:
                     return nil
                 default:
                     return nil
                 }
             }
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.imagePreviewVM.inputs.isUploadingImage.onNext(false)
             })
             .unwrap()
 
         imageContentObservable
             .subscribe(onNext: { [weak self] imageContent in
-                guard let self = self else { return }
+                guard let self else { return }
                 self._imageContent.onNext(imageContent)
             })
             .disposed(by: uploadImageDisposeBag)
@@ -418,4 +418,3 @@ fileprivate extension OWCommentCreationContentViewModel {
             .disposed(by: disposeBag)
     }
 }
-

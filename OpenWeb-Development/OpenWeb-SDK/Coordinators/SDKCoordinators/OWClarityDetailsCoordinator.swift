@@ -24,15 +24,15 @@ enum OWClarityDetailsCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinatorResult> {
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let fadeDuration: CGFloat = 0.3
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
-    fileprivate let data: OWClarityDetailsRequireData
-    fileprivate let router: OWRoutering?
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let data: OWClarityDetailsRequireData
+    private let router: OWRoutering?
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .clarityDetails)
     }()
 
@@ -49,7 +49,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
-        guard let router = router else { return .empty() }
+        guard let router else { return .empty() }
         let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(data: data, viewableMode: .partOfFlow)
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
 
@@ -77,7 +77,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
             .map { OWClarityDetailsCoordinatorResult.popped }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.router?.pop(popStyle: .dismiss, animated: false)
             })
 
@@ -98,7 +98,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
         let coordinateToSafariObservable = coordinateToSafariObservables
             .flatMap { [weak self] url -> Observable<OWWebTabCoordinatorResult> in
-                guard let self = self,
+                guard let self,
                       let router = self.router
                 else { return .empty() }
                 let title = clarityDetailsVM.outputs.clarityDetailsViewViewModel
@@ -134,7 +134,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
         let coordinateToAppealObservable = appealTapped
             .flatMap { [weak self] data -> Observable<OWCommenterAppealCoordinatorResult> in
-                guard let self = self,
+                guard let self,
                       let router = self.router
                 else { return .empty() }
 
@@ -167,7 +167,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     }
 }
 
-fileprivate extension OWClarityDetailsCoordinator {
+private extension OWClarityDetailsCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWClarityDetailsViewViewModeling) {
         // MARK: General (Used for both Flow and Independent)
         guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided

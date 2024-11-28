@@ -26,7 +26,7 @@ protocol OWSubmittedViewViewModeling {
 
 class OWSubmittedViewViewModel: OWSubmittedViewViewModelingInputs, OWSubmittedViewViewModelingOutputs, OWSubmittedViewViewModeling {
 
-    fileprivate struct Metrics {
+    private struct Metrics {
         static let titleIconName = "ReportReasonSubmittedIcon"
         static let titleViewPrefixIdentifier = "submitted"
     }
@@ -34,8 +34,8 @@ class OWSubmittedViewViewModel: OWSubmittedViewViewModelingInputs, OWSubmittedVi
     var inputs: OWSubmittedViewViewModelingInputs { return self }
     var outputs: OWSubmittedViewViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let type: OWSubmittedViewType
+    private let disposeBag = DisposeBag()
+    private let type: OWSubmittedViewType
     init(type: OWSubmittedViewType) {
         self.type = type
     }

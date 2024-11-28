@@ -29,13 +29,13 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
-    fileprivate let router: OWRoutering!
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks?
-    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+    private let router: OWRoutering!
+    private let commentCreationData: OWCommentCreationRequiredData
+    private let viewActionsCallbacks: OWViewActionsCallbacks?
+    private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .commentCreation)
     }()
-    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+    private lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .commentCreation)
     }()
 
@@ -59,20 +59,20 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         }()
 
         let animated = {
-            guard let coordinatorData = coordinatorData else { return true }
+            guard let coordinatorData else { return true }
             switch coordinatorData.deepLink {
-                case .commentCreation(let commentCreationData):
-                    guard coordinatorData.source == .preConversation,
-                          case .present = commentCreationData.presentationalStyle else { return true }
-                    // If comment creation was called from PreConversation
-                    // And the presentation style is present, then we do not
-                    // animate the comment creation since the animation of present
-                    // is done by the conversation presenting under it
-                    // this fixes a UI bug that in some cases looked like a
-                    // double present.
-                    return false
-                default:
-                    break
+            case .commentCreation(let commentCreationData):
+                guard coordinatorData.source == .preConversation,
+                      case .present = commentCreationData.presentationalStyle else { return true }
+                // If comment creation was called from PreConversation
+                // And the presentation style is present, then we do not
+                // animate the comment creation since the animation of present
+                // is done by the conversation presenting under it
+                // this fixes a UI bug that in some cases looked like a
+                // double present.
+                return false
+            default:
+                break
             }
             return true
         }()
@@ -91,7 +91,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
         let userLoggedInObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.userJustLoggedIn
             .map { [weak self] _ -> OWCommentCreationRequiredData? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
                 return self.commentCreationData
             }
             .unwrap()
@@ -120,7 +120,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commentCreatedObservable, userLoggedInObservable)
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 let popStyle: OWScreenPopStyle = {
                     switch commentCreationViewVM.outputs.commentCreationStyle {
                     case .regular, .light:
@@ -138,7 +138,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
+        let commentCreationViewVM: any OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
                                                                                                 viewableMode: .independent)
         let commentCreationView = OWCommentCreationView(viewModel: commentCreationViewVM)
         setupObservers(forViewModel: commentCreationViewVM)
@@ -147,17 +147,17 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     }
 }
 
-fileprivate extension OWCommentCreationCoordinator {
+private extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
         setupObservers(forViewModel: viewModel.outputs.commentCreationViewVM)
     }
 
-    func setupObservers(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+    func setupObservers(forViewModel viewModel: any OWCommentCreationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
         setupCustomizationElements(forViewModel: viewModel)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+    func setupViewActionsCallbacks(forViewModel viewModel: any OWCommentCreationViewViewModeling) {
         guard viewActionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let userLoggedInWhileReplyingToComment = viewModel.outputs.userJustLoggedIn
@@ -199,13 +199,13 @@ fileprivate extension OWCommentCreationCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .subscribe(onNext: { [weak self] viewAction in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewActionsService.append(viewAction: viewAction)
             })
             .disposed(by: disposeBag)
     }
 
-    func setupCustomizationElements(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+    func setupCustomizationElements(forViewModel viewModel: any OWCommentCreationViewViewModeling) {
         // Set customized pre conversation summary header
         let submitCustomizeButton = viewModel.outputs.customizeSubmitButtonUI
             .map { OWCustomizableElement.commentCreationSubmit(element: .button(button: $0)) }

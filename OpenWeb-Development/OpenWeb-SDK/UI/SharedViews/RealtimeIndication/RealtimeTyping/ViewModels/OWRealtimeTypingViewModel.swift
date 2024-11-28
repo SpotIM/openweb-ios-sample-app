@@ -46,4 +46,3 @@ class OWRealtimeTypingViewModel: OWRealtimeTypingViewModeling,
             .asObservable()
     }()
 }
-

@@ -16,13 +16,13 @@ protocol OWSpotConfigurationServicing {
 }
 
 class OWSpotConfigurationService: OWSpotConfigurationServicing {
-    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    private unowned let servicesProvider: OWSharedServicesProviding
     // Cache config for half an hour
-    fileprivate let cacheConfigService = OWCacheService<OWSpotId, SPSpotConfiguration>(expirationStrategy: .time(lifetime: 30 * 60))
-    fileprivate var disposeBag: DisposeBag? = DisposeBag()
-    fileprivate let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
-    fileprivate let _configWhichJustFetched = BehaviorSubject<(SPSpotConfiguration?, Error?)>(value: (nil, nil))
-    fileprivate var configWhichJustFetched: Observable<(SPSpotConfiguration?, Error?)> {
+    private let cacheConfigService = OWCacheService<OWSpotId, SPSpotConfiguration>(expirationStrategy: .time(lifetime: 30 * 60))
+    private var disposeBag: DisposeBag? = DisposeBag()
+    private let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
+    private let _configWhichJustFetched = BehaviorSubject<(SPSpotConfiguration?, Error?)>(value: (nil, nil))
+    private var configWhichJustFetched: Observable<(SPSpotConfiguration?, Error?)> {
         return _configWhichJustFetched
             .share(replay: 0) // New subscribers will get only elements which emits after their subscription
     }
@@ -39,7 +39,7 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
             return isCurrentlyFetching
                 .take(1)
                 .flatMap { [weak self] isFetching -> Observable<SPSpotConfiguration> in
-                    guard let self = self else { return .empty() }
+                    guard let self else { return .empty() }
                     if !isFetching {
                         self.fetchConfig(spotId: spotId)
                     }
@@ -73,7 +73,7 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
     }
 }
 
-fileprivate extension OWSpotConfigurationService {
+private extension OWSpotConfigurationService {
     func fetchConfig(spotId: OWSpotId) {
         // Fetch from API
         let api: OWConfigurationAPI = self.servicesProvider.networkAPI().configuration
@@ -92,13 +92,13 @@ fileprivate extension OWSpotConfigurationService {
                     .response
                     .take(1)
                     .do(onNext: { [weak self] config in
-                        guard let self = self else { return  }
+                        guard let self else { return  }
                         self.isCurrentlyFetching.onNext(false)
                         self._configWhichJustFetched.onNext((config, nil))
                         self.cacheConfigService[spotId] = config
                         self.setAdditionalStuff(forConfig: config)
                     }, onError: {[weak self] error in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         self.isCurrentlyFetching.onNext(false)
                         self._configWhichJustFetched.onNext((nil, error))
                     })
