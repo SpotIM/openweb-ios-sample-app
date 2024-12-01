@@ -69,7 +69,6 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - unneeded_break_in_switch
   - unneeded_override
   - unneeded_synthesized_initializer
-  - unused_closure_parameter
   - unused_control_flow_label
   - unused_enumerated
   - unused_setter_value
