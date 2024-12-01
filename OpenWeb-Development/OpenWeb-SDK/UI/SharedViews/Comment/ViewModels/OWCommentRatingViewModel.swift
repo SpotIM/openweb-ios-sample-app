@@ -243,16 +243,14 @@ private extension OWCommentRatingViewModel {
             }
 
         retryVote
-            .withLatestFrom(rankChanged)
-            .bind(to: rankChanged)
-            .disposed(by: disposeBag)
-
-        retryVote
             .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
 
+        let retryObserver = retryVote
+            .withLatestFrom(rankChanged)
+
         // Updating Network/Remote about rank change
-        rankChangedLocallyObservable
+        Observable.merge(rankChangedLocallyObservable, retryObserver)
             .flatMapLatest { [weak self] rankChange -> Observable<Event<EmptyDecodable>> in
                 guard let self,
                       let postId = OWManager.manager.postId,
