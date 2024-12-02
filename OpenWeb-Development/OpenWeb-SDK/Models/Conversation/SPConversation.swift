@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal struct SPConversation: Decodable {
+struct SPConversation: Decodable {
     var sortBy: String?
     var messagesCount: Int?
     var offset: Int?
