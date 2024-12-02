@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal struct SPConversationExtraDataRM: Decodable {
+struct SPConversationExtraDataRM: Decodable {
     var url: URL?
     var type: String?
     var title: String?

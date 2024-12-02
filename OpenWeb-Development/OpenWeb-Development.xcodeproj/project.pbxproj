@@ -470,6 +470,7 @@
 				th,
 				tr,
 				vi,
+				pt,
 			);
 			mainGroup = 5D697A3222B65106001AD556;
 			preferredProjectObjectVersion = 50;
