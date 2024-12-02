@@ -27,7 +27,7 @@ class OWCommentCreationImagePreviewView: UIView {
         let imageView = UIImageView()
             .contentMode(.scaleAspectFit)
             .image(UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false)) // Placeholder
-        imageView.addSubviews(imageViewLoadingCoverView)
+        imageView.addSubview(imageViewLoadingCoverView)
         imageViewLoadingCoverView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -86,7 +86,7 @@ private extension OWCommentCreationImagePreviewView {
             make.centerX.centerY.equalToSuperview()
         }
 
-        addSubviews(removeButton)
+        addSubview(removeButton)
         removeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Metrics.removeButtonTopOffset)
             make.trailing.equalToSuperview().offset(-Metrics.removeButtonTrailingOffset)

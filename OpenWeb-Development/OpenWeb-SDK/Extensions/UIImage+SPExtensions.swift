@@ -10,9 +10,9 @@
 
 import UIKit
 
-internal typealias OWImageName = String
+typealias OWImageName = String
 
-internal extension UIImage {
+extension UIImage {
 
     /// Load an image from OpenWeb bundle. The image is loaded for current interface style (light or dark).
     /// Dark images should have "-dark" postfix in the Asset catalog.
