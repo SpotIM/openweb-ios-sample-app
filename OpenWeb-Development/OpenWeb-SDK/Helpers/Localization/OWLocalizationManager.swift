@@ -215,7 +215,7 @@ private extension OWLocalizationManager {
                 case .useDevice:
                     if let preferredIdentifier = Locale.preferredLanguages.first,
                        let languageCode = Locale(identifier: preferredIdentifier).languageCode,
-                       let language = OWSupportedLanguage(rawValue: languageCode) {
+                       let language = OWSupportedLanguage(rawValue: preferredIdentifier) ?? OWSupportedLanguage(rawValue: languageCode) {
                         supportedLanguage = language
                     } else {
                         supportedLanguage = OWSupportedLanguage.english
