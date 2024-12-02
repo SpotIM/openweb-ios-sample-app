@@ -6070,22 +6070,14 @@
               },
               {
                 "kind": "TypeNominal",
-                "name": "Optional",
-                "printedName": "Swift.String?",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "String",
-                    "printedName": "Swift.String",
-                    "usr": "s:SS"
-                  }
-                ],
-                "usr": "s:Sq"
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
               }
             ],
             "declKind": "Func",
-            "usr": "s:13OpenWebIAUSDK17OWIAUGdprProtocolP14setGdprConsent7consentySSSg_tF",
-            "mangledName": "$s13OpenWebIAUSDK17OWIAUGdprProtocolP14setGdprConsent7consentySSSg_tF",
+            "usr": "s:13OpenWebIAUSDK17OWIAUGdprProtocolP14setGdprConsent7consentySS_tF",
+            "mangledName": "$s13OpenWebIAUSDK17OWIAUGdprProtocolP14setGdprConsent7consentySS_tF",
             "moduleName": "OpenWebIAUSDK",
             "genericSig": "<τ_0_0 where τ_0_0 : OpenWebIAUSDK.OWIAUGdprProtocol>",
             "sugared_genericSig": "<Self where Self : OpenWebIAUSDK.OWIAUGdprProtocol>",
@@ -6135,8 +6127,8 @@
         "children": [
           {
             "kind": "Var",
-            "name": "isNimbusInstalledCorrectly",
-            "printedName": "isNimbusInstalledCorrectly",
+            "name": "isNimbusAvailable",
+            "printedName": "isNimbusAvailable",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -6146,8 +6138,8 @@
               }
             ],
             "declKind": "Var",
-            "usr": "s:13OpenWebIAUSDK12OWIAUHelpersP26isNimbusInstalledCorrectlySbvp",
-            "mangledName": "$s13OpenWebIAUSDK12OWIAUHelpersP26isNimbusInstalledCorrectlySbvp",
+            "usr": "s:13OpenWebIAUSDK12OWIAUHelpersP17isNimbusAvailableSbvp",
+            "mangledName": "$s13OpenWebIAUSDK12OWIAUHelpersP17isNimbusAvailableSbvp",
             "moduleName": "OpenWebIAUSDK",
             "protocolReq": true,
             "accessors": [
@@ -6164,8 +6156,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:13OpenWebIAUSDK12OWIAUHelpersP26isNimbusInstalledCorrectlySbvg",
-                "mangledName": "$s13OpenWebIAUSDK12OWIAUHelpersP26isNimbusInstalledCorrectlySbvg",
+                "usr": "s:13OpenWebIAUSDK12OWIAUHelpersP17isNimbusAvailableSbvg",
+                "mangledName": "$s13OpenWebIAUSDK12OWIAUHelpersP17isNimbusAvailableSbvg",
                 "moduleName": "OpenWebIAUSDK",
                 "genericSig": "<τ_0_0 where τ_0_0 : OpenWebIAUSDK.OWIAUHelpers>",
                 "sugared_genericSig": "<Self where Self : OpenWebIAUSDK.OWIAUHelpers>",
