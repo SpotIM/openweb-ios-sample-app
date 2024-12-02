@@ -11,7 +11,6 @@ import RxSwift
 import RxCocoa
 
 class OWCommentRatingView: UIView {
-
     private struct Metrics {
         static let voteButtonSize: CGFloat = 24.0
         static let stackviewHeight: CGFloat = 28.0
@@ -93,7 +92,7 @@ class OWCommentRatingView: UIView {
 
 private extension OWCommentRatingView {
     func setupUI() {
-        self.addSubviews(stackView)
+        self.addSubview(stackView)
 
         // stackView
         stackView.OWSnp.makeConstraints { make in

@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal class SPSSOData: Codable {
+class SPSSOData: Codable {
 
     enum CodingKeys: String, CodingKey {
         case isSubscriber

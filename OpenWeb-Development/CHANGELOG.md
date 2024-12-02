@@ -5,10 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixes:
+- Fix Portuguese localizations not working.
+
+## [2.6.0] - 2024-11-28
+
+### Features:
+- Added `termsTapped` and `privacyTapped` OWViewActionCallbacks.
+- Added viewable time analytics event.
+- Updated translations.
+
+### Fixes:
+- Fixed extra vertical space when community guidelines were not shown.
+- Fixed crash when posting a comment starting with an emoji.
+- Fixed crash when opening the app on the conversation screen.
+- Removed navigation bar line after closing Full Conversation.
+- Fixed OBJ symbol appearing after dictation.
+- Ensured real-time conversation read requests stopped when the conversation was dismissed.
+- Fixed memory leaks.
+
 ## [2.5.1] - 2024-10-09
 
 ### Features:
-- Add OWFlowActionsCallbacks for Flows mode
+- Add OWFlowActionsCallbacks for Flows mode.
 - Language Support:
    * Dutch
    * German
