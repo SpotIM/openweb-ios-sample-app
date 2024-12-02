@@ -184,10 +184,10 @@ public protocol OWIAUAnalytics {
 }
 public protocol OWIAUGdprProtocol {
   func setGdprRequired(required: Swift.Bool)
-  func setGdprConsent(consent: Swift.String?)
+  func setGdprConsent(consent: Swift.String)
 }
 public protocol OWIAUHelpers {
-  var isNimbusInstalledCorrectly: Swift.Bool { get }
+  var isNimbusAvailable: Swift.Bool { get }
   var gdpr: any OpenWebIAUSDK.OWIAUGdprProtocol { get }
 }
 public protocol OWIAUManagerProtocol {
