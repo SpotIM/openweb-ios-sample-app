@@ -8,10 +8,10 @@
 
 import Foundation
 
-internal typealias OWCommentImage = OWComment.Content.Image
-internal typealias OWCommentGif = OWComment.Content.Animation
+typealias OWCommentImage = OWComment.Content.Image
+typealias OWCommentGif = OWComment.Content.Animation
 
-internal struct OWComment: Decodable, Equatable {
+struct OWComment: Decodable, Equatable {
 
     enum CodingKeys: String, CodingKey {
         case id, parentId, rootComment, depth, userId, writtenAt, time, repliesCount, totalRepliesCount, offset,

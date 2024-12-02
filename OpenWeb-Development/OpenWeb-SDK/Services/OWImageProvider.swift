@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-internal protocol OWImageProviding {
+protocol OWImageProviding {
     func imageURL(with id: String, size: CGSize?) -> Observable<URL?>
 }
 
