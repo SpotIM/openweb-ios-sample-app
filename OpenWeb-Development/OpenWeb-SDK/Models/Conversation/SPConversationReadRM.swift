@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal struct SPConversationReadRM: Decodable {
+struct SPConversationReadRM: Decodable {
     let user: SPUser?
     let extractData: SPConversationExtraDataRM?
     let conversation: SPConversation?
