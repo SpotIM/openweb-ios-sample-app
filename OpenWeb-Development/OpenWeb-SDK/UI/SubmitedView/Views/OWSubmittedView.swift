@@ -67,20 +67,20 @@ private extension OWSubmittedView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
-        self.addSubviews(closeButton)
+        self.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing - Metrics.closeButtonPadding)
             make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingSpacing - Metrics.closeButtonPadding)
             make.leading.greaterThanOrEqualToSuperview()
         }
 
-        self.addSubviews(titleView)
+        self.addSubview(titleView)
         titleView.OWSnp.makeConstraints { make in
             make.top.equalTo(closeButton.OWSnp.bottom).offset(Metrics.titleViewTopPadding)
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
         }
 
-        self.addSubviews(confirmButton)
+        self.addSubview(confirmButton)
         confirmButton.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
             make.bottom.equalToSuperviewSafeArea().inset(Metrics.bottomPadding)

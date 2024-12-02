@@ -9,6 +9,6 @@
 import Foundation
 
 public struct OWAppealRequiredData: Codable {
-    internal let commentId: OWCommentId
-    internal let reasons: [OWAppealReason]
+    let commentId: OWCommentId
+    let reasons: [OWAppealReason]
 }

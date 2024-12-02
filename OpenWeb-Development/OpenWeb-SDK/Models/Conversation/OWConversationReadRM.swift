@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal struct OWConversationReadRM: Decodable {
+struct OWConversationReadRM: Decodable {
     let user: SPUser?
     let extractData: SPConversationExtraDataRM?
     let conversation: OWConversation?

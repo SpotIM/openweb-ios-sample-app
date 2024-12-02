@@ -11,7 +11,7 @@ import RxSwift
 
 typealias ImageLoadingCompletion = (_ image: UIImage?, _ error: Error?) -> Void
 
-internal extension UIImageView {
+extension UIImageView {
     @discardableResult
     func setImage(with url: URL?, completion: ImageLoadingCompletion? = nil) -> OWNetworkDataRequest? {
         return UIImage.load(with: url) { image, error in
@@ -26,7 +26,7 @@ internal extension UIImageView {
     }
 }
 
-internal extension UIImage {
+extension UIImage {
     @discardableResult
     static func load(with url: URL?, completion: ImageLoadingCompletion? = nil) -> OWNetworkDataRequest? {
         guard let url else {

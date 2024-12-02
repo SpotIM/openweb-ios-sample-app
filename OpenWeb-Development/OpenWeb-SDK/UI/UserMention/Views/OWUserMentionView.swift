@@ -80,7 +80,7 @@ private extension OWUserMentionView {
             make.height.equalTo(0).priority(Metrics.heightLowPriority)
         }
 
-        self.addSubviews(tableView)
+        self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }

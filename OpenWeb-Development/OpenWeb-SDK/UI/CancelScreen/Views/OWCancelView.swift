@@ -87,20 +87,20 @@ private extension OWCancelView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
-        self.addSubviews(closeButton)
+        self.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing - Metrics.closeButtonPadding)
             make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingSpacing - Metrics.closeButtonPadding)
             make.leading.greaterThanOrEqualToSuperview()
         }
 
-        self.addSubviews(titleView)
+        self.addSubview(titleView)
         titleView.OWSnp.makeConstraints { make in
             make.top.equalTo(closeButton.OWSnp.bottom).offset(Metrics.titleViewTopSpacing)
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
         }
 
-        self.addSubviews(buttonsStackView)
+        self.addSubview(buttonsStackView)
         buttonsStackView.OWSnp.makeConstraints { make in
             make.bottom.equalToSuperviewSafeArea().inset(Metrics.bottomPadding)
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)

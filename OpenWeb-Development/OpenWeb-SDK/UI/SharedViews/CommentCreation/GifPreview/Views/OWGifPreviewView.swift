@@ -64,7 +64,7 @@ private extension OWGifPreviewView {
             make.edges.equalToSuperview()
         }
 
-        addSubviews(removeButton)
+        addSubview(removeButton)
         removeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Metrics.removeButtonTopOffset)
             make.trailing.equalToSuperview().offset(-Metrics.removeButtonTrailingOffset)
