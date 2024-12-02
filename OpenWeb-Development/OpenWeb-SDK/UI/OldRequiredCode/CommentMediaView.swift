@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-internal class CommentMediaView: UIView {
+class CommentMediaView: UIView {
     private struct Metrics {
         static let identifier = "comment_media_view_id"
         static let gifIdentifier = "comment_gif_webview_id"

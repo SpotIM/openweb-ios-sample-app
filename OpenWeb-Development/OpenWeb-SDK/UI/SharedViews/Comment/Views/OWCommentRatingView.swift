@@ -92,7 +92,7 @@ class OWCommentRatingView: UIView {
 
 private extension OWCommentRatingView {
     func setupUI() {
-        self.addSubviews(stackView)
+        self.addSubview(stackView)
 
         // stackView
         stackView.OWSnp.makeConstraints { make in
