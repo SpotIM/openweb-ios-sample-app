@@ -20,7 +20,7 @@ public protocol AdsProviderInterstitialDelegate: AnyObject {
     func interstitialFailedToLoad(error: Error)
 }
 
-internal struct AdsABGroup {
+struct AdsABGroup {
     let abGroup: OWABGroup
     let isUserRegistered: Bool
     let disableInterstitialOnLogin: Bool
@@ -72,7 +72,7 @@ public protocol AdsProvider: AnyObject {
     var interstitialDelegate: AdsProviderInterstitialDelegate? { get set }
 }
 
-internal final class AdsManager {
+final class AdsManager {
 
     private static var adsViewTracker = SPAdsViewTracker()
     private let spotId: String
@@ -98,7 +98,7 @@ internal final class AdsManager {
     }
 }
 
-internal final class SPAdsViewTracker {
+final class SPAdsViewTracker {
 
     var viewedConversations = Set<String>()
 

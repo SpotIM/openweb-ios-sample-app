@@ -178,7 +178,7 @@ private extension OWPreConversationCompactContentView {
         }
         cameraIcon.isHidden = true
 
-        self.addSubviews(errorRetryView)
+        self.addSubview(errorRetryView)
         errorRetryView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview()

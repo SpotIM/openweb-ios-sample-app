@@ -69,7 +69,7 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
             // This code is here on purpose and not in setupViews since we need to do this also going
             // back from extra screens that can be pushed after this VC like for example authentication screen
-            self.navigationController?.navigationBar.addSubviews(floatingNavigationBarOverlayButton)
+            self.navigationController?.navigationBar.addSubview(floatingNavigationBarOverlayButton)
             floatingNavigationBarOverlayButton.OWSnp.makeConstraints { make in
                 make.leading.trailing.bottom.equalToSuperview()
                 make.top.equalToSuperview().offset(Metrics.floatingOverNavBarOffset)

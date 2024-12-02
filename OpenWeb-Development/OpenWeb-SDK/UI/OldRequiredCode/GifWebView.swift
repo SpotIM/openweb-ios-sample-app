@@ -9,7 +9,7 @@
 import Foundation
 import WebKit
 
-internal final class GifWebView: UIView, WKUIDelegate {
+final class GifWebView: UIView, WKUIDelegate {
     let gifWebView: WKWebView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
 
     override init(frame: CGRect) {
@@ -24,7 +24,7 @@ internal final class GifWebView: UIView, WKUIDelegate {
 
     private func setupUI() {
         _ = self.enforceSemanticAttribute()
-        addSubviews(gifWebView)
+        addSubview(gifWebView)
         configureGifWebView()
     }
 
