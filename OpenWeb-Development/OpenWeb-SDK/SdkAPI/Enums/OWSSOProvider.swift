@@ -17,7 +17,7 @@ public enum OWSSOProvider: String {
     case hearst
 }
 
-internal extension OWSSOProvider {
+extension OWSSOProvider {
     func parameters(token: String) -> OWNetworkParameters {
         return ["provider": self.rawValue, "token": token]
     }

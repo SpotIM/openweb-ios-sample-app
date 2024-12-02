@@ -116,14 +116,14 @@ private extension OWTextView {
         }
 
         if viewModel.outputs.charectersLimitEnabled && viewModel.outputs.showCharectersLimit {
-            self.addSubviews(charectersCountLabel)
+            self.addSubview(charectersCountLabel)
             charectersCountLabel.OWSnp.makeConstraints { make in
                 make.trailing.equalToSuperview().inset(Metrics.charectersTrailingPadding)
                 make.bottom.equalToSuperview().inset(Metrics.charectersBottomPadding)
             }
         }
 
-        self.addSubviews(textView)
+        self.addSubview(textView)
         textView.OWSnp.makeConstraints { make in
             if viewModel.outputs.charectersLimitEnabled && viewModel.outputs.showCharectersLimit {
                 make.top.leading.trailing.equalToSuperview()
@@ -137,7 +137,7 @@ private extension OWTextView {
             }
         }
 
-        self.addSubviews(textViewPlaceholder)
+        self.addSubview(textViewPlaceholder)
         textViewPlaceholder.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.placeholderLeadingTrailingPadding)
             make.top.equalTo(textView.OWSnp.top).inset(Metrics.textViewTopBottomPadding)

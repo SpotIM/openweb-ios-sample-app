@@ -86,7 +86,7 @@ private extension OWCommentView {
     func setupUI() {
         self.backgroundColor = .clear
 
-        self.addSubviews(commentStatusView)
+        self.addSubview(commentStatusView)
         commentStatusView.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             commentStatusZeroHeightConstraint = make.height.equalTo(0).constraint

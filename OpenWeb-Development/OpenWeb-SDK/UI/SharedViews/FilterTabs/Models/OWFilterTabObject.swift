@@ -27,6 +27,11 @@ class OWFilterTabObject {
         return "all"
     }
 
+    static var defaultNewestTabId: OWFilterTabId {
+        // This will be returned as all newest tab id
+        return "all_newest"
+    }
+
     static var defaultTab: OWFilterTabObject {
         return OWFilterTabObject(id: defaultTabId, count: 1, name: "All", sortOptions: nil)
     }

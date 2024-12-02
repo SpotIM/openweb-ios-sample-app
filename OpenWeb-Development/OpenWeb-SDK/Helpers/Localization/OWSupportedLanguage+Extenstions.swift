@@ -45,6 +45,8 @@ extension OWSupportedLanguage {
             return "ko"
         case .portugueseBrazil:
             return "pt-BR"
+        case .portugueseOther:
+            return "pt"
         case .thai:
             return "th"
         case .turkish:
