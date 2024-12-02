@@ -113,14 +113,14 @@ private extension OWAdditionalInfoView {
 
         let shouldShowTitleView = viewModel.outputs.shouldShowTitleView
         if shouldShowTitleView {
-            self.addSubviews(titleView)
+            self.addSubview(titleView)
             titleView.OWSnp.makeConstraints { make in
                 make.leading.top.trailing.equalToSuperviewSafeArea()
                 make.height.equalTo(Metrics.titleViewHeight)
             }
         }
 
-        self.addSubviews(textView)
+        self.addSubview(textView)
         textView.OWSnp.makeConstraints { make in
             if shouldShowTitleView {
                 make.top.equalTo(titleView.OWSnp.bottom).offset(Metrics.textViewPadding)
@@ -130,7 +130,7 @@ private extension OWAdditionalInfoView {
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewPadding)
         }
 
-        self.addSubviews(footerView)
+        self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.top.equalTo(textView.OWSnp.bottom)
             make.leading.trailing.equalToSuperviewSafeArea()

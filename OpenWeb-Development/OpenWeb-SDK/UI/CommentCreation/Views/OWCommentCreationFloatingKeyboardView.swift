@@ -259,7 +259,7 @@ private extension OWCommentCreationFloatingKeyboardView {
         self.useAsThemeStyleInjector()
         self.backgroundColor = .clear
 
-        self.addSubviews(mainContainer)
+        self.addSubview(mainContainer)
         mainContainer.OWSnp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.bottom.equalToSuperviewSafeArea()
