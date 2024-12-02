@@ -1704,7 +1704,6 @@ private extension OWCommentThreadViewViewModel {
                                                                          actionCompletion: nil))
                     return true
                 case .error:
-                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
