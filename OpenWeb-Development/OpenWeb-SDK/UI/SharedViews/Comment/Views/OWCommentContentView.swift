@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 class OWCommentContentView: UIView {
-    internal struct Metrics {
+    struct Metrics {
         static let commentMediaTopPadding: CGFloat = 6.0
         static let emptyCommentMediaTopPadding: CGFloat = 0
         static let paragraphLineSpacing: CGFloat = 3.5
@@ -45,7 +45,6 @@ class OWCommentContentView: UIView {
 
     private var viewModel: OWCommentContentViewModeling!
     private var disposeBag: DisposeBag!
-    private var textHeightConstraint: OWConstraint?
     private var editedLabelHeightConstraint: OWConstraint?
 
     required init?(coder aDecoder: NSCoder) {
@@ -69,11 +68,11 @@ class OWCommentContentView: UIView {
 private extension OWCommentContentView {
     func setupViews() {
         self.enforceSemanticAttribute()
-        self.addSubviews(textLabel, mediaView)
+        self.addSubview(textLabel)
+        self.addSubview(mediaView)
 
         textLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            textHeightConstraint = make.height.equalTo(0).constraint
         }
 
         mediaView.OWSnp.makeConstraints { make in
@@ -124,14 +123,6 @@ private extension OWCommentContentView {
         viewModel.outputs.mediaSize
             .map { $0 == .zero }
             .bind(to: mediaView.rx.isHidden)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.collapsableLabelViewModel
-            .outputs.height
-            .subscribe(onNext: { [weak self] newHeight in
-                guard let self else { return }
-                self.textHeightConstraint?.update(offset: newHeight)
-            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.isEdited
