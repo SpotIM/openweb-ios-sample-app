@@ -15,14 +15,12 @@ import OpenWebIAUSDK
 public protocol OWMonetization {
     var ui: OWIAUUI { get }
     var analytics: OWIAUAnalytics { get }
-    var settings: OWIAUSettingsProtocol { get set }
     var helpers: OWIAUHelpers { get }
+    func setSettings(_ settings: OWIAUSettingsProtocol)
 }
 
 #else
 
-public protocol OWMonetization {
-
-}
+public protocol OWMonetization {}
 
 #endif

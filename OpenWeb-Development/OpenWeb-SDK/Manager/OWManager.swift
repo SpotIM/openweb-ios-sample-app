@@ -119,6 +119,7 @@ private extension OWManager {
             .subscribe(onNext: { [weak self] spotId in
                 // SpotId was set for the first time
                 guard let self else { return }
+                setMonetizationLayerSpotId(spotId)
                 self.servicesProvider.configure.set(spotId: spotId)
             })
             .disposed(by: disposeBag)
@@ -193,6 +194,7 @@ private extension OWManager {
             analytics.clearCallbacks()
         }
 
+        setMonetizationLayerSpotId(spotId)
         OWColorPalette.shared.initiateColors()
     }
 
@@ -200,5 +202,11 @@ private extension OWManager {
     func resetPostId() {
         self.servicesProvider.realtimeService()
             .reset()
+    }
+
+    func setMonetizationLayerSpotId(_ spotId: OWSpotId) {
+        guard let monetizationLayer = self.monetizationLayer as? OWMonetizationInternalProtocol else { return }
+
+        monetizationLayer.setSpotId(spotId)
     }
 }
