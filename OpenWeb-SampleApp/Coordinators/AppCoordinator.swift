@@ -61,9 +61,8 @@ private extension AppCoordinator {
 
     func initialMonetizationSetup() {
         let manager = OpenWeb.manager
-        let exampleStoreURL = "https://apps.apple.com/us/app/spotim-demo/id1234567"
         var settingsBuilder = OWIAUSettingsBuilder()
-        settingsBuilder.storeURL(exampleStoreURL)
+        settingsBuilder.storeURL(AppConstants.exampleStoreURL)
         manager.monetization.setSettings(settingsBuilder.build())
     }
 }

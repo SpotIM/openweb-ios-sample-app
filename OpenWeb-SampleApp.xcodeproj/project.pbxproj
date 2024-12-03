@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		136DD7842CFF67E50025A883 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DD7832CFF67DE0025A883 /* AppConstants.swift */; };
 		1374959E2CF4C8EF00F639D5 /* MonetizationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */; };
 		137495A32CF4CC1500F639D5 /* MonetizationViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */; };
 		137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */; };
@@ -222,6 +223,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		136DD7832CFF67DE0025A883 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationCoordinator.swift; sourceTree = "<group>"; };
 		137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewVC.swift; sourceTree = "<group>"; };
 		137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewViewModel.swift; sourceTree = "<group>"; };
@@ -440,6 +442,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		136DD7822CFF67D00025A883 /* AppConstants */ = {
+			isa = PBXGroup;
+			children = (
+				136DD7832CFF67DE0025A883 /* AppConstants.swift */,
+			);
+			path = AppConstants;
+			sourceTree = "<group>";
+		};
 		1374959F2CF4CBC800F639D5 /* Monetization */ = {
 			isa = PBXGroup;
 			children = (
@@ -488,6 +498,7 @@
 		3DA1DF152C6E200300EBFA7D /* OpenWeb-SampleApp */ = {
 			isa = PBXGroup;
 			children = (
+				136DD7822CFF67D00025A883 /* AppConstants */,
 				3DA1E5362C6E221800EBFA7D /* Lifecycle */,
 				3DA1E5342C6E221800EBFA7D /* Coordinators */,
 				3DA1E5F42C6E221800EBFA7D /* UI */,
@@ -1556,6 +1567,7 @@
 				3DA1E6192C6E221800EBFA7D /* DevelopmentConversationPreset+Extensions.swift in Sources */,
 				3DA1E62C2C6E221800EBFA7D /* UIView+Extensions.swift in Sources */,
 				3DA1E60C2C6E221800EBFA7D /* OWFontGroupFamily+Extensions.swift in Sources */,
+				136DD7842CFF67E50025A883 /* AppConstants.swift in Sources */,
 				3DA1E6912C6E221800EBFA7D /* PreConversationSettingsView.swift in Sources */,
 				3DA1E6562C6E221800EBFA7D /* AutomationViewModel.swift in Sources */,
 				1374A8C72CF6243000F639D5 /* SocialMonetizationExampleVC.swift in Sources */,

@@ -31,12 +31,12 @@ class MonetizationViewVC: UIViewController {
     }()
 
     private lazy var btnPreConversationExample: UIButton = {
-        return NSLocalizedString("PreConversationExample", comment: "")
+        return NSLocalizedString("PreConversationWithAd", comment: "")
             .blueRoundedButton
     }()
 
     private lazy var btnSocialMonetizationExample: UIButton = {
-        return NSLocalizedString("SocialMonetizationExample", comment: "")
+        return NSLocalizedString("SingleAd", comment: "")
             .blueRoundedButton
     }()
 
