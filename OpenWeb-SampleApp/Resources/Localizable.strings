@@ -161,9 +161,7 @@
 "Explore" = "Explore";
 "DescriptionText" = "Discover how the OpenWeb iOS SDK integrates with your app. Dive into the settings to explore and experience its full potential.";
 "UIFlowsLogger" = "Flows actions callbacks";
-"PreConversationExample" = "PreConversation Example";
-"SocialMonetizationExample" = "Social Monetization Example";
-"IndependentMonetizationExample" = "Independent Monetization Example";
+"PreConversationWithAd" = "PreConversation With Ad";
+"SingleAd" = "Single Ad";
 "Monetization" = "Monetization";
-"Independent Example" = "Independent Example";
-"Social Example" = "Social Example";
+"SingleAdExample" = "Single Ad Example";
