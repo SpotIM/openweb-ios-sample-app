@@ -33,16 +33,16 @@ class SocialMonetizationExampleViewModel: SocialMonetizationExampleViewModeling,
             .unwrap()
             .asObservable()
     }
-    
+
     init(postId: OWPostId) {
         self.postId = postId
         setupObservers()
     }
-    
+
     lazy var title: String = {
-        return NSLocalizedString("Social Example", comment: "")
+        return NSLocalizedString("SingleAdExample", comment: "")
     }()
-    
+
     lazy var loggerViewModel: UILoggerViewModeling = {
         return UILoggerViewModel(title: "Social monetization logger")
     }()
