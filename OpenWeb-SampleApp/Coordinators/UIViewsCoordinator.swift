@@ -56,7 +56,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
             .flatMap { _ -> Observable<Void> in
                 return .never()
             }
-        
+
         let monetizationCoordinator = viewsVM.outputs.openMonetizationScreen
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }

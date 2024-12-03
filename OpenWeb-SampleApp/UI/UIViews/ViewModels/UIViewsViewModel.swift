@@ -16,7 +16,7 @@ protocol UIViewsViewModelingInputs {
     var commentCreationTapped: PublishSubject<Void> { get }
     var commentThreadTapped: PublishSubject<Void> { get }
     var clarityDetailsTapped: PublishSubject<Void> { get }
-    var independentAdUnitTapped: PublishSubject<Void> { get }
+    var monetizationTapped: PublishSubject<Void> { get }
     var examplesTapped: PublishSubject<Void> { get }
 }
 
@@ -45,7 +45,7 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     let commentCreationTapped = PublishSubject<Void>()
     let commentThreadTapped = PublishSubject<Void>()
     let clarityDetailsTapped = PublishSubject<Void>()
-    let independentAdUnitTapped = PublishSubject<Void>()
+    let monetizationTapped = PublishSubject<Void>()
     let examplesTapped = PublishSubject<Void>()
 
     private let _openMockArticleScreen = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
@@ -117,7 +117,7 @@ private extension UIViewsViewModel {
                 let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
                 return model
             }
-        
+
         Observable.merge(
             fullConversationTappedModel,
             commentCreationTappedModel,
@@ -132,8 +132,8 @@ private extension UIViewsViewModel {
             .map { postId }
             .bind(to: _openExamplesScreen)
             .disposed(by: disposeBag)
-        
-        independentAdUnitTapped
+
+        monetizationTapped
             .asObservable()
             .map { postId }
             .bind(to: _openMonetizationScreen)

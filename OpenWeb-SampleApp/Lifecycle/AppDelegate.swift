@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .start(deepLinkOptions: deeplink.toDeepLinkOptions)
             .take(1)
             .subscribe()
-        
+
         return true
     }
 }

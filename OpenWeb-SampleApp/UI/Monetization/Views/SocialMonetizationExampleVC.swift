@@ -24,7 +24,7 @@ class SocialMonetizationExampleVC: UIViewController {
     private lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
     }()
-    
+
     init(viewModel: SocialMonetizationExampleViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -50,11 +50,11 @@ private extension SocialMonetizationExampleVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
     }
-    
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
-        
+
         self.view.addSubview(self.loggerView)
         self.loggerView.snp.makeConstraints { make in
             make.top.equalTo(self.view.layoutMarginsGuide.snp.top)
@@ -62,10 +62,10 @@ private extension SocialMonetizationExampleVC {
             make.height.equalTo(Metrics.loggerHeight)
         }
     }
-    
+
     func setupObservers() {
         title = viewModel.outputs.title
-        
+
         viewModel.outputs.showAdView
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] adView in

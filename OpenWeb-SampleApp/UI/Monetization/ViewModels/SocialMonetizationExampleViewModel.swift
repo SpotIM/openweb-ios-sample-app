@@ -25,7 +25,7 @@ protocol SocialMonetizationExampleViewModeling {
 class SocialMonetizationExampleViewModel: SocialMonetizationExampleViewModeling, SocialMonetizationExampleViewModelingOutputs, SocialMonetizationExampleViewModelingInputs {
     var inputs: SocialMonetizationExampleViewModelingInputs { return self }
     var outputs: SocialMonetizationExampleViewModelingOutputs { return self }
-    
+
     private let postId: OWPostId
     private let _showAdView = BehaviorSubject<UIView?>(value: nil)
     var showAdView: Observable<UIView> {
