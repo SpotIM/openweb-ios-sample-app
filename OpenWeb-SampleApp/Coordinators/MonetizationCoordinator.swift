@@ -50,7 +50,7 @@ private extension MonetizationCoordinator {
                                  completion: nil)
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.openPreConversationExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }

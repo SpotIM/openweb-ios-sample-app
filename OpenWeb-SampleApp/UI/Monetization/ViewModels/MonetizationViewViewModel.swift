@@ -69,7 +69,7 @@ private extension MonetizationViewViewModel {
             .unwrap()
             .bind(to: _openSocialMonetizationExample)
             .disposed(by: disposeBag)
-        
+
         preConversationExampleTapped
             .asObservable()
             .map { [weak self] _ -> OWPostId? in
