@@ -39,7 +39,7 @@ private extension AppCoordinator {
         initialVendorsSetup()
         initialDataSetup()
         initialUIAppearance()
-        initialIAUSetup()
+        initialMonetizationSetup()
     }
 
     func initialVendorsSetup() {
@@ -58,12 +58,12 @@ private extension AppCoordinator {
         window.makeKeyAndVisible()
         router = Router(navigationController: navigation)
     }
-    
-    func initialIAUSetup() {
-        var manager = OpenWebIAU.manager
+
+    func initialMonetizationSetup() {
+        let manager = OpenWeb.manager
         let exampleStoreURL = "https://apps.apple.com/us/app/spotim-demo/id1234567"
         var settingsBuilder = OWIAUSettingsBuilder()
         settingsBuilder.storeURL(exampleStoreURL)
-        manager.settings = settingsBuilder.build()
+        manager.monetization.setSettings(settingsBuilder.build())
     }
 }
