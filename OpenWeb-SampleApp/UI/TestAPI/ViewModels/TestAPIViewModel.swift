@@ -332,9 +332,6 @@ private extension TestAPIViewModel {
 
     func setSDKConfigurations(_ spotId: String) {
         setupEnvironment() // env must be set before spotId because we fetch config right after spotId set
-        //Init IAU SDK
-        var iauManager = OpenWebIAU.manager
-        iauManager.spotId = spotId
         var manager = OpenWeb.manager
         manager.spotId = spotId
         var customizations = manager.ui.customizations

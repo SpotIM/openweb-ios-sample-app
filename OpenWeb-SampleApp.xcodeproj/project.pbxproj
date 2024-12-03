@@ -10,8 +10,6 @@
 		1374959E2CF4C8EF00F639D5 /* MonetizationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */; };
 		137495A32CF4CC1500F639D5 /* MonetizationViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */; };
 		137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */; };
-		137495B92CF5F5DA00F639D5 /* IndependentMonetizationExampleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495B82CF5F5DA00F639D5 /* IndependentMonetizationExampleVC.swift */; };
-		137495BB2CF5F6E800F639D5 /* IndependentMonetizationExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495BA2CF5F6E800F639D5 /* IndependentMonetizationExampleViewModel.swift */; };
 		1374A8C72CF6243000F639D5 /* SocialMonetizationExampleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C62CF6243000F639D5 /* SocialMonetizationExampleVC.swift */; };
 		1374A8C92CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C82CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift */; };
 		2F113A104F74133456A49735 /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */; };
@@ -227,8 +225,6 @@
 		1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationCoordinator.swift; sourceTree = "<group>"; };
 		137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewVC.swift; sourceTree = "<group>"; };
 		137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewViewModel.swift; sourceTree = "<group>"; };
-		137495B82CF5F5DA00F639D5 /* IndependentMonetizationExampleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndependentMonetizationExampleVC.swift; sourceTree = "<group>"; };
-		137495BA2CF5F6E800F639D5 /* IndependentMonetizationExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndependentMonetizationExampleViewModel.swift; sourceTree = "<group>"; };
 		1374A8C62CF6243000F639D5 /* SocialMonetizationExampleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMonetizationExampleVC.swift; sourceTree = "<group>"; };
 		1374A8C82CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMonetizationExampleViewModel.swift; sourceTree = "<group>"; };
 		1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
@@ -457,7 +453,6 @@
 			isa = PBXGroup;
 			children = (
 				137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */,
-				137495BA2CF5F6E800F639D5 /* IndependentMonetizationExampleViewModel.swift */,
 				1374A8C82CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift */,
 			);
 			path = ViewModels;
@@ -467,7 +462,6 @@
 			isa = PBXGroup;
 			children = (
 				137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */,
-				137495B82CF5F5DA00F639D5 /* IndependentMonetizationExampleVC.swift */,
 				1374A8C62CF6243000F639D5 /* SocialMonetizationExampleVC.swift */,
 			);
 			path = Views;
@@ -1510,7 +1504,6 @@
 				3DA1E65A2C6E221800EBFA7D /* ConversationCounterNewAPICell.swift in Sources */,
 				3DA1E6042C6E221800EBFA7D /* OWArticleInformationStrategy+Extensions.swift in Sources */,
 				3DA1E6982C6E221800EBFA7D /* SwitchSetting.swift in Sources */,
-				137495BB2CF5F6E800F639D5 /* IndependentMonetizationExampleViewModel.swift in Sources */,
 				3DA1E66F2C6E221800EBFA7D /* OWCommentCreationStyleIndexer.swift in Sources */,
 				3DA1E6612C6E221800EBFA7D /* MicellaneousViewModel.swift in Sources */,
 				3DA1E6222C6E221800EBFA7D /* Notification+Keyboard.swift in Sources */,
@@ -1653,7 +1646,6 @@
 				3DA1E6842C6E221800EBFA7D /* IAUSettingsVM.swift in Sources */,
 				3DA1E62A2C6E221800EBFA7D /* UIImage+URL.swift in Sources */,
 				3DA1E6682C6E221800EBFA7D /* MockArticleFlowsVC.swift in Sources */,
-				137495B92CF5F5DA00F639D5 /* IndependentMonetizationExampleVC.swift in Sources */,
 				3DA1E6922C6E221800EBFA7D /* SampleAppSettingsView.swift in Sources */,
 				3DA1E60D2C6E221800EBFA7D /* OWInitialSortStrategy+Extensions.swift in Sources */,
 			);
