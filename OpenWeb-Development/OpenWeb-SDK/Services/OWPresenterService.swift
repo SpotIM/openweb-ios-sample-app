@@ -18,6 +18,7 @@ protocol OWPresenterServicing {
         preferredStyle: UIAlertController.Style,
         viewableMode: OWViewableMode
     ) -> Observable<OWRxPresenterResponseType>
+    func dismissMenu(viewableMode: OWViewableMode)
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
@@ -59,6 +60,12 @@ class OWPresenterService: OWPresenterServicing {
                                          title: title,
                                          message: message,
                                          actions: actions)
+    }
+
+    func dismissMenu(viewableMode: OWViewableMode) {
+        guard let presenterVC = getPresenterVC(for: viewableMode),
+        let menu = presenterVC.view.subviews.first(where: { $0.isKind(of: OWMenuSelectionEncapsulationView.self) }) else { return }
+        menu.removeFromSuperview()
     }
 
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
