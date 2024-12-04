@@ -43,7 +43,7 @@ extension OWMonetizationLayer: OWMonetizationInternalProtocol {
 public class OWMonetizationLayer: OWMonetization, OWMonetizationInternalProtocol {
     public init() {}
     
-    public func setSpotId(_ spotId: OWIAUSpotId) {}
+    public func setSpotId(_ spotId: String) {}
 }
 
 #endif
