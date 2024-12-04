@@ -16,7 +16,7 @@ protocol UIViewsViewModelingInputs {
     var commentCreationTapped: PublishSubject<Void> { get }
     var commentThreadTapped: PublishSubject<Void> { get }
     var clarityDetailsTapped: PublishSubject<Void> { get }
-    var independentAdUnitTapped: PublishSubject<Void> { get }
+    var monetizationTapped: PublishSubject<Void> { get }
     var examplesTapped: PublishSubject<Void> { get }
 }
 
@@ -24,6 +24,7 @@ protocol UIViewsViewModelingOutputs {
     var title: String { get }
     var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> { get }
     var openExamplesScreen: Observable<OWPostId> { get }
+    var openMonetizationScreen: Observable<OWPostId> { get }
 }
 
 protocol UIViewsViewModeling {
@@ -44,7 +45,7 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     let commentCreationTapped = PublishSubject<Void>()
     let commentThreadTapped = PublishSubject<Void>()
     let clarityDetailsTapped = PublishSubject<Void>()
-    let independentAdUnitTapped = PublishSubject<Void>()
+    let monetizationTapped = PublishSubject<Void>()
     let examplesTapped = PublishSubject<Void>()
 
     private let _openMockArticleScreen = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
@@ -57,6 +58,13 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     private let _openExamplesScreen = BehaviorSubject<OWPostId?>(value: nil)
     var openExamplesScreen: Observable<OWPostId> {
         return _openExamplesScreen
+            .unwrap()
+            .asObservable()
+    }
+
+    private let _openMonetizationScreen = BehaviorSubject<OWPostId?>(value: nil)
+    var openMonetizationScreen: Observable<OWPostId> {
+        return _openMonetizationScreen
             .unwrap()
             .asObservable()
     }
@@ -110,20 +118,12 @@ private extension UIViewsViewModel {
                 return model
             }
 
-        let independentAdUnitTappedModel = independentAdUnitTapped
-            .map { _ -> SDKUIIndependentViewsActionSettings in
-                let viewType = SDKUIIndependentViewType.independentAdUnit
-                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
-                return model
-            }
-
         Observable.merge(
             fullConversationTappedModel,
             commentCreationTappedModel,
             commentThreadTappedModel,
             clarityDetailsTappedModel,
-            preConversationTappedModel,
-            independentAdUnitTappedModel)
+            preConversationTappedModel)
         .bind(to: _openMockArticleScreen)
         .disposed(by: disposeBag)
 
@@ -131,6 +131,12 @@ private extension UIViewsViewModel {
             .asObservable()
             .map { postId }
             .bind(to: _openExamplesScreen)
+            .disposed(by: disposeBag)
+
+        monetizationTapped
+            .asObservable()
+            .map { postId }
+            .bind(to: _openMonetizationScreen)
             .disposed(by: disposeBag)
     }
 }

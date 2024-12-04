@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		136DD7842CFF67E50025A883 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DD7832CFF67DE0025A883 /* AppConstants.swift */; };
+		1374959E2CF4C8EF00F639D5 /* MonetizationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */; };
+		137495A32CF4CC1500F639D5 /* MonetizationViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */; };
+		137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */; };
+		1374A8C72CF6243000F639D5 /* SocialMonetizationExampleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C62CF6243000F639D5 /* SocialMonetizationExampleVC.swift */; };
+		1374A8C92CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C82CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift */; };
 		2F113A104F74133456A49735 /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */; };
 		3D11D9252C7C9D7B003794C6 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D11D9242C7C9D7B003794C6 /* Colors.xcassets */; };
 		3D11D9272C7CA5D9003794C6 /* ColorAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11D9262C7CA5D9003794C6 /* ColorAsset.swift */; };
@@ -217,6 +223,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		136DD7832CFF67DE0025A883 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationCoordinator.swift; sourceTree = "<group>"; };
+		137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewVC.swift; sourceTree = "<group>"; };
+		137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewViewModel.swift; sourceTree = "<group>"; };
+		1374A8C62CF6243000F639D5 /* SocialMonetizationExampleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMonetizationExampleVC.swift; sourceTree = "<group>"; };
+		1374A8C82CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMonetizationExampleViewModel.swift; sourceTree = "<group>"; };
 		1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3D11D9242C7C9D7B003794C6 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		3D11D9262C7CA5D9003794C6 /* ColorAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorAsset.swift; sourceTree = "<group>"; };
@@ -430,6 +442,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		136DD7822CFF67D00025A883 /* AppConstants */ = {
+			isa = PBXGroup;
+			children = (
+				136DD7832CFF67DE0025A883 /* AppConstants.swift */,
+			);
+			path = AppConstants;
+			sourceTree = "<group>";
+		};
+		1374959F2CF4CBC800F639D5 /* Monetization */ = {
+			isa = PBXGroup;
+			children = (
+				137495A12CF4CBE100F639D5 /* Views */,
+				137495A02CF4CBD800F639D5 /* ViewModels */,
+			);
+			path = Monetization;
+			sourceTree = "<group>";
+		};
+		137495A02CF4CBD800F639D5 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */,
+				1374A8C82CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		137495A12CF4CBE100F639D5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */,
+				1374A8C62CF6243000F639D5 /* SocialMonetizationExampleVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		3DA1DF0A2C6E200300EBFA7D = {
 			isa = PBXGroup;
 			children = (
@@ -451,6 +498,7 @@
 		3DA1DF152C6E200300EBFA7D /* OpenWeb-SampleApp */ = {
 			isa = PBXGroup;
 			children = (
+				136DD7822CFF67D00025A883 /* AppConstants */,
 				3DA1E5362C6E221800EBFA7D /* Lifecycle */,
 				3DA1E5342C6E221800EBFA7D /* Coordinators */,
 				3DA1E5F42C6E221800EBFA7D /* UI */,
@@ -583,6 +631,7 @@
 				3DA1E5302C6E221800EBFA7D /* TestingPlaygroundCoordinator.swift */,
 				3DA1E5312C6E221800EBFA7D /* UIFlowsCoordinator.swift */,
 				3DA1E5322C6E221800EBFA7D /* UIViewsCoordinator.swift */,
+				1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */,
 				3DA1E5332C6E221800EBFA7D /* ViewsExamplesCoordinator.swift */,
 			);
 			path = Coordinators;
@@ -1216,6 +1265,7 @@
 		3DA1E5F42C6E221800EBFA7D /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1374959F2CF4CBC800F639D5 /* Monetization */,
 				3DA1E53D2C6E221800EBFA7D /* About */,
 				3DA1E5482C6E221800EBFA7D /* AuthenticationPlayground */,
 				3DA1E54D2C6E221800EBFA7D /* Automation */,
@@ -1302,6 +1352,7 @@
 				3DA1DF112C6E200300EBFA7D /* Resources */,
 				3DA1E6D62C6E299A00EBFA7D /* Embed Frameworks */,
 				6196B358536E7D6AEE637AB1 /* [CP] Embed Pods Frameworks */,
+				A0C905C0E9AEA4779C4F67D5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1404,6 +1455,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		A0C905C0E9AEA4779C4F67D5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1495,11 +1563,14 @@
 				3DA1E63F2C6E221800EBFA7D /* MainPageCoordinator.swift in Sources */,
 				3DA1E6412C6E221800EBFA7D /* MockArticleFlowCoordinator.swift in Sources */,
 				3DA1E60F2C6E221800EBFA7D /* OWLocaleStrategy+Extensions.swift in Sources */,
+				137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */,
 				3DA1E6192C6E221800EBFA7D /* DevelopmentConversationPreset+Extensions.swift in Sources */,
 				3DA1E62C2C6E221800EBFA7D /* UIView+Extensions.swift in Sources */,
 				3DA1E60C2C6E221800EBFA7D /* OWFontGroupFamily+Extensions.swift in Sources */,
+				136DD7842CFF67E50025A883 /* AppConstants.swift in Sources */,
 				3DA1E6912C6E221800EBFA7D /* PreConversationSettingsView.swift in Sources */,
 				3DA1E6562C6E221800EBFA7D /* AutomationViewModel.swift in Sources */,
+				1374A8C72CF6243000F639D5 /* SocialMonetizationExampleVC.swift in Sources */,
 				3DA1E6942C6E221800EBFA7D /* ConversationPreset.swift in Sources */,
 				3DA1E68F2C6E221800EBFA7D /* IAUSettingsView.swift in Sources */,
 				3DA1E6972C6E221800EBFA7D /* SegmentedControlSetting.swift in Sources */,
@@ -1535,6 +1606,7 @@
 				3DA1E6A62C6E221800EBFA7D /* ToolbarCollectionCell.swift in Sources */,
 				3DA1E6712C6E221800EBFA7D /* OWConversationStyleIndexer.swift in Sources */,
 				3DA1E69F2C6E221800EBFA7D /* TestingPlaygroundIndependentViewVC.swift in Sources */,
+				1374959E2CF4C8EF00F639D5 /* MonetizationCoordinator.swift in Sources */,
 				3DA1E6BC2C6E221800EBFA7D /* DemoUserAuthentication.swift in Sources */,
 				3DA1E6852C6E221800EBFA7D /* NetworkSettingsVM.swift in Sources */,
 				3DA1E6652C6E221800EBFA7D /* SDKUIFlowActionSettings.swift in Sources */,
@@ -1543,6 +1615,7 @@
 				3DA1E6772C6E221800EBFA7D /* ColorType.swift in Sources */,
 				3DA1E6962C6E221800EBFA7D /* PickerSetting.swift in Sources */,
 				3DA1E62B2C6E221800EBFA7D /* UIImageView+URL.swift in Sources */,
+				1374A8C92CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift in Sources */,
 				3DA1E68C2C6E221800EBFA7D /* CommentThreadSettingsView.swift in Sources */,
 				3DA1E61C2C6E221800EBFA7D /* DevelopmentThirdPartySSOAuthentication+Extensions.swift in Sources */,
 				3DA1E6742C6E221800EBFA7D /* OWNetworkEnvironment.swift in Sources */,
@@ -1569,6 +1642,7 @@
 				3DA1E6C32C6E221800EBFA7D /* FontBook.swift in Sources */,
 				3DA1E6552C6E221800EBFA7D /* AuthenticationPlaygroundVC.swift in Sources */,
 				3D11D9272C7CA5D9003794C6 /* ColorAsset.swift in Sources */,
+				137495A32CF4CC1500F639D5 /* MonetizationViewVC.swift in Sources */,
 				3DA1E6AB2C6E221800EBFA7D /* UIViewsExamplesViewModel.swift in Sources */,
 				3DA1E6272C6E221800EBFA7D /* String+Extensions.swift in Sources */,
 				3DA1E6782C6E221800EBFA7D /* SettingsColorCustomizationStyle.swift in Sources */,

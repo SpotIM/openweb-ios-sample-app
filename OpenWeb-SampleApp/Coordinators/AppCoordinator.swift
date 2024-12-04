@@ -38,6 +38,7 @@ private extension AppCoordinator {
         initialVendorsSetup()
         initialDataSetup()
         initialUIAppearance()
+        initialMonetizationSetup()
     }
 
     func initialVendorsSetup() {
@@ -55,5 +56,12 @@ private extension AppCoordinator {
         window.rootViewController = navigation
         window.makeKeyAndVisible()
         router = Router(navigationController: navigation)
+    }
+
+    func initialMonetizationSetup() {
+        let manager = OpenWeb.manager
+        var settingsBuilder = OWIAUSettingsBuilder()
+        settingsBuilder.storeURL(AppConstants.exampleStoreURL)
+        manager.monetization.setSettings(settingsBuilder.build())
     }
 }
