@@ -2705,6 +2705,16 @@ private extension OWConversationViewViewModel {
                     .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
+
+        // Dismiss Menu if the menu is open while reloaded from server
+        serverCommentsLoadingState
+            .filter { $0 == .notLoading }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self else { return }
+                self.servicesProvider.presenterService().dismissMenu(viewableMode: self.viewableMode)
+            })
+            .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
