@@ -30,16 +30,6 @@ PODS:
     - NimbusSDK/NimbusRenderKit
   - NimbusSDK/NimbusRequestKit (2.20.6):
     - NimbusSDK/NimbusCoreKit
-  - OpenWebIAU (1.3.0):
-    - AdPlayerSDK (~> 1.11.9)
-    - AppHarbrSDK (~> 1.14.0)
-    - Google-Mobile-Ads-SDK (~> 11.5.0)
-    - NimbusSDK (~> 2.20.0)
-    - NimbusSDK/NimbusGAMKit
-    - NimbusSDK/NimbusKit
-    - NimbusSDK/NimbusRenderStaticKit
-    - OpenWrapHandlerDFP (= 5.0.0)
-    - OpenWrapSDK (= 3.6.0)
   - OpenWrapHandlerDFP (5.0.0):
     - Google-Mobile-Ads-SDK (>= 11.0.0)
     - OpenWrapSDK (>= 3.5.0)
@@ -56,9 +46,17 @@ PODS:
   - SnapKit (5.7.1)
 
 DEPENDENCIES:
+  - AdPlayerSDK (= 1.11.9)
   - Alamofire (~> 5.10.1)
+  - AppHarbrSDK (~> 1.14.0)
+  - Google-Mobile-Ads-SDK (~> 11.5.0)
   - Nimble (~> 10.0.0)
-  - OpenWebIAU (from `IAUTempSDK`)
+  - NimbusSDK (~> 2.20.0)
+  - NimbusSDK/NimbusGAMKit
+  - NimbusSDK/NimbusKit
+  - NimbusSDK/NimbusRenderStaticKit
+  - OpenWrapHandlerDFP (= 5.0.0)
+  - OpenWrapSDK (= 3.6.0)
   - Quick (~> 5.0.1)
   - RxCocoa (= 6.7.0)
   - RxRelay (= 6.7.0)
@@ -84,10 +82,6 @@ SPEC REPOS:
     - RxSwift
     - SnapKit
 
-EXTERNAL SOURCES:
-  OpenWebIAU:
-    :path: IAUTempSDK
-
 SPEC CHECKSUMS:
   AdPlayerSDK: 92252c9ca46d37c72b817f46a77cfb510f30db1c
   Alamofire: 840d2a1ad82355b536ec6ba5f97e5bfa54600ca3
@@ -98,7 +92,6 @@ SPEC CHECKSUMS:
   MobileFuseSDK: 4dae8f266ac60d346e8b2f526b1871844d6d8128
   Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
   NimbusSDK: 7513c920987ee47b0980011f05c53996d341b060
-  OpenWebIAU: 4e401759f0d05a2c398e521dc39889c000c0815a
   OpenWrapHandlerDFP: f11f51bbbcdd696c946934a7bd2dd5741be23bb7
   OpenWrapSDK: 23f8258cd274e39cd166dd90f43ca4d81aca1451
   Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
@@ -107,6 +100,6 @@ SPEC CHECKSUMS:
   RxSwift: 6ee35684dc3f7a63938758f4b7708199517dfa97
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
-PODFILE CHECKSUM: e4db0c49c6c7c059b0828269981c364330dc3940
+PODFILE CHECKSUM: 1bbde529fad173d9383ef87daf9e2ebacc4e6acf
 
 COCOAPODS: 1.16.2
