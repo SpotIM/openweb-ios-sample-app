@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+@_exported import OpenWebSDKAdapter
 
 // swiftlint:disable file_length
 
@@ -92,6 +93,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     private let imageProvider: OWImageProviding
     private let preConversationData: OWPreConversationRequiredData
     private let viewableMode: OWViewableMode
+    private let monetizationBridge: OWMonetizationBridgeProtocol
     let filterTabsVM: OWFilterTabsViewViewModeling
     private let disposeBag = DisposeBag()
 
@@ -494,13 +496,15 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
         preConversationData: OWPreConversationRequiredData,
-        viewableMode: OWViewableMode) {
+        viewableMode: OWViewableMode,
+        monetizationBridge: OWMonetizationBridgeProtocol = OWMonetizationBridge()) {
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
             self.viewableMode = viewableMode
             self.filterTabsVM = OWFilterTabsViewViewModel(servicesProvider: servicesProvider,
                                                           sourceType: .preConversation)
+            self.monetizationBridge = monetizationBridge
             self.populateInitialUI()
             setupObservers()
 
@@ -1579,6 +1583,18 @@ private extension OWPreConversationViewViewModel {
         dismissToast
             .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
             .disposed(by: disposeBag)
+
+        monetizationBridge.getAd(postId: postId,
+                                 tmsServerIndex: 0,
+                                 completion: { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let adView):
+                print("%%% got ad!!!")
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
     }
     // swiftlint:enable function_body_length
 

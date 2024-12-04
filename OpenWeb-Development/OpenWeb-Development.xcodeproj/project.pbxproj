@@ -100,7 +100,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C2280B482CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDK" target */ = {
+		C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Info.plist,
@@ -111,21 +111,21 @@
 			);
 			target = 44C8788C23608BC100E0E662 /* OpenWebSDK */;
 		};
-		C2280B492CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDKTests" target */ = {
+		C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/GiphyConfiguration.plist,
 			);
 			target = F92DD7B62A7E8B9E00A2BE5B /* OpenWebSDKTests */;
 		};
-		C2280B7F2CE3797B00E546DA /* Exceptions for "OpenWeb-SampleApp-Internal-Configs" folder in "OpenWeb-SampleApp-Internal-Configs" target */ = {
+		C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
 				Resources/OpenWeb_SampleApp_Internal_Configs.h,
 			);
 			target = 3DA1DEC02C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */;
 		};
-		C2280B832CE379B800E546DA /* Exceptions for "Vendor-Frameworks" folder in "OpenWebSDK" target */ = {
+		C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			attributesByRelativePath = {
 				GiphyUISDK.xcframework = (
@@ -137,65 +137,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		16F896BD2CF4794300BC962B /* OpenWeb-SDKAdapter */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "OpenWeb-SDKAdapter";
-			sourceTree = "<group>";
-		};
-		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C2280B482CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDK" target */,
-				C2280B492CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDKTests" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "OpenWeb-SDK";
-			sourceTree = "<group>";
-		};
-		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "OpenWeb-SDKTests";
-			sourceTree = "<group>";
-		};
-		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C2280B7F2CE3797B00E546DA /* Exceptions for "OpenWeb-SampleApp-Internal-Configs" folder in "OpenWeb-SampleApp-Internal-Configs" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "OpenWeb-SampleApp-Internal-Configs";
-			sourceTree = "<group>";
-		};
-		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C2280B832CE379B800E546DA /* Exceptions for "Vendor-Frameworks" folder in "OpenWebSDK" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "Vendor-Frameworks";
-			sourceTree = "<group>";
-		};
+		16F896BD2CF4794300BC962B /* OpenWeb-SDKAdapter */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKAdapter"; sourceTree = "<group>"; };
+		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDK"; sourceTree = "<group>"; };
+		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKTests"; sourceTree = "<group>"; };
+		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SampleApp-Internal-Configs"; sourceTree = "<group>"; };
+		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Vendor-Frameworks"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
