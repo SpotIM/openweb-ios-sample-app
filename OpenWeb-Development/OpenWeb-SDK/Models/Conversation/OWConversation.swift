@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal struct OWConversation: Decodable {
+struct OWConversation: Decodable {
     var sortBy: String?
     var messagesCount: Int?
     var offset: Int?

@@ -13,7 +13,7 @@ public enum OWSortOption: String {
     case newest
     case oldest
 
-    internal var sortMenu: OWSortMenu {
+    var sortMenu: OWSortMenu {
         switch self {
         case .best:
             return .sortBest

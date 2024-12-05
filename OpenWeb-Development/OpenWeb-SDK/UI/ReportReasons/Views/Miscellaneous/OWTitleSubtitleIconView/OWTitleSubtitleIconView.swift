@@ -67,20 +67,20 @@ private extension OWTitleSubtitleIconView {
     }
 
     func setupViews() {
-        self.addSubviews(titleIcon)
+        self.addSubview(titleIcon)
         titleIcon.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
             make.centerX.equalToSuperview()
             make.size.equalTo(Metrics.titleIconSize)
         }
 
-        self.addSubviews(titleLabel)
+        self.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
             make.top.equalTo(titleIcon.OWSnp.bottom).offset(Metrics.verticalSpacing)
             make.leading.trailing.equalToSuperview()
         }
 
-        self.addSubviews(subtitleLabel)
+        self.addSubview(subtitleLabel)
         subtitleLabel.OWSnp.makeConstraints { make in
             make.top.equalTo(titleLabel.OWSnp.bottom).offset(Metrics.verticalSpacing)
             make.leading.trailing.bottom.equalToSuperview()
