@@ -43,8 +43,9 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
         configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
 
         // listen to events
-        // TODO: only for profile
-        configuration.forwardJavaScript(event: "delete-account", to: self, message: "deleteAccount")
+        for event in viewModel.outputs.javaScriptEvents {
+            configuration.forwardJavaScript(event: event, to: self, message: "webkitMessage")
+        }
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.isOpaque = false
@@ -84,8 +85,7 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
 
 extension OWWebTabView: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("***** Received message from webview, name:", message.name, "body:", message.body)
-        // TODO: implement message.name: deleteAccount message.body: delete-account
+        viewModel.inputs.receiveJavaScriptEvent.onNext("\(message.body)")
     }
 }
 
