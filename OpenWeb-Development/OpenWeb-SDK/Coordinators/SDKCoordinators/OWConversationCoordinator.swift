@@ -310,12 +310,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         // Coordinate to safari tab
         let profilePageTitle = OWLocalizationManager.shared.localizedString(key: "ProfileTitle")
-        let profilePageEvents = ["delete-account"]
         let coordinateToSafariObservables = Observable.merge(
             communityGuidelinesURLTapped.map { OWWebTabOptions(url: $0) },
             conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return OWWebTabOptions(url: data.url, title: profilePageTitle, events: profilePageEvents)
+                    return OWWebTabOptions(url: data.url, title: profilePageTitle)
                 } else {
                     return nil
                 }
@@ -323,7 +322,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput.map { OWWebTabOptions(url: $0) },
             conversationVM.outputs.conversationViewVM.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return OWWebTabOptions(url: data.url, title: profilePageTitle, events: profilePageEvents)
+                    return OWWebTabOptions(url: data.url, title: profilePageTitle)
                 } else {
                     return nil
                 }
