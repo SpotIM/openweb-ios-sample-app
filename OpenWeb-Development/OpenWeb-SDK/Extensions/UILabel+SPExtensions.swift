@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal extension UILabel {
+extension UILabel {
 
     /// Index of character in contained attributed string at requested coordinates
     /// - Parameter point: coordinates in the frame of the label

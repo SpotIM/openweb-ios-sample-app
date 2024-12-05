@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-internal typealias OWUploadImageResponse = CloudinaryUploadResponse
+typealias OWUploadImageResponse = CloudinaryUploadResponse
 
-internal class SPSignResponse: Decodable {
+class SPSignResponse: Decodable {
     let signature: String
 }
 
-internal class CloudinaryUploadResponse: Decodable {
+class CloudinaryUploadResponse: Decodable {
     let assetId: String
     let width: Int
     let height: Int
@@ -23,7 +23,7 @@ internal class CloudinaryUploadResponse: Decodable {
 
 typealias ImageUploadCompletionHandler = (SPComment.Content.Image?, Error?) -> Void
 
-internal enum SPImageRequestConstants {
+enum SPImageRequestConstants {
     static let cloudinaryApiKey = "281466446316913"
     static let cloudinaryImageParamString = "dpr_3,c_thumb,g_face"
     static let cloudinaryWidthPrefix = ",w_"
