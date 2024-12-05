@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 class OWCommentContentView: UIView {
-    internal struct Metrics {
+    struct Metrics {
         static let commentMediaTopPadding: CGFloat = 6.0
         static let emptyCommentMediaTopPadding: CGFloat = 0
         static let paragraphLineSpacing: CGFloat = 3.5
@@ -68,7 +68,8 @@ class OWCommentContentView: UIView {
 private extension OWCommentContentView {
     func setupViews() {
         self.enforceSemanticAttribute()
-        self.addSubviews(textLabel, mediaView)
+        self.addSubview(textLabel)
+        self.addSubview(mediaView)
 
         textLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()

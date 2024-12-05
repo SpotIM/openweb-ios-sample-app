@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal struct SPComment: Decodable, Equatable {
+struct SPComment: Decodable, Equatable {
 
     enum CodingKeys: String, CodingKey {
         case id, parentId, rootComment, depth, userId, writtenAt, time, repliesCount, totalRepliesCount, offset,
