@@ -35,6 +35,25 @@ extension OWPresenterServicing {
     ) -> Observable<OWRxPresenterResponseType> {
         showAlert(title: title, message: message, actions: actions, preferredStyle: preferredStyle, viewableMode: viewableMode)
     }
+
+    /// Emit events on alert actions, not after presenting the alert
+    func showAlertActions(
+        title: String?,
+        message: String?,
+        actions: [OWRxPresenterAction],
+        preferredStyle: UIAlertController.Style = .alert,
+        viewableMode: OWViewableMode
+    ) -> Observable<OWRxPresenterAction> {
+        showAlert(title: title, message: message, actions: actions, preferredStyle: preferredStyle, viewableMode: viewableMode)
+            .compactMap { response -> OWRxPresenterAction? in
+                switch response {
+                case .completion:
+                    nil
+                case .selected(let action):
+                    action
+                }
+            }
+    }
 }
 
 class OWPresenterService: OWPresenterServicing {

@@ -187,7 +187,7 @@ private extension OWPreConversationCoordinator {
             viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput.map { OWWebTabOptions(url: $0) },
             viewModel.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return OWWebTabOptions(url: data.url, title: OWLocalizationManager.shared.localizedString(key: "ProfileTitle"), events: ["delete-account"])
+                    return OWWebTabOptions(url: data.url, title: OWLocalizationManager.shared.localizedString(key: "ProfileTitle"))
                 } else {
                     return nil
                 }
