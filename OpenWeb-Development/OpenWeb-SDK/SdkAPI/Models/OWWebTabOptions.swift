@@ -9,12 +9,13 @@
 import Foundation
 
 public struct OWWebTabOptions {
-    public let url: URL
-    public let title: String
+    public var url: URL
+    public var title: String
+    public var events: [String]
 
-    public init(url: URL, title: String) {
+    public init(url: URL, title: String = "", events: [String] = []) {
         self.url = url
         self.title = title
-
+        self.events = events
     }
 }
