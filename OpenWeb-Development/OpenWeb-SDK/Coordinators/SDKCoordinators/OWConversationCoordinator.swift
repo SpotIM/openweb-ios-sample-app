@@ -156,11 +156,16 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     return .empty()
                 }
             }
-            .do(onNext: { [weak self] result in
+            .withLatestFrom(deepLinkToCommentCreation) { ($0, $1) }
+            .do(onNext: { [weak self] result, deepLinkToCommentCreation in
                 guard let self else { return }
                 switch result {
                 case .commentCreated(let comment):
-                    guard let commentId = comment.id else { return }
+                    // Scroll to comment only if it is from pre conversation and a reply
+                    guard let deepLinkToCommentCreation,
+                          deepLinkToCommentCreation.source == .preConversation,
+                          comment.parentId != nil,
+                          let commentId = comment.id else { return }
                     conversationVM.inputs.scrollToCommentId.onNext(commentId)
                 case let .userLoggedInWhileWritingReplyToComment(commentId):
                     self._openCommentThread.onNext((commentId, .reply))
