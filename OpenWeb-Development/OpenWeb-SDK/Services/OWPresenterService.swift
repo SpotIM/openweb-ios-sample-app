@@ -67,7 +67,7 @@ class OWPresenterService: OWPresenterServicing {
         guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
         let fullScreenImageVM = OWFullScreenImageViewModel(image: image)
 
-        // Create OWMenuSelectionEncapsulationView and align menu according to constraints
+        // Create OWFullScreenImageView and align it according to constraints
         let fullScreenImageView = OWFullScreenImageView(viewModel: fullScreenImageVM)
         presenterVC.view.addSubview(fullScreenImageView)
         fullScreenImageView.OWSnp.makeConstraints { make in
