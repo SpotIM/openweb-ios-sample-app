@@ -9,11 +9,16 @@
 import UIKit
 
 class OWZoomableImageView: UIView {
-    // MARK: - Properties
+    private struct Metrics {
+        static let identifier = "zoomable_image_view_id"
+        static let scrollViewMinimumZoomScale = 1.0
+        static let scrollViewMaximumZoomScale = 5.0
+    }
+
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 5.0
+        scrollView.minimumZoomScale = Metrics.scrollViewMinimumZoomScale
+        scrollView.maximumZoomScale = Metrics.scrollViewMaximumZoomScale
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
@@ -26,59 +31,50 @@ class OWZoomableImageView: UIView {
         return imageView
     }()
 
-    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        applyIdentifiers()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
+        applyIdentifiers()
     }
 
-    // MARK: - Setup Methods
-    private func setupView() {
-        // Add scroll view
-        addSubview(scrollView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-
-        // Add image view to scroll view
-        scrollView.addSubview(imageView)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            imageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            imageView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
-        ])
-
-        // Set up scroll view delegate
-        scrollView.delegate = self
-    }
-
-    // MARK: - Public Methods
     func setImage(_ image: UIImage) {
         imageView.image = image
     }
 }
 
-// MARK: - UIScrollViewDelegate Extension
+private extension OWZoomableImageView {
+    func applyIdentifiers() {
+        self.accessibilityIdentifier = Metrics.identifier
+    }
+
+    func setupView() {
+        addSubview(scrollView)
+        scrollView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        scrollView.addSubview(imageView)
+        imageView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.size.equalToSuperview()
+        }
+
+        scrollView.delegate = self
+    }
+}
+
 extension OWZoomableImageView: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
 
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        // Optional: Implement any additional zooming behavior
         centerImageView()
     }
 
