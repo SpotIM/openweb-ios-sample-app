@@ -23,6 +23,7 @@ protocol OWPresenterServicing {
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
     func showGifPicker(viewableMode: OWViewableMode) -> Observable<OWGifPickerPresenterResponseType>
+    func presentZoomableImage(with image: UIImage, viewableMode: OWViewableMode)
 }
 
 extension OWPresenterServicing {
@@ -60,6 +61,18 @@ class OWPresenterService: OWPresenterServicing {
                                          title: title,
                                          message: message,
                                          actions: actions)
+    }
+
+    func presentZoomableImage(with image: UIImage, viewableMode: OWViewableMode) {
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
+        let fullScreenImageVM = OWFullScreenImageViewModel(image: image)
+
+        // Create OWFullScreenImageView and align it according to constraints
+        let fullScreenImageView = OWFullScreenImageView(viewModel: fullScreenImageVM)
+        presenterVC.view.addSubview(fullScreenImageView)
+        fullScreenImageView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func dismissMenu(viewableMode: OWViewableMode) {

@@ -682,7 +682,8 @@ private extension OWPreConversationViewViewModel {
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                         section: self.preConversationData.article.additionalSettings.section),
-                                                    spacing: hasReplies ? self.preConversationStyle.spacing.commentSpacingWithThread : self.preConversationStyle.spacing.betweenComments)
+                                                    spacing: hasReplies ? self.preConversationStyle.spacing.commentSpacingWithThread : self.preConversationStyle.spacing.betweenComments,
+                                                    viewableMode: viewableMode)
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
 
                     if hasReplies {
@@ -1034,7 +1035,8 @@ private extension OWPreConversationViewViewModel {
                             replyToUser: nil,
                             collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                             section: self.preConversationData.article.additionalSettings.section),
-                                                      spacing: self.preConversationStyle.spacing.betweenComments)
+                                                      spacing: self.preConversationStyle.spacing.betweenComments,
+                                                      viewableMode: self.viewableMode)
                     }.unwrap()
                     let viewModels = self._cellsViewModels
                     let filteredCommentsVms = commentsVms.filter { commentVm in
