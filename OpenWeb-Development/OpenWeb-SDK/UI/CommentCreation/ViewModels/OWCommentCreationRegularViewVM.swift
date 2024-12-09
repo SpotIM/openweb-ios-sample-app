@@ -143,20 +143,19 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
             }
         }
 
+        let boldUserNameAttrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
         switch commentCreationData.commentCreationType {
         case .edit:
             let editingReplyText = String(format: OWLocalizationManager.shared.localizedString(key: "EditingReply"), displayName)
             let attributedString = NSMutableAttributedString(string: editingReplyText)
-            let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
             if let rangeOfName = attributedString.string.range(of: displayName) {
-                attributedString.addAttributes(attrs, range: NSRange(rangeOfName, in: attributedString.string))
+                attributedString.addAttributes(boldUserNameAttrs, range: NSRange(rangeOfName, in: attributedString.string))
             }
             return Observable.just(attributedString)
         default:
             let replyText = OWLocalizationManager.shared.localizedString(key: "ReplyingTo")
             let attributedString = NSMutableAttributedString(string: replyText)
-            let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
-            let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
+            let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: boldUserNameAttrs)
             attributedString.append(boldUserNameString)
             return Observable.just(attributedString)
         }
