@@ -69,6 +69,8 @@
 		086A411DF7932B4542D13064 /* Pods-OpenWebSDK.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.internal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.internal.xcconfig"; sourceTree = "<group>"; };
 		0CB6AAC7606CFA603C7DF62B /* Pods-OpenWebSDKAdapter.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKAdapter.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter.public.xcconfig"; sourceTree = "<group>"; };
 		0F5F0E486DB3D9F532EB16A0 /* Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		16F8F40A2D0061D200BC962B /* KmmSpotimStandaloneAd.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:Q2Q7GJNSSL:Spot.IM Ltd"; lastKnownFileType = wrapper.xcframework; name = KmmSpotimStandaloneAd.xcframework; path = "OpenWeb-SampleApp/KmmSpotimStandaloneAd.xcframework"; sourceTree = "<group>"; };
+		16F8F40B2D0061D200BC962B /* OpenWebIAUSDK.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:Q2Q7GJNSSL:Spot.IM Ltd"; lastKnownFileType = wrapper.xcframework; name = OpenWebIAUSDK.xcframework; path = "OpenWeb-SampleApp/OpenWebIAUSDK.xcframework"; sourceTree = "<group>"; };
 		1ED0CB4D48B7D96036B3E614 /* Pods-OpenWebSDKAdapter.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKAdapter.internal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter.internal.xcconfig"; sourceTree = "<group>"; };
 		232820FD5EB04EAF2F142596 /* Pods-Shared-OpenWeb-SampleApp.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.public.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.public.xcconfig"; sourceTree = "<group>"; };
 		3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
@@ -100,7 +102,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C2280B482CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDK" target */ = {
+		161A56FA2D00A7330010B15B /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				KmmSpotimStandaloneAd.xcframework,
+				OpenWebIAUSDK.xcframework,
+			);
+			target = 16047ECF2CBD51330086E606 /* OpenWebSDKAdapter */;
+		};
+		C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Info.plist,
@@ -111,91 +121,41 @@
 			);
 			target = 44C8788C23608BC100E0E662 /* OpenWebSDK */;
 		};
-		C2280B492CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDKTests" target */ = {
+		C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/GiphyConfiguration.plist,
 			);
 			target = F92DD7B62A7E8B9E00A2BE5B /* OpenWebSDKTests */;
 		};
-		C2280B7F2CE3797B00E546DA /* Exceptions for "OpenWeb-SampleApp-Internal-Configs" folder in "OpenWeb-SampleApp-Internal-Configs" target */ = {
+		C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
 				Resources/OpenWeb_SampleApp_Internal_Configs.h,
 			);
 			target = 3DA1DEC02C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */;
 		};
-		C2280B832CE379B800E546DA /* Exceptions for "Vendor-Frameworks" folder in "OpenWebSDK" target */ = {
+		C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			attributesByRelativePath = {
 				GiphyUISDK.xcframework = (
 					Weak,
 				);
 			};
+			membershipExceptions = (
+				KmmSpotimStandaloneAd.xcframework,
+				OpenWebIAUSDK.xcframework,
+			);
 			target = 44C8788C23608BC100E0E662 /* OpenWebSDK */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		16F896BD2CF4794300BC962B /* OpenWeb-SDKAdapter */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "OpenWeb-SDKAdapter";
-			sourceTree = "<group>";
-		};
-		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C2280B482CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDK" target */,
-				C2280B492CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDKTests" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "OpenWeb-SDK";
-			sourceTree = "<group>";
-		};
-		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "OpenWeb-SDKTests";
-			sourceTree = "<group>";
-		};
-		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C2280B7F2CE3797B00E546DA /* Exceptions for "OpenWeb-SampleApp-Internal-Configs" folder in "OpenWeb-SampleApp-Internal-Configs" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "OpenWeb-SampleApp-Internal-Configs";
-			sourceTree = "<group>";
-		};
-		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C2280B832CE379B800E546DA /* Exceptions for "Vendor-Frameworks" folder in "OpenWebSDK" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "Vendor-Frameworks";
-			sourceTree = "<group>";
-		};
+		16F896BD2CF4794300BC962B /* OpenWeb-SDKAdapter */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKAdapter"; sourceTree = "<group>"; };
+		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDK"; sourceTree = "<group>"; };
+		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKTests"; sourceTree = "<group>"; };
+		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SampleApp-Internal-Configs"; sourceTree = "<group>"; };
+		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 161A56FA2D00A7330010B15B /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Vendor-Frameworks"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,6 +221,8 @@
 		5D697A6A22B6586C001AD556 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				16F8F40A2D0061D200BC962B /* KmmSpotimStandaloneAd.xcframework */,
+				16F8F40B2D0061D200BC962B /* OpenWebIAUSDK.xcframework */,
 				77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */,
 				ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */,
 				55000AE834E5310DEEACB7C5 /* Pods_OpenWebSDKAdapter.framework */,
@@ -337,7 +299,7 @@
 				16047ECC2CBD51330086E606 /* Sources */,
 				16047ECE2CBD51330086E606 /* Resources */,
 				2EA1D2B76A72409A62CBFDB9 /* Frameworks */,
-				B9E7CB1635965CF95121F323 /* [CP] Copy Pods Resources */,
+				5AACFBF03F11EFE0D3800570 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -408,6 +370,7 @@
 				F92DD7B52A7E8B9E00A2BE5B /* Resources */,
 				574B6D2274E2055E39B37113 /* [CP] Embed Pods Frameworks */,
 				16EA82992B8CE2C7004D6FF2 /* Embed Frameworks */,
+				35D9EBD45E692C8882760E0E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -541,6 +504,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		35D9EBD45E692C8882760E0E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		574B6D2274E2055E39B37113 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -556,6 +536,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5AACFBF03F11EFE0D3800570 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6D5DB15923CF5D73003F9D46 /* ShellScript */ = {
@@ -595,23 +592,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B9E7CB1635965CF95121F323 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C26AD90F2CA58662008F82DE /* SwiftLint */ = {
