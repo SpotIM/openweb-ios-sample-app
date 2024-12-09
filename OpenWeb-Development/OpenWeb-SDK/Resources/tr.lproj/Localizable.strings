@@ -102,6 +102,8 @@
 "PoweredBy" = "Destekleyen";
 "PoweredByOpenWeb" = "Destekleyen OpenWeb";
 "Privacy" = "Gizlilik";
+"PrivacyDeleteAccountSuccessSubtitle" = "Gittiğinizi gördüğümüz için üzgünüz!";
+"PrivacyDeleteAccountSuccessTitle" = "Hesabınız geri döndürülemez şekilde silindi.";
 "ProfileImage" = "Profil görseli";
 "ProfileSubtitle" = "Uygunsuz kullanıcı adı, avatar, biyografi, kimlik taklidi";
 "ProfileTitle" = "Profil";
