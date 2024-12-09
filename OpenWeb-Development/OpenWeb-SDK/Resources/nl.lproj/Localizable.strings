@@ -54,6 +54,7 @@
 "EditComment" = "Bewerk een opmerking";
 "Edited" = " (Aangepast)";
 "EditingComment" = "Bezig met bewerken van opmerking";
+"EditingReply" = "Antwoord aan %@ bewerken";
 "EmptyConversation" = "Begin het gesprek en deel je gedachten en ideeën met de gemeenschap.";
 "ErrorStateLoadComments" = "We kunnen de opmerkingen op dit moment niet laden";
 "ErrorStateLoadReplies" = "We kunnen de reacties op dit moment niet laden";

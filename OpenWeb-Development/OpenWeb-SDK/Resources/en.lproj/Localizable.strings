@@ -54,6 +54,7 @@
 "EditComment" = "Edit a comment";
 "Edited" = " (Edited)";
 "EditingComment" = "Editing comment";
+"EditingReply" = "Editing reply to %@";
 "EmptyConversation" = "Start the conversation and share your thoughts and ideas with the community.";
 "ErrorStateLoadComments" = "We are unable to load comments right now";
 "ErrorStateLoadReplies" = "We are unable to load replies right now";

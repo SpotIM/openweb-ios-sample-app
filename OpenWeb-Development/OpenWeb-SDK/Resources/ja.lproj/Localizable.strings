@@ -54,6 +54,7 @@
 "EditComment" = "コメントを編集";
 "Edited" = " (編集済み)";
 "EditingComment" = "コメントを編集しています";
+"EditingReply" = "%@ への返信を編集しています";
 "EmptyConversation" = "会話を始めて,あなたの考えやアイデアをコミュニティと共有してください。";
 "ErrorStateLoadComments" = "現在、コメントを読み込めません";
 "ErrorStateLoadReplies" = "現在、返信を読み込めません";
