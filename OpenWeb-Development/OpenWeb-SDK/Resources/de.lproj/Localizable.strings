@@ -54,6 +54,7 @@
 "EditComment" = "Kommentar bearbeiten";
 "Edited" = " (Bearbeitet)";
 "EditingComment" = "Kommentar wird bearbeitet";
+"EditingReply" = "Bearbeitung der Antwort an %@";
 "EmptyConversation" = "Beginnen Sie die Unterhaltung und teilen Sie Ihre Gedanken und Ideen mit der Gemeinschaft.";
 "ErrorStateLoadComments" = "Wir können gerade keine Kommentare laden.";
 "ErrorStateLoadReplies" = "Wir können gerade keine Antworten laden.";
