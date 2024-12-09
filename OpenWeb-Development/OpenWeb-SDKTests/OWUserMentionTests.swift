@@ -10,7 +10,6 @@ import XCTest
 import RxSwift
 import Quick
 import Nimble
-import OpenWebSDKAdapter
 
 @testable import OpenWebSDK
 
