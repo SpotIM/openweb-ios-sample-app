@@ -133,10 +133,9 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
     var replyToAttributedString: Observable<NSAttributedString> {
         var replyToComment: OWComment?
-        var isEdit = false
+
         switch commentCreationData.commentCreationType {
         case .edit(let comment):
-            isEdit = true
             if let postId = self.postId,
                let parentId = comment.parentId,
                let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
@@ -153,17 +152,18 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
               let displayName = user.displayName
         else { return .empty() }
 
-        if isEdit {
+        switch commentCreationData.commentCreationType {
+        case .edit:
             let editingReplyText = String(format: OWLocalizationManager.shared.localizedString(key: "EditingReply"), displayName)
-            var attributedString = NSMutableAttributedString(string: editingReplyText)
+            let attributedString = NSMutableAttributedString(string: editingReplyText)
             let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
             if let rangeOfName = attributedString.string.range(of: displayName) {
                 attributedString.addAttributes(attrs, range: NSRange(rangeOfName, in: attributedString.string))
             }
             return Observable.just(attributedString)
-        } else {
+        default:
             let replyText = OWLocalizationManager.shared.localizedString(key: "ReplyingTo")
-            var attributedString = NSMutableAttributedString(string: replyText)
+            let attributedString = NSMutableAttributedString(string: replyText)
             let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
             let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
             attributedString.append(boldUserNameString)
