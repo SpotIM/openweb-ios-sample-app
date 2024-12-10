@@ -13,6 +13,7 @@ protocol OWWebTabViewViewModelingInputs {
     var canGoBack: PublishSubject<Bool> { get }
     var backWebTabTapped: PublishSubject<Void> { get }
     var setTitle: PublishSubject<String?> { get }
+    var receiveJavaScriptEvent: PublishSubject<String> { get }
 }
 
 protocol OWWebTabViewViewModelingOutputs {
@@ -20,11 +21,13 @@ protocol OWWebTabViewViewModelingOutputs {
     var backTapped: Observable<Void> { get }
     var viewableMode: OWViewableMode { get }
     var options: OWWebTabOptions { get }
+    var javaScriptEvents: [String] { get }
     var titleViewVM: OWTitleViewViewModeling { get }
     var shouldShowTitleView: Bool { get }
     var shouldShowCloseButton: Observable<Bool> { get }
     var shouldShowBackButton: Observable<Bool> { get }
     var title: Observable<String?> { get }
+    var javaScriptEvent: Observable<String> { get }
 }
 
 protocol OWWebTabViewViewModeling {
@@ -40,6 +43,7 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
 
     let options: OWWebTabOptions
     let viewableMode: OWViewableMode
+    let javaScriptEvents: [String]
 
     let backWebTabTapped = PublishSubject<Void>()
     var backTapped: Observable<Void> {
@@ -71,6 +75,12 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
             .asObservable()
     }
 
+    let receiveJavaScriptEvent = PublishSubject<String>()
+    var javaScriptEvent: Observable<String> {
+        receiveJavaScriptEvent
+            .asObservable()
+    }
+
     lazy var shouldShowTitleView: Bool = {
         return viewableMode == .independent
     }()
@@ -81,9 +91,10 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
 
     private let disposeBag = DisposeBag()
 
-    init(options: OWWebTabOptions, viewableMode: OWViewableMode) {
+    init(options: OWWebTabOptions, viewableMode: OWViewableMode, javaScriptEvents: [String] = []) {
         self.options = options
         self.viewableMode = viewableMode
+        self.javaScriptEvents = javaScriptEvents
 
         self.setTitle.onNext(options.title)
 
@@ -91,7 +102,7 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
     }
 }
 
-extension OWWebTabViewViewModel {
+private extension OWWebTabViewViewModel {
     func setupObservers() {
         canGoBack
             .bind(to: titleViewVM.inputs.canGoBack)
