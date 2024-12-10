@@ -40,12 +40,12 @@ class MonetizationCoordinator: BaseCoordinator<Void> {
 
 private extension MonetizationCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MonetizationViewViewModeling) {
-        viewModel.outputs.openSocialMonetizationExample
+        viewModel.outputs.openSingleAdExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
-                let socialMonetizationExampleViewModel = SocialMonetizationExampleViewModel(postId: postId)
-                let socialMonetizationExampleVC = SocialMonetizationExampleVC(viewModel: socialMonetizationExampleViewModel)
-                self.router.push(socialMonetizationExampleVC,
+                let singleAdExampleViewModel = SingleAdExampleViewModel(postId: postId)
+                let singleAdExampleVC = SingleAdExampleVC(viewModel: singleAdExampleViewModel)
+                self.router.push(singleAdExampleVC,
                                  animated: true,
                                  completion: nil)
             })

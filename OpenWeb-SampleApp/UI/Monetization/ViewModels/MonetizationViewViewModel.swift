@@ -10,13 +10,13 @@ import OpenWebSDK
 import RxSwift
 
 protocol MonetizationViewViewModelingInputs {
-    var socialMonetizationExampleTapped: PublishSubject<Void> { get }
+    var singleAdExampleTapped: PublishSubject<Void> { get }
     var preConversationExampleTapped: PublishSubject<Void> { get }
 }
 
 protocol MonetizationViewViewModelingOutputs {
     var title: String { get }
-    var openSocialMonetizationExample: Observable<OWPostId> { get }
+    var openSingleAdExample: Observable<OWPostId> { get }
     var openPreConversationExample: Observable<OWPostId> { get }
 }
 
@@ -32,12 +32,12 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
     private let postId: OWPostId
     private let disposeBag = DisposeBag()
 
-    let socialMonetizationExampleTapped = PublishSubject<Void>()
+    let singleAdExampleTapped = PublishSubject<Void>()
     let preConversationExampleTapped = PublishSubject<Void>()
 
-    private let _openSocialMonetizationExample = BehaviorSubject<OWPostId?>(value: nil)
-    var openSocialMonetizationExample: Observable<OWPostId> {
-        return _openSocialMonetizationExample
+    private let _openSingleAdExample = BehaviorSubject<OWPostId?>(value: nil)
+    var openSingleAdExample: Observable<OWPostId> {
+        return _openSingleAdExample
             .unwrap()
             .asObservable()
     }
@@ -61,13 +61,13 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
 
 private extension MonetizationViewViewModel {
     func setupObservers() {
-        socialMonetizationExampleTapped
+        singleAdExampleTapped
             .asObservable()
             .map { [weak self] _ -> OWPostId? in
                 return self?.postId
             }
             .unwrap()
-            .bind(to: _openSocialMonetizationExample)
+            .bind(to: _openSingleAdExample)
             .disposed(by: disposeBag)
 
         preConversationExampleTapped
