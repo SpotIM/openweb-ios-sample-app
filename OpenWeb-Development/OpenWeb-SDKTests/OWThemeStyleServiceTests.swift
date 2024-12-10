@@ -10,6 +10,7 @@ import XCTest
 import RxSwift
 import Quick
 import Nimble
+
 @testable import OpenWebSDK
 
 class OWThemeStyleServiceTests: QuickSpec {

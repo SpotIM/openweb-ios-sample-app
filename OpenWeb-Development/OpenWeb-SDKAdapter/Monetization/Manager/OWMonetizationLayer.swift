@@ -33,7 +33,7 @@ public class OWMonetizationLayer: OWMonetization {
 }
 
 extension OWMonetizationLayer: OWMonetizationInternalProtocol {
-    public func setSpotId(_ spotId: OWIAUSpotId) {
+    public func setSpotId(_ spotId: String) {
         manager.spotId = spotId
     }
 }
@@ -43,7 +43,7 @@ extension OWMonetizationLayer: OWMonetizationInternalProtocol {
 public class OWMonetizationLayer: OWMonetization, OWMonetizationInternalProtocol {
     public init() {}
     
-    public func setSpotId(_ spotId: OWIAUSpotId) {}
+    public func setSpotId(_ spotId: String) {}
 }
 
 #endif
