@@ -102,14 +102,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		161A56FA2D00A7330010B15B /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				KmmSpotimStandaloneAd.xcframework,
-				OpenWebIAUSDK.xcframework,
-			);
-			target = 16047ECF2CBD51330086E606 /* OpenWebSDKAdapter */;
-		};
 		C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -142,10 +134,6 @@
 					Weak,
 				);
 			};
-			membershipExceptions = (
-				KmmSpotimStandaloneAd.xcframework,
-				OpenWebIAUSDK.xcframework,
-			);
 			target = 44C8788C23608BC100E0E662 /* OpenWebSDK */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -155,7 +143,7 @@
 		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDK"; sourceTree = "<group>"; };
 		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKTests"; sourceTree = "<group>"; };
 		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SampleApp-Internal-Configs"; sourceTree = "<group>"; };
-		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 161A56FA2D00A7330010B15B /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Vendor-Frameworks"; sourceTree = "<group>"; };
+		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Vendor-Frameworks"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -370,7 +358,7 @@
 				F92DD7B52A7E8B9E00A2BE5B /* Resources */,
 				574B6D2274E2055E39B37113 /* [CP] Embed Pods Frameworks */,
 				16EA82992B8CE2C7004D6FF2 /* Embed Frameworks */,
-				35D9EBD45E692C8882760E0E /* [CP] Copy Pods Resources */,
+				7867991A68081A8EF9CD1FCF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -504,23 +492,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		35D9EBD45E692C8882760E0E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		574B6D2274E2055E39B37113 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -571,6 +542,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "bash -x ./scripts/create_xcframework_script.sh \"${CONFIGURATION}\"\n";
+		};
+		7867991A68081A8EF9CD1FCF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		B4CD7256FB4F839C3E4ABEE3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

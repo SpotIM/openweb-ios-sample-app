@@ -13,15 +13,7 @@ def rx_pods
 end
 
 def iau_pods
-  pod 'AdPlayerSDK', '= 1.11.9'
-  pod 'OpenWrapSDK', '3.6.0'
-  pod 'OpenWrapHandlerDFP', '5.0.0'
-  pod 'AppHarbrSDK', '~> 1.14.0'
-  pod 'Google-Mobile-Ads-SDK', '~> 11.5.0'
-  pod 'NimbusSDK', '~> 2.20.0'
-  pod 'NimbusSDK/NimbusKit'
-  pod 'NimbusSDK/NimbusRenderStaticKit'
-  pod 'NimbusSDK/NimbusGAMKit'
+  pod 'OpenWebIAU', :git => 'git@github.com:SpotIM/spotim-iau-sdk.git', :branch => 'dev'
 end
 
 target 'OpenWeb-SampleApp' do
