@@ -19,6 +19,8 @@ public protocol OWMonetizationBridgeProtocol {
 }
 
 public class OWMonetizationBridge: OWMonetizationBridgeProtocol {
+    public init() {}
+    
     public func getAd(postId: String,
                       tmsServerIndex: Int,
                       completion: @escaping (Result<UIView, any Error>) -> Void) {
@@ -32,7 +34,6 @@ public class OWMonetizationBridge: OWMonetizationBridgeProtocol {
                                  viewEventCallbacks: nil,
                                  actionsCallbacks: nil,
                                  completion: { [weak self] result in
-            guard let self else { return }
             switch result {
             case .success(let adView):
                 completion(.success(adView))
