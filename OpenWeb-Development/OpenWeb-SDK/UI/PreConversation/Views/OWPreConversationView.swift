@@ -583,6 +583,19 @@ private extension OWPreConversationView {
             .map { $0.size }
             .bind(to: viewModel.inputs.tableViewSize)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.adView
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] adView in
+                guard let self else { return }
+                self.addSubview(adView)
+
+                adView.OWSnp.makeConstraints { make in
+                    make.trailing.leading.equalToSuperview()
+                    make.bottom.equalTo(self.preConversationSummary.OWSnp.top)
+                }
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 }

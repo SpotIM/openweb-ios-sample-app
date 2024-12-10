@@ -65,6 +65,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowFilterTabsView: Observable<Bool> { get }
     var termsTapped: Observable<Void> { get }
     var privacyTapped: Observable<Void> { get }
+    var adView: Observable<UIView> { get }
 }
 
 protocol OWPreConversationViewViewModeling: OWViewableTimeConsumer {
@@ -122,6 +123,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .distinctUntilChanged()
             .asObservable()
     }()
+
+    private let _adView = BehaviorSubject<UIView?>(value: nil)
+    var adView: Observable<UIView> {
+        return _adView
+            .unwrap()
+            .asObservable()
+    }
 
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> {
         return cellsViewModels
@@ -1592,7 +1600,7 @@ private extension OWPreConversationViewViewModel {
             guard let self else { return }
             switch result {
             case .success(let adView):
-                print("%%% got ad!!!")
+                _adView.onNext(adView)
             case .failure(let error):
                 print(error.localizedDescription)
             }
