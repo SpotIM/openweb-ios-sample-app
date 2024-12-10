@@ -125,14 +125,14 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentOptionsVM.inputs.update(user: user)
     }
 
-    init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, viewableMode: OWViewableMode) {
         self.sharedServiceProvider = sharedServiceProvider
         var status = OWCommentStatusType.commentStatus(from: data.comment)
         if status == .rejected { status = .none } // We display rejected status only for new created comments and not for ones from /read request
         commentStatusVM = OWCommentStatusViewModel(status: status, commentId: data.comment.id ?? "")
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
-        contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
+        contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit, viewableMode: viewableMode)
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         commentOptionsVM = OWCommentOptionsViewModel(data: data)
         comment = data.comment
@@ -140,11 +140,11 @@ class OWCommentViewModel: OWCommentViewModeling,
         setupObservers()
     }
 
-    init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, viewableMode: OWViewableMode) {
         self.sharedServiceProvider = sharedServiceProvider
         commentHeaderVM = OWCommentHeaderViewModel()
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
-        contentVM = OWCommentContentViewModel()
+        contentVM = OWCommentContentViewModel(viewableMode: viewableMode)
         commentEngagementVM = OWCommentEngagementViewModel()
         commentStatusVM = OWCommentStatusViewModel(status: .none, commentId: "")
         commentOptionsVM = OWCommentOptionsViewModel()
