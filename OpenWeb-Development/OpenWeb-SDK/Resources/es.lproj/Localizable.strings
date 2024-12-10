@@ -102,6 +102,8 @@
 "PoweredBy" = "Desarrollado por";
 "PoweredByOpenWeb" = "Desarrollado por OpenWeb";
 "Privacy" = "Privacidad";
+"PrivacyDeleteAccountSuccessSubtitle" = "";
+"PrivacyDeleteAccountSuccessTitle" = "";
 "ProfileImage" = "Profile image";
 "ProfileSubtitle" = "Nombre de usuario, avatar, biografía, personificación inapropiados";
 "ProfileTitle" = "Perfil";

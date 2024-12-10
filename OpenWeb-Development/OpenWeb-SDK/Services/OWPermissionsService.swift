@@ -79,15 +79,10 @@ private extension OWPermissionsService {
                 actions: actions,
                 viewableMode: viewableMode
             )
-            .subscribe(onNext: { [weak self] result in
+            .subscribe(onNext: { [weak self] action in
                 guard let self else { return }
-                switch result {
-                case .completion:
-                    break
-                case .selected(action: let action):
-                    if case OWOpenSettingsAlert.openSettings = action.type {
-                        self.openAppSettings()
-                    }
+                if case OWOpenSettingsAlert.openSettings = action.type {
+                    self.openAppSettings()
                 }
             })
             .disposed(by: disposeBag)

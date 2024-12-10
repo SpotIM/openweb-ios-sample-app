@@ -19,6 +19,11 @@ extension String {
         }
     }
 
+    var isLegalCIdentifier: Bool {
+        let legalCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_"))
+        return rangeOfCharacter(from: legalCharacters.inverted) == nil && (first?.isLetter == true || first == "_")
+    }
+
     var stripHTML: String {
         let regex = try? NSRegularExpression(pattern: "<[^>]+>", options: .caseInsensitive)
         let range = NSRange(location: 0, length: self.count)
