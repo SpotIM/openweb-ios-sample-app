@@ -382,15 +382,7 @@ private extension OWCommentCreationFloatingKeyboardViewViewModel {
 
         servicesProvider
             .authenticationManager()
-            .activeUserAvailability
-            .map { availability -> SPUser? in
-                switch availability {
-                case .user(let user):
-                    return user
-                case .notAvailable:
-                    return nil
-                }
-            }
+            .activeUser
             .bind(to: avatarViewVM.inputs.userInput)
             .disposed(by: disposeBag)
 

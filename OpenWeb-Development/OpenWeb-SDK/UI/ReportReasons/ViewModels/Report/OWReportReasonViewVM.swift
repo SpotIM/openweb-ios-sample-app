@@ -462,11 +462,14 @@ private extension OWReportReasonViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        reportReasonSubmittedSuccessfully
+        reportReasonSubmittedSuccessfully.withLatestFrom(servicesProvider.authenticationManager().activeUser)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                sendEvent(for: .reportMessageSubmitSuccess(commentId: commentId)) // TODO: check for super
+            .subscribe(onNext: { [weak self] user in
+                guard let self else { return }
+                let event: OWAnalyticEventType = user?.isAdmin ?? false
+                    ? .superReportMessageSubmitSuccess(commentId: commentId)
+                    : .reportMessageSubmitSuccess(commentId: commentId)
+                sendEvent(for: event)
             })
             .disposed(by: disposeBag)
     }
