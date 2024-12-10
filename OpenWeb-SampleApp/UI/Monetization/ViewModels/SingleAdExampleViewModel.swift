@@ -1,5 +1,5 @@
 //
-//  SocialMonetizationExampleViewModel.swift
+//  SingleAdExampleViewModel.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Anael on 26/11/2024.
@@ -9,27 +9,27 @@ import Foundation
 import RxSwift
 import OpenWebSDK
 
-protocol SocialMonetizationExampleViewModelingInputs {}
+protocol SingleAdExampleViewModelingInputs {}
 
-protocol SocialMonetizationExampleViewModelingOutputs {
+protocol SingleAdExampleViewModelingOutputs {
     var title: String { get }
     var loggerViewModel: UILoggerViewModeling { get }
-    var showAdView: Observable<UIView> { get }
+    var adView: Observable<UIView> { get }
 }
 
-protocol SocialMonetizationExampleViewModeling {
-    var inputs: SocialMonetizationExampleViewModelingInputs { get }
-    var outputs: SocialMonetizationExampleViewModelingOutputs { get }
+protocol SingleAdExampleViewModeling {
+    var inputs: SingleAdExampleViewModelingInputs { get }
+    var outputs: SingleAdExampleViewModelingOutputs { get }
 }
 
-class SocialMonetizationExampleViewModel: SocialMonetizationExampleViewModeling, SocialMonetizationExampleViewModelingOutputs, SocialMonetizationExampleViewModelingInputs {
-    var inputs: SocialMonetizationExampleViewModelingInputs { return self }
-    var outputs: SocialMonetizationExampleViewModelingOutputs { return self }
+class SingleAdExampleViewModel: SingleAdExampleViewModeling, SingleAdExampleViewModelingOutputs, SingleAdExampleViewModelingInputs {
+    var inputs: SingleAdExampleViewModelingInputs { return self }
+    var outputs: SingleAdExampleViewModelingOutputs { return self }
 
     private let postId: OWPostId
-    private let _showAdView = BehaviorSubject<UIView?>(value: nil)
-    var showAdView: Observable<UIView> {
-        return _showAdView
+    private let _adView = BehaviorSubject<UIView?>(value: nil)
+    var adView: Observable<UIView> {
+        return _adView
             .unwrap()
             .asObservable()
     }
@@ -48,7 +48,7 @@ class SocialMonetizationExampleViewModel: SocialMonetizationExampleViewModeling,
     }()
 }
 
-private extension SocialMonetizationExampleViewModel {
+private extension SingleAdExampleViewModel {
     func setupObservers() {
         let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0))
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
@@ -63,7 +63,7 @@ private extension SocialMonetizationExampleViewModel {
             guard let self else { return }
             switch result {
             case .success(let adView):
-                _showAdView.onNext(adView)
+                _adView.onNext(adView)
             case .failure(let error):
                 DLog("Social monetization example failed: \(error.localizedDescription)")
             }

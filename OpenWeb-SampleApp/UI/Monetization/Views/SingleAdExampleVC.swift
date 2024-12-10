@@ -1,5 +1,5 @@
 //
-//  SocialMonetizationExampleVC.swift
+//  SingleAdExampleVC.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Anael on 26/11/2024.
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class SocialMonetizationExampleVC: UIViewController {
+class SingleAdExampleVC: UIViewController {
     private struct Metrics {
         static let identifier = "uiviews_monetization_independent_example_id"
         static let adViewIdentifier = "social_monetization_ad_view_id"
@@ -18,14 +18,14 @@ class SocialMonetizationExampleVC: UIViewController {
         static let adViewHorizontalMargin: CGFloat = -16
     }
 
-    private let viewModel: SocialMonetizationExampleViewModeling
+    private let viewModel: SingleAdExampleViewModeling
     private let disposeBag = DisposeBag()
 
     private lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
     }()
 
-    init(viewModel: SocialMonetizationExampleViewModeling) {
+    init(viewModel: SingleAdExampleViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -46,7 +46,7 @@ class SocialMonetizationExampleVC: UIViewController {
     }
 }
 
-private extension SocialMonetizationExampleVC {
+private extension SingleAdExampleVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
     }
@@ -66,7 +66,7 @@ private extension SocialMonetizationExampleVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        viewModel.outputs.showAdView
+        viewModel.outputs.adView
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] adView in
                 guard let self else { return }

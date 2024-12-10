@@ -13,7 +13,7 @@ class MonetizationViewVC: UIViewController {
     private struct Metrics {
         static let identifier = "uiviews_monetization_vc_id"
         static let btnPreConversationExampleIdentifier = "btn_pre_conversation_example_id"
-        static let btnSocialMonetizationExampleIdentifier = "btn_social_monetization_example_id"
+        static let btnSingleAdExampleIdentifier = "btn_single_ad_example_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonHeight: CGFloat = 50
@@ -35,7 +35,7 @@ class MonetizationViewVC: UIViewController {
             .blueRoundedButton
     }()
 
-    private lazy var btnSocialMonetizationExample: UIButton = {
+    private lazy var btnSingleAdExample: UIButton = {
         return NSLocalizedString("SingleAd", comment: "")
             .blueRoundedButton
     }()
@@ -65,7 +65,7 @@ private extension MonetizationViewVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnPreConversationExample.accessibilityIdentifier = Metrics.btnPreConversationExampleIdentifier
-        btnSocialMonetizationExample.accessibilityIdentifier = Metrics.btnSocialMonetizationExampleIdentifier
+        btnSingleAdExample.accessibilityIdentifier = Metrics.btnSingleAdExampleIdentifier
     }
 
     func setupViews() {
@@ -80,8 +80,8 @@ private extension MonetizationViewVC {
         }
 
         // Adding social monetization example button
-        scrollView.addSubview(btnSocialMonetizationExample)
-        btnSocialMonetizationExample.snp.makeConstraints { make in
+        scrollView.addSubview(btnSingleAdExample)
+        btnSingleAdExample.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(scrollView).offset(Metrics.verticalMargin)
@@ -94,7 +94,7 @@ private extension MonetizationViewVC {
         btnPreConversationExample.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnSocialMonetizationExample.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(btnSingleAdExample.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
@@ -103,8 +103,8 @@ private extension MonetizationViewVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        btnSocialMonetizationExample.rx.tap
-            .bind(to: viewModel.inputs.socialMonetizationExampleTapped)
+        btnSingleAdExample.rx.tap
+            .bind(to: viewModel.inputs.singleAdExampleTapped)
             .disposed(by: disposeBag)
 
         btnPreConversationExample.rx.tap
