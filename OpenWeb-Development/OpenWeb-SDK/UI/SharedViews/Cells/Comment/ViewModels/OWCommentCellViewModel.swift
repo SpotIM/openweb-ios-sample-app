@@ -52,21 +52,22 @@ class OWCommentCellViewModel: OWCommentCellViewModeling,
     var id: String = ""
 
     init(data: OWCommentRequiredData,
-         spacing: OWVerticalSpacing) {
+         spacing: OWVerticalSpacing,
+         viewableMode: OWViewableMode) {
         self.id = data.comment.id ?? ""
 
-        self.commentVM = OWCommentViewModel(data: data)
+        self.commentVM = OWCommentViewModel(data: data, viewableMode: viewableMode)
 
         _updateSpacing.onNext(spacing)
     }
 
-    init() {
-        self.commentVM = OWCommentViewModel()
+    init(viewableMode: OWViewableMode) {
+        self.commentVM = OWCommentViewModel(viewableMode: viewableMode)
     }
 }
 
 extension OWCommentCellViewModel {
     static func stub() -> OWCommentCellViewModeling {
-        return OWCommentCellViewModel()
+        return OWCommentCellViewModel(viewableMode: .partOfFlow)
     }
 }
