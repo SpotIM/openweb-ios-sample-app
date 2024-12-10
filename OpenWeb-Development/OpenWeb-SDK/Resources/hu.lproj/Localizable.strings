@@ -102,6 +102,8 @@
 "PoweredBy" = "Működtető:";
 "PoweredByOpenWeb" = "Működtető: OpenWeb";
 "Privacy" = "Adatvédelem";
+"PrivacyDeleteAccountSuccessSubtitle" = "Sajnáljuk, hogy távozol!";
+"PrivacyDeleteAccountSuccessTitle" = "Fiókod véglegesen törlésre került.";
 "ProfileImage" = "Profilkép";
 "ProfileSubtitle" = "Nem megfelelő felhasználónév, avatar, életrajz, megszemélyesítés";
 "ProfileTitle" = "Profil";

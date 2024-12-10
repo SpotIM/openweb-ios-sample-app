@@ -423,7 +423,7 @@ private extension OWReportReasonViewViewModel {
 
         presentError
             .observe(on: MainScheduler.instance)
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterAction> in
                 guard let self else { return .empty() }
                 let action = OWRxPresenterAction(title: self.errorAlertActionText, type: OWCommentOptionsMenu.reportComment)
                 return self.servicesProvider.presenterService().showAlert(title: self.errorAlertTitleText,
