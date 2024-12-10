@@ -13,6 +13,8 @@
 		137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */; };
 		1374A8C72CF6243000F639D5 /* SocialMonetizationExampleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C62CF6243000F639D5 /* SocialMonetizationExampleVC.swift */; };
 		1374A8C92CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C82CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift */; };
+		16EFD62C2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */; };
+		16EFD62D2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2F113A104F74133456A49735 /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */; };
 		3D11D9252C7C9D7B003794C6 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D11D9242C7C9D7B003794C6 /* Colors.xcassets */; };
 		3D11D9272C7CA5D9003794C6 /* ColorAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11D9262C7CA5D9003794C6 /* ColorAsset.swift */; };
@@ -215,6 +217,7 @@
 			files = (
 				3DA1E6D52C6E299A00EBFA7D /* OpenWebSDK.framework in Embed Frameworks */,
 				3DA1E6D92C6E29B600EBFA7D /* GiphyUISDK.xcframework in Embed Frameworks */,
+				16EFD62D2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Embed Frameworks */,
 				3DA1E6D32C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -229,6 +232,7 @@
 		137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewViewModel.swift; sourceTree = "<group>"; };
 		1374A8C62CF6243000F639D5 /* SocialMonetizationExampleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMonetizationExampleVC.swift; sourceTree = "<group>"; };
 		1374A8C82CF6248000F639D5 /* SocialMonetizationExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMonetizationExampleViewModel.swift; sourceTree = "<group>"; };
+		16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebSDKAdapter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3D11D9242C7C9D7B003794C6 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		3D11D9262C7CA5D9003794C6 /* ColorAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorAsset.swift; sourceTree = "<group>"; };
@@ -432,6 +436,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16EFD62C2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Frameworks */,
 				3DA1E6D22C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */,
 				3DA1E6D42C6E299A00EBFA7D /* OpenWebSDK.framework in Frameworks */,
 				3DA1E6D82C6E29B600EBFA7D /* GiphyUISDK.xcframework in Frameworks */,
@@ -1331,6 +1336,7 @@
 		F8EE71FFA740F7552CE3A9AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */,
 				3DA1E6D72C6E29B600EBFA7D /* GiphyUISDK.xcframework */,
 				3DA1E6D02C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */,
 				3DA1E6D12C6E299A00EBFA7D /* OpenWebSDK.framework */,
