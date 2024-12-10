@@ -146,6 +146,7 @@ private extension OWManager {
                 guard let self else { return }
                 self.resetSpotId()
                 self.servicesProvider.configure.change(spotId: spotId)
+                self.setMonetizationLayerSpotId(spotId)
             })
             .disposed(by: disposeBag)
 
@@ -171,6 +172,7 @@ private extension OWManager {
                 guard let self else { return }
                 self.resetSpotId()
                 self.servicesProvider.spotConfigurationService().spotChanged(spotId: spotId)
+                self.setMonetizationLayerSpotId(spotId)
             })
             .disposed(by: disposeBag)
 
@@ -194,7 +196,6 @@ private extension OWManager {
             analytics.clearCallbacks()
         }
 
-        setMonetizationLayerSpotId(spotId)
         OWColorPalette.shared.initiateColors()
     }
 
