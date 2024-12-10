@@ -17,12 +17,13 @@ protocol OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType>
+    ) -> Observable<OWRxPresenterAction>
     func dismissMenu(viewableMode: OWViewableMode)
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
     func showGifPicker(viewableMode: OWViewableMode) -> Observable<OWGifPickerPresenterResponseType>
+    func presentZoomableImage(with image: UIImage, viewableMode: OWViewableMode)
 }
 
 extension OWPresenterServicing {
@@ -32,7 +33,7 @@ extension OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style = .alert,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType> {
+    ) -> Observable<OWRxPresenterAction> {
         showAlert(title: title, message: message, actions: actions, preferredStyle: preferredStyle, viewableMode: viewableMode)
     }
 }
@@ -51,7 +52,7 @@ class OWPresenterService: OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style = .alert,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType> {
+    ) -> Observable<OWRxPresenterAction> {
         guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
 
@@ -60,6 +61,18 @@ class OWPresenterService: OWPresenterServicing {
                                          title: title,
                                          message: message,
                                          actions: actions)
+    }
+
+    func presentZoomableImage(with image: UIImage, viewableMode: OWViewableMode) {
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
+        let fullScreenImageVM = OWFullScreenImageViewModel(image: image)
+
+        // Create OWFullScreenImageView and align it according to constraints
+        let fullScreenImageView = OWFullScreenImageView(viewModel: fullScreenImageVM)
+        presenterVC.view.addSubview(fullScreenImageView)
+        fullScreenImageView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func dismissMenu(viewableMode: OWViewableMode) {
