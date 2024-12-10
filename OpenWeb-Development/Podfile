@@ -1,4 +1,4 @@
-platform :ios, '12.0'
+platform :ios, '13.0'
 inhibit_all_warnings!
 use_frameworks!
 
@@ -12,12 +12,21 @@ def rx_pods
   pod 'RxCocoa', '6.7.0'
 end
 
+def iau_pods
+  pod 'OpenWebIAU', :git => 'git@github.com:SpotIM/spotim-iau-sdk.git', :branch => 'dev'
+end
+
 target 'OpenWeb-SampleApp' do
   project 'OpenWeb-SampleApp/OpenWeb-SampleApp.xcodeproj'
   pod 'SnapKit', '~> 5.7.1'
-  pod 'Google-Mobile-Ads-SDK', '= 8.0'
   pod 'Alamofire', '~> 5.10.1'
   rx_pods
+  iau_pods
+end
+
+target 'OpenWebSDKAdapter' do
+  project 'OpenWeb-Development.xcodeproj'
+  iau_pods
 end
 
 target 'OpenWebSDK' do
@@ -29,6 +38,7 @@ target 'OpenWebSDKTests' do
   project 'OpenWeb-Development.xcodeproj'
   pod 'Quick', '~> 5.0.1'
   pod 'Nimble', '~> 10.0.0'
+  iau_pods
 end
 
 post_install do |installer|
