@@ -21,17 +21,19 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		16EFCE0B2D08504E00470A03 /* Pods_OpenWebSDKAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163A09662D0849F80069B5B8 /* Pods_OpenWebSDKAdapter.framework */; };
+		16EFD6272D0850E400470A03 /* OpenWebSDKAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16EFCE152D08504E00470A03 /* OpenWebSDKAdapter.framework */; };
 		2EE6559280D523AC782FC3C9 /* Pods_OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */; };
 		3361A1AE3A23C3CE64FF21A2 /* Pods_OpenWebSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */; };
 		3DA1DF052C6DF7E800EBFA7D /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* OpenWebSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		166555BB2CBD563900AC257E /* PBXContainerItemProxy */ = {
+		16EFD6292D0850E400470A03 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 16047ECF2CBD51330086E606;
+			remoteGlobalIDString = 16EFCE062D08504E00470A03;
 			remoteInfo = OpenWebSDKAdapter;
 		};
 		3DA1DF072C6DF7E800EBFA7D /* PBXContainerItemProxy */ = {
@@ -66,7 +68,11 @@
 /* Begin PBXFileReference section */
 		033E5962A63FA4F4B5CF2E2F /* Pods-Shared-OpenWeb-SampleApp.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		086A411DF7932B4542D13064 /* Pods-OpenWebSDK.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.internal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.internal.xcconfig"; sourceTree = "<group>"; };
+		0CB6AAC7606CFA603C7DF62B /* Pods-OpenWebSDKAdapter.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKAdapter.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter.public.xcconfig"; sourceTree = "<group>"; };
 		0F5F0E486DB3D9F532EB16A0 /* Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		163A09662D0849F80069B5B8 /* Pods_OpenWebSDKAdapter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_OpenWebSDKAdapter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		16EFCE152D08504E00470A03 /* OpenWebSDKAdapter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenWebSDKAdapter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1ED0CB4D48B7D96036B3E614 /* Pods-OpenWebSDKAdapter.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKAdapter.internal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter.internal.xcconfig"; sourceTree = "<group>"; };
 		232820FD5EB04EAF2F142596 /* Pods-Shared-OpenWeb-SampleApp.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.public.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.public.xcconfig"; sourceTree = "<group>"; };
 		3C0FC9DE7B85CF8DD9F93F49 /* Pods-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		3DA1DEC12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,6 +80,8 @@
 		43A00F0329A6155C4CEFB584 /* Pods-OpenWebSDKTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.beta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.beta.xcconfig"; sourceTree = "<group>"; };
 		44C8788D23608BC100E0E662 /* OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49F73A60F2F59A47C297CDCE /* Pods-Shared-OpenWebSDKTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
+		55000AE834E5310DEEACB7C5 /* Pods_OpenWebSDKAdapter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDKAdapter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		591748EA10C0781EE831190C /* Pods-OpenWebSDKAdapter.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKAdapter.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		5963A75F8191A381031939C6 /* Pods-OpenWebSDK.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		5E8B87F580F233E1658DA16C /* Pods-Shared-OpenWebSDKTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		63B1383AE30465CDDD046528 /* Pods-Shared-OpenWeb-SampleApp.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWeb-SampleApp.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWeb-SampleApp/Pods-Shared-OpenWeb-SampleApp.releasebeta.xcconfig"; sourceTree = "<group>"; };
@@ -82,17 +90,20 @@
 		77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		874F2EDF6E51FB58E23D0C08 /* Pods-OpenWebSDK.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		8DBCC8A8AAEAFD1CDE891F88 /* Pods-OpenWebSDK.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.public.xcconfig"; sourceTree = "<group>"; };
+		90F746D2022315930CB51EB0 /* Pods-OpenWebSDKAdapter.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKAdapter.beta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter.beta.xcconfig"; sourceTree = "<group>"; };
 		9767D2C57B135F9C70D371B1 /* Pods-OpenWebSDKTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		9A9372C9C3EC60CD8F4362D7 /* Pods-OpenWebSDK.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDK.beta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDK/Pods-OpenWebSDK.beta.xcconfig"; sourceTree = "<group>"; };
 		9B311A87A16095711C65460F /* Pods-Shared-OpenWebSDKTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebSDKTests.internal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebSDKTests/Pods-Shared-OpenWebSDKTests.internal.xcconfig"; sourceTree = "<group>"; };
+		A40541019A51962E17634660 /* Pods-OpenWebSDKAdapter.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKAdapter.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWebSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B753F07BF98BF8A8E4355A29 /* Pods-OpenWebSDKTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		BA74A5109A24620201B287C0 /* Pods-OpenWebSDKAdapter.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKAdapter.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		E2080C05097A6CC95A92ADAE /* Pods-OpenWebSDKTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebSDKTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests.public.xcconfig"; sourceTree = "<group>"; };
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		C2280B482CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDK" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Info.plist,
@@ -103,21 +114,21 @@
 			);
 			target = 44C8788C23608BC100E0E662 /* OpenWebSDK */;
 		};
-		C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		C2280B492CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDKTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/GiphyConfiguration.plist,
 			);
 			target = F92DD7B62A7E8B9E00A2BE5B /* OpenWebSDKTests */;
 		};
-		C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		C2280B7F2CE3797B00E546DA /* Exceptions for "OpenWeb-SampleApp-Internal-Configs" folder in "OpenWeb-SampleApp-Internal-Configs" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
 				Resources/OpenWeb_SampleApp_Internal_Configs.h,
 			);
 			target = 3DA1DEC02C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */;
 		};
-		C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		C2280B832CE379B800E546DA /* Exceptions for "Vendor-Frameworks" folder in "OpenWebSDK" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			attributesByRelativePath = {
 				GiphyUISDK.xcframework = (
@@ -129,14 +140,76 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		16F896BD2CF4794300BC962B /* OpenWeb-SDKAdapter */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKAdapter"; sourceTree = "<group>"; };
-		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B482CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C2280B492CE378C500E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDK"; sourceTree = "<group>"; };
-		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SDKTests"; sourceTree = "<group>"; };
-		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B7F2CE3797B00E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "OpenWeb-SampleApp-Internal-Configs"; sourceTree = "<group>"; };
-		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C2280B832CE379B800E546DA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Vendor-Frameworks"; sourceTree = "<group>"; };
+		16F896BD2CF4794300BC962B /* OpenWeb-SDKAdapter */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = "OpenWeb-SDKAdapter";
+			sourceTree = "<group>";
+		};
+		C22807FD2CE378C400E546DA /* OpenWeb-SDK */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C2280B482CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDK" target */,
+				C2280B492CE378C500E546DA /* Exceptions for "OpenWeb-SDK" folder in "OpenWebSDKTests" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = "OpenWeb-SDK";
+			sourceTree = "<group>";
+		};
+		C2280B572CE3794D00E546DA /* OpenWeb-SDKTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = "OpenWeb-SDKTests";
+			sourceTree = "<group>";
+		};
+		C2280B742CE3797B00E546DA /* OpenWeb-SampleApp-Internal-Configs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C2280B7F2CE3797B00E546DA /* Exceptions for "OpenWeb-SampleApp-Internal-Configs" folder in "OpenWeb-SampleApp-Internal-Configs" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = "OpenWeb-SampleApp-Internal-Configs";
+			sourceTree = "<group>";
+		};
+		C2280B812CE379B800E546DA /* Vendor-Frameworks */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C2280B832CE379B800E546DA /* Exceptions for "Vendor-Frameworks" folder in "OpenWebSDK" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = "Vendor-Frameworks";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		16EFCE0A2D08504E00470A03 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16EFCE0B2D08504E00470A03 /* Pods_OpenWebSDKAdapter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DA1DEBE2C6CCB0300EBFA7D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -149,6 +222,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16EFD6272D0850E400470A03 /* OpenWebSDKAdapter.framework in Frameworks */,
 				2EE6559280D523AC782FC3C9 /* Pods_OpenWebSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -184,6 +258,7 @@
 				44C8788D23608BC100E0E662 /* OpenWebSDK.framework */,
 				F92DD7B72A7E8B9E00A2BE5B /* OpenWebSDKTests.xctest */,
 				3DA1DEC12C6CCB0300EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */,
+				16EFCE152D08504E00470A03 /* OpenWebSDKAdapter.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -191,8 +266,10 @@
 		5D697A6A22B6586C001AD556 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				163A09662D0849F80069B5B8 /* Pods_OpenWebSDKAdapter.framework */,
 				77373CFFAC12A9D37DF4F2AC /* Pods_OpenWebSDK.framework */,
 				ABAB3ABA7D16DED7A13A2575 /* Pods_OpenWebSDKTests.framework */,
+				55000AE834E5310DEEACB7C5 /* Pods_OpenWebSDKAdapter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -220,6 +297,12 @@
 				5963A75F8191A381031939C6 /* Pods-OpenWebSDK.releaseinternal.xcconfig */,
 				6AD88E67F8531F65F140E53D /* Pods-OpenWebSDK.releasebeta.xcconfig */,
 				874F2EDF6E51FB58E23D0C08 /* Pods-OpenWebSDK.releasepublic.xcconfig */,
+				1ED0CB4D48B7D96036B3E614 /* Pods-OpenWebSDKAdapter.internal.xcconfig */,
+				90F746D2022315930CB51EB0 /* Pods-OpenWebSDKAdapter.beta.xcconfig */,
+				0CB6AAC7606CFA603C7DF62B /* Pods-OpenWebSDKAdapter.public.xcconfig */,
+				BA74A5109A24620201B287C0 /* Pods-OpenWebSDKAdapter.releaseinternal.xcconfig */,
+				591748EA10C0781EE831190C /* Pods-OpenWebSDKAdapter.releasebeta.xcconfig */,
+				A40541019A51962E17634660 /* Pods-OpenWebSDKAdapter.releasepublic.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -227,7 +310,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		16047ECB2CBD51330086E606 /* Headers */ = {
+		16EFCE082D08504E00470A03 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -251,13 +334,16 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		16047ECF2CBD51330086E606 /* OpenWebSDKAdapter */ = {
+		16EFCE062D08504E00470A03 /* OpenWebSDKAdapter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 16047EDA2CBD51330086E606 /* Build configuration list for PBXNativeTarget "OpenWebSDKAdapter" */;
+			buildConfigurationList = 16EFCE0E2D08504E00470A03 /* Build configuration list for PBXNativeTarget "OpenWebSDKAdapter" */;
 			buildPhases = (
-				16047ECB2CBD51330086E606 /* Headers */,
-				16047ECC2CBD51330086E606 /* Sources */,
-				16047ECE2CBD51330086E606 /* Resources */,
+				16EFCE072D08504E00470A03 /* [CP] Check Pods Manifest.lock */,
+				16EFCE082D08504E00470A03 /* Headers */,
+				16EFCE092D08504E00470A03 /* Sources */,
+				16EFCE0A2D08504E00470A03 /* Frameworks */,
+				16EFCE0C2D08504E00470A03 /* Resources */,
+				16EFCE0D2D08504E00470A03 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -268,6 +354,7 @@
 			);
 			name = OpenWebSDKAdapter;
 			productName = OpenWebSDKAdapter;
+			productReference = 16EFCE152D08504E00470A03 /* OpenWebSDKAdapter.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		3DA1DEC02C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */ = {
@@ -307,7 +394,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				166555BC2CBD563900AC257E /* PBXTargetDependency */,
+				16EFD62A2D0850E400470A03 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				C22807FD2CE378C400E546DA /* OpenWeb-SDK */,
@@ -328,6 +415,7 @@
 				F92DD7B52A7E8B9E00A2BE5B /* Resources */,
 				574B6D2274E2055E39B37113 /* [CP] Embed Pods Frameworks */,
 				16EA82992B8CE2C7004D6FF2 /* Embed Frameworks */,
+				7B8DF5205950754D5575D9F9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -348,14 +436,10 @@
 		5D697A3322B65106001AD556 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1540;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = OpenWeb;
 				TargetAttributes = {
-					16047ECF2CBD51330086E606 = {
-						CreatedOnToolsVersion = 15.4;
-						LastSwiftMigration = 1540;
-					};
 					3DA1DEC02C6CCB0300EBFA7D = {
 						CreatedOnToolsVersion = 15.4;
 					};
@@ -399,16 +483,16 @@
 			projectRoot = "";
 			targets = (
 				3DA1DEC02C6CCB0300EBFA7D /* OpenWeb-SampleApp-Internal-Configs */,
+				16EFCE062D08504E00470A03 /* OpenWebSDKAdapter */,
 				44C8788C23608BC100E0E662 /* OpenWebSDK */,
 				F92DD7B62A7E8B9E00A2BE5B /* OpenWebSDKTests */,
 				6D5DB15823CF5D73003F9D46 /* OpenWeb-SDKBuilder */,
-				16047ECF2CBD51330086E606 /* OpenWebSDKAdapter */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		16047ECE2CBD51330086E606 /* Resources */ = {
+		16EFCE0C2D08504E00470A03 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -461,6 +545,45 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		16EFCE072D08504E00470A03 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenWebSDKAdapter-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		16EFCE0D2D08504E00470A03 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKAdapter/Pods-OpenWebSDKAdapter-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		574B6D2274E2055E39B37113 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -494,6 +617,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "bash -x ./scripts/create_xcframework_script.sh \"${CONFIGURATION}\"\n";
+		};
+		7B8DF5205950754D5575D9F9 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWebSDKTests/Pods-OpenWebSDKTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		C26AD90F2CA58662008F82DE /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -560,7 +700,7 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		16047ECC2CBD51330086E606 /* Sources */ = {
+		16EFCE092D08504E00470A03 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -591,10 +731,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		166555BC2CBD563900AC257E /* PBXTargetDependency */ = {
+		16EFD62A2D0850E400470A03 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 16047ECF2CBD51330086E606 /* OpenWebSDKAdapter */;
-			targetProxy = 166555BB2CBD563900AC257E /* PBXContainerItemProxy */;
+			target = 16EFCE062D08504E00470A03 /* OpenWebSDKAdapter */;
+			targetProxy = 16EFD6292D0850E400470A03 /* PBXContainerItemProxy */;
 		};
 		3DA1DF082C6DF7E800EBFA7D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -609,8 +749,9 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		16047ED42CBD51330086E606 /* Internal */ = {
+		16EFCE0F2D08504E00470A03 /* Internal */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ED0CB4D48B7D96036B3E614 /* Pods-OpenWebSDKAdapter.internal.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -642,6 +783,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -686,7 +828,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebSDKAdapter;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -700,8 +842,9 @@
 			};
 			name = Internal;
 		};
-		16047ED52CBD51330086E606 /* Beta */ = {
+		16EFCE102D08504E00470A03 /* Beta */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 90F746D2022315930CB51EB0 /* Pods-OpenWebSDKAdapter.beta.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -734,6 +877,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -771,7 +915,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebSDKAdapter;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -786,8 +930,9 @@
 			};
 			name = Beta;
 		};
-		16047ED62CBD51330086E606 /* Public */ = {
+		16EFCE112D08504E00470A03 /* Public */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0CB6AAC7606CFA603C7DF62B /* Pods-OpenWebSDKAdapter.public.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -819,6 +964,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -856,7 +1002,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebSDKAdapter;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -871,8 +1017,9 @@
 			};
 			name = Public;
 		};
-		16047ED72CBD51330086E606 /* ReleaseInternal */ = {
+		16EFCE122D08504E00470A03 /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA74A5109A24620201B287C0 /* Pods-OpenWebSDKAdapter.releaseinternal.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -905,6 +1052,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -942,7 +1090,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebSDKAdapter;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -956,8 +1104,9 @@
 			};
 			name = ReleaseInternal;
 		};
-		16047ED82CBD51330086E606 /* ReleaseBeta */ = {
+		16EFCE132D08504E00470A03 /* ReleaseBeta */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 591748EA10C0781EE831190C /* Pods-OpenWebSDKAdapter.releasebeta.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -990,6 +1139,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1027,7 +1177,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebSDKAdapter;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1041,8 +1191,9 @@
 			};
 			name = ReleaseBeta;
 		};
-		16047ED92CBD51330086E606 /* ReleasePublic */ = {
+		16EFCE142D08504E00470A03 /* ReleasePublic */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A40541019A51962E17634660 /* Pods-OpenWebSDKAdapter.releasepublic.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1075,6 +1226,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1112,7 +1264,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.OpenWebSDKAdapter;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -2758,15 +2910,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		16047EDA2CBD51330086E606 /* Build configuration list for PBXNativeTarget "OpenWebSDKAdapter" */ = {
+		16EFCE0E2D08504E00470A03 /* Build configuration list for PBXNativeTarget "OpenWebSDKAdapter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				16047ED42CBD51330086E606 /* Internal */,
-				16047ED52CBD51330086E606 /* Beta */,
-				16047ED62CBD51330086E606 /* Public */,
-				16047ED72CBD51330086E606 /* ReleaseInternal */,
-				16047ED82CBD51330086E606 /* ReleaseBeta */,
-				16047ED92CBD51330086E606 /* ReleasePublic */,
+				16EFCE0F2D08504E00470A03 /* Internal */,
+				16EFCE102D08504E00470A03 /* Beta */,
+				16EFCE112D08504E00470A03 /* Public */,
+				16EFCE122D08504E00470A03 /* ReleaseInternal */,
+				16EFCE132D08504E00470A03 /* ReleaseBeta */,
+				16EFCE142D08504E00470A03 /* ReleasePublic */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = ReleaseInternal;
