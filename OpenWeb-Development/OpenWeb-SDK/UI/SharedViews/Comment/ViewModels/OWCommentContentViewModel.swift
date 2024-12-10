@@ -13,6 +13,7 @@ import UIKit
 
 protocol OWCommentContentViewModelingInputs {
     func update(comment: OWComment)
+    var imageTapped: PublishSubject<UIImage> { get }
 }
 
 protocol OWCommentContentViewModelingOutputs {
@@ -47,19 +48,28 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     private let lineLimit: Int
     private let imageProvider: OWImageProviding
 
+    var disposeBag = DisposeBag()
+
+    var imageTapped = PublishSubject<UIImage>()
     var collapsableLabelViewModel: OWCommentTextViewModeling
 
-    init(comment: OWComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    let viewableMode: OWViewableMode
+
+    init(comment: OWComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider(), viewableMode: OWViewableMode) {
         self.lineLimit = lineLimit
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, collapsableTextLineLimit: lineLimit)
         self.imageProvider = imageProvider
+        self.viewableMode = viewableMode
         _comment.onNext(comment)
+        setupObservers()
     }
 
-    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider(), viewableMode: OWViewableMode) {
         lineLimit = 0
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: OWComment(), collapsableTextLineLimit: lineLimit)
         self.imageProvider = imageProvider
+        self.viewableMode = viewableMode
+        setupObservers()
     }
 
     func update(comment: OWComment) {
@@ -134,6 +144,15 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
 }
 
 private extension OWCommentContentViewModel {
+    func setupObservers() {
+        imageTapped
+            .subscribe(onNext: { [weak self] image in
+                guard let self else { return }
+                OWSharedServicesProvider.shared.presenterService().presentZoomableImage(with: image, viewableMode: self.viewableMode)
+            })
+            .disposed(by: disposeBag)
+    }
+
     func leadingOffset(perCommentDepth depth: Int) -> CGFloat {
         switch depth {
         case 0: return Metrics.depth0Offset
