@@ -15,14 +15,14 @@ extension Reactive where Base: UIAlertController {
                      preferredStyle: UIAlertController.Style = .alert,
                      title: String?,
                      message: String?,
-                     actions: [OWRxPresenterAction]) -> Observable<OWRxPresenterResponseType> {
+                     actions: [OWRxPresenterAction]) -> Observable<OWRxPresenterAction> {
 
         return Observable.create { observer in
             // Map to regular UIAlertAction
             let alertActions = actions.map { rxAction in
                 UIAlertAction(title: rxAction.title,
                               style: rxAction.style) { _ in
-                    observer.onNext(.selected(action: rxAction))
+                    observer.onNext(rxAction)
                     observer.onCompleted()
                 }
             }
@@ -38,9 +38,7 @@ extension Reactive where Base: UIAlertController {
             // Add the actions to the alertVC
             alertActions.forEach { alertVC.addAction($0) }
 
-            viewController.present(alertVC, animated: animated) {
-                observer.onNext(.completion)
-            }
+            viewController.present(alertVC, animated: animated)
 
             return Disposables.create()
         }

@@ -188,22 +188,18 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
-            commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput.map { ($0, "") },
+            commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput.map { OWWebTabOptions(url: $0) },
             commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return (data.url, OWLocalizationManager.shared.localizedString(key: "ProfileTitle"))
+                    return OWWebTabOptions(url: data.url, title: OWLocalizationManager.shared.localizedString(key: "ProfileTitle"))
                 } else {
                     return nil
                 }
             }
                 .unwrap()
         )
-            .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
+            .flatMap { [weak self] options -> Observable<OWWebTabCoordinatorResult> in
                 guard let self else { return .empty() }
-                let url = tuple.0
-                let title = tuple.1
-                let options = OWWebTabOptions(url: url,
-                                                 title: title)
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                    options: options,
                                                                    viewActionsCallbacks: self.viewActionsCallbacks)
