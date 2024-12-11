@@ -182,12 +182,12 @@ private extension OWPreConversationCoordinator {
 
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
-            viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput.map { ($0, "") },
-            viewModel.outputs.urlClickedOutput.map { ($0, "") },
-            viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput.map { ($0, "") },
+            viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput.map { OWWebTabOptions(url: $0) },
+            viewModel.outputs.urlClickedOutput.map { OWWebTabOptions(url: $0) },
+            viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput.map { OWWebTabOptions(url: $0) },
             viewModel.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return (data.url, OWLocalizationManager.shared.localizedString(key: "ProfileTitle"))
+                    return OWWebTabOptions(url: data.url, title: OWLocalizationManager.shared.localizedString(key: "ProfileTitle"))
                 } else {
                     return nil
                 }
@@ -199,12 +199,8 @@ private extension OWPreConversationCoordinator {
                 guard let self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
+            .flatMap { [weak self] options -> Observable<OWWebTabCoordinatorResult> in
                 guard let self else { return .empty() }
-                let url = tuple.0
-                let title = tuple.1
-                let options = OWWebTabOptions(url: url,
-                                                 title: title)
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                    options: options,
                                                                    viewActionsCallbacks: self.viewActionsCallbacks)
