@@ -29,14 +29,21 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
     private let options: OWWebTabOptions
     private let viewActionsCallbacks: OWViewActionsCallbacks?
     private var viewableMode: OWViewableMode!
+    private let servicesProvider: OWSharedServicesProviding
     private lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: viewActionsCallbacks, viewSourceType: .webView)
     }()
 
-    init(router: OWRoutering? = nil, options: OWWebTabOptions, viewActionsCallbacks: OWViewActionsCallbacks?) {
+    init(
+        router: OWRoutering? = nil,
+        options: OWWebTabOptions,
+        viewActionsCallbacks: OWViewActionsCallbacks?,
+        servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
+    ) {
         self.router = router
         self.options = options
         self.viewActionsCallbacks = viewActionsCallbacks // TODO: handle actions callbacks?
+        self.servicesProvider = servicesProvider
     }
 
     override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWWebTabCoordinatorResult> {
@@ -73,13 +80,52 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
             .map { OWWebTabCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        return Observable.merge(webVCPoppedObservable, webVCLoadedToScreenObservable)
+        // on delete account, show an alert and then route back to a guest state
+        let accountDeletedObservable = webTabVM.webTabViewVM.outputs.javaScriptEvent
+            .filter { $0 == OWOpenProfileData.deleteAccountEvent }
+            .flatMap { _ -> Observable<Void> in
+                return Observable.create { observer in
+                    OWManager.manager.authentication.logout { result in
+                        observer.onNext(())
+                        observer.onCompleted()
+                    }
+                    return Disposables.create()
+                }
+            }
+            .do(onNext: { [weak self] _ in
+                if let postId = OWManager.manager.postId {
+                    self?.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: postId)
+                }
+            })
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] _ -> Observable<Void> in
+                guard let self else { return .empty() }
+                let okAction = OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OK"), type: OWEmptyMenu.ok)
+                return servicesProvider.presenterService().showAlert(
+                    title: OWLocalizationManager.shared.localizedString(key: "PrivacyDeleteAccountSuccessTitle"),
+                    message: OWLocalizationManager.shared.localizedString(key: "PrivacyDeleteAccountSuccessSubtitle"),
+                    actions: [okAction],
+                    viewableMode: viewableMode
+                )
+                .map { action in }
+            }
+            .do(onNext: { [weak self] _ in
+                self?.router?.pop(animated: true)
+            })
+            .map {
+                return OWWebTabCoordinatorResult.popped
+            }
+
+        return Observable.merge(webVCPoppedObservable, webVCLoadedToScreenObservable, accountDeletedObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
         viewableMode = .independent
-        let webTabViewVM: OWWebTabViewViewModeling = OWWebTabViewViewModel(options: options,
-                                                                                    viewableMode: viewableMode)
+        let webTabViewVM: OWWebTabViewViewModeling = OWWebTabViewViewModel(
+            options: options,
+            viewableMode: viewableMode,
+            javaScriptEvents: [OWOpenProfileData.deleteAccountEvent]
+        )
         let webTabView = OWWebTabView(viewModel: webTabViewVM)
         setupViewActionsCallbacks(forViewModel: webTabViewVM)
         return .just(webTabView)

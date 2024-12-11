@@ -21,3 +21,7 @@ extension OWOpenProfileData: Equatable, Codable {
                 rhs.userId == lhs.userId
     }
 }
+
+extension OWOpenProfileData {
+    static let deleteAccountEvent = "delete-account"
+}
