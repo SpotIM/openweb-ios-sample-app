@@ -200,8 +200,13 @@ private extension OWPreConversationCompactContentView {
             .bind(to: skelatonView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.text
-            .bind(to: textLabel.rx.text)
+        viewModel.outputs.attributedString
+            .subscribe(onNext: { [weak self] attString in
+                guard let self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.textLabel.attributedText = attString
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.isSkelatonHidden
