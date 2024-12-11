@@ -54,6 +54,7 @@
 "EditComment" = "تحرير تعليق";
 "Edited" = " (تم التعديل)";
 "EditingComment" = "تعديل التعليق";
+"EditingReply" = "تعديل الرد على %@";
 "EmptyConversation" = "ابدأ المحادثة وشارك آراءك وأفكارك مع المجتمع.";
 "ErrorStateLoadComments" = "يتعذر علينا تحميل التعليقات حاليًا";
 "ErrorStateLoadReplies" = "يتعذر علينا تحميل الردود حاليًا";

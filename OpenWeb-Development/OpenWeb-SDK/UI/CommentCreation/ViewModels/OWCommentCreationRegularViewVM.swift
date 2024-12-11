@@ -115,6 +115,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     lazy var titleAttributedString: Observable<NSAttributedString> = {
         let commentingOnText = OWLocalizationManager.shared.localizedString(key: "CommentingOn")
+        let editingCommentText = OWLocalizationManager.shared.localizedString(key: "EditingComment")
 
         var replyToComment: OWComment?
         switch commentCreationData.commentCreationType {
@@ -133,16 +134,16 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         guard let userId = replyToComment?.userId,
               let user = self.servicesProvider.usersService().get(userId: userId),
               let displayName = user.displayName
-        else { return Observable.just(NSAttributedString(string: commentingOnText)) }
+        else {
+            switch commentCreationData.commentCreationType {
+            case .edit:
+                return Observable.just(NSAttributedString(string: editingCommentText))
+            default:
+                return Observable.just(NSAttributedString(string: commentingOnText))
+            }
+        }
 
-        var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ReplyingTo"))
-
-        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
-        let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
-
-        attributedString.append(boldUserNameString)
-
-        return Observable.just(attributedString)
+        return Observable.just(commentCreationData.commentCreationType.attributedStringForReplyTo(displayName: displayName))
     }()
 
     var shouldShowReplySnippet: Bool {

@@ -54,6 +54,7 @@
 "EditComment" = "Bir yorumu düzelt";
 "Edited" = " (Düzenlendi)";
 "EditingComment" = "Yorum düzenleniyor";
+"EditingReply" = "%@ adlı kişiye verilen yanıt düzenleniyor";
 "EmptyConversation" = "Sohbeti başlat ve düşüncelerini ve fikirlerini toplulukla paylaş.";
 "ErrorStateLoadComments" = "Şu anda yorumları yükleyemiyoruz";
 "ErrorStateLoadReplies" = "Şu anda yanıtları yükleyemiyoruz";
