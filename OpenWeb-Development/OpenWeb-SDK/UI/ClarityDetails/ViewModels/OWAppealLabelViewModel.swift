@@ -303,9 +303,8 @@ private extension OWAppealLabelViewModel {
                     OWRxPresenterAction(title: "Cancel", type: OWAuthToAppealAlert.cancel),
                     OWRxPresenterAction(title: "Authorize", type: OWAuthToAppealAlert.authenticate)
                 ], preferredStyle: .alert, viewableMode: .partOfFlow)
-            .map { result -> Bool in
-                if case .selected(let action) = result,
-                   case OWAuthToAppealAlert.authenticate = action.type {
+            .map { action -> Bool in
+                if case OWAuthToAppealAlert.authenticate = action.type {
                     return true
                 }
                 return false

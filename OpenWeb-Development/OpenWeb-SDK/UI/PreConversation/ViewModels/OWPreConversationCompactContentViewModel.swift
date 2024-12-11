@@ -23,7 +23,7 @@ protocol OWPreConversationCompactContentViewModelingOutputs {
     var contentType: Observable<OWCompactContentType> { get }
     var isSkelatonHidden: Observable<Bool> { get }
     var isCommentHidden: Observable<Bool> { get }
-    var text: Observable<String> { get }
+    var attributedString: Observable<NSMutableAttributedString> { get }
     var shouldShowImagePlaceholder: Observable<Bool> { get }
     var tryAgainTapped: Observable<Void> { get }
 }
@@ -36,6 +36,9 @@ protocol OWPreConversationCompactContentViewModeling {
 class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentViewModeling,
                                                 OWPreConversationCompactContentViewModelingInputs,
                                                 OWPreConversationCompactContentViewModelingOutputs {
+    private struct Metrics {
+        static let delayStyleChanged = 10
+    }
 
     var inputs: OWPreConversationCompactContentViewModelingInputs { return self }
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
@@ -45,7 +48,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     var conversationError = PublishSubject<Bool>()
     private var emptyConversation = PublishSubject<Void>()
     private var comment = PublishSubject<OWComment>()
-
+    private var userMentions: [OWUserMentionObject] = []
     private let _contentType = BehaviorSubject<OWCompactContentType>(value: .skeleton)
     lazy var contentType: Observable<OWCompactContentType> = {
         return _contentType
@@ -85,25 +88,36 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             }
     }()
 
-    lazy var text: Observable<String> = {
-        contentType
-            .map { type in
+    private lazy var themeStyleObservable: Observable<OWThemeStyle> = {
+        OWSharedServicesProvider.shared.themeStyleService().style
+            .delay(.milliseconds(Metrics.delayStyleChanged), scheduler: MainScheduler.instance)
+    }()
+
+    lazy var attributedString: Observable<NSMutableAttributedString> = {
+        Observable.combineLatest(comment, themeStyleObservable, contentType)
+            .map { [weak self] comment, style, type  in
+                guard let self else { return NSMutableAttributedString(string: "") }
                 switch type {
                 case .skeleton:
-                    return ""
+                    return NSMutableAttributedString(string: "")
                 case .emptyConversation:
-                    return OWLocalizationManager.shared.localizedString(key: "EmptyConversation")
+                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "EmptyConversation"))
                 case .closedAndEmpty:
-                    return OWLocalizationManager.shared.localizedString(key: "ClosedAndEmptyConversation")
+                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ClosedAndEmptyConversation"))
                 case .comment(let commentType):
                     switch commentType {
                     case .media:
-                        return OWLocalizationManager.shared.localizedString(key: "Image")
+                        return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Image"))
                     case .text(let string):
-                        return string
+                        var attrString = NSMutableAttributedString(string: string)
+                        attrString.addUserMentions(style: style,
+                                                   comment: comment,
+                                                   userMentions: self.userMentions,
+                                                   serviceProvider: self.serviceProvider)
+                        return attrString
                     }
                 case .error:
-                    return OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadComments")
+                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadComments"))
                 }
             }
             .asObservable()
@@ -115,9 +129,12 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             .asObservable()
     }()
 
+    private let serviceProvider: OWSharedServicesProviding
     private let imageProvider: OWImageProviding
     private let disposeBag = DisposeBag()
-    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
+         serviceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.serviceProvider = serviceProvider
         self.imageProvider = imageProvider
         setupObservers()
     }
@@ -165,9 +182,10 @@ private extension OWPreConversationCompactContentViewModel {
         comment
             .subscribe(onNext: { [weak self] commentData in
                 guard let self else { return }
-
+                var comment = commentData
+                self.userMentions.append(contentsOf: OWUserMentionHelper.createUserMentions(from: &comment))
                 let commentType: OWCompactCommentType = {
-                    if let commentText = commentData.text?.text {
+                    if let commentText = comment.text?.text {
                         return .text(string: commentText)
                     }
                     return .media
