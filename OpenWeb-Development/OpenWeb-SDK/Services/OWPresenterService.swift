@@ -17,7 +17,7 @@ protocol OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType>
+    ) -> Observable<OWRxPresenterAction>
     func dismissMenu(viewableMode: OWViewableMode)
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
@@ -33,7 +33,7 @@ extension OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style = .alert,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType> {
+    ) -> Observable<OWRxPresenterAction> {
         showAlert(title: title, message: message, actions: actions, preferredStyle: preferredStyle, viewableMode: viewableMode)
     }
 }
@@ -52,7 +52,7 @@ class OWPresenterService: OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style = .alert,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType> {
+    ) -> Observable<OWRxPresenterAction> {
         guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
 
