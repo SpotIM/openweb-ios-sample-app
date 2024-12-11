@@ -36,6 +36,9 @@ protocol OWPreConversationCompactContentViewModeling {
 class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentViewModeling,
                                                 OWPreConversationCompactContentViewModelingInputs,
                                                 OWPreConversationCompactContentViewModelingOutputs {
+    private struct Metrics {
+        static let delayStyleChanged = 10
+    }
 
     var inputs: OWPreConversationCompactContentViewModelingInputs { return self }
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
@@ -87,11 +90,13 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
 
     private lazy var themeStyleObservable: Observable<OWThemeStyle> = {
         OWSharedServicesProvider.shared.themeStyleService().style
+            .delay(.milliseconds(Metrics.delayStyleChanged), scheduler: MainScheduler.instance)
     }()
 
     lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(comment, themeStyleObservable, contentType)
-            .map { comment, style, type  in
+            .map { [weak self] comment, style, type  in
+                guard let self else { return NSMutableAttributedString(string: "") }
                 switch type {
                 case .skeleton:
                     return NSMutableAttributedString(string: "")
@@ -105,7 +110,10 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                         return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Image"))
                     case .text(let string):
                         var attrString = NSMutableAttributedString(string: string)
-                        self.addUserMentions(text: &attrString, style: style, comment: comment)
+                        attrString.addUserMentions(style: style,
+                                                   comment: comment,
+                                                   userMentions: self.userMentions,
+                                                   serviceProvider: self.serviceProvider)
                         return attrString
                     }
                 case .error:
@@ -199,16 +207,5 @@ private extension OWPreConversationCompactContentViewModel {
         Observable.merge(showErrorObservable, showSkeletonObservable)
                     .bind(to: _contentType)
                     .disposed(by: disposeBag)
-    }
-
-    func addUserMentions(text: inout NSMutableAttributedString, style: OWThemeStyle, comment: OWComment) {
-        guard OWUserMentionHelper.mentionsEnabled else { return }
-        let userMentions = OWUserMentionHelper.filterUserMentions(in: text.string, userMentions: userMentions, readMoreRange: nil)
-        for userMention in userMentions {
-            if (userMention.range.location + userMention.range.length) <= text.length {
-                text.addAttributes([
-                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)], range: userMention.range)
-            }
-        }
     }
 }

@@ -46,4 +46,23 @@ extension NSMutableAttributedString {
         guard attachmentCharRange.location != NSNotFound else { return }
         replaceCharacters(in: attachmentCharRange, with: "")
     }
+
+    @discardableResult func addUserMentions(style: OWThemeStyle,
+                                            comment: OWComment,
+                                            userMentions: [OWUserMentionObject],
+                                            readMoreRange: NSRange? = nil,
+                                            serviceProvider: OWSharedServicesProviding) -> OWRangeURLsMapper {
+        guard OWUserMentionHelper.mentionsEnabled else { return [:] }
+        let userMentions = OWUserMentionHelper.filterUserMentions(in: self.string, userMentions: userMentions, readMoreRange: readMoreRange)
+        var availableUrlsRange: OWRangeURLsMapper = [:]
+        for userMention in userMentions {
+            if let profileURL = serviceProvider.profileService().getProfileURL(userId: userMention.userId),
+               (userMention.range.location + userMention.range.length) <= self.length {
+                self.addAttributes([
+                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)], range: userMention.range)
+                availableUrlsRange[userMention.range] = profileURL
+            }
+        }
+        return availableUrlsRange
+    }
 }
