@@ -66,16 +66,8 @@ class OWCommentViewModel: OWCommentViewModeling,
     private var _currentUser: Observable<SPUser?> {
         sharedServiceProvider
             .authenticationManager()
-            .activeUserAvailability
+            .activeUser
             .observe(on: MainScheduler.instance)
-            .map { availability in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user
-                }
-            }
     }
 
     var heightChanged: Observable<Void> {
