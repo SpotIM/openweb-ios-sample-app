@@ -316,18 +316,18 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         // Coordinate to safari tab
         let profilePageTitle = OWLocalizationManager.shared.localizedString(key: "ProfileTitle")
         let coordinateToSafariObservables = Observable.merge(
-            communityGuidelinesURLTapped.map { ($0, "") },
+            communityGuidelinesURLTapped.map { OWWebTabOptions(url: $0) },
             conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return (data.url, profilePageTitle)
+                    return OWWebTabOptions(url: data.url, title: profilePageTitle)
                 } else {
                     return nil
                 }
             }.unwrap(),
-            conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput.map { ($0, "") },
+            conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput.map { OWWebTabOptions(url: $0) },
             conversationVM.outputs.conversationViewVM.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return (data.url, profilePageTitle)
+                    return OWWebTabOptions(url: data.url, title: profilePageTitle)
                 } else {
                     return nil
                 }
@@ -339,12 +339,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
+            .flatMap { [weak self] options -> Observable<OWWebTabCoordinatorResult> in
                 guard let self else { return .empty() }
-                let url = tuple.0
-                let title = tuple.1
-                let options = OWWebTabOptions(url: url,
-                                                 title: title)
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                             options: options,
                                                             viewActionsCallbacks: self.viewActionsCallbacks)

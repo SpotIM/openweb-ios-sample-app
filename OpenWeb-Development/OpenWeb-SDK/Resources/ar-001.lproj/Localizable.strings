@@ -102,6 +102,8 @@
 "PoweredBy" = "Powered by";
 "PoweredByOpenWeb" = "Powered by OpenWeb";
 "Privacy" = "الخصوصية";
+"PrivacyDeleteAccountSuccessSubtitle" = "نأسف لمغادرتك!";
+"PrivacyDeleteAccountSuccessTitle" = "تم حذف حسابك بشكل لا رجعة فيه.";
 "ProfileImage" = "Profile image";
 "ProfileSubtitle" = "اسم مستخدم غير مناسب، صورة شخصية غير مناسبة، أو تعريف شخصي غير مناسب، انتحال هوية";
 "ProfileTitle" = "الملف الشخصي";

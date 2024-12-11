@@ -102,6 +102,8 @@
 "PoweredBy" = "Mogelijk gemaakt door";
 "PoweredByOpenWeb" = "Mogelijk gemaakt door OpenWeb";
 "Privacy" = "Privacy";
+"PrivacyDeleteAccountSuccessSubtitle" = "Het spijt ons dat u zich afmeldt!";
+"PrivacyDeleteAccountSuccessTitle" = "Uw account is onherroepelijk verwijderd.";
 "ProfileImage" = "Profielafbeelding";
 "ProfileSubtitle" = "Ongepaste gebruikersnaam, avatar, bio, imitatie";
 "ProfileTitle" = "Profiel";

@@ -42,6 +42,11 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
         // disable local storage persistance
         configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
 
+        // listen to events
+        for event in viewModel.outputs.javaScriptEvents {
+            configuration.forwardJavaScript(event: event, to: self, message: "webkitMessage")
+        }
+
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.isOpaque = false
 
@@ -75,6 +80,12 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
         setupViews()
         setupObservers()
         applyAccessibility()
+    }
+}
+
+extension OWWebTabView: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        viewModel.inputs.receiveJavaScriptEvent.onNext("\(message.body)")
     }
 }
 
@@ -164,5 +175,24 @@ extension OWWebTabView: WKUIDelegate {
 
         // Return nil because a new web view is not created in this scenario.
         return nil
+    }
+}
+
+extension WKWebViewConfiguration {
+    func forwardJavaScript(event: String, to messageHandler: WKScriptMessageHandler, message: StaticString) {
+        let message = message.description
+        guard message.isLegalCIdentifier else {
+            fatalError("message must be a legal C identifier: \(message)")
+        }
+        let scriptSource = """
+            document.addEventListener('\(event)', (e) => {
+                if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.\(message)) {
+                    window.webkit.messageHandlers.\(message).postMessage("\(event)");
+                }
+            });
+        """
+        let script = WKUserScript(source: scriptSource, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+        userContentController.addUserScript(script)
+        userContentController.add(messageHandler, name: message)
     }
 }
