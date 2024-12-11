@@ -16,9 +16,6 @@ class PreconversationWithAdVC: UIViewController {
         static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2 / 3
         static let articelImageViewCornerRadius: CGFloat = 10
-        static let buttonCorners: CGFloat = 16
-        static let buttonPadding: CGFloat = 10
-        static let buttonHeight: CGFloat = 50
         static let identifier = "mock_article_flows_vc_id"
         static let viewIdentifier = "mock_article_flows_view_id"
         static let loggerViewWidth: CGFloat = 300
@@ -98,33 +95,6 @@ class PreconversationWithAdVC: UIViewController {
             .textColor(ColorPalette.shared.color(type: .text))
     }()
 
-    private lazy var btnFullConversation: UIButton = {
-        return UIButton()
-            .backgroundColor(ColorPalette.shared.color(type: .blue))
-            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-
-    private lazy var btnCommentCreation: UIButton = {
-        return UIButton()
-            .backgroundColor(ColorPalette.shared.color(type: .blue))
-            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-
-    private lazy var btnCommentThread: UIButton = {
-        return UIButton()
-            .backgroundColor(ColorPalette.shared.color(type: .blue))
-            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-
     init(viewModel: PreconversationWithAdViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -200,107 +170,10 @@ private extension PreconversationWithAdVC {
         viewModel.inputs.setNavigationController(self.navigationController)
         viewModel.inputs.setPresentationalVC(self)
 
-        // Binding button
-        btnFullConversation.rx.tap
-            .bind(to: viewModel.inputs.fullConversationButtonTapped)
-            .disposed(by: disposeBag)
-
-        btnCommentCreation.rx.tap
-            .bind(to: viewModel.inputs.commentCreationButtonTapped)
-            .disposed(by: disposeBag)
-
-        btnCommentThread.rx.tap
-            .bind(to: viewModel.inputs.commentThreadButtonTapped)
-            .disposed(by: disposeBag)
-
         // Setup article image
         viewModel.outputs.articleImageURL
             .subscribe(onNext: { [weak self] url in
                 self?.imgViewArticle.image(from: url)
-            })
-            .disposed(by: disposeBag)
-
-        // Adding full conversation button if needed
-        let btnFullConversationObservable = viewModel.outputs.showFullConversationButton
-            .take(1)
-            .do(onNext: { [weak self] mode in
-                guard let self else { return }
-                let btnTitle: String
-                switch mode {
-                case .push:
-                    btnTitle = NSLocalizedString("FullConversationPushMode", comment: "")
-                case .present:
-                    btnTitle = NSLocalizedString("FullConversationPresentMode", comment: "")
-                }
-
-                self.btnFullConversation.setTitle(btnTitle, for: .normal)
-            })
-            .map { [weak self] _ -> UIButton? in
-                guard let self else { return nil }
-                return self.btnFullConversation
-            }
-            .unwrap()
-
-        // Adding comment creation button if needed
-        let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
-            .take(1)
-            .do(onNext: { [weak self] mode in
-                guard let self else { return }
-                let btnTitle: String
-                switch mode {
-                case .push:
-                    btnTitle = NSLocalizedString("CommentCreationPushMode", comment: "")
-                case .present:
-                    btnTitle = NSLocalizedString("CommentCreationPresentMode", comment: "")
-                }
-
-                self.btnCommentCreation.setTitle(btnTitle, for: .normal)
-            })
-            .map { [weak self] _ -> UIButton? in
-                guard let self else { return nil }
-                return self.btnCommentCreation
-            }
-            .unwrap()
-
-        // Adding comment thread button if needed
-        let btnCommentThreadObservable = viewModel.outputs.showCommentThreadButton
-            .take(1)
-            .do(onNext: { [weak self] mode in
-                guard let self else { return }
-                let btnTitle: String
-                switch mode {
-                case .push:
-                    btnTitle = NSLocalizedString("CommentThreadPushMode", comment: "")
-                case .present:
-                    btnTitle = NSLocalizedString("CommentThreadPresentMode", comment: "")
-                }
-
-                self.btnCommentThread.setTitle(btnTitle, for: .normal)
-            })
-            .map { [weak self] _ -> UIButton? in
-                guard let self else { return nil }
-                return self.btnCommentThread
-            }
-            .unwrap()
-
-        Observable.merge(btnFullConversationObservable, btnCommentCreationObservable, btnCommentThreadObservable)
-            .subscribe(onNext: { [weak self] btn in
-                guard let self else { return }
-
-                self.articleView.removeFromSuperview()
-                self.articleScrollView.addSubview(self.articleView)
-                self.articleScrollView.addSubview(btn)
-
-                btn.snp.makeConstraints { make in
-                    make.height.equalTo(Metrics.buttonHeight)
-                    make.centerX.equalTo(self.articleScrollView.contentLayoutGuide)
-                    make.bottom.equalTo(self.articleScrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
-                }
-
-                self.articleView.snp.makeConstraints { make in
-                    make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
-                    make.bottom.equalTo(btn.snp.top).offset(-Metrics.verticalMargin)
-                }
             })
             .disposed(by: disposeBag)
 
@@ -313,13 +186,17 @@ private extension PreconversationWithAdVC {
                 self.articleScrollView.addSubview(self.articleView)
                 self.articleScrollView.addSubview(preConversationView)
 
+                // Constraints for preConversationView
                 preConversationView.snp.makeConstraints { make in
+                    make.top.greaterThanOrEqualTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide).inset(self.viewModel.outputs.preConversationHorizontalMargin)
                 }
 
+                // Constraints for articleView
                 self.articleView.snp.makeConstraints { make in
-                    make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
+                    make.top.equalTo(self.articleScrollView.contentLayoutGuide)
+                    make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
                 }
             })
