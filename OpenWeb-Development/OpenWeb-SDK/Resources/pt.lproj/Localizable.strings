@@ -54,6 +54,7 @@
 "EditComment" = "Edite um comentário";
 "Edited" = " (Editado)";
 "EditingComment" = "A editar comentário";
+"EditingReply" = "A editar resposta a %@";
 "EmptyConversation" = "Comece a conversa e partilhe os seus pensamentos e ideias com a comunidade.";
 "ErrorStateLoadComments" = "Não nos é possível carregar comentários neste momento";
 "ErrorStateLoadReplies" = "Não nos é possível carregar respostas neste momento";

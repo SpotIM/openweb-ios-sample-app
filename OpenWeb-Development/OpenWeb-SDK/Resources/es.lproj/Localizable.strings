@@ -54,6 +54,7 @@
 "EditComment" = "Editar un comentario";
 "Edited" = " (Editado)";
 "EditingComment" = "Editando comentario";
+"EditingReply" = "Editando respuesta a %@";
 "EmptyConversation" = "Inicia la conversación y comparte tus opiniones e ideas con la comunidad.";
 "ErrorStateLoadComments" = "No podemos cargar los comentarios en este momento";
 "ErrorStateLoadReplies" = "No podemos cargar las respuestas en este momento";
