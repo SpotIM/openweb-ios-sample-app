@@ -142,12 +142,12 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .map { [weak self] attString, style, comment in
                 guard let self,
                       var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
-                self.locateURLsInText(text: &res, style: style)
                 self.availableUrlsRange = res.addUserMentions(style: style,
                                                               comment: comment,
                                                               userMentions: userMentions,
                                                               readMoreRange: readMoreRange,
                                                               serviceProvider: serviceProvider)
+                self.locateURLsInText(text: &res, style: style)
                 return res
             }
             .distinctUntilChanged()
