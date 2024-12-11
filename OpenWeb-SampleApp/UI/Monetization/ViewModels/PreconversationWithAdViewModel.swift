@@ -14,17 +14,11 @@ import OpenWeb_SampleApp_Internal_Configs
 protocol PreconversationWithAdViewModelingInputs {
     func setNavigationController(_ navController: UINavigationController?)
     func setPresentationalVC(_ viewController: UIViewController)
-    var fullConversationButtonTapped: PublishSubject<Void> { get }
-    var commentCreationButtonTapped: PublishSubject<Void> { get }
-    var commentThreadButtonTapped: PublishSubject<Void> { get }
 }
 
 protocol PreconversationWithAdViewModelingOutputs {
     var title: String { get }
-    var showFullConversationButton: Observable<PresentationalModeCompact> { get }
-    var showCommentCreationButton: Observable<PresentationalModeCompact> { get }
     var showPreConversation: Observable<UIView> { get }
-    var showCommentThreadButton: Observable<PresentationalModeCompact> { get }
     var articleImageURL: Observable<URL> { get }
     var showError: Observable<String> { get }
     var preConversationHorizontalMargin: CGFloat { get }
@@ -109,10 +103,6 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
             .asObservable()
     }
 
-    let fullConversationButtonTapped = PublishSubject<Void>()
-    let commentCreationButtonTapped = PublishSubject<Void>()
-    let commentThreadButtonTapped = PublishSubject<Void>()
-
     var preConversationHorizontalMargin: CGFloat {
         let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
@@ -181,139 +171,6 @@ private extension PreconversationWithAdViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.preConversation error: \(error)")
-                        self._showError.onNext(message)
-                    }
-                })
-            })
-            .disposed(by: disposeBag)
-
-        // Full conversation
-        fullConversationButtonTapped
-            .withLatestFrom(showFullConversationButton)
-            .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
-                return (mode, settings.postId)
-            }
-            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
-                return (result.0, result.1, loggerEnabled)
-            }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
-                guard let self else { return }
-                let mode = result.0
-                let postId = result.1
-                let loggerEnabled = result.2
-
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
-
-                let manager = OpenWeb.manager
-                let flows = manager.ui.flows
-
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
-
-                flows.conversation(postId: postId,
-                                   article: article,
-                                   presentationalMode: presentationalMode,
-                                   additionalSettings: additionalSettings,
-                                   callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                   completion: { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        // All good
-                        break
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.conversation error: \(message)")
-                        self._showError.onNext(message)
-                    }
-                })
-            })
-            .disposed(by: disposeBag)
-
-        // Comment creation
-        commentCreationButtonTapped
-            .withLatestFrom(showCommentCreationButton)
-            .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
-                return (mode, settings.postId)
-            }
-            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
-                return (result.0, result.1, loggerEnabled)
-            }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
-                guard let self else { return }
-                let mode = result.0
-                let postId = result.1
-                let loggerEnabled = result.2
-
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
-
-                let manager = OpenWeb.manager
-                let flows = manager.ui.flows
-
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
-
-                flows.commentCreation(postId: postId,
-                                      article: article,
-                                      presentationalMode: presentationalMode,
-                                      additionalSettings: additionalSettings,
-                                      callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                      completion: { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        // All good
-                        break
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.commentCreation error: \(message)")
-                        self._showError.onNext(message)
-                    }
-                })
-            })
-            .disposed(by: disposeBag)
-
-        // Comment creation
-        commentThreadButtonTapped
-            .withLatestFrom(showCommentThreadButton)
-            .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
-                return (mode, settings.postId)
-            }
-            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
-                return (result.0, result.1, loggerEnabled)
-            }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
-                guard let self else { return }
-                let mode = result.0
-                let postId = result.1
-                let loggerEnabled = result.2
-
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
-
-                let manager = OpenWeb.manager
-                let flows = manager.ui.flows
-
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
-
-                flows.commentThread(postId: postId,
-                                    article: article,
-                                    commentId: self.commonCreatorService.commentThreadCommentId(),
-                                    presentationalMode: presentationalMode,
-                                    additionalSettings: additionalSettings,
-                                    callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                    completion: { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        // All good
-                        break
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.commentThread error: \(message)")
                         self._showError.onNext(message)
                     }
                 })
