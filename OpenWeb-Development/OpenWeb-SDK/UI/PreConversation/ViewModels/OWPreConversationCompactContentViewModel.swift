@@ -23,7 +23,7 @@ protocol OWPreConversationCompactContentViewModelingOutputs {
     var contentType: Observable<OWCompactContentType> { get }
     var isSkelatonHidden: Observable<Bool> { get }
     var isCommentHidden: Observable<Bool> { get }
-    var text: Observable<String> { get }
+    var attributedString: Observable<NSMutableAttributedString> { get }
     var shouldShowImagePlaceholder: Observable<Bool> { get }
     var tryAgainTapped: Observable<Void> { get }
 }
@@ -45,7 +45,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     var conversationError = PublishSubject<Bool>()
     private var emptyConversation = PublishSubject<Void>()
     private var comment = PublishSubject<OWComment>()
-
+    private var userMentions: [OWUserMentionObject] = []
     private let _contentType = BehaviorSubject<OWCompactContentType>(value: .skeleton)
     lazy var contentType: Observable<OWCompactContentType> = {
         return _contentType
@@ -85,25 +85,31 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             }
     }()
 
-    lazy var text: Observable<String> = {
-        contentType
-            .map { type in
+    private lazy var themeStyleObservable: Observable<OWThemeStyle> = {
+        OWSharedServicesProvider.shared.themeStyleService().style
+    }()
+
+    lazy var attributedString: Observable<NSMutableAttributedString> = {
+        Observable.combineLatest(comment, themeStyleObservable, contentType)
+            .map { comment, style, type  in
                 switch type {
                 case .skeleton:
-                    return ""
+                    return NSMutableAttributedString(string: "")
                 case .emptyConversation:
-                    return OWLocalizationManager.shared.localizedString(key: "EmptyConversation")
+                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "EmptyConversation"))
                 case .closedAndEmpty:
-                    return OWLocalizationManager.shared.localizedString(key: "ClosedAndEmptyConversation")
+                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ClosedAndEmptyConversation"))
                 case .comment(let commentType):
                     switch commentType {
                     case .media:
-                        return OWLocalizationManager.shared.localizedString(key: "Image")
+                        return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Image"))
                     case .text(let string):
-                        return string
+                        var attrString = NSMutableAttributedString(string: string)
+                        self.addUserMentions(text: &attrString, style: style, comment: comment)
+                        return attrString
                     }
                 case .error:
-                    return OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadComments")
+                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadComments"))
                 }
             }
             .asObservable()
@@ -115,9 +121,12 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             .asObservable()
     }()
 
+    private let serviceProvider: OWSharedServicesProviding
     private let imageProvider: OWImageProviding
     private let disposeBag = DisposeBag()
-    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
+         serviceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.serviceProvider = serviceProvider
         self.imageProvider = imageProvider
         setupObservers()
     }
@@ -165,9 +174,10 @@ private extension OWPreConversationCompactContentViewModel {
         comment
             .subscribe(onNext: { [weak self] commentData in
                 guard let self else { return }
-
+                var comment = commentData
+                self.userMentions.append(contentsOf: OWUserMentionHelper.createUserMentions(from: &comment))
                 let commentType: OWCompactCommentType = {
-                    if let commentText = commentData.text?.text {
+                    if let commentText = comment.text?.text {
                         return .text(string: commentText)
                     }
                     return .media
@@ -189,5 +199,16 @@ private extension OWPreConversationCompactContentViewModel {
         Observable.merge(showErrorObservable, showSkeletonObservable)
                     .bind(to: _contentType)
                     .disposed(by: disposeBag)
+    }
+
+    func addUserMentions(text: inout NSMutableAttributedString, style: OWThemeStyle, comment: OWComment) {
+        guard OWUserMentionHelper.mentionsEnabled else { return }
+        let userMentions = OWUserMentionHelper.filterUserMentions(in: text.string, userMentions: userMentions, readMoreRange: nil)
+        for userMention in userMentions {
+            if (userMention.range.location + userMention.range.length) <= text.length {
+                text.addAttributes([
+                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)], range: userMention.range)
+            }
+        }
     }
 }
