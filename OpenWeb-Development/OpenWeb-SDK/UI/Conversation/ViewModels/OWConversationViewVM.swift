@@ -2393,7 +2393,7 @@ private extension OWConversationViewViewModel {
 
         let commentDeletedLocallyObservable = deleteComment
             .asObservable()
-            .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
+            .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterAction, OWCommentViewModeling)> in
                 guard let self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
@@ -2407,19 +2407,14 @@ private extension OWConversationViewViewModel {
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
             }
-            .map { [weak self] result, commentVm -> Bool in
+            .map { [weak self] action, commentVm -> Bool in
                 guard let self else { return false }
-                switch result {
-                case .completion:
+                switch action.type {
+                case OWCommentDeleteAlert.delete:
+                    self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
+                    return true
+                default:
                     return false
-                case .selected(let action):
-                    switch action.type {
-                    case OWCommentDeleteAlert.delete:
-                        self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
-                        return true
-                    default:
-                        return false
-                    }
                 }
             }
             .filter { $0 }
@@ -2496,7 +2491,7 @@ private extension OWConversationViewViewModel {
             }
             .filter { $0.1 }
             .map { $0.0 && $0.1 }
-            .flatMapLatest { [weak self] needToRefreshConversation -> Observable<(Bool, OWRxPresenterResponseType)> in
+            .flatMapLatest { [weak self] needToRefreshConversation -> Observable<(Bool, OWRxPresenterAction)> in
                 // 3. Show alert
                 guard let self else { return .empty() }
                 let actions = [
@@ -2514,18 +2509,13 @@ private extension OWConversationViewViewModel {
             }
 
         let muteUserObservable = muteUserConfirmationObservable
-            .map { needToRefreshConversation, result -> (Bool, Bool) in
+            .map { needToRefreshConversation, action -> (Bool, Bool) in
                 // 4. Handle alert result
-                switch result {
-                case .completion:
-                    return (false, false)
-                case .selected(let action):
-                    switch action.type {
-                    case OWCommentUserMuteAlert.mute:
-                        return (needToRefreshConversation, true)
-                    default:
-                        return (needToRefreshConversation, false)
-                    }
+                switch action.type {
+                case OWCommentUserMuteAlert.mute:
+                    return (needToRefreshConversation, true)
+                default:
+                    return (needToRefreshConversation, false)
                 }
             }
             .do(onNext: { [weak self] needToRefreshConversation, _ in
