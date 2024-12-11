@@ -53,7 +53,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 
     private var userMentions: [OWUserMentionObject]
     private var readMoreRange: NSRange?
-    private var availableUrlsRange: OWRangeURLsMapper
+    private var availableUrlsRange: OWRangeURLsMapper = [:]
     private var serviceProvider: OWSharedServicesProviding
 
     init(serviceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -61,7 +61,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
          collapsableTextLineLimit: Int) {
         self.serviceProvider = serviceProvider
         self.collapsableTextLineLimit = collapsableTextLineLimit
-        self.availableUrlsRange = [:]
         var comment = comment
         self.userMentions = OWUserMentionHelper.createUserMentions(from: &comment)
         _comment.onNext(comment)
@@ -143,9 +142,12 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .map { [weak self] attString, style, comment in
                 guard let self,
                       var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
-                self.availableUrlsRange.removeAll()
                 self.locateURLsInText(text: &res, style: style)
-                self.addUserMentions(text: &res, style: style, comment: comment)
+                self.availableUrlsRange = res.addUserMentions(style: style,
+                                                              comment: comment,
+                                                              userMentions: userMentions,
+                                                              readMoreRange: readMoreRange,
+                                                              serviceProvider: serviceProvider)
                 return res
             }
             .distinctUntilChanged()
@@ -284,19 +286,6 @@ private extension OWCommentTextViewModel {
                         .underlineStyle: NSUnderlineStyle.single.rawValue], range: match.range)
                     availableUrlsRange[match.range] = urlMatch
                 }
-            }
-        }
-    }
-
-    func addUserMentions(text: inout NSMutableAttributedString, style: OWThemeStyle, comment: OWComment) {
-        guard OWUserMentionHelper.mentionsEnabled else { return }
-        let userMentions = OWUserMentionHelper.filterUserMentions(in: text.string, userMentions: userMentions, readMoreRange: readMoreRange)
-        for userMention in userMentions {
-            if let profileURL = self.serviceProvider.profileService().getProfileURL(userId: userMention.userId),
-               (userMention.range.location + userMention.range.length) <= text.length {
-                text.addAttributes([
-                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)], range: userMention.range)
-                availableUrlsRange[userMention.range] = profileURL
             }
         }
     }
