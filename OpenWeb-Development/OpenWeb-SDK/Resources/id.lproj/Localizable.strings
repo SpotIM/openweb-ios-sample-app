@@ -103,6 +103,8 @@
 "PoweredBy" = "Didukung oleh";
 "PoweredByOpenWeb" = "Didukung oleh OpenWeb";
 "Privacy" = "Privasi";
+"PrivacyDeleteAccountSuccessSubtitle" = "";
+"PrivacyDeleteAccountSuccessTitle" = "";
 "ProfileImage" = "Gambar profil";
 "ProfileSubtitle" = "Nama pengguna, avatar, biodata, peniruan identitas yang tidak pantas";
 "ProfileTitle" = "Profil";

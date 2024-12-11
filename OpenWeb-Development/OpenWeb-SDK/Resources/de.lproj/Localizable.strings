@@ -103,6 +103,8 @@
 "PoweredBy" = "Angetrieben von";
 "PoweredByOpenWeb" = "Angetrieben von OpenWeb";
 "Privacy" = "Datenschutz";
+"PrivacyDeleteAccountSuccessSubtitle" = "Es ist schade, dass du uns verlässt!";
+"PrivacyDeleteAccountSuccessTitle" = "Dein Konto wurde unwiederbringlich gelöscht.";
 "ProfileImage" = "Profilbild";
 "ProfileSubtitle" = "Unangemessener Benutzername, Avatar, Lebenslauf, Vortäuschung einer anderen Person";
 "ProfileTitle" = "Profil";

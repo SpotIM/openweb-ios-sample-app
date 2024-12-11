@@ -281,15 +281,10 @@ private extension OWCommentCreationContentViewModel {
         setupImageObserver()
 
         servicesProvider.authenticationManager()
-            .activeUserAvailability
-            .subscribe(onNext: { [weak self] availability in
+            .activeUser
+            .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
-                switch availability {
-                case .notAvailable:
-                    self.avatarViewVM.inputs.userInput.onNext(nil)
-                case .user(let user):
-                    self.avatarViewVM.inputs.userInput.onNext(user)
-                }
+                avatarViewVM.inputs.userInput.onNext(user)
             })
             .disposed(by: disposeBag)
 
