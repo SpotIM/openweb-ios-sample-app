@@ -75,15 +75,7 @@ class OWUsersService: OWUsersServicing {
 private extension OWUsersService {
     func setupObservers() {
         self.servicesProvider.authenticationManager()
-            .activeUserAvailability
-            .map { availability -> SPUser? in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user
-                }
-            }
+            .activeUser
             .unwrap()
             .subscribe(onNext: { [weak self] user in
                 guard let self else { return }

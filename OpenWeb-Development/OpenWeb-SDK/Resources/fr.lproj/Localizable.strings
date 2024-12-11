@@ -103,6 +103,8 @@
 "PoweredBy" = "Motorisé par";
 "PoweredByOpenWeb" = "Motorisé par OpenWeb";
 "Privacy" = "Confidentialité";
+"PrivacyDeleteAccountSuccessSubtitle" = "Nous sommes désolés de vous voir partir !";
+"PrivacyDeleteAccountSuccessTitle" = "Votre compte a été définitivement supprimé.";
 "ProfileImage" = "Image de profil";
 "ProfileSubtitle" = "Nom d'utilisateur, avatar, bio, usurpation d'identité inappropriés";
 "ProfileTitle" = "Profil";

@@ -104,6 +104,8 @@
 "PoweredBy" = "Powered by";
 "PoweredByOpenWeb" = "Powered by OpenWeb";
 "Privacy" = "Privacy";
+"PrivacyDeleteAccountSuccessSubtitle" = "We’re sorry to see you go!";
+"PrivacyDeleteAccountSuccessTitle" = "Your account has been irreversibly deleted.";
 "ProfileImage" = "Profile image";
 "ProfileSubtitle" = "Inappropriate username, avatar, bio, impersonation";
 "ProfileTitle" = "Profile";

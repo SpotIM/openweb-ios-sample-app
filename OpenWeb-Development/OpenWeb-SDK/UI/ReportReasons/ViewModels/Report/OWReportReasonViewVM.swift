@@ -43,7 +43,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
-    var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> { get }
+    var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> { get } // Bool is true if userJustLoggedIn
     var reportOffset: Observable<CGPoint> { get }
     var reportReasonsMinimumAdditionalTextLength: Observable<Int> { get }
 }
@@ -423,7 +423,7 @@ private extension OWReportReasonViewViewModel {
 
         presentError
             .observe(on: MainScheduler.instance)
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterAction> in
                 guard let self else { return .empty() }
                 let action = OWRxPresenterAction(title: self.errorAlertActionText, type: OWCommentOptionsMenu.reportComment)
                 return self.servicesProvider.presenterService().showAlert(title: self.errorAlertTitleText,
@@ -459,6 +459,17 @@ private extension OWReportReasonViewViewModel {
         learnMoreTapped
             .subscribe(onNext: { [weak self] _ in
                 self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
+
+        reportReasonSubmittedSuccessfully.withLatestFrom(servicesProvider.authenticationManager().activeUser)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] user in
+                guard let self else { return }
+                let event: OWAnalyticEventType = user?.isAdmin ?? false
+                    ? .superReportMessageSubmitSuccess(commentId: commentId)
+                    : .reportMessageSubmitSuccess(commentId: commentId)
+                sendEvent(for: event)
             })
             .disposed(by: disposeBag)
     }

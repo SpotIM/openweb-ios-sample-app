@@ -103,6 +103,8 @@
 "PoweredBy" = "Được hỗ trợ bởi";
 "PoweredByOpenWeb" = "Được hỗ trợ bởi OpenWeb";
 "Privacy" = "Quyền riêng tư";
+"PrivacyDeleteAccountSuccessSubtitle" = "";
+"PrivacyDeleteAccountSuccessTitle" = "";
 "ProfileImage" = "Ảnh hồ sơ";
 "ProfileSubtitle" = "Tên người dùng, ảnh đại diện, tiểu sử, mạo danh không phù hợp";
 "ProfileTitle" = "Hồ sơ";

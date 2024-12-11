@@ -103,6 +103,8 @@
 "PoweredBy" = "מופעל על-ידי";
 "PoweredByOpenWeb" = "מופעל על-ידי OpenWeb";
 "Privacy" = "פרטיות";
+"PrivacyDeleteAccountSuccessSubtitle" = "אנו מצטערים שאתה עוזב!";
+"PrivacyDeleteAccountSuccessTitle" = "חשבונך נמחק ללא אפשרות ביטול.";
 "ProfileImage" = "Profile image";
 "ProfileSubtitle" = "התחזות או שם משתמש, אווטאר או פרטים אישיים (ביו) בלתי הולמים";
 "ProfileTitle" = "פרופיל";

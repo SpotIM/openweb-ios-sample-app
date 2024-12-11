@@ -103,6 +103,8 @@
 "PoweredBy" = "ขับเคลื่อนโดย";
 "PoweredByOpenWeb" = "ขับเคลื่อนโดย OpenWeb";
 "Privacy" = "ความเป็นส่วนตัว";
+"PrivacyDeleteAccountSuccessSubtitle" = "";
+"PrivacyDeleteAccountSuccessTitle" = "";
 "ProfileImage" = "รูปภาพโปรไฟล์";
 "ProfileSubtitle" = "ชื่อผู้ใช้ อวาตาร์ ประวัติ การแอบอ้างบุคคลอื่นที่ไม่เหมาะสม";
 "ProfileTitle" = "โปรไฟล์";

@@ -548,7 +548,7 @@ private extension OWCommentCreationViewViewModel {
             .filter { $0 == true }
             .voidify()
             .observe(on: MainScheduler.instance)
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterAction> in
                 guard let self else { return .empty() }
 
                 let actions = [
@@ -568,25 +568,20 @@ private extension OWCommentCreationViewViewModel {
             }
 
         let userSelectedMediaObservable = selectMediaOptionsObservable
-            .map { [weak self] response -> UIImagePickerController.SourceType? in
+            .map { [weak self] action -> UIImagePickerController.SourceType? in
                 guard let self else { return nil }
-                switch response {
-                case .completion:
+                switch action.type {
+                case OWPickImageActionSheet.takePhoto:
+                    self.sendEvent(for: .cameraIconClickedTakePhoto)
+                    return .camera
+                case OWPickImageActionSheet.chooseFromGallery:
+                    self.sendEvent(for: .cameraIconClickedChooseFromGallery)
+                    return .photoLibrary
+                case OWPickImageActionSheet.cancel:
+                    self.sendEvent(for: .cameraIconClickedClose)
                     return nil
-                case .selected(let action):
-                    switch action.type {
-                    case OWPickImageActionSheet.takePhoto:
-                        self.sendEvent(for: .cameraIconClickedTakePhoto)
-                        return .camera
-                    case OWPickImageActionSheet.chooseFromGallery:
-                        self.sendEvent(for: .cameraIconClickedChooseFromGallery)
-                        return .photoLibrary
-                    case OWPickImageActionSheet.cancel:
-                        self.sendEvent(for: .cameraIconClickedClose)
-                        return nil
-                    default:
-                        return nil
-                    }
+                default:
+                    return nil
                 }
             }
             .unwrap()

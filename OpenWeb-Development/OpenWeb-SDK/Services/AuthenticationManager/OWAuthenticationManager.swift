@@ -13,6 +13,7 @@ protocol OWAuthenticationManagerProtocol {
     var userAuthenticationStatus: Observable<OWInternalUserAuthenticationStatus> { get }
     var currentAuthenticationLevelAvailability: Observable<OWAuthenticationLevelAvailability> { get }
     var activeUserAvailability: Observable<OWUserAvailability> { get }
+    var activeUser: Observable<SPUser?> { get }
 
     var networkCredentials: OWNetworkSessionCredentials { get }
     func updateNetworkCredentials(from response: HTTPURLResponse)
@@ -77,6 +78,18 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
         return _activeUserAvailability
             .distinctUntilChanged()
             .share(replay: 1)
+    }
+
+    var activeUser: Observable<SPUser?> {
+        activeUserAvailability
+            .map { availability -> SPUser? in
+                switch availability {
+                case .user(let user):
+                    return user
+                case .notAvailable:
+                    return nil
+                }
+            }
     }
 
     private let _userAuthenticationStatus = BehaviorSubject<OWInternalUserAuthenticationStatus>(value: .notAutenticated)

@@ -103,6 +103,8 @@
 "PoweredBy" = "提供：";
 "PoweredByOpenWeb" = "提供： OpenWeb";
 "Privacy" = "プライバシー";
+"PrivacyDeleteAccountSuccessSubtitle" = "退会されたしまった事、お詫び申し上げます。";
+"PrivacyDeleteAccountSuccessTitle" = "アカウントを完全に削除しました。";
 "ProfileImage" = "プロフィール画像";
 "ProfileSubtitle" = "不適切なユーザー名、アバター、プロフィール、なりすまし";
 "ProfileTitle" = "プロフィール";
