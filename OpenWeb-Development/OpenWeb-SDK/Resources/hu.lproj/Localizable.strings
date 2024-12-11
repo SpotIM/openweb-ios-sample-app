@@ -54,6 +54,7 @@
 "EditComment" = "Hozzászólás szerkesztése";
 "Edited" = " (Szerkesztett)";
 "EditingComment" = "Hozzászólás szerkesztése";
+"EditingReply" = "%@ válasz szerkesztése";
 "EmptyConversation" = "Indítsd el a beszélgetést, és oszd meg gondolataidat és ötleteidet a közösséggel.";
 "ErrorStateLoadComments" = "Pillanatnyilag nem lehet betölteni a hozzászólásokat";
 "ErrorStateLoadReplies" = "Pillanatnyilag nem lehet betölteni a válaszokat";

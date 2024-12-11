@@ -133,6 +133,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
     var replyToAttributedString: Observable<NSAttributedString> {
         var replyToComment: OWComment?
+
         switch commentCreationData.commentCreationType {
         case .edit(let comment):
             if let postId = self.postId,
@@ -151,14 +152,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
               let displayName = user.displayName
         else { return .empty() }
 
-        let attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ReplyingTo"))
-
-        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
-        let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
-
-        attributedString.append(boldUserNameString)
-
-        return Observable.just(attributedString)
+        return Observable.just(commentCreationData.commentCreationType.attributedStringForReplyTo(displayName: displayName))
     }
 
     var shouldShowReplySnippet: Bool {

@@ -54,6 +54,7 @@
 "EditComment" = "Chỉnh sửa bình luận";
 "Edited" = " (Đã chỉnh sửa)";
 "EditingComment" = "Chỉnh sửa bình luận";
+"EditingReply" = "Đang chỉnh sửa câu trả lời tới %@";
 "EmptyConversation" = "Bắt đầu cuộc trò chuyện và chia sẻ suy nghĩ cũng như ý tưởng của bạn với cộng đồng.";
 "ErrorStateLoadComments" = "Chúng tôi hiện không thể tải bình luận";
 "ErrorStateLoadReplies" = "Chúng tôi hiện không thể tải câu trả lời";

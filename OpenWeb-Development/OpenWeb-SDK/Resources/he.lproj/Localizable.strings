@@ -54,6 +54,7 @@
 "EditComment" = "עריכת תגובה";
 "Edited" = " (נערך)";
 "EditingComment" = "עריכת תגובה";
+"EditingReply" = "עריכת תגובה על %@";
 "EmptyConversation" = "התחילו את השיחה ושתפו את הקהילה במחשבות וברעיונות שלכם.";
 "ErrorStateLoadComments" = "אנחנו לא מצליחים לטעון תגובות כרגע";
 "ErrorStateLoadReplies" = "אנחנו לא מצליחים לטעון תשובות כרגע";

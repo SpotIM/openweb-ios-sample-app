@@ -54,6 +54,7 @@
 "EditComment" = "Edit komentar";
 "Edited" = " (Diedit)";
 "EditingComment" = "Mengedit komentar";
+"EditingReply" = "Mengedit balasan ke %@";
 "EmptyConversation" = "Mulai percakapan dan bagikan pemikiran dan gagasan Anda kepada komunitas.";
 "ErrorStateLoadComments" = "Saat ini kami tidak dapat memuat komentar";
 "ErrorStateLoadReplies" = "Saat ini kami tidak dapat memuat balasan";
