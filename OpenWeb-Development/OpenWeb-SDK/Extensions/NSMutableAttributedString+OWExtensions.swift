@@ -57,9 +57,11 @@ extension NSMutableAttributedString {
         var availableUrlsRange: OWRangeURLsMapper = [:]
         for userMention in userMentions {
             if let profileURL = serviceProvider.profileService().getProfileURL(userId: userMention.userId),
-               (userMention.range.location + userMention.range.length) <= self.length {
-                self.addAttributes([
-                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)], range: userMention.range)
+               userMention.range.upperBound <= self.length {
+                self.addAttributes(
+                    [.foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)],
+                    range: userMention.range
+                )
                 availableUrlsRange[userMention.range] = profileURL
             }
         }
