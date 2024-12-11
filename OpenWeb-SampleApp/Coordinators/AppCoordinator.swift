@@ -8,7 +8,6 @@
 import RxSwift
 import OpenWebSDK
 import UIKit
-import GoogleMobileAds
 
 #if !PUBLIC_DEMO_APP
     import OpenWeb_SampleApp_Internal_Configs
@@ -41,7 +40,6 @@ private extension AppCoordinator {
     }
 
     func initialVendorsSetup() {
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
     }
 
     func initialDataSetup() {
