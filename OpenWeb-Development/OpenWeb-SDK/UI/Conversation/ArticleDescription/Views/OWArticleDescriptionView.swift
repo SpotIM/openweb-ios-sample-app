@@ -26,11 +26,6 @@ class OWArticleDescriptionView: UIView {
         static let conversationAuthorIdentifier = "article_header_conversation_author_id"
     }
 
-    private lazy var topSeparatorView: UIView = {
-        return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-    }()
-
     private lazy var conversationImageView: UIImageView = {
         return UIImageView()
             .enforceSemanticAttribute()
@@ -99,19 +94,12 @@ private extension OWArticleDescriptionView {
             zeroHeightConstraint?.isActive = false
         }
 
-        // Setup top separator
-        self.addSubview(topSeparatorView)
-        topSeparatorView.OWSnp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(Metrics.separatorHeight)
-        }
-
         // Setup article image
         self.addSubview(conversationImageView)
         conversationImageView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.size.equalTo(Metrics.imageSize)
-            make.top.greaterThanOrEqualTo(topSeparatorView.OWSnp.bottom).offset(Metrics.margins.top)
+            make.top.equalToSuperview().offset(Metrics.margins.top)
             make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.margins.left)
         }
 
@@ -128,7 +116,7 @@ private extension OWArticleDescriptionView {
         titlesContainer.OWSnp.makeConstraints { make in
             make.leading.equalTo(conversationImageView.OWSnp.trailing).offset(Metrics.paddingBetweenImageAndLabels)
             make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.margins.right)
-            make.top.equalTo(topSeparatorView.OWSnp.bottom).offset(Metrics.margins.top)
+            make.top.equalToSuperview().offset(Metrics.margins.top)
             make.bottom.equalTo(bottomSeparatorView.OWSnp.top).offset(-Metrics.margins.bottom)
         }
 
@@ -187,8 +175,6 @@ private extension OWArticleDescriptionView {
                 guard let self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
 
-                self.topSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
-                                                                                  themeStyle: currentStyle))
                 self.bottomSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                                                   themeStyle: currentStyle))
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
