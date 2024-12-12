@@ -15,5 +15,6 @@ ad6a384c50917a5462f6b889aa66ee590ba26775 # OW-29577 change most occurrences of f
 73379e0c1a060b6e81de2f4221edb8f616a13402 # OW-29577 add SwiftLint opt-in rule collection_alignment
 d8db55928c99beda1fa7a79decc837326cd8f03c # OW-29577 add autocorrected SwiftLint opt-in rule shorthand_optional_binding
 f50100384f8d7f484993ee48d4b1648edd224790 # OW-29577 add SwiftLint opt-in rule weak_delegate
+6054542380df5eb927b70c6533aac2a86e8b6f25 # OW-30614 Add shorthand OWLocalize that forwards calls to OWLocalizationManager.shared
 349cf583b61f04733f7a7c547e2e34a6113cf13d # Delete unneeded UIView.addSubviews
 fafb4d5451ca243e08eb36547cc69dad68e1bb96 # cleanup superfluous internal access specifiers
