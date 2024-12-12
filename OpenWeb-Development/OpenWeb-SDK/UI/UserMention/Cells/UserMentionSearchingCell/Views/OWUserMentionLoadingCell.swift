@@ -29,7 +29,7 @@ class OWUserMentionLoadingCell: UITableViewCell {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-            .text(OWLocalizationManager.shared.localizedString(key: "Loading") + "...")
+            .text(OWLocalize.string("Loading") + "...")
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

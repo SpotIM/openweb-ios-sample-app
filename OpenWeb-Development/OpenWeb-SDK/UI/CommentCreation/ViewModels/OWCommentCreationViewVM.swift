@@ -317,7 +317,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 case .error:
                     self._commentCreationSubmitInProgrss.onNext(false)
                     self._commentCreationError.onNext()
-                    let data = OWToastRequiredData(type: .error, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "ErrorStatePostComment"))
+                    let data = OWToastRequiredData(type: .error, action: .tryAgain, title: OWLocalize.string("ErrorStatePostComment"))
                     let presentData = OWToastNotificationPresentData(data: data)
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: presentData, actionCompletion: self._retryCommentCreationSubmitted))
@@ -552,9 +552,9 @@ private extension OWCommentCreationViewViewModel {
                 guard let self else { return .empty() }
 
                 let actions = [
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "TakeAPhoto"), type: OWPickImageActionSheet.takePhoto),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "ChooseFromGallery"), type: OWPickImageActionSheet.chooseFromGallery),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWPickImageActionSheet.cancel, style: .cancel)
+                    OWRxPresenterAction(title: OWLocalize.string("TakeAPhoto"), type: OWPickImageActionSheet.takePhoto),
+                    OWRxPresenterAction(title: OWLocalize.string("ChooseFromGallery"), type: OWPickImageActionSheet.chooseFromGallery),
+                    OWRxPresenterAction(title: OWLocalize.string("Cancel"), type: OWPickImageActionSheet.cancel, style: .cancel)
                 ]
                 return self.servicesProvider
                     .presenterService()

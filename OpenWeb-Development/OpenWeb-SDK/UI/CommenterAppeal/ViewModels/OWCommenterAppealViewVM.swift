@@ -141,7 +141,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     var submitButtonText: Observable<String> {
         return isError
             .map { error in
-                return OWLocalizationManager.shared.localizedString(key: error ? "TryAgain" : "Appeal")
+                return OWLocalize.string(error ? "TryAgain" : "Appeal")
             }
     }
 
@@ -172,9 +172,9 @@ private extension OWCommenterAppealViewVM {
         selectedReason
             .map {
                 if $0.requiredAdditionalInfo == false {
-                    return OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder")
+                    return OWLocalize.string("ReportReasonTextViewPlaceholder")
                 } else {
-                    return OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewMandatoryPlaceholder")
+                    return OWLocalize.string("ReportReasonTextViewMandatoryPlaceholder")
                 }
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)

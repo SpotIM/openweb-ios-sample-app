@@ -56,18 +56,18 @@ class OWCancelViewViewModel: OWCancelViewViewModelingInputs, OWCancelViewViewMod
     var title: String {
         switch type {
         case .reportReason:
-            return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelTitle")
+            return OWLocalize.string("ReportReasonCancelTitle")
         case .commenterAppeal:
-            return OWLocalizationManager.shared.localizedString(key: "CancelAppeal")
+            return OWLocalize.string("CancelAppeal")
         }
     }
 
     var subtitle: String {
         switch type {
         case .reportReason:
-            return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelSubtitle")
+            return OWLocalize.string("ReportReasonCancelSubtitle")
         case .commenterAppeal:
-            return OWLocalizationManager.shared.localizedString(key: "CommmenterAppealCancelSubtitle")
+            return OWLocalize.string("CommmenterAppealCancelSubtitle")
         }
     }
 
@@ -82,18 +82,18 @@ class OWCancelViewViewModel: OWCancelViewViewModelingInputs, OWCancelViewViewMod
     var continueButtonText: String {
         switch type {
         case .reportReason:
-            return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelContinueButton")
+            return OWLocalize.string("ReportReasonCancelContinueButton")
         case .commenterAppeal:
-            return OWLocalizationManager.shared.localizedString(key: "CommenterAppealCancelContinueButton")
+            return OWLocalize.string("CommenterAppealCancelContinueButton")
         }
     }
 
     var cancelButtonText: String {
         switch type {
         case .reportReason:
-            return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelCancelButton")
+            return OWLocalize.string("ReportReasonCancelCancelButton")
         case .commenterAppeal:
-            return OWLocalizationManager.shared.localizedString(key: "CancelAppeal")
+            return OWLocalize.string("CancelAppeal")
         }
     }
 

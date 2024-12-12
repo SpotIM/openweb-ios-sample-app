@@ -245,7 +245,7 @@ private extension OWCommentRatingView {
         rankDownButton.accessibilityIdentifier = Metrics.rankDownButtonIdentifier
         rankUpLabel.accessibilityIdentifier = Metrics.rankUpLabelIdentifier
         rankDownLabel.accessibilityIdentifier = Metrics.rankDownLabelIdentifier
-        rankUpButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "UpVoteButton")
-        rankDownButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "DownVoteButton")
+        rankUpButton.accessibilityLabel = OWLocalize.string("UpVoteButton")
+        rankDownButton.accessibilityLabel = OWLocalize.string("DownVoteButton")
     }
 }

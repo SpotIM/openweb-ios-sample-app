@@ -45,7 +45,7 @@ class OWCommentContentView: UIView {
     private lazy var editedLabel: UILabel = {
        return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteSpecial))
-            .text(OWLocalizationManager.shared.localizedString(key: "Edited"))
+            .text(OWLocalize.string("Edited"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .enforceSemanticAttribute()
     }()

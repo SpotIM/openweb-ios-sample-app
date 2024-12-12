@@ -141,13 +141,13 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         _shouldSignUpToPostComment
             .map { [weak self] shouldSignUpToPost in
                 guard let self, !shouldSignUpToPost else {
-                    return OWLocalizationManager.shared.localizedString(key: "SignUpToPost")
+                    return OWLocalize.string("SignUpToPost")
                 }
 
                 if case .edit = self.commentCreationType {
-                    return OWLocalizationManager.shared.localizedString(key: "Update")
+                    return OWLocalize.string("Update")
                 } else {
-                    return OWLocalizationManager.shared.localizedString(key: "Post")
+                    return OWLocalize.string("Post")
                 }
             }
     }

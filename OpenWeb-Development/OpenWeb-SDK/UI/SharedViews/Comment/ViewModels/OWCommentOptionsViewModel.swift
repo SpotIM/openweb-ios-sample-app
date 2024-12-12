@@ -59,25 +59,25 @@ class OWCommentOptionsViewModel: OWCommentOptionsViewModeling,
                 var optionsActions: [OWRxPresenterAction] = []
                 if !isLoggedInUserComment {
                     optionsActions.append(OWRxPresenterAction(
-                        title: OWLocalizationManager.shared.localizedString(key: "Report"),
+                        title: OWLocalize.string("Report"),
                         type: OWCommentOptionsMenu.reportComment)
                     )
                 }
                 if allowEditingComment && isLoggedInUserComment {
                     optionsActions.append(OWRxPresenterAction(
-                        title: OWLocalizationManager.shared.localizedString(key: "Edit"),
+                        title: OWLocalize.string("Edit"),
                         type: OWCommentOptionsMenu.editComment)
                     )
                 }
                 if allowDeletingComment && isLoggedInUserComment {
                     optionsActions.append(OWRxPresenterAction(
-                        title: OWLocalizationManager.shared.localizedString(key: "Delete"),
+                        title: OWLocalize.string("Delete"),
                         type: OWCommentOptionsMenu.deleteComment)
                     )
                 }
                 if !isLoggedInUserComment && !user.isAdmin {
                     optionsActions.append(OWRxPresenterAction(
-                        title: OWLocalizationManager.shared.localizedString(key: "Mute"),
+                        title: OWLocalize.string("Mute"),
                         type: OWCommentOptionsMenu.muteUser)
                     )
                 }

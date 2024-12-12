@@ -17,9 +17,9 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
     private struct Metrics {
         static let horizontalOffset: CGFloat = 20
         static let verticalOffset: CGFloat = 20
-        static let activeSpotIdBaseText: String = OWLocalizationManager.shared.localizedString(key: "ActiveSpotId") + ": "
-        static let activePostIdBaseText: String = OWLocalizationManager.shared.localizedString(key: "ActivePostId") + ": "
-        static let userStatusBaseText: String = OWLocalizationManager.shared.localizedString(key: "UserStatus") + ": "
+        static let activeSpotIdBaseText: String = OWLocalize.string("ActiveSpotId") + ": "
+        static let activePostIdBaseText: String = OWLocalize.string("ActivePostId") + ": "
+        static let userStatusBaseText: String = OWLocalize.string("UserStatus") + ": "
         static let identifier = "user_status_automation_view_id"
         static let activeSpotIdentifier = "active_spot_id"
         static let activePostIdentifier = "active_post_id"
@@ -55,7 +55,7 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
 
     private lazy var warningLbl: UILabel = {
         return UILabel()
-            .text(OWLocalizationManager.shared.localizedString(key: "SDKNotInitializedWarning"))
+            .text(OWLocalize.string("SDKNotInitializedWarning"))
             .font(OWFontBook.shared.font(typography: .bodySpecial))
             .textColor(.red)
             .numberOfLines(0)

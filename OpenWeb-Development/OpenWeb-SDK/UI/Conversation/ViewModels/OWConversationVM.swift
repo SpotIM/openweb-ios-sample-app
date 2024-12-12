@@ -61,7 +61,7 @@ class OWConversationViewModel: OWConversationViewModeling,
     var scrollToCommentId = PublishSubject<String>()
 
     lazy var title: String = {
-        return OWLocalizationManager.shared.localizedString(key: "Conversation")
+        return OWLocalize.string("Conversation")
     }()
 
     var customizeNavigationItemUI: Observable<UINavigationItem> {

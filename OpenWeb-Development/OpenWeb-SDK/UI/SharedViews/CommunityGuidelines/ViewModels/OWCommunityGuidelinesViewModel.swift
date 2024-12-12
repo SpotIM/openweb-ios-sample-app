@@ -43,8 +43,8 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                                       OWCommunityGuidelinesViewModelingOutputs {
 
     struct Metrics {
-        static let readOurTitle = OWLocalizationManager.shared.localizedString(key: "ReadOur")
-        static let communityGuidelinesTitle = OWLocalizationManager.shared.localizedString(key: "CommunityGuidelines").lowercased()
+        static let readOurTitle = OWLocalize.string("ReadOur")
+        static let communityGuidelinesTitle = OWLocalize.string("CommunityGuidelines").lowercased()
     }
 
     var inputs: OWCommunityGuidelinesViewModelingInputs { return self }
@@ -236,7 +236,7 @@ private extension OWCommunityGuidelinesViewModel {
                                       linkURL: url,
                                       linkColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: currentThemeStyle),
                                       linkFont: OWFontBook.shared.font(typography: .bodyInteraction),
-                                      paragraphAlignment: OWLocalizationManager.shared.textAlignment)
+                                      paragraphAlignment: OWLocalize.textAlignment)
     }
 
     func getTextAndLinkedText(style: OWCommunityGuidelinesStyle, themeStyle: OWThemeStyle, communityGuidelinesText text: String) -> (text: String?, linkedText: String?) {

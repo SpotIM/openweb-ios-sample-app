@@ -32,7 +32,7 @@ class OWRealtimeNewCommentsViewModel: OWRealtimeNewCommentsViewModeling,
                 switch indicatorType {
                 case .all(_, let newCommentsCount), .newComments(let newCommentsCount):
                     let newCommentsStringKey = newCommentsCount > 1 ? "ViewNewComments" : "ViewNewComment"
-                    let newCommentsString = OWLocalizationManager.shared.localizedString(key: newCommentsStringKey)
+                    let newCommentsString = OWLocalize.string(newCommentsStringKey)
 
                     return String(format: newCommentsString, newCommentsCount)
 

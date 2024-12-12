@@ -102,7 +102,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             break
         case .edit(comment: let comment):
             headerIconView.image(UIImage(spNamed: Metrics.editImageIcon))
-            headerTitleLabel.text = OWLocalizationManager.shared.localizedString(key: "EditingComment")
+            headerTitleLabel.text = OWLocalize.string("EditingComment")
         case .replyToComment(originComment: let originComment):
             headerIconView.image(UIImage(spNamed: Metrics.replyImageIcon))
             var name = ""
@@ -111,7 +111,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
                let displayName = user.displayName {
                 name = displayName
             }
-            var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ReplyingTo"))
+            var attributedString = NSMutableAttributedString(string: OWLocalize.string("ReplyingTo"))
 
             let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
             let boldUserNameString = NSMutableAttributedString(string: name, attributes: attrs)

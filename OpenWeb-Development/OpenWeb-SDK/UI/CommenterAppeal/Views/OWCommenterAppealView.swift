@@ -40,7 +40,7 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
 
     private lazy var titleLabel: UILabel = {
         return UILabel()
-            .text(OWLocalizationManager.shared.localizedString(key: "CommenterAppealTitle"))
+            .text(OWLocalize.string("CommenterAppealTitle"))
             .font(OWFontBook.shared.font(typography: .bodyContext))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .enforceSemanticAttribute()
@@ -100,7 +100,7 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
         return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .setTitle(OWLocalizationManager.shared.localizedString(key: "Cancel"), state: .normal)
+            .setTitle(OWLocalize.string("Cancel"), state: .normal)
             .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .withPadding(Metrics.buttonTextPadding)
             .corner(radius: Metrics.buttonsRadius)

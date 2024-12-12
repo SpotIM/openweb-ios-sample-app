@@ -31,10 +31,10 @@ extension OWReportReasonType {
     }
 
     var localizedTitle: String {
-        return OWLocalizationManager.shared.localizedString(key: "\(self.localizationKey)Title")
+        return OWLocalize.string("\(self.localizationKey)Title")
     }
 
     var localizedSubtitle: String {
-        return OWLocalizationManager.shared.localizedString(key: "\(self.localizationKey)Subtitle")
+        return OWLocalize.string("\(self.localizationKey)Subtitle")
     }
 }

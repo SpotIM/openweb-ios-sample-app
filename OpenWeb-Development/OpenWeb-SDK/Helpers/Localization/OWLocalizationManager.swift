@@ -10,6 +10,25 @@ import Foundation
 import UIKit
 import RxSwift
 
+/// Convenience type, forwards calls to `OWLocalizationManager.shared`
+enum OWLocalize {
+    static func string(_ key: String) -> String {
+        return OWLocalizationManager.shared.localizedString(key: key)
+    }
+
+    static var locale: Locale {
+        return OWLocalizationManager.shared.locale
+    }
+
+    static var semanticAttribute: UISemanticContentAttribute {
+        return OWLocalizationManager.shared.semanticAttribute
+    }
+
+    static var textAlignment: NSTextAlignment {
+        return OWLocalizationManager.shared.textAlignment
+    }
+}
+
 protocol OWLocalizationManagerProtocol {
     func localizedString(key: String) -> String
     var locale: Locale { get }

@@ -67,8 +67,8 @@ private extension OWPermissionsService {
 
     func handlePermissionDenied(for type: PermissionType, viewableMode: OWViewableMode) {
         let actions = [
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWOpenSettingsAlert.cancel),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OpenSettings"), type: OWOpenSettingsAlert.openSettings)
+            OWRxPresenterAction(title: OWLocalize.string("Cancel"), type: OWOpenSettingsAlert.cancel),
+            OWRxPresenterAction(title: OWLocalize.string("OpenSettings"), type: OWOpenSettingsAlert.openSettings)
         ]
 
         self.servicesProvider
@@ -91,7 +91,7 @@ private extension OWPermissionsService {
     func getPermissionDeniedMessage(for type: PermissionType) -> String {
         switch type {
         case .camera:
-            return OWLocalizationManager.shared.localizedString(key: "CameraPermissionsAreNeeded")
+            return OWLocalize.string("CameraPermissionsAreNeeded")
         }
     }
 }
