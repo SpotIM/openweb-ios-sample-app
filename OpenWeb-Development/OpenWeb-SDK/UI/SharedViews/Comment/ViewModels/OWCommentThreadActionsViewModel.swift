@@ -116,13 +116,13 @@ private extension OWCommentThreadActionsViewModel {
                 guard let self else { return }
                 switch type {
                 case .collapseThread:
-                    self._actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "CollapseThread"))
+                    self._actionLabelText.onNext(OWLocalize.string("CollapseThread"))
                     self._disclosureTransform.onNext(.identity)
                     self._updateSpacing.onNext(OWVerticalSpacing(0))
 
                 case .viewMoreReplies(count: let count):
-                    let multipleRepliesString = OWLocalizationManager.shared.localizedString(key: "ViewMultipleRepliesFormat")
-                    let singleReplyString = OWLocalizationManager.shared.localizedString(key: "ViewSingleReplyFormat")
+                    let multipleRepliesString = OWLocalize.string("ViewMultipleRepliesFormat")
+                    let singleReplyString = OWLocalize.string("ViewSingleReplyFormat")
 
                     let repliesString = count > 1 ? multipleRepliesString : singleReplyString
                     self._actionLabelText.onNext(String(format: repliesString, count))
@@ -130,14 +130,14 @@ private extension OWCommentThreadActionsViewModel {
                     self._updateSpacing.onNext(self.spacing)
 
                 case .viewMoreRepliesRange(from: let from, to: let to):
-                    let repliesString = OWLocalizationManager.shared.localizedString(key: "ViewPartOfRepliesFormat")
+                    let repliesString = OWLocalize.string("ViewPartOfRepliesFormat")
                     self._actionLabelText.onNext(String(format: repliesString, from, to))
                     self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
                     self._updateSpacing.onNext(self.spacing)
 
                 case .openCommentThread(let count):
-                    let multipleRepliesString = OWLocalizationManager.shared.localizedString(key: "ViewMultipleRepliesFormat")
-                    let singleReplyString = OWLocalizationManager.shared.localizedString(key: "ViewSingleReplyFormat")
+                    let multipleRepliesString = OWLocalize.string("ViewMultipleRepliesFormat")
+                    let singleReplyString = OWLocalize.string("ViewSingleReplyFormat")
 
                     let repliesString = count > 1 ? multipleRepliesString : singleReplyString
                     self._actionLabelText.onNext(String(format: repliesString, count))

@@ -25,6 +25,6 @@ extension OWAppealReasonType {
     }
 
     var localizedTitle: String {
-        return OWLocalizationManager.shared.localizedString(key: "\(self.localizationKey)AppealTitle")
+        return OWLocalize.string("\(self.localizationKey)AppealTitle")
     }
 }

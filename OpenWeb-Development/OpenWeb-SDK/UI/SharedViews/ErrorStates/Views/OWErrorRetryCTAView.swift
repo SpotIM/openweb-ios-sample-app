@@ -23,7 +23,7 @@ class OWErrorRetryCTAView: UIView {
 
     private var attributedString: NSAttributedString {
         return NSAttributedString(
-            string: OWLocalizationManager.shared.localizedString(key: "TryAgain"),
+            string: OWLocalize.string("TryAgain"),
             attributes: [
                 .font: OWFontBook.shared.font(typography: .bodyInteraction),
                 .underlineStyle: NSUnderlineStyle.single.rawValue

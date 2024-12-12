@@ -31,7 +31,7 @@ class OWPreConversationSummaryView: UIView {
             .font(OWFontBook.shared.font(typography: viewModel.outputs.titleFontTypography))
             .textColor(OWColorPalette.shared.color(type: .textColor1,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-            .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
+            .text(OWLocalize.string("Conversation"))
     }()
 
     private lazy var counterLabel: UILabel = {

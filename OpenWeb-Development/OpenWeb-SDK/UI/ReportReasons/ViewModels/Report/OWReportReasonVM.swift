@@ -49,7 +49,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     }()
 
     lazy var title: String = {
-        return OWLocalizationManager.shared.localizedString(key: "ReportReasonTitle")
+        return OWLocalize.string("ReportReasonTitle")
     }()
 
     private let reportData: OWReportReasonsRequiredData

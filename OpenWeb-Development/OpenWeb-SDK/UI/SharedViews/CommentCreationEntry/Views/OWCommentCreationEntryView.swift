@@ -47,7 +47,7 @@ class OWCommentCreationEntryView: UIView {
     private lazy var label: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
-            .text(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
+            .text(OWLocalize.string("WhatDoYouThink"))
             .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
             .enforceSemanticAttribute()
     }()

@@ -65,7 +65,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
                 return ""
             }
         }()
-        return OWLocalizationManager.shared.localizedString(key: key)
+        return OWLocalize.string(key)
     }()
 
     lazy var shouldHaveBorder: Bool = {

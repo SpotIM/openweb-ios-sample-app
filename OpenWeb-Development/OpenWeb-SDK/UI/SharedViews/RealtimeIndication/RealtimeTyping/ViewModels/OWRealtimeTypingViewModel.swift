@@ -35,7 +35,7 @@ class OWRealtimeTypingViewModel: OWRealtimeTypingViewModeling,
                     return String(typingCount)
 
                 case .typing(let typingCount):
-                    let typingString = OWLocalizationManager.shared.localizedString(key: "TypingNow")
+                    let typingString = OWLocalize.string("TypingNow")
                     return String(format: typingString, typingCount)
 
                 default:

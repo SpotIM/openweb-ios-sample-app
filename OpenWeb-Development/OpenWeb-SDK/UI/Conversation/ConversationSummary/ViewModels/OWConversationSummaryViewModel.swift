@@ -103,11 +103,11 @@ private extension OWConversationSummaryViewModel {
 
     func getCommentsText(for count: Int) -> String {
         let commentsString: String = count > 1 ?
-        OWLocalizationManager.shared.localizedString(key: "Comments") :
-        OWLocalizationManager.shared.localizedString(key: "Comment")
+        OWLocalize.string("Comments") :
+        OWLocalize.string("Comment")
 
         let RTLcommentsText: String = String(count) + " " + commentsString
         let LTRcommentsText: String = count.kmFormatted + " " + commentsString
-        return OWLocalizationManager.shared.semanticAttribute == .forceLeftToRight ? LTRcommentsText : RTLcommentsText
+        return OWLocalize.semanticAttribute == .forceLeftToRight ? LTRcommentsText : RTLcommentsText
     }
 }

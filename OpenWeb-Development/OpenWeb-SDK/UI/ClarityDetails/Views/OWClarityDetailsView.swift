@@ -120,7 +120,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(OWDesignColors.G1)
             .corner(radius: Metrics.buttonRadius)
-            .setTitle(OWLocalizationManager.shared.localizedString(key: "GotIt"), state: .normal)
+            .setTitle(OWLocalize.string("GotIt"), state: .normal)
             .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .withPadding(Metrics.buttonTextPadding)
     }()

@@ -12,11 +12,11 @@ extension OWSortOption {
     var title: String {
         switch self {
         case .best:
-            return OWLocalizationManager.shared.localizedString(key: "Best")
+            return OWLocalize.string("Best")
         case .newest:
-            return OWLocalizationManager.shared.localizedString(key: "Newest")
+            return OWLocalize.string("Newest")
         case .oldest:
-            return OWLocalizationManager.shared.localizedString(key: "Oldest")
+            return OWLocalize.string("Oldest")
         }
     }
 

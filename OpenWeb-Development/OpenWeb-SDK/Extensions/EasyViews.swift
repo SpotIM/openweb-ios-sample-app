@@ -225,7 +225,7 @@ extension UIButton {
     @discardableResult func adjustTextAndImageAlignment(_ spacing: CGFloat) -> Self {
         var inset = spacing / 2
 
-        if OWLocalizationManager.shared.semanticAttribute == .forceRightToLeft {
+        if OWLocalize.semanticAttribute == .forceRightToLeft {
             inset = -inset
         }
 

@@ -87,14 +87,14 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
             .asObservable()
     }
 
-    var communityGuidelinesClickablePlaceholder = OWLocalizationManager.shared.localizedString(key: "CommunityGuidelines").lowercased()
+    var communityGuidelinesClickablePlaceholder = OWLocalize.string("CommunityGuidelines").lowercased()
 
     lazy var navigationTitle: String = {
         switch type {
         case .rejected:
-            return OWLocalizationManager.shared.localizedString(key: "CommentRejected")
+            return OWLocalize.string("CommentRejected")
         case .pending:
-            return OWLocalizationManager.shared.localizedString(key: "AwaitingReview")
+            return OWLocalize.string("AwaitingReview")
         }
     }()
 
@@ -108,7 +108,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     lazy var detailsTitleText: String = {
         switch type {
         case .rejected:
-            return OWLocalizationManager.shared.localizedString(key: "RejectReasonsTitle")
+            return OWLocalize.string("RejectReasonsTitle")
         case .pending:
             return ""
         }
@@ -119,7 +119,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         case .rejected:
             return ""
         case .pending:
-            return OWLocalizationManager.shared.localizedString(key: "ClarityDetailsPendingSummary")
+            return OWLocalize.string("ClarityDetailsPendingSummary")
         }
     }()
 
@@ -130,25 +130,25 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
             return [
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "heart-icon"),
-                    text: OWLocalizationManager.shared.localizedString(key: "RejectReasonEnsureCivil")),
+                    text: OWLocalize.string("RejectReasonEnsureCivil")),
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "info-icon"),
-                    text: OWLocalizationManager.shared.localizedString(key: "RejectReasonMachineLearning")),
+                    text: OWLocalize.string("RejectReasonMachineLearning")),
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "megaphone-icon"),
-                    text: OWLocalizationManager.shared.localizedString(key: "RejectReasonWeDoNotCensor"))
+                    text: OWLocalize.string("RejectReasonWeDoNotCensor"))
             ]
         case .pending:
             return [
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "v-icon"),
-                    text: OWLocalizationManager.shared.localizedString(key: "PendingResonManualApproval")),
+                    text: OWLocalize.string("PendingResonManualApproval")),
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "eye-icon"),
-                    text: OWLocalizationManager.shared.localizedString(key: "PendingReasonPerformanceReview")),
+                    text: OWLocalize.string("PendingReasonPerformanceReview")),
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "flag-icon"),
-                    text: OWLocalizationManager.shared.localizedString(key: "PendingResonCommunityGuidelines"),
+                    text: OWLocalize.string("PendingResonCommunityGuidelines"),
                     communityGuidelinesClickable: true)
             ]
         }
@@ -252,7 +252,7 @@ private extension OWClarityDetailsViewVM {
 
         switch clarityType {
         case .rejected:
-            let string = OWLocalizationManager.shared.localizedString(key: "ClarityDetailsRejectedTopParagraph")
+            let string = OWLocalize.string("ClarityDetailsRejectedTopParagraph")
             let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
             if let range = string.range(of: communityGuidelinesClickablePlaceholder) {
                 let nsRange = NSRange(range, in: string)
@@ -263,7 +263,7 @@ private extension OWClarityDetailsViewVM {
             return attributedString
         case .pending:
             return NSAttributedString(
-                string: OWLocalizationManager.shared.localizedString(key: "ClarityPendingReasonsTitle"),
+                string: OWLocalize.string("ClarityPendingReasonsTitle"),
                 attributes: attributes
             )
         }

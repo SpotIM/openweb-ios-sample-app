@@ -10,7 +10,7 @@ import UIKit
 
 extension UIView {
     @objc @discardableResult func enforceSemanticAttribute() -> Self {
-        self.semanticContentAttribute = OWLocalizationManager.shared.semanticAttribute
+        self.semanticContentAttribute = OWLocalize.semanticAttribute
 
         return self
     }
@@ -19,7 +19,7 @@ extension UIView {
 extension UILabel {
     @objc @discardableResult override func enforceSemanticAttribute() -> Self {
         super.enforceSemanticAttribute()
-        self.textAlignment = OWLocalizationManager.shared.textAlignment
+        self.textAlignment = OWLocalize.textAlignment
 
         return self
     }

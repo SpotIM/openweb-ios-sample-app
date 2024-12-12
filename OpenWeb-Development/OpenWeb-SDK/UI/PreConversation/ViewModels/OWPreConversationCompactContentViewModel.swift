@@ -101,13 +101,13 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                 case .skeleton:
                     return NSMutableAttributedString(string: "")
                 case .emptyConversation:
-                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "EmptyConversation"))
+                    return NSMutableAttributedString(string: OWLocalize.string("EmptyConversation"))
                 case .closedAndEmpty:
-                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ClosedAndEmptyConversation"))
+                    return NSMutableAttributedString(string: OWLocalize.string("ClosedAndEmptyConversation"))
                 case .comment(let commentType):
                     switch commentType {
                     case .media:
-                        return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Image"))
+                        return NSMutableAttributedString(string: OWLocalize.string("Image"))
                     case .text(let string):
                         var attrString = NSMutableAttributedString(string: string)
                         attrString.addUserMentions(style: style,
@@ -117,7 +117,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                         return attrString
                     }
                 case .error:
-                    return NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadComments"))
+                    return NSMutableAttributedString(string: OWLocalize.string("ErrorStateLoadComments"))
                 }
             }
             .asObservable()

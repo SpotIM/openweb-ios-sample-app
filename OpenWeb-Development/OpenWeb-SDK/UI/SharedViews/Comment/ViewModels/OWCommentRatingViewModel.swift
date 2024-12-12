@@ -125,7 +125,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .withLatestFrom(_voteSymbolType) { rankUpCount, votesType in
                 let formattedRankCount = rankUpCount.kmFormatted
                 if votesType == .recommend {
-                    let recommendText = OWLocalizationManager.shared.localizedString(key: "Recommend")
+                    let recommendText = OWLocalize.string("Recommend")
                     return "\(recommendText) (\(formattedRankCount))"
                 } else {
                     return rankUpCount > 0 ? formattedRankCount : ""
@@ -267,7 +267,7 @@ private extension OWCommentRatingViewModel {
                 guard let self else { return }
                 switch event {
                 case .error:
-                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalize.string("SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: self.retryVote))

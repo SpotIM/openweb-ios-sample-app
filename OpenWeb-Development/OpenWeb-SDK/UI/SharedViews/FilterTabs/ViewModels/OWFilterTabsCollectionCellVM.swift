@@ -53,7 +53,7 @@ class OWFilterTabsCollectionCellViewModel: OWFilterTabsCollectionCellViewModelin
     }
 
     lazy var text: String = {
-        let localizedName = OWLocalizationManager.shared.localizedString(key: model.name)
+        let localizedName = OWLocalize.string(model.name)
         let countString = model.id == "all" ? "" : " (\(model.count))"
         return localizedName + countString
     }()

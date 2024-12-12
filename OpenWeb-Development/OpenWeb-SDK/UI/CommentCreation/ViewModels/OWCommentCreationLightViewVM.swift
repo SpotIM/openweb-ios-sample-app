@@ -119,9 +119,9 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
         let title: String
         switch commentCreationData.commentCreationType {
         case .edit:
-            title = OWLocalizationManager.shared.localizedString(key: "EditComment")
+            title = OWLocalize.string("EditComment")
         default:
-            title = OWLocalizationManager.shared.localizedString(key: "AddComment")
+            title = OWLocalize.string("AddComment")
         }
 
         let attributedString = NSMutableAttributedString(string: title)

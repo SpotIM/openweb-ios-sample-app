@@ -33,7 +33,7 @@ class OWUserStatusAutomationViewModel: OWUserStatusAutomationViewModeling,
     }()
 
     lazy var title: String = {
-        return OWLocalizationManager.shared.localizedString(key: "UserInformation")
+        return OWLocalize.string("UserInformation")
     }()
 }
 

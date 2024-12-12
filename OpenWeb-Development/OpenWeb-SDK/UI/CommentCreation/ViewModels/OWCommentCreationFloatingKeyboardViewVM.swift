@@ -62,7 +62,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
 
     private struct Metrics {
-        static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
+        static let textViewPlaceholderText = OWLocalize.string("WhatDoYouThink")
         static let ctaIconName = "sendCommentIcon"
         static let delayForDismiss: Int = 350 // ms
         static let maxLandscapeLines = 1
