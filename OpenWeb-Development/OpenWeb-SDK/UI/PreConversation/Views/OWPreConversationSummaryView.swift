@@ -104,7 +104,7 @@ private extension OWPreConversationSummaryView {
         self.addSubview(onlineViewingUsersView)
         onlineViewingUsersView.OWSnp.makeConstraints { make in
             make.top.greaterThanOrEqualToSuperview()
-            make.bottom.equalTo(counterLabel).offset(-Metrics.onlineViewingUsersBottomOffset)
+            make.bottom.equalTo(counterLabel).offset(Metrics.onlineViewingUsersBottomOffset)
             make.leading.greaterThanOrEqualTo(counterLabel.OWSnp.trailing).offset(Metrics.onlineViewingUsersBottomLeading)
         }
 
