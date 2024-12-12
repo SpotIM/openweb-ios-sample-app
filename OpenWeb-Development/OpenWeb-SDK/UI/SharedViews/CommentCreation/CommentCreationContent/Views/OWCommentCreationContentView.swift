@@ -17,6 +17,7 @@ class OWCommentCreationContentView: UIView {
         static let horizontalOffset: CGFloat = 16.0
         static let verticalOffset: CGFloat = 12.0
         static let avatarSize: CGFloat = 40.0
+        static let textInputVerticalOffset: CGFloat = 8.0
         static let avatarToInputSpacing: CGFloat = 13.0
         static let becomeFirstResponderDelay = 0 // miliseconds
     }
@@ -64,7 +65,7 @@ class OWCommentCreationContentView: UIView {
         textInput.OWSnp.makeConstraints { make in
             make.leading.equalTo(avatarView.OWSnp.trailing).offset(Metrics.avatarToInputSpacing)
             make.trailing.equalTo(scroll.contentLayoutGuide).offset(-Metrics.horizontalOffset)
-            make.top.equalToSuperview().offset(Metrics.verticalOffset)
+            make.top.equalTo(avatarView.OWSnp.top).offset(-Metrics.textInputVerticalOffset)
         }
 
         scroll.addSubview(imagePreview)
