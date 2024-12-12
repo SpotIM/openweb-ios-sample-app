@@ -22,8 +22,8 @@ class OWCommentOptionsView: UIView {
 
     private lazy var optionButton: UIButton = {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
-        let leftInset: CGFloat = OWLocalizationManager.shared.textAlignment == .left ? 0 : -Metrics.optionsImageInset
-        let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -Metrics.optionsImageInset
+        let leftInset: CGFloat = OWLocalize.textAlignment == .left ? 0 : -Metrics.optionsImageInset
+        let rightInset: CGFloat = OWLocalize.textAlignment == .right ? 0 : -Metrics.optionsImageInset
         return UIButton()
             .image(image, state: .normal)
             .imageEdgeInsets(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset))
@@ -81,6 +81,6 @@ private extension OWCommentOptionsView {
     func applyAccessibility() {
         optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
         optionButton.accessibilityTraits = .button
-        optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "OptionsMenu")
+        optionButton.accessibilityLabel = OWLocalize.string("OptionsMenu")
     }
 }

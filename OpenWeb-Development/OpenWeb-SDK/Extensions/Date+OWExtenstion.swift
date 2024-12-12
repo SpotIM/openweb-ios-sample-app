@@ -13,7 +13,7 @@ extension Date {
     static let owDayNameFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE"
-        dateFormatter.locale = OWLocalizationManager.shared.locale
+        dateFormatter.locale = OWLocalize.locale
 
         return dateFormatter
     }()
@@ -21,7 +21,7 @@ extension Date {
     static let owHourFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH"
-        dateFormatter.locale = OWLocalizationManager.shared.locale
+        dateFormatter.locale = OWLocalize.locale
 
         return dateFormatter
     }()
@@ -43,10 +43,10 @@ extension Date {
 
         switch (weekOfYear, day, hour, minute, second) {
         case (let week, _, _, _, _)     where week > 0:     return owFormatDate()
-        case (_, let day, _, _, _)      where day > 0:      return "\(day)" + OWLocalizationManager.shared.localizedString(key: "Days")
-        case (_, _, let hour, _, _)     where hour > 0:     return "\(hour)" + OWLocalizationManager.shared.localizedString(key: "Hours")
-        case (_, _, _, let minute, _)   where minute > 0:   return "\(minute)" + OWLocalizationManager.shared.localizedString(key: "Minutes")
-        case (_, _, _, _, let second)   where second >= 0:  return OWLocalizationManager.shared.localizedString(key: "JustNow")
+        case (_, let day, _, _, _)      where day > 0:      return "\(day)" + OWLocalize.string("Days")
+        case (_, _, let hour, _, _)     where hour > 0:     return "\(hour)" + OWLocalize.string("Hours")
+        case (_, _, _, let minute, _)   where minute > 0:   return "\(minute)" + OWLocalize.string("Minutes")
+        case (_, _, _, _, let second)   where second >= 0:  return OWLocalize.string("JustNow")
         default:                                            return owFormatDate()
         }
     }
@@ -54,7 +54,7 @@ extension Date {
     private func owFormatDate() -> String {
         let calendar = Calendar.current
         let formatter = DateFormatter()
-        formatter.locale = OWLocalizationManager.shared.locale
+        formatter.locale = OWLocalize.locale
         let now = Date()
 
         let isInThisYear = calendar.isDate(self, equalTo: now, toGranularity: .year)

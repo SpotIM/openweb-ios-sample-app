@@ -33,7 +33,7 @@ class OWLoginPromptView: UIView {
     private lazy var titleLabel: UILabel = {
         return UILabel()
             .attributedText(
-                OWLocalizationManager.shared.localizedString(key: "LoginPromptTitle")
+                OWLocalize.string("LoginPromptTitle")
                     .attributedString
                     .underline(1)
             )

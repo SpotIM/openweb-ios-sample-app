@@ -91,14 +91,14 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             .startWith(false)
     }()
 
-    let appealClickableText: String = OWLocalizationManager.shared.localizedString(key: "Appeal").lowercased()
+    let appealClickableText: String = OWLocalize.string("Appeal").lowercased()
     lazy var defaultAttributedText: Observable<NSAttributedString> = {
         Observable.combineLatest(
             servicesProvider.themeStyleService().style,
             accessibilityChange
         ) { [weak self] style, _ in
             guard let self else { return nil }
-            let string = OWLocalizationManager.shared.localizedString(key: "AppealLabel")
+            let string = OWLocalize.string("AppealLabel")
             let attributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),
                 .font: OWFontBook.shared.font(typography: .bodyText)
@@ -152,7 +152,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 return nil
             case .error:
                 return NSAttributedString(
-                    string: OWLocalizationManager.shared.localizedString(key: "AppealLabelError"),
+                    string: OWLocalize.string("AppealLabelError"),
                     attributes: [
                         .foregroundColor: OWColorPalette.shared.color(type: .errorColor, themeStyle: style),
                         .font: OWFontBook.shared.font(typography: .bodySpecial)
@@ -160,7 +160,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 )
             case .unavailable:
                 return NSAttributedString(
-                    string: OWLocalizationManager.shared.localizedString(key: "AppealLabelNotAvailable"),
+                    string: OWLocalize.string("AppealLabelNotAvailable"),
                     attributes: attributes
                 )
             case .none:
@@ -297,8 +297,8 @@ private extension OWAppealLabelViewModel {
     func openNotLogeedInAlert() {
         self.servicesProvider.presenterService()
             .showAlert(
-                title: OWLocalizationManager.shared.localizedString(key: "AppealAuthorizationRequiredTitle"),
-                message: OWLocalizationManager.shared.localizedString(key: "AppealAuthorizationRequiredMessage"),
+                title: OWLocalize.string("AppealAuthorizationRequiredTitle"),
+                message: OWLocalize.string("AppealAuthorizationRequiredMessage"),
                 actions: [
                     OWRxPresenterAction(title: "Cancel", type: OWAuthToAppealAlert.cancel),
                     OWRxPresenterAction(title: "Authorize", type: OWAuthToAppealAlert.authenticate)

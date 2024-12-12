@@ -33,7 +33,7 @@ class OWCommentEngagementView: UIView {
 
     private lazy var replyButton: UIButton = {
         return UIButton()
-            .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
+            .setTitle(OWLocalize.string("Reply"), state: .normal)
             .wrapContent()
     }()
 
@@ -56,7 +56,7 @@ class OWCommentEngagementView: UIView {
     private lazy var shareButton: UIButton = {
         return UIButton()
             .hugContent(axis: .horizontal)
-            .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
+            .setTitle(OWLocalize.string("Share"), state: .normal)
     }()
 
     override init(frame: CGRect) {
@@ -139,7 +139,7 @@ private extension OWCommentEngagementView {
                 switch shareButtonStyle {
                 case .text:
                     self.shareButton
-                        .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
+                        .setTitle(OWLocalize.string("Share"), state: .normal)
                         .setImage(nil, for: .normal)
                 case .icon:
                     self.shareButton

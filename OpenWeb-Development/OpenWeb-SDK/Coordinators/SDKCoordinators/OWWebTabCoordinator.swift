@@ -100,10 +100,10 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self else { return .empty() }
-                let okAction = OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OK"), type: OWEmptyMenu.ok)
+                let okAction = OWRxPresenterAction(title: OWLocalize.string("OK"), type: OWEmptyMenu.ok)
                 return servicesProvider.presenterService().showAlert(
-                    title: OWLocalizationManager.shared.localizedString(key: "PrivacyDeleteAccountSuccessTitle"),
-                    message: OWLocalizationManager.shared.localizedString(key: "PrivacyDeleteAccountSuccessSubtitle"),
+                    title: OWLocalize.string("PrivacyDeleteAccountSuccessTitle"),
+                    message: OWLocalize.string("PrivacyDeleteAccountSuccessSubtitle"),
                     actions: [okAction],
                     viewableMode: viewableMode
                 )

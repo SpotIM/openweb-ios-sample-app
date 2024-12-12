@@ -114,8 +114,8 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }()
 
     lazy var titleAttributedString: Observable<NSAttributedString> = {
-        let commentingOnText = OWLocalizationManager.shared.localizedString(key: "CommentingOn")
-        let editingCommentText = OWLocalizationManager.shared.localizedString(key: "EditingComment")
+        let commentingOnText = OWLocalize.string("CommentingOn")
+        let editingCommentText = OWLocalize.string("EditingComment")
 
         var replyToComment: OWComment?
         switch commentCreationData.commentCreationType {

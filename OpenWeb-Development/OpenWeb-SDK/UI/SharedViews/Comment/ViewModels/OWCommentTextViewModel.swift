@@ -47,7 +47,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     private let collapsableTextLineLimit: Int
     private let disposeBag = DisposeBag()
 
-    private var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "SeeMore")
+    private var readMoreText: String = OWLocalize.string("SeeMore")
 
     var labelClickIndex = PublishSubject<Int>()
 
@@ -215,7 +215,7 @@ private extension OWCommentTextViewModel {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = OWCommentContentView.Metrics.paragraphLineSpacing
-        paragraphStyle.alignment = OWLocalizationManager.shared.textAlignment
+        paragraphStyle.alignment = OWLocalize.textAlignment
 
         var attributes: [NSAttributedString.Key: Any]
         attributes = [

@@ -28,7 +28,7 @@ class OWCommentingReadOnlyView: UIView {
 
     private lazy var label: UILabel = {
        return UILabel()
-            .text(OWLocalizationManager.shared.localizedString(key: "CommentingReadOnlyMessage"))
+            .text(OWLocalize.string("CommentingReadOnlyMessage"))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .bodyContext))
             .numberOfLines(0)

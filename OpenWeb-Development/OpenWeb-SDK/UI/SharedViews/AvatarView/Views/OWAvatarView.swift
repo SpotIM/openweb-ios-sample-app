@@ -168,6 +168,6 @@ private extension OWAvatarView {
         onlineGreenView.accessibilityIdentifier = Metrics.onlineGreenIndicatorIdentifier
 
         avatarButton.accessibilityTraits = .image
-        avatarButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "ProfileImage")
+        avatarButton.accessibilityLabel = OWLocalize.string("ProfileImage")
     }
 }

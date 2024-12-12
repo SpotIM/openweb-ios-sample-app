@@ -71,42 +71,42 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
 
     var errorAlertTitleText: String {
 
-        return OWLocalizationManager.shared.localizedString(key: "ReportSubmissionFailedTitle")
+        return OWLocalize.string("ReportSubmissionFailedTitle")
     }
 
     var errorAlertMessageText: String {
-        return OWLocalizationManager.shared.localizedString(key: "ReportSubmissionFailedMessage")
+        return OWLocalize.string("ReportSubmissionFailedMessage")
     }
 
     var errorAlertActionText: String {
-        return OWLocalizationManager.shared.localizedString(key: "GotIt")
+        return OWLocalize.string("GotIt")
     }
 
     var titleText: String {
-        return OWLocalizationManager.shared.localizedString(key: "ReportReasonTitle")
+        return OWLocalize.string("ReportReasonTitle")
     }
 
     var cancelButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: "Cancel")
+        return OWLocalize.string("Cancel")
     }
 
     var changeSubmitButtonText = BehaviorSubject<Bool>(value: false)
     var submitButtonText: Observable<String> {
         return changeSubmitButtonText
             .map { changeText in
-                return OWLocalizationManager.shared.localizedString(key: changeText ? "TryAgain" : "Submit")
+                return OWLocalize.string(changeText ? "TryAgain" : "Submit")
             }
     }
 
     var tableViewHeaderTapText: String {
-        return OWLocalizationManager.shared.localizedString(key: "ReportReasonHelpUsClickText")
+        return OWLocalize.string("ReportReasonHelpUsClickText")
     }
 
     var tableViewHeaderAttributedText: Observable<NSAttributedString> {
         Observable.combineLatest(shouldShowLearnMore, OWSharedServicesProvider.shared.themeStyleService().style)
             .map { [weak self] shouldShowLearnMore, style in
                 guard let self else { return nil }
-                return OWLocalizationManager.shared.localizedString(key: "ReportReasonHelpUsTitle")
+                return OWLocalize.string("ReportReasonHelpUsTitle")
                     .replacingOccurrences(of: self.tableViewHeaderTapText, with: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
                     .attributedString
                     .font(OWFontBook.shared.font(typography: .bodyText))
@@ -212,7 +212,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
-                                          placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
+                                          placeholderText: OWLocalize.string("ReportReasonTextViewPlaceholder"),
                                           charectersLimitEnabled: false,
                                           showCharectersLimit: false,
                                           isEditable: false)
@@ -393,9 +393,9 @@ private extension OWReportReasonViewViewModel {
         selectedReason
             .map {
                 if $0.requiredAdditionalInfo == false {
-                    return OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder")
+                    return OWLocalize.string("ReportReasonTextViewPlaceholder")
                 } else {
-                    return OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewMandatoryPlaceholder")
+                    return OWLocalize.string("ReportReasonTextViewMandatoryPlaceholder")
                 }
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)

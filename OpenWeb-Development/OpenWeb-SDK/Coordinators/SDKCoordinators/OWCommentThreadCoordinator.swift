@@ -191,7 +191,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput.map { OWWebTabOptions(url: $0) },
             commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return OWWebTabOptions(url: data.url, title: OWLocalizationManager.shared.localizedString(key: "ProfileTitle"))
+                    return OWWebTabOptions(url: data.url, title: OWLocalize.string("ProfileTitle"))
                 } else {
                     return nil
                 }

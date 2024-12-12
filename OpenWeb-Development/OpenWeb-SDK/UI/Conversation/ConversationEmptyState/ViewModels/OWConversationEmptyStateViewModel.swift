@@ -103,9 +103,9 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
             .map { type in
                 switch type {
                 case .empty:
-                    return OWLocalizationManager.shared.localizedString(key: "EmptyConversation")
+                    return OWLocalize.string("EmptyConversation")
                 case .closedAndEmpty:
-                    return OWLocalizationManager.shared.localizedString(key: "ClosedAndEmptyConversation")
+                    return OWLocalize.string("ClosedAndEmptyConversation")
                 }
             }
             .asObservable()

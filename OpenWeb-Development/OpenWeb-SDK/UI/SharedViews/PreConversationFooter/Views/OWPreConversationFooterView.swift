@@ -22,7 +22,7 @@ class OWPreConversationFooterView: UIView {
     }
 
     private lazy var termsButton: UIButton = {
-        return OWLocalizationManager.shared.localizedString(key: "Terms")
+        return OWLocalize.string("Terms")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteText))
@@ -34,7 +34,7 @@ class OWPreConversationFooterView: UIView {
             .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
     private lazy var privacyButton: UIButton = {
-        return OWLocalizationManager.shared.localizedString(key: "Privacy")
+        return OWLocalize.string("Privacy")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteText))
@@ -43,7 +43,7 @@ class OWPreConversationFooterView: UIView {
         return UIImageView(image: UIImage(spNamed: "OpenWeb-logo", supportDarkMode: true))
     }()
     private lazy var poweredByOWButton: UIButton = {
-        let btn = OWLocalizationManager.shared.localizedString(key: "PoweredBy")
+        let btn = OWLocalize.string("PoweredBy")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .metaText))

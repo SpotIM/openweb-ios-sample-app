@@ -145,9 +145,9 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         let placeholderText = {
             switch commentCreationType {
             case .replyToComment:
-                return OWLocalizationManager.shared.localizedString(key: "TypeYourReply")
+                return OWLocalize.string("TypeYourReply")
             default:
-                return OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
+                return OWLocalize.string("WhatDoYouThink")
             }
         }()
         let textViewData = OWTextViewData(placeholderText: placeholderText,

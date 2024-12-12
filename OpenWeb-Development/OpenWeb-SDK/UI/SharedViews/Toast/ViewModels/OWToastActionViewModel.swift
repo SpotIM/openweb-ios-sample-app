@@ -55,11 +55,11 @@ private extension OWToastActionViewModel {
     func title(for action: OWToastAction) -> String {
         switch action {
         case .learnMore:
-            return OWLocalizationManager.shared.localizedString(key: "LearnMore")
+            return OWLocalize.string("LearnMore")
         case .tryAgain:
-            return OWLocalizationManager.shared.localizedString(key: "TryAgain")
+            return OWLocalize.string("TryAgain")
         case .undo:
-            return OWLocalizationManager.shared.localizedString(key: "Undo") // TODO: missing translations
+            return OWLocalize.string("Undo") // TODO: missing translations
         case .close:
             return ""
         case .none:

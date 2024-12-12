@@ -33,7 +33,7 @@ class OWFontsAutomationViewModel: OWFontsAutomationViewModeling,
     }()
 
     lazy var title: String = {
-        return OWLocalizationManager.shared.localizedString(key: "Fonts")
+        return OWLocalize.string("Fonts")
     }()
 }
 

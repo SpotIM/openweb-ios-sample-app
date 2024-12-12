@@ -123,7 +123,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 guard let displayName = $0, !displayName.isEmpty else {
                     return ""
                 }
-                return OWLocalizationManager.shared.localizedString(key: "To") + " \(displayName)"
+                return OWLocalize.string("To") + " \(displayName)"
             })
     }
 
@@ -190,7 +190,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 return ""
             }
 
-            return OWLocalizationManager.shared.localizedString(key: localizationKey)
+            return OWLocalize.string(localizationKey)
         }
     }
 

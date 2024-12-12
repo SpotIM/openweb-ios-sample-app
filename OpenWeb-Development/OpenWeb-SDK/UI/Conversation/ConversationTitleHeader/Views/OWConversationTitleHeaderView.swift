@@ -24,7 +24,7 @@ class OWConversationTitleHeaderView: UIView {
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(typography: .titleSmall))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-            .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
+            .text(OWLocalize.string("Conversation"))
     }()
 
     private lazy var closeButton: UIButton = {

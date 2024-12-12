@@ -89,7 +89,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }
 
     lazy var title: String = {
-        return OWLocalizationManager.shared.localizedString(key: "Replies")
+        return OWLocalize.string("Replies")
     }()
 
     private var _closeCommentThread = PublishSubject<Void>()
@@ -1357,10 +1357,10 @@ private extension OWCommentThreadViewViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self else { return }
-                let actions = [OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OK"), type: OWEmptyMenu.ok)]
+                let actions = [OWRxPresenterAction(title: OWLocalize.string("OK"), type: OWEmptyMenu.ok)]
                 self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "ConnectivityErrorMessage"),
+                        title: OWLocalize.string("ConnectivityErrorMessage"),
                         message: "",
                         actions: actions,
                         viewableMode: self.viewableMode
@@ -1443,13 +1443,13 @@ private extension OWCommentThreadViewViewModel {
             .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterAction, OWCommentViewModeling)> in
                 guard let self else { return .empty() }
                 let actions = [
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentDeleteAlert.cancel, style: .cancel)
+                    OWRxPresenterAction(title: OWLocalize.string("Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
+                    OWRxPresenterAction(title: OWLocalize.string("Cancel"), type: OWCommentDeleteAlert.cancel, style: .cancel)
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
-                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentMessage"),
+                        title: OWLocalize.string("DeleteCommentTitle"),
+                        message: OWLocalize.string("DeleteCommentMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
@@ -1507,7 +1507,7 @@ private extension OWCommentThreadViewViewModel {
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return commentDelete
                 case .error:
-                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalize.string("SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: self.retryDelete))
@@ -1541,13 +1541,13 @@ private extension OWCommentThreadViewViewModel {
                 // 3. Show alert
                 guard let self else { return .empty() }
                 let actions = [
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentUserMuteAlert.cancel, style: .cancel)
+                    OWRxPresenterAction(title: OWLocalize.string("Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
+                    OWRxPresenterAction(title: OWLocalize.string("Cancel"), type: OWCommentUserMuteAlert.cancel, style: .cancel)
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "MuteUser"),
-                        message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
+                        title: OWLocalize.string("MuteUser"),
+                        message: OWLocalize.string("MuteUserMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     )
@@ -1682,13 +1682,13 @@ private extension OWCommentThreadViewViewModel {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     // TODO: cancel action when supported
-                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
+                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalize.string("MuteSuccessToast"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: nil))
                     return true
                 case .error:
-                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalize.string("SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: self.retryMute))

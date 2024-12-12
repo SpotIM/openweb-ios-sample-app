@@ -2396,13 +2396,13 @@ private extension OWConversationViewViewModel {
             .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterAction, OWCommentViewModeling)> in
                 guard let self else { return .empty() }
                 let actions = [
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentDeleteAlert.cancel, style: .cancel)
+                    OWRxPresenterAction(title: OWLocalize.string("Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
+                    OWRxPresenterAction(title: OWLocalize.string("Cancel"), type: OWCommentDeleteAlert.cancel, style: .cancel)
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
-                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentMessage"),
+                        title: OWLocalize.string("DeleteCommentTitle"),
+                        message: OWLocalize.string("DeleteCommentMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
@@ -2461,7 +2461,7 @@ private extension OWConversationViewViewModel {
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return commentDelete
                 case .error:
-                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalize.string("SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: self.retryDelete))
@@ -2495,13 +2495,13 @@ private extension OWConversationViewViewModel {
                 // 3. Show alert
                 guard let self else { return .empty() }
                 let actions = [
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentUserMuteAlert.cancel, style: .cancel)
+                    OWRxPresenterAction(title: OWLocalize.string("Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
+                    OWRxPresenterAction(title: OWLocalize.string("Cancel"), type: OWCommentUserMuteAlert.cancel, style: .cancel)
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "MuteUser"),
-                        message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
+                        title: OWLocalize.string("MuteUser"),
+                        message: OWLocalize.string("MuteUserMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     )
@@ -2567,14 +2567,14 @@ private extension OWConversationViewViewModel {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     // TODO: cancel action when supported
-                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
+                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalize.string("MuteSuccessToast"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: nil))
                     return true
                 case .error:
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
-                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalize.string("SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                    actionCompletion: self.retryMute))

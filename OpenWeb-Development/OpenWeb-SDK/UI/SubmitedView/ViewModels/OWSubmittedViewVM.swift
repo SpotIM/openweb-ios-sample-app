@@ -48,15 +48,15 @@ class OWSubmittedViewViewModel: OWSubmittedViewViewModelingInputs, OWSubmittedVi
     }
 
     var title: String {
-        return OWLocalizationManager.shared.localizedString(key: "ReportReasonSubmittedTitle")
+        return OWLocalize.string("ReportReasonSubmittedTitle")
     }
 
     var subtitle: String {
         switch type {
         case .reportReason:
-            return OWLocalizationManager.shared.localizedString(key: "ReportReasonSubmittedSubtitle")
+            return OWLocalize.string("ReportReasonSubmittedSubtitle")
         case .commenterAppeal:
-            return OWLocalizationManager.shared.localizedString(key: "AppealSubmittedSubtitle")
+            return OWLocalize.string("AppealSubmittedSubtitle")
         }
     }
 
@@ -65,7 +65,7 @@ class OWSubmittedViewViewModel: OWSubmittedViewViewModelingInputs, OWSubmittedVi
     }
 
     var confirmButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: "GotIt")
+        return OWLocalize.string("GotIt")
     }
 
     var closeSubmittedTap = PublishSubject<Void>()
