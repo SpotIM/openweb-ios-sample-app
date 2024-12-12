@@ -48,7 +48,7 @@ class OWCommentCreationEntryView: UIView {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .text(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
-            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
             .enforceSemanticAttribute()
     }()
 
@@ -123,7 +123,7 @@ private extension OWCommentCreationEntryView {
                 guard let self else { return }
                 self.labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
                 self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
-                self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.label.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
                 self.updateCustomUI()
             })
             .disposed(by: disposeBag)
