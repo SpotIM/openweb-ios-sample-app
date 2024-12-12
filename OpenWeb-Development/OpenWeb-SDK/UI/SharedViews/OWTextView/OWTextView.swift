@@ -70,7 +70,7 @@ class OWTextView: UIView {
     private lazy var textViewPlaceholder: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(typography: .bodyText))
-                .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .numberOfLines(0)
                 .enforceSemanticAttribute()
     }()
@@ -329,7 +329,7 @@ private extension OWTextView {
                 if viewModel.outputs.hasBorder {
                     self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
                 }
-                self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
                 self.textView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.textView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
                 self.textView.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
