@@ -13,6 +13,7 @@ class SPAnimatedButton: UIButton {
 
     private var imageShape: CAShapeLayer!
     private var selectedImageShape: CAShapeLayer!
+    private var animateOnSelection: Bool
 
     var image: UIImage? {
         didSet {
@@ -105,18 +106,19 @@ class SPAnimatedButton: UIButton {
     }
 
     override convenience init(frame: CGRect) {
-        self.init(frame: frame, image: UIImage())
+        self.init(frame: frame, image: UIImage(), animateOnSelection: true)
     }
 
-    convenience init(frame: CGRect, image: UIImage) {
-        self.init(frame: frame, image: image, selectedImage: UIImage())
+    convenience init(frame: CGRect, image: UIImage, animateOnSelection: Bool) {
+        self.init(frame: frame, image: image, selectedImage: UIImage(), animateOnSelection: animateOnSelection)
     }
 
-    convenience init(frame: CGRect, buttonInset insets: UIEdgeInsets = .zero) {
-        self.init(frame: frame, image: UIImage(), selectedImage: UIImage(), buttonInset: insets)
+    convenience init(frame: CGRect, buttonInset insets: UIEdgeInsets = .zero, animateOnSelection: Bool) {
+        self.init(frame: frame, image: UIImage(), selectedImage: UIImage(), buttonInset: insets, animateOnSelection: animateOnSelection)
     }
 
-    init(frame: CGRect, image: UIImage?, selectedImage: UIImage?, buttonInset insets: UIEdgeInsets = .zero) {
+    init(frame: CGRect, image: UIImage?, selectedImage: UIImage?, buttonInset insets: UIEdgeInsets = .zero, animateOnSelection: Bool) {
+        self.animateOnSelection = animateOnSelection
         super.init(frame: frame)
         createLayers(buttonInset: insets)
         self.image = image
@@ -412,6 +414,7 @@ class SPAnimatedButton: UIButton {
     open func select() {
         isSelected = true
 
+        guard animateOnSelection else { return }
         CATransaction.begin()
 
         circleShape.add(circleTransform, forKey: "transform")
