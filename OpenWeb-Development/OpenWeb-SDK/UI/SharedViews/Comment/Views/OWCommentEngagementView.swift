@@ -13,7 +13,7 @@ import RxCocoa
 class OWCommentEngagementView: UIView {
 
     private struct Metrics {
-        static let baseOffset: CGFloat = 14
+        static let baseOffset: CGFloat = 8
         static let dotDividerSize: CGFloat = 3
         static let shareButtonSize: CGFloat = 24
 
