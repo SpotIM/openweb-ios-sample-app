@@ -41,7 +41,7 @@ class OWCommentRatingView: UIView {
 
     private lazy var rankDownButton: SPAnimatedButton = {
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
-        let button = SPAnimatedButton(frame: frame)
+        let button = SPAnimatedButton(frame: frame, animateOnSelection: false)
             .hugContent(axis: .horizontal)
         return button
     }()
