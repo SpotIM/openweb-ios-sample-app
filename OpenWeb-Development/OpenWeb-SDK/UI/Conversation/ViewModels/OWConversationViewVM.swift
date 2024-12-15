@@ -906,8 +906,7 @@ private extension OWConversationViewViewModel {
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
             section: self.conversationData.article.additionalSettings.section),
-                                      spacing: self.spacingBetweenComments,
-                                      viewableMode: viewableMode)
+                                      spacing: self.spacingBetweenComments)
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {

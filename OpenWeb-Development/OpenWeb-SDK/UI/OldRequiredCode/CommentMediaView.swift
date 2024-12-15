@@ -74,7 +74,6 @@ class CommentMediaView: UIView {
         }
         // if gifUrl exist, set gif and clean image
         else if let gifUrl {
-            imageView.image = nil
             addSubview(gifWebView)
             configureGifWebView()
             gifWebView.configure(gifUrl: gifUrl)
