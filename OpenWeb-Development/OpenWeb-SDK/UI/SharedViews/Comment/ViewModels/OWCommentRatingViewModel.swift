@@ -43,8 +43,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     var outputs: OWCommentRatingViewModelingOutputs { return self }
 
     private let disposeBag = DisposeBag()
-    private let servicesProvider: OWSharedServicesProviding
-    private var retryVote = PublishSubject<Void>()
+    private let sharedServiceProvider: OWSharedServicesProviding
 
     var rankChanged = PublishSubject<SPRankChange>()
     var tapRankUp = PublishSubject<Void>()
@@ -55,7 +54,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     private let _rankedByUser = BehaviorSubject<Int?>(value: nil)
 
     private var _voteSymbolType: Observable<OWVotesType> {
-        self.servicesProvider.spotConfigurationService()
+        self.sharedServiceProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> OWVotesType in
                 guard let sharedConfig = config.shared
@@ -91,9 +90,9 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 
     private let commentId: String
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
-        self.servicesProvider = servicesProvider
+    init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
+        self.sharedServiceProvider = sharedServiceProvider
         self.customizationsLayer = customizationsLayer
         commentId = ""
     }
@@ -102,9 +101,9 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 
     init(model: OWCommentVotingModel,
          commentId: String,
-         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
-        self.servicesProvider = servicesProvider
+        self.sharedServiceProvider = sharedServiceProvider
         self.customizationsLayer = customizationsLayer
         _rankUp.onNext(model.rankUpCount)
         _rankDown.onNext(model.rankDownCount)
@@ -140,7 +139,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     }
 
     var voteTypes: Observable<[OWVoteType]> {
-        self.servicesProvider.spotConfigurationService()
+        self.sharedServiceProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> [OWVoteType] in
                 var voteTypesToShow: [OWVoteType] = [.voteUp, .voteDown]
@@ -242,38 +241,25 @@ private extension OWCommentRatingViewModel {
                     .map { _ in rankChange }
             }
 
-        retryVote
-            .bind(to: servicesProvider.toastNotificationService().clearCurrentToast)
-            .disposed(by: disposeBag)
-
-        let retryObserver = retryVote
-            .withLatestFrom(rankChanged)
-
         // Updating Network/Remote about rank change
-        Observable.merge(rankChangedLocallyObservable, retryObserver)
+        rankChangedLocallyObservable
             .flatMapLatest { [weak self] rankChange -> Observable<Event<EmptyDecodable>> in
                 guard let self,
                       let postId = OWManager.manager.postId,
                       let operation = rankChange.operation
                 else { return .empty() }
-                return self.servicesProvider
+
+                return self.sharedServiceProvider
                     .networkAPI()
                     .conversation
                     .commentRankChange(conversationId: "\(OWManager.manager.spotId)_\(postId)", operation: operation, commentId: self.commentId)
                     .response
                     .materialize()
             }
-            .subscribe(onNext: { [weak self] event  in
-                guard let self else { return }
-                switch event {
-                case .error:
-                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
-                    self.servicesProvider.toastNotificationService()
-                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
-                                                                         actionCompletion: self.retryVote))
-                default:
-                    return
-                }
+            .map { $0.element }
+            .subscribe(onError: { error in
+                // TODO: if did not work - change locally back (using rankChange.reverse)
+                print("error \(error)")
             })
             .disposed(by: disposeBag)
     }
@@ -317,10 +303,10 @@ private extension OWCommentRatingViewModel {
 
     func updateRankChangeInCommentsService(rank: OWComment.Rank) {
         guard let postId = OWManager.manager.postId,
-        var comment = self.servicesProvider.commentsService().get(commentId: self.commentId, postId: postId)
+        var comment = self.sharedServiceProvider.commentsService().get(commentId: self.commentId, postId: postId)
         else { return }
 
         comment.rank = rank
-        self.servicesProvider.commentsService().set(comments: [comment], postId: postId)
+        self.sharedServiceProvider.commentsService().set(comments: [comment], postId: postId)
     }
 }
