@@ -24,13 +24,6 @@ class OWCommentContentView: UIView {
         static let editedLabelIdentifier = "comment_edited_label_id"
     }
 
-    private lazy var tapMediaViewGesture: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer()
-        mediaView.addGestureRecognizer(tap)
-        mediaView.isUserInteractionEnabled = true
-        return tap
-    }()
-
     private lazy var textLabel: OWCommentTextLabel = {
        return OWCommentTextLabel()
             .numberOfLines(0)
@@ -98,15 +91,6 @@ private extension OWCommentContentView {
     }
 
     func setupObservers() {
-        tapMediaViewGesture.rx.event
-            .map { [weak self] _ -> UIImage? in
-                guard let self else { return nil }
-                return self.mediaView.imageView.image
-            }
-            .unwrap()
-            .bind(to: viewModel.inputs.imageTapped)
-            .disposed(by: disposeBag)
-
         viewModel.outputs.image
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
