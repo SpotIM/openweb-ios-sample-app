@@ -13,6 +13,8 @@
 		137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */; };
 		1374A8C72CF6243000F639D5 /* SingleAdExampleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C62CF6243000F639D5 /* SingleAdExampleVC.swift */; };
 		1374A8C92CF6248000F639D5 /* SingleAdExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C82CF6248000F639D5 /* SingleAdExampleViewModel.swift */; };
+		13A8393B2D098EAA007F82D0 /* PreconversationWithAdVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A8393A2D098E7F007F82D0 /* PreconversationWithAdVC.swift */; };
+		13A8393D2D098EC1007F82D0 /* PreconversationWithAdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A8393C2D098EAF007F82D0 /* PreconversationWithAdViewModel.swift */; };
 		16EFD62C2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */; };
 		16EFD62D2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2F113A104F74133456A49735 /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */; };
@@ -48,6 +50,8 @@
 		137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewViewModel.swift; sourceTree = "<group>"; };
 		1374A8C62CF6243000F639D5 /* SingleAdExampleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAdExampleVC.swift; sourceTree = "<group>"; };
 		1374A8C82CF6248000F639D5 /* SingleAdExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAdExampleViewModel.swift; sourceTree = "<group>"; };
+		13A8393A2D098E7F007F82D0 /* PreconversationWithAdVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreconversationWithAdVC.swift; sourceTree = "<group>"; };
+		13A8393C2D098EAF007F82D0 /* PreconversationWithAdViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreconversationWithAdViewModel.swift; sourceTree = "<group>"; };
 		16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebSDKAdapter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3DA1DF132C6E200300EBFA7D /* OpenWeb-SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWeb-SampleApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */,
+				13A8393C2D098EAF007F82D0 /* PreconversationWithAdViewModel.swift */,
 				1374A8C82CF6248000F639D5 /* SingleAdExampleViewModel.swift */,
 			);
 			path = ViewModels;
@@ -128,6 +133,7 @@
 		137495A12CF4CBE100F639D5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				13A8393A2D098E7F007F82D0 /* PreconversationWithAdVC.swift */,
 				137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */,
 				1374A8C62CF6243000F639D5 /* SingleAdExampleVC.swift */,
 			);

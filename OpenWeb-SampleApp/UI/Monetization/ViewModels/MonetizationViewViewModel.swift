@@ -11,13 +11,13 @@ import RxSwift
 
 protocol MonetizationViewViewModelingInputs {
     var singleAdExampleTapped: PublishSubject<Void> { get }
-    var preConversationExampleTapped: PublishSubject<Void> { get }
+    var preConversationTapped: PublishSubject<PresentationalModeCompact> { get }
 }
 
 protocol MonetizationViewViewModelingOutputs {
     var title: String { get }
     var openSingleAdExample: Observable<OWPostId> { get }
-    var openPreConversationExample: Observable<OWPostId> { get }
+    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> { get }
 }
 
 protocol MonetizationViewViewModeling {
@@ -33,7 +33,7 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
     private let disposeBag = DisposeBag()
 
     let singleAdExampleTapped = PublishSubject<Void>()
-    let preConversationExampleTapped = PublishSubject<Void>()
+    let preConversationTapped = PublishSubject<PresentationalModeCompact>()
 
     private let _openSingleAdExample = BehaviorSubject<OWPostId?>(value: nil)
     var openSingleAdExample: Observable<OWPostId> {
@@ -42,9 +42,9 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
             .asObservable()
     }
 
-    private let _openPreConversationExample = BehaviorSubject<OWPostId?>(value: nil)
-    var openPreConversationExample: Observable<OWPostId> {
-        return _openPreConversationExample
+    private let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
+    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
+        return _openMockArticleScreen
             .unwrap()
             .asObservable()
     }
@@ -70,13 +70,16 @@ private extension MonetizationViewViewModel {
             .bind(to: _openSingleAdExample)
             .disposed(by: disposeBag)
 
-        preConversationExampleTapped
+        preConversationTapped
             .asObservable()
-            .map { [weak self] _ -> OWPostId? in
-                return self?.postId
+            .map { [weak self] mode -> SDKUIFlowActionSettings? in
+                guard let self else { return nil }
+                let action = SDKUIFlowActionType.preConversation(presentationalMode: mode)
+                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
+                return model
             }
             .unwrap()
-            .bind(to: _openPreConversationExample)
+            .bind(to: _openMockArticleScreen)
             .disposed(by: disposeBag)
     }
 }
