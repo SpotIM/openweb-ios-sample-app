@@ -57,8 +57,20 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
                 return .never()
             }
 
+        let monetizationCoordinator = viewsVM.outputs.openMonetizationScreen
+            .flatMap { [weak self] dataModel -> Observable<Void> in
+                guard let self else { return .empty() }
+                let coordinatorData = CoordinatorData.postId(data: dataModel)
+                let coordinator = MonetizationCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> Observable<Void> in
+                return .never()
+            }
+
         return Observable.merge(vcPopped.asObservable(),
                                 mockArticleIndependentCoordinator,
-                                viewsExamplesCoordinator)
+                                viewsExamplesCoordinator,
+                                monetizationCoordinator)
     }
 }
