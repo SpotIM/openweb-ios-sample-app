@@ -123,7 +123,6 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
 }
 
 private extension PreconversationWithAdViewModel {
-    // swiftlint:disable function_body_length
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.onNext(articleURL)
