@@ -374,8 +374,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 (element, latestValues.0, latestValues.1, latestValues.2)
             }
             .map { scrollingDown, tableViewContentOffsetY, tableViewHeight, tableViewContentSizeHeight in
-                if tableViewHeight < tableViewContentSizeHeight - tableViewContentOffsetY {
-                    return scrollingDown ? tableViewContentOffsetY : 0
+                if scrollingDown && tableViewHeight < tableViewContentSizeHeight {
+                    return tableViewContentOffsetY
                 } else {
                     return 0
                 }
