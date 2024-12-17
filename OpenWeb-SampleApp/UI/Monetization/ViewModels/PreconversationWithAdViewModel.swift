@@ -19,6 +19,7 @@ protocol PreconversationWithAdViewModelingInputs {
 protocol PreconversationWithAdViewModelingOutputs {
     var title: String { get }
     var showPreConversation: Observable<UIView> { get }
+    var adSizeChanged: Observable<Void> { get }
     var articleImageURL: Observable<URL> { get }
     var showError: Observable<String> { get }
     var preConversationHorizontalMargin: CGFloat { get }
@@ -103,6 +104,12 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
             .asObservable()
     }
 
+    private let _adSizeChanged = PublishSubject<Void>()
+    var adSizeChanged: Observable<Void> {
+        return _adSizeChanged
+            .asObservable()
+    }
+    
     var preConversationHorizontalMargin: CGFloat {
         let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
@@ -161,7 +168,7 @@ private extension PreconversationWithAdViewModel {
                                       article: article,
                                       presentationalMode: presentationalMode,
                                       additionalSettings: additionalSettings,
-                                      callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                                      callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
                                       completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
@@ -255,12 +262,19 @@ private extension PreconversationWithAdViewModel {
         analytics.addBICallback(BIClosure)
     }
 
-    func loggerActionCallbacks(loggerEnabled: Bool) -> OWFlowActionsCallbacks? {
-        guard loggerEnabled else { return nil }
+    func actionCallbacks(loggerEnabled: Bool) -> OWFlowActionsCallbacks? {
         return { [weak self] callbackType, sourceType, postId in
             guard let self else { return }
-            let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-            self.loggerViewModel.inputs.log(text: log)
+
+            switch callbackType {
+            case .adSizeChanged:
+                _adSizeChanged.onNext()
+            default:
+                guard loggerEnabled else { return }
+                let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+           
         }
     }
 }
