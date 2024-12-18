@@ -38,9 +38,17 @@ class ArticleImageCell: UITableViewCell {
             make.width.equalTo(imgViewArticle.snp.height)
             make.width.equalToSuperview().multipliedBy(Metrics.articleImageRatio)
         }
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private extension ArticleImageCell {
+    func setupViews() {
+        selectionStyle = .none
+        self.backgroundColor = .clear
     }
 }

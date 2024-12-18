@@ -24,10 +24,16 @@ class PreConversationCell: UITableViewCell {
         self.viewModel = viewModel
         self.tableView = tableView
         self.setupObservers()
+        self.setupViews()
     }
 }
 
 private extension PreConversationCell {
+    func setupViews() {
+        selectionStyle = .none
+        self.backgroundColor = .clear
+    }
+    
     func setupObservers() {
         viewModel.outputs.showPreConversation
             .observe(on: MainScheduler.instance)
