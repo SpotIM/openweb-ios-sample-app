@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class PreConversationCell: UITableViewCell {
     private struct Metrics {
@@ -14,12 +15,40 @@ class PreConversationCell: UITableViewCell {
     }
     
     static let identifier = "PreConversationCell"
-    
-    func configure(with preConversationView: UIView?) {
-        guard let preConversationView else { return }
-        contentView.addSubview(preConversationView)
-        preConversationView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(Metrics.horizontalMargin)
-        }
+    private weak var preConversation: UIView?
+    private weak var tableView: UITableView?
+    private var viewModel: PreconversationCellViewModeling!
+    private let disposeBag = DisposeBag()
+
+    func configure(with viewModel: PreconversationCellViewModeling, tableView: UITableView) {
+        self.viewModel = viewModel
+        self.tableView = tableView
+        self.setupObservers()
+    }
+}
+
+private extension PreConversationCell {
+    func setupObservers() {
+        viewModel.outputs.showPreConversation
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] preConversation in
+                guard let self, let preConversation else { return }
+                self.preConversation = preConversation
+                contentView.addSubview(preConversation)
+                preConversation.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+                tableView?.beginUpdates()
+                tableView?.endUpdates()
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.adSizeChanged
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.tableView?.beginUpdates()
+                self?.tableView?.endUpdates()
+            })
+            .disposed(by: disposeBag)
     }
 }
