@@ -30,9 +30,17 @@ class ArticleContentCell: UITableViewCell {
         lblArticleDescription.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private extension ArticleContentCell {
+    func setupViews() {
+        selectionStyle = .none
+        self.backgroundColor = .clear
     }
 }
