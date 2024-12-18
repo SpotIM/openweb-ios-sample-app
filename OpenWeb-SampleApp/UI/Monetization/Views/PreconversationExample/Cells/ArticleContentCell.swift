@@ -27,8 +27,9 @@ class ArticleContentCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(lblArticleDescription)
+        lblArticleDescription.backgroundColor = .green
         lblArticleDescription.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(Metrics.horizontalMargin)
+            make.edges.equalToSuperview()
         }
     }
     

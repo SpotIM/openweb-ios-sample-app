@@ -16,14 +16,19 @@ class PreconversationWithAdVC: UIViewController {
         let tableView = UITableView()
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
-        tableView.register(ArticleImageCell.self, forCellReuseIdentifier: ArticleImageCell.identifier)
-        tableView.register(ArticleContentCell.self, forCellReuseIdentifier: ArticleContentCell.identifier)
-        tableView.register(PreConversationCell.self, forCellReuseIdentifier: PreConversationCell.identifier)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 500
+        tableView.register(ArticleImageCell.self,
+                           forCellReuseIdentifier: ArticleImageCell.identifier)
+        tableView.register(ArticleContentCell.self,
+                           forCellReuseIdentifier: ArticleContentCell.identifier)
+        tableView.register(PreConversationCell.self,
+                           forCellReuseIdentifier: PreConversationCell.identifier)
+   
         tableView.dataSource = self
         return tableView
     }()
     
-    private var preConversationView: UIView?
     private var articleImageURL: URL?
     
     init(viewModel: PreconversationWithAdViewModeling) {
@@ -48,20 +53,13 @@ class PreconversationWithAdVC: UIViewController {
     }
     
     private func setupObservers() {
-        viewModel.inputs.setNavigationController(self.navigationController)
-        viewModel.inputs.setPresentationalVC(self)
+        viewModel.outputs.preconversationCellViewModel.inputs.setNavigationController(self.navigationController)
+        viewModel.outputs.preconversationCellViewModel.inputs.setPresentationalVC(self)
 
         viewModel.outputs.articleImageURL
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] url in
                 self?.articleImageURL = url
-                self?.tableView.reloadData()
-            })
-            .disposed(by: disposeBag)
-        
-        viewModel.outputs.showPreConversation
-            .subscribe(onNext: { [weak self] preConversation in
-                self?.preConversationView = preConversation
-                self?.tableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -69,22 +67,27 @@ class PreconversationWithAdVC: UIViewController {
 
 extension PreconversationWithAdVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // 2 cells by default (image + content), 3 if preConversationView exists
         return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ArticleImageCell.identifier, for: indexPath) as! ArticleImageCell
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticleImageCell.identifier, for: indexPath) as? ArticleImageCell else {
+                fatalError("\(ArticleImageCell.identifier) must be registered first")
+            }
             cell.configure(with: articleImageURL)
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ArticleContentCell.identifier, for: indexPath) as! ArticleContentCell
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticleContentCell.identifier, for: indexPath) as? ArticleContentCell else {
+                fatalError("\(ArticleContentCell.identifier) must be registered first")
+            }
             return cell
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: PreConversationCell.identifier, for: indexPath) as! PreConversationCell
-            cell.configure(with: preConversationView)
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: PreConversationCell.identifier, for: indexPath) as? PreConversationCell else {
+                fatalError("\(PreConversationCell.identifier) must be registered first")
+            }
+            cell.configure(with: viewModel.outputs.preconversationCellViewModel, tableView: tableView)
             
             return cell
         default:
