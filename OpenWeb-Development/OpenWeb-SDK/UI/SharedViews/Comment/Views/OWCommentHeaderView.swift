@@ -130,7 +130,7 @@ class OWCommentHeaderView: UIView {
         self.subtitleLabel.isHidden = false
         self.subscriberBadgeView.isHidden = false
 
-        self.badgeTagContainer.isHidden = true
+        self.badgeTagContainer.isHidden = false
         self.hiddenCommentReasonLabel.isHidden = true
         self.avatarImageView.prepareForReuse()
     }
