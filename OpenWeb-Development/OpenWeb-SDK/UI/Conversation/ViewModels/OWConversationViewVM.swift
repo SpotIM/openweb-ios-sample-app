@@ -34,7 +34,7 @@ protocol OWConversationViewViewModelingInputs {
 
 protocol OWConversationViewViewModelingOutputs {
     var shouldShowTitleHeader: Bool { get }
-    var shouldShowArticleDescription: Bool { get }
+    var shouldShowArticleDescription: Observable<Bool> { get }
     var shouldShowErrorLoadingComments: Observable<Bool> { get }
     var shouldShowErrorLoadingMoreComments: Observable<Bool> { get }
     var shouldShowErrorCommentDelete: Observable<Bool> { get }
@@ -109,6 +109,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
         static let filterTabsHideMinimumOffset: CGFloat = 50
+        static let articleDescriptionHideMinimumOffset: CGFloat = 30
         static let delayScrollToCommentId: Int = 500 // ms
         static let delayHighlightComment: Int = 350 // ms
     }
@@ -161,8 +162,15 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWManager.manager.postId ?? ""
     }
 
-    lazy var shouldShowArticleDescription: Bool = {
-        return conversationData.article.additionalSettings.headerStyle != .none
+    lazy var shouldShowArticleDescription: Observable<Bool> = {
+        Observable.combineLatest(yOffsetForHidingScrolledViews, servicesProvider.orientationService().orientation)
+            .map { [weak self] yOffsetForHidingScrolledViews, orientation in
+                guard let self else { return false }
+                guard conversationData.article.additionalSettings.headerStyle != OWArticleHeaderStyle.none else { return false }
+                return orientation == .portrait || yOffsetForHidingScrolledViews < Metrics.articleDescriptionHideMinimumOffset
+            }
+            .distinctUntilChanged()
+            .asObservable()
     }()
 
     private var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
@@ -348,19 +356,32 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     // Show FilterTabsView
     lazy var shouldShowFilterTabsView: Observable<Bool> = {
         return Observable.combineLatest(filterTabsVM.outputs.shouldShowFilterTabs,
-                                        scrollingDown)
-        .withLatestFrom(Observable.combineLatest(tableViewContentOffsetYChanged,
-                                                 tableViewHeightChanged,
-                                                 tableViewContentSizeHeight)) { element, latestValues in
-            (element.0, element.1, latestValues.0, latestValues.1, latestValues.2)
-        }
-        .map { shouldShowFilterTabs, scrollingDown, tableViewContentOffsetY, tableViewHeight, tableViewContentSizeHeight in
+                                        yOffsetForHidingScrolledViews)
+        .map { shouldShowFilterTabs, yOffsetForHidingScrolledViews in
             return shouldShowFilterTabs &&
-                !(tableViewContentOffsetY + tableViewHeight > tableViewContentSizeHeight) &&
-                (!scrollingDown || tableViewContentOffsetY < Metrics.filterTabsHideMinimumOffset)
+                yOffsetForHidingScrolledViews < Metrics.filterTabsHideMinimumOffset
         }
         .distinctUntilChanged()
         .asObservable()
+    }()
+
+    /// Sends 0 when nothing should be hidden, and Y offset when needs to test if filters or description should to be hidden.
+    private lazy var yOffsetForHidingScrolledViews: Observable<CGFloat> = {
+        scrollingDown
+            .withLatestFrom(Observable.combineLatest(tableViewContentOffsetYChanged,
+                                                     tableViewHeightChanged,
+                                                     tableViewContentSizeHeight)) { element, latestValues in
+                (element, latestValues.0, latestValues.1, latestValues.2)
+            }
+            .map { scrollingDown, tableViewContentOffsetY, tableViewHeight, tableViewContentSizeHeight in
+                if tableViewHeight < tableViewContentSizeHeight - tableViewContentOffsetY {
+                    return scrollingDown ? tableViewContentOffsetY : 0
+                } else {
+                    return 0
+                }
+            }
+            .distinctUntilChanged()
+            .asObservable()
     }()
 
     private lazy var pendingLocalComments = BehaviorSubject<[OWComment]?>(value: nil)

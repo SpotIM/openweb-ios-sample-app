@@ -135,6 +135,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     private var summaryPortraitLeadingConstraint: OWConstraint?
     private var summaryLandscapeLeadingConstraint: OWConstraint?
     private var filterTabsHeightConstraint: OWConstraint?
+    private var articleDescriptionViewHeightConstraint: OWConstraint?
 
     private let viewModel: any OWConversationViewViewModeling
     private let disposeBag = DisposeBag()
@@ -177,17 +178,15 @@ private extension OWConversationView {
             }
         }
 
-        let shouldShowArticleDescription = viewModel.outputs.shouldShowArticleDescription
-        if shouldShowArticleDescription {
-            self.addSubview(articleDescriptionView)
-            articleDescriptionView.OWSnp.makeConstraints { make in
-                if shouldShowTitleHeader {
-                    make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
-                } else {
-                    make.top.equalToSuperview()
-                }
-                make.leading.trailing.equalToSuperview()
+        self.addSubview(articleDescriptionView)
+        articleDescriptionView.OWSnp.makeConstraints { make in
+            if shouldShowTitleHeader {
+                make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
+            } else {
+                make.top.equalToSuperview()
             }
+            make.leading.trailing.equalToSuperview()
+            articleDescriptionViewHeightConstraint = make.height.equalTo(0).constraint
         }
 
         let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
@@ -195,13 +194,7 @@ private extension OWConversationView {
 
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
-            if shouldShowArticleDescription {
-                make.top.equalTo(articleDescriptionView.OWSnp.bottom)
-            } else if shouldShowTitleHeader {
-                make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
-            } else {
-                make.top.equalToSuperview()
-            }
+            make.top.equalTo(articleDescriptionView.OWSnp.bottom)
             make.leading.equalToSuperview()
             loginPromptPortraitConstraints.append(make.trailing.equalToSuperview().constraint)
             loginPromptLandscapeConstraints.append(make.trailing.equalToSuperview().multipliedBy(0.5).constraint)
@@ -320,8 +313,18 @@ private extension OWConversationView {
                     self.filterTabsView.OWSnp.updateConstraints { make in
                         make.top.equalTo(self.conversationSummaryView.OWSnp.bottom).offset(-offset)
                     }
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowArticleDescription
+            .subscribe(onNext: { [weak self] shouldShowArticleDescription in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let articleDescriptionViewHeightConstraint = self?.articleDescriptionViewHeightConstraint else { return }
+                    guard shouldShowArticleDescription == articleDescriptionViewHeightConstraint.isActive else { return }
+                    articleDescriptionViewHeightConstraint.isActive = !shouldShowArticleDescription
                     UIView.animate(withDuration: Metrics.animateHideShowFilterTabsDuration) {
-                        self.layoutSubviews()
+                        self?.layoutSubviews()
                     }
                 }
             })
