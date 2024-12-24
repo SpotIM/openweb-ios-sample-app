@@ -11,10 +11,7 @@ import UIKit
 class ArticleImageCell: UITableViewCell {
     static let identifier = "ArticleImageCell"
     private struct Metrics {
-        static let verticalMargin: CGFloat = 40
-        static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2 / 3
-        static let horizontalMargin: CGFloat = 20
         static let articelImageViewCornerRadius: CGFloat = 10
     }
 
