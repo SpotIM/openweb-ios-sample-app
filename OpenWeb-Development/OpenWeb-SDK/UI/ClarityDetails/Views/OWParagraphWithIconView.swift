@@ -15,6 +15,9 @@ class OWParagraphWithIconView: UIView {
     private struct Metrics {
         static let iconSize: CGFloat = 24
         static let textLeadingPadding: CGFloat = 10
+
+        static let identifier = "paragraph_with_icon_view_id"
+        static let textLabelIdentifier = "paragraph_with_icon_text_label_id"
     }
 
     private let disposeBag: DisposeBag
@@ -27,6 +30,7 @@ class OWParagraphWithIconView: UIView {
 
         setupViews()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -87,5 +91,10 @@ private extension OWParagraphWithIconView {
                 self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        textLabel.accessibilityIdentifier = Metrics.textLabelIdentifier
     }
 }

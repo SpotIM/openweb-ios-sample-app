@@ -29,6 +29,10 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         static let identifier = "clarity_details_view_id"
         static let titleLabelIdentifier = "clarity_details_title_id"
         static let closeButtonIdentifier = "clarity_details_close_button_id"
+        static let topParagraphLabelIdentifier = "clarity_details_top_paragraph_label_id"
+        static let detailsTitleLabelIdentifier = "clarity_details_details_title_label_id"
+        static let paragraphsStackViewIdentifier = "clarity_details_paragraphs_stack_view_id"
+        static let bottomParagraphLabelIdentifier = "clarity_details_bottom_paragraph_label_id"
         static let gotItButtonIdentifier = "clarity_details_got_it_button_id"
     }
 
@@ -252,6 +256,10 @@ private extension OWClarityDetailsView {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        topParagraphLabel.accessibilityIdentifier = Metrics.topParagraphLabelIdentifier
+        detailsTitleLabel.accessibilityIdentifier = Metrics.detailsTitleLabelIdentifier
+        paragraphsStackView.accessibilityIdentifier = Metrics.paragraphsStackViewIdentifier
+        bottomParagraphLabel.accessibilityIdentifier = Metrics.bottomParagraphLabelIdentifier
         gotItButton.accessibilityIdentifier = Metrics.gotItButtonIdentifier
     }
 }
