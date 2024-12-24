@@ -52,20 +52,24 @@ private extension MonetizationCoordinator {
             .disposed(by: disposeBag)
 
         viewModel.outputs.openMockArticleScreen
-            .subscribe(onNext: { [weak self] dataModel in
-                guard let self else { return }
-                let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
-                guard case CoordinatorData.actionsFlowSettings(let settings) = coordinatorData else {
-                    fatalError("MockArticleCoordinator requires coordinatorData from `CoordinatorData.actionsFlowSettings` type")
-                }
+            .subscribe(
+                onNext: { [weak self] dataModel in
+                    guard let self else { return }
+                    let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
+                    guard case CoordinatorData.actionsFlowSettings(let settings) = coordinatorData else {
+                        fatalError("MockArticleCoordinator requires coordinatorData from `CoordinatorData.actionsFlowSettings` type")
+                    }
 
-                let PreconversationWithAdVM: PreconversationWithAdViewModeling = PreconversationWithAdViewModel(actionSettings: settings)
+                    let PreconversationWithAdVM: PreconversationWithAdViewModeling = PreconversationWithAdViewModel(
+                        actionSettings: settings,
+                        postId: dataModel.postId
+                    )
                 let PreconversationWithAdVC = PreconversationWithAdVC(viewModel: PreconversationWithAdVM)
                 self.router.push(PreconversationWithAdVC,
                                  animated: true,
                                  completion: nil)
 
-            })
+                })
             .disposed(by: disposeBag)
 
     }
