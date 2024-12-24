@@ -13,7 +13,7 @@ class PreConversationCell: UITableViewCell {
     private struct Metrics {
         static let horizontalMargin: CGFloat = 20
     }
-    
+
     static let identifier = "PreConversationCell"
     private weak var preConversation: UIView?
     private weak var tableView: UITableView?
@@ -33,7 +33,7 @@ private extension PreConversationCell {
         selectionStyle = .none
         self.backgroundColor = .clear
     }
-    
+
     func setupObservers() {
         viewModel.outputs.showPreConversation
             .observe(on: MainScheduler.instance)
@@ -48,7 +48,7 @@ private extension PreConversationCell {
                 tableView?.endUpdates()
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.adSizeChanged
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
