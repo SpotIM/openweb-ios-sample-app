@@ -17,19 +17,19 @@ class ArticleImageCell: UITableViewCell {
         static let horizontalMargin: CGFloat = 20
         static let articelImageViewCornerRadius: CGFloat = 10
     }
-    
+
     private lazy var imgViewArticle: UIImageView = {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
             .corner(radius: Metrics.articelImageViewCornerRadius)
     }()
-    
+
     func configure(with imageURL: URL?) {
         guard let imageURL else { return }
         imgViewArticle.image(from: imageURL)
     }
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(imgViewArticle)
@@ -40,7 +40,7 @@ class ArticleImageCell: UITableViewCell {
         }
         setupViews()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

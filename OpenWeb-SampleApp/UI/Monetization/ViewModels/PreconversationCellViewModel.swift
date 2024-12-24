@@ -50,7 +50,7 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
     func setPresentationalVC(_ viewController: UIViewController) {
         presentationalVC = viewController
     }
-    
+
     private let _showPreConversation = BehaviorSubject<UIView?>(value: nil)
     var showPreConversation: Observable<UIView?> {
         return _showPreConversation
@@ -62,22 +62,22 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
         return _adSizeChanged
             .asObservable()
     }
-    
+
     private let _actionSettings = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
     private var actionSettings: Observable<SDKUIFlowActionSettings> {
         return _actionSettings
             .unwrap()
             .asObservable()
     }
-    
+
     lazy var loggerEnabled: Observable<Bool> = {
         return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
     }()
-    
+
     lazy var loggerViewModel: UILoggerViewModeling = {
         return UILoggerViewModel(title: "Flows Logger")
     }()
-    
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          actionSettings: SDKUIFlowActionSettings,
          commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {
@@ -86,13 +86,13 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
         _actionSettings.onNext(actionSettings)
         setupObservers()
     }
-    
+
     var preConversationHorizontalMargin: CGFloat {
         let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
         return margin
     }
-    
+
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
         guard let navController = self.navController,
               let presentationalVC = self.presentationalVC else { return nil }
@@ -155,7 +155,7 @@ private extension PreconversationCellViewModel {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func actionCallbacks(loggerEnabled: Bool) -> OWFlowActionsCallbacks? {
         return { [weak self] callbackType, sourceType, postId in
             guard let self else { return }
@@ -168,7 +168,7 @@ private extension PreconversationCellViewModel {
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
-           
+
         }
     }
 }
