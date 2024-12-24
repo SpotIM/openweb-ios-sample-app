@@ -8,10 +8,6 @@
 import UIKit
 
 class ArticleContentCell: UITableViewCell {
-    private struct Metrics {
-        static let horizontalMargin: CGFloat = 20
-    }
-
     static let identifier = "ArticleContentCell"
 
     private lazy var lblArticleDescription: UILabel = {

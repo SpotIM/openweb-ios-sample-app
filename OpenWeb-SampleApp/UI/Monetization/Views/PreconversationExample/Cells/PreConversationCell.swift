@@ -10,10 +10,6 @@ import UIKit
 import RxSwift
 
 class PreConversationCell: UITableViewCell {
-    private struct Metrics {
-        static let horizontalMargin: CGFloat = 20
-    }
-
     static let identifier = "PreConversationCell"
     private weak var preConversation: UIView?
     private weak var tableView: UITableView?
