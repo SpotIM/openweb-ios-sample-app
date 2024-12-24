@@ -41,8 +41,12 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
          imageProviderAPI: ImageProviding = ImageProvider(),
          actionSettings: SDKUIFlowActionSettings) {
         self.imageProviderAPI = imageProviderAPI
-    
-        self.preconversationCellViewModel = PreconversationCellViewModel(userDefaultsProvider: userDefaultsProvider, actionSettings: actionSettings, commonCreatorService: commonCreatorService)
+
+        self.preconversationCellViewModel = PreconversationCellViewModel(
+            userDefaultsProvider: userDefaultsProvider,
+            actionSettings: actionSettings,
+            commonCreatorService: commonCreatorService
+        )
         setupObservers()
     }
 
