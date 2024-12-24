@@ -6,6 +6,7 @@
 //
 
 import RxSwift
+import OpenWebSDK
 
 protocol PreconversationWithAdViewModelingInputs {}
 
@@ -13,6 +14,7 @@ protocol PreconversationWithAdViewModelingOutputs {
     var title: String { get }
     var articleImageURL: Observable<URL> { get }
     var preconversationCellViewModel: PreconversationCellViewModeling { get }
+    var independentAdCellViewModel: IndependentAdCellViewModeling { get }
 }
 
 protocol PreconversationWithAdViewModeling {
@@ -26,6 +28,7 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
 
     private let disposeBag = DisposeBag()
     private let imageProviderAPI: ImageProviding
+    private let postId: OWPostId
 
     private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
     var articleImageURL: Observable<URL> {
@@ -35,13 +38,19 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
     }
 
     var preconversationCellViewModel: PreconversationCellViewModeling
+    lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
+        IndependentAdCellViewModel(postId: postId)
+    }()
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
          imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIFlowActionSettings) {
+         actionSettings: SDKUIFlowActionSettings,
+         postId: OWPostId
+    ) {
         self.imageProviderAPI = imageProviderAPI
-
+        self.postId = postId
         self.preconversationCellViewModel = PreconversationCellViewModel(
             userDefaultsProvider: userDefaultsProvider,
             actionSettings: actionSettings,

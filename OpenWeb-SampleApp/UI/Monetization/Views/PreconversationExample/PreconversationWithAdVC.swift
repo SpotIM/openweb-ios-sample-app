@@ -22,6 +22,10 @@ class PreconversationWithAdVC: UIViewController {
                            forCellReuseIdentifier: ArticleImageCell.identifier)
         tableView.register(ArticleContentCell.self,
                            forCellReuseIdentifier: ArticleContentCell.identifier)
+        tableView.register(IndependentAdCell.self,
+                           forCellReuseIdentifier: IndependentAdCell.identifier)
+        tableView.register(ArticleContentCell.self,
+                           forCellReuseIdentifier: ArticleContentCell.identifier)
         tableView.register(PreConversationCell.self,
                            forCellReuseIdentifier: PreConversationCell.identifier)
 
@@ -66,7 +70,7 @@ class PreconversationWithAdVC: UIViewController {
 
 extension PreconversationWithAdVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 5
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -83,10 +87,23 @@ extension PreconversationWithAdVC: UITableViewDataSource {
             }
             return cell
         case 2:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: IndependentAdCell.identifier, for: indexPath) as? IndependentAdCell else {
+                fatalError("\(IndependentAdCell.identifier) must be registered first")
+            }
+            cell.configure(with: viewModel.outputs.independentAdCellViewModel,
+                           tableView: tableView)
+            return cell
+        case 3:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticleContentCell.identifier, for: indexPath) as? ArticleContentCell else {
+                fatalError("\(ArticleContentCell.identifier) must be registered first")
+            }
+            return cell
+        case 4:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: PreConversationCell.identifier, for: indexPath) as? PreConversationCell else {
                 fatalError("\(PreConversationCell.identifier) must be registered first")
             }
-            cell.configure(with: viewModel.outputs.preconversationCellViewModel, tableView: tableView)
+            cell.configure(with: viewModel.outputs.preconversationCellViewModel,
+                           tableView: tableView)
 
             return cell
         default:
