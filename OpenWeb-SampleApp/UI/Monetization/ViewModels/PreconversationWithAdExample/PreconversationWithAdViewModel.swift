@@ -49,8 +49,7 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
         PreconversationCellViewModel(
             userDefaultsProvider: userDefaultsProvider,
             actionSettings: actionSettings,
-            commonCreatorService: commonCreatorService,
-            loggerViewModel: loggerViewModel
+            commonCreatorService: commonCreatorService
         )
     }()
     lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
@@ -61,13 +60,13 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
         return NSLocalizedString("MockArticle", comment: "")
     }()
 
-    lazy var loggerEnabled: Observable<Bool> = {
-        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
-    }()
+    var loggerEnabled: Observable<Bool> {
+        return preconversationCellViewModel.outputs.loggerEnabled
+    }
 
-    lazy var loggerViewModel: UILoggerViewModeling = {
-        return UILoggerViewModel(title: "Flows Logger")
-    }()
+    var loggerViewModel: UILoggerViewModeling {
+        return preconversationCellViewModel.outputs.loggerViewModel
+    }
 
     lazy var floatingViewViewModel: OWFloatingViewModeling = {
         return OWFloatingViewModel()
