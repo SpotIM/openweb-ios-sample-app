@@ -15,6 +15,8 @@ protocol PreconversationWithAdViewModelingOutputs {
     var articleImageURL: Observable<URL> { get }
     var preconversationCellViewModel: PreconversationCellViewModeling { get }
     var independentAdCellViewModel: IndependentAdCellViewModeling { get }
+    var cells: Observable<[PreconversationWithAdCellOption]> { get }
+
 }
 
 protocol PreconversationWithAdViewModeling {
@@ -23,6 +25,7 @@ protocol PreconversationWithAdViewModeling {
 }
 
 class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, PreconversationWithAdViewModelingInputs, PreconversationWithAdViewModelingOutputs {
+
     var inputs: PreconversationWithAdViewModelingInputs { return self }
     var outputs: PreconversationWithAdViewModelingOutputs { return self }
 
@@ -30,6 +33,7 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
     private let imageProviderAPI: ImageProviding
     private let postId: OWPostId
 
+    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.allCases)
     private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
     var articleImageURL: Observable<URL> {
         return _articleImageURL
