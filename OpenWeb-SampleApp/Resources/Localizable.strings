@@ -47,6 +47,7 @@
 "Miscellaneous" = "Miscellaneous";
 "MockArticle" = "Mock Article";
 "MockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";
+"PreconversationWithAdMockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";
 "PreConversation" = "Pre Conversation";
 "FullConversation" = "Full Conversation";
 "CommentCreation" = "Comment Creation";
