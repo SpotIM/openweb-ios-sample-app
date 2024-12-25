@@ -12,6 +12,20 @@ class PreconversationWithAdVC: UIViewController {
     private let viewModel: PreconversationWithAdViewModeling
     private let disposeBag = DisposeBag()
 
+    private struct Metrics {
+        static let loggerViewWidth: CGFloat = 300
+        static let loggerViewHeight: CGFloat = 250
+        static let loggerInitialTopPadding: CGFloat = 50
+    }
+
+    private lazy var floatingLoggerView: OWFloatingView = {
+        return OWFloatingView(viewModel: viewModel.outputs.floatingViewViewModel)
+    }()
+
+    private lazy var loggerView: UILoggerView = {
+        return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
+    }()
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .clear
@@ -36,6 +50,15 @@ class PreconversationWithAdVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        floatingLoggerView.removeFromSuperview()
+    }
+
+    override func loadView() {
+        super.loadView()
+        setupViews()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = ColorPalette.shared.color(type: .background)
@@ -47,11 +70,32 @@ class PreconversationWithAdVC: UIViewController {
         setupObservers()
     }
 
+    private func setupViews() {
+        if #available(iOS 13.0, *) {
+            #if !PUBLIC_DEMO_APP
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                // Add it to the window
+                floatingLoggerView.isHidden = true
+                keyWindow.addSubview(floatingLoggerView)
+                floatingLoggerView.snp.makeConstraints { make in
+                    make.width.equalTo(Metrics.loggerViewWidth)
+                    make.height.equalTo(Metrics.loggerViewHeight)
+                    make.top.equalToSuperview().offset(Metrics.loggerInitialTopPadding)
+                    make.centerX.equalToSuperview()
+                }
+            }
+            #endif
+        }
+    }
+
     private func setupObservers() {
         title = viewModel.outputs.title
 
         viewModel.outputs.preconversationCellViewModel.inputs.setNavigationController(self.navigationController)
         viewModel.outputs.preconversationCellViewModel.inputs.setPresentationalVC(self)
+
+        viewModel.outputs.floatingViewViewModel.inputs.setContentView.onNext(loggerView)
 
         viewModel.outputs.cells
             .bind(to: tableView.rx.items) { [weak self] tableView, _, option in
@@ -91,6 +135,15 @@ class PreconversationWithAdVC: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] url in
                 self?.articleImageURL = url
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.loggerEnabled
+            .delay(.milliseconds(10), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] loggerEnabled in
+                guard let self else { return }
+                self.floatingLoggerView.isHidden = !loggerEnabled
             })
             .disposed(by: disposeBag)
     }
