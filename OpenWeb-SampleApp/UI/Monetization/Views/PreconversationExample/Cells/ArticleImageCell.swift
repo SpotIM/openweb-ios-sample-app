@@ -13,6 +13,7 @@ class ArticleImageCell: UITableViewCell {
     private struct Metrics {
         static let articleImageRatio: CGFloat = 2 / 3
         static let articelImageViewCornerRadius: CGFloat = 10
+        static let verticalPadding: CGFloat = 40
     }
 
     private lazy var imgViewArticle: UIImageView = {
@@ -31,9 +32,11 @@ class ArticleImageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(imgViewArticle)
         imgViewArticle.snp.makeConstraints { make in
-            make.center.bottom.equalToSuperview()
-            make.width.equalTo(imgViewArticle.snp.height)
+            make.top.bottom.equalToSuperview().inset(Metrics.verticalPadding)
+            make.centerX.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(Metrics.articleImageRatio)
+            make.height.equalTo(imgViewArticle.snp.width)
+
         }
         setupViews()
     }
