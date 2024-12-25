@@ -17,7 +17,7 @@ protocol MonetizationViewViewModelingInputs {
 protocol MonetizationViewViewModelingOutputs {
     var title: String { get }
     var openSingleAdExample: Observable<OWPostId> { get }
-    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> { get }
+    var openPreconversationWithAdExample: Observable<SDKUIFlowActionSettings> { get }
 }
 
 protocol MonetizationViewViewModeling {
@@ -42,9 +42,9 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
             .asObservable()
     }
 
-    private let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
-    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
-        return _openMockArticleScreen
+    private let _openPreconversationWithAdExample = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
+    var openPreconversationWithAdExample: Observable<SDKUIFlowActionSettings> {
+        return _openPreconversationWithAdExample
             .unwrap()
             .asObservable()
     }
@@ -79,7 +79,7 @@ private extension MonetizationViewViewModel {
                 return model
             }
             .unwrap()
-            .bind(to: _openMockArticleScreen)
+            .bind(to: _openPreconversationWithAdExample)
             .disposed(by: disposeBag)
     }
 }
