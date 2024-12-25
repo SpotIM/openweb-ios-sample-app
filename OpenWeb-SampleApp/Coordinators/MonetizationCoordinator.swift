@@ -51,7 +51,7 @@ private extension MonetizationCoordinator {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openMockArticleScreen
+        viewModel.outputs.openPreconversationWithAdExample
             .subscribe(
                 onNext: { [weak self] dataModel in
                     guard let self else { return }
