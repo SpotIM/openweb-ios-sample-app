@@ -16,7 +16,9 @@ protocol PreconversationWithAdViewModelingOutputs {
     var preconversationCellViewModel: PreconversationCellViewModeling { get }
     var independentAdCellViewModel: IndependentAdCellViewModeling { get }
     var cells: Observable<[PreconversationWithAdCellOption]> { get }
-
+    var loggerEnabled: Observable<Bool> { get }
+    var floatingViewViewModel: OWFloatingViewModeling { get }
+    var loggerViewModel: UILoggerViewModeling { get }
 }
 
 protocol PreconversationWithAdViewModeling {
@@ -32,7 +34,9 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
     private let disposeBag = DisposeBag()
     private let imageProviderAPI: ImageProviding
     private let postId: OWPostId
-
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
+    private let actionSettings: SDKUIFlowActionSettings
+    private let commonCreatorService: CommonCreatorServicing
     var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.allCases)
     private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
     var articleImageURL: Observable<URL> {
@@ -41,13 +45,32 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
             .asObservable()
     }
 
-    var preconversationCellViewModel: PreconversationCellViewModeling
+    lazy var preconversationCellViewModel: PreconversationCellViewModeling = {
+        PreconversationCellViewModel(
+            userDefaultsProvider: userDefaultsProvider,
+            actionSettings: actionSettings,
+            commonCreatorService: commonCreatorService,
+            loggerViewModel: loggerViewModel
+        )
+    }()
     lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
         IndependentAdCellViewModel(postId: postId)
     }()
 
     lazy var title: String = {
         return NSLocalizedString("MockArticle", comment: "")
+    }()
+
+    lazy var loggerEnabled: Observable<Bool> = {
+        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
+    }()
+
+    lazy var loggerViewModel: UILoggerViewModeling = {
+        return UILoggerViewModel(title: "Flows Logger")
+    }()
+
+    lazy var floatingViewViewModel: OWFloatingViewModeling = {
+        return OWFloatingViewModel()
     }()
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
@@ -57,13 +80,12 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
          actionSettings: SDKUIFlowActionSettings,
          postId: OWPostId
     ) {
+        self.userDefaultsProvider = userDefaultsProvider
+        self.commonCreatorService = commonCreatorService
         self.imageProviderAPI = imageProviderAPI
+        self.actionSettings = actionSettings
         self.postId = postId
-        self.preconversationCellViewModel = PreconversationCellViewModel(
-            userDefaultsProvider: userDefaultsProvider,
-            actionSettings: actionSettings,
-            commonCreatorService: commonCreatorService
-        )
+
         setupObservers()
     }
 }
