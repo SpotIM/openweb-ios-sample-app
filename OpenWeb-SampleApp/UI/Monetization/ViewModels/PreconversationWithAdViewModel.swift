@@ -42,6 +42,10 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
         IndependentAdCellViewModel(postId: postId)
     }()
 
+    lazy var title: String = {
+        return NSLocalizedString("MockArticle", comment: "")
+    }()
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
@@ -58,10 +62,6 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
         )
         setupObservers()
     }
-
-    lazy var title: String = {
-        return NSLocalizedString("MockArticle", comment: "")
-    }()
 }
 
 private extension PreconversationWithAdViewModel {
