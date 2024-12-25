@@ -11,10 +11,13 @@ import RxSwift
 
 class IndependentAdCell: UITableViewCell {
     static let identifier = "IndependentAdCell"
-    private weak var independentAdView: UIView?
     private weak var tableView: UITableView?
     private var viewModel: IndependentAdCellViewModeling!
     private let disposeBag = DisposeBag()
+    private struct Metrics {
+        static let horizontalPadding: CGFloat = 37
+        static let verticalPadding: CGFloat = 16
+    }
 
     func configure(with viewModel: IndependentAdCellViewModeling,
                    tableView: UITableView) {
@@ -36,10 +39,10 @@ private extension IndependentAdCell {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] independentAdView in
                 guard let self else { return }
-                self.independentAdView = independentAdView
                 contentView.addSubview(independentAdView)
                 independentAdView.snp.makeConstraints { make in
-                    make.edges.equalToSuperview()
+                    make.top.bottom.equalToSuperview().inset(Metrics.verticalPadding)
+                    make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
                 }
                 tableView?.beginUpdates()
                 tableView?.endUpdates()
