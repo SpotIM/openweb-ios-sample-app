@@ -11,7 +11,6 @@ import RxSwift
 
 class PreConversationCell: UITableViewCell {
     static let identifier = "PreConversationCell"
-    private weak var preConversation: UIView?
     private weak var tableView: UITableView?
     private var viewModel: PreconversationCellViewModeling!
     private let disposeBag = DisposeBag()
@@ -35,7 +34,6 @@ private extension PreConversationCell {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] preConversation in
                 guard let self, let preConversation else { return }
-                self.preConversation = preConversation
                 contentView.addSubview(preConversation)
                 preConversation.snp.makeConstraints { make in
                     make.edges.equalToSuperview()

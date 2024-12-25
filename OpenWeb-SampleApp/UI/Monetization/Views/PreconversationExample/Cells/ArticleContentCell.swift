@@ -26,8 +26,8 @@ class ArticleContentCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(lblArticleDescription)
         lblArticleDescription.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.trailing.bottom.equalToSuperview().inset(Metrics.padding)
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.padding)
         }
         setupViews()
     }
