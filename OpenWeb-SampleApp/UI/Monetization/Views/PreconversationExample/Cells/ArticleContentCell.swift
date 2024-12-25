@@ -10,10 +10,10 @@ import UIKit
 class ArticleContentCell: UITableViewCell {
     static let identifier = "ArticleContentCell"
     private struct Metrics {
-        static let padding: CGFloat = 20
+        static let horizontalPadding: CGFloat = 20
     }
     private lazy var lblArticleDescription: UILabel = {
-        let txt = NSLocalizedString("MockArticleDescription", comment: "")
+        let txt = NSLocalizedString("PreconversationWithAdMockArticleDescription", comment: "")
 
         return txt
             .label
@@ -27,7 +27,7 @@ class ArticleContentCell: UITableViewCell {
         contentView.addSubview(lblArticleDescription)
         lblArticleDescription.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(Metrics.padding)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
         }
         setupViews()
     }
