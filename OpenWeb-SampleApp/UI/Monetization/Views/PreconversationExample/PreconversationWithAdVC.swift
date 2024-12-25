@@ -56,6 +56,7 @@ class PreconversationWithAdVC: UIViewController {
     }
 
     private func setupObservers() {
+        title = viewModel.outputs.title
         viewModel.outputs.preconversationCellViewModel.inputs.setNavigationController(self.navigationController)
         viewModel.outputs.preconversationCellViewModel.inputs.setPresentationalVC(self)
 
