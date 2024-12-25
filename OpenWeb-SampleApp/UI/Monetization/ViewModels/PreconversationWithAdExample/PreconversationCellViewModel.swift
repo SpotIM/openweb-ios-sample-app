@@ -18,7 +18,8 @@ protocol PreconversationCellViewModelingOutput {
     var showPreConversation: Observable<UIView?> { get }
     var adSizeChanged: Observable<Void> { get }
     var preConversationHorizontalMargin: CGFloat { get }
-
+    var loggerViewModel: UILoggerViewModeling { get }
+    var loggerEnabled: Observable<Bool> { get }
 }
 
 protocol PreconversationCellViewModeling {
@@ -85,6 +86,7 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
         self.commonCreatorService = commonCreatorService
         _actionSettings.onNext(actionSettings)
         setupObservers()
+        setupBICallaback()
     }
 
     var preConversationHorizontalMargin: CGFloat {
@@ -149,11 +151,22 @@ private extension PreconversationCellViewModel {
                         self._showPreConversation.onNext(preConversationView)
                     case .failure(let error):
                         let message = error.description
-                        DLog("Calling flows.preConversation error: \(error)")
+                        DLog("Calling flows.preConversation error: \(message)")
                     }
                 })
             })
             .disposed(by: disposeBag)
+    }
+
+    func setupBICallaback() {
+        let analytics: OWAnalytics = OpenWeb.manager.analytics
+
+        let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
+            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
+            self?.loggerViewModel.inputs.log(text: log)
+        }
+
+        analytics.addBICallback(BIClosure)
     }
 
     func actionCallbacks(loggerEnabled: Bool) -> OWFlowActionsCallbacks? {
@@ -168,7 +181,6 @@ private extension PreconversationCellViewModel {
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
-
         }
     }
 }
