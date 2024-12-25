@@ -50,7 +50,7 @@ private extension IndependentAdCell {
             .disposed(by: disposeBag)
 
         viewModel.outputs.adSizeChanged
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] in
                 self?.tableView?.beginUpdates()
                 self?.tableView?.endUpdates()
