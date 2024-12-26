@@ -115,6 +115,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case deeplinkOption
         case commentActionsColor
         case commentActionsFontStyle
+        case callingMethodOption
         case flowsLoggerEnabled
     }
 }
@@ -130,86 +131,6 @@ extension UserDefaultsProvider {
 
     func setValues<T>(key: UserDefaultsProvider.UDKey<T>) -> Binder<T> {
         return rx.setValues(key: key)
-    }
-}
-
-private extension UserDefaultsProvider.UDKey {
-    // Add description for better understanding of future cases (keys)
-    var description: String {
-        switch self {
-        case .shouldShowOpenFullConversation:
-            return "Key which stores if we should open full conversation"
-        case .shouldPresentInNewNavStack:
-            return "Key which stores if we should present in a new navigation or push in the existing one"
-        case .shouldOpenComment:
-            return "Key which stores if we should show create comment button"
-        case .isCustomDarkModeEnabled:
-            return "Key which stores if we should override system's dark mode"
-        case .isReadOnlyEnabled:
-            return "Key which stores if read only mode is enabled"
-        case .interfaceStyle:
-            return "Key which stores if we should override system's interface style (light, dark)"
-        case .spotIdKey:
-            return "Key which stores the current spot id to be tested"
-        case .articleHeaderStyle:
-            return "Key which stores article header style"
-        case .articleInformationStrategy:
-            return "Key which stores article information strategy (server, custom)"
-        case .readOnlyModeIndex:
-            return "Key which stores read only mode (default, enabled, disabled)"
-        case .themeModeIndex:
-            return "Key which stores the theme mode (default, light, dark)"
-        case .statusBarStyleIndex:
-            return "Key which stores the status bar style (matchTheme, lightContent, darkContent)"
-        case .navigationBarStyleIndex:
-            return "Key which stores the navigation bar style (largeTitles, regular, keepOriginal)"
-        case .modalStyleIndex:
-            return "Key which stores modal style (full screen, page sheet)"
-        case .initialSortIndex:
-            return "Key which stores initial sort (server, best, newest, oldest)"
-        case .articleAssociatedURL:
-            return "Key which stores injected article url for easy testing"
-        case .articleSection:
-            return "Key which stores article section for easy testing"
-        case .preConversationStyle:
-            return "Key which stores pre conversation's style"
-        case .conversationStyle:
-            return "Key which stores conversation's style"
-        case .commentCreationStyle:
-            return "Key which stores comment creation style"
-        case .networkEnvironment:
-            return "Key which stores network environment"
-        case .fontGroupType:
-            return "Key which stores general setting's font type"
-        case .languageStrategy:
-            return "Key which stores general setting's language strategy"
-        case .localeStrategy:
-            return "Key which stores general setting's locale strategy"
-        case .openCommentId:
-            return "Key which stores comment thread setting's comment id to open"
-        case .showLoginPrompt:
-            return "Key which stores general setting's show login prompt (if needed)"
-        case .orientationEnforcement:
-            return "Key wich stores general setting's orientation enforcement"
-        case .elementsCustomizationStyleIndex:
-            return "Key which stores general setting's elements customization style index"
-        case .colorCustomizationStyleIndex:
-            return "Key which stores general setting's color customization style index"
-        case .colorCustomizationCustomTheme:
-            return "Key which stores general setting's OWTheme color for custom colors override"
-        case .selectedSpotId:
-            return "Key which stores the current spot id"
-        case .selectedPostId:
-            return "Key which stores the current post id"
-        case .deeplinkOption:
-            return "Key which stores the SampleApp deeplink option"
-        case .commentActionsColor:
-            return "Key which stores the comment action's color"
-        case .commentActionsFontStyle:
-            return "Key which stores the comment action's font style"
-        case .flowsLoggerEnabled:
-            return "Key which stores the flows logger enabled state"
-        }
     }
 }
 
