@@ -75,7 +75,7 @@ private extension OWCommentLabelView {
     }
 
     func setupUI() {
-        addSubviews(labelContainer)
+        addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }

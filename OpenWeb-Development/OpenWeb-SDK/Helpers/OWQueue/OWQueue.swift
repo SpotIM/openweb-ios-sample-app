@@ -30,11 +30,7 @@ class OWQueue<Node: Equatable & Codable>: OWQueueProtocol {
     }
 
     func popFirst() -> Node? {
-        let node = queue.first
-        if queue.count > 0 {
-            queue.remove(at: 0)
-        }
-        return node
+        return queue.isEmpty ? nil : queue.removeFirst()
     }
 
     func insert(_ node: Node) {

@@ -74,7 +74,7 @@ private extension OWFilterTabsView {
             make.height.equalTo(Metrics.height)
         }
 
-        self.addSubviews(filterTabsCollectionView)
+        self.addSubview(filterTabsCollectionView)
         filterTabsCollectionView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(0)

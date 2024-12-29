@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal enum OWABGroup: String, CaseIterable {
+enum OWABGroup: String, CaseIterable {
     case first = "A"
     case second = "B"
     case third = "C"

@@ -109,30 +109,23 @@ class OWUserMentionHelper {
         return nil
     }
 
-    static func updateCurrentCursorRange(with cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index> {
-        guard !mentions.isEmpty,
-              !text.isEmpty  else { return cursorRange }
+    static func modifiedCursorRange(from cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index>? {
+        guard !mentions.isEmpty, !text.isEmpty else { return nil }
         var cursorNSRange = NSRange(cursorRange, in: text)
-        let mentionsToCheck: [OWUserMentionObject] = mentions.filter {
-            NSIntersectionRange(cursorNSRange, $0.range).length > 0
-        }
-        for mention in mentionsToCheck {
-            let cursorEndIndex = cursorNSRange.location + cursorNSRange.length
-            let mentionEndIndex = mention.range.location + mention.range.length
-            if cursorRange.lowerBound == cursorRange.upperBound,
-               cursorNSRange.location != mention.range.location {
-                cursorNSRange.location = mentionEndIndex
-            } else {
-                if cursorNSRange.location > mention.range.location {
-                    cursorNSRange.location = mention.range.location
+        for mention in mentions {
+            if mention.range.isCut(by: cursorNSRange.lowerBound) {
+                if cursorRange.isEmpty {
+                    cursorNSRange.location = mention.range.upperBound
+                    break // no need to check other mentions, empty range can only cut once
                 }
-                if cursorEndIndex < mentionEndIndex {
-                    cursorNSRange.length += mentionEndIndex - cursorEndIndex
-                }
+                cursorNSRange.extend(downTo: mention.range.lowerBound)
+            }
+            if mention.range.isCut(by: cursorNSRange.upperBound) {
+                cursorNSRange.extend(upTo: mention.range.upperBound)
             }
         }
-        let range = Range(cursorNSRange, in: text) ?? cursorRange
-        return range
+        let range = Range(cursorNSRange, in: text)
+        return range != cursorRange ? range : nil
     }
 
     static func getAttributedText(for textViewText: String,
