@@ -92,14 +92,6 @@ struct ColorModel {
 }
 
 extension ColorModel {
-    private mutating func setLightThemeColor(_ color: UIColor) {
-        lightThemeColor = color
-    }
-
-    private mutating func setDarkThemeColor(_ color: UIColor) {
-        darkThemeColor = color
-    }
-
     func color(forThemeStyle style: ThemeStyle) -> UIColor {
         switch style {
         case .light:
