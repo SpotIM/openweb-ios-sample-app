@@ -5,10 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.6.1] - 2024-12-29
 
 ### Fixes:
-- Fix Portuguese localizations not working.
+- Properly report errors that occur when failing to change the sort method.
+- Correctly redirect users to the root comment after replying in pre-conversation.
+- Fixed “someone typing” indication with Filter Tabs.
+- Corrected animation when scrolling to the bottom of the conversation.
+- Fixed typing position after accepting keyboard suggestions.
+- Fixed typing position inside @mentions.
+- Refresh the conversation after account deletion.
+- Fixed Portuguese translation.
+- Fixed unnecessary animation when opening a full comment.
+- Fixed misplacement of comment options menu after refreshing the conversation.
 
 ## [2.6.0] - 2024-11-28
 
