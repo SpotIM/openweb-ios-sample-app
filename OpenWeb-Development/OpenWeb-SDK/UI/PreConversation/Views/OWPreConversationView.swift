@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol, OWViewabilityTrackable {
-    internal struct Metrics {
+    struct Metrics {
         static let commentingCTATopPadding: CGFloat = 8
         static let horizontalOffset: CGFloat = 16.0
         static let btnFullConversationCornerRadius: CGFloat = 6
@@ -186,7 +186,7 @@ private extension OWPreConversationView {
         self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
-        self.addSubviews(preConversationSummary)
+        self.addSubview(preConversationSummary)
         preConversationSummary.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Metrics.compactSummaryTopPadding)
             make.leading.trailing.equalToSuperview()

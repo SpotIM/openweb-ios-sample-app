@@ -102,6 +102,8 @@
 "PoweredBy" = "Basato su";
 "PoweredByOpenWeb" = "Basato su OpenWeb";
 "Privacy" = "Privacy";
+"PrivacyDeleteAccountSuccessSubtitle" = "Ci dispiace che hai deciso di lasciarci!";
+"PrivacyDeleteAccountSuccessTitle" = "Il tuo account è stato irreversibilmente eliminato.";
 "ProfileImage" = "Immagine del profilo";
 "ProfileSubtitle" = "Nome utente, avatar, biografia inappropriati, imitazione di un altro utente";
 "ProfileTitle" = "Profilo";

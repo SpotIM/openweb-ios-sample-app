@@ -156,7 +156,7 @@ private extension OWCommentCreationLightView {
         }
 
         if viewModel.outputs.shouldShowReplySnippet {
-            self.addSubviews(replyToLabel)
+            self.addSubview(replyToLabel)
             replyToLabel.OWSnp.makeConstraints { make in
                 make.top.equalTo(topContainerView.OWSnp.bottom).offset(Metrics.replyToVerticalSpacing)
                 make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)

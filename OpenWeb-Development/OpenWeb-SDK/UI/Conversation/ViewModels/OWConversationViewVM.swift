@@ -22,6 +22,7 @@ protocol OWConversationViewViewModelingInputs {
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var scrolledToTop: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
+    var scrollToCommentId: PublishSubject<String> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var tableViewContentOffsetY: BehaviorSubject<CGFloat> { get }
@@ -33,7 +34,7 @@ protocol OWConversationViewViewModelingInputs {
 
 protocol OWConversationViewViewModelingOutputs {
     var shouldShowTitleHeader: Bool { get }
-    var shouldShowArticleDescription: Bool { get }
+    var shouldShowArticleDescription: Observable<Bool> { get }
     var shouldShowErrorLoadingComments: Observable<Bool> { get }
     var shouldShowErrorLoadingMoreComments: Observable<Bool> { get }
     var shouldShowErrorCommentDelete: Observable<Bool> { get }
@@ -108,6 +109,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
         static let filterTabsHideMinimumOffset: CGFloat = 50
+        static let articleDescriptionHideMinimumOffset: CGFloat = 30
+        static let delayScrollToCommentId: Int = 500 // ms
+        static let delayHighlightComment: Int = 350 // ms
     }
 
     var viewIsViewable = PublishSubject<Bool>()
@@ -158,8 +162,15 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWManager.manager.postId ?? ""
     }
 
-    lazy var shouldShowArticleDescription: Bool = {
-        return conversationData.article.additionalSettings.headerStyle != .none
+    lazy var shouldShowArticleDescription: Observable<Bool> = {
+        Observable.combineLatest(yOffsetForHidingScrolledViews, servicesProvider.orientationService().orientation)
+            .map { [weak self] yOffsetForHidingScrolledViews, orientation in
+                guard let self else { return false }
+                guard conversationData.article.additionalSettings.headerStyle != OWArticleHeaderStyle.none else { return false }
+                return orientation == .portrait || yOffsetForHidingScrolledViews < Metrics.articleDescriptionHideMinimumOffset
+            }
+            .distinctUntilChanged()
+            .asObservable()
     }()
 
     private var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
@@ -260,6 +271,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    var scrollToCommentId = PublishSubject<String>()
+
     private lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
     private lazy var isReadOnly: Observable<Bool> = {
         return _isReadOnly
@@ -343,13 +356,32 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     // Show FilterTabsView
     lazy var shouldShowFilterTabsView: Observable<Bool> = {
         return Observable.combineLatest(filterTabsVM.outputs.shouldShowFilterTabs,
-                                        scrollingDown)
-        .withLatestFrom(tableViewContentOffsetYChanged) { ($0.0, $0.1, $1) }
-        .map { shouldShowFilterTabs, scrollingDown, tableViewContentOffsetY in
-            return shouldShowFilterTabs && (!scrollingDown || tableViewContentOffsetY < Metrics.filterTabsHideMinimumOffset)
+                                        yOffsetForHidingScrolledViews)
+        .map { shouldShowFilterTabs, yOffsetForHidingScrolledViews in
+            return shouldShowFilterTabs &&
+                yOffsetForHidingScrolledViews < Metrics.filterTabsHideMinimumOffset
         }
         .distinctUntilChanged()
         .asObservable()
+    }()
+
+    /// Sends 0 when nothing should be hidden, and Y offset when needs to test if filters or description should to be hidden.
+    private lazy var yOffsetForHidingScrolledViews: Observable<CGFloat> = {
+        scrollingDown
+            .withLatestFrom(Observable.combineLatest(tableViewContentOffsetYChanged,
+                                                     tableViewHeightChanged,
+                                                     tableViewContentSizeHeight)) { element, latestValues in
+                (element, latestValues.0, latestValues.1, latestValues.2)
+            }
+            .map { scrollingDown, tableViewContentOffsetY, tableViewHeight, tableViewContentSizeHeight in
+                if scrollingDown && tableViewHeight < tableViewContentSizeHeight {
+                    return tableViewContentOffsetY
+                } else {
+                    return 0
+                }
+            }
+            .distinctUntilChanged()
+            .asObservable()
     }()
 
     private lazy var pendingLocalComments = BehaviorSubject<[OWComment]?>(value: nil)
@@ -898,6 +930,29 @@ private extension OWConversationViewViewModel {
 private extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        Observable.zip(scrollToCommentId,
+                       serverCommentsLoadingState.filter { $0 == .notLoading },
+                       pendingLocalComments.filter { $0 == nil })
+            .delay(.milliseconds(Metrics.delayScrollToCommentId), scheduler: MainScheduler.instance)
+            .withLatestFrom(cellsViewModels) { ($0.0, $1) }
+            .map { commentId, cellViewModels -> Int? in
+                let index = cellViewModels.firstIndex { cellViewModel in
+                    if case .comment(let commentCellViewModel) = cellViewModel {
+                        return commentCellViewModel.outputs.commentVM.outputs.comment.id == commentId
+                    }
+                    return false
+                }
+                return index
+            }
+            .unwrap()
+            .do(onNext: { [weak self] index in
+                self?._scrollToCellIndex.onNext(index)
+            })
+            .map { [$0] }
+            .delay(.milliseconds(Metrics.delayHighlightComment), scheduler: MainScheduler.instance)
+            .bind(to: _highlightCellsIndexes)
+            .disposed(by: disposeBag)
+
         viewIsViewable
             .subscribe(onNext: { [weak self] isViewable in
                 guard let self else { return }
@@ -958,6 +1013,14 @@ private extension OWConversationViewViewModel {
             .filterTabsDictateService()
             .filterId(perPostId: self.postId)
             .share(replay: 1)
+
+        filterTabsObservable
+            .map { filterTabId in
+                return OWFilterTabObject.defaultTabId != filterTabId &&
+                       OWFilterTabObject.defaultNewestTabId != filterTabId
+            }
+            .bind(to: self.realtimeIndicationAnimationViewModel.inputs.forceDisable)
+            .disposed(by: disposeBag)
 
         filterTabsObservable
             .skip(1)
@@ -2335,7 +2398,7 @@ private extension OWConversationViewViewModel {
 
         let commentDeletedLocallyObservable = deleteComment
             .asObservable()
-            .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
+            .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterAction, OWCommentViewModeling)> in
                 guard let self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
@@ -2349,19 +2412,14 @@ private extension OWConversationViewViewModel {
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
             }
-            .map { [weak self] result, commentVm -> Bool in
+            .map { [weak self] action, commentVm -> Bool in
                 guard let self else { return false }
-                switch result {
-                case .completion:
+                switch action.type {
+                case OWCommentDeleteAlert.delete:
+                    self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
+                    return true
+                default:
                     return false
-                case .selected(let action):
-                    switch action.type {
-                    case OWCommentDeleteAlert.delete:
-                        self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
-                        return true
-                    default:
-                        return false
-                    }
                 }
             }
             .filter { $0 }
@@ -2440,7 +2498,7 @@ private extension OWConversationViewViewModel {
             }
             .filter { $0.1 }
             .map { $0.0 && $0.1 }
-            .flatMapLatest { [weak self] needToRefreshConversation -> Observable<(Bool, OWRxPresenterResponseType)> in
+            .flatMapLatest { [weak self] needToRefreshConversation -> Observable<(Bool, OWRxPresenterAction)> in
                 // 3. Show alert
                 guard let self else { return .empty() }
                 let actions = [
@@ -2458,18 +2516,13 @@ private extension OWConversationViewViewModel {
             }
 
         let muteUserObservable = muteUserConfirmationObservable
-            .map { needToRefreshConversation, result -> (Bool, Bool) in
+            .map { needToRefreshConversation, action -> (Bool, Bool) in
                 // 4. Handle alert result
-                switch result {
-                case .completion:
-                    return (false, false)
-                case .selected(let action):
-                    switch action.type {
-                    case OWCommentUserMuteAlert.mute:
-                        return (needToRefreshConversation, true)
-                    default:
-                        return (needToRefreshConversation, false)
-                    }
+                switch action.type {
+                case OWCommentUserMuteAlert.mute:
+                    return (needToRefreshConversation, true)
+                default:
+                    return (needToRefreshConversation, false)
                 }
             }
             .do(onNext: { [weak self] needToRefreshConversation, _ in
@@ -2646,6 +2699,16 @@ private extension OWConversationViewViewModel {
                 self.servicesProvider
                     .conversationSizeService()
                     .setConversationTableSize(size)
+            })
+            .disposed(by: disposeBag)
+
+        // Dismiss Menu if the menu is open while reloaded from server
+        serverCommentsLoadingState
+            .filter { $0 == .notLoading }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self else { return }
+                self.servicesProvider.presenterService().dismissMenu(viewableMode: self.viewableMode)
             })
             .disposed(by: disposeBag)
     }

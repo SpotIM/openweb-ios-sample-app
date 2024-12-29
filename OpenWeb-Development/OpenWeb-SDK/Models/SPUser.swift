@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
+class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     static func == (lhs: SPUser, rhs: SPUser) -> Bool {
         return lhs.userId == rhs.userId
         && lhs.displayName == rhs.displayName

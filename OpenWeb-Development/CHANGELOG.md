@@ -5,21 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2024-12-29
+
+### Fixes:
+- Properly report errors that occur when failing to change the sort method.
+- Correctly redirect users to the root comment after replying in pre-conversation.
+- Fixed “someone typing” indication with Filter Tabs.
+- Corrected animation when scrolling to the bottom of the conversation.
+- Fixed typing position after accepting keyboard suggestions.
+- Fixed typing position inside @mentions.
+- Refresh the conversation after account deletion.
+- Fixed Portuguese translation.
+- Fixed unnecessary animation when opening a full comment.
+- Fixed misplacement of comment options menu after refreshing the conversation.
+
 ## [2.6.0] - 2024-11-28
 
 ### Features:
-- Added termsTapped and privacyTapped OWViewActionCallbacks.
+- Added `termsTapped` and `privacyTapped` OWViewActionCallbacks.
 - Added viewable time analytics event.
 - Updated translations.
 
 ### Fixes:
-- Fix extra vertical space when the community guidelines are not shown.
-- Fix potential crash when posting a comment that starts with emoji.
-- Fix crash when opening the app with the conversation screen when the community guidelines are shown.
-- Removed unnecessary navigation bar visual element after conversation close.
-- Corrected text input anomaly during dictation.
-- Optimized realtime conversation read request management.
-- Fix memory leaks.
+- Fixed extra vertical space when community guidelines were not shown.
+- Fixed crash when posting a comment starting with an emoji.
+- Fixed crash when opening the app on the conversation screen.
+- Removed navigation bar line after closing Full Conversation.
+- Fixed OBJ symbol appearing after dictation.
+- Ensured real-time conversation read requests stopped when the conversation was dismissed.
+- Fixed memory leaks.
 
 ## [2.5.1] - 2024-10-09
 

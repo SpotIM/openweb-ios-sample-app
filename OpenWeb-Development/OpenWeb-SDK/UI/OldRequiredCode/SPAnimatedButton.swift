@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable
-internal class SPAnimatedButton: UIButton {
+class SPAnimatedButton: UIButton {
 
     private var imageShape: CAShapeLayer!
     private var selectedImageShape: CAShapeLayer!
