@@ -3,7 +3,7 @@ inhibit_all_warnings!
 use_frameworks!
 
 def openweb_pod
-  pod 'OpenWebSDK', '2.6.0'
+  pod 'OpenWebSDK', '2.6.1'
 end
 
 def rx_pods
