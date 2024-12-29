@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal enum SPCommentSortMode: String, CaseIterable, Decodable {
+enum SPCommentSortMode: String, CaseIterable, Decodable {
 
     case best
     case newest

@@ -17,7 +17,8 @@ protocol OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType>
+    ) -> Observable<OWRxPresenterAction>
+    func dismissMenu(viewableMode: OWViewableMode)
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
@@ -31,7 +32,7 @@ extension OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style = .alert,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType> {
+    ) -> Observable<OWRxPresenterAction> {
         showAlert(title: title, message: message, actions: actions, preferredStyle: preferredStyle, viewableMode: viewableMode)
     }
 }
@@ -50,7 +51,7 @@ class OWPresenterService: OWPresenterServicing {
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style = .alert,
         viewableMode: OWViewableMode
-    ) -> Observable<OWRxPresenterResponseType> {
+    ) -> Observable<OWRxPresenterAction> {
         guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
 
@@ -59,6 +60,12 @@ class OWPresenterService: OWPresenterServicing {
                                          title: title,
                                          message: message,
                                          actions: actions)
+    }
+
+    func dismissMenu(viewableMode: OWViewableMode) {
+        guard let presenterVC = getPresenterVC(for: viewableMode),
+        let menu = presenterVC.view.subviews.first(where: { $0.isKind(of: OWMenuSelectionEncapsulationView.self) }) else { return }
+        menu.removeFromSuperview()
     }
 
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {

@@ -10,7 +10,7 @@ First time? Execute:
 This project is for OpenWeb iOS Demo App and SDK development.
 
 ### How to run OpenWeb-SampleApp:
-1. OpenWebSDK is embeded framework in OpenWeb-SampleApp target
+1. OpenWebSDK is embedded framework in OpenWeb-SampleApp target
 2. Install pods in the OpenWeb-Development folder
 3. Open the workspace (not the project)
 4. Run OpenWeb-SampleApp target.
@@ -82,5 +82,5 @@ Download the demo app from this link or Clone using your git app
 1. Open the publishers website
 2. Go into an article that contains OpenWeb conversation
 3. Copy the link as the URL
-4. Paste this link back into the converstaion and inspect the web page (filter /extract)
+4. Paste this link back into the conversation and inspect the web page (filter /extract)
 5. In the response to /extract you can find a json object with all the article data

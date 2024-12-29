@@ -130,7 +130,7 @@ class OWCommentHeaderView: UIView {
         self.subtitleLabel.isHidden = false
         self.subscriberBadgeView.isHidden = false
 
-        self.badgeTagContainer.isHidden = true
+        self.badgeTagContainer.isHidden = false
         self.hiddenCommentReasonLabel.isHidden = true
         self.avatarImageView.prepareForReuse()
     }
@@ -225,6 +225,7 @@ private extension OWCommentHeaderView {
         .disposed(by: disposeBag)
 
         viewModel.outputs.subtitleText
+            .map { $0.isEmpty ? .zeroLengthSpace : $0 }
             .bind(to: subtitleLabel.rx.text)
             .disposed(by: disposeBag)
 

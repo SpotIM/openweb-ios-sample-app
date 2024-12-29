@@ -63,7 +63,7 @@ private extension OWCommentCell {
     func setupUI() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
                                                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-        self.contentView.addSubviews(commentView)
+        self.contentView.addSubview(commentView)
         self.selectionStyle = .none
 
         commentView.OWSnp.makeConstraints { make in

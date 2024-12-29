@@ -102,6 +102,8 @@
 "PoweredBy" = "제공자:";
 "PoweredByOpenWeb" = "제공자: OpenWeb";
 "Privacy" = "개인정보 보호";
+"PrivacyDeleteAccountSuccessSubtitle" = "";
+"PrivacyDeleteAccountSuccessTitle" = "";
 "ProfileImage" = "프로필 이미지";
 "ProfileSubtitle" = "부적절한 사용자 이름, 아바타, 소개 글, 사칭";
 "ProfileTitle" = "프로필";

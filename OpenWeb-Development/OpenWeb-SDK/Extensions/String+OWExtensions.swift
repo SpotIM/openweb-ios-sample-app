@@ -9,12 +9,19 @@
 import UIKit
 
 extension String {
+    static let zeroLengthSpace = "\u{200B}"
+
     init?(unicodeCodePoint: Int) {
         if let unicodeScalar = UnicodeScalar(unicodeCodePoint) {
             self.init(unicodeScalar)
         } else {
             return nil
         }
+    }
+
+    var isLegalCIdentifier: Bool {
+        let legalCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_"))
+        return rangeOfCharacter(from: legalCharacters.inverted) == nil && (first?.isLetter == true || first == "_")
     }
 
     var stripHTML: String {
