@@ -19,7 +19,6 @@ class ConversationBelowVideoVC: UIViewController {
     private struct Metrics {
         static let identifier = "uiviews_examples_vc_id"
         static let verticalMargin: CGFloat = 40
-        static let horizontalMargin: CGFloat = 20
         static let presentAnimationDuration: TimeInterval = 0.3
         static let preConversationHorizontalMargin: CGFloat = 16.0
         static let videoRatio: CGFloat = 9 / 16

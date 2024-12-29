@@ -32,7 +32,6 @@ class TestAPIVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let textFieldHeight: CGFloat = 40
-        static let textFieldCorners: CGFloat = 12
         static let buttonVerticalMargin: CGFloat = 20
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
@@ -155,8 +154,6 @@ class TestAPIVC: UIViewController {
     private lazy var btnAutomation: UIButton = {
         return NSLocalizedString("Automation", comment: "").blueRoundedButton
     }()
-
-    private var selectedAnswer: ConversationPreset?
 
     init(viewModel: TestAPIViewModeling = TestAPIViewModel()) {
         self.viewModel = viewModel
