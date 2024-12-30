@@ -109,7 +109,7 @@ private extension MonetizationViewVC {
 
         btnPreConversationExample.rx.tap
             .map { PresentationalModeCompact.push }
-            .bind(to: viewModel.inputs.preConversationTapped)
+            .bind(to: viewModel.inputs.preConversationWithAdTapped)
             .disposed(by: disposeBag)
     }
 }

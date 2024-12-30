@@ -57,7 +57,7 @@ private extension MonetizationCoordinator {
                     guard let self else { return }
                     let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
                     guard case CoordinatorData.actionsFlowSettings(let settings) = coordinatorData else {
-                        fatalError("MockArticleCoordinator requires coordinatorData from `CoordinatorData.actionsFlowSettings` type")
+                        fatalError("MonetizationCoordinator requires coordinatorData from `CoordinatorData.actionsFlowSettings` type")
                     }
 
                     let PreconversationWithAdVM: PreconversationWithAdViewModeling = PreconversationWithAdViewModel(
@@ -71,6 +71,5 @@ private extension MonetizationCoordinator {
 
                 })
             .disposed(by: disposeBag)
-
     }
 }

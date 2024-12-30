@@ -36,11 +36,10 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
     private struct Metrics {
         static let preConversationCompactHorizontalMargin: CGFloat = 16.0
     }
-    private let disposeBag = DisposeBag()
 
+    private let disposeBag = DisposeBag()
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
-
     private weak var navController: UINavigationController?
     private weak var presentationalVC: UIViewController?
 
@@ -76,7 +75,7 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
     }()
 
     lazy var loggerViewModel: UILoggerViewModeling = {
-        return UILoggerViewModel(title: "Flows Logger")
+        return UILoggerViewModel(title: "PreconversationCellViewModel Logger")
     }()
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,

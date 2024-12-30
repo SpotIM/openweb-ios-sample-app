@@ -51,13 +51,10 @@ private extension IndependentAdCellViewModel {
     func setupObservers() {
         let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0))
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
-        let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in
-            //            self?.loggerViewModel.inputs.log(text: eventType.description)
-        }
 
         OpenWeb.manager.monetization.ui.ad(postId: postId,
                                            settings: adSettings,
-                                           viewEventCallbacks: viewEventCallbacks,
+                                           viewEventCallbacks: nil,
                                            actionsCallbacks: { [weak self] event, _, _ in
             switch event {
             case .adSizeChanged:
@@ -72,7 +69,7 @@ private extension IndependentAdCellViewModel {
             case .success(let adView):
                 _adView.onNext(adView)
             case .failure(let error):
-                DLog("Social monetization example failed: \(error.localizedDescription)")
+                DLog("Independent Ad Cell failed with error: \(error.localizedDescription)")
             }
         })
     }
