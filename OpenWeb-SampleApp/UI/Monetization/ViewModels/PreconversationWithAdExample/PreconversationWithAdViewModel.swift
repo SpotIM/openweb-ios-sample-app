@@ -52,7 +52,7 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
             commonCreatorService: commonCreatorService
         )
     }()
-    
+
     lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
         IndependentAdCellViewModel(postId: postId)
     }()
