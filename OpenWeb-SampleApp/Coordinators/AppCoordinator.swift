@@ -7,6 +7,7 @@
 
 import RxSwift
 import OpenWebSDK
+import OpenWebIAUSDK
 import UIKit
 
 #if !PUBLIC_DEMO_APP
@@ -57,9 +58,12 @@ private extension AppCoordinator {
     }
 
     func initialMonetizationSetup() {
-        let manager = OpenWeb.manager
+        var manager = OpenWebIAU.manager
         var settingsBuilder = OWIAUSettingsBuilder()
         settingsBuilder.storeURL(AppConstants.exampleStoreURL)
-        manager.monetization.setSettings(settingsBuilder.build())
+        manager.settings = settingsBuilder.build()
+
+        // TODO - Set from Social SDK, or decide that publisher should do it
+        manager.spotId = "sp_PPSI75uf"
     }
 }
