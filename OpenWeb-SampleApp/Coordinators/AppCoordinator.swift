@@ -63,7 +63,10 @@ private extension AppCoordinator {
         settingsBuilder.storeURL(AppConstants.exampleStoreURL)
         manager.settings = settingsBuilder.build()
 
+        var socialManagerMonetization = OpenWeb.manager.monetization
+        socialManagerMonetization.iauProvider = manager.helpers.getIAUProvider()
+
         // TODO - Set from Social SDK, or decide that publisher should do it
-        manager.spotId = "sp_PPSI75uf"
+//        manager.spotId = "sp_PPSI75uf"
     }
 }
