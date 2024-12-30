@@ -11,7 +11,7 @@ import RxSwift
 
 protocol MonetizationViewViewModelingInputs {
     var singleAdExampleTapped: PublishSubject<Void> { get }
-    var preConversationTapped: PublishSubject<PresentationalModeCompact> { get }
+    var preConversationWithAdTapped: PublishSubject<PresentationalModeCompact> { get }
 }
 
 protocol MonetizationViewViewModelingOutputs {
@@ -33,7 +33,7 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
     private let disposeBag = DisposeBag()
 
     let singleAdExampleTapped = PublishSubject<Void>()
-    let preConversationTapped = PublishSubject<PresentationalModeCompact>()
+    let preConversationWithAdTapped = PublishSubject<PresentationalModeCompact>()
 
     private let _openSingleAdExample = BehaviorSubject<OWPostId?>(value: nil)
     var openSingleAdExample: Observable<OWPostId> {
@@ -70,7 +70,7 @@ private extension MonetizationViewViewModel {
             .bind(to: _openSingleAdExample)
             .disposed(by: disposeBag)
 
-        preConversationTapped
+        preConversationWithAdTapped
             .asObservable()
             .map { [weak self] mode -> SDKUIFlowActionSettings? in
                 guard let self else { return nil }

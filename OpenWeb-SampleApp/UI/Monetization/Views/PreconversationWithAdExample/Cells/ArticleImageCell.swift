@@ -10,6 +10,7 @@ import UIKit
 
 class ArticleImageCell: UITableViewCell {
     static let identifier = "ArticleImageCell"
+
     private struct Metrics {
         static let articleImageRatio: CGFloat = 2 / 3
         static let articelImageViewCornerRadius: CGFloat = 10
@@ -28,7 +29,8 @@ class ArticleImageCell: UITableViewCell {
         imgViewArticle.image(from: imageURL)
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(imgViewArticle)
         imgViewArticle.snp.makeConstraints { make in
