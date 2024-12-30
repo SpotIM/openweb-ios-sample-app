@@ -14,7 +14,7 @@ class IndependentAdCell: UITableViewCell {
     private weak var tableView: UITableView?
     private var viewModel: IndependentAdCellViewModeling!
     private let disposeBag = DisposeBag()
-    
+
     private struct Metrics {
         static let horizontalPadding: CGFloat = 37
         static let verticalPadding: CGFloat = 16
