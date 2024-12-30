@@ -7,14 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		136DD7842CFF67E50025A883 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DD7832CFF67DE0025A883 /* AppConstants.swift */; };
-		1374959E2CF4C8EF00F639D5 /* MonetizationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */; };
-		137495A32CF4CC1500F639D5 /* MonetizationViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */; };
-		137495A52CF4CC5200F639D5 /* MonetizationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */; };
-		1374A8C72CF6243000F639D5 /* SingleAdExampleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C62CF6243000F639D5 /* SingleAdExampleVC.swift */; };
-		1374A8C92CF6248000F639D5 /* SingleAdExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1374A8C82CF6248000F639D5 /* SingleAdExampleViewModel.swift */; };
-		16EFD62C2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */; };
-		16EFD62D2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2F113A104F74133456A49735 /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */; };
 		3DA1E6D22C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D02C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */; };
 		3DA1E6D32C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D02C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -33,7 +25,6 @@
 			files = (
 				3DA1E6D52C6E299A00EBFA7D /* OpenWebSDK.framework in Embed Frameworks */,
 				3DA1E6D92C6E29B600EBFA7D /* GiphyUISDK.xcframework in Embed Frameworks */,
-				16EFD62D2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Embed Frameworks */,
 				3DA1E6D32C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -42,12 +33,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		136DD7832CFF67DE0025A883 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
-		1374959D2CF4C8EF00F639D5 /* MonetizationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationCoordinator.swift; sourceTree = "<group>"; };
-		137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewVC.swift; sourceTree = "<group>"; };
-		137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationViewViewModel.swift; sourceTree = "<group>"; };
-		1374A8C62CF6243000F639D5 /* SingleAdExampleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAdExampleVC.swift; sourceTree = "<group>"; };
-		1374A8C82CF6248000F639D5 /* SingleAdExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAdExampleViewModel.swift; sourceTree = "<group>"; };
 		16EFD62B2D0850FA00470A03 /* OpenWebSDKAdapter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebSDKAdapter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BB8A71C0F14956B8A7655A9 /* Pods-OpenWeb-SampleApp.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.internal.xcconfig"; sourceTree = "<group>"; };
 		3DA1DF132C6E200300EBFA7D /* OpenWeb-SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWeb-SampleApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,7 +73,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16EFD62C2D0850FA00470A03 /* OpenWebSDKAdapter.framework in Frameworks */,
 				3DA1E6D22C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */,
 				3DA1E6D42C6E299A00EBFA7D /* OpenWebSDK.framework in Frameworks */,
 				3DA1E6D82C6E29B600EBFA7D /* GiphyUISDK.xcframework in Frameworks */,
@@ -99,41 +83,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		136DD7822CFF67D00025A883 /* AppConstants */ = {
-			isa = PBXGroup;
-			children = (
-				136DD7832CFF67DE0025A883 /* AppConstants.swift */,
-			);
-			path = AppConstants;
-			sourceTree = "<group>";
-		};
-		1374959F2CF4CBC800F639D5 /* Monetization */ = {
-			isa = PBXGroup;
-			children = (
-				137495A12CF4CBE100F639D5 /* Views */,
-				137495A02CF4CBD800F639D5 /* ViewModels */,
-			);
-			path = Monetization;
-			sourceTree = "<group>";
-		};
-		137495A02CF4CBD800F639D5 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				137495A42CF4CC5200F639D5 /* MonetizationViewViewModel.swift */,
-				1374A8C82CF6248000F639D5 /* SingleAdExampleViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		137495A12CF4CBE100F639D5 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				137495A22CF4CC1500F639D5 /* MonetizationViewVC.swift */,
-				1374A8C62CF6243000F639D5 /* SingleAdExampleVC.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		3DA1DF0A2C6E200300EBFA7D = {
 			isa = PBXGroup;
 			children = (
@@ -303,23 +252,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A0C905C0E9AEA4779C4F67D5 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
