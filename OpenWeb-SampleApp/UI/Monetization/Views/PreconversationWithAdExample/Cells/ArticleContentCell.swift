@@ -9,9 +9,11 @@ import UIKit
 
 class ArticleContentCell: UITableViewCell {
     static let identifier = "ArticleContentCell"
+
     private struct Metrics {
         static let horizontalPadding: CGFloat = 20
     }
+
     private lazy var lblArticleDescription: UILabel = {
         let txt = NSLocalizedString("PreconversationWithAdMockArticleDescription", comment: "")
 
@@ -22,7 +24,8 @@ class ArticleContentCell: UITableViewCell {
             .textColor(ColorPalette.shared.color(type: .text))
     }()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(lblArticleDescription)
         lblArticleDescription.snp.makeConstraints { make in

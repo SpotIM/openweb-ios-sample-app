@@ -37,8 +37,8 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let actionSettings: SDKUIFlowActionSettings
     private let commonCreatorService: CommonCreatorServicing
-    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.allCases)
     private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
+    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.allCases)
     var articleImageURL: Observable<URL> {
         return _articleImageURL
             .unwrap()
@@ -52,6 +52,7 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
             commonCreatorService: commonCreatorService
         )
     }()
+    
     lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
         IndependentAdCellViewModel(postId: postId)
     }()
