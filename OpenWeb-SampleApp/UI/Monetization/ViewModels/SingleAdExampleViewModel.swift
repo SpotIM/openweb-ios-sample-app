@@ -7,7 +7,7 @@
 
 import Foundation
 import RxSwift
-import OpenWebSDK
+import OpenWebIAUSDK
 
 protocol SingleAdExampleViewModelingInputs {}
 
@@ -26,7 +26,7 @@ class SingleAdExampleViewModel: SingleAdExampleViewModeling, SingleAdExampleView
     var inputs: SingleAdExampleViewModelingInputs { return self }
     var outputs: SingleAdExampleViewModelingOutputs { return self }
 
-    private let postId: OWPostId
+    private let postId: String
     private let _adView = BehaviorSubject<UIView?>(value: nil)
     var adView: Observable<UIView> {
         return _adView
@@ -34,7 +34,7 @@ class SingleAdExampleViewModel: SingleAdExampleViewModeling, SingleAdExampleView
             .asObservable()
     }
 
-    init(postId: OWPostId) {
+    init(postId: String) {
         self.postId = postId
         setupObservers()
     }
@@ -55,7 +55,7 @@ private extension SingleAdExampleViewModel {
         let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in
             self?.loggerViewModel.inputs.log(text: eventType.description)
         }
-        OpenWeb.manager.monetization.ui.ad(postId: postId,
+        OpenWebIAU.manager.ui.ad(postId: postId,
                                            settings: adSettings,
                                            viewEventCallbacks: viewEventCallbacks,
                                            actionsCallbacks: nil,
