@@ -7,8 +7,11 @@
 
 import RxSwift
 import OpenWebSDK
-import OpenWebIAUSDK
 import UIKit
+
+#if ADS
+import OpenWebIAUSDK
+#endif
 
 #if !PUBLIC_DEMO_APP
     import OpenWeb_SampleApp_Internal_Configs
@@ -38,7 +41,10 @@ private extension AppCoordinator {
         initialVendorsSetup()
         initialDataSetup()
         initialUIAppearance()
+
+        #if ADS
         initialMonetizationSetup()
+        #endif
     }
 
     func initialVendorsSetup() {
@@ -57,6 +63,7 @@ private extension AppCoordinator {
         router = Router(navigationController: navigation)
     }
 
+    #if ADS
     func initialMonetizationSetup() {
         var manager = OpenWebIAU.manager
         var settingsBuilder = OWIAUSettingsBuilder()
@@ -65,8 +72,6 @@ private extension AppCoordinator {
 
         var socialManagerMonetization = OpenWeb.manager.monetization
         socialManagerMonetization.iauProvider = manager.helpers.getIAUProvider()
-
-        // TODO - Set from Social SDK, or decide that publisher should do it
-//        manager.spotId = "sp_PPSI75uf"
     }
+    #endif
 }
