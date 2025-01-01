@@ -47,6 +47,8 @@ protocol TestAPIViewModelingOutputs {
     var selectedPostId: Observable<OWPostId> { get }
     var envLabelString: Observable<String> { get }
     var isEnvLabelVisible: Observable<Bool> { get }
+    var configurationLabelString: Observable<String> { get }
+    var isConfigurationLabelVisible: Observable<Bool> { get }
 }
 
 protocol TestAPIViewModeling {
@@ -86,20 +88,65 @@ class TestAPIViewModel: TestAPIViewModeling,
     let viewWillAppear = PublishSubject<Void>()
 
     private lazy var isBetaConfiguration: Bool = {
-    #if BETA
+        #if BETA
         return true
         #else
         return false
-    #endif
+        #endif
+    }()
+
+    private lazy var isAdsConfiguration: Bool = {
+        #if ADS
+        return true
+        #else
+        return false
+        #endif
+    }()
+
+    private lazy var isDebugConfiguration: Bool = {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }()
+
+    private lazy var isPublicDemoAppConfiguration: Bool = {
+        #if PUBLIC_DEMO_APP
+        return true
+        #else
+        return false
+        #endif
     }()
 
     private lazy var isBetaConfigurationSubject: BehaviorSubject<Bool> = {
         return BehaviorSubject(value: isBetaConfiguration)
     }()
 
+    private lazy var isAdsConfigurationSubject: BehaviorSubject<Bool> = {
+        return BehaviorSubject(value: isAdsConfiguration)
+    }()
+
+    private lazy var isDebugConfigurationSubject: BehaviorSubject<Bool> = {
+        return BehaviorSubject(value: isDebugConfiguration)
+    }()
+
+    private lazy var isPublicDemoAppConfigurationSubject: BehaviorSubject<Bool> = {
+        return BehaviorSubject(value: isPublicDemoAppConfiguration)
+    }()
+
     var isEnvLabelVisible: Observable<Bool> {
         return isBetaConfigurationSubject
             .asObservable()
+    }
+
+    var isConfigurationLabelVisible: Observable<Bool> {
+        return Observable.combineLatest(isBetaConfigurationSubject,
+                                        isAdsConfigurationSubject,
+                                        isDebugConfigurationSubject,
+                                        isPublicDemoAppConfigurationSubject)
+        .map { ($0 || $1 || $2) && !$3 }
+        .asObservable()
     }
 
     var envLabelString: Observable<String> {
@@ -123,6 +170,34 @@ class TestAPIViewModel: TestAPIViewModeling,
                     return ""
                 }
                 return NSLocalizedString("NetworkEnvironment", comment: "") + ": \(envString)"
+            }
+            .asObservable()
+    }
+
+    var configurationLabelString: Observable<String> {
+        return viewWillAppear
+            .map {
+                var configurationString = ""
+                #if DEBUG && !PUBLIC_DEMO_APP
+                configurationString.append(NSLocalizedString("ConfigurationDebug", comment: ""))
+                #endif
+
+                #if BETA || ADS
+                configurationString.append(" | ")
+                #endif
+
+                #if BETA
+                configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
+                #elseif ADS
+                configurationString.append(NSLocalizedString("ConfigurationAds", comment: ""))
+                #endif
+                return configurationString
+            }
+            .map { configurationString in
+                guard !configurationString.isEmpty else {
+                    return ""
+                }
+                return NSLocalizedString("BuildConfiguration", comment: "") + ": \(configurationString)"
             }
             .asObservable()
     }
