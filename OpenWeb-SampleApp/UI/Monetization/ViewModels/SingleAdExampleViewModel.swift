@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import OpenWebIAUSDK
+import OpenWebCommon
 
 protocol SingleAdExampleViewModelingInputs {}
 
@@ -26,7 +27,7 @@ class SingleAdExampleViewModel: SingleAdExampleViewModeling, SingleAdExampleView
     var inputs: SingleAdExampleViewModelingInputs { return self }
     var outputs: SingleAdExampleViewModelingOutputs { return self }
 
-    private let postId: String
+    private let postId: OWPostId
     private let _adView = BehaviorSubject<UIView?>(value: nil)
     var adView: Observable<UIView> {
         return _adView
@@ -34,7 +35,7 @@ class SingleAdExampleViewModel: SingleAdExampleViewModeling, SingleAdExampleView
             .asObservable()
     }
 
-    init(postId: String) {
+    init(postId: OWPostId) {
         self.postId = postId
         setupObservers()
     }
