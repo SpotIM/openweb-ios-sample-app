@@ -156,6 +156,7 @@ private extension UIViewsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
+        #if ADS
         // Adding monetization button
         scrollView.addSubview(btnMonetization)
         btnMonetization.snp.makeConstraints { make in
@@ -164,13 +165,18 @@ private extension UIViewsVC {
             make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
+        #endif
 
         // Adding examples button
         scrollView.addSubview(btnExamples)
         btnExamples.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
+            #if ADS
             make.top.equalTo(btnMonetization.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            #else
+            make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            #endif
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
