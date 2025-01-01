@@ -22,6 +22,7 @@ class TestAPIVC: UIViewController {
         static let btnDoneIdentifier = "btn_done_id"
         static let btnSelectPresetIdentifier = "btn_select_preset_id"
         static let envLabelIdentifier = "environment_label_id"
+        static let configurationLabelIdentifier = "configuration_label_id"
         static let txtFieldSpotIdIdentifier = "spot_id"
         static let txtFieldPostIdIdentifier = "post_id"
         static let btnUIFlowsIdentifier = "btn_ui_flows_id"
@@ -30,6 +31,7 @@ class TestAPIVC: UIViewController {
         static let btnTestingPlaygroundIdentifier = "btn_testing_playground_id"
         static let btnAutomationIdentifier = "btn_automation_id"
         static let verticalMargin: CGFloat = 40
+        static let shortVerticalMargin: CGFloat = 15
         static let horizontalMargin: CGFloat = 50
         static let textFieldHeight: CGFloat = 40
         static let buttonVerticalMargin: CGFloat = 20
@@ -119,6 +121,12 @@ class TestAPIVC: UIViewController {
             .textColor(.red)
     }()
 
+    private lazy var configurationLabel: UILabel = {
+        return UILabel()
+            .font(FontBook.paragraphBold)
+            .textColor(.gray)
+    }()
+
     private lazy var btnSelectPreset: UIButton = {
         return NSLocalizedString("SelectPreset", comment: "").darkGrayRoundedButton
     }()
@@ -195,6 +203,7 @@ private extension TestAPIVC {
         btnDone.accessibilityIdentifier = Metrics.btnDoneIdentifier
         btnSelectPreset.accessibilityIdentifier = Metrics.btnSelectPresetIdentifier
         envLabel.accessibilityIdentifier = Metrics.envLabelIdentifier
+        configurationLabel.accessibilityIdentifier = Metrics.configurationLabelIdentifier
         btnUIFlows.accessibilityIdentifier = Metrics.btnUIFlowsIdentifier
         btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
         btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
@@ -217,7 +226,14 @@ private extension TestAPIVC {
         envLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.shortVerticalMargin)
+        }
+
+        scrollView.addSubview(configurationLabel)
+        configurationLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.top.equalTo(envLabel.snp.bottom).offset(Metrics.shortVerticalMargin)
         }
 
         // Adding select preset button
@@ -226,7 +242,7 @@ private extension TestAPIVC {
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.top.equalTo(envLabel.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(configurationLabel.snp.bottom).offset(Metrics.verticalMargin)
         }
 
         scrollView.addSubview(txtFieldSpotId)
@@ -410,6 +426,15 @@ private extension TestAPIVC {
         viewModel.outputs.isEnvLabelVisible
             .map { !$0 }
             .bind(to: envLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.configurationLabelString
+            .bind(to: configurationLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isConfigurationLabelVisible
+            .map { !$0 }
+            .bind(to: configurationLabel.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }
