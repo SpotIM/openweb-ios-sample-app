@@ -94,7 +94,7 @@ private extension ConversationCountersNewAPIViewModel {
             .subscribe(onNext: { [weak self] postIds in
                 guard let self else { return }
                 let helper = OpenWeb.manager.helpers
-                if #available(iOS 13, *), shouldUseAsyncAwaitCallingMethod() {
+                if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
                         guard let self else { return }
                         do {
