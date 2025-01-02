@@ -233,7 +233,7 @@ private extension AuthenticationPlaygroundViewModel {
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
                 let authentication = OpenWeb.manager.authentication
-                if #available(iOS 13, *), shouldUseAsyncAwaitCallingMethod() {
+                if shouldUseAsyncAwaitCallingMethod() {
                     Task { [weak self] in
                         do {
                             var loginStatus = try await authentication.userStatus()
