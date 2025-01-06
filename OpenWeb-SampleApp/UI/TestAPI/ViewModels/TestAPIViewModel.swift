@@ -123,30 +123,37 @@ class TestAPIViewModel: TestAPIViewModeling,
         return BehaviorSubject(value: isBetaConfiguration)
     }()
 
-    private lazy var isAdsConfigurationSubject: BehaviorSubject<Bool> = {
-        return BehaviorSubject(value: isAdsConfiguration)
-    }()
-
-    private lazy var isDebugConfigurationSubject: BehaviorSubject<Bool> = {
-        return BehaviorSubject(value: isDebugConfiguration)
-    }()
-
-    private lazy var isPublicDemoAppConfigurationSubject: BehaviorSubject<Bool> = {
-        return BehaviorSubject(value: isPublicDemoAppConfiguration)
-    }()
-
     var isEnvLabelVisible: Observable<Bool> {
         return isBetaConfigurationSubject
             .asObservable()
     }
 
+    private var configurationString: String? {
+        var configurationString = ""
+        #if DEBUG && !PUBLIC_DEMO_APP
+        configurationString.append(NSLocalizedString("ConfigurationDebug", comment: ""))
+        #endif
+
+        #if BETA || ADS
+        configurationString.append(" | ")
+        #endif
+
+        #if BETA
+        configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
+        #elseif ADS
+        configurationString.append(NSLocalizedString("ConfigurationAds", comment: ""))
+        #endif
+        return !configurationString.isEmpty ? configurationString : nil
+    }
+
+    private lazy var configurationStringSubject: BehaviorSubject<String?> = {
+        return BehaviorSubject(value: configurationString)
+    }()
+
     var isConfigurationLabelVisible: Observable<Bool> {
-        return Observable.combineLatest(isBetaConfigurationSubject,
-                                        isAdsConfigurationSubject,
-                                        isDebugConfigurationSubject,
-                                        isPublicDemoAppConfigurationSubject)
-        .map { ($0 || $1 || $2) && !$3 }
-        .asObservable()
+        return configurationStringSubject
+            .map { $0 != nil }
+            .asObservable()
     }
 
     var envLabelString: Observable<String> {
@@ -176,25 +183,11 @@ class TestAPIViewModel: TestAPIViewModeling,
 
     var configurationLabelString: Observable<String> {
         return viewWillAppear
-            .map {
-                var configurationString = ""
-                #if DEBUG && !PUBLIC_DEMO_APP
-                configurationString.append(NSLocalizedString("ConfigurationDebug", comment: ""))
-                #endif
-
-                #if BETA || ADS
-                configurationString.append(" | ")
-                #endif
-
-                #if BETA
-                configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
-                #elseif ADS
-                configurationString.append(NSLocalizedString("ConfigurationAds", comment: ""))
-                #endif
-                return configurationString
+            .flatMap {
+                self.configurationStringSubject
             }
             .map { configurationString in
-                guard !configurationString.isEmpty else {
+                guard let configurationString else {
                     return ""
                 }
                 return NSLocalizedString("BuildConfiguration", comment: "") + ": \(configurationString)"
