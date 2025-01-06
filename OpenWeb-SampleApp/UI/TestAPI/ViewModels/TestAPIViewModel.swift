@@ -95,30 +95,6 @@ class TestAPIViewModel: TestAPIViewModeling,
         #endif
     }()
 
-    private lazy var isAdsConfiguration: Bool = {
-        #if ADS
-        return true
-        #else
-        return false
-        #endif
-    }()
-
-    private lazy var isDebugConfiguration: Bool = {
-        #if DEBUG
-        return true
-        #else
-        return false
-        #endif
-    }()
-
-    private lazy var isPublicDemoAppConfiguration: Bool = {
-        #if PUBLIC_DEMO_APP
-        return true
-        #else
-        return false
-        #endif
-    }()
-
     private lazy var isBetaConfigurationSubject: BehaviorSubject<Bool> = {
         return BehaviorSubject(value: isBetaConfiguration)
     }()
