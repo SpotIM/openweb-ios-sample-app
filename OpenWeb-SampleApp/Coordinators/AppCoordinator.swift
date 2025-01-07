@@ -9,6 +9,10 @@ import RxSwift
 import OpenWebSDK
 import UIKit
 
+#if ADS
+import OpenWebIAUSDK
+#endif
+
 #if !PUBLIC_DEMO_APP
     import OpenWeb_SampleApp_Internal_Configs
 #endif
@@ -37,7 +41,10 @@ private extension AppCoordinator {
         initialVendorsSetup()
         initialDataSetup()
         initialUIAppearance()
+
+        #if ADS
         initialMonetizationSetup()
+        #endif
     }
 
     func initialVendorsSetup() {
@@ -56,10 +63,15 @@ private extension AppCoordinator {
         router = Router(navigationController: navigation)
     }
 
+    #if ADS
     func initialMonetizationSetup() {
-        let manager = OpenWeb.manager
+        var manager = OpenWebIAU.manager
         var settingsBuilder = OWIAUSettingsBuilder()
         settingsBuilder.storeURL(AppConstants.exampleStoreURL)
-        manager.monetization.setSettings(settingsBuilder.build())
+        manager.settings = settingsBuilder.build()
+
+        var socialManagerMonetization = OpenWeb.manager.monetization
+        socialManagerMonetization.iauProvider = manager.helpers.getIAUProvider()
     }
+    #endif
 }
