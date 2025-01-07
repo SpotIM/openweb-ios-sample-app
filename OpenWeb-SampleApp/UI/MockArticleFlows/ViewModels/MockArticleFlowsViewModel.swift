@@ -211,22 +211,42 @@ private extension MockArticleFlowsViewModel {
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
-                flows.preConversation(postId: postId,
-                                      article: article,
-                                      presentationalMode: presentationalMode,
-                                      additionalSettings: additionalSettings,
-                                      callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                      completion: { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success(let preConversationView):
-                        self._showPreConversation.onNext(preConversationView)
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.preConversation error: \(error)")
-                        self._showError.onNext(message)
+                if shouldUseAsyncAwaitCallingMethod() {
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        do {
+                            let preConversationView = try await flows.preConversation(
+                                postId: postId,
+                                article: article,
+                                presentationalMode: presentationalMode,
+                                additionalSettings: additionalSettings,
+                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
+                            )
+                            _showPreConversation.onNext(preConversationView)
+                        } catch {
+                            let message = (error as? OWError)?.description ?? error.localizedDescription
+                            DLog("Calling flows.preConversation error: \(error)")
+                            _showError.onNext(message)
+                        }
                     }
-                })
+                } else {
+                    flows.preConversation(postId: postId,
+                                          article: article,
+                                          presentationalMode: presentationalMode,
+                                          additionalSettings: additionalSettings,
+                                          callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                                          completion: { [weak self] result in
+                        guard let self else { return }
+                        switch result {
+                        case .success(let preConversationView):
+                            self._showPreConversation.onNext(preConversationView)
+                        case .failure(let error):
+                            let message = error.description
+                            DLog("Calling flows.preConversation error: \(error)")
+                            self._showError.onNext(message)
+                        }
+                    })
+                }
             })
             .disposed(by: disposeBag)
 
@@ -254,23 +274,42 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: manager.spotId)
 
-                flows.conversation(postId: postId,
-                                   article: article,
-                                   presentationalMode: presentationalMode,
-                                   additionalSettings: additionalSettings,
-                                   callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                   completion: { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        // All good
-                        break
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.conversation error: \(message)")
-                        self._showError.onNext(message)
+                if shouldUseAsyncAwaitCallingMethod() {
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        do {
+                            try await flows.conversation(
+                                postId: postId,
+                                article: article,
+                                presentationalMode: presentationalMode,
+                                additionalSettings: additionalSettings,
+                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
+                            )
+                        } catch {
+                            let message = (error as? OWError)?.description ?? error.localizedDescription
+                            DLog("Calling flows.conversation error: \(message)")
+                            _showError.onNext(message)
+                        }
                     }
-                })
+                } else {
+                    flows.conversation(postId: postId,
+                                       article: article,
+                                       presentationalMode: presentationalMode,
+                                       additionalSettings: additionalSettings,
+                                       callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                                       completion: { [weak self] result in
+                        guard let self else { return }
+                        switch result {
+                        case .success:
+                            // All good
+                            break
+                        case .failure(let error):
+                            let message = error.description
+                            DLog("Calling flows.conversation error: \(message)")
+                            self._showError.onNext(message)
+                        }
+                    })
+                }
             })
             .disposed(by: disposeBag)
 
@@ -298,23 +337,42 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-                flows.commentCreation(postId: postId,
-                                      article: article,
-                                      presentationalMode: presentationalMode,
-                                      additionalSettings: additionalSettings,
-                                      callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                      completion: { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        // All good
-                        break
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.commentCreation error: \(message)")
-                        self._showError.onNext(message)
+                if shouldUseAsyncAwaitCallingMethod() {
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        do {
+                            try await flows.commentCreation(
+                                postId: postId,
+                                article: article,
+                                presentationalMode: presentationalMode,
+                                additionalSettings: additionalSettings,
+                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
+                            )
+                        } catch {
+                            let message = (error as? OWError)?.description ?? error.localizedDescription
+                            DLog("Calling flows.commentCreation error: \(message)")
+                            _showError.onNext(message)
+                        }
                     }
-                })
+                } else {
+                    flows.commentCreation(postId: postId,
+                                          article: article,
+                                          presentationalMode: presentationalMode,
+                                          additionalSettings: additionalSettings,
+                                          callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                                          completion: { [weak self] result in
+                        guard let self else { return }
+                        switch result {
+                        case .success:
+                            // All good
+                            break
+                        case .failure(let error):
+                            let message = error.description
+                            DLog("Calling flows.commentCreation error: \(message)")
+                            self._showError.onNext(message)
+                        }
+                    })
+                }
             })
             .disposed(by: disposeBag)
 
@@ -342,24 +400,44 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-                flows.commentThread(postId: postId,
-                                    article: article,
-                                    commentId: self.commonCreatorService.commentThreadCommentId(),
-                                    presentationalMode: presentationalMode,
-                                    additionalSettings: additionalSettings,
-                                    callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                    completion: { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        // All good
-                        break
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.commentThread error: \(message)")
-                        self._showError.onNext(message)
+                if shouldUseAsyncAwaitCallingMethod() {
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        do {
+                            try await flows.commentThread(
+                                postId: postId,
+                                article: article,
+                                commentId: self.commonCreatorService.commentThreadCommentId(),
+                                presentationalMode: presentationalMode,
+                                additionalSettings: additionalSettings,
+                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
+                            )
+                        } catch {
+                            let message = (error as? OWError)?.description ?? error.localizedDescription
+                            DLog("Calling flows.commentThread error: \(message)")
+                            _showError.onNext(message)
+                        }
                     }
-                })
+                } else {
+                    flows.commentThread(postId: postId,
+                                        article: article,
+                                        commentId: self.commonCreatorService.commentThreadCommentId(),
+                                        presentationalMode: presentationalMode,
+                                        additionalSettings: additionalSettings,
+                                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                                        completion: { [weak self] result in
+                        guard let self else { return }
+                        switch result {
+                        case .success:
+                            // All good
+                            break
+                        case .failure(let error):
+                            let message = error.description
+                            DLog("Calling flows.commentThread error: \(message)")
+                            self._showError.onNext(message)
+                        }
+                    })
+                }
             })
             .disposed(by: disposeBag)
 
@@ -440,6 +518,10 @@ private extension MockArticleFlowsViewModel {
         }
 
         analytics.addBICallback(BIClosure)
+    }
+
+    func shouldUseAsyncAwaitCallingMethod() -> Bool {
+        return SampleAppCallingMethod.asyncAwait == userDefaultsProvider.get(key: .callingMethodOption, defaultValue: .default)
     }
 
     func loggerActionCallbacks(loggerEnabled: Bool) -> OWFlowActionsCallbacks? {
