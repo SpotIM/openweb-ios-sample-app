@@ -156,13 +156,15 @@
 "AboutText" = "This application was designed and developed by OpenWeb to showcase the powerful capabilities of our iOS SDK. Explore all the features provided. You’re welcome to use and incorporate any part of the code into your own company’s applications for seamless SDK integration.";
 "allRightsReserved" = "© OpenWeb %@, All rights reserved";
 "SampleApp" = "Sample App";
-"Vesrion" = "Vesrion";
 "Build" = "Build";
 "WelcomeText" = "Welcome to OpenWeb SampleApp";
 "Deeplink" = "Deeplink";
 "Authentication" = "Authentication";
 "Explore" = "Explore";
 "DescriptionText" = "Discover how the OpenWeb iOS SDK integrates with your app. Dive into the settings to explore and experience its full potential.";
+"CallingMethod" = "Calling method";
+"CallingMethodCompletionBlock" = "completion block";
+"CallingMethodAsyncAwait" = "async await";
 "UIFlowsLogger" = "Flows actions callbacks";
 "PreConversationWithAd" = "PreConversation With Ad";
 "SingleAd" = "Single Ad";
