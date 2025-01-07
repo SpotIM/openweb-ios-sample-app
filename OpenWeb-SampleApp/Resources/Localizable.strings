@@ -113,6 +113,10 @@
 "ClarityDetailsSettings" = "Clarity Details:";
 "NetworkSettings" = "Network:";
 "NetworkEnvironment" = "Environment";
+"BuildConfiguration" = "Configuration";
+"ConfigurationDebug" = "Debug";
+"ConfigurationBeta" = "Beta";
+"ConfigurationAds" = "Ads";
 "OpenCommentId" = "Open comment id";
 "ElementsCustomizationStyle" = "Elements customization style:";
 "ColorsCustomizationStyle" = "Colors customization style:";
