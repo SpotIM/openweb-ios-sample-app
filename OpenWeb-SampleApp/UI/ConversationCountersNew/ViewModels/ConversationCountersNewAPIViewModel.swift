@@ -65,9 +65,11 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
             .startWith([])
     }
 
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let disposeBag = DisposeBag()
 
-    init() {
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
+        self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
     }
 }
@@ -92,29 +94,42 @@ private extension ConversationCountersNewAPIViewModel {
             .subscribe(onNext: { [weak self] postIds in
                 guard let self else { return }
                 let helper = OpenWeb.manager.helpers
-                helper.conversationCounters(forPostIds: postIds) { [weak self] result in
-                    guard let self else { return }
-                    self._showLoader.onNext(false)
-
-                    switch result {
-                    case .success(let commentDict):
-                        let postIdsKeys = commentDict.keys
-                        var cellViewModels = [ConversationCounterNewAPICellViewModeling]()
-
-                        for id in postIdsKeys {
-                            guard let counter = commentDict[id] else { continue }
-                            let cellViewModel = ConversationCounterNewAPICellViewModel(counter: counter, postId: id)
-                            cellViewModels.append(cellViewModel)
+                if shouldUseAsyncAwaitCallingMethod() {
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        do {
+                            let counts = try await helper.conversationCounters(forPostIds: postIds)
+                            updateCells(counts: counts)
+                        } catch {
+                            DLog(error)
+                            self._showError.onNext((error as? OWError)?.description ?? error.localizedDescription)
                         }
+                        self._showLoader.onNext(false)
+                    }
+                } else {
+                    helper.conversationCounters(forPostIds: postIds) { [weak self] result in
+                        guard let self else { return }
+                        self._showLoader.onNext(false)
 
-                        self._cellsViewModels.onNext(cellViewModels)
-                    case .failure(let error):
-                        DLog(error)
-                        self._showError.onNext(error.description)
+                        switch result {
+                        case .success(let commentDict):
+                            updateCells(counts: commentDict)
+                        case .failure(let error):
+                            DLog(error)
+                            self._showError.onNext(error.description)
+                        }
                     }
                 }
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateCells(counts: [OWPostId: OWConversationCounter]) {
+        let cellViewModels = counts.map { id, counter in
+            ConversationCounterNewAPICellViewModel(counter: counter, postId: id)
+        }
+
+        _cellsViewModels.onNext(cellViewModels)
     }
 
     func parse(postIds: String) -> [String] {
@@ -122,5 +137,9 @@ private extension ConversationCountersNewAPIViewModel {
         return postIds
             .components(separatedBy: Metrics.parsingSeparator)
             .map { $0.replacingOccurrences(of: " ", with: "") } // Remove extra possible white spaces
+    }
+
+    func shouldUseAsyncAwaitCallingMethod() -> Bool {
+        return SampleAppCallingMethod.asyncAwait == userDefaultsProvider.get(key: .callingMethodOption, defaultValue: .default)
     }
 }
