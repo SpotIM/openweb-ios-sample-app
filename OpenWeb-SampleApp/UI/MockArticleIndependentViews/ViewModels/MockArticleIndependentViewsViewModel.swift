@@ -300,7 +300,7 @@ private extension MockArticleIndependentViewsViewModel {
                         observer.onNext(preConversationView)
                         observer.onCompleted()
                     } catch {
-                        let message = (error as? OWError)?.description ?? error.localizedDescription
+                        let message = error.localizedDescription
                         DLog("Calling retrievePreConversation error: \(message)")
                         observer.onError(error)
                     }
@@ -355,7 +355,7 @@ private extension MockArticleIndependentViewsViewModel {
                         observer.onNext(conversationView)
                         observer.onCompleted()
                     } catch {
-                        let message = (error as? OWError)?.description ?? error.localizedDescription
+                        let message = error.localizedDescription
                         DLog("Calling retrieveConversation error: \(message)")
                         observer.onError(error)
                     }
@@ -411,7 +411,7 @@ private extension MockArticleIndependentViewsViewModel {
                         observer.onNext(commentCreationView)
                         observer.onCompleted()
                     } catch {
-                        let message = (error as? OWError)?.description ?? error.localizedDescription
+                        let message = error.localizedDescription
                         DLog("Calling retrieveCommentCreation error: \(message)")
                         observer.onError(error)
                     }
@@ -468,7 +468,7 @@ private extension MockArticleIndependentViewsViewModel {
                         observer.onNext(commentThreadView)
                         observer.onCompleted()
                     } catch {
-                        let message = (error as? OWError)?.description ?? error.localizedDescription
+                        let message = error.localizedDescription
                         DLog("Calling retrieveCommentThread error: \(message)")
                         observer.onError(error)
                     }
@@ -523,7 +523,7 @@ private extension MockArticleIndependentViewsViewModel {
                         observer.onNext(clarityDetailsView)
                         observer.onCompleted()
                     } catch {
-                        let message = (error as? OWError)?.description ?? error.localizedDescription
+                        let message = error.localizedDescription
                         DLog("Calling retrieveClarityDetails error: \(message)")
                         observer.onError(error)
                     }

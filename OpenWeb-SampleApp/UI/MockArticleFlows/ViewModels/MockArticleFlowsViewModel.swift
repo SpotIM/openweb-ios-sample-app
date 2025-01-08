@@ -224,7 +224,7 @@ private extension MockArticleFlowsViewModel {
                             )
                             _showPreConversation.onNext(preConversationView)
                         } catch {
-                            let message = (error as? OWError)?.description ?? error.localizedDescription
+                            let message = error.localizedDescription
                             DLog("Calling flows.preConversation error: \(error)")
                             _showError.onNext(message)
                         }
@@ -286,7 +286,7 @@ private extension MockArticleFlowsViewModel {
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
                         } catch {
-                            let message = (error as? OWError)?.description ?? error.localizedDescription
+                            let message = error.localizedDescription
                             DLog("Calling flows.conversation error: \(message)")
                             _showError.onNext(message)
                         }
@@ -349,7 +349,7 @@ private extension MockArticleFlowsViewModel {
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
                         } catch {
-                            let message = (error as? OWError)?.description ?? error.localizedDescription
+                            let message = error.localizedDescription
                             DLog("Calling flows.commentCreation error: \(message)")
                             _showError.onNext(message)
                         }
@@ -413,7 +413,7 @@ private extension MockArticleFlowsViewModel {
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
                         } catch {
-                            let message = (error as? OWError)?.description ?? error.localizedDescription
+                            let message = error.localizedDescription
                             DLog("Calling flows.commentThread error: \(message)")
                             _showError.onNext(message)
                         }
