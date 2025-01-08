@@ -102,7 +102,7 @@ private extension ConversationCountersNewAPIViewModel {
                             updateCells(counts: counts)
                         } catch {
                             DLog(error)
-                            self._showError.onNext((error as? OWError)?.description ?? error.localizedDescription)
+                            self._showError.onNext(error.localizedDescription)
                         }
                         self._showLoader.onNext(false)
                     }
