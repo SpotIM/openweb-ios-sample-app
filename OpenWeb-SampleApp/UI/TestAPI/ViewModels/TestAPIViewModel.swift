@@ -47,6 +47,8 @@ protocol TestAPIViewModelingOutputs {
     var selectedPostId: Observable<OWPostId> { get }
     var envLabelString: Observable<String> { get }
     var isEnvLabelVisible: Observable<Bool> { get }
+    var configurationLabelString: Observable<String> { get }
+    var isConfigurationLabelVisible: Observable<Bool> { get }
 }
 
 protocol TestAPIViewModeling {
@@ -86,11 +88,11 @@ class TestAPIViewModel: TestAPIViewModeling,
     let viewWillAppear = PublishSubject<Void>()
 
     private lazy var isBetaConfiguration: Bool = {
-    #if BETA
+        #if BETA
         return true
         #else
         return false
-    #endif
+        #endif
     }()
 
     private lazy var isBetaConfigurationSubject: BehaviorSubject<Bool> = {
@@ -99,6 +101,34 @@ class TestAPIViewModel: TestAPIViewModeling,
 
     var isEnvLabelVisible: Observable<Bool> {
         return isBetaConfigurationSubject
+            .asObservable()
+    }
+
+    private var configurationString: String? {
+        var configurationString = ""
+        #if DEBUG && !PUBLIC_DEMO_APP
+        configurationString.append(NSLocalizedString("ConfigurationDebug", comment: ""))
+        #endif
+
+        #if BETA || ADS
+        configurationString.append(" | ")
+        #endif
+
+        #if BETA
+        configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
+        #elseif ADS
+        configurationString.append(NSLocalizedString("ConfigurationAds", comment: ""))
+        #endif
+        return !configurationString.isEmpty ? configurationString : nil
+    }
+
+    private lazy var configurationStringSubject: BehaviorSubject<String?> = {
+        return BehaviorSubject(value: configurationString)
+    }()
+
+    var isConfigurationLabelVisible: Observable<Bool> {
+        return configurationStringSubject
+            .map { $0 != nil }
             .asObservable()
     }
 
@@ -123,6 +153,20 @@ class TestAPIViewModel: TestAPIViewModeling,
                     return ""
                 }
                 return NSLocalizedString("NetworkEnvironment", comment: "") + ": \(envString)"
+            }
+            .asObservable()
+    }
+
+    var configurationLabelString: Observable<String> {
+        return viewWillAppear
+            .flatMap {
+                self.configurationStringSubject
+            }
+            .map { configurationString in
+                guard let configurationString else {
+                    return ""
+                }
+                return NSLocalizedString("BuildConfiguration", comment: "") + ": \(configurationString)"
             }
             .asObservable()
     }
