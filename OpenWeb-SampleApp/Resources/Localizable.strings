@@ -52,7 +52,6 @@
 "CommentCreation" = "Comment Creation";
 "CommentThread" = "Comment Thread";
 "ClarityDetails" = "Clarity Details";
-"IndependentAdUnit" = "IAU - Independent Ad Unit";
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";
 "Settings" = "Settings";
@@ -114,6 +113,10 @@
 "ClarityDetailsSettings" = "Clarity Details:";
 "NetworkSettings" = "Network:";
 "NetworkEnvironment" = "Environment";
+"BuildConfiguration" = "Configuration";
+"ConfigurationDebug" = "Debug";
+"ConfigurationBeta" = "Beta";
+"ConfigurationAds" = "Ads";
 "OpenCommentId" = "Open comment id";
 "ElementsCustomizationStyle" = "Elements customization style:";
 "ColorsCustomizationStyle" = "Colors customization style:";
@@ -163,3 +166,7 @@
 "CallingMethodCompletionBlock" = "completion block";
 "CallingMethodAsyncAwait" = "async await";
 "UIFlowsLogger" = "Flows actions callbacks";
+"PreConversationWithAd" = "PreConversation With Ad";
+"SingleAd" = "Single Ad";
+"Monetization" = "Monetization";
+"SingleAdExample" = "Single Ad Example";
