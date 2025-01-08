@@ -144,7 +144,6 @@
 				3DA1DF112C6E200300EBFA7D /* Resources */,
 				3DA1E6D62C6E299A00EBFA7D /* Embed Frameworks */,
 				6196B358536E7D6AEE637AB1 /* [CP] Embed Pods Frameworks */,
-				2C267A3FD37C7ED63724B5B5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -202,23 +201,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2C267A3FD37C7ED63724B5B5 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		6196B358536E7D6AEE637AB1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
