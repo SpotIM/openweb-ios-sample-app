@@ -175,22 +175,20 @@ private extension MockArticleFlowsVC {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
 
-        if #available(iOS 13.0, *) {
-            #if !PUBLIC_DEMO_APP
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
-                // Add it to the window
-                floatingLoggerView.isHidden = true
-                keyWindow.addSubview(floatingLoggerView)
-                floatingLoggerView.snp.makeConstraints { make in
-                    make.width.equalTo(Metrics.loggerViewWidth)
-                    make.height.equalTo(Metrics.loggerViewHeight)
-                    make.top.equalToSuperview().offset(Metrics.loggerInitialTopPadding)
-                    make.centerX.equalToSuperview()
-                }
+        #if !PUBLIC_DEMO_APP
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            // Add it to the window
+            floatingLoggerView.isHidden = true
+            keyWindow.addSubview(floatingLoggerView)
+            floatingLoggerView.snp.makeConstraints { make in
+                make.width.equalTo(Metrics.loggerViewWidth)
+                make.height.equalTo(Metrics.loggerViewHeight)
+                make.top.equalToSuperview().offset(Metrics.loggerInitialTopPadding)
+                make.centerX.equalToSuperview()
             }
-            #endif
         }
+        #endif
     }
 
     // swiftlint:disable function_body_length

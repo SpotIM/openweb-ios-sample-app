@@ -7,7 +7,11 @@
 
 import Foundation
 import RxSwift
-import OpenWebSDK
+import OpenWebCommon
+
+#if ADS
+import OpenWebIAUSDK
+#endif
 
 protocol SingleAdExampleViewModelingInputs {}
 
@@ -50,12 +54,13 @@ class SingleAdExampleViewModel: SingleAdExampleViewModeling, SingleAdExampleView
 
 private extension SingleAdExampleViewModel {
     func setupObservers() {
+        #if ADS
         let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0))
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
         let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in
             self?.loggerViewModel.inputs.log(text: eventType.description)
         }
-        OpenWeb.manager.monetization.ui.ad(postId: postId,
+        OpenWebIAU.manager.ui.ad(postId: postId,
                                            settings: adSettings,
                                            viewEventCallbacks: viewEventCallbacks,
                                            actionsCallbacks: nil,
@@ -68,5 +73,6 @@ private extension SingleAdExampleViewModel {
                 DLog("Social monetization example failed: \(error.localizedDescription)")
             }
         })
+        #endif
     }
 }

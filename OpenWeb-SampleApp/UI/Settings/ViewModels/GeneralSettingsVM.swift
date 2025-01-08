@@ -492,11 +492,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         let _light = NSLocalizedString("Light", comment: "")
         let _dark = NSLocalizedString("Dark", comment: "")
 
-        if #available(iOS 13.0, *) {
-            return [_matchTheme, _light, _dark]
-        } else {
-            return [_matchTheme, _light]
-        }
+        return [_matchTheme, _light, _dark]
     }()
 
     lazy var navigationBarStyleSettings: [String] = {
