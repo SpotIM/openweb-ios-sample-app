@@ -63,7 +63,7 @@ private extension IndependentAdCellViewModel {
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
 
         let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in
-            self?._loggerEvents.onNext("IndependentAd: \(eventType.description)")
+            self?._loggerEvents.onNext("IndependentAd: \(eventType.description)\n")
         }
 
         OpenWebIAU.manager.ui.ad(postId: postId,

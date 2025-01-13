@@ -162,7 +162,7 @@ private extension PreconversationCellViewModel {
         let analytics: OWAnalytics = OpenWeb.manager.analytics
 
         let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
-            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
+            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)\n"
             self?._loggerEvents.onNext(log)
         }
 
@@ -176,6 +176,9 @@ private extension PreconversationCellViewModel {
             switch callbackType {
             case .adSizeChanged:
                 _adSizeChanged.onNext()
+            case .adEvent(event: let event):
+                let log = "preconversationAd: \(event.description)\n"
+                self._loggerEvents.onNext(log)
             default:
                 guard loggerEnabled else { return }
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
