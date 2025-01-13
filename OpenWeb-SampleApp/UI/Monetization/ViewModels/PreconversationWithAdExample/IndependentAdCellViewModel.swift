@@ -8,7 +8,9 @@
 import Foundation
 import RxSwift
 import OpenWebSDK
+#if ADS
 import OpenWebIAUSDK
+#endif
 
 protocol IndependentAdCellViewModelingInput {}
 
