@@ -18,8 +18,8 @@ protocol PreconversationCellViewModelingOutput {
     var showPreConversation: Observable<UIView?> { get }
     var adSizeChanged: Observable<Void> { get }
     var preConversationHorizontalMargin: CGFloat { get }
-    var loggerViewModel: UILoggerViewModeling { get }
     var loggerEnabled: Observable<Bool> { get }
+    var loggerEvents: Observable<String> { get }
 }
 
 protocol PreconversationCellViewModeling {
@@ -74,9 +74,10 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
         return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
     }()
 
-    lazy var loggerViewModel: UILoggerViewModeling = {
-        return UILoggerViewModel(title: "PreconversationCellViewModel Logger")
-    }()
+    private let _loggerEvents = PublishSubject<String>()
+    var loggerEvents: Observable<String> {
+        _loggerEvents.asObservable()
+    }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          actionSettings: SDKUIFlowActionSettings,
@@ -162,7 +163,7 @@ private extension PreconversationCellViewModel {
 
         let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
             let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
-            self?.loggerViewModel.inputs.log(text: log)
+            self?._loggerEvents.onNext(log)
         }
 
         analytics.addBICallback(BIClosure)
@@ -178,7 +179,7 @@ private extension PreconversationCellViewModel {
             default:
                 guard loggerEnabled else { return }
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                self._loggerEvents.onNext(log)
             }
         }
     }
