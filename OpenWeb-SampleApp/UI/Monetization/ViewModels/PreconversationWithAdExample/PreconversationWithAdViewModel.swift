@@ -65,9 +65,9 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
         return preconversationCellViewModel.outputs.loggerEnabled
     }
 
-    var loggerViewModel: UILoggerViewModeling {
-        return preconversationCellViewModel.outputs.loggerViewModel
-    }
+    lazy var loggerViewModel: UILoggerViewModeling = {
+        return UILoggerViewModel(title: "Logger")
+    }()
 
     lazy var floatingViewViewModel: OWFloatingViewModeling = {
         return OWFloatingViewModel()
@@ -94,5 +94,13 @@ private extension PreconversationWithAdViewModel {
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.onNext(articleURL)
+
+        Observable.merge(preconversationCellViewModel.outputs.loggerEvents,
+                         independentAdCellViewModel.outputs.loggerEvents)
+            .subscribe(onNext: { [weak self] logEvent in
+                self?.loggerViewModel.inputs.log(text: logEvent)
+            })
+            .disposed(by: disposeBag)
+
     }
 }
