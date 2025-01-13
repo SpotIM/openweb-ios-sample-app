@@ -15,12 +15,14 @@ protocol UIFlowsViewModelingInputs {
     var fullConversationTapped: PublishSubject<PresentationalModeCompact> { get }
     var commentCreationTapped: PublishSubject<PresentationalModeCompact> { get }
     var commentThreadTapped: PublishSubject<PresentationalModeCompact> { get }
+    var monetizationTapped: PublishSubject<Void> { get }
 }
 
 protocol UIFlowsViewModelingOutputs {
     var title: String { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
     var openMockArticleScreen: Observable<SDKUIFlowActionSettings> { get }
+    var openMonetizationScreen: Observable<OWPostId> { get }
     var presentStyle: OWModalPresentationStyle { get }
 }
 
@@ -41,6 +43,7 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
     let fullConversationTapped = PublishSubject<PresentationalModeCompact>()
     let commentCreationTapped = PublishSubject<PresentationalModeCompact>()
     let commentThreadTapped = PublishSubject<PresentationalModeCompact>()
+    let monetizationTapped = PublishSubject < Void>()
 
     private let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
     var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
@@ -51,6 +54,13 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
 
     var presentStyle: OWModalPresentationStyle {
         return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
+    }
+
+    private let _openMonetizationScreen = BehaviorSubject<OWPostId?>(value: nil)
+    var openMonetizationScreen: Observable<OWPostId> {
+        return _openMonetizationScreen
+            .unwrap()
+            .asObservable()
     }
 
     lazy var title: String = {
@@ -98,6 +108,11 @@ private extension UIFlowsViewModel {
 
         Observable.merge(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
             .bind(to: _openMockArticleScreen)
+
+        monetizationTapped
+            .asObservable()
+            .map { postId }
+            .bind(to: _openMonetizationScreen)
             .disposed(by: disposeBag)
     }
 }
