@@ -15,6 +15,7 @@ protocol IndependentAdCellViewModelingInput {}
 protocol IndependentAdCellViewModelingOutput {
     var adView: Observable<UIView> { get }
     var adSizeChanged: Observable<Void> { get }
+    var loggerEvents: Observable<String> { get }
 }
 
 protocol IndependentAdCellViewModeling {
@@ -42,6 +43,11 @@ public final class IndependentAdCellViewModel: IndependentAdCellViewModeling,
             .asObservable()
     }
 
+    private let _loggerEvents = PublishSubject<String>()
+    var loggerEvents: Observable<String> {
+        _loggerEvents.asObservable()
+    }
+
     public init(postId: OWPostId) {
         self.postId = postId
         setupObservers()
@@ -54,9 +60,13 @@ private extension IndependentAdCellViewModel {
         let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0))
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
 
+        let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in
+            self?._loggerEvents.onNext("IndependentAd: \(eventType.description)")
+        }
+
         OpenWebIAU.manager.ui.ad(postId: postId,
                                            settings: adSettings,
-                                           viewEventCallbacks: nil,
+                                           viewEventCallbacks: viewEventCallbacks,
                                            actionsCallbacks: { [weak self] event, _, _ in
             switch event {
             case .adSizeChanged:
