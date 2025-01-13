@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import OpenWebSDK
+import OpenWebIAUSDK
 
 protocol IndependentAdCellViewModelingInput {}
 
@@ -49,10 +50,11 @@ public final class IndependentAdCellViewModel: IndependentAdCellViewModeling,
 
 private extension IndependentAdCellViewModel {
     func setupObservers() {
+        #if ADS
         let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0))
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
 
-        OpenWeb.manager.monetization.ui.ad(postId: postId,
+        OpenWebIAU.manager.ui.ad(postId: postId,
                                            settings: adSettings,
                                            viewEventCallbacks: nil,
                                            actionsCallbacks: { [weak self] event, _, _ in
@@ -72,5 +74,6 @@ private extension IndependentAdCellViewModel {
                 DLog("Independent Ad Cell failed with error: \(error.localizedDescription)")
             }
         })
+        #endif
     }
 }
