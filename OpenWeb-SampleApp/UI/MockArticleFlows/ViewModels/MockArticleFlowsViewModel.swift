@@ -513,7 +513,7 @@ private extension MockArticleFlowsViewModel {
         let analytics: OWAnalytics = OpenWeb.manager.analytics
 
         let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
-            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
+            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)\n"
             self?.loggerViewModel.inputs.log(text: log)
         }
 
@@ -528,8 +528,15 @@ private extension MockArticleFlowsViewModel {
         guard loggerEnabled else { return nil }
         return { [weak self] callbackType, sourceType, postId in
             guard let self else { return }
-            let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-            self.loggerViewModel.inputs.log(text: log)
+            switch callbackType {
+            case .adSizeChanged: break
+            case .adEvent(event: let event):
+                let log = "preconversationAd: \(event.description)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            default:
+                let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
         }
     }
 }
