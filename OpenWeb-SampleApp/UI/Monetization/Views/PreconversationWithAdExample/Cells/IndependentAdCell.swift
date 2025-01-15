@@ -16,7 +16,7 @@ class IndependentAdCell: UITableViewCell {
     private let disposeBag = DisposeBag()
 
     private struct Metrics {
-        static let horizontalPadding: CGFloat = 37
+        static let horizontalPadding: CGFloat = 16
         static let verticalPadding: CGFloat = 16
     }
 
