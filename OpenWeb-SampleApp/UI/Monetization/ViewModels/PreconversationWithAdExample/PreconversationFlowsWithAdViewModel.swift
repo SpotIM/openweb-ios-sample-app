@@ -1,5 +1,5 @@
 //
-//  PreconversationWithAdViewModel.swift
+//  PreconversationFlowsWithAdViewModel.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Anael on 11/12/2024.
@@ -8,12 +8,12 @@
 import RxSwift
 import OpenWebSDK
 
-protocol PreconversationWithAdViewModelingInputs {
+protocol PreconversationFlowsWithAdViewModelingInputs {
     func setNavigationController(_ navController: UINavigationController?)
     func setPresentationalVC(_ viewController: UIViewController)
 }
 
-protocol PreconversationWithAdViewModelingOutputs {
+protocol PreconversationFlowsWithAdViewModelingOutputs {
     var title: String { get }
     var articleImageURL: Observable<URL> { get }
     var preconversationCellViewModel: PreconversationCellViewModeling { get }
@@ -24,15 +24,15 @@ protocol PreconversationWithAdViewModelingOutputs {
     var loggerViewModel: UILoggerViewModeling { get }
 }
 
-protocol PreconversationWithAdViewModeling {
-    var inputs: PreconversationWithAdViewModelingInputs { get }
-    var outputs: PreconversationWithAdViewModelingOutputs { get }
+protocol PreconversationFlowsWithAdViewModeling {
+    var inputs: PreconversationFlowsWithAdViewModelingInputs { get }
+    var outputs: PreconversationFlowsWithAdViewModelingOutputs { get }
 }
 
-class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, PreconversationWithAdViewModelingInputs, PreconversationWithAdViewModelingOutputs {
+class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModeling, PreconversationFlowsWithAdViewModelingInputs, PreconversationFlowsWithAdViewModelingOutputs {
 
-    var inputs: PreconversationWithAdViewModelingInputs { return self }
-    var outputs: PreconversationWithAdViewModelingOutputs { return self }
+    var inputs: PreconversationFlowsWithAdViewModelingInputs { return self }
+    var outputs: PreconversationFlowsWithAdViewModelingOutputs { return self }
 
     private let disposeBag = DisposeBag()
     private let imageProviderAPI: ImageProviding
@@ -123,7 +123,7 @@ class PreconversationWithAdViewModel: PreconversationWithAdViewModeling, Preconv
     }
 }
 
-private extension PreconversationWithAdViewModel {
+private extension PreconversationFlowsWithAdViewModel {
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.onNext(articleURL)
