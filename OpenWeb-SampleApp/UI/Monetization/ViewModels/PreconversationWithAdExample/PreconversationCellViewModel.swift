@@ -176,9 +176,9 @@ private extension PreconversationCellViewModel {
             switch callbackType {
             case .adSizeChanged:
                 _adSizeChanged.onNext()
-//            case .adEvent(event: let event):
-//                let log = "preconversationAd: \(event.description)\n"
-//                self._loggerEvents.onNext(log)
+            case .adEvent(event: let event):
+                let log = "preconversationAd: \(event.description)\n"
+                self._loggerEvents.onNext(log)
             default:
                 guard loggerEnabled else { return }
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
