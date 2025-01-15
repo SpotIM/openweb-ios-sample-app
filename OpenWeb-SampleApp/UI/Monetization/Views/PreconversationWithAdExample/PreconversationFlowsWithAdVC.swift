@@ -8,8 +8,8 @@
 import RxSwift
 import UIKit
 
-class PreconversationWithAdVC: UIViewController {
-    private let viewModel: PreconversationWithAdViewModeling
+class PreconversationFlowsWithAdVC: UIViewController {
+    private let viewModel: PreconversationFlowsWithAdViewModeling
     private let disposeBag = DisposeBag()
 
     private struct Metrics {
@@ -41,7 +41,7 @@ class PreconversationWithAdVC: UIViewController {
 
     private var articleImageURL: URL?
 
-    init(viewModel: PreconversationWithAdViewModeling) {
+    init(viewModel: PreconversationFlowsWithAdViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }

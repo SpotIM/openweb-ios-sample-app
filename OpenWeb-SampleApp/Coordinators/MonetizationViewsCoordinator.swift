@@ -1,13 +1,14 @@
 //
-//  MonetizationCoordinator.swift
+//  MonetizationViewsCoordinator.swift
 //  OpenWeb-SampleApp
 //
-//  Created by Anael on 25/11/2024.
+//  Created by Anael on 15/01/2025.
 //
 
+import Foundation
 import RxSwift
 
-class MonetizationCoordinator: BaseCoordinator<Void> {
+class MonetizationViewsCoordinator: BaseCoordinator<Void> {
 
     private let router: Routering
 
@@ -19,7 +20,7 @@ class MonetizationCoordinator: BaseCoordinator<Void> {
                         coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
-            fatalError("MonetizationCoordinator requires coordinatorData from `CoordinatorData.postId` type")
+            fatalError("MonetizationViewsCoordinator requires coordinatorData from `CoordinatorData.postId` type")
         }
 
         let monetizationViewModel: MonetizationViewViewModeling = MonetizationViewViewModel(postId: postId)
@@ -38,7 +39,7 @@ class MonetizationCoordinator: BaseCoordinator<Void> {
     }
 }
 
-private extension MonetizationCoordinator {
+private extension MonetizationViewsCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MonetizationViewViewModeling) {
         viewModel.outputs.openSingleAdExample
             .subscribe(onNext: { [weak self] postId in
@@ -55,17 +56,17 @@ private extension MonetizationCoordinator {
             .subscribe(
                 onNext: { [weak self] dataModel in
                     guard let self else { return }
-                    let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
-                    guard case CoordinatorData.actionsFlowSettings(let settings) = coordinatorData else {
-                        fatalError("MonetizationCoordinator requires coordinatorData from `CoordinatorData.actionsFlowSettings` type")
+                    let coordinatorData = CoordinatorData.actionsViewSettings(data: dataModel)
+                    guard case CoordinatorData.actionsViewSettings(let settings) = coordinatorData else {
+                        fatalError("MonetizationViewsCoordinator requires coordinatorData from `CoordinatorData.actionsViewSettings` type")
                     }
 
-                    let PreconversationWithAdVM: PreconversationWithAdViewModeling = PreconversationWithAdViewModel(
+                    let preconversationViewsWithAdVM: PreconversationViewsWithAdViewModeling = PreconversationViewsWithAdViewModel(
                         actionSettings: settings,
                         postId: dataModel.postId
                     )
-                let PreconversationWithAdVC = PreconversationWithAdVC(viewModel: PreconversationWithAdVM)
-                self.router.push(PreconversationWithAdVC,
+                let preconversationViewsWithAdVC = PreconversationViewsWithAdVC(viewModel: preconversationViewsWithAdVM)
+                self.router.push(preconversationViewsWithAdVC,
                                  animated: true,
                                  completion: nil)
 

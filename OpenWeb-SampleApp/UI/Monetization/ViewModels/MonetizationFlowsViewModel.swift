@@ -1,39 +1,40 @@
 //
-//  MonetizationViewViewModel.swift
+//  MonetizationFlowsViewModel.swift
 //  OpenWeb-SampleApp
 //
-//  Created by Anael on 25/11/2024.
+//  Created by Anael on 15/01/2025.
 //
 
 import Foundation
 import OpenWebSDK
 import RxSwift
 
-protocol MonetizationViewViewModelingInputs {
+protocol MonetizationFlowsViewModelingInputs {
     var singleAdExampleTapped: PublishSubject<Void> { get }
-    var preConversationWithAdTapped: PublishSubject<Void> { get }
+    var preConversationWithAdTapped: PublishSubject<PresentationalModeCompact> { get }
 }
 
-protocol MonetizationViewViewModelingOutputs {
+protocol MonetizationFlowsViewModelingOutputs {
     var title: String { get }
     var openSingleAdExample: Observable<OWPostId> { get }
-    var openPreconversationWithAdExample: Observable<SDKUIIndependentViewsActionSettings> { get }
+    var openPreconversationWithAdExample: Observable<SDKUIFlowActionSettings> { get }
 }
 
-protocol MonetizationViewViewModeling {
-    var inputs: MonetizationViewViewModelingInputs { get }
-    var outputs: MonetizationViewViewModelingOutputs { get }
+protocol MonetizationFlowsViewModeling {
+    var inputs: MonetizationFlowsViewModelingInputs { get }
+    var outputs: MonetizationFlowsViewModelingOutputs { get }
 }
 
-class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewViewModelingOutputs, MonetizationViewViewModelingInputs {
-    var inputs: MonetizationViewViewModelingInputs { return self }
-    var outputs: MonetizationViewViewModelingOutputs { return self }
+class MonetizationFlowsViewModel: MonetizationFlowsViewModeling, MonetizationFlowsViewModelingOutputs, MonetizationFlowsViewModelingInputs {
+
+    var inputs: MonetizationFlowsViewModelingInputs { return self }
+    var outputs: MonetizationFlowsViewModelingOutputs { return self }
 
     private let postId: OWPostId
     private let disposeBag = DisposeBag()
 
     let singleAdExampleTapped = PublishSubject<Void>()
-    let preConversationWithAdTapped = PublishSubject<Void>()
+    let preConversationWithAdTapped = PublishSubject<PresentationalModeCompact>()
 
     private let _openSingleAdExample = BehaviorSubject<OWPostId?>(value: nil)
     var openSingleAdExample: Observable<OWPostId> {
@@ -42,8 +43,8 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
             .asObservable()
     }
 
-    private let _openPreconversationWithAdExample = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
-    var openPreconversationWithAdExample: Observable<SDKUIIndependentViewsActionSettings> {
+    private let _openPreconversationWithAdExample = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
+    var openPreconversationWithAdExample: Observable<SDKUIFlowActionSettings> {
         return _openPreconversationWithAdExample
             .unwrap()
             .asObservable()
@@ -59,7 +60,7 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
     }
 }
 
-private extension MonetizationViewViewModel {
+private extension MonetizationFlowsViewModel {
     func setupObservers() {
         singleAdExampleTapped
             .asObservable()
@@ -72,10 +73,10 @@ private extension MonetizationViewViewModel {
 
         preConversationWithAdTapped
             .asObservable()
-            .map { [weak self] _ -> SDKUIIndependentViewsActionSettings? in
+            .map { [weak self] mode -> SDKUIFlowActionSettings? in
                 guard let self else { return nil }
-                let action = SDKUIIndependentViewType.preConversation
-                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: action)
+                let action = SDKUIFlowActionType.preConversation(presentationalMode: mode)
+                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
             .unwrap()
