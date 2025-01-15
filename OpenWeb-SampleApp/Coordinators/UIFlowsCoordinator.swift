@@ -49,7 +49,7 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = MonetizationCoordinator(router: self.router)
+                let coordinator = MonetizationFlowsCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> Observable<Void> in
