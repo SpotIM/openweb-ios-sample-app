@@ -139,21 +139,40 @@ private extension PreconversationCellViewModel {
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
-                flows.preConversation(postId: postId,
-                                      article: article,
-                                      presentationalMode: presentationalMode,
-                                      additionalSettings: additionalSettings,
-                                      callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
-                                      completion: { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success(let preConversationView):
-                        self._showPreConversation.onNext(preConversationView)
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.preConversation error: \(message)")
+                if shouldUseAsyncAwaitCallingMethod() {
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        do {
+                            let preConversationView = try await flows.preConversation(
+                                postId: postId,
+                                article: article,
+                                presentationalMode: presentationalMode,
+                                additionalSettings: additionalSettings,
+                                callbacks: actionCallbacks(loggerEnabled: loggerEnabled)
+                            )
+                            _showPreConversation.onNext(preConversationView)
+                        } catch {
+                            let message = error.localizedDescription
+                            DLog("Calling flows.preConversation error: \(error)")
+                        }
                     }
-                })
+                } else {
+                    flows.preConversation(postId: postId,
+                                          article: article,
+                                          presentationalMode: presentationalMode,
+                                          additionalSettings: additionalSettings,
+                                          callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
+                                          completion: { [weak self] result in
+                        guard let self else { return }
+                        switch result {
+                        case .success(let preConversationView):
+                            self._showPreConversation.onNext(preConversationView)
+                        case .failure(let error):
+                            let message = error.description
+                            DLog("Calling flows.preConversation error: \(error)")
+                        }
+                    })
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -185,5 +204,9 @@ private extension PreconversationCellViewModel {
                 self._loggerEvents.onNext(log)
             }
         }
+    }
+
+    func shouldUseAsyncAwaitCallingMethod() -> Bool {
+        return SampleAppCallingMethod.asyncAwait == userDefaultsProvider.get(key: .callingMethodOption, defaultValue: .default)
     }
 }
