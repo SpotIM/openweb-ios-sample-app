@@ -288,7 +288,7 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if shouldUseAsyncAwaitCallingMethod() {
+            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                 Task { @MainActor in
                     do {
                         let preConversationView = try await uiViews.preConversation(
@@ -343,7 +343,7 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if shouldUseAsyncAwaitCallingMethod() {
+            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                 Task { @MainActor in
                     do {
                         let conversationView = try await uiViews.conversation(
@@ -398,7 +398,7 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if shouldUseAsyncAwaitCallingMethod() {
+            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                 Task { @MainActor in
                     do {
                         let commentCreationView = try await uiViews.commentCreation(
@@ -455,7 +455,7 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if shouldUseAsyncAwaitCallingMethod() {
+            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                 Task { @MainActor in
                     do {
                         let commentThreadView = try await uiViews.commentThread(
@@ -510,7 +510,7 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if shouldUseAsyncAwaitCallingMethod() {
+            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                 Task { @MainActor in
                     do {
                         let clarityDetailsView = try await uiViews.clarityDetails(
