@@ -14,7 +14,6 @@ class SampleAppSettingsView: UIView {
     private struct Metrics {
         static let identifier = "sample_app_settings_view_id"
         static let deeplinkIdentifier = "deeplink_selection_id"
-        static let callingMethodIdentifier = "calling_method_selection_id"
         static let flowsLoggerIdentifier = "flows_logger_switch_id"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
@@ -41,14 +40,6 @@ class SampleAppSettingsView: UIView {
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.deeplinkIdentifier,
                                        items: items)
-    }()
-
-    private lazy var segmentedCallingMethod: SegmentedControlSetting = {
-        return SegmentedControlSetting(
-            title: viewModel.outputs.callingMethodTitle,
-            accessibilityPrefixId: Metrics.callingMethodIdentifier,
-            items: viewModel.outputs.callingMethodSettings
-        )
     }()
 
     private lazy var switchFlowsLogger: SwitchSetting = {
@@ -90,7 +81,6 @@ private extension SampleAppSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedDeeplink)
-        stackView.addArrangedSubview(segmentedCallingMethod)
         stackView.addArrangedSubview(switchFlowsLogger)
     }
 
@@ -103,16 +93,6 @@ private extension SampleAppSettingsView {
         segmentedDeeplink.rx.selectedSegmentIndex
             .map { SampleAppDeeplink.deeplink(fromIndex: $0) }
             .bind(to: viewModel.inputs.deeplinkOptionSelected)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.callingMethodOption
-            .map { $0.rawValue }
-            .bind(to: segmentedCallingMethod.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
-
-        segmentedCallingMethod.rx.selectedSegmentIndex
-            .compactMap { SampleAppCallingMethod(rawValue: $0) }
-            .bind(to: viewModel.inputs.callingMethodOptionSelected)
             .disposed(by: disposeBag)
 
         viewModel.outputs.flowsLoggerEnabled
