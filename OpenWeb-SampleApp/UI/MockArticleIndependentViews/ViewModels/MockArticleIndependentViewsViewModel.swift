@@ -288,40 +288,21 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
-                Task { @MainActor in
-                    do {
-                        let preConversationView = try await uiViews.preConversation(
-                            postId: settings.postId,
-                            article: article,
-                            additionalSettings: additionalSettings,
-                            callbacks: actionsCallbacks
-                        )
-                        observer.onNext(preConversationView)
-                        observer.onCompleted()
-                    } catch {
-                        let message = error.localizedDescription
-                        DLog("Calling retrievePreConversation error: \(message)")
-                        observer.onError(error)
-                    }
+            uiViews.preConversation(postId: settings.postId,
+                                    article: article,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: actionsCallbacks,
+                                    completion: { result in
+                switch result {
+                case .success(let preConversationView):
+                    observer.onNext(preConversationView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrievePreConversation error: \(message)")
+                    observer.onError(error)
                 }
-            } else {
-                uiViews.preConversation(postId: settings.postId,
-                                        article: article,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: actionsCallbacks,
-                                        completion: { result in
-                    switch result {
-                    case .success(let preConversationView):
-                        observer.onNext(preConversationView)
-                        observer.onCompleted()
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling retrievePreConversation error: \(message)")
-                        observer.onError(error)
-                    }
-                })
-            }
+            })
 
             return Disposables.create()
         }
@@ -343,40 +324,21 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
-                Task { @MainActor in
-                    do {
-                        let conversationView = try await uiViews.conversation(
-                            postId: settings.postId,
-                            article: article,
-                            additionalSettings: additionalSettings,
-                            callbacks: actionsCallbacks
-                        )
-                        observer.onNext(conversationView)
-                        observer.onCompleted()
-                    } catch {
-                        let message = error.localizedDescription
-                        DLog("Calling retrieveConversation error: \(message)")
-                        observer.onError(error)
-                    }
+            uiViews.conversation(postId: settings.postId,
+                                    article: article,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: actionsCallbacks,
+                                    completion: { result in
+                switch result {
+                case .success(let conversationView):
+                    observer.onNext(conversationView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveConversation error: \(message)")
+                    observer.onError(error)
                 }
-            } else {
-                uiViews.conversation(postId: settings.postId,
-                                     article: article,
-                                     additionalSettings: additionalSettings,
-                                     callbacks: actionsCallbacks,
-                                     completion: { result in
-                    switch result {
-                    case .success(let conversationView):
-                        observer.onNext(conversationView)
-                        observer.onCompleted()
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling retrieveConversation error: \(message)")
-                        observer.onError(error)
-                    }
-                })
-            }
+            })
 
             return Disposables.create()
         }
@@ -398,42 +360,22 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
-                Task { @MainActor in
-                    do {
-                        let commentCreationView = try await uiViews.commentCreation(
-                            postId: settings.postId,
-                            article: article,
-                            commentCreationType: .comment,
-                            additionalSettings: additionalSettings,
-                            callbacks: actionsCallbacks
-                        )
-                        observer.onNext(commentCreationView)
-                        observer.onCompleted()
-                    } catch {
-                        let message = error.localizedDescription
-                        DLog("Calling retrieveCommentCreation error: \(message)")
-                        observer.onError(error)
-                    }
+            uiViews.commentCreation(postId: settings.postId,
+                                    article: article,
+                                    commentCreationType: .comment,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: actionsCallbacks,
+                                    completion: { result in
+                switch result {
+                case .success(let commentCreationView):
+                    observer.onNext(commentCreationView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveCommentCreation error: \(message)")
+                    observer.onError(error)
                 }
-            } else {
-                uiViews.commentCreation(postId: settings.postId,
-                                        article: article,
-                                        commentCreationType: .comment,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: actionsCallbacks,
-                                        completion: { result in
-                    switch result {
-                    case .success(let commentCreationView):
-                        observer.onNext(commentCreationView)
-                        observer.onCompleted()
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling retrieveCommentCreation error: \(message)")
-                        observer.onError(error)
-                    }
-                })
-            }
+            })
 
             return Disposables.create()
         }
@@ -455,42 +397,22 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
-                Task { @MainActor in
-                    do {
-                        let commentThreadView = try await uiViews.commentThread(
-                            postId: settings.postId,
-                            article: article,
-                            commentId: self.commonCreatorService.commentThreadCommentId(),
-                            additionalSettings: additionalSettings,
-                            callbacks: actionsCallbacks
-                        )
-                        observer.onNext(commentThreadView)
-                        observer.onCompleted()
-                    } catch {
-                        let message = error.localizedDescription
-                        DLog("Calling retrieveCommentThread error: \(message)")
-                        observer.onError(error)
-                    }
+            uiViews.commentThread(postId: settings.postId,
+                                  article: article,
+                                  commentId: self.commonCreatorService.commentThreadCommentId(),
+                                  additionalSettings: additionalSettings,
+                                  callbacks: actionsCallbacks,
+                                  completion: { result in
+                switch result {
+                case .success(let commentThreadView):
+                    observer.onNext(commentThreadView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveCommentThread error: \(message)")
+                    observer.onError(error)
                 }
-            } else {
-                uiViews.commentThread(postId: settings.postId,
-                                      article: article,
-                                      commentId: self.commonCreatorService.commentThreadCommentId(),
-                                      additionalSettings: additionalSettings,
-                                      callbacks: actionsCallbacks,
-                                      completion: { result in
-                    switch result {
-                    case .success(let commentThreadView):
-                        observer.onNext(commentThreadView)
-                        observer.onCompleted()
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling retrieveCommentThread error: \(message)")
-                        observer.onError(error)
-                    }
-                })
-            }
+            })
 
             return Disposables.create()
         }
@@ -510,48 +432,24 @@ private extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
-                Task { @MainActor in
-                    do {
-                        let clarityDetailsView = try await uiViews.clarityDetails(
-                            postId: settings.postId,
-                            commentId: self.commonCreatorService.commentThreadCommentId(),
-                            type: .rejected,
-                            additionalSettings: additionalSettings,
-                            callbacks: actionsCallbacks
-                        )
-                        observer.onNext(clarityDetailsView)
-                        observer.onCompleted()
-                    } catch {
-                        let message = error.localizedDescription
-                        DLog("Calling retrieveClarityDetails error: \(message)")
-                        observer.onError(error)
-                    }
+            uiViews.clarityDetails(postId: settings.postId,
+                                   commentId: self.commonCreatorService.commentThreadCommentId(),
+                                   type: .rejected,
+                                   additionalSettings: additionalSettings,
+                                   callbacks: actionsCallbacks,
+                                   completion: { result in
+                switch result {
+                case .success(let clarityDetailsView):
+                    observer.onNext(clarityDetailsView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveClarityDetails error: \(message)")
+                    observer.onError(error)
                 }
-            } else {
-                uiViews.clarityDetails(postId: settings.postId,
-                                       commentId: self.commonCreatorService.commentThreadCommentId(),
-                                       type: .rejected,
-                                       additionalSettings: additionalSettings,
-                                       callbacks: actionsCallbacks,
-                                       completion: { result in
-                    switch result {
-                    case .success(let clarityDetailsView):
-                        observer.onNext(clarityDetailsView)
-                        observer.onCompleted()
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling retrieveClarityDetails error: \(message)")
-                        observer.onError(error)
-                    }
-                })
-            }
+            })
 
             return Disposables.create()
         }
-    }
-
-    func shouldUseAsyncAwaitCallingMethod() -> Bool {
-        return SampleAppCallingMethod.asyncAwait == userDefaultsProvider.get(key: .callingMethodOption, defaultValue: .default)
     }
 }
