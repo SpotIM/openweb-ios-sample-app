@@ -211,7 +211,7 @@ private extension MockArticleFlowsViewModel {
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
-                if shouldUseAsyncAwaitCallingMethod() {
+                if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
                         guard let self else { return }
                         do {
@@ -274,7 +274,7 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: manager.spotId)
 
-                if shouldUseAsyncAwaitCallingMethod() {
+                if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
                         guard let self else { return }
                         do {
@@ -337,7 +337,7 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-                if shouldUseAsyncAwaitCallingMethod() {
+                if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
                         guard let self else { return }
                         do {
@@ -400,7 +400,7 @@ private extension MockArticleFlowsViewModel {
                 let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-                if shouldUseAsyncAwaitCallingMethod() {
+                if #available(iOS 13.0, *), shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
                         guard let self else { return }
                         do {

@@ -42,7 +42,11 @@ class UILoggerView: UIView {
 
     private lazy var clearButton: UIButton = {
         let this = UIButton()
-        this.setImage(UIImage(systemName: "trash"), for: .normal)
+        if #available(iOS 13.0, *) {
+            this.setImage(UIImage(systemName: "trash"), for: .normal)
+        } else {
+            this.setTitle("Clear", for: .normal)
+        }
         this.tintColor = .black
         return this
     }()

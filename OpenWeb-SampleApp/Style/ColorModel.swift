@@ -9,7 +9,8 @@
 import UIKit
 
 struct ColorModel {
-    var color: UIColor
+    var lightThemeColor: UIColor
+    var darkThemeColor: UIColor
 
     enum ColorType: CaseIterable {
         case background
@@ -32,9 +33,21 @@ struct ColorModel {
         var `default`: ColorModel {
             switch self {
             case .background:
-                return ColorModel(color: .systemBackground)
+                if #available(iOS 13.0, *) {
+                    return ColorModel(lightThemeColor: .systemBackground,
+                                   darkThemeColor: .systemBackground)
+                } else {
+                    return ColorModel(lightThemeColor: .white,
+                                   darkThemeColor: .black)
+                }
             case .text:
-                return ColorModel(color: .label)
+                if #available(iOS 13.0, *) {
+                    return ColorModel(lightThemeColor: .label,
+                                   darkThemeColor: .label)
+                } else {
+                    return ColorModel(lightThemeColor: .black,
+                                   darkThemeColor: .white)
+                }
             case .blue:
                 return ColorModel(color: UIColor(r: 39, g: 120, b: 206))
             case .blackish:
@@ -66,10 +79,25 @@ struct ColorModel {
             }
         }
     }
+
+    init(lightThemeColor: UIColor, darkThemeColor: UIColor) {
+        self.lightThemeColor = lightThemeColor
+        self.darkThemeColor = darkThemeColor
+    }
+
+    init(color: UIColor) {
+        self.lightThemeColor = color
+        self.darkThemeColor = color
+    }
 }
 
 extension ColorModel {
     func color(forThemeStyle style: ThemeStyle) -> UIColor {
-        color
+        switch style {
+        case .light:
+            return lightThemeColor
+        case .dark:
+            return darkThemeColor
+        }
     }
 }
