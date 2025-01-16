@@ -13,7 +13,6 @@ import OpenWebSDK
 
 protocol SampleAppSettingsViewModelingInputs {
     var deeplinkOptionSelected: BehaviorSubject<SampleAppDeeplink> { get }
-    var callingMethodOptionSelected: BehaviorSubject<SampleAppCallingMethod> { get }
     var flowsLoggerEnable: BehaviorSubject<Bool> { get }
 }
 
@@ -22,9 +21,6 @@ protocol SampleAppSettingsViewModelingOutputs {
     var appDeeplinkTitle: String { get }
     var appDeeplinkSettings: [String] { get }
     var deeplinkOption: Observable<SampleAppDeeplink> { get }
-    var callingMethodTitle: String { get }
-    var callingMethodSettings: [String] { get }
-    var callingMethodOption: Observable<SampleAppCallingMethod> { get }
     var flowsLoggerSwitchTitle: String { get }
     var flowsLoggerEnabled: Observable<Bool> { get }
 }
@@ -55,19 +51,6 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
     lazy var appDeeplinkTitle: String = {
         return NSLocalizedString("Deeplink", comment: "")
     }()
-
-    lazy var callingMethodTitle: String = {
-        return NSLocalizedString("CallingMethod", comment: "")
-    }()
-
-    lazy var callingMethodSettings: [String] = {
-        return SampleAppCallingMethod.allCases.map { $0.description }
-    }()
-
-    var callingMethodOptionSelected = BehaviorSubject<SampleAppCallingMethod>(value: .default)
-    var callingMethodOption: Observable<SampleAppCallingMethod> {
-        return userDefaultsProvider.values(key: .callingMethodOption, defaultValue: .default)
-    }
 
     lazy var flowsLoggerSwitchTitle: String = {
         return NSLocalizedString("UIFlowsLogger", comment: "")
@@ -100,12 +83,6 @@ private extension SampleAppSettingsVM {
                 .setValues(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption))
             .disposed(by: disposeBag)
 
-        callingMethodOptionSelected
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<SampleAppCallingMethod>.callingMethodOption))
-            .disposed(by: disposeBag)
-
         flowsLoggerEnable
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
@@ -117,7 +94,5 @@ private extension SampleAppSettingsVM {
 extension SampleAppSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
         deeplinkOptionSelected.onNext(SampleAppDeeplink.default)
-        callingMethodOptionSelected.onNext(.default)
-        flowsLoggerEnable.onNext(false)
     }
 }
