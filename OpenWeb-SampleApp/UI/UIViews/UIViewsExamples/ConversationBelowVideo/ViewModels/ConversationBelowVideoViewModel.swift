@@ -247,11 +247,11 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
 private extension ConversationBelowVideoViewModel {
     func initialSetup() {
         // Setup authentication flow callback
-        var authenticationUI = OpenWeb.manager.ui.authenticationUI
+        let authenticationUI = OpenWeb.manager.ui.authenticationUI
         authenticationUI.displayAuthenticationFlow = authenticationFlowCallback
 
         // Setup renew SSO callback
-        var authentication = OpenWeb.manager.authentication
+        let authentication = OpenWeb.manager.authentication
         authentication.renewSSO = renewSSOCallback
 
         // We are going to retrieve pre conversation component as soon as the user entered the screen.

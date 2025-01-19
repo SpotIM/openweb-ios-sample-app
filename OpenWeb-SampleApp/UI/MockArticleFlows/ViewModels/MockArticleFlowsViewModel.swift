@@ -464,7 +464,7 @@ private extension MockArticleFlowsViewModel {
                 })
         }
 
-        var authenticationUI = OpenWeb.manager.ui.authenticationUI
+        let authenticationUI = OpenWeb.manager.ui.authenticationUI
         authenticationUI.displayAuthenticationFlow = authenticationFlowCallback
 
         // Providing `renewSSO` callback
@@ -492,7 +492,7 @@ private extension MockArticleFlowsViewModel {
             #endif
         }
 
-        var authentication = OpenWeb.manager.authentication
+        let authentication = OpenWeb.manager.authentication
         authentication.renewSSO = renewSSOCallback
     }
     // swiftlint:enable function_body_length
