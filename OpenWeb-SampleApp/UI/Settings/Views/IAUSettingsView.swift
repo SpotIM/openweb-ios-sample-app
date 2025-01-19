@@ -24,7 +24,6 @@ class IAUSettingsView: UIView {
     }()
 
     private let viewModel: IAUSettingsViewModeling
-    private let disposeBag = DisposeBag()
 
     init(viewModel: IAUSettingsViewModeling) {
         self.viewModel = viewModel
