@@ -45,7 +45,6 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     var outputs: ConversationBelowVideoViewModelingOutputs { return self }
 
     private let postId: OWPostId
-    private let disposeBag = DisposeBag()
     private let commonCreatorService: CommonCreatorServicing
     private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
 
