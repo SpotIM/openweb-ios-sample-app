@@ -31,8 +31,6 @@ class MiscellaneousViewModel: MiscellaneousViewModeling,
 
     private let dataModel: SDKConversationDataModel
 
-    private let disposeBag = DisposeBag()
-
     let conversationCounterTapped = PublishSubject<Void>()
     var openConversationCounters: Observable<Void> {
         return conversationCounterTapped
