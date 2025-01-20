@@ -1,5 +1,5 @@
 //
-//  MonetizationViewViewModel.swift
+//  MonetizationViewsViewModel.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Anael on 25/11/2024.
@@ -9,25 +9,25 @@ import Foundation
 import OpenWebSDK
 import RxSwift
 
-protocol MonetizationViewViewModelingInputs {
+protocol MonetizationViewsViewModelingInputs {
     var singleAdExampleTapped: PublishSubject<Void> { get }
     var preConversationWithAdTapped: PublishSubject<Void> { get }
 }
 
-protocol MonetizationViewViewModelingOutputs {
+protocol MonetizationViewsViewModelingOutputs {
     var title: String { get }
     var openSingleAdExample: Observable<OWPostId> { get }
     var openPreconversationWithAdExample: Observable<SDKUIIndependentViewsActionSettings> { get }
 }
 
-protocol MonetizationViewViewModeling {
-    var inputs: MonetizationViewViewModelingInputs { get }
-    var outputs: MonetizationViewViewModelingOutputs { get }
+protocol MonetizationViewsViewModeling {
+    var inputs: MonetizationViewsViewModelingInputs { get }
+    var outputs: MonetizationViewsViewModelingOutputs { get }
 }
 
-class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewViewModelingOutputs, MonetizationViewViewModelingInputs {
-    var inputs: MonetizationViewViewModelingInputs { return self }
-    var outputs: MonetizationViewViewModelingOutputs { return self }
+class MonetizationViewsViewModel: MonetizationViewsViewModeling, MonetizationViewsViewModelingOutputs, MonetizationViewsViewModelingInputs {
+    var inputs: MonetizationViewsViewModelingInputs { return self }
+    var outputs: MonetizationViewsViewModelingOutputs { return self }
 
     private let postId: OWPostId
     private let disposeBag = DisposeBag()
@@ -59,7 +59,7 @@ class MonetizationViewViewModel: MonetizationViewViewModeling, MonetizationViewV
     }
 }
 
-private extension MonetizationViewViewModel {
+private extension MonetizationViewsViewModel {
     func setupObservers() {
         singleAdExampleTapped
             .asObservable()

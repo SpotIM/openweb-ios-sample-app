@@ -1,5 +1,5 @@
 //
-//  MonetizationViewVC.swift
+//  MonetizationViewsVC.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Anael on 25/11/2024.
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class MonetizationViewVC: UIViewController {
+class MonetizationViewsVC: UIViewController {
     private struct Metrics {
         static let identifier = "uiviews_monetization_vc_id"
         static let btnPreConversationExampleIdentifier = "btn_pre_conversation_example_id"
@@ -20,7 +20,7 @@ class MonetizationViewVC: UIViewController {
         static let buttonVerticalMargin: CGFloat = 20
     }
 
-    private let viewModel: MonetizationViewViewModeling
+    private let viewModel: MonetizationViewsViewModeling
     private let disposeBag = DisposeBag()
 
     private lazy var scrollView: UIScrollView = {
@@ -40,7 +40,7 @@ class MonetizationViewVC: UIViewController {
             .blueRoundedButton
     }()
 
-    init(viewModel: MonetizationViewViewModeling) {
+    init(viewModel: MonetizationViewsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,7 +61,7 @@ class MonetizationViewVC: UIViewController {
     }
 }
 
-private extension MonetizationViewVC {
+private extension MonetizationViewsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnPreConversationExample.accessibilityIdentifier = Metrics.btnPreConversationExampleIdentifier
