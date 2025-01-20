@@ -110,6 +110,7 @@
         self.postId = postId
         _actionSettings.onNext(actionSettings)
         setupObservers()
+        setupBICallaback()
     }
 
     func setNavigationController(_ navController: UINavigationController?) {
@@ -125,6 +126,12 @@
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.onNext(articleURL)
+
+        independentAdCellViewModel.outputs.loggerEvents
+            .subscribe(onNext: { [weak self] logEvent in
+                self?.loggerViewModel.inputs.log(text: logEvent)
+            })
+            .disposed(by: disposeBag)
 
         actionSettings
             .map { settings -> String? in
@@ -205,9 +212,10 @@
             guard let self else { return }
 
             switch callbackType {
-            case .adSizeChanged: break
-//                _adSizeChanged.onNext()
+            case .adSizeChanged:
+                _adSizeChanged.onNext()
             case .adEvent(event: let event):
+                guard loggerEnabled else { return }
                 let log = "preconversationAd: \(event.description)\n"
                 self.loggerViewModel.inputs.log(text: log)
             default:
