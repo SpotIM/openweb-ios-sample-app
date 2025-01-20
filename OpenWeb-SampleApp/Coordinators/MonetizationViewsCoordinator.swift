@@ -23,8 +23,8 @@ class MonetizationViewsCoordinator: BaseCoordinator<Void> {
             fatalError("MonetizationViewsCoordinator requires coordinatorData from `CoordinatorData.postId` type")
         }
 
-        let monetizationViewModel: MonetizationViewViewModeling = MonetizationViewViewModel(postId: postId)
-        let monetizationVC = MonetizationViewVC(viewModel: monetizationViewModel)
+        let monetizationViewModel: MonetizationViewsViewModeling = MonetizationViewsViewModel(postId: postId)
+        let monetizationVC = MonetizationViewsVC(viewModel: monetizationViewModel)
 
         let vcPopped = PublishSubject<Void>()
 
@@ -40,7 +40,7 @@ class MonetizationViewsCoordinator: BaseCoordinator<Void> {
 }
 
 private extension MonetizationViewsCoordinator {
-    func setupCoordinatorInternalNavigation(viewModel: MonetizationViewViewModeling) {
+    func setupCoordinatorInternalNavigation(viewModel: MonetizationViewsViewModeling) {
         viewModel.outputs.openSingleAdExample
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
