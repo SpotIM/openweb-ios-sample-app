@@ -31,7 +31,7 @@
  }
 
  public final class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModeling,
-                                                        PreconversationViewsWithAdViewModelingOutput,
+                                                         PreconversationViewsWithAdViewModelingOutput,
                                                          PreconversationViewsWithAdViewModelingInput {
 
     var inputs: PreconversationViewsWithAdViewModelingInput { self }
@@ -68,11 +68,8 @@
     }()
 
     lazy var preconversationCellViewModel: PreconversationCellViewModeling = {
-        PreconversationCellViewModel(
-            userDefaultsProvider: userDefaultsProvider,
-            showPreConversation: showPreConversation,
-            adSizeChanged: adSizeChanged
-        )
+        PreconversationCellViewModel(showPreConversation: showPreConversation,
+                                     adSizeChanged: adSizeChanged)
     }()
 
     private let _adSizeChanged = PublishSubject<Void>()

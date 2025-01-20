@@ -11,9 +11,9 @@ import RxSwift
 
 class MonetizationViewsVC: UIViewController {
     private struct Metrics {
-        static let identifier = "uiviews_monetization_vc_id"
-        static let btnPreConversationExampleIdentifier = "btn_pre_conversation_example_id"
-        static let btnSingleAdExampleIdentifier = "btn_single_ad_example_id"
+        static let identifier = "views_monetization_vc_id"
+        static let btnPreConversationExampleIdentifier = "views_btn_pre_conversation_example_with_ad_id"
+        static let btnSingleAdExampleIdentifier = "views_btn_single_ad_example_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonHeight: CGFloat = 50
@@ -108,7 +108,6 @@ private extension MonetizationViewsVC {
             .disposed(by: disposeBag)
 
         btnPreConversationExample.rx.tap
-            .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.preConversationWithAdTapped)
             .disposed(by: disposeBag)
     }
