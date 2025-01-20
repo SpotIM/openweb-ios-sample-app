@@ -67,9 +67,9 @@ private extension IndependentAdCellViewModel {
         }
 
         OpenWebIAU.manager.ui.ad(postId: postId,
-                                           settings: adSettings,
-                                           viewEventCallbacks: viewEventCallbacks,
-                                           actionsCallbacks: { [weak self] event, _, _ in
+                                 settings: adSettings,
+                                 viewEventCallbacks: viewEventCallbacks,
+                                 actionsCallbacks: { [weak self] event, _, _ in
             switch event {
             case .adSizeChanged:
                 self?._adSizeChanged.onNext()
@@ -77,7 +77,7 @@ private extension IndependentAdCellViewModel {
                 break
             }
         },
-                                           completion: { [weak self] result in
+                                 completion: { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let adView):

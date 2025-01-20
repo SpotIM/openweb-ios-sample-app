@@ -14,7 +14,6 @@ protocol PreconversationCellViewModelingInput {}
 protocol PreconversationCellViewModelingOutput {
     var showPreConversation: Observable<UIView?> { get }
     var adSizeChanged: Observable<Void> { get }
-    var preConversationHorizontalMargin: CGFloat { get }
 }
 
 protocol PreconversationCellViewModeling {
@@ -28,12 +27,7 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
     var inputs: PreconversationCellViewModelingInput { self }
     var outputs: PreconversationCellViewModelingOutput { self }
 
-    private struct Metrics {
-        static let preConversationCompactHorizontalMargin: CGFloat = 16.0
-    }
-
     private let disposeBag = DisposeBag()
-    private let userDefaultsProvider: UserDefaultsProviderProtocol
 
     private let _showPreConversation = BehaviorSubject<UIView?>(value: nil)
     var showPreConversation: Observable<UIView?> {
@@ -47,10 +41,8 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
             .asObservable()
     }
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         showPreConversation: Observable<UIView?>,
+    init(showPreConversation: Observable<UIView?>,
          adSizeChanged: Observable<Void>) {
-        self.userDefaultsProvider = userDefaultsProvider
 
         showPreConversation
               .bind(to: _showPreConversation)
@@ -59,11 +51,5 @@ public final class PreconversationCellViewModel: PreconversationCellViewModeling
         adSizeChanged
             .bind(to: _adSizeChanged)
             .disposed(by: disposeBag)
-    }
-
-    var preConversationHorizontalMargin: CGFloat {
-        let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-        let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
-        return margin
     }
 }

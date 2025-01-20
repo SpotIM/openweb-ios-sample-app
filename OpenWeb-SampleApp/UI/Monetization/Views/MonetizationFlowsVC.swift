@@ -12,9 +12,9 @@ import RxSwift
 
 class MonetizationFlowsVC: UIViewController {
     private struct Metrics {
-        static let identifier = "uiviews_monetization_vc_id"
-        static let btnPreConversationExampleIdentifier = "btn_pre_conversation_example_id"
-        static let btnSingleAdExampleIdentifier = "btn_single_ad_example_id"
+        static let identifier = "flows_monetization_vc_id"
+        static let btnPreConversationExampleIdentifier = "flows_btn_pre_conversation_with_ad_example_id"
+        static let btnSingleAdExampleIdentifier = "flows_btn_single_ad_example_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonHeight: CGFloat = 50
