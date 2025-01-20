@@ -41,9 +41,9 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
     private let commonCreatorService: CommonCreatorServicing
     private weak var navController: UINavigationController?
     private weak var presentationalVC: UIViewController?
+    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.allCases)
 
     private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
-    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.allCases)
     var articleImageURL: Observable<URL> {
         return _articleImageURL
             .unwrap()
@@ -57,12 +57,33 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
             .asObservable()
     }
 
+    private let _showPreConversation = BehaviorSubject<UIView?>(value: nil)
+    var showPreConversation: Observable<UIView?> {
+        return _showPreConversation
+            .asObservable()
+    }
+
+    private let _adSizeChanged = PublishSubject<Void>()
+    var adSizeChanged: Observable<Void> {
+        return _adSizeChanged
+            .asObservable()
+    }
+
+    lazy var loggerEnabled: Observable<Bool> = {
+        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
+    }()
+
+    lazy var loggerViewModel: UILoggerViewModeling = {
+        return UILoggerViewModel(title: "Logger")
+    }()
+
+    lazy var floatingViewViewModel: OWFloatingViewModeling = {
+        return OWFloatingViewModel()
+    }()
+
     lazy var preconversationCellViewModel: PreconversationCellViewModeling = {
-        PreconversationCellViewModel(
-            userDefaultsProvider: userDefaultsProvider,
-            showPreConversation: showPreConversation,
-            adSizeChanged: adSizeChanged
-        )
+        PreconversationCellViewModel(showPreConversation: showPreConversation,
+                                     adSizeChanged: adSizeChanged)
     }()
 
     lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
@@ -73,32 +94,7 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
         return NSLocalizedString("MockArticle", comment: "")
     }()
 
-    private let _showPreConversation = BehaviorSubject<UIView?>(value: nil)
-    var showPreConversation: Observable<UIView?> {
-        return _showPreConversation
-            .asObservable()
-    }
-
-    lazy var loggerEnabled: Observable<Bool> = {
-        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
-    }()
-
-    private let _adSizeChanged = PublishSubject<Void>()
-    var adSizeChanged: Observable<Void> {
-        return _adSizeChanged
-            .asObservable()
-    }
-
-    lazy var loggerViewModel: UILoggerViewModeling = {
-        return UILoggerViewModel(title: "Logger")
-    }()
-
-    lazy var floatingViewViewModel: OWFloatingViewModeling = {
-        return OWFloatingViewModel()
-    }()
-
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
          imageProviderAPI: ImageProviding = ImageProvider(),
          actionSettings: SDKUIFlowActionSettings,
@@ -107,9 +103,8 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
         self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
         self.imageProviderAPI = imageProviderAPI
-        _actionSettings.onNext(actionSettings)
         self.postId = postId
-
+        _actionSettings.onNext(actionSettings)
         setupObservers()
         setupBICallaback()
     }
