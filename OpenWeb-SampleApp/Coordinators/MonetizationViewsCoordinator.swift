@@ -65,10 +65,10 @@ private extension MonetizationViewsCoordinator {
                         actionSettings: settings,
                         postId: dataModel.postId
                     )
-                let preconversationViewsWithAdVC = PreconversationViewsWithAdVC(viewModel: preconversationViewsWithAdVM)
-                self.router.push(preconversationViewsWithAdVC,
-                                 animated: true,
-                                 completion: nil)
+                    let preconversationViewsWithAdVC = PreconversationViewsWithAdVC(viewModel: preconversationViewsWithAdVM)
+                    self.router.push(preconversationViewsWithAdVC,
+                                     animated: true,
+                                     completion: nil)
 
                 })
             .disposed(by: disposeBag)
