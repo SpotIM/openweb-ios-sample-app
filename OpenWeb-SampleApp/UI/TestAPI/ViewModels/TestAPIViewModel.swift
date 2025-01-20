@@ -376,22 +376,22 @@ private extension TestAPIViewModel {
 
     func setSDKConfigurations(_ spotId: String) {
         setupEnvironment() // env must be set before spotId because we fetch config right after spotId set
-        var manager = OpenWeb.manager
+        let manager = OpenWeb.manager
         manager.spotId = spotId
-        var customizations = manager.ui.customizations
+        let customizations = manager.ui.customizations
         customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.default.index))
         customizations.statusBarEnforcement = .statusBarStyle(fromIndex: UserDefaultsProvider.shared.get(key: .statusBarStyleIndex, defaultValue: OWStatusBarEnforcement.default.index))
         // swiftlint:disable line_length
         customizations.navigationBarEnforcement = .navigationBarEnforcement(fromIndex: UserDefaultsProvider.shared.get(key: .navigationBarStyleIndex, defaultValue: OWNavigationBarEnforcement.default.index))
         // swiftlint:enable line_length
-        var sorting = customizations.sorting
+        let sorting = customizations.sorting
         sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index))
         customizations.fontFamily = UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
-        var helpers = OpenWeb.manager.helpers
+        let helpers = OpenWeb.manager.helpers
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
         helpers.localeStrategy = UserDefaultsProvider.shared.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
         helpers.orientationEnforcement = UserDefaultsProvider.shared.get(key: .orientationEnforcement, defaultValue: OWOrientationEnforcement.default)
-        var authentication = OpenWeb.manager.authentication
+        let authentication = OpenWeb.manager.authentication
         authentication.shouldDisplayLoginPrompt = UserDefaultsProvider.shared.get(key: .showLoginPrompt, defaultValue: false)
         customizations.commentActions.color = UserDefaultsProvider.shared.get(key: .commentActionsColor, defaultValue: OWCommentActionsColor.default)
         customizations.commentActions.fontStyle = UserDefaultsProvider.shared.get(key: .commentActionsFontStyle, defaultValue: OWCommentActionsFontStyle.default)
@@ -414,7 +414,7 @@ private extension TestAPIViewModel {
     func setupEnvironment() {
         #if BETA
         let env = UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
-        var manager = OpenWeb.manager
+        let manager = OpenWeb.manager
         manager.environment = env.toSDKEnvironmentType
         #endif
     }

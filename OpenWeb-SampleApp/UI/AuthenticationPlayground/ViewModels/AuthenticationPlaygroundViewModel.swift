@@ -300,7 +300,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> Observable<GenericSSOAuthentication> in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if shouldInitializeSDK {
-                    var manager = OpenWeb.manager
+                    let manager = OpenWeb.manager
                     manager.spotId = genericSSO.spotId
                 }
                 var genericSSO = genericSSO
@@ -402,7 +402,7 @@ private extension AuthenticationPlaygroundViewModel {
             .withLatestFrom(shouldInitializeSDK) { thirdPartySSO, shouldInitializeSDK -> ThirdPartySSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if shouldInitializeSDK {
-                    var manager = OpenWeb.manager
+                    let manager = OpenWeb.manager
                     manager.spotId = thirdPartySSO.spotId
                 }
                 return thirdPartySSO
