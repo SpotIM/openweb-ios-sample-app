@@ -40,6 +40,7 @@
     private let disposeBag = DisposeBag()
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
+    private let imageProviderAPI: ImageProviding
     private weak var navController: UINavigationController?
     private weak var presentationalVC: UIViewController?
     private let postId: OWPostId
@@ -100,9 +101,11 @@
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+         imageProviderAPI: ImageProviding = ImageProvider(),
          actionSettings: SDKUIIndependentViewsActionSettings,
          postId: OWPostId) {
         self.userDefaultsProvider = userDefaultsProvider
+        self.imageProviderAPI = imageProviderAPI
         self.commonCreatorService = commonCreatorService
         self.postId = postId
         _actionSettings.onNext(actionSettings)
@@ -120,6 +123,9 @@
 
  private extension PreconversationViewsWithAdViewModel {
     func setupObservers() {
+        let articleURL = imageProviderAPI.randomImageUrl()
+        _articleImageURL.onNext(articleURL)
+
         actionSettings
             .map { settings -> String? in
                 if case .preConversation = settings.viewType {
