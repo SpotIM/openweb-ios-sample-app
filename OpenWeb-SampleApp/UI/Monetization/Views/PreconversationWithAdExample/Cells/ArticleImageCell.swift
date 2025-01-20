@@ -38,7 +38,6 @@ class ArticleImageCell: UITableViewCell {
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(Metrics.articleImageRatio)
             make.height.equalTo(imgViewArticle.snp.width)
-
         }
         setupViews()
     }
