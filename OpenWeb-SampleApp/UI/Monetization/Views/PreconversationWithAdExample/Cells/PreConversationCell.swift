@@ -15,7 +15,8 @@ class PreConversationCell: UITableViewCell {
     private var viewModel: PreconversationCellViewModeling!
     private let disposeBag = DisposeBag()
 
-    func configure(with viewModel: PreconversationCellViewModeling, tableView: UITableView) {
+    func configure(with viewModel: PreconversationCellViewModeling,
+                   tableView: UITableView) {
         self.viewModel = viewModel
         self.tableView = tableView
         self.setupObservers()
