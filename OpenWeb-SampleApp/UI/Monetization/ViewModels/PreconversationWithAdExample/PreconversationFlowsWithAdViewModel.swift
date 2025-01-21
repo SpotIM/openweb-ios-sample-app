@@ -41,7 +41,7 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
     private let commonCreatorService: CommonCreatorServicing
     private weak var navController: UINavigationController?
     private weak var presentationalVC: UIViewController?
-    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.allCases)
+    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.cells)
 
     private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
     var articleImageURL: Observable<URL> {

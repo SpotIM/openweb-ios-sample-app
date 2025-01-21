@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 enum PreconversationWithAdCellOption: CaseIterable {
-    static var allCases: [PreconversationWithAdCellOption] {
+    static var cells: [PreconversationWithAdCellOption] {
         return [.image,
                 .content,
                 .independentAd,

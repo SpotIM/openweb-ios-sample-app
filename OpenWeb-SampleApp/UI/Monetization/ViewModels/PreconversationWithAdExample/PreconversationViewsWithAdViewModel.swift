@@ -56,7 +56,7 @@
     }()
 
     private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
-    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.allCases)
+    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.cells)
     var articleImageURL: Observable<URL> {
         return _articleImageURL
             .unwrap()
