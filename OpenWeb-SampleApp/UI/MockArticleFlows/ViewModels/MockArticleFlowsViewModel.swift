@@ -531,7 +531,7 @@ private extension MockArticleFlowsViewModel {
             switch callbackType {
             case .adSizeChanged: break
             case .adEvent(event: let event):
-                let log = "preconversationAd: \(event.description)\n"
+                let log = "preconversationAd: \(event.0.description) for index: \(event.1)\n"
                 self.loggerViewModel.inputs.log(text: log)
             default:
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
