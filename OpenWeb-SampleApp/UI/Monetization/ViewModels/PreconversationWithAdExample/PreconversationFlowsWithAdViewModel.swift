@@ -213,7 +213,7 @@ private extension PreconversationFlowsWithAdViewModel {
             case .adSizeChanged:
                 _adSizeChanged.onNext()
             case .adEvent(event: let event):
-                let log = "preconversationAd: \(event.description)\n"
+                let log = "preconversationAd: \(event.0.description) for index: \(event.1)\n"
                 self.loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }
