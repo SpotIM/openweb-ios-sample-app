@@ -211,9 +211,9 @@
             switch callbackType {
             case .adSizeChanged:
                 _adSizeChanged.onNext()
-            case .adEvent(event: let event):
+            case let .adEvent(event, index):
                 guard loggerEnabled else { return }
-                let log = "preconversationAd: \(event.0.description) for index: \(event.1)\n"
+                let log = "preconversationAd: \(event.description) for index: \(index)\n"
                 self.loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }
