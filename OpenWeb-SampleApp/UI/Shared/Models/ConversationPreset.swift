@@ -23,6 +23,9 @@ extension ConversationPreset {
     static func createMockModels() -> [ConversationPreset] {
     #if PUBLIC_DEMO_APP
         return publicPresets()
+    #elseif ADS
+        let adsPresets = DevelopmentConversationPreset.developmentWithAdsPresets().map { $0.toConversationPreset() }
+        return publicPresets() + adsPresets
     #else
         let developmentPresets = DevelopmentConversationPreset.developmentPresets().map { $0.toConversationPreset() }
         return publicPresets() + developmentPresets
