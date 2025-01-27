@@ -49,7 +49,6 @@ private extension ArticleImageCell {
             make.width.equalToSuperview().multipliedBy(Metrics.articleImageRatio)
             make.height.equalTo(imgViewArticle.snp.width)
         }
-        
         selectionStyle = .none
         self.backgroundColor = .clear
     }
