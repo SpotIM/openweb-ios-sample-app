@@ -33,12 +33,6 @@ class ArticleImageCell: UITableViewCell {
                   reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(imgViewArticle)
-        imgViewArticle.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(Metrics.verticalPadding)
-            make.centerX.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(Metrics.articleImageRatio)
-            make.height.equalTo(imgViewArticle.snp.width)
-        }
         setupViews()
     }
 
@@ -49,6 +43,13 @@ class ArticleImageCell: UITableViewCell {
 
 private extension ArticleImageCell {
     func setupViews() {
+        imgViewArticle.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(Metrics.verticalPadding)
+            make.centerX.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(Metrics.articleImageRatio)
+            make.height.equalTo(imgViewArticle.snp.width)
+        }
+        
         selectionStyle = .none
         self.backgroundColor = .clear
     }

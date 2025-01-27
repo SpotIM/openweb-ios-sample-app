@@ -66,26 +66,28 @@ private extension IndependentAdCellViewModel {
             self?._loggerEvents.onNext("IndependentAd: \(eventType.description)\n")
         }
 
-        OpenWebIAU.manager.ui.ad(postId: postId,
-                                 settings: adSettings,
-                                 viewEventCallbacks: viewEventCallbacks,
-                                 actionsCallbacks: { [weak self] event, _, _ in
-            switch event {
-            case .adSizeChanged:
-                self?._adSizeChanged.onNext()
-            default:
-                break
+        OpenWebIAU.manager.ui.ad(
+            postId: postId,
+            settings: adSettings,
+            viewEventCallbacks: viewEventCallbacks,
+            actionsCallbacks: { [weak self] event, _, _ in
+                switch event {
+                case .adSizeChanged:
+                    self?._adSizeChanged.onNext()
+                default:
+                    break
+                }
+            },
+            completion: { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let adView):
+                    _adView.onNext(adView)
+                case .failure(let error):
+                    DLog("Independent Ad Cell failed with error: \(error.localizedDescription)")
+                }
             }
-        },
-                                 completion: { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let adView):
-                _adView.onNext(adView)
-            case .failure(let error):
-                DLog("Independent Ad Cell failed with error: \(error.localizedDescription)")
-            }
-        })
+        )
         #endif
     }
 }
