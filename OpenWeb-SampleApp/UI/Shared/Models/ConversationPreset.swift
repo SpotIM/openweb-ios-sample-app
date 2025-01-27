@@ -24,8 +24,8 @@ extension ConversationPreset {
     #if PUBLIC_DEMO_APP
         return publicPresets()
     #elseif ADS
-        let adsPresets = DevelopmentConversationPreset.developmentWithAdsPresets().map { $0.toConversationPreset() }
-        return publicPresets() + adsPresets
+        let developmentWithAdsPresets = DevelopmentConversationPreset.developmentWithAdsPresets().map { $0.toConversationPreset() }
+        return publicPresets() + developmentWithAdsPresets
     #else
         let developmentPresets = DevelopmentConversationPreset.developmentPresets().map { $0.toConversationPreset() }
         return publicPresets() + developmentPresets
