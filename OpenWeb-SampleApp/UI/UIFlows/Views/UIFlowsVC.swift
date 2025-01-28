@@ -264,7 +264,6 @@ private extension UIFlowsVC {
             .disposed(by: disposeBag)
 
         btnMonetization.rx.tap
-            .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.monetizationTapped)
             .disposed(by: disposeBag)
     }
