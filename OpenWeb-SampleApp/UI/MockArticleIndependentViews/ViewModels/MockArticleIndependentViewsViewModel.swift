@@ -131,6 +131,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             }
             .filter { $0 == .preConversation }
             .voidify()
+            .share()
     }()
     private lazy var preConversationUpdater: Observable<Void> = {
         return Observable.merge(self.preConversationStyleChanged)
@@ -148,6 +149,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             }
             .filter { $0 == .conversation }
             .voidify()
+            .share()
     }()
     private lazy var conversationUpdater: Observable<Void> = {
         return Observable.merge(self.conversationStyleChanged)
@@ -164,6 +166,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             }
             .filter { $0 == .commentCreation }
             .voidify()
+            .share()
     }()
     private lazy var commentCreationUpdater: Observable<Void> = {
         return Observable.merge(self.commentCreationStyleChanged)
@@ -181,6 +184,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             }
             .filter { $0 == .commentThread }
             .voidify()
+            .share()
     }()
 
     private lazy var commentThreadUpdater: Observable<Void> = {
