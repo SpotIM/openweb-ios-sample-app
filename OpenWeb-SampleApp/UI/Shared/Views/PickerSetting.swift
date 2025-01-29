@@ -13,7 +13,6 @@ import RxCocoa
 class PickerSetting: UIView {
 
     private struct Metrics {
-        static let titleFontSize: CGFloat = 20
         static let horizontalOffset: CGFloat = 10
         static let pickerMaxWidth: CGFloat = 220
         static let titleNumberOfLines: Int = 2

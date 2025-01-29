@@ -41,7 +41,6 @@
 		3DA1E61D2C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5012C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions.swift */; };
 		3DA1E61E2C6E221800EBFA7D /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5032C6E221800EBFA7D /* Array+Unwrap.swift */; };
 		3DA1E61F2C6E221800EBFA7D /* CollectionView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5042C6E221800EBFA7D /* CollectionView+Registration.swift */; };
-		3DA1E6202C6E221800EBFA7D /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5052C6E221800EBFA7D /* Date+extensions.swift */; };
 		3DA1E6212C6E221800EBFA7D /* EasyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5062C6E221800EBFA7D /* EasyViews.swift */; };
 		3DA1E6222C6E221800EBFA7D /* Notification+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5072C6E221800EBFA7D /* Notification+Keyboard.swift */; };
 		3DA1E6232C6E221800EBFA7D /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1E5082C6E221800EBFA7D /* Reusable+IndentifierName.swift */; };
@@ -233,7 +232,6 @@
 		3DA1E5012C6E221800EBFA7D /* DevelopmentUserAuthentication+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DevelopmentUserAuthentication+Extensions.swift"; sourceTree = "<group>"; };
 		3DA1E5032C6E221800EBFA7D /* Array+Unwrap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DA1E5042C6E221800EBFA7D /* CollectionView+Registration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CollectionView+Registration.swift"; sourceTree = "<group>"; };
-		3DA1E5052C6E221800EBFA7D /* Date+extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+extensions.swift"; sourceTree = "<group>"; };
 		3DA1E5062C6E221800EBFA7D /* EasyViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasyViews.swift; sourceTree = "<group>"; };
 		3DA1E5072C6E221800EBFA7D /* Notification+Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+Keyboard.swift"; sourceTree = "<group>"; };
 		3DA1E5082C6E221800EBFA7D /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
@@ -491,7 +489,6 @@
 				3DA1E5022C6E221800EBFA7D /* SampleAppInternalConfigs */,
 				3DA1E5032C6E221800EBFA7D /* Array+Unwrap.swift */,
 				3DA1E5042C6E221800EBFA7D /* CollectionView+Registration.swift */,
-				3DA1E5052C6E221800EBFA7D /* Date+extensions.swift */,
 				3DA1E5062C6E221800EBFA7D /* EasyViews.swift */,
 				3DA1E5072C6E221800EBFA7D /* Notification+Keyboard.swift */,
 				3DA1E5082C6E221800EBFA7D /* Reusable+IndentifierName.swift */,
@@ -1540,7 +1537,6 @@
 				3DA1E69E2C6E221800EBFA7D /* TestingPlaygroundViewModel.swift in Sources */,
 				3DA1E64E2C6E221800EBFA7D /* AboutVC.swift in Sources */,
 				3DA1E6082C6E221800EBFA7D /* OWCommunityGuidelinesStyle+Extensions.swift in Sources */,
-				3DA1E6202C6E221800EBFA7D /* Date+extensions.swift in Sources */,
 				3DA1E6992C6E221800EBFA7D /* TextFieldSetting.swift in Sources */,
 				3DA1E64D2C6E221800EBFA7D /* AboutViewModel.swift in Sources */,
 				3DA1E6522C6E221800EBFA7D /* ThirdPartySSOAuthentication.swift in Sources */,
