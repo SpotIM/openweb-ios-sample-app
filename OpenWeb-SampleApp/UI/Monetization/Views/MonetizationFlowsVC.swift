@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import CombineCocoa
 
 class MonetizationFlowsVC: UIViewController {
     private struct Metrics {
@@ -102,11 +103,11 @@ private extension MonetizationFlowsVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        btnSingleAdExample.publisher(for: .touchUpInside)
+        btnSingleAdExample.tapPublisher
             .bind(to: viewModel.inputs.singleAdExampleTapped)
             .store(in: &cancellables)
 
-        btnPreConversationExample.publisher(for: .touchUpInside)
+        btnPreConversationExample.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.preConversationWithAdTapped)
             .store(in: &cancellables)
