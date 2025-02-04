@@ -6,10 +6,13 @@
 //
 
 import RxSwift
+import Combine
+import OpenWebSDK
 
 class MonetizationFlowsCoordinator: BaseCoordinator<Void> {
 
     private let router: Routering
+    private var cancellables = Set<AnyCancellable>()
 
     init(router: Routering) {
         self.router = router
@@ -40,7 +43,26 @@ class MonetizationFlowsCoordinator: BaseCoordinator<Void> {
 
 private extension MonetizationFlowsCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MonetizationFlowsViewModeling) {
-        viewModel.outputs.openSingleAdExample
+        // Bridge Combine publisher to RxSwift Observable (temporary)
+        let openSingleAdObservable = Observable<OWPostId>.create { observer in
+            let cancellable = viewModel.outputs.openSingleAdExample
+                .sink(
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            observer.onError(error)
+                        }
+                    },
+                    receiveValue: { postId in
+                        observer.onNext(postId)
+                    }
+                )
+
+            return Disposables.create {
+                cancellable.cancel()
+            }
+        }
+
+        openSingleAdObservable
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
                 let singleAdExampleViewModel = SingleAdExampleViewModel(postId: postId)
@@ -51,7 +73,26 @@ private extension MonetizationFlowsCoordinator {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.openPreconversationWithAdExample
+        // Bridge Combine publisher to RxSwift Observable (temporary)
+        let openPreconversationWithAdExampleObservable = Observable<SDKUIFlowActionSettings>.create { observer in
+            let cancellable = viewModel.outputs.openPreconversationWithAdExample
+                .sink(
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            observer.onError(error)
+                        }
+                    },
+                    receiveValue: { settings in
+                        observer.onNext(settings)
+                    }
+                )
+
+            return Disposables.create {
+                cancellable.cancel()
+            }
+        }
+
+        openPreconversationWithAdExampleObservable
             .subscribe(
                 onNext: { [weak self] dataModel in
                     guard let self else { return }
@@ -68,7 +109,6 @@ private extension MonetizationFlowsCoordinator {
                     self.router.push(preconversationFlowsWithAdVC,
                                      animated: true,
                                      completion: nil)
-
                 }
             )
             .disposed(by: disposeBag)

@@ -7,17 +7,17 @@
 
 import Foundation
 import OpenWebSDK
-import RxSwift
+import Combine
 
 protocol MonetizationFlowsViewModelingInputs {
-    var singleAdExampleTapped: PublishSubject<Void> { get }
-    var preConversationWithAdTapped: PublishSubject<PresentationalModeCompact> { get }
+    var singleAdExampleTapped: PassthroughSubject<Void, Never> { get }
+    var preConversationWithAdTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
 }
 
 protocol MonetizationFlowsViewModelingOutputs {
     var title: String { get }
-    var openSingleAdExample: Observable<OWPostId> { get }
-    var openPreconversationWithAdExample: Observable<SDKUIFlowActionSettings> { get }
+    var openSingleAdExample: AnyPublisher<OWPostId, Never> { get }
+    var openPreconversationWithAdExample: AnyPublisher<SDKUIFlowActionSettings, Never> { get }
 }
 
 protocol MonetizationFlowsViewModeling {
@@ -31,23 +31,23 @@ class MonetizationFlowsViewModel: MonetizationFlowsViewModeling, MonetizationFlo
     var outputs: MonetizationFlowsViewModelingOutputs { return self }
 
     private let postId: OWPostId
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    let singleAdExampleTapped = PublishSubject<Void>()
-    let preConversationWithAdTapped = PublishSubject<PresentationalModeCompact>()
+    let singleAdExampleTapped = PassthroughSubject<Void, Never>()
+    let preConversationWithAdTapped = PassthroughSubject<PresentationalModeCompact, Never>()
 
-    private let _openSingleAdExample = BehaviorSubject<OWPostId?>(value: nil)
-    var openSingleAdExample: Observable<OWPostId> {
+    private let _openSingleAdExample = CurrentValueSubject<OWPostId?, Never>(nil)
+    var openSingleAdExample: AnyPublisher<OWPostId, Never> {
         return _openSingleAdExample
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _openPreconversationWithAdExample = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
-    var openPreconversationWithAdExample: Observable<SDKUIFlowActionSettings> {
+    private let _openPreconversationWithAdExample = CurrentValueSubject<SDKUIFlowActionSettings?, Never>(nil)
+    var openPreconversationWithAdExample: AnyPublisher<SDKUIFlowActionSettings, Never> {
         return _openPreconversationWithAdExample
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {
@@ -63,16 +63,14 @@ class MonetizationFlowsViewModel: MonetizationFlowsViewModeling, MonetizationFlo
 private extension MonetizationFlowsViewModel {
     func setupObservers() {
         singleAdExampleTapped
-            .asObservable()
             .map { [weak self] _ -> OWPostId? in
                 return self?.postId
             }
             .unwrap()
             .bind(to: _openSingleAdExample)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         preConversationWithAdTapped
-            .asObservable()
             .map { [weak self] mode -> SDKUIFlowActionSettings? in
                 guard let self else { return nil }
                 let action = SDKUIFlowActionType.preConversation(presentationalMode: mode)
@@ -81,6 +79,6 @@ private extension MonetizationFlowsViewModel {
             }
             .unwrap()
             .bind(to: _openPreconversationWithAdExample)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
