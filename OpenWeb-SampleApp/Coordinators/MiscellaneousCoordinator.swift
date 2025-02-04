@@ -44,6 +44,7 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
 private extension MiscellaneousCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MiscellaneousViewModeling) {
         viewModel.outputs.openConversationCounters
+            .asObservable()
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
                 let conversationCounterVM = ConversationCountersNewAPIViewModel()
