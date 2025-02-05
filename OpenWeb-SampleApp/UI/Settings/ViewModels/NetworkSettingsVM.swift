@@ -11,14 +11,15 @@ import RxSwift
 import OpenWebSDK
 
 protocol NetworkSettingsViewModelingInputs {
-    var networkEnvironmentSelectedIndex: BehaviorSubject<Int> { get }
+    var networkEnvironmentSelected: BehaviorSubject<OWNetworkEnvironment> { get }
 }
 
 protocol NetworkSettingsViewModelingOutputs {
     var title: String { get }
     var networkEnvironmentTitle: String { get }
+    var networkEnvironmentCustomTitle: String { get }
     var networkEnvironmentSettings: [String] { get }
-    var networkEnvironmentIndex: Observable<Int> { get }
+    var networkEnvironment: Observable<OWNetworkEnvironment> { get }
 }
 
 protocol NetworkSettingsViewModeling {
@@ -45,29 +46,28 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
         return NSLocalizedString("NetworkEnvironment", comment: "")
     }()
 
+    lazy var networkEnvironmentCustomTitle: String = {
+        return NSLocalizedString("NetworkEnvironmentCustom", comment: "")
+    }()
+
     lazy var networkEnvironmentSettings: [String] = {
         let _prod = NSLocalizedString("Production", comment: "")
         let _staging = NSLocalizedString("Staging", comment: "")
         let _cluster1d = NSLocalizedString("1DCluster", comment: "")
+        let _custom = NSLocalizedString("Custom", comment: "")
 
-        return [_prod, _staging, _cluster1d]
+        return [_prod, _staging, _cluster1d, _custom]
     }()
 
-    var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: OWNetworkEnvironment.default.index)
+    var networkEnvironmentSelected = BehaviorSubject<OWNetworkEnvironment>(value: OWNetworkEnvironment.default)
 
-    var networkEnvironmentIndex: Observable<Int> {
+    var networkEnvironment: Observable<OWNetworkEnvironment> {
         return userDefaultsProvider.values(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
-            .map { env in
-                env.index
-            }
             .asObservable()
     }
 
     private lazy var environmentObservable: Observable<OWNetworkEnvironment> = {
-        return networkEnvironmentSelectedIndex
-            .map {
-                OWNetworkEnvironment(from: $0)
-            }
+        return networkEnvironmentSelected
             .asObservable()
     }()
 
@@ -90,6 +90,6 @@ private extension NetworkSettingsVM {
 
 extension NetworkSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        networkEnvironmentSelectedIndex.onNext(OWNetworkEnvironment.default.index)
+        networkEnvironmentSelected.onNext(OWNetworkEnvironment.default)
     }
 }

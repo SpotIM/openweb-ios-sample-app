@@ -41,6 +41,14 @@ class NetworkSettingsView: UIView {
                                        items: items)
     }()
 
+    private lazy var customURLTextField: TextFieldSetting = {
+        var customURLTextField = TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
+                                                  placeholder: "Example: ntfs",
+                                                  accessibilityPrefixId: Metrics.identifier,
+                                                  font: FontBook.helperLight)
+        return customURLTextField
+    }()
+
     private let viewModel: NetworkSettingsViewModeling
     private let disposeBag = DisposeBag()
 
@@ -79,12 +87,48 @@ private extension NetworkSettingsView {
     }
 
     func setupObservers() {
-        viewModel.outputs.networkEnvironmentIndex
+        viewModel.outputs.networkEnvironment
+            .map { $0.index }
             .bind(to: segmentedNetworkEnvironment.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.networkEnvironment
+            .map {
+                switch $0 {
+                case .custom(let path):
+                    return path
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .bind(to: customURLTextField.rx.textFieldText)
+            .disposed(by: disposeBag)
+
+        // Custom network environment
+        Observable.combineLatest(segmentedNetworkEnvironment.rx.selectedSegmentIndex, customURLTextField.rx.textFieldText.unwrap())
+            .filter { $0.0 == OWNetworkEnvironment.custom(path: nil).index }
+            .map { OWNetworkEnvironment(from: $0.0, path: $0.1) }
+            .bind(to: viewModel.inputs.networkEnvironmentSelected)
+            .disposed(by: disposeBag)
+
+        // Non custom network environment
         segmentedNetworkEnvironment.rx.selectedSegmentIndex
-            .bind(to: viewModel.inputs.networkEnvironmentSelectedIndex)
+            .filter { $0 != OWNetworkEnvironment.custom(path: nil).index }
+            .map { OWNetworkEnvironment(from: $0) }
+            .bind(to: viewModel.inputs.networkEnvironmentSelected)
+            .disposed(by: disposeBag)
+
+        segmentedNetworkEnvironment.rx.selectedSegmentIndex
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] index in
+                guard let self else { return }
+                if index == OWNetworkEnvironment.custom(path: nil).index {
+                    stackView.addArrangedSubview(customURLTextField)
+                } else {
+                    stackView.removeArrangedSubview(customURLTextField)
+                }
+            })
             .disposed(by: disposeBag)
     }
 }
