@@ -30,10 +30,6 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     var inputs: NetworkSettingsViewModelingInputs { return self }
     var outputs: NetworkSettingsViewModelingOutputs { return self }
 
-    private struct Metrics {
-        static let delayInsertDataToPersistense = 100
-    }
-
     private var userDefaultsProvider: UserDefaultsProviderProtocol
     private let disposeBag = DisposeBag()
 
@@ -80,8 +76,7 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
 private extension NetworkSettingsVM {
     func setupObservers() {
         environmentObservable
-            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
-            .skip(1)
+            .takeLast(1)
             .bind(to: self.userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
             .disposed(by: disposeBag)

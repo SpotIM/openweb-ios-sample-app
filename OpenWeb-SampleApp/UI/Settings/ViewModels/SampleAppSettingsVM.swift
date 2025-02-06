@@ -95,19 +95,19 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
 private extension SampleAppSettingsVM {
     func setupObservers() {
         deeplinkOptionSelected
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption))
             .disposed(by: disposeBag)
 
         callingMethodOptionSelected
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<SampleAppCallingMethod>.callingMethodOption))
             .disposed(by: disposeBag)
 
         flowsLoggerEnable
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<Bool>.flowsLoggerEnabled))
             .disposed(by: disposeBag)

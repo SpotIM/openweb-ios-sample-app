@@ -101,7 +101,7 @@ private extension ColorsCustomizationViewModel {
             .disposed(by: disposeBag)
 
         selectedTheme
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWTheme>.colorCustomizationCustomTheme))
             .disposed(by: disposeBag)

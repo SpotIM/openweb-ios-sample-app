@@ -52,9 +52,6 @@ protocol ConversationSettingsViewModeling {
 class ConversationSettingsVM: ConversationSettingsViewModeling,
                               ConversationSettingsViewModelingInputs,
                               ConversationSettingsViewModelingOutputs {
-    private struct Metrics {
-        static let delayInsertDataToPersistense = 100
-    }
 
     var inputs: ConversationSettingsViewModelingInputs { return self }
     var outputs: ConversationSettingsViewModelingOutputs { return self }
@@ -306,8 +303,7 @@ private extension ConversationSettingsVM {
     func setupObservers() {
         // Conversation style mode data binder to persistence key conversationStyle
         styleModeObservable
-            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
-            .skip(1)
+            .takeLast(1)
             .bind(to: self.userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
             .disposed(by: disposeBag)

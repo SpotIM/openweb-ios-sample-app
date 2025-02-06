@@ -269,13 +269,13 @@ private extension TestAPIViewModel {
             .disposed(by: disposeBag)
 
         _spotId
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWSpotId>.selectedSpotId))
             .disposed(by: disposeBag)
 
         _postId
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWPostId>.selectedPostId))
             .disposed(by: disposeBag)

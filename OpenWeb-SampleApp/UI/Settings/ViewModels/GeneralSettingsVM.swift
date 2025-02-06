@@ -165,7 +165,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         .map { index in
             return OWLocaleStrategy.localeStrategy(fromIndex: index)
         }
-        .skip(1)
+        .takeLast(1)
         .asObservable()
 
     var elementsCustomizationStyleIndex: Observable<Int> {
@@ -583,79 +583,79 @@ private extension GeneralSettingsVM {
     // swiftlint:disable function_body_length
     func setupObservers() {
         articleHeaderSelectedStyle
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle))
             .disposed(by: disposeBag)
 
         articleInformationSelectedStrategy
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy))
             .disposed(by: disposeBag)
 
         orientationSelectedEnforcement
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWOrientationEnforcement>.orientationEnforcement))
             .disposed(by: disposeBag)
 
         commentActionsColorSelected
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWCommentActionsColor>.commentActionsColor))
             .disposed(by: disposeBag)
 
         commentActionsFontStyleSelected
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWCommentActionsFontStyle>.commentActionsFontStyle))
             .disposed(by: disposeBag)
 
         elementsCustomizationStyleSelectedIndex
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.elementsCustomizationStyleIndex))
             .disposed(by: disposeBag)
 
         colorsCustomizationStyleSelectedIndex
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.colorCustomizationStyleIndex))
             .disposed(by: disposeBag)
 
         readOnlyModeSelectedIndex
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.readOnlyModeIndex))
             .disposed(by: disposeBag)
 
         themeModeSelectedIndex
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.themeModeIndex))
             .disposed(by: disposeBag)
 
         statusBarStyleSelectedIndex
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.statusBarStyleIndex))
             .disposed(by: disposeBag)
 
         navigationBarStyleSelectedIndex
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.navigationBarStyleIndex))
             .disposed(by: disposeBag)
 
         modalStyleSelectedIndex
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.modalStyleIndex))
             .disposed(by: disposeBag)
 
         initialSortSelectedIndex
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.initialSortIndex))
             .disposed(by: disposeBag)
@@ -666,13 +666,13 @@ private extension GeneralSettingsVM {
             .disposed(by: disposeBag)
 
         articleAssociatedSelectedURL
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL))
             .disposed(by: disposeBag)
 
         articleSelectedSection
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String>.articleSection))
             .disposed(by: disposeBag)
@@ -720,7 +720,7 @@ private extension GeneralSettingsVM {
             .disposed(by: disposeBag)
 
         showLoginPromptSelected
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<Bool>.showLoginPrompt))
             .disposed(by: disposeBag)

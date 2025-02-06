@@ -55,7 +55,7 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
 private extension CommentThreadSettingsVM {
     func setupObservers() {
         openCommentIdSelected
-            .skip(1)
+            .takeLast(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String>.openCommentId))
             .disposed(by: disposeBag)

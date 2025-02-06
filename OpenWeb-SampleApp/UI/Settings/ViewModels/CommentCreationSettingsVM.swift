@@ -32,9 +32,6 @@ protocol CommentCreationSettingsViewModeling {
 }
 
 class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCreationSettingsViewModelingInputs, CommentCreationSettingsViewModelingOutputs {
-    private struct Metrics {
-        static let delayInsertDataToPersistense = 100
-    }
 
     var inputs: CommentCreationSettingsViewModelingInputs { return self }
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
@@ -137,8 +134,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 private extension CommentCreationSettingsVM {
     func setupObservers() {
         styleModeObservable
-            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
-            .skip(1)
+            .takeLast(1)
             .bind(to: self.userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
             .disposed(by: disposeBag)
