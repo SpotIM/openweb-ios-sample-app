@@ -67,7 +67,7 @@ private extension MonetizationFlowsViewModel {
                 return self?.postId
             }
             .unwrap()
-            .bind(to: _openSingleAdExample)
+            .assign(to: \._openSingleAdExample.value, on: self)
             .store(in: &cancellables)
 
         preConversationWithAdTapped
@@ -78,7 +78,7 @@ private extension MonetizationFlowsViewModel {
                 return model
             }
             .unwrap()
-            .bind(to: _openPreconversationWithAdExample)
+            .assign(to: \._openPreconversationWithAdExample.value, on: self)
             .store(in: &cancellables)
     }
 }
