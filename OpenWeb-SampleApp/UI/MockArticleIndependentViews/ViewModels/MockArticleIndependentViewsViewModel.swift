@@ -7,20 +7,20 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import OpenWebSDK
 
 typealias ComponentAndType = (UIView, SDKUIIndependentViewType)
 
 protocol MockArticleIndependentViewsViewModelingInputs {
-    var settingsTapped: PublishSubject<Void> { get }
+    var settingsTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol MockArticleIndependentViewsViewModelingOutputs {
     var title: String { get }
     var loggerViewModel: UILoggerViewModeling { get }
-    var openSettings: Observable<SettingsGroupType> { get }
-    var showComponent: Observable<ComponentAndType> { get }
+    var openSettings: AnyPublisher<SettingsGroupType, Never> { get }
+    var showComponent: AnyPublisher<ComponentAndType, Never> { get }
     var independentViewHorizontalMargin: CGFloat { get }
 }
 
@@ -38,17 +38,17 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         static let timeForPersistenceToUpdate: Int = 100 // In ms
     }
 
-    private let disposeBag = DisposeBag()
-    let settingsTapped = PublishSubject<Void>()
+    private var cancellables = Set<AnyCancellable>()
+    let settingsTapped = PassthroughSubject<Void, Never>()
 
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
 
-    private let _actionSettings = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
-    private var actionSettings: Observable<SDKUIIndependentViewsActionSettings> {
+    private let _actionSettings = CurrentValueSubject<SDKUIIndependentViewsActionSettings?, Never>(nil)
+    private var actionSettings: AnyPublisher<SDKUIIndependentViewsActionSettings, Never> {
         return _actionSettings
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
@@ -56,7 +56,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
          actionSettings: SDKUIIndependentViewsActionSettings) {
         self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
-        _actionSettings.onNext(actionSettings)
+        _actionSettings.send(actionSettings)
 
         switch actionSettings.viewType {
         case .preConversation:
@@ -77,12 +77,11 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         setupBICallaback()
         setupObservers()
     }
-
-    var openSettings: Observable<SettingsGroupType> {
+    var openSettings: AnyPublisher<SettingsGroupType, Never> {
         return settingsTapped
             .withLatestFrom(actionSettings)
             .map { SettingsGroupType(independentViewType: $0.viewType) }
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     private let loggerViewTitle: String
@@ -95,23 +94,36 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         return UILoggerViewModel(title: loggerViewTitle)
     }()
 
-    lazy var showComponent: Observable<ComponentAndType> = {
-        return self.viewTypeUpdaters
-            .flatMap { [weak self] settings -> Observable<ComponentAndType> in
-                guard let self else { return .empty() }
+    lazy var showComponent: AnyPublisher<ComponentAndType, Never> = {
+        return viewTypeUpdaters
+            .flatMap { [weak self] settings -> AnyPublisher<ComponentAndType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 return self.retrieveComponent(for: settings)
                     .map { ($0, settings.viewType) }
+                    .catch { error in Empty().eraseToAnyPublisher() }
+                    .eraseToAnyPublisher()
             }
+            .eraseToAnyPublisher()
     }()
 
-    private lazy var viewTypeUpdaters: Observable<SDKUIIndependentViewsActionSettings> = {
-        return Observable.merge(preConversationUpdater, conversationUpdater, commentCreationUpdater, commentThreadUpdater, independentAdUnitUpdater, clarityDetailsUpdater)
-            .flatMapLatest { [weak self] _ -> Observable<SDKUIIndependentViewsActionSettings> in
-                guard let self else { return .empty() }
-                return self.actionSettings
-                    .take(1)
-            }
-            .delay(.milliseconds(Metrics.timeForPersistenceToUpdate), scheduler: MainScheduler.asyncInstance)
+    private lazy var viewTypeUpdaters: AnyPublisher<SDKUIIndependentViewsActionSettings, Never> = {
+        return Publishers.Merge6(
+            preConversationStyleChanged,
+            conversationStyleChanged,
+            commentCreationStyleChanged,
+            commentThreadStyleChanged,
+            independentAdUnitStyleChanged,
+            clarityDetailsStyleChanged
+        )
+        .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewsActionSettings, Never> in
+            guard let self else { return Empty().eraseToAnyPublisher() }
+            return self.actionSettings
+                .first()
+                .eraseToAnyPublisher()
+        }
+        .delay(for: .milliseconds(Metrics.timeForPersistenceToUpdate), scheduler: RunLoop.main)
+        .share()
+        .eraseToAnyPublisher()
     }()
 
     private var _horizontalMargin: CGFloat = 0.0
@@ -120,92 +132,78 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }
 
     // All the stuff which should trigger new pre conversation component
-    private lazy var preConversationStyleChanged: Observable<Void> = {
+    private lazy var preConversationStyleChanged: AnyPublisher<Void, Never> = {
         return self.userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-            .asObservable()
-            .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 return self.actionSettings
-                    .take(1)
+                    .first()
                     .map { $0.viewType }
+                    .eraseToAnyPublisher()
             }
             .filter { $0 == .preConversation }
             .voidify()
             .share()
-    }()
-    private lazy var preConversationUpdater: Observable<Void> = {
-        return Observable.merge(self.preConversationStyleChanged)
+            .eraseToAnyPublisher()
     }()
 
     // All the stuff which should trigger new conversation component
-    private lazy var conversationStyleChanged: Observable<Void> = {
+    private lazy var conversationStyleChanged: AnyPublisher<Void, Never> = {
         return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .asObservable()
-            .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 return self.actionSettings
-                    .take(1)
+                    .first()
                     .map { $0.viewType }
+                    .eraseToAnyPublisher()
             }
             .filter { $0 == .conversation }
             .voidify()
             .share()
-    }()
-    private lazy var conversationUpdater: Observable<Void> = {
-        return Observable.merge(self.conversationStyleChanged)
+            .eraseToAnyPublisher()
     }()
 
-    private lazy var commentCreationStyleChanged: Observable<Void> = {
+    private lazy var commentCreationStyleChanged: AnyPublisher<Void, Never> = {
         return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
-            .asObservable()
-            .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 return self.actionSettings
-                    .take(1)
+                    .first()
                     .map { $0.viewType }
+                    .eraseToAnyPublisher()
             }
             .filter { $0 == .commentCreation }
             .voidify()
             .share()
-    }()
-    private lazy var commentCreationUpdater: Observable<Void> = {
-        return Observable.merge(self.commentCreationStyleChanged)
+            .eraseToAnyPublisher()
     }()
 
     // All the stuff which should trigger new comment thread component
-    private lazy var commentThreadStyleChanged: Observable<Void> = {
+    private lazy var commentThreadStyleChanged: AnyPublisher<Void, Never> = {
         return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .asObservable()
-            .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 return self.actionSettings
-                    .take(1)
+                    .first()
                     .map { $0.viewType }
+                    .eraseToAnyPublisher()
             }
             .filter { $0 == .commentThread }
             .voidify()
             .share()
-    }()
-
-    private lazy var commentThreadUpdater: Observable<Void> = {
-        return Observable.merge(self.commentThreadStyleChanged)
+            .eraseToAnyPublisher()
     }()
 
     // All the stuff which should trigger new comment thread component
-    private lazy var independentAdUnitStyleChanged: Observable<Void> = {
+    private lazy var independentAdUnitStyleChanged: AnyPublisher<Void, Never> = {
         // TODO: Complete once developed
-        return Observable.never()
-    }()
-    private lazy var independentAdUnitUpdater: Observable<Void> = {
-        return Observable.merge(self.independentAdUnitStyleChanged)
+        return Empty().eraseToAnyPublisher()
     }()
 
     // All the stuff which should trigger new comment thread component
-    private lazy var clarityDetailsStyleChanged: Observable<Void> = {
-        return Observable.just(())
-    }()
-    private lazy var clarityDetailsUpdater: Observable<Void> = {
-        return Observable.merge(self.clarityDetailsStyleChanged)
+    private lazy var clarityDetailsStyleChanged: AnyPublisher<Void, Never> = {
+        // TODO: Complete once developed
+        return Empty().eraseToAnyPublisher()
     }()
 }
 
@@ -213,7 +211,7 @@ private extension MockArticleIndependentViewsViewModel {
     func setupObservers() {
         // Addressing horizontal margin
         viewTypeUpdaters
-            .subscribe(onNext: { [weak self] settings in
+            .sink { [weak self] settings in
                 guard let self else { return }
                 switch settings.viewType {
                 case .preConversation:
@@ -222,17 +220,16 @@ private extension MockArticleIndependentViewsViewModel {
                 default:
                     self._horizontalMargin = 0.0
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         // Clear logger
         viewTypeUpdaters
-            .voidify()
-            .subscribe(onNext: { [weak self] _ in
+            .sink { [weak self] _ in
                 guard let self else { return }
                 self.loggerViewModel.inputs.clear()
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     func setupCustomizationsCallaback() {
@@ -259,7 +256,7 @@ private extension MockArticleIndependentViewsViewModel {
         analytics.addBICallback(BIClosure)
     }
 
-    func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
+    func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
         switch settings.viewType {
         case .preConversation:
             return self.retrievePreConversation(settings: settings)
@@ -269,16 +266,19 @@ private extension MockArticleIndependentViewsViewModel {
             return self.retrieveCommentCreation(settings: settings)
         case .commentThread:
             return self.retrieveCommentThread(settings: settings)
+        case .independentAdUnit:
+            return Empty().eraseToAnyPublisher()
         case .clarityDetails:
             return self.retrieveClarityDetails(settings: settings)
-        default:
-            return Observable.error(GeneralErrors.missingImplementation)
         }
     }
 
-    func retrievePreConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
-        return Observable.create { [weak self] observer in
-            guard let self else { return Disposables.create() }
+    func retrievePreConversation(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
+        return AnyPublisher<UIView, Error>.create { [weak self] observer in
+            guard let self else {
+                observer.onError(GeneralErrors.missingImplementation)
+                return
+            }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -333,14 +333,15 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 })
             }
-
-            return Disposables.create()
         }
     }
 
-    func retrieveConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
-        return Observable.create { [weak self] observer in
-            guard let self else { return Disposables.create() }
+    func retrieveConversation(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
+        return AnyPublisher<UIView, Error>.create { [weak self] observer in
+            guard let self else {
+                observer.onError(GeneralErrors.missingImplementation)
+                return
+            }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -388,14 +389,15 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 })
             }
-
-            return Disposables.create()
         }
     }
 
-    func retrieveCommentCreation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
-        return Observable.create { [weak self] observer in
-            guard let self else { return Disposables.create() }
+    func retrieveCommentCreation(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
+        return AnyPublisher<UIView, Error>.create { [weak self] observer in
+            guard let self else {
+                observer.onError(GeneralErrors.missingImplementation)
+                return
+            }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -445,14 +447,15 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 })
             }
-
-            return Disposables.create()
         }
     }
 
-    func retrieveCommentThread(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
-        return Observable.create { [weak self] observer in
-            guard let self else { return Disposables.create() }
+    func retrieveCommentThread(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
+        return AnyPublisher<UIView, Error>.create { [weak self] observer in
+            guard let self else {
+                observer.onError(GeneralErrors.missingImplementation)
+                return
+            }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
@@ -502,14 +505,15 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 })
             }
-
-            return Disposables.create()
         }
     }
 
-    func retrieveClarityDetails(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
-        return Observable.create { [weak self] observer in
-            guard let self else { return Disposables.create() }
+    func retrieveClarityDetails(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
+        return AnyPublisher<UIView, Error>.create { [weak self] observer in
+            guard let self else {
+                observer.onError(GeneralErrors.missingImplementation)
+                return
+            }
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -557,8 +561,6 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 })
             }
-
-            return Disposables.create()
         }
     }
 

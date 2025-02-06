@@ -36,6 +36,7 @@ class MockArticleIndependentCoordinator: BaseCoordinator<Void> {
 
         // Define childs coordinators
         let settingsCoordinator = mockArticleIndependentVM.outputs.openSettings
+            .asObservable()
             .flatMap { [weak self] settingsType -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinator = SettingsCoordinator(router: self.router)

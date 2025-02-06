@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 class MockArticleIndependentViewsVC: UIViewController {
@@ -21,7 +21,7 @@ class MockArticleIndependentViewsVC: UIViewController {
     }
 
     private let viewModel: MockArticleIndependentViewsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var articleView: UIView = {
         let article = UIView()
@@ -113,12 +113,17 @@ private extension MockArticleIndependentViewsVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        settingsBarItem.rx.tap
+        settingsBarItem.tapPublisher
             .bind(to: viewModel.inputs.settingsTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.showComponent
-            .subscribe(onNext: { [weak self] result in
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                if case .failure(let error) = completion {
+                    DLog("Error showing component: \(error)")
+                }
+            } receiveValue: { [weak self] result in
                 guard let self else { return }
                 let view = result.0
                 let type = result.1
@@ -130,7 +135,7 @@ private extension MockArticleIndependentViewsVC {
                 switch type {
                 case .preConversation:
                     self.handlePreConversationPresentation()
-                case.conversation:
+                case .conversation:
                     self.handleConversationPresentation()
                 case .commentCreation:
                     self.handleCommentCreationPresentation()
@@ -141,8 +146,8 @@ private extension MockArticleIndependentViewsVC {
                 default:
                     break
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     func handlePreConversationPresentation() {
