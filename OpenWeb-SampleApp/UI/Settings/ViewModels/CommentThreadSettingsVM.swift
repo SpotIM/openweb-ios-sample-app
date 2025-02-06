@@ -57,7 +57,7 @@ private extension CommentThreadSettingsVM {
         openCommentIdSelected
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<String?>.openCommentId))
+            .setValues(key: UserDefaultsProvider.UDKey<String>.openCommentId))
             .disposed(by: disposeBag)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Publisher+Unwrap.swift
+//  Publisher+Extensions.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Yonat Sharon on 04/02/2025.
@@ -8,8 +8,12 @@
 import Combine
 
 extension Publisher {
-    /// Unwraps optional elements, similar to RxSwift's unwrap()
-    /// - Returns: A publisher of non-optional elements
+    func voidify() -> AnyPublisher<Void, Never> {
+        map { _ in }
+            .catch { _ in Empty() }
+            .eraseToAnyPublisher()
+    }
+
     func unwrap<T>() -> AnyPublisher<T, Failure> where Output == T? {
         compactMap { $0 }
             .eraseToAnyPublisher()

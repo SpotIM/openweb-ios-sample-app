@@ -668,13 +668,13 @@ private extension GeneralSettingsVM {
         articleAssociatedSelectedURL
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<String?>.articleAssociatedURL))
+            .setValues(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL))
             .disposed(by: disposeBag)
 
         articleSelectedSection
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<String?>.articleSection))
+            .setValues(key: UserDefaultsProvider.UDKey<String>.articleSection))
             .disposed(by: disposeBag)
 
         themeModeSelectedIndex // 0. default 1. light 2. dark
