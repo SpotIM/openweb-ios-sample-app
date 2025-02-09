@@ -148,12 +148,6 @@ private extension TextFieldSetting {
 }
 
 extension Reactive where Base: TextFieldSetting {
-    var titleText: Binder<String?> {
-        return Binder(self.base.textFieldTitleLbl) { textField, value in
-            textField.text = value
-        }
-    }
-
     var textFieldText: ControlProperty<String?> {
         return base.textFieldControl.rx.controlProperty(editingEvents: .editingChanged) { textField in
             textField.text

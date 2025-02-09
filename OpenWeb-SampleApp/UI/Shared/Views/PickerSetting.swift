@@ -88,12 +88,6 @@ private extension PickerSetting {
 }
 
 extension Reactive where Base: PickerSetting {
-    var text: Binder<String?> {
-        return Binder(self.base.pickerTitleLbl) { label, text in
-            label.text = text
-        }
-    }
-
     var selectedPickerIndex: ControlEvent<(row: Int, component: Int)> {
         return value
     }

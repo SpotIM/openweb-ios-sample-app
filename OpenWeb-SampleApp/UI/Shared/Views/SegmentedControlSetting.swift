@@ -77,12 +77,6 @@ private extension SegmentedControlSetting {
 
 extension Reactive where Base: SegmentedControlSetting {
 
-    var text: Binder<String?> {
-        return Binder(self.base.segmentTitleLbl) { label, text in
-            label.text = text
-        }
-    }
-
     var selectedSegmentIndex: ControlProperty<Int> {
         return value
     }
@@ -98,12 +92,6 @@ extension Reactive where Base: SegmentedControlSetting {
             segmentedControl.selectedSegmentIndex
         } setter: { segmentedControl, value in
             segmentedControl.selectedSegmentIndex = value
-        }
-    }
-
-    func titleForSegment(at index: Int) -> Binder<String?> {
-        return Binder(self.base.segmentedControl) { segmentedControl, title in
-            segmentedControl.setTitle(title, forSegmentAt: index)
         }
     }
 }

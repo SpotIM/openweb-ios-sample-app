@@ -77,20 +77,8 @@ private extension SwitchSetting {
 
 extension Reactive where Base: SwitchSetting {
 
-    var text: Binder<String?> {
-        return Binder(self.base.settingTitleLbl) { label, text in
-            label.text = text
-        }
-    }
-
     var isOn: ControlProperty<Bool> {
         return value
-    }
-
-    var isHidden: Binder<Bool> {
-        return Binder(self.base) { _, value in
-            base.isHidden = value
-        }
     }
 
     private var value: ControlProperty<Bool> {
