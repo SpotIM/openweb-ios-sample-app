@@ -24,6 +24,7 @@ protocol UserDefaultsProviderCombineProtocol {
     func setValues<T: Codable>(key: UserDefaultsProvider.UDKey<T>) -> AnySubscriber<T, Never>
 }
 
+// TODO: Remove this protocol when we remove RxSwift from the project.
 protocol UserDefaultsProviderRxCompatibilityProtocol {
     func values<T: Codable>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T?) -> Observable<T>
     func values<T: Codable>(key: UserDefaultsProvider.UDKey<T>) -> Observable<T>

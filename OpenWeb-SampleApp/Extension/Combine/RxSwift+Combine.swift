@@ -6,6 +6,8 @@
 //  Copyright © 2025 OpenWeb. All rights reserved.
 //
 
+// TODO: Remove this file when we remove RxSwift from the project.
+
 import Combine
 import RxSwift
 
