@@ -277,8 +277,8 @@ private extension MockArticleIndependentViewsViewModel {
     func retrievePreConversation(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
         return AnyPublisher<UIView, Error>.create { [weak self] observer in
             guard let self else {
-                observer.onError(GeneralErrors.missingImplementation)
-                return
+                observer.send(completion: .failure(GeneralErrors.missingImplementation))
+                return AnyCancellable {}
             }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
@@ -309,12 +309,12 @@ private extension MockArticleIndependentViewsViewModel {
                             additionalSettings: additionalSettings,
                             callbacks: actionsCallbacks
                         )
-                        observer.onNext(preConversationView)
-                        observer.onCompleted()
+                        observer.send(preConversationView)
+                        observer.send(completion: .finished)
                     } catch {
                         let message = error.localizedDescription
                         DLog("Calling retrievePreConversation error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 }
             } else {
@@ -325,23 +325,25 @@ private extension MockArticleIndependentViewsViewModel {
                                         completion: { result in
                     switch result {
                     case .success(let preConversationView):
-                        observer.onNext(preConversationView)
-                        observer.onCompleted()
+                        observer.send(preConversationView)
+                        observer.send(completion: .finished)
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling retrievePreConversation error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 })
             }
+
+            return AnyCancellable {}
         }
     }
 
     func retrieveConversation(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
         return AnyPublisher<UIView, Error>.create { [weak self] observer in
             guard let self else {
-                observer.onError(GeneralErrors.missingImplementation)
-                return
+                observer.send(completion: .failure(GeneralErrors.missingImplementation))
+                return AnyCancellable {}
             }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
@@ -365,12 +367,12 @@ private extension MockArticleIndependentViewsViewModel {
                             additionalSettings: additionalSettings,
                             callbacks: actionsCallbacks
                         )
-                        observer.onNext(conversationView)
-                        observer.onCompleted()
+                        observer.send(conversationView)
+                        observer.send(completion: .finished)
                     } catch {
                         let message = error.localizedDescription
                         DLog("Calling retrieveConversation error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 }
             } else {
@@ -381,23 +383,25 @@ private extension MockArticleIndependentViewsViewModel {
                                      completion: { result in
                     switch result {
                     case .success(let conversationView):
-                        observer.onNext(conversationView)
-                        observer.onCompleted()
+                        observer.send(conversationView)
+                        observer.send(completion: .finished)
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling retrieveConversation error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 })
             }
+
+            return AnyCancellable {}
         }
     }
 
     func retrieveCommentCreation(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
         return AnyPublisher<UIView, Error>.create { [weak self] observer in
             guard let self else {
-                observer.onError(GeneralErrors.missingImplementation)
-                return
+                observer.send(completion: .failure(GeneralErrors.missingImplementation))
+                return AnyCancellable {}
             }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
@@ -422,12 +426,12 @@ private extension MockArticleIndependentViewsViewModel {
                             additionalSettings: additionalSettings,
                             callbacks: actionsCallbacks
                         )
-                        observer.onNext(commentCreationView)
-                        observer.onCompleted()
+                        observer.send(commentCreationView)
+                        observer.send(completion: .finished)
                     } catch {
                         let message = error.localizedDescription
                         DLog("Calling retrieveCommentCreation error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 }
             } else {
@@ -439,23 +443,25 @@ private extension MockArticleIndependentViewsViewModel {
                                         completion: { result in
                     switch result {
                     case .success(let commentCreationView):
-                        observer.onNext(commentCreationView)
-                        observer.onCompleted()
+                        observer.send(commentCreationView)
+                        observer.send(completion: .finished)
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling retrieveCommentCreation error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 })
             }
+
+            return AnyCancellable {}
         }
     }
 
     func retrieveCommentThread(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
         return AnyPublisher<UIView, Error>.create { [weak self] observer in
             guard let self else {
-                observer.onError(GeneralErrors.missingImplementation)
-                return
+                observer.send(completion: .failure(GeneralErrors.missingImplementation))
+                return AnyCancellable {}
             }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
@@ -480,12 +486,12 @@ private extension MockArticleIndependentViewsViewModel {
                             additionalSettings: additionalSettings,
                             callbacks: actionsCallbacks
                         )
-                        observer.onNext(commentThreadView)
-                        observer.onCompleted()
+                        observer.send(commentThreadView)
+                        observer.send(completion: .finished)
                     } catch {
                         let message = error.localizedDescription
                         DLog("Calling retrieveCommentThread error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 }
             } else {
@@ -497,23 +503,25 @@ private extension MockArticleIndependentViewsViewModel {
                                       completion: { result in
                     switch result {
                     case .success(let commentThreadView):
-                        observer.onNext(commentThreadView)
-                        observer.onCompleted()
+                        observer.send(commentThreadView)
+                        observer.send(completion: .finished)
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling retrieveCommentThread error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 })
             }
+
+            return AnyCancellable {}
         }
     }
 
     func retrieveClarityDetails(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
         return AnyPublisher<UIView, Error>.create { [weak self] observer in
             guard let self else {
-                observer.onError(GeneralErrors.missingImplementation)
-                return
+                observer.send(completion: .failure(GeneralErrors.missingImplementation))
+                return AnyCancellable {}
             }
 
             let manager = OpenWeb.manager
@@ -536,12 +544,12 @@ private extension MockArticleIndependentViewsViewModel {
                             additionalSettings: additionalSettings,
                             callbacks: actionsCallbacks
                         )
-                        observer.onNext(clarityDetailsView)
-                        observer.onCompleted()
+                        observer.send(clarityDetailsView)
+                        observer.send(completion: .finished)
                     } catch {
                         let message = error.localizedDescription
                         DLog("Calling retrieveClarityDetails error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 }
             } else {
@@ -553,15 +561,17 @@ private extension MockArticleIndependentViewsViewModel {
                                        completion: { result in
                     switch result {
                     case .success(let clarityDetailsView):
-                        observer.onNext(clarityDetailsView)
-                        observer.onCompleted()
+                        observer.send(clarityDetailsView)
+                        observer.send(completion: .finished)
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling retrieveClarityDetails error: \(message)")
-                        observer.onError(error)
+                        observer.send(completion: .failure(error))
                     }
                 })
             }
+
+            return AnyCancellable {}
         }
     }
 
