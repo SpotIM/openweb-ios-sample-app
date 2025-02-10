@@ -133,26 +133,6 @@ extension UserDefaultsProvider: UserDefaultsProviderCombineProtocol {
     }
 }
 
-extension Data {
-    init?<T: Encodable>(encoding: T) {
-        do {
-            self = try JSONEncoder().encode(encoding)
-        } catch {
-            DLog("Error encoding data from \(T.self): \(error)")
-            return nil
-        }
-    }
-
-    func asType<T: Decodable>(_ type: T.Type) -> T? {
-        do {
-            return try JSONDecoder().decode(T.self, from: self)
-        } catch {
-            DLog("Error decoding data for \(T.self): \(error)")
-            return nil
-        }
-    }
-}
-
 extension UserDefaults {
     func dataPublisher(for key: String) -> AnyPublisher<Data?, Never> {
         NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)
