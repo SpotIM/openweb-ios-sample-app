@@ -25,6 +25,11 @@ class GeneralSettingsView: UIView {
         static let segmentedNavigationBarStyleIdentifier = "navigation_bar_style"
         static let segmentedModalStyleIdentifier = "modal_style"
         static let segmentedInitialSortIdentifier = "initial_sort"
+        static let textFieldCustomSortTitleIdentifier: [OWSortOption: String] = [
+            .best: "sort_title_best",
+            .newest: "sort_title_newest",
+            .oldest: "sort_title_oldest"
+        ]
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
         static let textFieldCustomFontNameIdentifier = "custom_font_name"
         static let textFieldArticleURLIdentifier = "article_url"
@@ -148,6 +153,20 @@ class GeneralSettingsView: UIView {
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedInitialSortIdentifier,
                                        items: items)
+    }()
+
+    private lazy var customSortTitles: [OWSortOption: TextFieldSetting] = {
+        return OWSortOption.allCases.reduce(into: [:]) { result, option in
+            let title = viewModel.outputs.initialSortSettings[option.titleIndex]
+            let txtField = TextFieldSetting(
+                title: "\(title) sort title",
+                placeholder: title,
+                accessibilityPrefixId: Metrics.textFieldCustomSortTitleIdentifier[option] ?? "",
+                text: "",
+                font: FontBook.paragraph
+            )
+            result[option] = txtField
+        }
     }()
 
     private lazy var segmentedFontGroupType: SegmentedControlSetting = {
@@ -286,6 +305,9 @@ private extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedNavigationBarStyle)
         stackView.addArrangedSubview(segmentedModalStyle)
         stackView.addArrangedSubview(segmentedInitialSort)
+        for customSortTitleSetting in OWSortOption.allCases.compactMap({ customSortTitles[$0] }) {
+            stackView.addArrangedSubview(customSortTitleSetting)
+        }
         stackView.addArrangedSubview(segmentedFontGroupType)
         stackView.addArrangedSubview(textFieldCustomFontName)
         stackView.addArrangedSubview(segmentedLanguageStrategy)
@@ -355,6 +377,14 @@ private extension GeneralSettingsView {
         viewModel.outputs.initialSortIndex
             .assign(to: \.selectedSegmentIndex, on: segmentedInitialSort.segmentedControl)
             .store(in: &cancellables)
+
+        viewModel.outputs.customSortTitles
+            .subscribe(onNext: { [weak self] customSortTitles in
+                for option in OWSortOption.allCases {
+                    self?.customSortTitles[option]?.rx.textFieldText.onNext(customSortTitles[option] ?? "")
+                }
+            })
+            .disposed(by: disposeBag)
 
         viewModel.outputs.fontGroupTypeIndex
             .assign(to: \.selectedSegmentIndex, on: segmentedFontGroupType.segmentedControl)
@@ -433,6 +463,16 @@ private extension GeneralSettingsView {
         segmentedInitialSort.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.initialSortSelectedIndex)
             .store(in: &cancellables)
+
+        let sortedCustomSortTitlesSettings = OWSortOption.allCases.compactMap { customSortTitles[$0] }
+        Observable.combineLatest(sortedCustomSortTitlesSettings.map { $0.rx.textFieldText }) { textValues in
+            return zip(OWSortOption.allCases, textValues)
+                .reduce(into: [OWSortOption: String]()) { result, optionTextTuple in
+                    result[optionTextTuple.0] = optionTextTuple.1
+                }
+        }
+        .bind(to: viewModel.inputs.customSortTitlesChanged)
+        .disposed(by: disposeBag)
 
         segmentedFontGroupType.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.fontGroupTypeSelectedIndex)
