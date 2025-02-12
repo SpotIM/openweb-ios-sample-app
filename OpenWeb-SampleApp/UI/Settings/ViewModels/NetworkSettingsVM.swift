@@ -49,14 +49,10 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
         return [_prod, _staging, _cluster1d]
     }()
 
-    var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: OWNetworkEnvironment.default.index)
+    lazy var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.default).index)
 
     var networkEnvironmentIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
-            .map { env in
-                env.index
-            }
-            .asObservable()
+        return networkEnvironmentSelectedIndex.asObservable()
     }
 
     private lazy var environmentObservable: Observable<OWNetworkEnvironment> = {
@@ -76,7 +72,7 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
 private extension NetworkSettingsVM {
     func setupObservers() {
         environmentObservable
-            .takeLast(1)
+            .skip(1)
             .bind(to: self.userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
             .disposed(by: disposeBag)

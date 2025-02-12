@@ -45,7 +45,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
     var inputs: PreConversationSettingsViewModelingInputs { return self }
     var outputs: PreConversationSettingsViewModelingOutputs { return self }
 
-    var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWPreConversationStyle.defaultIndex)
+    lazy var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default).index)
     var customStyleModeSelectedNumberOfComments = BehaviorSubject<Int>(value: 0)
     var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.default.index)
     var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.default.index)
@@ -59,23 +59,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
     }
 
     var styleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-            .map { preConversationStyle in
-                switch preConversationStyle {
-                case .regular:
-                    return OWPreConversationStyleIndexer.regular.index
-                case .compact:
-                    return OWPreConversationStyleIndexer.compact.index
-                case .ctaButtonOnly:
-                    return OWPreConversationStyleIndexer.ctaButtonOnly.index
-                case .ctaWithSummary:
-                    return OWPreConversationStyleIndexer.ctaWithSummary.index
-                case .custom:
-                    return OWPreConversationStyleIndexer.custom.index
-                default:
-                    return OWPreConversationStyleIndexer.regular.index
-                }
-            }
+        customStyleModeSelectedIndex
             .asObservable()
     }
 
@@ -198,7 +182,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
 private extension PreConversationSettingsVM {
     func setupObservers() {
         customStyleModeObservable
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWPreConversationStyle>.preConversationStyle))
             .disposed(by: disposeBag)
@@ -211,5 +195,24 @@ extension PreConversationSettingsVM: SettingsGroupVMProtocol {
         customStyleModeSelectedNumberOfComments.onNext(0)
         communityGuidelinesStyleSelectedIndex.onNext(OWCommunityGuidelinesStyle.default.index)
         communityQuestionsStyleModeSelectedIndex.onNext(OWCommunityQuestionStyle.default.index)
+    }
+}
+
+extension OWPreConversationStyle {
+    var index: Int {
+        switch self {
+        case .regular:
+            return OWPreConversationStyleIndexer.regular.index
+        case .compact:
+            return OWPreConversationStyleIndexer.compact.index
+        case .ctaButtonOnly:
+            return OWPreConversationStyleIndexer.ctaButtonOnly.index
+        case .ctaWithSummary:
+            return OWPreConversationStyleIndexer.ctaWithSummary.index
+        case .custom:
+            return OWPreConversationStyleIndexer.custom.index
+        default:
+            return OWPreConversationStyleIndexer.regular.index
+        }
     }
 }

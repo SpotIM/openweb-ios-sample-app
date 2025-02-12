@@ -56,133 +56,111 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
     var inputs: ConversationSettingsViewModelingInputs { return self }
     var outputs: ConversationSettingsViewModelingOutputs { return self }
 
-    var styleModeSelectedIndex = BehaviorSubject<Int>(value: OWConversationStyle.defaultIndex)
-    var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.default.index)
-    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.default.index)
-    var conversationSpacingSelectedIndex = BehaviorSubject<Int>(value: OWConversationSpacing.defaultIndex)
-    var betweenCommentsSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)")
-    var communityGuidelinesSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)")
-    var communityQuestionsGuidelinesSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)")
+    lazy var styleModeSelectedIndex = BehaviorSubject<Int>(value: {
+        let cs = userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        switch cs {
+        case .regular:
+            return OWConversationStyleIndexer.regular.index
+        case .compact:
+            return OWConversationStyleIndexer.compact.index
+        case .custom:
+            return OWConversationStyleIndexer.custom.index
+        default:
+            return OWConversationStyle.defaultIndex
+        }
+    }())
+
+    lazy var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: {
+        let cs = userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        if case .custom(let communityGuidelinesStyle, _, _) = cs {
+            return communityGuidelinesStyle.index
+        }
+        return OWCommunityGuidelinesStyle.default.index
+    }())
+
+    lazy var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: {
+        let cs = userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        if case .custom(_, let communityQuestionsStyle, _) = cs {
+            return communityQuestionsStyle.index
+        }
+        return OWCommunityQuestionStyle.default.index
+    }())
+
+    lazy var conversationSpacingSelectedIndex = BehaviorSubject<Int>(value: {
+        let cs = userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        if case .custom(_, _, let spacing) = cs {
+            switch spacing {
+            case .regular:
+                return OWConversationSpacingIndexer.regular.index
+            case .compact:
+                return OWConversationSpacingIndexer.compact.index
+            case .custom:
+                return OWConversationSpacingIndexer.custom.index
+            default:
+                return OWConversationSpacing.defaultIndex
+            }
+        }
+        return OWConversationSpacing.defaultIndex
+    }())
+
+    lazy var betweenCommentsSpacingSelected = BehaviorSubject<String>(value: {
+        let cs = userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        if case .custom(_, _, let spacing) = cs {
+            if case .custom(let betweenComments, _, _) = spacing {
+                return "\(betweenComments)"
+            }
+        }
+        return "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)"
+    }())
+
+    lazy var communityGuidelinesSpacingSelected = BehaviorSubject<String>(value: {
+        let cs = userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        if case .custom(_, _, let spacing) = cs {
+            if case .custom(_, let communityGuidelinesSpacing, _) = spacing {
+                return "\(communityGuidelinesSpacing)"
+            }
+        }
+        return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)"
+    }())
+
+    lazy var communityQuestionsGuidelinesSpacingSelected = BehaviorSubject<String>(value: {
+        let cs = userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        if case .custom(_, _, let spacing) = cs {
+            if case .custom(_, _, let communityQuestionsSpacing) = spacing {
+                return "\(communityQuestionsSpacing)"
+            }
+        }
+        return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)"
+    }())
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     var styleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .map { conversationStyle in
-                switch conversationStyle {
-                case .regular:
-                    return OWConversationStyleIndexer.regular.index
-                case .compact:
-                    return OWConversationStyleIndexer.compact.index
-                case .custom:
-                    return OWConversationStyleIndexer.custom.index
-                default:
-                    return OWConversationStyle.defaultIndex
-                }
-            }
-            .asObservable()
+        return styleModeSelectedIndex.asObservable()
     }
 
     var communityGuidelinesStyleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .map { conversationStyle in
-                switch conversationStyle {
-                case .custom(communityGuidelinesStyle: let communityGuidelines, communityQuestionsStyle: _, spacing: _):
-                    return communityGuidelines.index
-                default:
-                    return OWCommunityGuidelinesStyle.default.index
-                }
-            }
-            .asObservable()
+        return communityGuidelinesStyleSelectedIndex.asObservable()
     }
 
     var communityQuestionsStyleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .map { conversationStyle in
-                switch conversationStyle {
-                case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: let communityQuestions, spacing: _):
-                    return communityQuestions.index
-                default:
-                    return OWCommunityQuestionStyle.default.index
-                }
-            }
-            .asObservable()
+        return communityQuestionsStyleModeSelectedIndex.asObservable()
     }
 
     var conversationSpacingModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .map { conversationStyle in
-                switch conversationStyle {
-                case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
-                    switch spacingMode {
-                    case .regular:
-                        return OWConversationSpacingIndexer.regular.index
-                    case .compact:
-                        return OWConversationSpacingIndexer.compact.index
-                    case .custom:
-                        return OWConversationSpacingIndexer.custom.index
-                    default:
-                        return OWConversationSpacing.defaultIndex
-                    }
-                default:
-                    return OWConversationSpacing.defaultIndex
-                }
-            }
-            .asObservable()
+        return conversationSpacingSelectedIndex.asObservable()
     }
 
     var betweenCommentsSpacing: Observable<String> {
-        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .map { conversationStyle in
-                switch conversationStyle {
-                case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
-                    switch spacingMode {
-                    case .custom(betweenComments: let betweenComments, communityGuidelines: _, communityQuestions: _):
-                        return "\(betweenComments)"
-                    default:
-                        return "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)"
-                    }
-                default:
-                    return "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)"
-                }
-            }
-            .asObservable()
+        return betweenCommentsSpacingSelected.asObservable()
     }
 
     var communityGuidelinesSpacing: Observable<String> {
-        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .map { conversationStyle in
-                switch conversationStyle {
-                case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
-                    switch spacingMode {
-                    case .custom(betweenComments: _, communityGuidelines: let communityGuidelinesSpacing, communityQuestions: _):
-                        return "\(communityGuidelinesSpacing)"
-                    default:
-                        return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)"
-                    }
-                default:
-                    return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)"
-                }
-            }
-            .asObservable()
+        return communityGuidelinesSpacingSelected.asObservable()
     }
 
     var communityQuestionsGuidelinesSpacing: Observable<String> {
-        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .map { conversationStyle in
-                switch conversationStyle {
-                case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
-                    switch spacingMode {
-                    case .custom(betweenComments: _, communityGuidelines: _, communityQuestions: let communityQuestionsSpacing):
-                        return "\(communityQuestionsSpacing)"
-                    default:
-                        return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)"
-                    }
-                default:
-                    return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)"
-                }
-            }
-            .asObservable()
+        return communityQuestionsGuidelinesSpacingSelected.asObservable()
     }
 
     private let disposeBag = DisposeBag()
@@ -303,7 +281,7 @@ private extension ConversationSettingsVM {
     func setupObservers() {
         // Conversation style mode data binder to persistence key conversationStyle
         styleModeObservable
-            .takeLast(1)
+            .skip(1)
             .bind(to: self.userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
             .disposed(by: disposeBag)

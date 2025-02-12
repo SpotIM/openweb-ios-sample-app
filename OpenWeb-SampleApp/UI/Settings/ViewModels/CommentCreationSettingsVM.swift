@@ -36,39 +36,25 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     var inputs: CommentCreationSettingsViewModelingInputs { return self }
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
 
-    var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
-    var accessoryViewSelectedIndex = BehaviorSubject<Int>(value: 0)
+    lazy var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default).index)
+    lazy var accessoryViewSelectedIndex = BehaviorSubject<Int>(value: {
+        let defaultStyle = userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
+        switch defaultStyle {
+        case .floatingKeyboard(let accessoryViewStrategy):
+            return accessoryViewStrategy.index
+        default:
+            return 0
+        }
+    }())
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     var accessoryViewIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
-            .map { commentCreationStyle in
-                switch commentCreationStyle {
-                case .floatingKeyboard(let accessoryViewStrategy):
-                    return accessoryViewStrategy.index
-                default:
-                    return 0
-                }
-            }
-            .asObservable()
+        return accessoryViewSelectedIndex.asObservable()
     }
 
     var styleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
-            .map { commentCreationStyle in
-                switch commentCreationStyle {
-                case .regular:
-                    return OWCommentCreationStyleIndexer.regular.index
-                case .light:
-                    return OWCommentCreationStyleIndexer.light.index
-                case .floatingKeyboard:
-                    return OWCommentCreationStyleIndexer.floatingKeyboard.index
-                default:
-                    return OWCommentCreationStyleIndexer.regular.index
-                }
-            }
-            .asObservable()
+        return customStyleModeSelectedIndex.asObservable()
     }
 
     var hideAccessoryViewOptions: Observable<Bool> {
@@ -134,7 +120,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 private extension CommentCreationSettingsVM {
     func setupObservers() {
         styleModeObservable
-            .takeLast(1)
+            .skip(1)
             .bind(to: self.userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
             .disposed(by: disposeBag)
@@ -145,5 +131,20 @@ extension CommentCreationSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
         customStyleModeSelectedIndex.onNext(0)
         accessoryViewSelectedIndex.onNext(0)
+    }
+}
+
+extension OWCommentCreationStyle {
+    var index: Int {
+        switch self {
+        case .regular:
+            return OWCommentCreationStyleIndexer.regular.index
+        case .light:
+            return OWCommentCreationStyleIndexer.light.index
+        case .floatingKeyboard:
+            return OWCommentCreationStyleIndexer.floatingKeyboard.index
+        default:
+            return OWCommentCreationStyleIndexer.regular.index
+        }
     }
 }

@@ -11,7 +11,7 @@ import RxSwift
 import OpenWebSDK
 
 protocol CommentThreadSettingsViewModelingInputs {
-    var openCommentIdSelected: PublishSubject<String> { get }
+    var openCommentIdSelected: BehaviorSubject<String> { get }
 }
 
 protocol CommentThreadSettingsViewModelingOutputs {
@@ -29,9 +29,9 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
     var inputs: CommentThreadSettingsViewModelingInputs { return self }
     var outputs: CommentThreadSettingsViewModelingOutputs { return self }
 
-    var openCommentIdSelected = PublishSubject<String>()
+    lazy var openCommentIdSelected = BehaviorSubject<String>(value: userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId))
     var openCommentId: Observable<String> {
-        return userDefaultsProvider.values(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
+        return openCommentIdSelected.asObservable()
     }
 
     lazy var openCommentIdTitle: String = {
@@ -55,7 +55,7 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
 private extension CommentThreadSettingsVM {
     func setupObservers() {
         openCommentIdSelected
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String>.openCommentId))
             .disposed(by: disposeBag)
