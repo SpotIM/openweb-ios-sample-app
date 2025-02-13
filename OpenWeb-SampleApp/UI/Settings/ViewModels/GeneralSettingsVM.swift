@@ -15,18 +15,18 @@ protocol GeneralSettingsViewModelingInputs {
     var articleHeaderSelectedStyle: BehaviorSubject<OWArticleHeaderStyle> { get }
     var articleInformationSelectedStrategy: BehaviorSubject<OWArticleInformationStrategy> { get }
     var orientationSelectedEnforcement: BehaviorSubject<OWOrientationEnforcement> { get }
-    var elementsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
-    var colorsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
-    var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
-    var themeModeSelectedIndex: PublishSubject<Int> { get }
-    var statusBarStyleSelectedIndex: PublishSubject<Int> { get }
-    var navigationBarStyleSelectedIndex: PublishSubject<Int> { get }
-    var modalStyleSelectedIndex: PublishSubject<Int> { get }
-    var initialSortSelectedIndex: PublishSubject<Int> { get }
+    var elementsCustomizationStyleSelectedIndex: BehaviorSubject<Int> { get }
+    var colorsCustomizationStyleSelectedIndex: BehaviorSubject<Int> { get }
+    var readOnlyModeSelectedIndex: BehaviorSubject<Int> { get }
+    var themeModeSelectedIndex: BehaviorSubject<Int> { get }
+    var statusBarStyleSelectedIndex: BehaviorSubject<Int> { get }
+    var navigationBarStyleSelectedIndex: BehaviorSubject<Int> { get }
+    var modalStyleSelectedIndex: BehaviorSubject<Int> { get }
+    var initialSortSelectedIndex: BehaviorSubject<Int> { get }
     var fontGroupTypeSelectedIndex: BehaviorSubject<Int> { get }
     var customFontGroupSelectedName: BehaviorSubject<String> { get }
-    var articleAssociatedSelectedURL: PublishSubject<String> { get }
-    var articleSelectedSection: PublishSubject<String> { get }
+    var articleAssociatedSelectedURL: BehaviorSubject<String> { get }
+    var articleSelectedSection: BehaviorSubject<String> { get }
     var languageStrategySelectedIndex: BehaviorSubject<Int> { get }
     var languageSelectedName: BehaviorSubject<String> { get }
     var localeStrategySelectedIndex: BehaviorSubject<Int> { get }
@@ -121,27 +121,31 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var inputs: GeneralSettingsViewModelingInputs { return self }
     var outputs: GeneralSettingsViewModelingOutputs { return self }
 
-    var articleHeaderSelectedStyle = BehaviorSubject<OWArticleHeaderStyle>(value: OWArticleHeaderStyle.default)
-    var articleInformationSelectedStrategy = BehaviorSubject<OWArticleInformationStrategy>(value: .default)
-    var orientationSelectedEnforcement = BehaviorSubject<OWOrientationEnforcement>(value: .default)
-    var elementsCustomizationStyleSelectedIndex = PublishSubject<Int>()
-    var colorsCustomizationStyleSelectedIndex = PublishSubject<Int>()
-    var readOnlyModeSelectedIndex = PublishSubject<Int>()
-    var themeModeSelectedIndex = PublishSubject<Int>()
-    var statusBarStyleSelectedIndex = PublishSubject<Int>()
-    var navigationBarStyleSelectedIndex = PublishSubject<Int>()
-    var modalStyleSelectedIndex = PublishSubject<Int>()
-    var initialSortSelectedIndex = PublishSubject<Int>()
-    var fontGroupTypeSelectedIndex = BehaviorSubject<Int>(value: 0)
-    var customFontGroupSelectedName = BehaviorSubject<String>(value: "")
-    var articleAssociatedSelectedURL = PublishSubject<String>()
-    var articleSelectedSection = PublishSubject<String>()
-    var languageStrategySelectedIndex = BehaviorSubject<Int>(value: OWLanguageStrategy.defaultStrategyIndex)
-    var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
-    var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.default.index)
-    var showLoginPromptSelected = BehaviorSubject<Bool>(value: false)
-    var commentActionsColorSelected = BehaviorSubject<OWCommentActionsColor>(value: .default)
-    var commentActionsFontStyleSelected = BehaviorSubject<OWCommentActionsFontStyle>(value: .default)
+    lazy var articleHeaderSelectedStyle = BehaviorSubject<OWArticleHeaderStyle>(value: userDefaultsProvider.get(key: .articleHeaderStyle, defaultValue: OWArticleHeaderStyle.default))
+    lazy var articleInformationSelectedStrategy = BehaviorSubject<OWArticleInformationStrategy>(value: userDefaultsProvider.get(key: .articleInformationStrategy, defaultValue: .default))
+    lazy var orientationSelectedEnforcement = BehaviorSubject<OWOrientationEnforcement>(value: userDefaultsProvider.get(key: .orientationEnforcement, defaultValue: .default))
+    lazy var elementsCustomizationStyleSelectedIndex = BehaviorSubject<Int>(
+        value: userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<Int>.elementsCustomizationStyleIndex, defaultValue: 0)
+    )
+    lazy var colorsCustomizationStyleSelectedIndex = BehaviorSubject<Int>(
+        value: userDefaultsProvider.get(key: .colorCustomizationStyleIndex, defaultValue: SettingsColorCustomizationStyle.defaultIndex)
+    )
+    lazy var readOnlyModeSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.default.index))
+    lazy var themeModeSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.default.index))
+    lazy var statusBarStyleSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .statusBarStyleIndex, defaultValue: OWStatusBarEnforcement.default.index))
+    lazy var navigationBarStyleSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .navigationBarStyleIndex, defaultValue: OWNavigationBarEnforcement.default.index))
+    lazy var modalStyleSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
+    lazy var initialSortSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index))
+    lazy var fontGroupTypeSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default).index)
+    lazy var customFontGroupSelectedName = BehaviorSubject<String>(value: userDefaultsProvider.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default).name)
+    lazy var articleAssociatedSelectedURL = BehaviorSubject<String>(value: userDefaultsProvider.get(key: .articleAssociatedURL, defaultValue: ""))
+    lazy var articleSelectedSection = BehaviorSubject<String>(value: userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleSection, defaultValue: ""))
+    lazy var languageStrategySelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default).index)
+    lazy var languageSelectedName = BehaviorSubject<String>(value: userDefaultsProvider.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default).name)
+    lazy var localeStrategySelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default).index)
+    lazy var showLoginPromptSelected = BehaviorSubject<Bool>(value: userDefaultsProvider.get(key: .showLoginPrompt, defaultValue: false))
+    lazy var commentActionsColorSelected = BehaviorSubject<OWCommentActionsColor>(value: userDefaultsProvider.get(key: .commentActionsColor, defaultValue: .default))
+    lazy var commentActionsFontStyleSelected = BehaviorSubject<OWCommentActionsFontStyle>(value: userDefaultsProvider.get(key: .commentActionsFontStyle, defaultValue: .default))
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
     private var manager: OWManagerProtocol
@@ -150,14 +154,14 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     Observable.combineLatest(fontGroupTypeSelectedIndex, customFontGroupSelectedName) { index, name -> OWFontGroupFamily in
         return OWFontGroupFamily.fontGroupFamily(fromIndex: index, name: name)
     }
-    .skip(2)
+    .skip(1)
     .asObservable()
 
     private lazy var languageStrategyObservable =
     Observable.combineLatest(languageStrategySelectedIndex, languageSelectedName) { index, languageName -> OWLanguageStrategy in
         return OWLanguageStrategy.languageStrategy(fromIndex: index, language: OWSupportedLanguage(languageName: languageName))
     }
-    .skip(2)
+    .skip(1)
     .asObservable()
 
     private lazy var localeStrategyObservable =
@@ -165,156 +169,117 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         .map { index in
             return OWLocaleStrategy.localeStrategy(fromIndex: index)
         }
-        .takeLast(1)
+        .skip(1)
         .asObservable()
 
     var elementsCustomizationStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .elementsCustomizationStyleIndex, defaultValue: SettingsElementsCustomizationStyle.defaultIndex)
+        elementsCustomizationStyleSelectedIndex
+            .asObservable()
     }
 
     var colorsCustomizationStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .colorCustomizationStyleIndex, defaultValue: SettingsColorCustomizationStyle.defaultIndex)
+        return colorsCustomizationStyleSelectedIndex
+            .asObservable()
     }
 
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> {
-        return userDefaultsProvider.values(key: .articleHeaderStyle, defaultValue: OWArticleHeaderStyle.default)
+        return articleHeaderSelectedStyle
+            .asObservable()
     }
 
     var articleInformationStrategy: Observable<OWArticleInformationStrategy> {
-        return userDefaultsProvider.values(key: .articleInformationStrategy, defaultValue: .server)
+        return articleInformationSelectedStrategy
+            .asObservable()
     }
 
     var showLoginPrompt: Observable<Bool> {
-        return userDefaultsProvider.values(key: .showLoginPrompt, defaultValue: false)
+        return showLoginPromptSelected
+            .asObservable()
     }
 
     var orientationEnforcement: Observable<OWOrientationEnforcement> {
-        return userDefaultsProvider.values(key: .orientationEnforcement, defaultValue: OWOrientationEnforcement.default)
+        return orientationSelectedEnforcement
+            .asObservable()
     }
 
     var commentActionsColor: Observable<OWCommentActionsColor> {
-        return userDefaultsProvider.values(key: .commentActionsColor, defaultValue: OWCommentActionsColor.default)
+        return commentActionsColorSelected
+            .asObservable()
     }
 
     var commentActionsFontStyle: Observable<OWCommentActionsFontStyle> {
-        return userDefaultsProvider.values(key: .commentActionsFontStyle, defaultValue: OWCommentActionsFontStyle.default)
+        return commentActionsFontStyleSelected
+            .asObservable()
     }
 
     var readOnlyModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.default.index)
+        return readOnlyModeSelectedIndex
+            .asObservable()
     }
 
     var themeModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.default.index)
+        return themeModeSelectedIndex
+            .asObservable()
     }
 
     var statusBarStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .statusBarStyleIndex, defaultValue: OWStatusBarEnforcement.default.index)
+        return statusBarStyleSelectedIndex
+            .asObservable()
     }
 
     var navigationBarStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .navigationBarStyleIndex, defaultValue: OWNavigationBarEnforcement.default.index)
+        return navigationBarStyleSelectedIndex
+            .asObservable()
     }
 
     var modalStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index)
+        return modalStyleSelectedIndex
+            .asObservable()
     }
 
     var initialSortIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index)
+        return initialSortSelectedIndex
+            .asObservable()
     }
 
     var fontGroupTypeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
-            .map { fontGroupFamily in
-                switch fontGroupFamily {
-                case .`default`:
-                    return 0
-                case .custom:
-                    return 1
-                default:
-                    return 0
-                }
-            }
+        return fontGroupTypeSelectedIndex
             .asObservable()
     }
 
     var customFontGroupTypeName: Observable<String> {
-        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
-            .map { fontGroupFamily in
-                switch fontGroupFamily {
-                case .custom(fontFamily: let fontFamily):
-                    return fontFamily
-                default:
-                    return ""
-                }
-            }
+        return customFontGroupSelectedName
             .asObservable()
     }
 
     var articleAssociatedURL: Observable<String> {
-        return userDefaultsProvider.values(key: .articleAssociatedURL)
+        return articleAssociatedSelectedURL
+            .asObservable()
     }
 
     var articleSection: Observable<String> {
-        return userDefaultsProvider.values(key: .articleSection)
+        return articleSelectedSection
+            .asObservable()
     }
 
     var showCustomFontName: Observable<Bool> {
-        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
-            .map { fontGroupFamily in
-                switch fontGroupFamily {
-                case .custom:
-                    return true
-                default:
-                    return false
-                }
-            }
+        fontGroupTypeSelectedIndex
+            .map { $0 != 0 }
             .asObservable()
     }
 
     var localeStrategyIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
-            .map { localeStrategy in
-                switch localeStrategy {
-                case .useDevice:
-                    return 0
-                case .useServerConfig:
-                    return 1
-                default:
-                    return OWLocaleStrategy.default.index
-                }
-            }
+        return localeStrategySelectedIndex
             .asObservable()
     }
 
     var languageStrategyIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
-            .map { languageStrategy in
-                switch languageStrategy {
-                case .useDevice:
-                    return 0
-                case .useServerConfig:
-                    return 1
-                case .use:
-                    return 2
-                default:
-                    return OWLanguageStrategy.defaultStrategyIndex
-                }
-            }
+        return languageStrategySelectedIndex
             .asObservable()
     }
 
     var languageName: Observable<String> {
-        return userDefaultsProvider.values(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
-            .map { languageStrategy in
-                switch languageStrategy {
-                case .use(language: let language):
-                    return language.languageName
-                default:
-                    return OWSupportedLanguage.defaultLanguage.languageName
-                }
-            }
+        return languageSelectedName
             .asObservable()
     }
 
@@ -338,7 +303,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 
     var shouldShowColorSettingButton: Observable<Bool> {
-        return userDefaultsProvider.values(key: .colorCustomizationStyleIndex, defaultValue: 0)
+        return colorsCustomizationStyleSelectedIndex
             .map { $0 == 2 } // Custom
             .asObservable()
     }
@@ -583,79 +548,79 @@ private extension GeneralSettingsVM {
     // swiftlint:disable function_body_length
     func setupObservers() {
         articleHeaderSelectedStyle
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle))
             .disposed(by: disposeBag)
 
         articleInformationSelectedStrategy
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy))
             .disposed(by: disposeBag)
 
         orientationSelectedEnforcement
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWOrientationEnforcement>.orientationEnforcement))
             .disposed(by: disposeBag)
 
         commentActionsColorSelected
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWCommentActionsColor>.commentActionsColor))
             .disposed(by: disposeBag)
 
         commentActionsFontStyleSelected
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWCommentActionsFontStyle>.commentActionsFontStyle))
             .disposed(by: disposeBag)
 
         elementsCustomizationStyleSelectedIndex
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.elementsCustomizationStyleIndex))
             .disposed(by: disposeBag)
 
         colorsCustomizationStyleSelectedIndex
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.colorCustomizationStyleIndex))
             .disposed(by: disposeBag)
 
         readOnlyModeSelectedIndex
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.readOnlyModeIndex))
             .disposed(by: disposeBag)
 
         themeModeSelectedIndex
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.themeModeIndex))
             .disposed(by: disposeBag)
 
         statusBarStyleSelectedIndex
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.statusBarStyleIndex))
             .disposed(by: disposeBag)
 
         navigationBarStyleSelectedIndex
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.navigationBarStyleIndex))
             .disposed(by: disposeBag)
 
         modalStyleSelectedIndex
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.modalStyleIndex))
             .disposed(by: disposeBag)
 
         initialSortSelectedIndex
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.initialSortIndex))
             .disposed(by: disposeBag)
@@ -666,13 +631,13 @@ private extension GeneralSettingsVM {
             .disposed(by: disposeBag)
 
         articleAssociatedSelectedURL
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL))
             .disposed(by: disposeBag)
 
         articleSelectedSection
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String>.articleSection))
             .disposed(by: disposeBag)
@@ -720,7 +685,7 @@ private extension GeneralSettingsVM {
             .disposed(by: disposeBag)
 
         showLoginPromptSelected
-            .takeLast(1)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<Bool>.showLoginPrompt))
             .disposed(by: disposeBag)
@@ -748,5 +713,49 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
         orientationSelectedEnforcement.onNext(OWOrientationEnforcement.default)
         commentActionsColorSelected.onNext(OWCommentActionsColor.default)
         commentActionsFontStyleSelected.onNext(OWCommentActionsFontStyle.default)
+    }
+}
+
+extension OWFontGroupFamily {
+    var index: Int {
+        switch self {
+        case .custom:
+            return 1
+        default:
+            return 0
+        }
+    }
+
+    var name: String {
+        switch self {
+        case .custom(fontFamily: let fontFamily):
+            return fontFamily
+        default:
+            return ""
+        }
+    }
+}
+
+extension OWLanguageStrategy {
+    var index: Int {
+        switch self {
+        case .useDevice:
+            return 0
+        case .useServerConfig:
+            return 1
+        case .use:
+            return 2
+        default:
+            return OWLanguageStrategy.defaultStrategyIndex
+        }
+    }
+
+    var name: String {
+        switch self {
+        case .use(language: let language):
+            return language.languageName
+        default:
+            return OWSupportedLanguage.defaultLanguage.languageName
+        }
     }
 }
