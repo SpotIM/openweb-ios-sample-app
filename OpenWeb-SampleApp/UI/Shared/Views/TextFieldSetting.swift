@@ -33,7 +33,7 @@ class TextFieldSetting: UIView {
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var textFieldControl = {
+    private(set) lazy var textFieldControl = {
         let textField = UITextField()
             .corner(radius: Metrics.textFieldCorners)
             .border(width: 1.0, color: ColorPalette.shared.color(type: .blackish))

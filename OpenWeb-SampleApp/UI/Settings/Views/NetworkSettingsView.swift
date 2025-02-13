@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class NetworkSettingsView: UIView {
 
@@ -42,7 +43,7 @@ class NetworkSettingsView: UIView {
     }()
 
     private let viewModel: NetworkSettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: NetworkSettingsViewModeling) {
         self.viewModel = viewModel
@@ -80,11 +81,11 @@ private extension NetworkSettingsView {
 
     func setupObservers() {
         viewModel.outputs.networkEnvironmentIndex
-            .bind(to: segmentedNetworkEnvironment.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedNetworkEnvironment.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedNetworkEnvironment.rx.selectedSegmentIndex
+        segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.networkEnvironmentSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

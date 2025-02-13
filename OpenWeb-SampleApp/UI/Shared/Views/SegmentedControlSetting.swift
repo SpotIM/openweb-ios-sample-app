@@ -30,7 +30,7 @@ class SegmentedControlSetting: UIView {
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var segmentedControl: UISegmentedControl = {
+    private(set) lazy var segmentedControl: UISegmentedControl = {
         let segment = UISegmentedControl(items: self.items)
             .wrapContent(axis: .horizontal)
 

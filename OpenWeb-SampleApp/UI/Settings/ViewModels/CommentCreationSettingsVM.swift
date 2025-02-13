@@ -7,23 +7,23 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol CommentCreationSettingsViewModelingInputs {
-    var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
-    var accessoryViewSelectedIndex: BehaviorSubject<Int> { get }
+    var customStyleModeSelectedIndex: CurrentValueSubject<Int, Never> { get }
+    var accessoryViewSelectedIndex: CurrentValueSubject<Int, Never> { get }
 }
 
 protocol CommentCreationSettingsViewModelingOutputs {
     var title: String { get }
     var styleModeTitle: String { get }
     var accessoryViewTitle: String { get }
-    var styleModeIndex: Observable<Int> { get }
-    var accessoryViewIndex: Observable<Int> { get }
+    var styleModeIndex: AnyPublisher<Int, Never> { get }
+    var accessoryViewIndex: AnyPublisher<Int, Never> { get }
     var styleModeSettings: [String] { get }
     var accessoryViewSettings: [String] { get }
-    var hideAccessoryViewOptions: Observable<Bool> { get }
+    var hideAccessoryViewOptions: AnyPublisher<Bool, Never> { get }
 }
 
 protocol CommentCreationSettingsViewModeling {
@@ -36,8 +36,9 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     var inputs: CommentCreationSettingsViewModelingInputs { return self }
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
 
-    lazy var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default).index)
-    lazy var accessoryViewSelectedIndex = BehaviorSubject<Int>(value: {
+    lazy var customStyleModeSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default).index)
+
+    lazy var accessoryViewSelectedIndex = CurrentValueSubject<Int, Never>({
         let defaultStyle = userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
         switch defaultStyle {
         case .floatingKeyboard(let accessoryViewStrategy):
@@ -49,15 +50,19 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
 
-    var accessoryViewIndex: Observable<Int> {
-        return accessoryViewSelectedIndex.asObservable()
+    var accessoryViewIndex: AnyPublisher<Int, Never> {
+        return accessoryViewSelectedIndex
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
-    var styleModeIndex: Observable<Int> {
-        return customStyleModeSelectedIndex.asObservable()
+    var styleModeIndex: AnyPublisher<Int, Never> {
+        return customStyleModeSelectedIndex
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
-    var hideAccessoryViewOptions: Observable<Bool> {
+    var hideAccessoryViewOptions: AnyPublisher<Bool, Never> {
         return customStyleModeSelectedIndex
             .map {
                 if case .floatingKeyboard = OWCommentCreationStyle.commentCreationStyle(fromIndex: $0) {
@@ -65,10 +70,11 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
                 }
                 return true
             }
-            .asObservable()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
-    private let disposeBag = DisposeBag()
+    private var cancellables: Set<AnyCancellable> = []
 
     lazy var title: String = {
         return NSLocalizedString("CommentCreationSettings", comment: "")
@@ -97,20 +103,6 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return [_none, _toolbar]
     }()
 
-    private lazy var styleModeObservable: Observable<OWCommentCreationStyle> = {
-        return Observable.combineLatest(customStyleModeSelectedIndex,
-                                        accessoryViewSelectedIndex)
-            .map { customStyleModeIndex, accessoryViewIndex -> OWCommentCreationStyle in
-                var style = OWCommentCreationStyle.commentCreationStyle(fromIndex: customStyleModeIndex)
-                if case .floatingKeyboard = style {
-                    let accessoryViewStrategy = OWAccessoryViewStrategy(index: accessoryViewIndex)
-                    style = .floatingKeyboard(accessoryViewStrategy: accessoryViewStrategy)
-                }
-                return style
-            }
-            .asObservable()
-    }()
-
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
@@ -119,18 +111,25 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 
 private extension CommentCreationSettingsVM {
     func setupObservers() {
-        styleModeObservable
-            .skip(1)
-            .bind(to: self.userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
-            .disposed(by: disposeBag)
+        Publishers.CombineLatest(customStyleModeSelectedIndex, accessoryViewSelectedIndex)
+            .dropFirst()
+            .map { styleIndex, accessoryViewIndex -> OWCommentCreationStyle in
+                var style = OWCommentCreationStyle.commentCreationStyle(fromIndex: styleIndex)
+                if case .floatingKeyboard = style {
+                    let accessoryViewStrategy = OWAccessoryViewStrategy(index: accessoryViewIndex)
+                    style = .floatingKeyboard(accessoryViewStrategy: accessoryViewStrategy)
+                }
+                return style
+            }
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
+            .store(in: &cancellables)
     }
 }
 
 extension CommentCreationSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        customStyleModeSelectedIndex.onNext(0)
-        accessoryViewSelectedIndex.onNext(0)
+        customStyleModeSelectedIndex.send(0)
+        accessoryViewSelectedIndex.send(0)
     }
 }
 

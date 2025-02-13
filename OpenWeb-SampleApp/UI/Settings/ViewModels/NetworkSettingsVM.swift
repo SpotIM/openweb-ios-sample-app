@@ -7,18 +7,18 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol NetworkSettingsViewModelingInputs {
-    var networkEnvironmentSelectedIndex: BehaviorSubject<Int> { get }
+    var networkEnvironmentSelectedIndex: CurrentValueSubject<Int, Never> { get }
 }
 
 protocol NetworkSettingsViewModelingOutputs {
     var title: String { get }
     var networkEnvironmentTitle: String { get }
     var networkEnvironmentSettings: [String] { get }
-    var networkEnvironmentIndex: Observable<Int> { get }
+    var networkEnvironmentIndex: AnyPublisher<Int, Never> { get }
 }
 
 protocol NetworkSettingsViewModeling {
@@ -31,7 +31,7 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     var outputs: NetworkSettingsViewModelingOutputs { return self }
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var title: String = {
         return NSLocalizedString("NetworkSettings", comment: "")
@@ -49,19 +49,13 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
         return [_prod, _staging, _cluster1d]
     }()
 
-    lazy var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: userDefaultsProvider.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.default).index)
+    lazy var networkEnvironmentSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.default).index)
 
-    var networkEnvironmentIndex: Observable<Int> {
-        return networkEnvironmentSelectedIndex.asObservable()
-    }
-
-    private lazy var environmentObservable: Observable<OWNetworkEnvironment> = {
+    var networkEnvironmentIndex: AnyPublisher<Int, Never> {
         return networkEnvironmentSelectedIndex
-            .map {
-                OWNetworkEnvironment(from: $0)
-            }
-            .asObservable()
-    }()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -71,16 +65,16 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
 
 private extension NetworkSettingsVM {
     func setupObservers() {
-        environmentObservable
-            .skip(1)
-            .bind(to: self.userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
-            .disposed(by: disposeBag)
+        networkEnvironmentSelectedIndex
+            .dropFirst()
+            .map { OWNetworkEnvironment(from: $0) }
+            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
+            .store(in: &cancellables)
     }
 }
 
 extension NetworkSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        networkEnvironmentSelectedIndex.onNext(OWNetworkEnvironment.default.index)
+        networkEnvironmentSelectedIndex.send(OWNetworkEnvironment.default.index)
     }
 }

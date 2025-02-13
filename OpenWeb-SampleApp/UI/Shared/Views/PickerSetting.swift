@@ -30,7 +30,7 @@ class PickerSetting: UIView {
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var pickerControl: UIPickerView = {
+    private(set) lazy var pickerControl: UIPickerView = {
         return UIPickerView()
     }()
 

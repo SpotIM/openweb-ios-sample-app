@@ -7,17 +7,17 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol CommentThreadSettingsViewModelingInputs {
-    var openCommentIdSelected: BehaviorSubject<String> { get }
+    var openCommentIdSelected: CurrentValueSubject<String, Never> { get }
 }
 
 protocol CommentThreadSettingsViewModelingOutputs {
     var title: String { get }
     var openCommentIdTitle: String { get }
-    var openCommentId: Observable<String> { get }
+    var openCommentId: AnyPublisher<String, Never> { get }
 }
 
 protocol CommentThreadSettingsViewModeling {
@@ -29,9 +29,12 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
     var inputs: CommentThreadSettingsViewModelingInputs { return self }
     var outputs: CommentThreadSettingsViewModelingOutputs { return self }
 
-    lazy var openCommentIdSelected = BehaviorSubject<String>(value: userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId))
-    var openCommentId: Observable<String> {
-        return openCommentIdSelected.asObservable()
+    lazy var openCommentIdSelected = CurrentValueSubject<String, Never>(userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId))
+
+    var openCommentId: AnyPublisher<String, Never> {
+        return openCommentIdSelected
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     lazy var openCommentIdTitle: String = {
@@ -39,8 +42,7 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
     }()
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
-
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var title: String = {
         return NSLocalizedString("CommentThreadSettings", comment: "")
@@ -55,15 +57,14 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
 private extension CommentThreadSettingsVM {
     func setupObservers() {
         openCommentIdSelected
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<String>.openCommentId))
-            .disposed(by: disposeBag)
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<String>.openCommentId))
+            .store(in: &cancellables)
     }
 }
 
 extension CommentThreadSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        openCommentIdSelected.onNext(OWCommentThreadSettings.defaultCommentId)
+        openCommentIdSelected.send(OWCommentThreadSettings.defaultCommentId)
     }
 }
