@@ -119,11 +119,7 @@ private extension MockArticleIndependentViewsVC {
 
         viewModel.outputs.showComponent
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                if case .failure(let error) = completion {
-                    DLog("Error showing component: \(error)")
-                }
-            } receiveValue: { [weak self] result in
+            .sink { [weak self] result in
                 guard let self else { return }
                 let view = result.0
                 let type = result.1
