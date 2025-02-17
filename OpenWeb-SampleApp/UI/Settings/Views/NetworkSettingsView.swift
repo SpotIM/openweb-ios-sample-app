@@ -107,28 +107,21 @@ private extension NetworkSettingsView {
 
         // Custom network environment
         Observable.combineLatest(segmentedNetworkEnvironment.rx.selectedSegmentIndex, customURLTextField.rx.textFieldText.unwrap())
-            .filter { $0.0 == OWNetworkEnvironment.custom(path: nil).index }
-            .map { OWNetworkEnvironment(from: $0.0, path: $0.1) }
+            .filter { $0.0 == OWNetworkEnvironment.custom(namespace: nil).index }
+            .map { OWNetworkEnvironment(from: $0.0, namespace: $0.1) }
             .bind(to: viewModel.inputs.networkEnvironmentSelected)
             .disposed(by: disposeBag)
 
         // Non custom network environment
         segmentedNetworkEnvironment.rx.selectedSegmentIndex
-            .filter { $0 != OWNetworkEnvironment.custom(path: nil).index }
+            .filter { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
             .map { OWNetworkEnvironment(from: $0) }
             .bind(to: viewModel.inputs.networkEnvironmentSelected)
             .disposed(by: disposeBag)
 
         segmentedNetworkEnvironment.rx.selectedSegmentIndex
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] index in
-                guard let self else { return }
-                if index == OWNetworkEnvironment.custom(path: nil).index {
-                    stackView.addArrangedSubview(customURLTextField)
-                } else {
-                    stackView.removeArrangedSubview(customURLTextField)
-                }
-            })
+            .map { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
+            .bind(to: customURLTextField.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }

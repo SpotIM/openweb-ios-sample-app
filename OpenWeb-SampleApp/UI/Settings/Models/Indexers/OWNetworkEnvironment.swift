@@ -13,7 +13,7 @@ enum OWNetworkEnvironment: Codable {
     case production
     case staging
     case cluster1d
-    case custom(path: String? = "")
+    case custom(namespace: String? = "")
 
     var index: Int {
         switch self {
@@ -28,7 +28,7 @@ enum OWNetworkEnvironment: Codable {
         return .production
     }
 
-    init(from index: Int, path: String? = nil) {
+    init(from index: Int, namespace: String? = nil) {
         switch index {
         case OWNetworkEnvironment.production.index:
             self = .production
@@ -36,8 +36,8 @@ enum OWNetworkEnvironment: Codable {
             self = .staging
         case OWNetworkEnvironment.cluster1d.index:
             self = .cluster1d
-        case OWNetworkEnvironment.custom(path: path).index:
-            self = .custom(path: path)
+        case OWNetworkEnvironment.custom(namespace: namespace).index:
+            self = .custom(namespace: namespace)
         default:
             self = OWNetworkEnvironment.default
         }
@@ -54,8 +54,8 @@ extension OWNetworkEnvironment {
             return .staging
         case .cluster1d:
             return .cluster1d
-        case .custom(let path):
-            return .custom(path: path)
+        case .custom(let namespace):
+            return .custom(namespace: namespace)
         }
     }
 }
