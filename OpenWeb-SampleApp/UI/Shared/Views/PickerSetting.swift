@@ -6,11 +6,14 @@
 //  Copyright © 2023 OpenWeb. All rights reserved.
 //
 
+import Combine
 import UIKit
 import RxSwift
 import RxCocoa
 
 class PickerSetting: UIView {
+
+    @Published var selectedPickerIndexPath: (row: Int, component: Int) = (0, 0)
 
     private struct Metrics {
         static let horizontalOffset: CGFloat = 10
@@ -21,6 +24,7 @@ class PickerSetting: UIView {
     private let title: String
     fileprivate let items = BehaviorSubject<[String]>(value: [])
     private let disposeBag = DisposeBag()
+    private var cancellables: Set<AnyCancellable> = []
 
     fileprivate lazy var pickerTitleLbl: UILabel = {
         return title
@@ -83,6 +87,19 @@ private extension PickerSetting {
             .bind(to: pickerControl.rx.itemTitles) { _, element in
                 return element
             }
+            .disposed(by: disposeBag)
+
+        // TODO: Replace Combine<->RxSwift connection below with Combine-only binding
+        $selectedPickerIndexPath
+            .sink(receiveValue: { [weak self] indexPath in
+                self?.pickerControl.selectRow(indexPath.row, inComponent: indexPath.component, animated: true)
+            })
+            .store(in: &cancellables)
+
+        pickerControl.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                self?.selectedPickerIndexPath = indexPath
+            })
             .disposed(by: disposeBag)
     }
 }
