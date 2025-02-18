@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class SettingsVC: UIViewController {
 
@@ -38,7 +39,7 @@ class SettingsVC: UIViewController {
     }()
 
     private let viewModel: SettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: SettingsViewModeling) {
         self.viewModel = viewModel
@@ -114,14 +115,13 @@ private extension SettingsVC {
     }
 
     func setupObservers() {
-        resetButton.rx.tap
+        resetButton.tapPublisher
             .bind(to: viewModel.inputs.resetToDefaultTap)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // keyboard will show
-        NotificationCenter.default.rx
-            .notification(UIResponder.keyboardWillShowNotification)
-            .subscribe(onNext: { [weak self] notification in
+        NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+            .sink { [weak self] notification in
                 guard
                     let self,
                     let expandedKeyboardHeight = notification.keyboardSize?.height,
@@ -140,19 +140,17 @@ private extension SettingsVC {
                         self.scrollToView(toView: firstResponder)
                     }
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         // keyboard will hide
-        NotificationCenter.default.rx
-            .notification(UIResponder.keyboardWillHideNotification)
-            .voidify()
-            .subscribe(onNext: { [weak self] _ in
+        NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+            .sink { [weak self] _ in
                 guard let self else { return }
                 self.resetButton.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-Metrics.resetButtonVerticalPadding)
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 }
