@@ -18,8 +18,4 @@ extension Publisher {
         compactMap { $0 }
             .eraseToAnyPublisher()
     }
-
-    func bind<S: Subscriber>(to subscriber: S) where S.Input == Output, S.Failure == Failure {
-        receive(subscriber: subscriber)
-    }
 }

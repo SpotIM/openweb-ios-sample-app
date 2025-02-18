@@ -50,6 +50,7 @@ private extension SettingsCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: SettingsViewModeling) {
         if let generalSettingsVM = viewModel.outputs.settingsVMs.first(where: { $0 is GeneralSettingsViewModeling }) as? GeneralSettingsViewModeling {
             generalSettingsVM.outputs.openColorsCustomizationScreen
+                .asObservable()
                 .subscribe(onNext: { [weak self] colorsCustomizationVC in
                     guard let self else { return }
                     self.router.push(colorsCustomizationVC,
