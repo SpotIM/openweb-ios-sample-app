@@ -51,7 +51,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         }
 
         // 2. Define childs coordinators
-        let settingsCoordinator = Observable.merge(testAPIVM.outputs.openSettings.map { nil },
+        let settingsCoordinator = Observable.merge(testAPIVM.outputs.openSettings.asObservable().map { nil },
                                                 deepLinkToSettings.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self else { return .empty() }
@@ -64,7 +64,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
                 return .never()
             }
 
-        let authenticationPlaygroundCoordinator = Observable.merge(testAPIVM.outputs.openAuthentication.map { nil },
+        let authenticationPlaygroundCoordinator = Observable.merge(testAPIVM.outputs.openAuthentication.asObservable().map { nil },
                                                                    deepLinkToAuthentication.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> Observable<Void> in
                 guard let self else { return .empty() }
@@ -76,6 +76,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             }
 
         let flowsCoordinator = testAPIVM.outputs.openUIFlows
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
@@ -87,6 +88,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             }
 
         let viewsCoordinator = testAPIVM.outputs.openUIViews
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
@@ -98,6 +100,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             }
 
         let miscellaneousCoordinator = testAPIVM.outputs.openMiscellaneous
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
@@ -110,6 +113,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 
 #if BETA
         let testingPlauygroundCoordinator = testAPIVM.outputs.openTestingPlayground
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
@@ -123,6 +127,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 
 #if AUTOMATION
         let automationCoordinator = testAPIVM.outputs.openAutomation
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
