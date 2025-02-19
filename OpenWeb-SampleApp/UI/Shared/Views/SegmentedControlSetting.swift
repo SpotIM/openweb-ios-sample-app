@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
 
 class SegmentedControlSetting: UIView {
 
@@ -71,27 +69,6 @@ private extension SegmentedControlSetting {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
             make.width.greaterThanOrEqualTo(Metrics.segmentMinWidth)
-        }
-    }
-}
-
-extension Reactive where Base: SegmentedControlSetting {
-
-    var selectedSegmentIndex: ControlProperty<Int> {
-        return value
-    }
-
-    var isHidden: Binder<Bool> {
-        return Binder(self.base) { _, value in
-            base.isHidden = value
-        }
-    }
-
-    private var value: ControlProperty<Int> {
-        return base.segmentedControl.rx.controlProperty(editingEvents: .valueChanged) { segmentedControl in
-            segmentedControl.selectedSegmentIndex
-        } setter: { segmentedControl, value in
-            segmentedControl.selectedSegmentIndex = value
         }
     }
 }

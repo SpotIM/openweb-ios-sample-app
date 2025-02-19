@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
 
 class SwitchSetting: UIView {
 
@@ -71,21 +69,6 @@ private extension SwitchSetting {
             make.leading.greaterThanOrEqualTo(settingTitleLbl.snp.trailing).offset(Metrics.verticalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.verticalOffset)
             make.width.greaterThanOrEqualTo(Metrics.switchMinWidth)
-        }
-    }
-}
-
-extension Reactive where Base: SwitchSetting {
-
-    var isOn: ControlProperty<Bool> {
-        return value
-    }
-
-    private var value: ControlProperty<Bool> {
-        return base.switchControl.rx.controlProperty(editingEvents: .valueChanged) { switchSetting in
-            switchSetting.isOn
-        } setter: { switchSetting, value in
-            switchSetting.isOn = value
         }
     }
 }

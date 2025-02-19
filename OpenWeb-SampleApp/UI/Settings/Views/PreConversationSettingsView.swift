@@ -126,10 +126,10 @@ private extension PreConversationSettingsView {
                 return (index, 0)
             }
             .unwrap()
-            .assign(to: \.selectedPickerIndexPath, on: pickerCustomStyleNumberOfComments)
+            .assign(to: \.selectedIndexPath, on: pickerCustomStyleNumberOfComments.pickerControl.publisher)
             .store(in: &cancellables)
 
-        pickerCustomStyleNumberOfComments.$selectedPickerIndexPath
+        pickerCustomStyleNumberOfComments.pickerControl.publisher.$selectedIndexPath
             .map { [weak self] in
                 guard let self else { return nil }
                 return Int(self.viewModel.outputs.customStyleNumberOfCommentsSettings[$0.row])

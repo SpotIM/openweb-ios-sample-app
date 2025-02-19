@@ -11,9 +11,6 @@ import UIKit
 
 class PickerSetting: UIView {
 
-    @Published var selectedPickerIndexPath: (row: Int, component: Int) = (0, 0)
-    @Published var pickerTitles: [String] = []
-
     private struct Metrics {
         static let horizontalOffset: CGFloat = 10
         static let pickerMaxWidth: CGFloat = 220
@@ -21,7 +18,6 @@ class PickerSetting: UIView {
     }
 
     private let title: String
-    private var cancellables: Set<AnyCancellable> = []
 
     fileprivate lazy var pickerTitleLbl: UILabel = {
         return title
@@ -32,21 +28,18 @@ class PickerSetting: UIView {
     }()
 
     private(set) lazy var pickerControl: UIPickerView = {
-        let picker = UIPickerView()
-        picker.delegate = self
-        picker.dataSource = self
-        return picker
+        return UIPickerView()
     }()
 
     init(title: String, accessibilityPrefixId: String, items: [String]? = nil) {
         self.title = title
-        if let items {
-            pickerTitles = items
-        }
         super.init(frame: .zero)
         setupViews()
-        setupObservers()
         applyAccessibility(prefixId: accessibilityPrefixId)
+
+        if let items {
+            pickerControl.publisher.itemTitles = items
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -76,39 +69,5 @@ private extension PickerSetting {
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.width.lessThanOrEqualTo(Metrics.pickerMaxWidth)
         }
-    }
-
-    func setupObservers() {
-        $pickerTitles
-            .sink { [weak self] _ in
-                self?.pickerControl.reloadAllComponents()
-            }
-            .store(in: &cancellables)
-
-        $selectedPickerIndexPath
-            .sink(receiveValue: { [weak self] indexPath in
-                self?.pickerControl.selectRow(indexPath.row, inComponent: indexPath.component, animated: true)
-            })
-            .store(in: &cancellables)
-    }
-}
-
-extension PickerSetting: UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerTitles.count
-    }
-}
-
-extension PickerSetting: UIPickerViewDelegate {
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectedPickerIndexPath = (row: row, component: component)
-    }
-
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return pickerTitles[row]
     }
 }

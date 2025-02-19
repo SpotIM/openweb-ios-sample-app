@@ -295,7 +295,7 @@ private extension AuthenticationPlaygroundVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        pickerGenericSSO.$selectedPickerIndexPath
+        pickerGenericSSO.pickerControl.publisher.$selectedIndexPath
             .map { $0.row }
             .removeDuplicates()
             .bind(to: viewModel.inputs.selectedGenericSSOOptionIndex)
@@ -316,7 +316,7 @@ private extension AuthenticationPlaygroundVC {
             .bind(to: viewModel.inputs.customPassword)
             .store(in: &cancellables)
 
-        pickerThirdPartySSO.$selectedPickerIndexPath
+        pickerThirdPartySSO.pickerControl.publisher.$selectedIndexPath
             .map { $0.row }
             .removeDuplicates()
             .bind(to: viewModel.inputs.selectedThirdPartySSOOptionIndex)
@@ -324,12 +324,12 @@ private extension AuthenticationPlaygroundVC {
 
         viewModel.outputs.genericSSOOptions
             .map { return $0.map { $0.displayName } }
-            .assign(to: \.pickerTitles, on: pickerGenericSSO)
+            .assign(to: \.itemTitles, on: pickerGenericSSO.pickerControl.publisher)
             .store(in: &cancellables)
 
         viewModel.outputs.thirdPartySSOOptions
             .map { return $0.map { $0.displayName } }
-            .assign(to: \.pickerTitles, on: pickerThirdPartySSO)
+            .assign(to: \.itemTitles, on: pickerThirdPartySSO.pickerControl.publisher)
             .store(in: &cancellables)
 
         viewModel.outputs.genericSSOAuthenticationStatus

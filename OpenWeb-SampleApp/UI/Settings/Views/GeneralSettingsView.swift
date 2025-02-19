@@ -489,10 +489,10 @@ private extension GeneralSettingsView {
                 return (index, 0)
             }
             .unwrap()
-            .assign(to: \.selectedPickerIndexPath, on: pickerLanguageCode)
+            .assign(to: \.selectedIndexPath, on: pickerLanguageCode.pickerControl.publisher)
             .store(in: &cancellables)
 
-        pickerLanguageCode.$selectedPickerIndexPath
+        pickerLanguageCode.pickerControl.publisher.$selectedIndexPath
             .map { [weak self] in
                 guard let self else { return nil }
                 return self.viewModel.outputs.supportedLanguageItems[$0.row]
