@@ -10,16 +10,7 @@ import Combine
 extension Publisher {
     /// Binds the publisher's output to a subject, similar to RxSwift's `bind(to:)`
     func bind<S: Subject>(to subject: S) -> AnyCancellable where S.Output == Output, S.Failure == Failure {
-        sink(
-            receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    subject.send(completion: .failure(error))
-                }
-            },
-            receiveValue: { value in
-                subject.send(value)
-            }
-        )
+        subscribe(subject)
     }
 
     /// Binds the publisher's output to a subscriber, similar to `RxSwift's bind(to:)`
