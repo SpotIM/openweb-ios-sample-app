@@ -458,6 +458,7 @@ private extension MockArticleFlowsViewModel {
             }
 
             _ = authenticationVM.outputs.dismissed
+                .asObservable()
                 .take(1)
                 .subscribe(onNext: { [completion] _ in
                     completion()

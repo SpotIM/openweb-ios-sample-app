@@ -1,5 +1,5 @@
 //
-//  Publisher+Extensions.swift
+//  Combine+Helpers.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Yonat Sharon on 04/02/2025.
@@ -19,3 +19,9 @@ extension Publisher {
             .eraseToAnyPublisher()
     }
 }
+
+ extension CurrentValueSubject where Failure == Never {
+    convenience init(value: Output) {
+        self.init(value)
+    }
+ }

@@ -288,6 +288,7 @@ private extension ConversationBelowVideoVC {
                 self.navigationController?.present(authenticationVC, animated: true)
 
                 return authenticationVM.outputs.dismissed
+                    .asObservable()
                     .take(1)
                     .map { completion }
             }

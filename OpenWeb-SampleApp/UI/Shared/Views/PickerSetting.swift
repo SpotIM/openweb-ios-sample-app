@@ -8,12 +8,11 @@
 
 import Combine
 import UIKit
-import RxSwift
-import RxCocoa
 
 class PickerSetting: UIView {
 
     @Published var selectedPickerIndexPath: (row: Int, component: Int) = (0, 0)
+    @Published var pickerTitles: [String] = []
 
     private struct Metrics {
         static let horizontalOffset: CGFloat = 10
@@ -22,8 +21,6 @@ class PickerSetting: UIView {
     }
 
     private let title: String
-    fileprivate let items = BehaviorSubject<[String]>(value: [])
-    private let disposeBag = DisposeBag()
     private var cancellables: Set<AnyCancellable> = []
 
     fileprivate lazy var pickerTitleLbl: UILabel = {
@@ -35,20 +32,21 @@ class PickerSetting: UIView {
     }()
 
     private(set) lazy var pickerControl: UIPickerView = {
-        return UIPickerView()
+        let picker = UIPickerView()
+        picker.delegate = self
+        picker.dataSource = self
+        return picker
     }()
 
     init(title: String, accessibilityPrefixId: String, items: [String]? = nil) {
         self.title = title
+        if let items {
+            pickerTitles = items
+        }
         super.init(frame: .zero)
         setupViews()
         setupObservers()
         applyAccessibility(prefixId: accessibilityPrefixId)
-
-        // Add items if exist after setupObservers since there is a skip(1) for skipping initial BehaviorSubject value
-        if let items {
-            self.items.onNext(items)
-        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -81,51 +79,36 @@ private extension PickerSetting {
     }
 
     func setupObservers() {
-        items
-            .skip(1) // Skip initialize BehaviorSubject value
-            .take(1) // Take first value after initialize
-            .bind(to: pickerControl.rx.itemTitles) { _, element in
-                return element
+        $pickerTitles
+            .sink { [weak self] _ in
+                self?.pickerControl.reloadAllComponents()
             }
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        // TODO: Replace Combine<->RxSwift connection below with Combine-only binding
         $selectedPickerIndexPath
             .sink(receiveValue: { [weak self] indexPath in
                 self?.pickerControl.selectRow(indexPath.row, inComponent: indexPath.component, animated: true)
             })
             .store(in: &cancellables)
-
-        pickerControl.rx.itemSelected
-            .subscribe(onNext: { [weak self] indexPath in
-                self?.selectedPickerIndexPath = indexPath
-            })
-            .disposed(by: disposeBag)
     }
 }
 
-extension Reactive where Base: PickerSetting {
-    var selectedPickerIndex: ControlEvent<(row: Int, component: Int)> {
-        return value
+extension PickerSetting: UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
     }
 
-    private var value: ControlEvent<(row: Int, component: Int)> {
-        return base.pickerControl.rx.itemSelected
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerTitles.count
+    }
+}
+
+extension PickerSetting: UIPickerViewDelegate {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selectedPickerIndexPath = (row: row, component: component)
     }
 
-    var setSelectedPickerIndex: Binder<(row: Int, component: Int)> {
-        return Binder(self.base.pickerControl) { picker, indexPath in
-            picker.selectRow(indexPath.row, inComponent: indexPath.component, animated: true)
-        }
-    }
-
-    var setPickerTitles: BehaviorSubject<[String]> {
-        return base.items
-    }
-
-    var isHidden: Binder<Bool> {
-        return Binder(self.base) { _, value in
-            base.isHidden = value
-        }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return pickerTitles[row]
     }
 }
