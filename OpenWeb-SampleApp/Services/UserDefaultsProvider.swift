@@ -91,6 +91,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case navigationBarStyleIndex
         case modalStyleIndex
         case initialSortIndex
+        case customSortTitles
         case fontGroupType
         case articleAssociatedURL
         case articleSection
