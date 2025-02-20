@@ -37,6 +37,14 @@ extension Publisher {
 }
 
 extension ObservableType {
+    /// Converts an RxSwift Observable into a Combine Publisher.
+    func asPublisher() -> AnyPublisher<Element, Error> {
+        RxObservablePublisher(observable: self.asObservable())
+            .eraseToAnyPublisher()
+    }
+}
+
+extension ObservableType {
     /// Binds Rx Observable to a Combine Subscriber.
     func bind<S: Subscriber>(to subscriber: S) -> Disposable
     where S.Input == Element, S.Failure == Never {
@@ -103,5 +111,62 @@ private class RxToCombineSubscription<S: Subscriber>: Subscription, Disposable {
     func receiveCompletion(_ completion: Subscribers.Completion<S.Failure>) {
         subscriber?.receive(completion: completion)
         subscriber = nil // so we don’t accidentally send more events.
+    }
+}
+
+/// A custom Publisher that wraps an Rx Observable.
+private struct RxObservablePublisher<Output>: Publisher {
+    typealias Failure = Error
+    let observable: Observable<Output>
+
+    func receive<S>(subscriber: S) where S: Subscriber,
+                                         RxObservablePublisher.Failure == S.Failure,
+                                         RxObservablePublisher.Output == S.Input {
+        let subscription = RxSubscription(subscriber: subscriber, observable: observable)
+        subscriber.receive(subscription: subscription)
+    }
+}
+
+/// A Subscription that holds the connection to the Rx Observable and
+/// forwards its events to a Combine Subscriber.
+private final class RxSubscription<S: Subscriber, T>: Subscription
+where S.Input == T, S.Failure == Error {
+
+    private var subscriber: S?
+    private var disposable: Disposable?
+
+    init(subscriber: S, observable: Observable<T>) {
+        self.subscriber = subscriber
+
+        // Subscribe to the Rx Observable and forward events to the Combine subscriber.
+        self.disposable = observable.subscribe { [weak self] event in
+            guard let self else { return }
+
+            switch event {
+            case .next(let value):
+                _ = self.subscriber?.receive(value)
+
+            case .error(let error):
+                self.subscriber?.receive(completion: .failure(error))
+                self.cancel()
+
+            case .completed:
+                self.subscriber?.receive(completion: .finished)
+                self.cancel()
+            }
+        }
+    }
+
+    /// Combine asks the Subscription to begin emitting values.
+    /// Rx does not support back-pressure natively, so we ignore the `demand`.
+    func request(_ demand: Subscribers.Demand) {
+        // No-op: Rx doesn't have a built-in backpressure mechanism.
+    }
+
+    /// Cancel the subscription and dispose of the Rx resources.
+    func cancel() {
+        disposable?.dispose()
+        disposable = nil
+        subscriber = nil
     }
 }

@@ -8,7 +8,6 @@
 
 import UIKit
 import Combine
-import CombineCocoa
 import SnapKit
 
 class MockArticleIndependentViewsVC: UIViewController {
