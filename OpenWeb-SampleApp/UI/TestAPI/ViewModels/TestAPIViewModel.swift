@@ -386,6 +386,11 @@ private extension TestAPIViewModel {
         // swiftlint:enable line_length
         let sorting = customizations.sorting
         sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index))
+        let sortTitles: [OWSortOption: String]? = UserDefaultsProvider.shared.get(key: .customSortTitles)
+        for (key, title) in sortTitles ?? [:] {
+            if title.isEmpty { continue }
+            sorting.setTitle(title, forOption: key)
+        }
         customizations.fontFamily = UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
         let helpers = OpenWeb.manager.helpers
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)

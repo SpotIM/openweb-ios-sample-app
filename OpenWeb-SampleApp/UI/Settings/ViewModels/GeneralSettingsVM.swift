@@ -23,6 +23,7 @@ protocol GeneralSettingsViewModelingInputs {
     var navigationBarStyleSelectedIndex: PublishSubject<Int> { get }
     var modalStyleSelectedIndex: PublishSubject<Int> { get }
     var initialSortSelectedIndex: PublishSubject<Int> { get }
+    var customSortTitlesChanged: PublishSubject<[OWSortOption: String]> { get }
     var fontGroupTypeSelectedIndex: BehaviorSubject<Int> { get }
     var customFontGroupSelectedName: BehaviorSubject<String> { get }
     var articleAssociatedSelectedURL: PublishSubject<String> { get }
@@ -62,6 +63,7 @@ protocol GeneralSettingsViewModelingOutputs {
     var navigationBarStyleIndex: Observable<Int> { get }
     var modalStyleIndex: Observable<Int> { get }
     var initialSortIndex: Observable<Int> { get }
+    var customSortTitles: Observable<[OWSortOption: String]> { get }
     var fontGroupTypeIndex: Observable<Int> { get }
     var customFontGroupTypeNameTitle: String { get }
     var customFontGroupTypeName: Observable<String> { get }
@@ -132,6 +134,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var navigationBarStyleSelectedIndex = PublishSubject<Int>()
     var modalStyleSelectedIndex = PublishSubject<Int>()
     var initialSortSelectedIndex = PublishSubject<Int>()
+    var customSortTitlesChanged = PublishSubject<[OWSortOption: String]>()
     var fontGroupTypeSelectedIndex = BehaviorSubject<Int>(value: 0)
     var customFontGroupSelectedName = BehaviorSubject<String>(value: "")
     var articleAssociatedSelectedURL = PublishSubject<String>()
@@ -222,6 +225,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var initialSortIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index)
+    }
+
+    var customSortTitles: Observable<[OWSortOption: String]> {
+        return userDefaultsProvider.values(key: .customSortTitles)
     }
 
     var fontGroupTypeIndex: Observable<Int> {
@@ -660,6 +667,12 @@ private extension GeneralSettingsVM {
             .setValues(key: UserDefaultsProvider.UDKey<Int>.initialSortIndex))
             .disposed(by: disposeBag)
 
+        customSortTitlesChanged
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<[OWSortOption: String]>.customSortTitles))
+            .disposed(by: disposeBag)
+
         fontGroupTypeObservable
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWFontGroupFamily>.fontGroupType))
@@ -742,11 +755,28 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
         navigationBarStyleSelectedIndex.onNext(OWNavigationBarEnforcement.default.index)
         modalStyleSelectedIndex.onNext(OWModalPresentationStyle.default.index)
         initialSortSelectedIndex.onNext(OWInitialSortStrategy.default.index)
+        customSortTitlesChanged.onNext([:])
         fontGroupTypeSelectedIndex.onNext(OWFontGroupFamilyIndexer.`default`.index)
         languageStrategySelectedIndex.onNext(OWLanguageStrategy.defaultStrategyIndex)
         showLoginPromptSelected.onNext(false)
         orientationSelectedEnforcement.onNext(OWOrientationEnforcement.default)
         commentActionsColorSelected.onNext(OWCommentActionsColor.default)
         commentActionsFontStyleSelected.onNext(OWCommentActionsFontStyle.default)
+    }
+}
+
+extension OWSortOption {
+    /// index into `GeneralSettingsVM.initialSortSettings`
+    var titleIndex: Int {
+        switch self {
+        case .best:
+            return 1
+        case .newest:
+            return 2
+        case .oldest:
+            return 3
+        default:
+            return 0
+        }
     }
 }
