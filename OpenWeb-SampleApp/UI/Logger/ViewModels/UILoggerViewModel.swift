@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol UILoggerViewModelingInputs {
     func log(text: String)
@@ -15,8 +15,8 @@ protocol UILoggerViewModelingInputs {
 }
 
 protocol UILoggerViewModelingOutputs {
-    var loggerText: Observable<String> { get }
-    var title: Observable<String> { get }
+    var loggerText: AnyPublisher<String, Never> { get }
+    var title: AnyPublisher<String, Never> { get }
 }
 
 protocol UILoggerViewModeling {
@@ -28,32 +28,32 @@ class UILoggerViewModel: UILoggerViewModeling, UILoggerViewModelingInputs, UILog
     var inputs: UILoggerViewModelingInputs { return self }
     var outputs: UILoggerViewModelingOutputs { return self }
 
-    let _title = BehaviorSubject<String>(value: "")
-    var title: Observable<String> {
+    let _title = CurrentValueSubject<String, Never>(value: "")
+    var title: AnyPublisher<String, Never> {
         return _title
-                .asObservable()
+                .eraseToAnyPublisher()
     }
 
-    private let _loggerText = BehaviorSubject<String>(value: "")
-    var loggerText: Observable<String> {
+    private let _loggerText = CurrentValueSubject<String, Never>(value: "")
+    var loggerText: AnyPublisher<String, Never> {
         return _loggerText
-                .asObservable()
+                .eraseToAnyPublisher()
     }
 
     init(title: String = "") {
-        self._title.onNext(title)
+        self._title.send(title)
     }
 
     func log(text: String) {
         _ = _loggerText
-            .take(1)
-            .subscribe(onNext: { [weak self] lastText in
+            .prefix(1)
+            .sink(receiveValue: { [weak self] lastText in
                 guard let self else { return }
-                self._loggerText.onNext(lastText + "\n" + text)
+                self._loggerText.send(lastText + "\n" + text)
             })
     }
 
     func clear() {
-        _loggerText.onNext("")
+        _loggerText.send("")
     }
 }

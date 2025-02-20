@@ -95,7 +95,7 @@ class PreconversationViewsWithAdVC: UIViewController {
         viewModel.inputs.setNavigationController(self.navigationController)
         viewModel.inputs.setPresentationalVC(self)
 
-        viewModel.outputs.floatingViewViewModel.inputs.setContentView.onNext(loggerView)
+        viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
 
         viewModel.outputs.cells
             .bind(to: tableView.rx.items) { [weak self] tableView, _, option in

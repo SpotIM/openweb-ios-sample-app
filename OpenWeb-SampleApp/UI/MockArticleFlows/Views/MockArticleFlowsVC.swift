@@ -195,7 +195,7 @@ private extension MockArticleFlowsVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        viewModel.outputs.floatingViewViewModel.inputs.setContentView.onNext(loggerView)
+        viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
 
         // Setting those in the VM for integration with the SDK
         viewModel.inputs.setNavigationController(self.navigationController)
