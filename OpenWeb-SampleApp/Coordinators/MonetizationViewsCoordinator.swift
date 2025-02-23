@@ -42,6 +42,7 @@ class MonetizationViewsCoordinator: BaseCoordinator<Void> {
 private extension MonetizationViewsCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MonetizationViewsViewModeling) {
         viewModel.outputs.openSingleAdExample
+            .asObservable()
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
                 let singleAdExampleViewModel = SingleAdExampleViewModel(postId: postId)
@@ -53,6 +54,7 @@ private extension MonetizationViewsCoordinator {
             .disposed(by: disposeBag)
 
         viewModel.outputs.openPreconversationWithAdExample
+            .asObservable()
             .subscribe(
                 onNext: { [weak self] dataModel in
                     guard let self else { return }

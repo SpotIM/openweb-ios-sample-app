@@ -5,12 +5,12 @@
 //  Created by Anael on 11/12/2024.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class PreconversationFlowsWithAdVC: UIViewController {
     private let viewModel: PreconversationFlowsWithAdViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private struct Metrics {
         static let loggerViewWidth: CGFloat = 300
@@ -98,7 +98,7 @@ class PreconversationFlowsWithAdVC: UIViewController {
         viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
 
         viewModel.outputs.cells
-            .bind(to: tableView.rx.items) { [weak self] tableView, _, option in
+            .bind(to: tableView.rowsSubscriber { [weak self] tableView, _, option in
                 guard let self else { return UITableViewCell() }
                     switch option {
                     case .image:
@@ -128,23 +128,23 @@ class PreconversationFlowsWithAdVC: UIViewController {
                         cell.configure(with: self.viewModel.outputs.preconversationCellViewModel, tableView: tableView)
                         return cell
                     }
-            }
-            .disposed(by: disposeBag)
+            })
+            .store(in: &cancellables)
 
         viewModel.outputs.articleImageURL
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] url in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] url in
                 self?.articleImageURL = url
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.loggerEnabled
-            .delay(.milliseconds(10), scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] loggerEnabled in
+            .delay(for: .milliseconds(10), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] loggerEnabled in
                 guard let self else { return }
                 self.floatingLoggerView.isHidden = !loggerEnabled
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

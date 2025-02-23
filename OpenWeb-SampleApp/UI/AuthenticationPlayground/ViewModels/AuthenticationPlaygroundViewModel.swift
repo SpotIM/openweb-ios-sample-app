@@ -182,7 +182,7 @@ private extension AuthenticationPlaygroundViewModel {
             .store(in: &cancellables)
 
         _selectedGenericSSOOptionIndex
-            .delay(for: .milliseconds(Metrics.delayInsertSSOPresetData), scheduler: RunLoop.main)
+            .delay(for: .milliseconds(Metrics.delayInsertSSOPresetData), scheduler: DispatchQueue.main)
             .withLatestFrom(genericSSOOptions) { index, options -> GenericSSOAuthentication? in
                 guard !options.isEmpty else {
                     DLog("There isn't any generic SSO preset")
