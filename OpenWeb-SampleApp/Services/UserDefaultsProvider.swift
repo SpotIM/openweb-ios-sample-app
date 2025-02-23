@@ -137,7 +137,7 @@ extension UserDefaults {
     func dataPublisher(for key: String) -> AnyPublisher<Data?, Never> {
         NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)
             .map { [weak self] _ in self?.data(forKey: key) }
-            .prepend(UserDefaults.standard.data(forKey: key))
+            .prepend(data(forKey: key))
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
