@@ -341,7 +341,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 011E97193E9DFD306B3CFF08 /* Pods-OpenWeb-SampleApp.releaseads.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Ads";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0;
@@ -442,7 +442,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F18F1768AC170BBF3EB547A0 /* Pods-OpenWeb-SampleApp.ads.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-Ads;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0;
