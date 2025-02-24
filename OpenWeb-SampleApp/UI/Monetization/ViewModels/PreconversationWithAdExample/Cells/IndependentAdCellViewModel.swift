@@ -59,7 +59,7 @@ public final class IndependentAdCellViewModel: IndependentAdCellViewModeling,
 private extension IndependentAdCellViewModel {
     func setupObservers() {
         #if ADS
-        let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0))
+        let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0, component: .independentAd))
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
 
         let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in

@@ -55,7 +55,7 @@ class SingleAdExampleViewModel: SingleAdExampleViewModeling, SingleAdExampleView
 private extension SingleAdExampleViewModel {
     func setupObservers() {
         #if ADS
-        let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0))
+        let adConfiguration = OWIAUAdConfiguration.server(remote: .tmsServer(index: 0, component: .independentAd))
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
         let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in
             self?.loggerViewModel.inputs.log(text: eventType.description)
