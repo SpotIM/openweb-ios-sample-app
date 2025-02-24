@@ -42,11 +42,10 @@ class NetworkSettingsView: UIView {
     }()
 
     private lazy var customNamespaceTextField: TextFieldSetting = {
-        var customURLTextField = TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
+        return TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
                                                   placeholder: "Example: ntfs",
                                                   accessibilityPrefixId: Metrics.identifier,
                                                   font: FontBook.helperLight)
-        return customURLTextField
     }()
 
     private let viewModel: NetworkSettingsViewModeling
