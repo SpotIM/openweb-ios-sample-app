@@ -42,6 +42,13 @@ class NetworkSettingsView: UIView {
                                        items: items)
     }()
 
+    private lazy var customNamespaceTextField: TextFieldSetting = {
+        return TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
+                                                  placeholder: "Example: ntfs",
+                                                  accessibilityPrefixId: Metrics.identifier,
+                                                  font: FontBook.helperLight)
+    }()
+
     private let viewModel: NetworkSettingsViewModeling
     private var cancellables = Set<AnyCancellable>()
 
@@ -77,15 +84,45 @@ private extension NetworkSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedNetworkEnvironment)
+        stackView.addArrangedSubview(customNamespaceTextField)
     }
 
     func setupObservers() {
-        viewModel.outputs.networkEnvironmentIndex
+        viewModel.outputs.networkEnvironment
+            .map { $0.index }
             .assign(to: \.selectedSegmentIndex, on: segmentedNetworkEnvironment.segmentedControl)
             .store(in: &cancellables)
 
+        viewModel.outputs.networkEnvironment
+            .map {
+                switch $0 {
+                case .custom(let path):
+                    return path
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .assign(to: \.text, on: customNamespaceTextField.textFieldControl)
+            .store(in: &cancellables)
+
+        // Custom network environment
+        Publishers.CombineLatest(segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher, customNamespaceTextField.textFieldControl.textPublisher.unwrap())
+            .filter { $0.0 == OWNetworkEnvironment.custom(namespace: nil).index }
+            .map { OWNetworkEnvironment(from: $0.0, namespace: $0.1) }
+            .bind(to: viewModel.inputs.networkEnvironmentSelected)
+            .store(in: &cancellables)
+
+        // Non custom network environment
         segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher
-            .bind(to: viewModel.inputs.networkEnvironmentSelectedIndex)
+            .filter { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
+            .map { OWNetworkEnvironment(from: $0) }
+            .bind(to: viewModel.inputs.networkEnvironmentSelected)
+            .store(in: &cancellables)
+
+        segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher
+            .map { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
+            .assign(to: \.isHidden, on: customNamespaceTextField)
             .store(in: &cancellables)
     }
 }

@@ -11,14 +11,15 @@ import Combine
 import OpenWebSDK
 
 protocol NetworkSettingsViewModelingInputs {
-    var networkEnvironmentSelectedIndex: CurrentValueSubject<Int, Never> { get }
+    var networkEnvironmentSelected: CurrentValueSubject<OWNetworkEnvironment, Never> { get }
 }
 
 protocol NetworkSettingsViewModelingOutputs {
     var title: String { get }
     var networkEnvironmentTitle: String { get }
+    var networkEnvironmentCustomTitle: String { get }
     var networkEnvironmentSettings: [String] { get }
-    var networkEnvironmentIndex: AnyPublisher<Int, Never> { get }
+    var networkEnvironment: AnyPublisher<OWNetworkEnvironment, Never> { get }
 }
 
 protocol NetworkSettingsViewModeling {
@@ -41,19 +42,25 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
         return NSLocalizedString("NetworkEnvironment", comment: "")
     }()
 
+    lazy var networkEnvironmentCustomTitle: String = {
+        return NSLocalizedString("NetworkEnvironmentCustom", comment: "")
+    }()
+
     lazy var networkEnvironmentSettings: [String] = {
         let _prod = NSLocalizedString("Production", comment: "")
         let _staging = NSLocalizedString("Staging", comment: "")
         let _cluster1d = NSLocalizedString("1DCluster", comment: "")
+        let _custom = NSLocalizedString("Custom", comment: "")
 
-        return [_prod, _staging, _cluster1d]
+        return [_prod, _staging, _cluster1d, _custom]
     }()
 
-    lazy var networkEnvironmentSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.default).index)
+    lazy var networkEnvironmentSelected = CurrentValueSubject<OWNetworkEnvironment, Never>(
+        value: userDefaultsProvider.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.default)
+    )
 
-    var networkEnvironmentIndex: AnyPublisher<Int, Never> {
-        return networkEnvironmentSelectedIndex
-            .removeDuplicates()
+    var networkEnvironment: AnyPublisher<OWNetworkEnvironment, Never> {
+        return networkEnvironmentSelected
             .eraseToAnyPublisher()
     }
 
@@ -65,9 +72,8 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
 
 private extension NetworkSettingsVM {
     func setupObservers() {
-        networkEnvironmentSelectedIndex
+        networkEnvironmentSelected
             .dropFirst()
-            .map { OWNetworkEnvironment(from: $0) }
             .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
             .store(in: &cancellables)
     }
@@ -75,6 +81,6 @@ private extension NetworkSettingsVM {
 
 extension NetworkSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        networkEnvironmentSelectedIndex.send(OWNetworkEnvironment.default.index)
+        networkEnvironmentSelected.send(OWNetworkEnvironment.default)
     }
 }
