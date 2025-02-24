@@ -122,6 +122,15 @@ private extension NetworkSettingsView {
 
         segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher
             .map { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
+            .removeDuplicates()
+            .handleEvents(receiveOutput: { [weak self] isHidden in
+                guard let self else { return }
+                if isHidden {
+                    customNamespaceTextField.textFieldControl.resignFirstResponder()
+                } else {
+                    customNamespaceTextField.textFieldControl.becomeFirstResponder()
+                }
+            })
             .assign(to: \.isHidden, on: customNamespaceTextField)
             .store(in: &cancellables)
     }
