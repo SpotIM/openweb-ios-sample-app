@@ -142,12 +142,10 @@ class TestAPIViewModel: TestAPIViewModeling,
                 switch env {
                 case .production:
                     return nil // no label for production
-                case .staging:
-                    return NSLocalizedString("Staging", comment: "")
+                case .staging(let namespace):
+                    return NSLocalizedString("Staging", comment: "") + " " + (namespace ?? "")
                 case .cluster1d:
                     return NSLocalizedString("1DCluster", comment: "")
-                case .custom(let path):
-                    return NSLocalizedString("Custom: \(path ?? "")", comment: "")
                 }
 
             }

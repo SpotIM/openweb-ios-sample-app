@@ -50,9 +50,8 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
         let _prod = NSLocalizedString("Production", comment: "")
         let _staging = NSLocalizedString("Staging", comment: "")
         let _cluster1d = NSLocalizedString("1DCluster", comment: "")
-        let _custom = NSLocalizedString("Custom", comment: "")
 
-        return [_prod, _staging, _cluster1d, _custom]
+        return [_prod, _staging, _cluster1d]
     }()
 
     lazy var networkEnvironmentSelected = CurrentValueSubject<OWNetworkEnvironment, Never>(

@@ -91,7 +91,7 @@ internal class DemoUserAuthentication {
         #if BETA
         let env = OpenWeb.manager.environment
         urlString = Metrics.codeBURLPath(env: env)
-        environment = env == .staging ? "staging" : "production"
+        environment = if case .staging = env { "staging" } else { "production" }
         #endif
         guard let url = URL(string: urlString) else { return }
 
