@@ -41,6 +41,13 @@ class NetworkSettingsView: UIView {
                                        items: items)
     }()
 
+    private lazy var customNamespaceTextField: TextFieldSetting = {
+        return TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
+                                                  placeholder: "Example: ntfs",
+                                                  accessibilityPrefixId: Metrics.identifier,
+                                                  font: FontBook.helperLight)
+    }()
+
     private let viewModel: NetworkSettingsViewModeling
     private let disposeBag = DisposeBag()
 
@@ -76,15 +83,45 @@ private extension NetworkSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedNetworkEnvironment)
+        stackView.addArrangedSubview(customNamespaceTextField)
     }
 
     func setupObservers() {
-        viewModel.outputs.networkEnvironmentIndex
+        viewModel.outputs.networkEnvironment
+            .map { $0.index }
             .bind(to: segmentedNetworkEnvironment.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.networkEnvironment
+            .map {
+                switch $0 {
+                case .custom(let path):
+                    return path
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .bind(to: customNamespaceTextField.rx.textFieldText)
+            .disposed(by: disposeBag)
+
+        // Custom network environment
+        Observable.combineLatest(segmentedNetworkEnvironment.rx.selectedSegmentIndex, customNamespaceTextField.rx.textFieldText.unwrap())
+            .filter { $0.0 == OWNetworkEnvironment.custom(namespace: nil).index }
+            .map { OWNetworkEnvironment(from: $0.0, namespace: $0.1) }
+            .bind(to: viewModel.inputs.networkEnvironmentSelected)
+            .disposed(by: disposeBag)
+
+        // Non custom network environment
         segmentedNetworkEnvironment.rx.selectedSegmentIndex
-            .bind(to: viewModel.inputs.networkEnvironmentSelectedIndex)
+            .filter { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
+            .map { OWNetworkEnvironment(from: $0) }
+            .bind(to: viewModel.inputs.networkEnvironmentSelected)
+            .disposed(by: disposeBag)
+
+        segmentedNetworkEnvironment.rx.selectedSegmentIndex
+            .map { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
+            .bind(to: customNamespaceTextField.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }
