@@ -334,8 +334,8 @@ private extension MockArticleFlowsVC {
             .store(in: &cancellables)
 
         viewModel.outputs.loggerEnabled
-            .delay(for: .milliseconds(10), scheduler: RunLoop.main)
-            .receive(on: RunLoop.main)
+            .delay(for: .milliseconds(10), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loggerEnabled in
                 guard let self else { return }
                 self.floatingLoggerView.isHidden = !loggerEnabled

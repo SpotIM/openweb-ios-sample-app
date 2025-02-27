@@ -152,7 +152,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     var dismissing = PassthroughSubject<Void, Never>()
     var dismissed: AnyPublisher<Void, Never> {
         return dismissing
-            .delay(for: .milliseconds(250), scheduler: RunLoop.main) // Allow some time for dismissing animation
+            .delay(for: .milliseconds(250), scheduler: DispatchQueue.main) // Allow some time for dismissing animation
             .eraseToAnyPublisher()
     }
 
@@ -374,7 +374,7 @@ private extension AuthenticationPlaygroundViewModel {
             })
             .withLatestFrom(shouldAutomaticallyDismiss)
             .filter { $0 == true }
-            .delay(for: .milliseconds(Metrics.delayUntilDismissVC), scheduler: RunLoop.main)
+            .delay(for: .milliseconds(Metrics.delayUntilDismissVC), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
                 // 7. Rx back to the view layer to dismiss itself
                 self?.outputs.dismissVC.send()
@@ -429,7 +429,7 @@ private extension AuthenticationPlaygroundViewModel {
             })
             .withLatestFrom(shouldAutomaticallyDismiss)
             .filter { $0 == true }
-            .delay(for: .milliseconds(Metrics.delayUntilDismissVC), scheduler: RunLoop.main)
+            .delay(for: .milliseconds(Metrics.delayUntilDismissVC), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
                 // 5. Rx back to the view layer to dismiss itself
                 self?.outputs.dismissVC.send()

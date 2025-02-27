@@ -94,13 +94,13 @@ private extension UILoggerView {
 
     func setupObservers() {
         viewModel.outputs.loggerText
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .assign(to: \.text, on: loggerTextView)
             .store(in: &cancellables)
 
         viewModel.outputs.loggerText
             .throttle(for: .milliseconds(Metrics.delayScrollToBottom), scheduler: DispatchQueue.main, latest: true)
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
                 self.scrollTextViewToBottom(textView: self.loggerTextView)

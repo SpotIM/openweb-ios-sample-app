@@ -196,7 +196,7 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
@@ -259,7 +259,7 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
@@ -322,7 +322,7 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
@@ -385,7 +385,7 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0

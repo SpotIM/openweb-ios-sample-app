@@ -121,7 +121,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
                 .first()
                 .eraseToAnyPublisher()
         }
-        .delay(for: .milliseconds(Metrics.timeForPersistenceToUpdate), scheduler: RunLoop.main)
+        .delay(for: .milliseconds(Metrics.timeForPersistenceToUpdate), scheduler: DispatchQueue.main)
         .share()
         .eraseToAnyPublisher()
     }()
