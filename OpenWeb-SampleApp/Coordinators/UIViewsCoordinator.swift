@@ -36,6 +36,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
 
         // Child coordinators
         let mockArticleIndependentCoordinator = viewsVM.outputs.openMockArticleScreen
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.actionsViewSettings(data: dataModel)
@@ -47,6 +48,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
             }
 
         let viewsExamplesCoordinator = viewsVM.outputs.openExamplesScreen
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
@@ -58,6 +60,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
             }
 
         let monetizationCoordinator = viewsVM.outputs.openMonetizationScreen
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
