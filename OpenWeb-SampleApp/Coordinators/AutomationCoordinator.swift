@@ -9,7 +9,7 @@
 #if AUTOMATION
 
 import Foundation
-import RxSwift
+import Combine
 
 class AutomationCoordinator: BaseCoordinator<Void> {
 
@@ -20,7 +20,7 @@ class AutomationCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -30,14 +30,14 @@ class AutomationCoordinator: BaseCoordinator<Void> {
         let automationVM: AutomationViewModeling = AutomationViewModel(dataModel: conversationDataModel)
         let automationVC = AutomationVC(viewModel: automationVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         router.push(automationVC,
                     animated: true,
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }
 
