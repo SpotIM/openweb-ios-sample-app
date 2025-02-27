@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ToolbarElementAction {
+enum ToolbarElementAction: Hashable {
     case append(text: String)
     case removeAll
 }
