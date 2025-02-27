@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ToolbarElementModel {
+struct ToolbarElementModel: Hashable {
     let emoji: String
     let accessibility: String
     let action: ToolbarElementAction

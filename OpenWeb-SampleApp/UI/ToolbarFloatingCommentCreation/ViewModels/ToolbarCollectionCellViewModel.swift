@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol ToolbarCollectionCellViewModelingInputs {}
 
 protocol ToolbarCollectionCellViewModelingOutputs {
-    var emoji: Observable<String> { get }
+    var emoji: AnyPublisher<String, Never> { get }
     var action: ToolbarElementAction { get }
     var accessibilityPrefix: String { get }
 }
@@ -30,8 +30,8 @@ class ToolbarCollectionCellViewModel: ToolbarCollectionCellViewModeling,
 
     private let model: ToolbarElementModel
 
-    private let _emoji = BehaviorSubject<String?>(value: nil)
-    var emoji: Observable<String> {
+    private let _emoji = CurrentValueSubject<String?, Never>(value: nil)
+    var emoji: AnyPublisher<String, Never> {
         return _emoji
             .unwrap()
     }
@@ -47,6 +47,16 @@ class ToolbarCollectionCellViewModel: ToolbarCollectionCellViewModeling,
     init(model: ToolbarElementModel) {
         self.model = model
 
-        _emoji.onNext(model.emoji)
+        _emoji.send(model.emoji)
+    }
+}
+
+extension ToolbarCollectionCellViewModel: Hashable {
+    static func == (lhs: ToolbarCollectionCellViewModel, rhs: ToolbarCollectionCellViewModel) -> Bool {
+        return lhs.model == rhs.model
+    }
+
+    func hash(into hasher: inout Hasher) {
+        model.hash(into: &hasher)
     }
 }
