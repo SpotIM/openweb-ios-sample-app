@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import CombineCocoa
+import CombineExt
 import OpenWebSDK
 
 class GeneralSettingsView: UIView {
@@ -379,12 +380,12 @@ private extension GeneralSettingsView {
             .store(in: &cancellables)
 
         viewModel.outputs.customSortTitles
-            .subscribe(onNext: { [weak self] customSortTitles in
+            .sink(receiveValue: { [weak self] customSortTitles in
                 for option in OWSortOption.allCases {
-                    self?.customSortTitles[option]?.rx.textFieldText.onNext(customSortTitles[option] ?? "")
+                    self?.customSortTitles[option]?.textFieldControl.text = customSortTitles[option]
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.fontGroupTypeIndex
             .assign(to: \.selectedSegmentIndex, on: segmentedFontGroupType.segmentedControl)
@@ -465,14 +466,16 @@ private extension GeneralSettingsView {
             .store(in: &cancellables)
 
         let sortedCustomSortTitlesSettings = OWSortOption.allCases.compactMap { customSortTitles[$0] }
-        Observable.combineLatest(sortedCustomSortTitlesSettings.map { $0.rx.textFieldText }) { textValues in
-            return zip(OWSortOption.allCases, textValues)
-                .reduce(into: [OWSortOption: String]()) { result, optionTextTuple in
-                    result[optionTextTuple.0] = optionTextTuple.1
-                }
-        }
-        .bind(to: viewModel.inputs.customSortTitlesChanged)
-        .disposed(by: disposeBag)
+        sortedCustomSortTitlesSettings.map { $0.textFieldControl.textPublisher }
+            .combineLatest()
+            .map { textValues in
+                return zip(OWSortOption.allCases, textValues)
+                    .reduce(into: [OWSortOption: String]()) { result, optionTextTuple in
+                        result[optionTextTuple.0] = optionTextTuple.1
+                    }
+            }
+            .bind(to: viewModel.inputs.customSortTitlesChanged)
+            .store(in: &cancellables)
 
         segmentedFontGroupType.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.fontGroupTypeSelectedIndex)

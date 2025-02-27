@@ -23,7 +23,7 @@ protocol GeneralSettingsViewModelingInputs {
     var navigationBarStyleSelectedIndex: CurrentValueSubject<Int, Never> { get }
     var modalStyleSelectedIndex: CurrentValueSubject<Int, Never> { get }
     var initialSortSelectedIndex: CurrentValueSubject<Int, Never> { get }
-    var customSortTitlesChanged: PublishSubject<[OWSortOption: String]> { get }
+    var customSortTitlesChanged: CurrentValueSubject<[OWSortOption: String], Never> { get }
     var fontGroupTypeSelectedIndex: CurrentValueSubject<Int, Never> { get }
     var customFontGroupSelectedName: CurrentValueSubject<String, Never> { get }
     var articleAssociatedSelectedURL: CurrentValueSubject<String, Never> { get }
@@ -63,7 +63,7 @@ protocol GeneralSettingsViewModelingOutputs {
     var navigationBarStyleIndex: AnyPublisher<Int, Never> { get }
     var modalStyleIndex: AnyPublisher<Int, Never> { get }
     var initialSortIndex: AnyPublisher<Int, Never> { get }
-    var customSortTitles: Observable<[OWSortOption: String]> { get }
+    var customSortTitles: AnyPublisher<[OWSortOption: String], Never> { get }
     var fontGroupTypeIndex: AnyPublisher<Int, Never> { get }
     var customFontGroupTypeNameTitle: String { get }
     var customFontGroupTypeName: AnyPublisher<String, Never> { get }
@@ -140,7 +140,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     )
     lazy var modalStyleSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
     lazy var initialSortSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index))
-    var customSortTitlesChanged = PublishSubject<[OWSortOption: String]>()
+    lazy var customSortTitlesChanged = CurrentValueSubject<[OWSortOption: String], Never>(userDefaultsProvider.get(key: .customSortTitles, defaultValue: [:]))
     lazy var fontGroupTypeSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default).index)
     lazy var customFontGroupSelectedName = CurrentValueSubject<String, Never>(userDefaultsProvider.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default).name)
     lazy var articleAssociatedSelectedURL = CurrentValueSubject<String, Never>(userDefaultsProvider.get(key: .articleAssociatedURL, defaultValue: ""))
@@ -259,7 +259,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
             .eraseToAnyPublisher()
     }
 
-    var customSortTitles: Observable<[OWSortOption: String]> {
+    var customSortTitles: AnyPublisher<[OWSortOption: String], Never> {
         return userDefaultsProvider.values(key: .customSortTitles)
     }
 
@@ -647,10 +647,9 @@ private extension GeneralSettingsVM {
             .store(in: &cancellables)
 
         customSortTitlesChanged
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<[OWSortOption: String]>.customSortTitles))
-            .disposed(by: disposeBag)
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: .customSortTitles))
+            .store(in: &cancellables)
 
         fontGroupTypeObservable
             .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWFontGroupFamily>.fontGroupType))
@@ -728,6 +727,7 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
         navigationBarStyleSelectedIndex.send(OWNavigationBarEnforcement.default.index)
         modalStyleSelectedIndex.send(OWModalPresentationStyle.default.index)
         initialSortSelectedIndex.send(OWInitialSortStrategy.default.index)
+        customSortTitlesChanged.send([:])
         fontGroupTypeSelectedIndex.send(OWFontGroupFamilyIndexer.`default`.index)
         languageStrategySelectedIndex.send(OWLanguageStrategy.defaultStrategyIndex)
         showLoginPromptSelected.send(false)
@@ -781,7 +781,7 @@ extension OWLanguageStrategy {
     }
 }
 
-extension OWSortOption: Codable {
+extension OWSortOption {
     /// index into `GeneralSettingsVM.initialSortSettings`
     var titleIndex: Int {
         switch self {
