@@ -44,6 +44,7 @@ class ViewsExamplesCoordinator: BaseCoordinator<Void> {
 private extension ViewsExamplesCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: UIViewsExamplesViewModeling) {
         viewModel.outputs.openConversationBelowVideo
+            .asObservable()
             .subscribe(onNext: { [weak self] postId in
                 guard let self else { return }
                 let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
