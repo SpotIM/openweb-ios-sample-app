@@ -35,6 +35,7 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
                     completion: vcPopped)
 
         let mockArticleFlowCoordinator = flowsVM.outputs.openMockArticleScreen
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
@@ -46,6 +47,7 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
             }
 
         let monetizationCoordinator = flowsVM.outputs.openMonetizationScreen
+            .asObservable()
             .flatMap { [weak self] dataModel -> Observable<Void> in
                 guard let self else { return .empty() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
