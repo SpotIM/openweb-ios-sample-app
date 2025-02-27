@@ -8,23 +8,23 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 import OpenWebSDK
 
 #if BETA
 
 protocol TestingPlaygroundViewModelingInputs {
-    var playgroundPushModeTapped: PublishSubject<Void> { get }
-    var playgroundPresentModeTapped: PublishSubject<Void> { get }
-    var playgroundIndependentModeTapped: PublishSubject<Void> { get }
+    var playgroundPushModeTapped: PassthroughSubject<Void, Never> { get }
+    var playgroundPresentModeTapped: PassthroughSubject<Void, Never> { get }
+    var playgroundIndependentModeTapped: PassthroughSubject<Void, Never> { get }
     func setNavigationController(_ navController: UINavigationController?)
     func setPresentationalVC(_ viewController: UIViewController)
 }
 
 protocol TestingPlaygroundViewModelingOutputs {
     var title: String { get }
-    var showError: Observable<String> { get }
-    var openTestingPlaygroundIndependent: Observable<SDKConversationDataModel> { get }
+    var showError: AnyPublisher<String, Never> { get }
+    var openTestingPlaygroundIndependent: AnyPublisher<SDKConversationDataModel, Never> { get }
 }
 
 protocol TestingPlaygroundViewModeling {
@@ -40,18 +40,18 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
 
     private let dataModel: SDKConversationDataModel
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private weak var navController: UINavigationController?
     private weak var presentationalVC: UIViewController?
 
-    let playgroundPushModeTapped = PublishSubject<Void>()
-    let playgroundPresentModeTapped = PublishSubject<Void>()
-    let playgroundIndependentModeTapped = PublishSubject<Void>()
+    let playgroundPushModeTapped = PassthroughSubject<Void, Never>()
+    let playgroundPresentModeTapped = PassthroughSubject<Void, Never>()
+    let playgroundIndependentModeTapped = PassthroughSubject<Void, Never>()
 
-    var openTestingPlaygroundIndependent: Observable<SDKConversationDataModel> {
+    var openTestingPlaygroundIndependent: AnyPublisher<SDKConversationDataModel, Never> {
         return playgroundIndependentModeTapped
-            .asObservable()
+            .eraseToAnyPublisher()
             .map { [weak self] _ -> SDKConversationDataModel? in
                 guard let self else { return nil }
                 return self.dataModel
@@ -59,10 +59,10 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
             .unwrap()
     }
 
-    private let _showError = PublishSubject<String>()
-    var showError: Observable<String> {
+    private let _showError = PassthroughSubject<String, Never>()
+    var showError: AnyPublisher<String, Never> {
         return _showError
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     var present: OWModalPresentationStyle {
@@ -92,11 +92,11 @@ private extension TestingPlaygroundViewModel {
     func setupObservers() {
 
         let playgroundPushModeObservable = playgroundPushModeTapped
-            .asObservable()
+            .eraseToAnyPublisher()
             .map { PresentationalModeCompact.push }
 
         let playgroundPresentModeObservable = playgroundPresentModeTapped
-            .asObservable()
+            .eraseToAnyPublisher()
             .map { [weak self] _ -> PresentationalModeCompact? in
                 guard let self else { return nil }
                 return PresentationalModeCompact.present(style: self.present)
@@ -104,8 +104,8 @@ private extension TestingPlaygroundViewModel {
             .unwrap()
 
         // Testing playground - Flows
-        Observable.merge(playgroundPushModeObservable, playgroundPresentModeObservable)
-            .subscribe(onNext: { [weak self] mode in
+        Publishers.Merge(playgroundPushModeObservable, playgroundPresentModeObservable)
+            .sink(receiveValue: { [weak self] mode in
                 guard let self else { return }
                 let postId = self.dataModel.postId
 
@@ -127,11 +127,11 @@ private extension TestingPlaygroundViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.testingPlayground error: \(message)")
-                        self._showError.onNext(message)
+                        self._showError.send(message)
                     }
                 })
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
