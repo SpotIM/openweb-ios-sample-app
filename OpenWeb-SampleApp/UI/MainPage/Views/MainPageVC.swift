@@ -8,8 +8,8 @@
 
 import UIKit
 import SnapKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 
 class MainPageVC: UIViewController {
     private struct Metrics {
@@ -28,7 +28,7 @@ class MainPageVC: UIViewController {
     }
 
     private let viewModel: MainPageViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var welcomeLbl: UILabel = {
         return UILabel()
@@ -185,12 +185,12 @@ private extension MainPageVC {
         versionLbl.text = viewModel.outputs.versionText
         buildLbl.text = viewModel.outputs.buildText
 
-        aboutBtn.rx.tap
+        aboutBtn.tapPublisher
             .bind(to: viewModel.inputs.aboutTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        exploreAPIBtn.rx.tap
+        exploreAPIBtn.tapPublisher
             .bind(to: viewModel.inputs.testAPITapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
