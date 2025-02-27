@@ -218,11 +218,11 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
                 .asPublisher()
                 .prefix(1) // No need to disposed since we only take 1
                 .sink(receiveCompletion: { result in
-    if case .failure(let error) = result {
-                    DLog("Silent SSO failed with error: \(error)")
-                    completion()
+                    if case .failure(let error) = result {
+                        DLog("Silent SSO failed with error: \(error)")
+                        completion()
                     }
-}, receiveValue: { userId in
+                }, receiveValue: { userId in
                     DLog("Silent SSO completed successfully with userId: \(userId)")
                     completion()
                 })
