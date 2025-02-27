@@ -46,6 +46,7 @@ class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
 private extension TestingPlaygroundCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: TestingPlaygroundViewModeling) {
         viewModel.outputs.openTestingPlaygroundIndependent
+            .asObservable()
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self else { return }
                 let testingPlaygroundIndependentVM = TestingPlaygroundIndependentViewModel(dataModel: dataModel)
