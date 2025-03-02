@@ -7,24 +7,24 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol UIViewsViewModelingInputs {
-    var preConversationTapped: PublishSubject<Void> { get }
-    var fullConversationTapped: PublishSubject<Void> { get }
-    var commentCreationTapped: PublishSubject<Void> { get }
-    var commentThreadTapped: PublishSubject<Void> { get }
-    var clarityDetailsTapped: PublishSubject<Void> { get }
-    var monetizationTapped: PublishSubject<Void> { get }
-    var examplesTapped: PublishSubject<Void> { get }
+    var preConversationTapped: PassthroughSubject<Void, Never> { get }
+    var fullConversationTapped: PassthroughSubject<Void, Never> { get }
+    var commentCreationTapped: PassthroughSubject<Void, Never> { get }
+    var commentThreadTapped: PassthroughSubject<Void, Never> { get }
+    var clarityDetailsTapped: PassthroughSubject<Void, Never> { get }
+    var monetizationTapped: PassthroughSubject<Void, Never> { get }
+    var examplesTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol UIViewsViewModelingOutputs {
     var title: String { get }
-    var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> { get }
-    var openExamplesScreen: Observable<OWPostId> { get }
-    var openMonetizationScreen: Observable<OWPostId> { get }
+    var openMockArticleScreen: AnyPublisher<SDKUIIndependentViewsActionSettings, Never> { get }
+    var openExamplesScreen: AnyPublisher<OWPostId, Never> { get }
+    var openMonetizationScreen: AnyPublisher<OWPostId, Never> { get }
 }
 
 protocol UIViewsViewModeling {
@@ -38,35 +38,35 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
 
     private let dataModel: SDKConversationDataModel
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    let preConversationTapped = PublishSubject<Void>()
-    let fullConversationTapped = PublishSubject<Void>()
-    let commentCreationTapped = PublishSubject<Void>()
-    let commentThreadTapped = PublishSubject<Void>()
-    let clarityDetailsTapped = PublishSubject<Void>()
-    let monetizationTapped = PublishSubject<Void>()
-    let examplesTapped = PublishSubject<Void>()
+    let preConversationTapped = PassthroughSubject<Void, Never>()
+    let fullConversationTapped = PassthroughSubject<Void, Never>()
+    let commentCreationTapped = PassthroughSubject<Void, Never>()
+    let commentThreadTapped = PassthroughSubject<Void, Never>()
+    let clarityDetailsTapped = PassthroughSubject<Void, Never>()
+    let monetizationTapped = PassthroughSubject<Void, Never>()
+    let examplesTapped = PassthroughSubject<Void, Never>()
 
-    private let _openMockArticleScreen = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
-    var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> {
+    private let _openMockArticleScreen = CurrentValueSubject<SDKUIIndependentViewsActionSettings?, Never>(value: nil)
+    var openMockArticleScreen: AnyPublisher<SDKUIIndependentViewsActionSettings, Never> {
         return _openMockArticleScreen
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _openExamplesScreen = BehaviorSubject<OWPostId?>(value: nil)
-    var openExamplesScreen: Observable<OWPostId> {
+    private let _openExamplesScreen = CurrentValueSubject<OWPostId?, Never>(value: nil)
+    var openExamplesScreen: AnyPublisher<OWPostId, Never> {
         return _openExamplesScreen
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _openMonetizationScreen = BehaviorSubject<OWPostId?>(value: nil)
-    var openMonetizationScreen: Observable<OWPostId> {
+    private let _openMonetizationScreen = CurrentValueSubject<OWPostId?, Never>(value: nil)
+    var openMonetizationScreen: AnyPublisher<OWPostId, Never> {
         return _openMonetizationScreen
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {
@@ -118,25 +118,26 @@ private extension UIViewsViewModel {
                 return model
             }
 
-        Observable.merge(
+        Publishers.MergeMany(
             fullConversationTappedModel,
             commentCreationTappedModel,
             commentThreadTappedModel,
             clarityDetailsTappedModel,
             preConversationTappedModel)
+        .map { $0 } // swiftlint:disable:this array_init
         .bind(to: _openMockArticleScreen)
-        .disposed(by: disposeBag)
+        .store(in: &cancellables)
 
         examplesTapped
-            .asObservable()
+            .eraseToAnyPublisher()
             .map { postId }
             .bind(to: _openExamplesScreen)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         monetizationTapped
-            .asObservable()
+            .eraseToAnyPublisher()
             .map { postId }
             .bind(to: _openMonetizationScreen)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

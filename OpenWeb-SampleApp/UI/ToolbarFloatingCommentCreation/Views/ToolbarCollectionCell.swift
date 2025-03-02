@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 
 class ToolbarCollectionCell: UICollectionViewCell {
     private struct Metrics {
@@ -36,7 +36,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
         return view
     }()
 
-    private var disposeBag: DisposeBag!
+    private var cancellables: Set<AnyCancellable> = []
     private var viewModel: ToolbarCollectionCellViewModeling!
 
     func configure(with viewModel: ToolbarCollectionCellViewModeling) {
@@ -74,10 +74,11 @@ private extension ToolbarCollectionCell {
     }
 
     func setupObservers() {
-        disposeBag = DisposeBag()
+        cancellables.removeAll()
 
         viewModel.outputs.emoji
-            .bind(to: titleLabel.rx.text)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: titleLabel)
+            .store(in: &cancellables)
     }
 }

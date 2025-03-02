@@ -7,16 +7,16 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol UIViewsExamplesViewModelingInputs {
-    var conversationBelowVideoTapped: PublishSubject<Void> { get }
+    var conversationBelowVideoTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol UIViewsExamplesViewModelingOutputs {
     var title: String { get }
-    var openConversationBelowVideo: Observable<OWPostId> { get }
+    var openConversationBelowVideo: AnyPublisher<OWPostId, Never> { get }
 }
 
 protocol UIViewsExamplesViewModeling {
@@ -29,15 +29,15 @@ class UIViewsExamplesViewModel: UIViewsExamplesViewModeling, UIViewsExamplesView
     var outputs: UIViewsExamplesViewModelingOutputs { return self }
 
     private let postId: OWPostId
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    let conversationBelowVideoTapped = PublishSubject<Void>()
+    let conversationBelowVideoTapped = PassthroughSubject<Void, Never>()
 
-    private let _openConversationBelowVideo = BehaviorSubject<OWPostId?>(value: nil)
-    var openConversationBelowVideo: Observable<OWPostId> {
+    private let _openConversationBelowVideo = CurrentValueSubject<OWPostId?, Never>(value: nil)
+    var openConversationBelowVideo: AnyPublisher<OWPostId, Never> {
         return _openConversationBelowVideo
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {
@@ -53,12 +53,12 @@ class UIViewsExamplesViewModel: UIViewsExamplesViewModeling, UIViewsExamplesView
 private extension UIViewsExamplesViewModel {
     func setupObservers() {
         conversationBelowVideoTapped
-            .asObservable()
+            .eraseToAnyPublisher()
             .map { [weak self] _ -> OWPostId? in
                 return self?.postId
             }
             .unwrap()
             .bind(to: _openConversationBelowVideo)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

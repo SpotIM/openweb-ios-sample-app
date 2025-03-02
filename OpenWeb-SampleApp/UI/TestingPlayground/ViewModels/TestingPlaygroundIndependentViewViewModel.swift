@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import OpenWebSDK
 
 #if BETA
@@ -19,7 +19,7 @@ protocol TestingPlaygroundIndependentViewModelingInputs {
 protocol TestingPlaygroundIndependentViewModelingOutputs {
     var title: String { get }
     var loggerViewModel: UILoggerViewModeling { get }
-    var testingPlaygroundView: Observable<UIView> { get }
+    var testingPlaygroundView: AnyPublisher<UIView, Never> { get }
 }
 
 protocol TestingPlaygroundIndependentViewModeling {
@@ -35,13 +35,13 @@ class TestingPlaygroundIndependentViewModel: TestingPlaygroundIndependentViewMod
 
     private let dataModel: SDKConversationDataModel
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    private let _testingPlaygroundView = BehaviorSubject<UIView?>(value: nil)
-    var testingPlaygroundView: Observable<UIView> {
+    private let _testingPlaygroundView = CurrentValueSubject<UIView?, Never>(value: nil)
+    var testingPlaygroundView: AnyPublisher<UIView, Never> {
         return _testingPlaygroundView
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {
@@ -62,8 +62,8 @@ private extension TestingPlaygroundIndependentViewModel {
     func setupObservers() {
 
         // Testing playground - Views
-        Observable.just(())
-            .subscribe(onNext: { [weak self] _ in
+        Just(())
+            .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
                 let postId = self.dataModel.postId
 
@@ -83,7 +83,7 @@ private extension TestingPlaygroundIndependentViewModel {
                     guard let self else { return }
                     switch result {
                     case .success(let view):
-                        self._testingPlaygroundView.onNext(view)
+                        self._testingPlaygroundView.send(view)
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.testingPlayground error: \(message)")
@@ -91,7 +91,7 @@ private extension TestingPlaygroundIndependentViewModel {
                     }
                 })
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
 

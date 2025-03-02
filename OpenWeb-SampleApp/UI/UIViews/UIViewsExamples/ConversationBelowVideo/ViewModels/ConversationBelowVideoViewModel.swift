@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import OpenWebSDK
 #if !PUBLIC_DEMO_APP
 import OpenWeb_SampleApp_Internal_Configs
@@ -17,21 +17,21 @@ protocol ConversationBelowVideoViewModelingInputs {}
 
 protocol ConversationBelowVideoViewModelingOutputs {
     var title: String { get }
-    var componentRetrievingError: Observable<OWError> { get }
-    var preConversationRetrieved: Observable<UIView> { get }
-    var conversationRetrieved: Observable<UIView> { get }
-    var commentCreationRetrieved: Observable<UIView> { get }
-    var clarityDetailsRetrieved: Observable<UIView> { get }
-    var webPageRetrieved: Observable<UIView> { get }
-    var reportReasonsRetrieved: Observable<UIView> { get }
-    var commentThreadRetrieved: Observable<UIView> { get }
-    var removeConversation: Observable<Void> { get }
-    var removeReportReasons: Observable<Void> { get }
-    var removeCommentCreation: Observable<Void> { get }
-    var removeClarityDetails: Observable<Void> { get }
-    var removeCommentThread: Observable<Void> { get }
-    var removeWebPage: Observable<Void> { get }
-    var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> { get }
+    var componentRetrievingError: AnyPublisher<OWError, Never> { get }
+    var preConversationRetrieved: AnyPublisher<UIView, Never> { get }
+    var conversationRetrieved: AnyPublisher<UIView, Never> { get }
+    var commentCreationRetrieved: AnyPublisher<UIView, Never> { get }
+    var clarityDetailsRetrieved: AnyPublisher<UIView, Never> { get }
+    var webPageRetrieved: AnyPublisher<UIView, Never> { get }
+    var reportReasonsRetrieved: AnyPublisher<UIView, Never> { get }
+    var commentThreadRetrieved: AnyPublisher<UIView, Never> { get }
+    var removeConversation: AnyPublisher<Void, Never> { get }
+    var removeReportReasons: AnyPublisher<Void, Never> { get }
+    var removeCommentCreation: AnyPublisher<Void, Never> { get }
+    var removeClarityDetails: AnyPublisher<Void, Never> { get }
+    var removeCommentThread: AnyPublisher<Void, Never> { get }
+    var removeWebPage: AnyPublisher<Void, Never> { get }
+    var openAuthentication: AnyPublisher<(OWSpotId, OWBasicCompletion), Never> { get }
 }
 
 protocol ConversationBelowVideoViewModeling {
@@ -52,96 +52,96 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         return NSLocalizedString("VideoExample", comment: "")
     }()
 
-    private let _componentRetrievingError = BehaviorSubject<OWError?>(value: nil)
-    var componentRetrievingError: Observable<OWError> {
+    private let _componentRetrievingError = CurrentValueSubject<OWError?, Never>(value: nil)
+    var componentRetrievingError: AnyPublisher<OWError, Never> {
         return _componentRetrievingError
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _preConversationRetrieved = BehaviorSubject<UIView?>(value: nil)
-    var preConversationRetrieved: Observable<UIView> {
+    private let _preConversationRetrieved = CurrentValueSubject<UIView?, Never>(value: nil)
+    var preConversationRetrieved: AnyPublisher<UIView, Never> {
         return _preConversationRetrieved
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _conversationRetrieved = PublishSubject<UIView>()
-    var conversationRetrieved: Observable<UIView> {
+    private let _conversationRetrieved = PassthroughSubject<UIView, Never>()
+    var conversationRetrieved: AnyPublisher<UIView, Never> {
         return _conversationRetrieved
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _commentCreationRetrieved = PublishSubject<UIView>()
-    var commentCreationRetrieved: Observable<UIView> {
+    private let _commentCreationRetrieved = PassthroughSubject<UIView, Never>()
+    var commentCreationRetrieved: AnyPublisher<UIView, Never> {
         return _commentCreationRetrieved
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _reportReasonsRetrieved = PublishSubject<UIView>()
-    var reportReasonsRetrieved: Observable<UIView> {
+    private let _reportReasonsRetrieved = PassthroughSubject<UIView, Never>()
+    var reportReasonsRetrieved: AnyPublisher<UIView, Never> {
         return _reportReasonsRetrieved
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _commentThreadRetrieved = PublishSubject<UIView>()
-    var commentThreadRetrieved: Observable<UIView> {
+    private let _commentThreadRetrieved = PassthroughSubject<UIView, Never>()
+    var commentThreadRetrieved: AnyPublisher<UIView, Never> {
         return _commentThreadRetrieved
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _clarityDetailsRetrieved = PublishSubject<UIView>()
-    var clarityDetailsRetrieved: Observable<UIView> {
+    private let _clarityDetailsRetrieved = PassthroughSubject<UIView, Never>()
+    var clarityDetailsRetrieved: AnyPublisher<UIView, Never> {
         return _clarityDetailsRetrieved
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _webPageRetrieved = PublishSubject<UIView>()
-    var webPageRetrieved: Observable<UIView> {
+    private let _webPageRetrieved = PassthroughSubject<UIView, Never>()
+    var webPageRetrieved: AnyPublisher<UIView, Never> {
         return _webPageRetrieved
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _removeConversation = PublishSubject<Void>()
-    var removeConversation: Observable<Void> {
+    private let _removeConversation = PassthroughSubject<Void, Never>()
+    var removeConversation: AnyPublisher<Void, Never> {
         return _removeConversation
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _removeReportReasons = PublishSubject<Void>()
-    var removeReportReasons: Observable<Void> {
+    private let _removeReportReasons = PassthroughSubject<Void, Never>()
+    var removeReportReasons: AnyPublisher<Void, Never> {
         return _removeReportReasons
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _removeCommentCreation = PublishSubject<Void>()
-    var removeCommentCreation: Observable<Void> {
+    private let _removeCommentCreation = PassthroughSubject<Void, Never>()
+    var removeCommentCreation: AnyPublisher<Void, Never> {
         return _removeCommentCreation
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _removeClarityDetails = PublishSubject<Void>()
-    var removeClarityDetails: Observable<Void> {
+    private let _removeClarityDetails = PassthroughSubject<Void, Never>()
+    var removeClarityDetails: AnyPublisher<Void, Never> {
         return _removeClarityDetails
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _removeCommentThread = PublishSubject<Void>()
-    var removeCommentThread: Observable<Void> {
+    private let _removeCommentThread = PassthroughSubject<Void, Never>()
+    var removeCommentThread: AnyPublisher<Void, Never> {
         return _removeCommentThread
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _removeWebPage = PublishSubject<Void>()
-    var removeWebPage: Observable<Void> {
+    private let _removeWebPage = PassthroughSubject<Void, Never>()
+    var removeWebPage: AnyPublisher<Void, Never> {
         return _removeWebPage
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _openAuthentication = PublishSubject<(OWSpotId, OWBasicCompletion)>()
-    var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> {
+    private let _openAuthentication = PassthroughSubject<(OWSpotId, OWBasicCompletion), Never>()
+    var openAuthentication: AnyPublisher<(OWSpotId, OWBasicCompletion), Never> {
         return _openAuthentication
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     private lazy var actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
@@ -154,11 +154,11 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         case (.preConversation, .contentPressed):
             self.retrieveConversationComponent()
         case (.conversation, .closeConversationPressed):
-            self._removeConversation.onNext()
+            self._removeConversation.send()
         case (.conversation, .openReportReason(let commentId, let parentId)):
             self.retrieveReportReasonsComponent(commentId: commentId, parentId: parentId)
         case (.reportReason, .closeReportReason):
-            self._removeReportReasons.onNext()
+            self._removeReportReasons.send()
         case (.conversation, .openCommentCreation(let commentCreationType)):
             self.retrieveCommentCreationComponent(type: commentCreationType)
         case (.conversation, .openClarityDetails(let data)):
@@ -166,9 +166,9 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         case (.commentThread, .openCommentCreation(let commentCreationType)):
             self.retrieveCommentCreationComponent(type: commentCreationType)
         case (.clarityDetails, .closeClarityDetails):
-            self._removeClarityDetails.onNext()
+            self._removeClarityDetails.send()
         case (.commenterAppeal, .closeClarityDetails):
-            self._removeClarityDetails.onNext()
+            self._removeClarityDetails.send()
         case (_, .openCommenterAppeal(let data)):
             self.retrieveCommenterAppealComponent(data: data)
         case (_, .communityGuidelinesPressed(let url)):
@@ -176,9 +176,9 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             let options = OWWebTabOptions(url: url, title: title)
             self.retrieveWebPageComponent(options: options)
         case (.commentCreation, .floatingCommentCreationDismissed):
-            self._removeCommentCreation.onNext()
+            self._removeCommentCreation.send()
         case (.webView, .closeWebView):
-            self._removeWebPage.onNext()
+            self._removeWebPage.send()
         case (_, .openOWProfile(let data)):
             let title = NSLocalizedString("ProfileTitle", comment: "")
             let options = OWWebTabOptions(url: data.url, title: title)
@@ -189,7 +189,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self.retrieveCommentThreadComponent(commentId: commentId,
                                                 performActionType: performActionType)
         case (.commentThread, .closeCommentThread):
-            self._removeCommentThread.onNext()
+            self._removeCommentThread.send()
         default:
             break
         }
@@ -201,7 +201,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
 
         switch routeringMode {
         case .none:
-            self._openAuthentication.onNext((OpenWeb.manager.spotId, completion))
+            self._openAuthentication.send((OpenWeb.manager.spotId, completion))
         default:
             break
         }
@@ -215,12 +215,15 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         if OpenWeb.manager.spotId == demoSpotId,
            let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
             _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
-                .take(1) // No need to disposed since we only take 1
-                .subscribe(onNext: { userId in
+                .asPublisher()
+                .prefix(1) // No need to disposed since we only take 1
+                .sink(receiveCompletion: { result in
+                    if case .failure(let error) = result {
+                        DLog("Silent SSO failed with error: \(error)")
+                        completion()
+                    }
+                }, receiveValue: { userId in
                     DLog("Silent SSO completed successfully with userId: \(userId)")
-                    completion()
-                }, onError: { error in
-                    DLog("Silent SSO failed with error: \(error)")
                     completion()
                 })
         } else {
@@ -274,9 +277,9 @@ private extension ConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.onNext(err)
+                self._componentRetrievingError.send(err)
             case.success(let view):
-                self._preConversationRetrieved.onNext(view)
+                self._preConversationRetrieved.send(view)
             }
         })
     }
@@ -296,9 +299,9 @@ private extension ConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.onNext(err)
+                self._componentRetrievingError.send(err)
             case.success(let view):
-                self._conversationRetrieved.onNext(view)
+                self._conversationRetrieved.send(view)
             }
         })
     }
@@ -328,9 +331,9 @@ private extension ConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.onNext(err)
+                self._componentRetrievingError.send(err)
             case.success(let view):
-                self._commentCreationRetrieved.onNext(view)
+                self._commentCreationRetrieved.send(view)
             }
         })
     }
@@ -349,9 +352,9 @@ private extension ConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.onNext(err)
+                self._componentRetrievingError.send(err)
             case.success(let view):
-                self._reportReasonsRetrieved.onNext(view)
+                self._reportReasonsRetrieved.send(view)
             }
         })
     }
@@ -370,9 +373,9 @@ private extension ConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.onNext(err)
+                self._componentRetrievingError.send(err)
             case.success(let view):
-                self._clarityDetailsRetrieved.onNext(view)
+                self._clarityDetailsRetrieved.send(view)
             }
         })
     }
@@ -390,9 +393,9 @@ private extension ConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.onNext(err)
+                self._componentRetrievingError.send(err)
             case.success(let view):
-                self._clarityDetailsRetrieved.onNext(view)
+                self._clarityDetailsRetrieved.send(view)
             }
         })
     }
@@ -414,9 +417,9 @@ private extension ConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.onNext(err)
+                self._componentRetrievingError.send(err)
             case.success(let view):
-                self._commentThreadRetrieved.onNext(view)
+                self._commentThreadRetrieved.send(view)
             }
         })
     }
@@ -434,9 +437,9 @@ private extension ConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.onNext(err)
+                self._componentRetrievingError.send(err)
             case.success(let view):
-                self._webPageRetrieved.onNext(view)
+                self._webPageRetrieved.send(view)
             }
         })
     }

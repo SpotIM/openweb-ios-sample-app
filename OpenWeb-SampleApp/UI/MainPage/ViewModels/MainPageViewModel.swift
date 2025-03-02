@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol MainPageViewModelingInputs {
-    var testAPITapped: PublishSubject<Void> { get }
-    var aboutTapped: PublishSubject<Void> { get }
+    var testAPITapped: PassthroughSubject<Void, Never> { get }
+    var aboutTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol MainPageViewModelingOutputs {
@@ -20,8 +20,8 @@ protocol MainPageViewModelingOutputs {
     var buildText: String { get }
     var welcomeText: String { get }
     var descriptionText: String { get }
-    var showAbout: Observable<Void> { get }
-    var testAPI: Observable<Void> { get }
+    var showAbout: AnyPublisher<Void, Never> { get }
+    var testAPI: AnyPublisher<Void, Never> { get }
 }
 
 protocol MainPageViewModeling {
@@ -63,16 +63,16 @@ class MainPageViewModel: MainPageViewModeling, MainPageViewModelingInputs, MainP
         return "\(NSLocalizedString("Build", comment: "")): \(buildNumber)"
     }()
 
-    let testAPITapped = PublishSubject<Void>()
-    let aboutTapped = PublishSubject<Void>()
+    let testAPITapped = PassthroughSubject<Void, Never>()
+    let aboutTapped = PassthroughSubject<Void, Never>()
 
-    var showAbout: Observable<Void> {
+    var showAbout: AnyPublisher<Void, Never> {
         aboutTapped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    var testAPI: Observable<Void> {
+    var testAPI: AnyPublisher<Void, Never> {
         testAPITapped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }
