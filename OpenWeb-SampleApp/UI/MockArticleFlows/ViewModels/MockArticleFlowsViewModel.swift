@@ -476,7 +476,6 @@ private extension MockArticleFlowsViewModel {
             if OpenWeb.manager.spotId == demoSpotId,
                let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
                 _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
-                    .asPublisher()
                     .prefix(1) // No need to disposed since we only take 1
                     .sink(receiveCompletion: { result in
                         if case .failure(let error) = result {
