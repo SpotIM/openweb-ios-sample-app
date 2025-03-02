@@ -8,14 +8,12 @@
 
 import Foundation
 import Combine
-import RxSwift
 
-protocol UserDefaultsProviderProtocol: UserDefaultsProviderRxCompatibilityProtocol, UserDefaultsProviderCombineProtocol {
+protocol UserDefaultsProviderProtocol: UserDefaultsProviderCombineProtocol {
     func get<T: Codable>(key: UserDefaultsProvider.UDKey<T>) -> T?
     func get<T: Codable>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T) -> T
     func save<T: Codable>(value: T, forKey key: UserDefaultsProvider.UDKey<T>)
     func remove<T: Codable>(key: UserDefaultsProvider.UDKey<T>)
-    var rxProtocol: UserDefaultsProviderRxCompatibilityProtocol { get }
 }
 
 protocol UserDefaultsProviderCombineProtocol {
@@ -24,19 +22,9 @@ protocol UserDefaultsProviderCombineProtocol {
     func setValues<T: Codable>(key: UserDefaultsProvider.UDKey<T>) -> AnySubscriber<T, Never>
 }
 
-// TODO: Remove this protocol when we remove RxSwift from the project.
-protocol UserDefaultsProviderRxCompatibilityProtocol {
-    func values<T: Codable>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T?) -> Observable<T>
-    func values<T: Codable>(key: UserDefaultsProvider.UDKey<T>) -> Observable<T>
-    func setValues<T: Codable>(key: UserDefaultsProvider.UDKey<T>) -> AnySubscriber<T, Never>
-}
-
 class UserDefaultsProvider: UserDefaultsProviderProtocol {
     // Singleton
     static let shared: UserDefaultsProviderProtocol = UserDefaultsProvider()
-
-    /// To keep old code working, will probably need to be replaced with the new `UserDefaultsProviderCombineProtocol`
-    var rxProtocol: UserDefaultsProviderRxCompatibilityProtocol { return self }
 
     private struct Metrics {
         static let suiteName = "com.open-web.demo-app"
@@ -95,17 +83,6 @@ class UserDefaultsProvider: UserDefaultsProviderProtocol {
         case commentActionsFontStyle
         case callingMethodOption
         case flowsLoggerEnabled
-    }
-}
-
-extension UserDefaultsProvider: UserDefaultsProviderRxCompatibilityProtocol {
-    func values<T: Codable>(key: UDKey<T>, defaultValue: T?) -> Observable<T> {
-        let publisher: AnyPublisher<T, Never> = values(key: key, defaultValue: defaultValue)
-        return publisher.asObservable()
-    }
-
-    func values<T: Codable>(key: UDKey<T>) -> Observable<T> {
-        values(key: key, defaultValue: nil)
     }
 }
 
