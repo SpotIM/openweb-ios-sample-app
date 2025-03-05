@@ -39,7 +39,7 @@ class MainPageCoordinator: BaseCoordinator<Void> {
         }
 
         // Define childs coordinators
-        let aboutCoordinator = Publishers.MergeMany(mainPageVM.outputs.showAbout.eraseToAnyPublisher().map { nil },
+        let aboutCoordinator = Publishers.MergeMany(mainPageVM.outputs.showAbout.map { nil },
                                                 deepLinkToAbout.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
@@ -47,7 +47,7 @@ class MainPageCoordinator: BaseCoordinator<Void> {
                 return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
 
-        let testAPICoordinator = Publishers.MergeMany(mainPageVM.outputs.testAPI.eraseToAnyPublisher().map { nil },
+        let testAPICoordinator = Publishers.MergeMany(mainPageVM.outputs.testAPI.map { nil },
                                                   deepLinkToTestAPI.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }

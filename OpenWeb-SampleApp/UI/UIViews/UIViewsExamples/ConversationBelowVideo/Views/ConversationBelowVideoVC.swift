@@ -288,7 +288,6 @@ private extension ConversationBelowVideoVC {
                 self.navigationController?.present(authenticationVC, animated: true)
 
                 return authenticationVM.outputs.dismissed
-                    .eraseToAnyPublisher()
                     .prefix(1)
                     .map { completion }
                     .eraseToAnyPublisher()

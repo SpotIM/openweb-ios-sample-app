@@ -458,7 +458,6 @@ private extension MockArticleFlowsViewModel {
             }
 
             _ = authenticationVM.outputs.dismissed
-                .eraseToAnyPublisher()
                 .prefix(1)
                 .sink(receiveValue: { [completion] _ in
                     completion()

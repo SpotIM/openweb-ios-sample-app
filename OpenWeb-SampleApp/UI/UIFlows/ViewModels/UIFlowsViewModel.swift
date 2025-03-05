@@ -112,7 +112,6 @@ private extension UIFlowsViewModel {
             .store(in: &cancellables)
 
         monetizationTapped
-            .eraseToAnyPublisher()
             .map { postId }
             .bind(to: _openMonetizationScreen)
             .store(in: &cancellables)

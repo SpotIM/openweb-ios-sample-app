@@ -62,7 +62,6 @@ class MonetizationViewsViewModel: MonetizationViewsViewModeling, MonetizationVie
 private extension MonetizationViewsViewModel {
     func setupObservers() {
         singleAdExampleTapped
-            .eraseToAnyPublisher()
             .map { [weak self] _ -> OWPostId? in
                 return self?.postId
             }
@@ -71,7 +70,6 @@ private extension MonetizationViewsViewModel {
             .store(in: &cancellables)
 
         preConversationWithAdTapped
-            .eraseToAnyPublisher()
             .map { [weak self] _ -> SDKUIIndependentViewsActionSettings? in
                 guard let self else { return nil }
                 let action = SDKUIIndependentViewType.preConversation

@@ -92,9 +92,7 @@ private extension TextFieldSetting {
         text
             .dropFirst() // Skip initialize CurrentValueSubject value
             .prefix(1) // Take first value after initialize
-            .sink { [weak self] value in
-                self?.textFieldControl.text = value
-            }
+            .assign(to: \.text, on: textFieldControl)
             .store(in: &cancellables)
 
         textFieldControl.controlEventPublisher(for: [.editingDidEnd, .editingDidEndOnExit])

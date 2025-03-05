@@ -51,7 +51,6 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
 
     var openTestingPlaygroundIndependent: AnyPublisher<SDKConversationDataModel, Never> {
         return playgroundIndependentModeTapped
-            .eraseToAnyPublisher()
             .map { [weak self] _ -> SDKConversationDataModel? in
                 guard let self else { return nil }
                 return self.dataModel
@@ -92,11 +91,9 @@ private extension TestingPlaygroundViewModel {
     func setupObservers() {
 
         let playgroundPushModeObservable = playgroundPushModeTapped
-            .eraseToAnyPublisher()
             .map { PresentationalModeCompact.push }
 
         let playgroundPresentModeObservable = playgroundPresentModeTapped
-            .eraseToAnyPublisher()
             .map { [weak self] _ -> PresentationalModeCompact? in
                 guard let self else { return nil }
                 return PresentationalModeCompact.present(style: self.present)

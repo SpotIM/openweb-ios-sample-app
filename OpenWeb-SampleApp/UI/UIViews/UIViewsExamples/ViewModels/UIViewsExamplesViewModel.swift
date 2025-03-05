@@ -53,7 +53,6 @@ class UIViewsExamplesViewModel: UIViewsExamplesViewModeling, UIViewsExamplesView
 private extension UIViewsExamplesViewModel {
     func setupObservers() {
         conversationBelowVideoTapped
-            .eraseToAnyPublisher()
             .map { [weak self] _ -> OWPostId? in
                 return self?.postId
             }

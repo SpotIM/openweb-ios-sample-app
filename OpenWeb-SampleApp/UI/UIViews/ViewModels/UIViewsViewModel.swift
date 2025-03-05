@@ -129,13 +129,11 @@ private extension UIViewsViewModel {
         .store(in: &cancellables)
 
         examplesTapped
-            .eraseToAnyPublisher()
             .map { postId }
             .bind(to: _openExamplesScreen)
             .store(in: &cancellables)
 
         monetizationTapped
-            .eraseToAnyPublisher()
             .map { postId }
             .bind(to: _openMonetizationScreen)
             .store(in: &cancellables)

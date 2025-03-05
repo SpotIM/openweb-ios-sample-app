@@ -51,7 +51,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         }
 
         // 2. Define childs coordinators
-        let settingsCoordinator = Publishers.MergeMany(testAPIVM.outputs.openSettings.eraseToAnyPublisher().map { nil },
+        let settingsCoordinator = Publishers.MergeMany(testAPIVM.outputs.openSettings.map { nil },
                                                 deepLinkToSettings.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
@@ -65,7 +65,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             }
             .eraseToAnyPublisher()
 
-        let authenticationPlaygroundCoordinator = Publishers.MergeMany(testAPIVM.outputs.openAuthentication.eraseToAnyPublisher().map { nil },
+        let authenticationPlaygroundCoordinator = Publishers.MergeMany(testAPIVM.outputs.openAuthentication.map { nil },
                                                                    deepLinkToAuthentication.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
@@ -129,7 +129,6 @@ class TestAPICoordinator: BaseCoordinator<Void> {
 
 #if AUTOMATION
         let automationCoordinator = testAPIVM.outputs.openAutomation
-            .eraseToAnyPublisher()
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
