@@ -652,10 +652,9 @@ private extension GeneralSettingsVM {
             .store(in: &cancellables)
 
         customSortTitlesChanged
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<[OWSortOption: String]>.customSortTitles))
-            .disposed(by: disposeBag)
+            .dropFirst(1)
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<[OWSortOption: String]>.customSortTitles))
+            .store(in: &cancellables)
 
         fontGroupTypeObservable
             .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWFontGroupFamily>.fontGroupType))
@@ -783,22 +782,6 @@ extension OWLanguageStrategy {
             return language.languageName
         default:
             return OWSupportedLanguage.defaultLanguage.languageName
-        }
-    }
-}
-
-extension OWSortOption {
-    /// index into `GeneralSettingsVM.initialSortSettings`
-    var titleIndex: Int {
-        switch self {
-        case .best:
-            return 1
-        case .newest:
-            return 2
-        case .oldest:
-            return 3
-        default:
-            return 0
         }
     }
 }

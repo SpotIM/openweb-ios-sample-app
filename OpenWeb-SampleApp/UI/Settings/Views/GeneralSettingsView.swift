@@ -388,12 +388,12 @@ private extension GeneralSettingsView {
             .store(in: &cancellables)
 
         viewModel.outputs.customSortTitles
-            .subscribe(onNext: { [weak self] customSortTitles in
+            .sink(receiveValue: { [weak self] customSortTitles in
                 for option in OWSortOption.allCases {
-                    self?.customSortTitles[option]?.rx.textFieldText.onNext(customSortTitles[option] ?? "")
+                    self?.customSortTitles[option]?.textFieldControl.text = customSortTitles[option] ?? ""
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.fontGroupTypeIndex
             .assign(to: \.selectedSegmentIndex, on: segmentedFontGroupType.segmentedControl)
