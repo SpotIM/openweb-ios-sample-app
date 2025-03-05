@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class AboutCoordinator: BaseCoordinator<Void> {
 
@@ -18,7 +18,7 @@ class AboutCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
         let aboutVM: AboutViewModeling = AboutViewModel()
         let aboutVC = AboutVC(viewModel: aboutVM)
 
@@ -27,13 +27,13 @@ class AboutCoordinator: BaseCoordinator<Void> {
             shouldAnimate = false
         }
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         router.push(aboutVC,
                     animated: shouldAnimate,
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }

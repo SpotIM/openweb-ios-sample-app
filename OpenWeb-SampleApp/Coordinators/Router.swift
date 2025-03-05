@@ -7,22 +7,22 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 
 protocol Routering {
     var navigationController: UINavigationController { get }
     var rootViewController: UIViewController? { get }
     func present(_ module: Presentable, animated: Bool)
-    func push(_ module: Presentable, animated: Bool, completion: PublishSubject<Void>?)
+    func push(_ module: Presentable, animated: Bool, completion: PassthroughSubject<Void, Never>?)
     func pop(animated: Bool)
-    func dismiss(animated: Bool, completion: PublishSubject<Void>?)
+    func dismiss(animated: Bool, completion: PassthroughSubject<Void, Never>?)
     func setRoot(_ module: Presentable)
     func popToRoot(animated: Bool)
 }
 
 class Router: NSObject, Routering {
 
-    private var completions: [UIViewController: PublishSubject<Void>]
+    private var completions: [UIViewController: PassthroughSubject<Void, Never>]
     unowned let navigationController: UINavigationController
     var rootViewController: UIViewController? {
         return navigationController.viewControllers.first
@@ -43,7 +43,7 @@ class Router: NSObject, Routering {
 
     func push(_ module: Presentable,
               animated: Bool,
-              completion: PublishSubject<Void>?) {
+              completion: PassthroughSubject<Void, Never>?) {
         guard module.toPresentable() is UINavigationController == false else {
                 return
         }
@@ -61,9 +61,9 @@ class Router: NSObject, Routering {
         }
     }
 
-    func dismiss(animated: Bool, completion: PublishSubject<Void>?) {
+    func dismiss(animated: Bool, completion: PassthroughSubject<Void, Never>?) {
         navigationController.dismiss(animated: animated) {
-            completion?.onNext()
+            completion?.send()
         }
     }
 
@@ -95,7 +95,7 @@ private extension Router {
         guard let completion = completions[controller] else {
             return
         }
-        completion.onNext()
+        completion.send()
         completions.removeValue(forKey: controller)
     }
 }

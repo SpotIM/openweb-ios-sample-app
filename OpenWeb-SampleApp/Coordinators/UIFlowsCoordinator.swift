@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class UIFlowsCoordinator: BaseCoordinator<Void> {
 
@@ -18,7 +18,7 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -28,38 +28,37 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
         let flowsVM: UIFlowsViewModeling = UIFlowsViewModel(dataModel: conversationDataModel)
         let flowsVC = UIFlowsVC(viewModel: flowsVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         router.push(flowsVC,
                     animated: true,
                     completion: vcPopped)
 
         let mockArticleFlowCoordinator = flowsVM.outputs.openMockArticleScreen
-            .asObservable()
-            .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
                 let coordinator = MockArticleFlowCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
-            .flatMap { _ -> Observable<Void> in
-                return .never()
+            .flatMap { _ -> AnyPublisher<Void, Never> in
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
         let monetizationCoordinator = flowsVM.outputs.openMonetizationScreen
-            .asObservable()
-            .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
                 let coordinator = MonetizationFlowsCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
-            .flatMap { _ -> Observable<Void> in
-                return .never()
+            .flatMap { _ -> AnyPublisher<Void, Never> in
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
-        return Observable.merge(vcPopped.asObservable(),
-                                mockArticleFlowCoordinator,
-                                monetizationCoordinator)
+        return Publishers.Merge3(vcPopped,
+                                 mockArticleFlowCoordinator,
+                                 monetizationCoordinator)
+        .eraseToAnyPublisher()
     }
 }

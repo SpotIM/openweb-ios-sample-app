@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class SettingsCoordinator: BaseCoordinator<Void> {
 
@@ -18,7 +18,7 @@ class SettingsCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.settingsScreen(let settingsGroups) = data else {
@@ -28,7 +28,7 @@ class SettingsCoordinator: BaseCoordinator<Void> {
         let settingsVM: SettingsViewModeling = SettingsViewModel(settingViewTypes: settingsGroups)
         let settingsVC = SettingsVC(viewModel: settingsVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         var shouldAnimate = true
         if let deepLink = deepLinkOptions, deepLink == .settings {
@@ -42,7 +42,7 @@ class SettingsCoordinator: BaseCoordinator<Void> {
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }
 
@@ -50,14 +50,13 @@ private extension SettingsCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: SettingsViewModeling) {
         if let generalSettingsVM = viewModel.outputs.settingsVMs.first(where: { $0 is GeneralSettingsViewModeling }) as? GeneralSettingsViewModeling {
             generalSettingsVM.outputs.openColorsCustomizationScreen
-                .asObservable()
-                .subscribe(onNext: { [weak self] colorsCustomizationVC in
+                .sink(receiveValue: { [weak self] colorsCustomizationVC in
                     guard let self else { return }
                     self.router.push(colorsCustomizationVC,
                                      animated: true,
                                      completion: nil)
                 })
-                .disposed(by: disposeBag)
+                .store(in: &cancellables)
         }
     }
 }

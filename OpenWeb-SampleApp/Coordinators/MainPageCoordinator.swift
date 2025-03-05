@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class MainPageCoordinator: BaseCoordinator<Void> {
 
@@ -18,39 +18,39 @@ class MainPageCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
         let mainPageVM: MainPageViewModeling = MainPageViewModel()
         let mainPageVC = MainPageVC(viewModel: mainPageVM)
         router.setRoot(mainPageVC)
 
         // Define deep links variables
-        let deepLinkAboutScreen = BehaviorSubject<Void?>(value: nil)
-        var deepLinkToAbout: Observable<Void> {
+        let deepLinkAboutScreen = CurrentValueSubject<Void?, Never>(value: nil)
+        var deepLinkToAbout: AnyPublisher<Void, Never> {
             return deepLinkAboutScreen
                 .unwrap()
-                .asObservable()
+                .eraseToAnyPublisher()
         }
 
-        let deepLinkTestAPIScreen = BehaviorSubject<Void?>(value: nil)
-        var deepLinkToTestAPI: Observable<Void> {
+        let deepLinkTestAPIScreen = CurrentValueSubject<Void?, Never>(value: nil)
+        var deepLinkToTestAPI: AnyPublisher<Void, Never> {
             return deepLinkTestAPIScreen
                 .unwrap()
-                .asObservable()
+                .eraseToAnyPublisher()
         }
 
         // Define childs coordinators
-        let aboutCoordinator = Observable.merge(mainPageVM.outputs.showAbout.asObservable().map { nil },
+        let aboutCoordinator = Publishers.MergeMany(mainPageVM.outputs.showAbout.eraseToAnyPublisher().map { nil },
                                                 deepLinkToAbout.map { deepLinkOptions })
-            .flatMap { [weak self] deepLink -> Observable<Void> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinator = AboutCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
 
-        let testAPICoordinator = Observable.merge(mainPageVM.outputs.testAPI.asObservable().map { nil },
+        let testAPICoordinator = Publishers.MergeMany(mainPageVM.outputs.testAPI.eraseToAnyPublisher().map { nil },
                                                   deepLinkToTestAPI.map { deepLinkOptions })
-            .flatMap { [weak self] deepLink -> Observable<Void> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinator = TestAPICoordinator(router: self.router)
                 return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
@@ -59,16 +59,17 @@ class MainPageCoordinator: BaseCoordinator<Void> {
         if let deepLink = deepLinkOptions {
             switch deepLink {
             case .about:
-                deepLinkAboutScreen.onNext(())
+                deepLinkAboutScreen.send(())
             case .testAPI, .settings, .authenticationPlayground:
-                deepLinkTestAPIScreen.onNext(())
+                deepLinkTestAPIScreen.send(())
             }
         }
 
-        return Observable.merge(aboutCoordinator, testAPICoordinator)
-            .flatMap { _ -> Observable<Void> in
+        return Publishers.Merge(aboutCoordinator, testAPICoordinator)
+            .flatMap { _ -> AnyPublisher<Void, Never> in
                 // We always showing the main demo screen, that's why we return never here.
-                return .never()
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
+            .eraseToAnyPublisher()
     }
 }

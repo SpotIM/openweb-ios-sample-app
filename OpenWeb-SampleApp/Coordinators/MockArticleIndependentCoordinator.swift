@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class MockArticleIndependentCoordinator: BaseCoordinator<Void> {
 
@@ -18,7 +18,7 @@ class MockArticleIndependentCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.actionsViewSettings(let settings) = data else {
@@ -28,7 +28,7 @@ class MockArticleIndependentCoordinator: BaseCoordinator<Void> {
         let mockArticleIndependentVM: MockArticleIndependentViewsViewModeling = MockArticleIndependentViewsViewModel(actionSettings: settings)
         let mockArticleIndependentVC = MockArticleIndependentViewsVC(viewModel: mockArticleIndependentVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         router.push(mockArticleIndependentVC,
                     animated: true,
@@ -36,19 +36,19 @@ class MockArticleIndependentCoordinator: BaseCoordinator<Void> {
 
         // Define childs coordinators
         let settingsCoordinator = mockArticleIndependentVM.outputs.openSettings
-            .asObservable()
-            .flatMap { [weak self] settingsType -> Observable<Void> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] settingsType -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinator = SettingsCoordinator(router: self.router)
                 return self.coordinate(to: coordinator,
                                        deepLinkOptions: nil,
                                        coordinatorData: .settingsScreen(data: [settingsType]))
             }
-            .flatMap { _ -> Observable<Void> in
-                return .never()
+            .flatMap { _ -> AnyPublisher<Void, Never> in
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
-        return Observable.merge(vcPopped.asObservable(),
+        return Publishers.Merge(vcPopped,
                                 settingsCoordinator)
+            .eraseToAnyPublisher()
     }
 }

@@ -271,14 +271,12 @@ private extension TestAPIViewModel {
 
         _spotId
             .dropFirst(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<OWSpotId>.selectedSpotId))
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWSpotId>.selectedSpotId))
             .store(in: &cancellables)
 
         _postId
             .dropFirst(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<OWPostId>.selectedPostId))
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWPostId>.selectedPostId))
             .store(in: &cancellables)
 
         let conversationDataModelObservable =
