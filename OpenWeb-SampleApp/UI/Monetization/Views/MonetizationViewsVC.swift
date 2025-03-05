@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 
 class MonetizationViewsVC: UIViewController {
     private struct Metrics {
@@ -21,7 +21,7 @@ class MonetizationViewsVC: UIViewController {
     }
 
     private let viewModel: MonetizationViewsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -103,12 +103,12 @@ private extension MonetizationViewsVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        btnSingleAdExample.rx.tap
+        btnSingleAdExample.tapPublisher
             .bind(to: viewModel.inputs.singleAdExampleTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnPreConversationExample.rx.tap
+        btnPreConversationExample.tapPublisher
             .bind(to: viewModel.inputs.preConversationWithAdTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

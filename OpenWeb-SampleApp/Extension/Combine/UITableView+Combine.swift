@@ -20,4 +20,22 @@ extension UITableView {
         Items: Equatable {
             return rowsSubscriber(.init(cellIdentifier: cellType.identifierName, cellType: cellType, cellConfig: cellConfig))
     }
+
+    func rowsSubscriber<Items>(
+        cellFactory: @escaping (UITableView, Int, Items.Element) -> UITableViewCell
+    ) -> AnySubscriber<Items, Never> where
+        Items: RandomAccessCollection,
+        Items: Hashable,
+        Items.Element: Hashable,
+        Items.Index == Int {
+            let controller = TableViewItemsController<[Items]> { controler, tableView, indexPath, item in
+                cellFactory(tableView, indexPath.row, item)
+            }
+            setObjectiveCAssociatedObject(key: &AssociatedObjects.retainedControllerIdentifier, value: controller) // retain the controller
+            return rowsSubscriber(controller)
+    }
+}
+
+private struct AssociatedObjects {
+    static var retainedControllerIdentifier = "OWSampleAppRetainedControllerIdentifier"
 }

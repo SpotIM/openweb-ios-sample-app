@@ -7,13 +7,13 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 
 class PreConversationCell: UITableViewCell {
     static let identifier = "PreConversationCell"
     private weak var tableView: UITableView?
     private var viewModel: PreconversationCellViewModeling!
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     func configure(with viewModel: PreconversationCellViewModeling,
                    tableView: UITableView) {
@@ -32,8 +32,8 @@ private extension PreConversationCell {
 
     func setupObservers() {
         viewModel.outputs.showPreConversation
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] preConversation in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] preConversation in
                 guard let self, let preConversation else { return }
                 contentView.addSubview(preConversation)
                 preConversation.snp.makeConstraints { make in
@@ -42,14 +42,14 @@ private extension PreConversationCell {
                 tableView?.beginUpdates()
                 tableView?.endUpdates()
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.adSizeChanged
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
                 self?.tableView?.beginUpdates()
                 self?.tableView?.endUpdates()
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

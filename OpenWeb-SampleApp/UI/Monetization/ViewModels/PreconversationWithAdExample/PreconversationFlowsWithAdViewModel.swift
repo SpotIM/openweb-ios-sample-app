@@ -5,7 +5,7 @@
 //  Created by Anael on 11/12/2024.
 //
 
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol PreconversationFlowsWithAdViewModelingInputs {
@@ -15,11 +15,11 @@ protocol PreconversationFlowsWithAdViewModelingInputs {
 
 protocol PreconversationFlowsWithAdViewModelingOutputs {
     var title: String { get }
-    var articleImageURL: Observable<URL> { get }
+    var articleImageURL: AnyPublisher<URL, Never> { get }
     var preconversationCellViewModel: PreconversationCellViewModeling { get }
     var independentAdCellViewModel: IndependentAdCellViewModeling { get }
-    var cells: Observable<[PreconversationWithAdCellOption]> { get }
-    var loggerEnabled: Observable<Bool> { get }
+    var cells: AnyPublisher<[PreconversationWithAdCellOption], Never> { get }
+    var loggerEnabled: AnyPublisher<Bool, Never> { get }
     var floatingViewViewModel: OWFloatingViewModeling { get }
     var loggerViewModel: UILoggerViewModeling { get }
 }
@@ -34,42 +34,42 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
     var inputs: PreconversationFlowsWithAdViewModelingInputs { return self }
     var outputs: PreconversationFlowsWithAdViewModelingOutputs { return self }
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     private let imageProviderAPI: ImageProviding
     private let postId: OWPostId
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
     private weak var navController: UINavigationController?
     private weak var presentationalVC: UIViewController?
-    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.cells)
+    var cells: AnyPublisher<[PreconversationWithAdCellOption], Never> = Just(PreconversationWithAdCellOption.cells).eraseToAnyPublisher()
 
-    private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
-    var articleImageURL: Observable<URL> {
+    private let _articleImageURL = CurrentValueSubject<URL?, Never>(value: nil)
+    var articleImageURL: AnyPublisher<URL, Never> {
         return _articleImageURL
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _actionSettings = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
-    private var actionSettings: Observable<SDKUIFlowActionSettings> {
+    private let _actionSettings = CurrentValueSubject<SDKUIFlowActionSettings?, Never>(value: nil)
+    private var actionSettings: AnyPublisher<SDKUIFlowActionSettings, Never> {
         return _actionSettings
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _showPreConversation = BehaviorSubject<UIView?>(value: nil)
-    var showPreConversation: Observable<UIView?> {
+    private let _showPreConversation = CurrentValueSubject<UIView?, Never>(value: nil)
+    var showPreConversation: AnyPublisher<UIView?, Never> {
         return _showPreConversation
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _adSizeChanged = PublishSubject<Void>()
-    var adSizeChanged: Observable<Void> {
+    private let _adSizeChanged = PassthroughSubject<Void, Never>()
+    var adSizeChanged: AnyPublisher<Void, Never> {
         return _adSizeChanged
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    lazy var loggerEnabled: Observable<Bool> = {
+    lazy var loggerEnabled: AnyPublisher<Bool, Never> = {
         return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
     }()
 
@@ -104,7 +104,7 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
         self.commonCreatorService = commonCreatorService
         self.imageProviderAPI = imageProviderAPI
         self.postId = postId
-        _actionSettings.onNext(actionSettings)
+        _actionSettings.send(actionSettings)
         setupObservers()
         setupBICallaback()
     }
@@ -121,13 +121,13 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
 private extension PreconversationFlowsWithAdViewModel {
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
-        _articleImageURL.onNext(articleURL)
+        _articleImageURL.send(articleURL)
 
         independentAdCellViewModel.outputs.loggerEvents
-            .subscribe(onNext: { [weak self] logEvent in
+            .sink(receiveValue: { [weak self] logEvent in
                 self?.loggerViewModel.inputs.log(text: logEvent)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         actionSettings
             .map { settings -> (PresentationalModeCompact, String)? in
@@ -139,12 +139,12 @@ private extension PreconversationFlowsWithAdViewModel {
             }
             .unwrap()
         // Small delay so the navigation controller will be set from the view controller
-            .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive))
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
@@ -169,7 +169,7 @@ private extension PreconversationFlowsWithAdViewModel {
                                 additionalSettings: additionalSettings,
                                 callbacks: actionCallbacks(loggerEnabled: loggerEnabled)
                             )
-                            _showPreConversation.onNext(preConversationView)
+                            _showPreConversation.send(preConversationView)
                         } catch {
                             DLog("Calling flows.preConversation error: \(error)")
                         }
@@ -184,14 +184,14 @@ private extension PreconversationFlowsWithAdViewModel {
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
-                            self._showPreConversation.onNext(preConversationView)
+                            self._showPreConversation.send(preConversationView)
                         case .failure(let error):
                             DLog("Calling flows.preConversation error: \(error)")
                         }
                     })
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func setupBICallaback() {
@@ -211,7 +211,7 @@ private extension PreconversationFlowsWithAdViewModel {
 
             switch callbackType {
             case .adSizeChanged:
-                _adSizeChanged.onNext()
+                _adSizeChanged.send()
             case let .adEvent(event, index):
                 let log = "preconversationAd: \(event.description) for index: \(index)\n"
                 self.loggerViewModel.inputs.log(text: log)
