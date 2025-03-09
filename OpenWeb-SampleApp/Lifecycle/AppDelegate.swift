@@ -38,8 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .take(1)
             .subscribe()
 
-        Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
-
         return true
     }
 }
