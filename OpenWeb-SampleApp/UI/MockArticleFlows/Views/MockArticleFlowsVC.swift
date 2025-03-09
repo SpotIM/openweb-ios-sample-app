@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import InjectHotReload
 
 class MockArticleFlowsVC: UIViewController {
     private struct Metrics {
@@ -164,7 +165,7 @@ private extension MockArticleFlowsVC {
         articleView.accessibilityIdentifier = Metrics.viewIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         articleScrollView.backgroundColor = ColorPalette.shared.color(type: .background)
 

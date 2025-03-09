@@ -68,7 +68,7 @@ private extension AboutVC {
         allRightsReservedLbl.accessibilityIdentifier = Metrics.rightsReservedIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 

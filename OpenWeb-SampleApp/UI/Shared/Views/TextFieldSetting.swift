@@ -69,7 +69,7 @@ private extension TextFieldSetting {
         textFieldControl.accessibilityIdentifier = prefixId + "_text_field_id"
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         let stackView = UIStackView()
         self.addSubview(stackView)
         stackView.distribution = .fillProportionally

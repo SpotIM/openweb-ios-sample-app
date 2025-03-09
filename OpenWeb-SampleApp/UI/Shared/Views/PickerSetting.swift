@@ -59,7 +59,7 @@ private extension PickerSetting {
         pickerControl.accessibilityIdentifier = prefixId + "_picker_id"
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.addSubview(pickerControl)
         self.addSubview(pickerTitleLbl)
 

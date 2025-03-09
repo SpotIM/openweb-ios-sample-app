@@ -67,7 +67,7 @@ class ColorsCustomizationVC: UIViewController {
 
 @available(iOS 14.0, *)
 private extension ColorsCustomizationVC {
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 

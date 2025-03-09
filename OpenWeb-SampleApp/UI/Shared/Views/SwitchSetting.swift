@@ -58,7 +58,7 @@ private extension SwitchSetting {
         switchSetting.accessibilityIdentifier = prefixId + "_switch_id"
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.addSubview(settingTitleLbl)
         settingTitleLbl.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
