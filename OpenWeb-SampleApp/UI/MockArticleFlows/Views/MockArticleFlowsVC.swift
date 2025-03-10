@@ -10,7 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
-import InjectHotReload
 
 class MockArticleFlowsVC: UIViewController {
     private struct Metrics {
