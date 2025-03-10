@@ -67,7 +67,7 @@ private extension AppCoordinator {
         settingsBuilder.storeURL(AppConstants.exampleStoreURL)
         manager.settings = settingsBuilder.build()
 
-        var socialManagerMonetization = OpenWeb.manager.monetization
+        let socialManagerMonetization = OpenWeb.manager.monetization
         socialManagerMonetization.iauProvider = manager.helpers.getIAUProvider()
     }
     #endif
