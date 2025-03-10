@@ -41,12 +41,11 @@ class NetworkSettingsView: UIView {
                                        items: items)
     }()
 
-    private lazy var customURLTextField: TextFieldSetting = {
-        var customURLTextField = TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
+    private lazy var customNamespaceTextField: TextFieldSetting = {
+        return TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
                                                   placeholder: "Example: ntfs",
                                                   accessibilityPrefixId: Metrics.identifier,
                                                   font: FontBook.helperLight)
-        return customURLTextField
     }()
 
     private let viewModel: NetworkSettingsViewModeling
@@ -71,7 +70,7 @@ private extension NetworkSettingsView {
         self.segmentedNetworkEnvironment.accessibilityIdentifier = Metrics.segmentedNetworkEnvironmentIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
@@ -84,6 +83,7 @@ private extension NetworkSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedNetworkEnvironment)
+        stackView.addArrangedSubview(customNamespaceTextField)
     }
 
     func setupObservers() {
@@ -102,11 +102,11 @@ private extension NetworkSettingsView {
                 }
             }
             .unwrap()
-            .bind(to: customURLTextField.rx.textFieldText)
+            .bind(to: customNamespaceTextField.rx.textFieldText)
             .disposed(by: disposeBag)
 
         // Custom network environment
-        Observable.combineLatest(segmentedNetworkEnvironment.rx.selectedSegmentIndex, customURLTextField.rx.textFieldText.unwrap())
+        Observable.combineLatest(segmentedNetworkEnvironment.rx.selectedSegmentIndex, customNamespaceTextField.rx.textFieldText.unwrap())
             .filter { $0.0 == OWNetworkEnvironment.custom(namespace: nil).index }
             .map { OWNetworkEnvironment(from: $0.0, namespace: $0.1) }
             .bind(to: viewModel.inputs.networkEnvironmentSelected)
@@ -121,7 +121,7 @@ private extension NetworkSettingsView {
 
         segmentedNetworkEnvironment.rx.selectedSegmentIndex
             .map { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
-            .bind(to: customURLTextField.rx.isHidden)
+            .bind(to: customNamespaceTextField.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }

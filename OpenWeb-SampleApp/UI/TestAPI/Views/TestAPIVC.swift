@@ -211,7 +211,7 @@ private extension TestAPIVC {
         btnAutomation.accessibilityIdentifier = Metrics.btnAutomationIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 

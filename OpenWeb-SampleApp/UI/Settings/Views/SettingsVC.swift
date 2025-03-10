@@ -63,7 +63,7 @@ private extension SettingsVC {
         resetButton.accessibilityIdentifier = Metrics.resetButtonId
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 

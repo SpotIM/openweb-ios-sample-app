@@ -42,7 +42,7 @@ class ArticleImageCell: UITableViewCell {
 }
 
 private extension ArticleImageCell {
-    func setupViews() {
+    @objc func setupViews() {
         imgViewArticle.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview().inset(Metrics.verticalPadding)
             make.centerX.equalToSuperview()

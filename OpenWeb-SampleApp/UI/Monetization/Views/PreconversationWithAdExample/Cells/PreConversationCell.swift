@@ -25,7 +25,7 @@ class PreConversationCell: UITableViewCell {
 }
 
 private extension PreConversationCell {
-    func setupViews() {
+    @objc func setupViews() {
         selectionStyle = .none
         self.backgroundColor = .clear
     }
