@@ -25,6 +25,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Nimbus.shared.testMode = true
         #endif
 
+        #if canImport(InjectHotReload)
+        Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
+        UIView.setupSwizzlingForHotReload()
+        #endif
+
         window = UIWindow(frame: UIScreen.main.bounds)
         appCoordinator = AppCoordinator(window: window!)
         userDefaultsProvider = UserDefaultsProvider.shared
