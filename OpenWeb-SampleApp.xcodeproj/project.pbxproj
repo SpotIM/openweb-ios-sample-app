@@ -341,8 +341,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 011E97193E9DFD306B3CFF08 /* Pods-OpenWeb-SampleApp.releaseads.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Ads";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0;
 				DEFINES_MODULE = YES;
@@ -363,10 +364,10 @@
 				);
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.ads.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore im.spot.demo";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore im.spot.ads.demo";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "ADS AUTOMATION";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -444,7 +445,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F18F1768AC170BBF3EB547A0 /* Pods-OpenWeb-SampleApp.ads.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Ads";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0;
@@ -466,10 +468,10 @@
 				);
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.ads.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.demo";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.ads.demo";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG AUTOMATION ADS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -764,6 +766,119 @@
 				);
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"sqlite3\"",
+					"-l\"swiftCoreGraphics\"",
+					"-l\"z\"",
+					"-framework",
+					"\"AVFoundation\"",
+					"-framework",
+					"\"AdPlayerSDK\"",
+					"-framework",
+					"\"AdSupport\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"AppHarbrSDK\"",
+					"-framework",
+					"\"AudioToolbox\"",
+					"-framework",
+					"\"CFNetwork\"",
+					"-framework",
+					"\"CoreFoundation\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreLocation\"",
+					"-framework",
+					"\"CoreMedia\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"CoreVideo\"",
+					"-framework",
+					"\"EventKit\"",
+					"-framework",
+					"\"EventKitUI\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"GoogleInteractiveMediaAds\"",
+					"-framework",
+					"\"GoogleMobileAds\"",
+					"-framework",
+					"\"InjectHotReload\"",
+					"-framework",
+					"\"JavaScriptCore\"",
+					"-framework",
+					"\"MediaPlayer\"",
+					"-framework",
+					"\"MessageUI\"",
+					"-framework",
+					"\"MobileCoreServices\"",
+					"-framework",
+					"\"Network\"",
+					"-framework",
+					"\"NimbusCoreKit\"",
+					"-framework",
+					"\"NimbusKit\"",
+					"-framework",
+					"\"NimbusRenderKit\"",
+					"-framework",
+					"\"NimbusRenderStaticKit\"",
+					"-framework",
+					"\"NimbusRenderVideoKit\"",
+					"-framework",
+					"\"NimbusRequestKit\"",
+					"-framework",
+					"\"NimbusSDK\"",
+					"-framework",
+					"\"OMSDK_Adsbynimbus\"",
+					"-framework",
+					"\"OMSDK_Pubmatic\"",
+					"-framework",
+					"\"OpenWebCommon\"",
+					"-framework",
+					"\"OpenWrapHandlerDFP\"",
+					"-framework",
+					"\"OpenWrapMeasurement\"",
+					"-framework",
+					"\"OpenWrapSDK\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxRelay\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SnapKit\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"UserMessagingPlatform\"",
+					"-framework",
+					"\"WebKit\"",
+					"-weak_framework",
+					"\"AdSupport\"",
+					"-weak_framework",
+					"\"JavaScriptCore\"",
+					"-weak_framework",
+					"\"SafariServices\"",
+					"-weak_framework",
+					"\"WebKit\"",
+					"-Xlinker",
+					"-interposable",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
