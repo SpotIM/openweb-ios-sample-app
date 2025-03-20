@@ -93,7 +93,7 @@ private extension MockArticleIndependentViewsVC {
         settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
         self.navigationItem.largeTitleDisplayMode = .never
 

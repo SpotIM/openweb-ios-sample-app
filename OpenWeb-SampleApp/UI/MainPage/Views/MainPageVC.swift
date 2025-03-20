@@ -120,7 +120,7 @@ private extension MainPageVC {
         exploreAPIBtn.accessibilityIdentifier = Metrics.exploreButtonIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 

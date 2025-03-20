@@ -56,7 +56,7 @@ private extension SegmentedControlSetting {
         segmentedControl.accessibilityIdentifier = prefixId + "_segment_id"
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.addSubview(segmentTitleLbl)
         segmentTitleLbl.snp.makeConstraints { make in
             make.top.equalToSuperview()

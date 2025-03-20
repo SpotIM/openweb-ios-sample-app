@@ -62,7 +62,7 @@ private extension CommentThreadSettingsView {
         textFieldOpenCommentId.accessibilityIdentifier = Metrics.textFieldOpenCommentIdIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed

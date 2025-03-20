@@ -70,7 +70,7 @@ private extension UILoggerView {
         loggerTextView.accessibilityIdentifier = Metrics.loggerTextViewIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.backgroundColor = .yellow
 
         self.addSubview(titleLabel)

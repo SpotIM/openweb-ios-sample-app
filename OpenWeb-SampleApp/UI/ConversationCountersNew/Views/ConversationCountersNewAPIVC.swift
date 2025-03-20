@@ -93,7 +93,7 @@ class ConversationCountersNewAPIVC: UIViewController {
 }
 
 private extension ConversationCountersNewAPIVC {
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 

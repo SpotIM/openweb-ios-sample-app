@@ -68,7 +68,7 @@ private extension MonetizationViewsVC {
         btnSingleAdExample.accessibilityIdentifier = Metrics.btnSingleAdExampleIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 

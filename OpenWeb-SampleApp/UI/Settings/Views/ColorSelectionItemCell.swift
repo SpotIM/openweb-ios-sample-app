@@ -114,7 +114,7 @@ class ColorSelectionItemCell: UITableViewCell {
 
 @available(iOS 14.0, *)
 private extension ColorSelectionItemCell {
-    func setupViews() {
+    @objc func setupViews() {
         self.contentView.isUserInteractionEnabled = false
 
         self.addSubview(enableCheckbox)

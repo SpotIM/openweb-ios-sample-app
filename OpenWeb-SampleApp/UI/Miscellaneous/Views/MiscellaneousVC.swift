@@ -62,7 +62,7 @@ private extension MiscellaneousVC {
         btnConversationCounter.accessibilityIdentifier = Metrics.btnConversationCounterIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
