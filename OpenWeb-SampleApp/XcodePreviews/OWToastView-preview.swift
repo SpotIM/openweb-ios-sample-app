@@ -5,6 +5,7 @@
 //  Created by Yonat Sharon on 10/03/2025.
 //
 
+#if DEBUG
 @testable import OpenWebSDK
 import SnapKit
 
@@ -29,3 +30,4 @@ extension OWToastView {
     .spacing(32)
     .padding(16)
 }
+#endif

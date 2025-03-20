@@ -5,6 +5,7 @@
 //  Created by Yonat Sharon on 10/03/2025.
 //
 
+#if DEBUG
 @testable import OpenWebSDK
 import SnapKit
 
@@ -37,3 +38,4 @@ extension OWErrorStateView {
     }
     return scrollView
 }
+#endif
