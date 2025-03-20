@@ -5,6 +5,7 @@
 //  Created by Yonat Sharon on 09/03/2025.
 //
 
+#if DEBUG
 @testable import OpenWebSDK
 
 @available(iOS 17.0, *)
@@ -29,3 +30,4 @@
         )
     )
 }
+#endif
