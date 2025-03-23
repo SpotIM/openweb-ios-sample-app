@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class ViewsExamplesCoordinator: BaseCoordinator<Void> {
 
@@ -18,7 +18,7 @@ class ViewsExamplesCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
@@ -28,7 +28,7 @@ class ViewsExamplesCoordinator: BaseCoordinator<Void> {
         let examplesViewModel: UIViewsExamplesViewModeling = UIViewsExamplesViewModel(postId: postId)
         let examplesVC = UIViewsExamplesVC(viewModel: examplesViewModel)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         setupCoordinatorInternalNavigation(viewModel: examplesViewModel)
 
@@ -37,14 +37,14 @@ class ViewsExamplesCoordinator: BaseCoordinator<Void> {
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }
 
 private extension ViewsExamplesCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: UIViewsExamplesViewModeling) {
         viewModel.outputs.openConversationBelowVideo
-            .subscribe(onNext: { [weak self] postId in
+            .sink(receiveValue: { [weak self] postId in
                 guard let self else { return }
                 let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
                 let conversationBelowVideoVC = ConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
@@ -52,6 +52,6 @@ private extension ViewsExamplesCoordinator {
                                  animated: true,
                                  completion: nil)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

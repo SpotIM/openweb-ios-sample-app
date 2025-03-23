@@ -5,10 +5,9 @@
 //  Created by Anael on 15/01/2025.
 //
 
-import Foundation
-
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class MonetizationFlowsVC: UIViewController {
     private struct Metrics {
@@ -22,7 +21,7 @@ class MonetizationFlowsVC: UIViewController {
     }
 
     private let viewModel: MonetizationFlowsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -104,13 +103,13 @@ private extension MonetizationFlowsVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        btnSingleAdExample.rx.tap
+        btnSingleAdExample.tapPublisher
             .bind(to: viewModel.inputs.singleAdExampleTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnPreConversationExample.rx.tap
+        btnPreConversationExample.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.preConversationWithAdTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol NetworkSettingsViewModelingInputs {
-    var networkEnvironmentSelected: BehaviorSubject<OWNetworkEnvironment> { get }
+    var networkEnvironmentSelected: CurrentValueSubject<OWNetworkEnvironment, Never> { get }
 }
 
 protocol NetworkSettingsViewModelingOutputs {
@@ -19,7 +19,7 @@ protocol NetworkSettingsViewModelingOutputs {
     var networkEnvironmentTitle: String { get }
     var networkEnvironmentCustomTitle: String { get }
     var networkEnvironmentSettings: [String] { get }
-    var networkEnvironment: Observable<OWNetworkEnvironment> { get }
+    var networkEnvironment: AnyPublisher<OWNetworkEnvironment, Never> { get }
 }
 
 protocol NetworkSettingsViewModeling {
@@ -31,12 +31,8 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     var inputs: NetworkSettingsViewModelingInputs { return self }
     var outputs: NetworkSettingsViewModelingOutputs { return self }
 
-    private struct Metrics {
-        static let delayInsertDataToPersistense = 100
-    }
-
     private var userDefaultsProvider: UserDefaultsProviderProtocol
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var title: String = {
         return NSLocalizedString("NetworkSettings", comment: "")
@@ -54,22 +50,18 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
         let _prod = NSLocalizedString("Production", comment: "")
         let _staging = NSLocalizedString("Staging", comment: "")
         let _cluster1d = NSLocalizedString("1DCluster", comment: "")
-        let _custom = NSLocalizedString("Custom", comment: "")
 
-        return [_prod, _staging, _cluster1d, _custom]
+        return [_prod, _staging, _cluster1d]
     }()
 
-    var networkEnvironmentSelected = BehaviorSubject<OWNetworkEnvironment>(value: OWNetworkEnvironment.default)
+    lazy var networkEnvironmentSelected = CurrentValueSubject<OWNetworkEnvironment, Never>(
+        value: userDefaultsProvider.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.default)
+    )
 
-    var networkEnvironment: Observable<OWNetworkEnvironment> {
-        return userDefaultsProvider.values(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
-            .asObservable()
-    }
-
-    private lazy var environmentObservable: Observable<OWNetworkEnvironment> = {
+    var networkEnvironment: AnyPublisher<OWNetworkEnvironment, Never> {
         return networkEnvironmentSelected
-            .asObservable()
-    }()
+            .eraseToAnyPublisher()
+    }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -79,17 +71,15 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
 
 private extension NetworkSettingsVM {
     func setupObservers() {
-        environmentObservable
-            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
-            .skip(1)
-            .bind(to: self.userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
-            .disposed(by: disposeBag)
+        networkEnvironmentSelected
+            .dropFirst()
+            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
+            .store(in: &cancellables)
     }
 }
 
 extension NetworkSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        networkEnvironmentSelected.onNext(OWNetworkEnvironment.default)
+        networkEnvironmentSelected.send(OWNetworkEnvironment.default)
     }
 }

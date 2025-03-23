@@ -8,8 +8,8 @@
 
 import Foundation
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import OpenWebSDK
 
 @available(iOS 14.0, *)
@@ -93,17 +93,16 @@ class ColorSelectionItemCell: UITableViewCell {
     }()
 
     private var viewModel: ColorSelectionItemCellViewModeling!
-    private var disposeBag: DisposeBag
+    private var cancellables = Set<AnyCancellable>()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        self.disposeBag = DisposeBag()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
     func configure(with viewModel: ColorSelectionItemCellViewModeling) {
         self.viewModel = viewModel
-        self.disposeBag = DisposeBag()
+        cancellables.removeAll()
 
         setupObservers()
     }
@@ -160,64 +159,62 @@ private extension ColorSelectionItemCell {
     func setupObservers() {
         title.text = viewModel.outputs.title
 
-        lightTapGesture.rx.event
-            .voidify()
-            .map { .light }
+        lightTapGesture.tapPublisher
+            .map { _ in ColorType.light }
             .bind(to: viewModel.inputs.displayPicker)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        darkTapGesture.rx.event
-            .voidify()
-            .map { .dark }
+        darkTapGesture.tapPublisher
+            .map { _ in ColorType.dark }
             .bind(to: viewModel.inputs.displayPicker)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.color
-            .take(1)
-            .subscribe(onNext: { [weak self] color in
+            .prefix(1)
+            .sink { [weak self] color in
                 guard let color else { return }
                 self?.lightColorRectangleView.backgroundColor = color.lightColor
                 self?.darkColorRectangleView.backgroundColor = color.darkColor
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         viewModel.outputs.lightColorObservable
             .map { $0 !== nil }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isColorSet in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isColorSet in
                 guard let self else { return }
                 if isColorSet {
                     self.lightNoColorRedLine.removeFromSuperlayer()
                 } else {
                     self.lightColorRectangleView.layer.addSublayer(self.lightNoColorRedLine)
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         viewModel.outputs.lightColorObservable
-            .bind(to: lightColorRectangleView.rx.backgroundColor)
-            .disposed(by: disposeBag)
+            .assign(to: \.backgroundColor, on: lightColorRectangleView)
+            .store(in: &cancellables)
 
         viewModel.outputs.darkColorObservable
             .map { $0 !== nil }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isColorSet in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isColorSet in
                 guard let self else { return }
                 if isColorSet {
                     self.darkNoColorRedLine.removeFromSuperlayer()
                 } else {
                     self.darkColorRectangleView.layer.addSublayer(self.darkNoColorRedLine)
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         viewModel.outputs.darkColorObservable
-            .bind(to: darkColorRectangleView.rx.backgroundColor)
-            .disposed(by: disposeBag)
+            .assign(to: \.backgroundColor, on: darkColorRectangleView)
+            .store(in: &cancellables)
 
-        enableCheckbox.rx.isOn
+        enableCheckbox.isOnPublisher
             .bind(to: viewModel.inputs.isEnabled)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func diagonalRedLine() -> CAShapeLayer {

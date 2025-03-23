@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class NetworkSettingsView: UIView {
 
@@ -41,15 +42,15 @@ class NetworkSettingsView: UIView {
                                        items: items)
     }()
 
-    private lazy var customNamespaceTextField: TextFieldSetting = {
+    private lazy var stagingNamespaceTextField: TextFieldSetting = {
         return TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
-                                                  placeholder: "Example: ntfs",
+                                                  placeholder: "staging-v2",
                                                   accessibilityPrefixId: Metrics.identifier,
                                                   font: FontBook.helperLight)
     }()
 
     private let viewModel: NetworkSettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: NetworkSettingsViewModeling) {
         self.viewModel = viewModel
@@ -83,45 +84,54 @@ private extension NetworkSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedNetworkEnvironment)
-        stackView.addArrangedSubview(customNamespaceTextField)
+        stackView.addArrangedSubview(stagingNamespaceTextField)
     }
 
     func setupObservers() {
         viewModel.outputs.networkEnvironment
             .map { $0.index }
-            .bind(to: segmentedNetworkEnvironment.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedNetworkEnvironment.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.networkEnvironment
             .map {
                 switch $0 {
-                case .custom(let path):
-                    return path
+                case .staging(let namespace):
+                    return namespace
                 default:
                     return nil
                 }
             }
             .unwrap()
-            .bind(to: customNamespaceTextField.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .assign(to: \.text, on: stagingNamespaceTextField.textFieldControl)
+            .store(in: &cancellables)
 
         // Custom network environment
-        Observable.combineLatest(segmentedNetworkEnvironment.rx.selectedSegmentIndex, customNamespaceTextField.rx.textFieldText.unwrap())
-            .filter { $0.0 == OWNetworkEnvironment.custom(namespace: nil).index }
+        Publishers.CombineLatest(segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher, stagingNamespaceTextField.textFieldControl.textPublisher.unwrap())
+            .filter { $0.0 == OWNetworkEnvironment.staging(namespace: nil).index }
             .map { OWNetworkEnvironment(from: $0.0, namespace: $0.1) }
             .bind(to: viewModel.inputs.networkEnvironmentSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Non custom network environment
-        segmentedNetworkEnvironment.rx.selectedSegmentIndex
-            .filter { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
+        segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher
+            .filter { $0 != OWNetworkEnvironment.staging(namespace: nil).index }
             .map { OWNetworkEnvironment(from: $0) }
             .bind(to: viewModel.inputs.networkEnvironmentSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedNetworkEnvironment.rx.selectedSegmentIndex
-            .map { $0 != OWNetworkEnvironment.custom(namespace: nil).index }
-            .bind(to: customNamespaceTextField.rx.isHidden)
-            .disposed(by: disposeBag)
+        segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher
+            .map { $0 != OWNetworkEnvironment.staging(namespace: nil).index }
+            .removeDuplicates()
+            .handleEvents(receiveOutput: { [weak self] isHidden in
+                guard let self else { return }
+                if isHidden {
+                    stagingNamespaceTextField.textFieldControl.resignFirstResponder()
+                } else if segmentedNetworkEnvironment.isVisible {
+                    stagingNamespaceTextField.textFieldControl.becomeFirstResponder()
+                }
+            })
+            .assign(to: \.isHidden, on: stagingNamespaceTextField)
+            .store(in: &cancellables)
     }
 }

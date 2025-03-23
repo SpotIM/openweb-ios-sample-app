@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class CommentThreadSettingsView: UIView {
 
@@ -40,7 +41,7 @@ class CommentThreadSettingsView: UIView {
     }()
 
     private let viewModel: CommentThreadSettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: CommentThreadSettingsViewModeling) {
         self.viewModel = viewModel
@@ -78,12 +79,13 @@ private extension CommentThreadSettingsView {
 
     func setupObservers() {
         viewModel.outputs.openCommentId
-            .bind(to: textFieldOpenCommentId.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldOpenCommentId.textFieldControl)
+            .store(in: &cancellables)
 
-        textFieldOpenCommentId.rx.textFieldText
+        textFieldOpenCommentId.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.openCommentIdSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

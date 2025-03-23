@@ -9,7 +9,7 @@
 import Foundation
 import OpenWebSDK
 
-enum SettingsGroupType {
+enum SettingsGroupType: CaseIterable {
     case sampleApp
     case general
     case preConversation
@@ -21,11 +21,16 @@ enum SettingsGroupType {
     case network
 
     static var all: [SettingsGroupType] {
-        #if BETA
-        return [.sampleApp, .general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau, .network]
-        #else
-        return [.sampleApp, .general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau]
+        var allSettings = Self.allCases
+        #if !ADS
+        allSettings.removeAll { $0 == .iau }
         #endif
+
+        #if !ADS && !BETA
+        allSettings.removeAll { $0 == .network }
+        #endif
+
+        return allSettings
     }
 }
 

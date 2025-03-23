@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
 
 class SegmentedControlSetting: UIView {
 
@@ -30,7 +28,7 @@ class SegmentedControlSetting: UIView {
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var segmentedControl: UISegmentedControl = {
+    private(set) lazy var segmentedControl: UISegmentedControl = {
         let segment = UISegmentedControl(items: self.items)
             .wrapContent(axis: .horizontal)
 
@@ -71,39 +69,6 @@ private extension SegmentedControlSetting {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
             make.width.greaterThanOrEqualTo(Metrics.segmentMinWidth)
-        }
-    }
-}
-
-extension Reactive where Base: SegmentedControlSetting {
-
-    var text: Binder<String?> {
-        return Binder(self.base.segmentTitleLbl) { label, text in
-            label.text = text
-        }
-    }
-
-    var selectedSegmentIndex: ControlProperty<Int> {
-        return value
-    }
-
-    var isHidden: Binder<Bool> {
-        return Binder(self.base) { _, value in
-            base.isHidden = value
-        }
-    }
-
-    private var value: ControlProperty<Int> {
-        return base.segmentedControl.rx.controlProperty(editingEvents: .valueChanged) { segmentedControl in
-            segmentedControl.selectedSegmentIndex
-        } setter: { segmentedControl, value in
-            segmentedControl.selectedSegmentIndex = value
-        }
-    }
-
-    func titleForSegment(at index: Int) -> Binder<String?> {
-        return Binder(self.base.segmentedControl) { segmentedControl, title in
-            segmentedControl.setTitle(title, forSegmentAt: index)
         }
     }
 }

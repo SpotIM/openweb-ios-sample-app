@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol SettingsViewModelingInputs {
-    var resetToDefaultTap: PublishSubject<Void> { get }
+    var resetToDefaultTap: PassthroughSubject<Void, Never> { get }
 }
 
 protocol SettingsViewModelingOutputs {
@@ -39,13 +39,13 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
         return settingsVMs
     }()
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var title: String = {
         return NSLocalizedString("Settings", comment: "")
     }()
 
-    var resetToDefaultTap = PublishSubject<Void>()
+    var resetToDefaultTap = PassthroughSubject<Void, Never>()
 
     init(settingViewTypes: [SettingsGroupType] = SettingsGroupType.all, userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          manager: OWManagerProtocol = OpenWeb.manager) {
@@ -60,10 +60,10 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
 private extension SettingsViewModel {
     func setupObservers() {
         resetToDefaultTap
-            .subscribe(onNext: { [weak self] in
+            .sink { [weak self] in
                 guard let self else { return }
                 self.settingsVMs.forEach { $0.resetToDefault() }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 }

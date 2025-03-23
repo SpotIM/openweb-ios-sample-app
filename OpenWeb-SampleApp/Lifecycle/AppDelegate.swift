@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 #if ADS
 import NimbusSDK
 #endif
@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var appCoordinator: AppCoordinator!
     var userDefaultsProvider: UserDefaultsProviderProtocol!
+    private var cancellables: Set<AnyCancellable> = []
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -37,11 +38,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let deeplink = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption,
                                                 defaultValue: .none)
 
-        // No need to dispose, as we are taking only one and this observable should also never end
-        _ = appCoordinator
+        appCoordinator
             .start(deepLinkOptions: deeplink.toDeepLinkOptions)
-            .take(1)
-            .subscribe()
+            .prefix(1)
+            .sink {}
+            .store(in: &cancellables)
 
         return true
     }

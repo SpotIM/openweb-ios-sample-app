@@ -8,7 +8,7 @@
 
 import UIKit
 import Foundation
-import RxSwift
+import Combine
 
 class UILoggerView: UIView {
     private struct Metrics {
@@ -48,7 +48,7 @@ class UILoggerView: UIView {
     }()
 
     private let viewModel: UILoggerViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: UILoggerViewModeling = UILoggerViewModel()) {
         self.viewModel = viewModel
@@ -94,28 +94,29 @@ private extension UILoggerView {
 
     func setupObservers() {
         viewModel.outputs.loggerText
-            .observe(on: MainScheduler.instance)
-            .bind(to: loggerTextView.rx.text)
-            .disposed(by: disposeBag)
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.text, on: loggerTextView)
+            .store(in: &cancellables)
 
         viewModel.outputs.loggerText
-            .throttle(.milliseconds(Metrics.delayScrollToBottom), scheduler: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
+            .throttle(for: .milliseconds(Metrics.delayScrollToBottom), scheduler: DispatchQueue.main, latest: true)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
                 self.scrollTextViewToBottom(textView: self.loggerTextView)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.title
-            .bind(to: titleLabel.rx.text)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: titleLabel)
+            .store(in: &cancellables)
 
-        clearButton.rx.tap
-            .subscribe(onNext: { [weak self] in
+        clearButton.tapPublisher
+            .sink(receiveValue: { [weak self] in
                 self?.viewModel.inputs.clear()
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func scrollTextViewToBottom(textView: UITextView) {

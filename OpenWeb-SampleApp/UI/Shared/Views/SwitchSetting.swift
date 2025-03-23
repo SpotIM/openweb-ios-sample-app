@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
 
 class SwitchSetting: UIView {
 
@@ -30,7 +28,7 @@ class SwitchSetting: UIView {
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var switchSetting: UISwitch = {
+    private(set) lazy var switchControl: UISwitch = {
         let aSwitch = UISwitch()
         aSwitch.setOn(initialIsOn, animated: false)
 
@@ -55,7 +53,7 @@ class SwitchSetting: UIView {
 private extension SwitchSetting {
     func applyAccessibility(prefixId: String) {
         settingTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
-        switchSetting.accessibilityIdentifier = prefixId + "_switch_id"
+        switchControl.accessibilityIdentifier = prefixId + "_switch_id"
     }
 
     @objc func setupViews() {
@@ -65,39 +63,12 @@ private extension SwitchSetting {
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
         }
 
-        self.addSubview(switchSetting)
-        switchSetting.snp.makeConstraints { make in
+        self.addSubview(switchControl)
+        switchControl.snp.makeConstraints { make in
             make.centerY.equalTo(settingTitleLbl)
             make.leading.greaterThanOrEqualTo(settingTitleLbl.snp.trailing).offset(Metrics.verticalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.verticalOffset)
             make.width.greaterThanOrEqualTo(Metrics.switchMinWidth)
-        }
-    }
-}
-
-extension Reactive where Base: SwitchSetting {
-
-    var text: Binder<String?> {
-        return Binder(self.base.settingTitleLbl) { label, text in
-            label.text = text
-        }
-    }
-
-    var isOn: ControlProperty<Bool> {
-        return value
-    }
-
-    var isHidden: Binder<Bool> {
-        return Binder(self.base) { _, value in
-            base.isHidden = value
-        }
-    }
-
-    private var value: ControlProperty<Bool> {
-        return base.switchSetting.rx.controlProperty(editingEvents: .valueChanged) { switchSetting in
-            switchSetting.isOn
-        } setter: { switchSetting, value in
-            switchSetting.isOn = value
         }
     }
 }

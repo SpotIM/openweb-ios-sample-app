@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class CommentCreationSettingsView: UIView {
 
@@ -52,7 +53,7 @@ class CommentCreationSettingsView: UIView {
     }()
 
     private let viewModel: CommentCreationSettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: CommentCreationSettingsViewModeling) {
         self.viewModel = viewModel
@@ -90,23 +91,23 @@ private extension CommentCreationSettingsView {
 
     func setupObservers() {
         viewModel.outputs.styleModeIndex
-            .bind(to: segmentedStyleMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedStyleMode.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedStyleMode.rx.selectedSegmentIndex
+        segmentedStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.customStyleModeSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.accessoryViewIndex
-            .bind(to: segmentedAccessoryView.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedAccessoryView.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedAccessoryView.rx.selectedSegmentIndex
+        segmentedAccessoryView.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.accessoryViewSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.hideAccessoryViewOptions
-            .bind(to: segmentedAccessoryView.rx.isHidden)
-            .disposed(by: disposeBag)
+            .assign(to: \.isHidden, on: segmentedAccessoryView)
+            .store(in: &cancellables)
     }
 }

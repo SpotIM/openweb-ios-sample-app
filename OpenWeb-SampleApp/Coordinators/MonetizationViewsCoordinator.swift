@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class MonetizationViewsCoordinator: BaseCoordinator<Void> {
 
@@ -17,7 +17,7 @@ class MonetizationViewsCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
             fatalError("MonetizationViewsCoordinator requires coordinatorData from `CoordinatorData.postId` type")
@@ -26,7 +26,7 @@ class MonetizationViewsCoordinator: BaseCoordinator<Void> {
         let monetizationViewModel: MonetizationViewsViewModeling = MonetizationViewsViewModel(postId: postId)
         let monetizationVC = MonetizationViewsVC(viewModel: monetizationViewModel)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         setupCoordinatorInternalNavigation(viewModel: monetizationViewModel)
 
@@ -35,14 +35,14 @@ class MonetizationViewsCoordinator: BaseCoordinator<Void> {
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }
 
 private extension MonetizationViewsCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MonetizationViewsViewModeling) {
         viewModel.outputs.openSingleAdExample
-            .subscribe(onNext: { [weak self] postId in
+            .sink(receiveValue: { [weak self] postId in
                 guard let self else { return }
                 let singleAdExampleViewModel = SingleAdExampleViewModel(postId: postId)
                 let singleAdExampleVC = SingleAdExampleVC(viewModel: singleAdExampleViewModel)
@@ -50,11 +50,11 @@ private extension MonetizationViewsCoordinator {
                                  animated: true,
                                  completion: nil)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.openPreconversationWithAdExample
-            .subscribe(
-                onNext: { [weak self] dataModel in
+            .sink(
+                receiveValue: { [weak self] dataModel in
                     guard let self else { return }
                     let coordinatorData = CoordinatorData.actionsViewSettings(data: dataModel)
                     guard case CoordinatorData.actionsViewSettings(let settings) = coordinatorData else {
@@ -71,6 +71,6 @@ private extension MonetizationViewsCoordinator {
                                      completion: nil)
 
                 })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

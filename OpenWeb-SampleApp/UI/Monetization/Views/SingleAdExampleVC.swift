@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 
 class SingleAdExampleVC: UIViewController {
     private struct Metrics {
@@ -19,7 +19,7 @@ class SingleAdExampleVC: UIViewController {
     }
 
     private let viewModel: SingleAdExampleViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
@@ -67,8 +67,8 @@ private extension SingleAdExampleVC {
         title = viewModel.outputs.title
 
         viewModel.outputs.adView
-            .observe(on: MainScheduler.instance)
-            .subscribe { [weak self] adView in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] adView in
                 guard let self else { return }
                 view.addSubview(adView)
                 adView.snp.makeConstraints { make in
@@ -78,6 +78,6 @@ private extension SingleAdExampleVC {
                 }
                 adView.accessibilityIdentifier = Metrics.adViewIdentifier
             }
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
