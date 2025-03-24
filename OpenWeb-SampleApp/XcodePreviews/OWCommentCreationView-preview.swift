@@ -24,7 +24,8 @@
                 ),
                 settings: OWAdditionalSettings(),
                 commentCreationType: .comment,
-                presentationalStyle: .none
+                presentationalStyle: .none,
+                postId: OWManager.manager.postId ?? ""
             ),
             viewableMode: .independent
         )
