@@ -25,7 +25,7 @@
                 settings: OWAdditionalSettings(),
                 commentCreationType: .comment,
                 presentationalStyle: .none,
-                postId: OWManager.manager.postId ?? ""
+                postId: ""
             ),
             viewableMode: .independent
         )
