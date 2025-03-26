@@ -457,11 +457,12 @@ private extension MockArticleFlowsViewModel {
                 break
             }
 
-            _ = authenticationVM.outputs.dismissed
+            authenticationVM.outputs.dismissed
                 .prefix(1)
                 .sink(receiveValue: { [completion] _ in
                     completion()
                 })
+                .store(in: &cancellables)
         }
 
         let authenticationUI = OpenWeb.manager.ui.authenticationUI
@@ -474,8 +475,8 @@ private extension MockArticleFlowsViewModel {
             let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
             if OpenWeb.manager.spotId == demoSpotId,
                let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
-                _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
-                    .prefix(1) // No need to disposed since we only take 1
+                self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+                    .prefix(1)
                     .sink(receiveCompletion: { result in
                         if case .failure(let error) = result {
                             DLog("Silent SSO failed with error: \(error)")
@@ -485,6 +486,7 @@ private extension MockArticleFlowsViewModel {
                         DLog("Silent SSO completed successfully with userId: \(userId)")
                         completion()
                     })
+                    .store(in: &cancellables)
             } else {
                 DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
                 completion()
