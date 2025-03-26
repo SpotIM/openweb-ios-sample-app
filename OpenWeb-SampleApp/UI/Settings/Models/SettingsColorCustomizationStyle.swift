@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum SettingsColorCustomizationStyle: Int {
+enum SettingsColorCustomizationStyle: Int {
     case none
     case style1
     case custom

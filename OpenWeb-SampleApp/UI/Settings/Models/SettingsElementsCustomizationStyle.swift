@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum SettingsElementsCustomizationStyle: Int {
+enum SettingsElementsCustomizationStyle: Int {
     case none
     case style1
     case style2

@@ -52,11 +52,7 @@ class ConversationCountersNewAPIVC: UIViewController {
 
     private lazy var loader: UIActivityIndicatorView = {
         let style: UIActivityIndicatorView.Style
-        if #available(iOS 13.0, *) {
-            style = .large
-        } else {
-            style = .whiteLarge
-        }
+        style = .large
         let loader = UIActivityIndicatorView(style: style)
         loader.isHidden = true
         return loader

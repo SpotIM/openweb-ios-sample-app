@@ -42,22 +42,17 @@ private extension SampleAppNavigationController {
             NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text)
         ]
 
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithTransparentBackground()
-            appearance.backgroundColor = navigationBarBackgroundColor
-            appearance.titleTextAttributes = navigationTitleTextAttributes
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = navigationBarBackgroundColor
+        appearance.titleTextAttributes = navigationTitleTextAttributes
 
-            // Setup Back button
-            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
-            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-            appearance.backButtonAppearance = backButtonAppearance
+        // Setup Back button
+        let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
+        backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+        appearance.backButtonAppearance = backButtonAppearance
 
-            self.navigationBar.standardAppearance = appearance
-            self.navigationBar.scrollEdgeAppearance = self.navigationBar.standardAppearance
-        } else {
-            self.navigationBar.backgroundColor = navigationBarBackgroundColor
-            self.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-        }
+        self.navigationBar.standardAppearance = appearance
+        self.navigationBar.scrollEdgeAppearance = self.navigationBar.standardAppearance
      }
 }

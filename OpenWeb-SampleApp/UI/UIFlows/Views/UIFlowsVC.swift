@@ -24,6 +24,7 @@ class UIFlowsVC: UIViewController {
         static let btnCommentCreationPresentModeIdentifier = "btn_comment_creation_present_mode_id"
         static let btnCommentThreadPushModeIdentifier = "btn_comment_thread_push_mode_id"
         static let btnCommentThreadPresentModeIdentifier = "btn_comment_thread_present_mode_id"
+        static let btnMonetizationIdentifier = "btn_monetization_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -72,6 +73,10 @@ class UIFlowsVC: UIViewController {
         return NSLocalizedString("CommentThreadPresentMode", comment: "").blueRoundedButton
     }()
 
+    private lazy var btnMonetization: UIButton = {
+        return NSLocalizedString("Monetization", comment: "").blueRoundedButton
+    }()
+
     init(viewModel: UIFlowsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -104,6 +109,7 @@ private extension UIFlowsVC {
         btnCommentCreationPresentMode.accessibilityIdentifier = Metrics.btnCommentCreationPresentModeIdentifier
         btnCommentThreadPushMode.accessibilityIdentifier = Metrics.btnCommentThreadPushModeIdentifier
         btnCommentThreadPresentMode.accessibilityIdentifier = Metrics.btnCommentThreadPresentModeIdentifier
+        btnMonetization.accessibilityIdentifier = Metrics.btnMonetizationIdentifier
     }
 
     func setupViews() {
@@ -186,6 +192,17 @@ private extension UIFlowsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
+
+        #if ADS
+        // Adding monetization button
+        scrollView.addSubview(btnMonetization)
+        btnMonetization.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentThreadPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+        #endif
     }
 
     func setupObservers() {
@@ -244,6 +261,10 @@ private extension UIFlowsVC {
                 return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentThreadTapped)
+            .disposed(by: disposeBag)
+
+        btnMonetization.rx.tap
+            .bind(to: viewModel.inputs.monetizationTapped)
             .disposed(by: disposeBag)
     }
 }

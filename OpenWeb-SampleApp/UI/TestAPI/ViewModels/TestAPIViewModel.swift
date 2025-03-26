@@ -47,6 +47,8 @@ protocol TestAPIViewModelingOutputs {
     var selectedPostId: Observable<OWPostId> { get }
     var envLabelString: Observable<String> { get }
     var isEnvLabelVisible: Observable<Bool> { get }
+    var configurationLabelString: Observable<String> { get }
+    var isConfigurationLabelVisible: Observable<Bool> { get }
 }
 
 protocol TestAPIViewModeling {
@@ -86,11 +88,11 @@ class TestAPIViewModel: TestAPIViewModeling,
     let viewWillAppear = PublishSubject<Void>()
 
     private lazy var isBetaConfiguration: Bool = {
-    #if BETA
+        #if BETA
         return true
         #else
         return false
-    #endif
+        #endif
     }()
 
     private lazy var isBetaConfigurationSubject: BehaviorSubject<Bool> = {
@@ -99,6 +101,34 @@ class TestAPIViewModel: TestAPIViewModeling,
 
     var isEnvLabelVisible: Observable<Bool> {
         return isBetaConfigurationSubject
+            .asObservable()
+    }
+
+    private var configurationString: String? {
+        var configurationString = ""
+        #if DEBUG && !PUBLIC_DEMO_APP
+        configurationString.append(NSLocalizedString("ConfigurationDebug", comment: ""))
+        #endif
+
+        #if BETA || ADS
+        configurationString.append(" | ")
+        #endif
+
+        #if BETA
+        configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
+        #elseif ADS
+        configurationString.append(NSLocalizedString("ConfigurationAds", comment: ""))
+        #endif
+        return !configurationString.isEmpty ? configurationString : nil
+    }
+
+    private lazy var configurationStringSubject: BehaviorSubject<String?> = {
+        return BehaviorSubject(value: configurationString)
+    }()
+
+    var isConfigurationLabelVisible: Observable<Bool> {
+        return configurationStringSubject
+            .map { $0 != nil }
             .asObservable()
     }
 
@@ -123,6 +153,20 @@ class TestAPIViewModel: TestAPIViewModeling,
                     return ""
                 }
                 return NSLocalizedString("NetworkEnvironment", comment: "") + ": \(envString)"
+            }
+            .asObservable()
+    }
+
+    var configurationLabelString: Observable<String> {
+        return viewWillAppear
+            .flatMap {
+                self.configurationStringSubject
+            }
+            .map { configurationString in
+                guard let configurationString else {
+                    return ""
+                }
+                return NSLocalizedString("BuildConfiguration", comment: "") + ": \(configurationString)"
             }
             .asObservable()
     }
@@ -332,15 +376,15 @@ private extension TestAPIViewModel {
 
     func setSDKConfigurations(_ spotId: String) {
         setupEnvironment() // env must be set before spotId because we fetch config right after spotId set
-        var manager = OpenWeb.manager
+        let manager = OpenWeb.manager
         manager.spotId = spotId
-        var customizations = manager.ui.customizations
+        let customizations = manager.ui.customizations
         customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.default.index))
         customizations.statusBarEnforcement = .statusBarStyle(fromIndex: UserDefaultsProvider.shared.get(key: .statusBarStyleIndex, defaultValue: OWStatusBarEnforcement.default.index))
         // swiftlint:disable line_length
         customizations.navigationBarEnforcement = .navigationBarEnforcement(fromIndex: UserDefaultsProvider.shared.get(key: .navigationBarStyleIndex, defaultValue: OWNavigationBarEnforcement.default.index))
         // swiftlint:enable line_length
-        var sorting = customizations.sorting
+        let sorting = customizations.sorting
         sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index))
         let sortTitles: [OWSortOption: String]? = UserDefaultsProvider.shared.get(key: .customSortTitles)
         for (key, title) in sortTitles ?? [:] {
@@ -348,11 +392,11 @@ private extension TestAPIViewModel {
             sorting.setTitle(title, forOption: key)
         }
         customizations.fontFamily = UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
-        var helpers = OpenWeb.manager.helpers
+        let helpers = OpenWeb.manager.helpers
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
         helpers.localeStrategy = UserDefaultsProvider.shared.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
         helpers.orientationEnforcement = UserDefaultsProvider.shared.get(key: .orientationEnforcement, defaultValue: OWOrientationEnforcement.default)
-        var authentication = OpenWeb.manager.authentication
+        let authentication = OpenWeb.manager.authentication
         authentication.shouldDisplayLoginPrompt = UserDefaultsProvider.shared.get(key: .showLoginPrompt, defaultValue: false)
         customizations.commentActions.color = UserDefaultsProvider.shared.get(key: .commentActionsColor, defaultValue: OWCommentActionsColor.default)
         customizations.commentActions.fontStyle = UserDefaultsProvider.shared.get(key: .commentActionsFontStyle, defaultValue: OWCommentActionsFontStyle.default)
@@ -375,7 +419,7 @@ private extension TestAPIViewModel {
     func setupEnvironment() {
         #if BETA
         let env = UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
-        var manager = OpenWeb.manager
+        let manager = OpenWeb.manager
         manager.environment = env.toSDKEnvironmentType
         #endif
     }

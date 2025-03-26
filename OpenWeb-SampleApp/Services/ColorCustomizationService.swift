@@ -18,7 +18,7 @@ class ColorCustomizationService: ColorCustomizationServicing {
 
     static func setColorCustomization() {
         let style = UserDefaultsProvider.shared.get(key: .colorCustomizationStyleIndex, defaultValue: SettingsColorCustomizationStyle.defaultIndex)
-        var customizations = OpenWeb.manager.ui.customizations
+        let customizations = OpenWeb.manager.ui.customizations
 
         switch style {
         case 1: // style 1

@@ -1,15 +1,15 @@
-platform :ios, '12.0'
+platform :ios, '13.0'
 inhibit_all_warnings!
 use_frameworks!
 
 def openweb_pod
-  pod 'OpenWebSDK', '2.6.3'
+  pod 'OpenWebSDK', '2.7.0'
 end
 
 def rx_pods
-  pod 'RxSwift', '6.7.0'
-  pod 'RxRelay', '6.7.0'
-  pod 'RxCocoa', '6.7.0'
+  pod 'RxSwift', '6.7.1'
+  pod 'RxRelay', '6.7.1'
+  pod 'RxCocoa', '6.7.1'
 end
 
 def general_pods

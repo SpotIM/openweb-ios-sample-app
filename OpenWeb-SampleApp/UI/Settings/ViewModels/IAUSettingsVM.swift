@@ -28,8 +28,6 @@ class IAUSettingsVM: IAUSettingsViewModeling, IAUSettingsViewModelingInputs, IAU
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
 
-    private let disposeBag = DisposeBag()
-
     lazy var title: String = {
         return NSLocalizedString("IAUSettings", comment: "")
     }()

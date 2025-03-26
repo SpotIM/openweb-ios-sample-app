@@ -499,11 +499,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         let _light = NSLocalizedString("Light", comment: "")
         let _dark = NSLocalizedString("Dark", comment: "")
 
-        if #available(iOS 13.0, *) {
-            return [_matchTheme, _light, _dark]
-        } else {
-            return [_matchTheme, _light]
-        }
+        return [_matchTheme, _light, _dark]
     }()
 
     lazy var navigationBarStyleSettings: [String] = {
@@ -697,7 +693,7 @@ private extension GeneralSettingsVM {
         themeModeSelectedIndex // 0. default 1. light 2. dark
             .subscribe(onNext: { [weak self] index in
                 guard let self else { return }
-                var customizations = self.manager.ui.customizations
+                let customizations = self.manager.ui.customizations
                 customizations.themeEnforcement = .themeStyle(fromIndex: index)
             })
             .disposed(by: disposeBag)
@@ -705,7 +701,7 @@ private extension GeneralSettingsVM {
         statusBarStyleSelectedIndex // 0. matchTheme 1. light 2. dark
             .subscribe(onNext: { [weak self] index in
                 guard let self else { return }
-                var customizations = self.manager.ui.customizations
+                let customizations = self.manager.ui.customizations
                 customizations.statusBarEnforcement = .statusBarStyle(fromIndex: index)
             })
             .disposed(by: disposeBag)
@@ -713,7 +709,7 @@ private extension GeneralSettingsVM {
         navigationBarStyleSelectedIndex // 0. largeTitles 1. regular 2. keepOriginal
             .subscribe(onNext: { [weak self] index in
                 guard let self else { return }
-                var customizations = self.manager.ui.customizations
+                let customizations = self.manager.ui.customizations
                 customizations.navigationBarEnforcement = .navigationBarEnforcement(fromIndex: index)
             })
             .disposed(by: disposeBag)
@@ -721,7 +717,7 @@ private extension GeneralSettingsVM {
         fontGroupTypeObservable
             .subscribe(onNext: { [weak self] fontGroupType in
                 guard let self else { return }
-                var customizations = self.manager.ui.customizations
+                let customizations = self.manager.ui.customizations
                 customizations.fontFamily = fontGroupType
             })
             .disposed(by: disposeBag)
@@ -769,7 +765,7 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
     }
 }
 
-extension OWSortOption: Codable {
+extension OWSortOption {
     /// index into `GeneralSettingsVM.initialSortSettings`
     var titleIndex: Int {
         switch self {

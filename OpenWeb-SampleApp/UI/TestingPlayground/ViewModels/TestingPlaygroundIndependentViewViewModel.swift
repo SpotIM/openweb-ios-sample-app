@@ -37,12 +37,6 @@ class TestingPlaygroundIndependentViewModel: TestingPlaygroundIndependentViewMod
 
     private let disposeBag = DisposeBag()
 
-    private let _showError = PublishSubject<String>()
-    var showError: Observable<String> {
-        return _showError
-            .asObservable()
-    }
-
     private let _testingPlaygroundView = BehaviorSubject<UIView?>(value: nil)
     var testingPlaygroundView: Observable<UIView> {
         return _testingPlaygroundView

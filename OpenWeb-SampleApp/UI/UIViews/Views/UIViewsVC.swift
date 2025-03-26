@@ -20,7 +20,7 @@ class UIViewsVC: UIViewController {
         static let btnCommentCreationIdentifier = "btn_comment_creation_id"
         static let btnCommentThreadIdentifier = "btn_comment_thread_id"
         static let btnClarityDetailsIdentifier = "btn_clarity_details_id"
-        static let btnIndependentAdUnitIdentifier = "btn_independent_ad_unit_id"
+        static let btnMonetizationIdentifier = "btn_monetization_id"
         static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
@@ -58,8 +58,8 @@ class UIViewsVC: UIViewController {
         return NSLocalizedString("ClarityDetails", comment: "").blueRoundedButton
     }()
 
-    private lazy var btnIndependentAdUnit: UIButton = {
-        return NSLocalizedString("IndependentAdUnit", comment: "").blueRoundedButton
+    private lazy var btnMonetization: UIButton = {
+        return NSLocalizedString("Monetization", comment: "").blueRoundedButton
     }()
 
     private lazy var btnExamples: UIButton = {
@@ -95,7 +95,7 @@ private extension UIViewsVC {
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
         btnClarityDetails.accessibilityIdentifier = Metrics.btnClarityDetailsIdentifier
-        btnIndependentAdUnit.accessibilityIdentifier = Metrics.btnIndependentAdUnitIdentifier
+        btnMonetization.accessibilityIdentifier = Metrics.btnMonetizationIdentifier
         btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
@@ -156,21 +156,27 @@ private extension UIViewsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
-        // Adding independent ad unit button
-        scrollView.addSubview(btnIndependentAdUnit)
-        btnIndependentAdUnit.snp.makeConstraints { make in
+        #if ADS
+        // Adding monetization button
+        scrollView.addSubview(btnMonetization)
+        btnMonetization.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
+        #endif
 
         // Adding examples button
         scrollView.addSubview(btnExamples)
         btnExamples.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnIndependentAdUnit.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            #if ADS
+            make.top.equalTo(btnMonetization.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            #else
+            make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            #endif
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
@@ -200,8 +206,8 @@ private extension UIViewsVC {
             .bind(to: viewModel.inputs.clarityDetailsTapped)
             .disposed(by: disposeBag)
 
-        btnIndependentAdUnit.rx.tap
-            .bind(to: viewModel.inputs.independentAdUnitTapped)
+        btnMonetization.rx.tap
+            .bind(to: viewModel.inputs.monetizationTapped)
             .disposed(by: disposeBag)
 
         btnExamples.rx.tap
