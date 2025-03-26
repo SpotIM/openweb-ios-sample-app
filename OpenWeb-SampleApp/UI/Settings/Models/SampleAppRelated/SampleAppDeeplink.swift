@@ -8,16 +8,9 @@
 
 import Foundation
 
-enum SampleAppDeeplink: Codable {
+enum SampleAppDeeplink: Int, Codable {
     static func deeplink(fromIndex index: Int) -> SampleAppDeeplink {
-        switch index {
-        case SampleAppDeeplink.none.index: return .none
-        case SampleAppDeeplink.about.index: return .about
-        case SampleAppDeeplink.testAPI.index: return .testAPI
-        case SampleAppDeeplink.settings.index: return .settings
-        case SampleAppDeeplink.authentication.index: return .authentication
-        default: return `default`
-        }
+        return Self(rawValue: index) ?? `default`
     }
 
     case none
@@ -27,13 +20,7 @@ enum SampleAppDeeplink: Codable {
     case authentication
 
     var index: Int {
-        switch self {
-        case .none: return 0
-        case .about: return 1
-        case .testAPI: return 2
-        case .settings: return 3
-        case .authentication: return 4
-        }
+        return rawValue
     }
 
     var toDeepLinkOptions: DeepLinkOptions? {
@@ -46,7 +33,5 @@ enum SampleAppDeeplink: Codable {
         }
     }
 
-    static var `default`: SampleAppDeeplink {
-        return .none
-    }
+    static let `default`: SampleAppDeeplink = .none
 }

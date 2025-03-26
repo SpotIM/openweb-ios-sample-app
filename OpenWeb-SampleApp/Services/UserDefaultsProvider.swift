@@ -80,13 +80,6 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
     }
 
     enum UDKey<T: Codable>: String {
-        case shouldShowOpenFullConversation
-        case shouldPresentInNewNavStack
-        case shouldOpenComment
-        case isCustomDarkModeEnabled = "demo.isCustomDarkModeEnabled"
-        case isReadOnlyEnabled = "demo.isReadOnlyEnabled"
-        case interfaceStyle = "demo.interfaceStyle"
-        case spotIdKey
         case articleHeaderStyle
         case articleInformationStrategy
         case elementsCustomizationStyleIndex
@@ -116,6 +109,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case deeplinkOption
         case commentActionsColor
         case commentActionsFontStyle
+        case callingMethodOption
         case flowsLoggerEnabled
     }
 }

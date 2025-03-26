@@ -39,7 +39,6 @@ class ColorSelectionItemCellViewModel: ColorSelectionItemCellViewModeling, Color
     var outputs: ColorSelectionItemCellViewModelingOutputs { return self }
 
     private var item: ThemeColorItem
-    private let disposeBag = DisposeBag()
 
     init(item: ThemeColorItem) {
         self.item = item

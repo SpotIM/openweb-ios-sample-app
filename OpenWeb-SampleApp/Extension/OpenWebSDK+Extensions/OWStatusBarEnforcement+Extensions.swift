@@ -14,16 +14,8 @@ extension OWStatusBarEnforcement {
         switch index {
         case OWStatusBarEnforcement.matchTheme.index: return .matchTheme
         case OWStatusBarEnforcement.style(.lightContent).index: return .style(.lightContent)
-        default:
-            if #available(iOS 13.0, *) {
-                if index == OWStatusBarEnforcement.style(.darkContent).index {
-                    return .style(.darkContent)
-                } else {
-                    return `default`
-                }
-            } else {
-                return `default`
-            }
+        case OWStatusBarEnforcement.style(.darkContent).index: return .style(.darkContent)
+        default: return `default`
         }
     }
 
@@ -35,16 +27,8 @@ extension OWStatusBarEnforcement {
         switch self {
         case .matchTheme: return 0
         case .style(.lightContent): return 1
-        default:
-            if #available(iOS 13.0, *) {
-                if self == .style(.darkContent) {
-                    return 2
-                } else {
-                    return OWStatusBarEnforcement.`default`.index
-                }
-            } else {
-                return OWStatusBarEnforcement.`default`.index
-            }
+        case .style(.darkContent): return 2
+        default: return OWStatusBarEnforcement.`default`.index
         }
     }
 }
