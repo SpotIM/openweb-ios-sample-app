@@ -765,7 +765,7 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
     }
 }
 
-extension OWSortOption: Codable {
+extension OWSortOption {
     /// index into `GeneralSettingsVM.initialSortSettings`
     var titleIndex: Int {
         switch self {
