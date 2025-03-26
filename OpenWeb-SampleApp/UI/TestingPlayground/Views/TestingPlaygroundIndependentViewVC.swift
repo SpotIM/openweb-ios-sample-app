@@ -15,7 +15,6 @@ import RxCocoa
 
 class TestingPlaygroundIndependentViewVC: UIViewController {
     private struct Metrics {
-        static let verticalMargin: CGFloat = 40
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let identifier = "testing_playground_independent_view_vc_id"
     }

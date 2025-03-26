@@ -156,12 +156,14 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
 
     var closeClick = PublishSubject<Void>()
 
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let disposeBag = DisposeBag()
 
     private var spotIdToFilterBy: OWSpotId?
 
-    init(filterBySpotId spotId: OWSpotId? = nil) {
+    init(filterBySpotId spotId: OWSpotId? = nil, userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         spotIdToFilterBy = spotId
+        self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
     }
 }
@@ -228,20 +230,38 @@ private extension AuthenticationPlaygroundViewModel {
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
                 self?._logoutAuthenticationStatus.onNext(.inProgress)
             })
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
                 let authentication = OpenWeb.manager.authentication
-                authentication.userStatus { loginStatus in
-                    DLog("Before logout \(loginStatus))")
-                    authentication.logout { [weak self] result in
-                        switch result {
-                        case .success:
-                            authentication.userStatus { loginStatus in
-                                DLog("After logout \(loginStatus))")
-                            }
+                if shouldUseAsyncAwaitCallingMethod() {
+                    Task { [weak self] in
+                        do {
+                            var loginStatus = try await authentication.userStatus()
+                            DLog("Before logout \(loginStatus))")
+                            try await authentication.logout()
                             self?._logoutAuthenticationStatus.onNext(.successful)
-                        case .failure(let error):
+                            loginStatus = try await authentication.userStatus()
+                            DLog("After logout \(loginStatus))")
+                        } catch {
                             DLog("Logout error: \(error)")
                             self?._logoutAuthenticationStatus.onNext(.failed)
+                        }
+                    }
+
+                } else {
+                    authentication.userStatus { loginStatus in
+                        DLog("Before logout \(loginStatus))")
+                        authentication.logout { [weak self] result in
+                            switch result {
+                            case .success:
+                                authentication.userStatus { loginStatus in
+                                    DLog("After logout \(loginStatus))")
+                                }
+                                self?._logoutAuthenticationStatus.onNext(.successful)
+                            case .failure(let error):
+                                DLog("Logout error: \(error)")
+                                self?._logoutAuthenticationStatus.onNext(.failed)
+                            }
                         }
                     }
                 }
@@ -280,7 +300,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> Observable<GenericSSOAuthentication> in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if shouldInitializeSDK {
-                    var manager = OpenWeb.manager
+                    let manager = OpenWeb.manager
                     manager.spotId = genericSSO.spotId
                 }
                 var genericSSO = genericSSO
@@ -382,7 +402,7 @@ private extension AuthenticationPlaygroundViewModel {
             .withLatestFrom(shouldInitializeSDK) { thirdPartySSO, shouldInitializeSDK -> ThirdPartySSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if shouldInitializeSDK {
-                    var manager = OpenWeb.manager
+                    let manager = OpenWeb.manager
                     manager.spotId = thirdPartySSO.spotId
                 }
                 return thirdPartySSO
@@ -508,5 +528,9 @@ private extension AuthenticationPlaygroundViewModel {
 
             return Disposables.create()
         }
+    }
+
+    func shouldUseAsyncAwaitCallingMethod() -> Bool {
+        return SampleAppCallingMethod.asyncAwait == userDefaultsProvider.get(key: .callingMethodOption, defaultValue: .default)
     }
 }
