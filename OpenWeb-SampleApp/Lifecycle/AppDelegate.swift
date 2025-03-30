@@ -27,8 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
 
         #if canImport(InjectHotReload)
-        Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
-        UIView.setupSwizzlingForHotReload()
+        if let injectionPath = Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle") {
+            injectionPath.load()
+            UIView.setupSwizzlingForHotReload()
+        } else {
+            DLog("InjectionIII bundle not found")
+        }
         #endif
 
         window = UIWindow(frame: UIScreen.main.bounds)
