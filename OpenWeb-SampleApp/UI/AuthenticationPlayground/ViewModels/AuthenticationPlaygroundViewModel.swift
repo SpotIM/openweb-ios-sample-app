@@ -103,7 +103,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
         var models = GenericSSOAuthentication.mockModels
 
         if let spotId = spotIdToFilterBy {
-            models = models.filter { $0.spotId == spotId }
+            models = models.filter { $0.spotId == spotId || $0.spotId == "*" }
         }
 
         return models
