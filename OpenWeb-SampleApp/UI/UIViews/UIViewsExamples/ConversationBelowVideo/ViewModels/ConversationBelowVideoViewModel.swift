@@ -214,7 +214,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
         if OpenWeb.manager.spotId == demoSpotId,
            let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
-            _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+            self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
                 .prefix(1) // No need to disposed since we only take 1
                 .sink(receiveCompletion: { result in
                     if case .failure(let error) = result {
@@ -225,6 +225,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
                     DLog("Silent SSO completed successfully with userId: \(userId)")
                     completion()
                 })
+                .store(in: &cancellables)
         } else {
             DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
             completion()
@@ -233,6 +234,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         DLog("`renewSSOCallback` triggered")
         #endif
     }
+
+    private lazy var cancellables: Set<AnyCancellable> = []
 
     init(postId: OWPostId,
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
