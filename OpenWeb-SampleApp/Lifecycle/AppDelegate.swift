@@ -27,11 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
 
         #if canImport(InjectHotReload)
-        if let injectionPath = Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle") {
-            injectionPath.load()
-            UIView.setupSwizzlingForHotReload()
-        } else {
-            DLog("InjectionIII bundle not found")
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+            if let injectionPath = Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle") {
+                injectionPath.load()
+                UIView.setupSwizzlingForHotReload()
+            } else {
+                DLog("InjectionIII bundle not found")
+            }
         }
         #endif
 
