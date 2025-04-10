@@ -34,12 +34,49 @@ private func bellWithCount(_ count: Int) -> UIView {
 
 private extension OWNotificationBellView {
     convenience init(unseenCount: Int) {
-        let mockRealtimeService = MockUnseenCountRealtimeService(unseenCount: unseenCount)
         let vm = OWNotificationsBellViewModel(
-            servicesProvider: MockServicesProvider(realtimeService: mockRealtimeService),
+            servicesProvider: MockServicesProvider(
+                networkAPI: MockNetworkAPI(unseenCount: unseenCount),
+                realtimeService: MockUnseenCountRealtimeService(unseenCount: unseenCount)
+            ),
+            postId: "mockPostId",
             viewableMode: .independent
         )
         self.init(viewModel: vm)
+    }
+}
+
+private class MockNetworkAPI: StubNetworkAPI {
+    private let unseenCount: Int
+    private let mockNotificationsAPI: MockNotificationsAPI
+
+    init(unseenCount: Int) {
+        self.unseenCount = unseenCount
+        self.mockNotificationsAPI = MockNotificationsAPI(unseenCount: unseenCount)
+        super.init()
+    }
+
+    override var notifications: OWNotificationsAPI { return mockNotificationsAPI }
+}
+
+private class MockNotificationsAPI: OWNotificationsAPI {
+    private let progress = PublishSubject<Progress>()
+    private let unseenCount: Int
+
+    init(unseenCount: Int) {
+        self.unseenCount = unseenCount
+        let progressValue = Progress(totalUnitCount: 1)
+        progressValue.completedUnitCount = 1
+        progress.onNext(progressValue)
+    }
+
+    func getNotifications(offset: Int?, count: Int, postId: OWPostId) -> OWNetworkResponse<OWNotificationsResponse> {
+        let response = OWNotificationsResponse(notifications: [], totalUnread: unseenCount, totalUnseen: unseenCount, total: unseenCount, cursor: nil)
+        return OWNetworkResponse(progress: progress, response: Observable.just(response))
+    }
+
+    func resetUnseen(postId: OWPostId) -> OWNetworkResponse<OWNetworkEmpty> {
+        return OWNetworkResponse(progress: progress, response: Observable.just(OWNetworkEmpty()))
     }
 }
 
