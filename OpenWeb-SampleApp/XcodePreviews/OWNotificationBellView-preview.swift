@@ -78,6 +78,10 @@ private class MockNotificationsAPI: OWNotificationsAPI {
     func resetUnseen(postId: OWPostId) -> OWNetworkResponse<OWNetworkEmpty> {
         return OWNetworkResponse(progress: progress, response: Observable.just(OWNetworkEmpty()))
     }
+
+    func markAsRead(notificationIds: [String], postId: OWPostId) -> OWNetworkResponse<OWNetworkEmpty> {
+        return OWNetworkResponse(progress: progress, response: Observable.just(OWNetworkEmpty()))
+    }
 }
 
 private class MockUnseenCountRealtimeService: OWRealtimeServicing {
