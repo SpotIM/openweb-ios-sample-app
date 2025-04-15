@@ -11,6 +11,8 @@ import RxSwift
 
 @available(iOS 17.0, *)
 #Preview {
+    OpenWeb.manager.spotId = "sp_JO8jQVTJ"
+
     let notificationsData = OWNotificationsRequiredData(
         presentationalMode: .push,
         article: OWArticle.stub(),
