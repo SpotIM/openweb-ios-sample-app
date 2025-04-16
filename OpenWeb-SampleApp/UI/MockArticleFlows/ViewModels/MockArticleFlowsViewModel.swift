@@ -503,7 +503,7 @@ private extension MockArticleFlowsViewModel {
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
         guard let navController = self.navController,
-              let presentationalVC = self.presentationalVC else { return nil }
+              let presentationalVC else { return nil }
 
         switch mode {
         case .present(let style):
