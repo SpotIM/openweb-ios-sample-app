@@ -30,7 +30,7 @@
     var outputs: PreconversationViewsWithAdViewModelingOutput { get }
  }
 
- public final class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModeling,
+class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModeling,
                                                          PreconversationViewsWithAdViewModelingOutput,
                                                          PreconversationViewsWithAdViewModelingInput {
 
