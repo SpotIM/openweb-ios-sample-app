@@ -21,7 +21,7 @@ protocol PreconversationCellViewModeling {
     var outputs: PreconversationCellViewModelingOutput { get }
 }
 
-public final class PreconversationCellViewModel: PreconversationCellViewModeling,
+class PreconversationCellViewModel: PreconversationCellViewModeling,
                                                  PreconversationCellViewModelingOutput,
                                                  PreconversationCellViewModelingInput {
     var inputs: PreconversationCellViewModelingInput { self }

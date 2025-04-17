@@ -47,11 +47,9 @@ private extension OWNotificationBellView {
 }
 
 private class MockNetworkAPI: StubNetworkAPI {
-    private let unseenCount: Int
     private let mockNotificationsAPI: MockNotificationsAPI
 
     init(unseenCount: Int) {
-        self.unseenCount = unseenCount
         self.mockNotificationsAPI = MockNotificationsAPI(unseenCount: unseenCount)
         super.init()
     }

@@ -314,7 +314,7 @@ private extension ConversationBelowVideoVC {
         keyboardHeight
             .sink(receiveValue: { [weak self] height in
                 guard let self, self.reportReasons != nil,
-                let reportReasonsHeightConstraint = self.reportReasonsHeightConstraint else { return }
+                let reportReasonsHeightConstraint else { return }
                 let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
                 reportReasonsHeightConstraint.update(offset: -adjustedHeight)
                 UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
@@ -327,7 +327,7 @@ private extension ConversationBelowVideoVC {
         keyboardHeight
             .sink(receiveValue: { [weak self] height in
                 guard let self, self.clarityDetails != nil,
-                let clarityDetailsHeightConstraint = self.clarityDetailsHeightConstraint else { return }
+                let clarityDetailsHeightConstraint else { return }
                 let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
                 clarityDetailsHeightConstraint.update(offset: -adjustedHeight)
                 UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {

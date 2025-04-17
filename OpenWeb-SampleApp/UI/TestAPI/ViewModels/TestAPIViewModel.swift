@@ -33,8 +33,6 @@ protocol TestAPIViewModelingInputs {
 protocol TestAPIViewModelingOutputs {
     var title: String { get }
     var conversationPresets: AnyPublisher<[ConversationPreset], Never> { get }
-    var spotId: AnyPublisher<String, Never> { get }
-    var postId: AnyPublisher<String, Never> { get }
     var shouldShowSelectPreset: AnyPublisher<Bool, Never> { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
     var openUIFlows: AnyPublisher<SDKConversationDataModel, Never> { get }

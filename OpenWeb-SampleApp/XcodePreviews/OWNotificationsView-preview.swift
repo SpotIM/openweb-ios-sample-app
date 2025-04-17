@@ -236,13 +236,4 @@ class MockListNotificationsAPI: OWNotificationsAPI {
     }
 
 }
-
-// Stub implementation for active article service
-class StubActiveArticleService: OWActiveArticleServicing {
-    func articleExtraData(postId: OWPostId) -> Observable<OWArticleExtraData> {
-        return .just(OWArticleExtraData(url: URL(string: "https://example.com")!, title: "Test Article", subtitle: "Test Subtitle", thumbnailUrl: nil))
-    }
-
-    func updateStrategy(_ strategy: OpenWebSDK.OWArticleInformationStrategy) {}
-}
 #endif
