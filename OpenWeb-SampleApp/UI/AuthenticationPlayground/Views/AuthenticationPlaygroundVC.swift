@@ -173,6 +173,7 @@ private extension AuthenticationPlaygroundVC {
         view.accessibilityIdentifier = Metrics.identifier
     }
 
+    // swiftlint:disable function_body_length
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
@@ -305,6 +306,7 @@ private extension AuthenticationPlaygroundVC {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         }
     }
+    // swiftlint:enable function_body_length
 
     func setupObservers() {
         title = viewModel.outputs.title
