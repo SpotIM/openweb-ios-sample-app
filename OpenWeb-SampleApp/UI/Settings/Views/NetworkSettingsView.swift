@@ -15,6 +15,7 @@ class NetworkSettingsView: UIView {
     private struct Metrics {
         static let identifier = "network_settings_view_id"
         static let segmentedNetworkEnvironmentIdentifier = "network_environment"
+        static let customUrlTextFieldIdentifier = "custom_url_text_field"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -44,9 +45,16 @@ class NetworkSettingsView: UIView {
 
     private lazy var stagingNamespaceTextField: TextFieldSetting = {
         return TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
-                                                  placeholder: "staging-v2",
-                                                  accessibilityPrefixId: Metrics.identifier,
-                                                  font: FontBook.helperLight)
+                                placeholder: "staging-v2",
+                                accessibilityPrefixId: Metrics.identifier,
+                                font: FontBook.helperLight)
+    }()
+
+    private lazy var customUrlTextField: TextFieldSetting = {
+        return TextFieldSetting(title: "Custom URL",
+                                placeholder: "https://example.com",
+                                accessibilityPrefixId: Metrics.customUrlTextFieldIdentifier,
+                                font: FontBook.helperLight)
     }()
 
     private let viewModel: NetworkSettingsViewModeling
@@ -85,6 +93,7 @@ private extension NetworkSettingsView {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedNetworkEnvironment)
         stackView.addArrangedSubview(stagingNamespaceTextField)
+        stackView.addArrangedSubview(customUrlTextField)
     }
 
     func setupObservers() {
@@ -106,32 +115,60 @@ private extension NetworkSettingsView {
             .assign(to: \.text, on: stagingNamespaceTextField.textFieldControl)
             .store(in: &cancellables)
 
-        // Custom network environment
-        Publishers.CombineLatest(segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher, stagingNamespaceTextField.textFieldControl.textPublisher.unwrap())
+        viewModel.outputs.networkEnvironment
+            .map {
+                switch $0 {
+                case .custom(let url):
+                    return url
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .assign(to: \.text, on: customUrlTextField.textFieldControl)
+            .store(in: &cancellables)
+
+        let selectedSegmentPublisher = segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher.share()
+
+        // Non custom network environment (neither staging nor custom URL)
+        selectedSegmentPublisher
+            .filter { $0 != OWNetworkEnvironment.staging(namespace: nil).index && $0 != OWNetworkEnvironment.custom(url: nil).index }
+            .map { OWNetworkEnvironment(from: $0) }
+            .bind(to: viewModel.inputs.networkEnvironmentSelected)
+            .store(in: &cancellables)
+
+        // Staging network environment
+        Publishers.CombineLatest(selectedSegmentPublisher, stagingNamespaceTextField.textFieldControl.textPublisher.unwrap())
             .filter { $0.0 == OWNetworkEnvironment.staging(namespace: nil).index }
             .map { OWNetworkEnvironment(from: $0.0, namespace: $0.1) }
             .bind(to: viewModel.inputs.networkEnvironmentSelected)
             .store(in: &cancellables)
 
-        // Non custom network environment
-        segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher
-            .filter { $0 != OWNetworkEnvironment.staging(namespace: nil).index }
-            .map { OWNetworkEnvironment(from: $0) }
+        // Custom URL network environment
+        Publishers.CombineLatest(selectedSegmentPublisher, customUrlTextField.textFieldControl.textPublisher.unwrap())
+            .filter { $0.0 == OWNetworkEnvironment.custom(url: nil).index }
+            .map { OWNetworkEnvironment(from: $0.0, url: $0.1) }
             .bind(to: viewModel.inputs.networkEnvironmentSelected)
             .store(in: &cancellables)
 
+        setupTextFieldVisibility(textField: stagingNamespaceTextField, visibleForIndex: OWNetworkEnvironment.staging(namespace: nil).index)
+        setupTextFieldVisibility(textField: customUrlTextField, visibleForIndex: OWNetworkEnvironment.custom(url: nil).index)
+    }
+
+    /// Setup a text field's visibility and focus based on the segmentedNetworkEnvironment selected segment
+    func setupTextFieldVisibility(textField: TextFieldSetting, visibleForIndex: Int) {
         segmentedNetworkEnvironment.segmentedControl.selectedSegmentIndexPublisher
-            .map { $0 != OWNetworkEnvironment.staging(namespace: nil).index }
+            .map { $0 != visibleForIndex }
             .removeDuplicates()
             .handleEvents(receiveOutput: { [weak self] isHidden in
                 guard let self else { return }
                 if isHidden {
-                    stagingNamespaceTextField.textFieldControl.resignFirstResponder()
+                    textField.textFieldControl.resignFirstResponder()
                 } else if segmentedNetworkEnvironment.isVisible {
-                    stagingNamespaceTextField.textFieldControl.becomeFirstResponder()
+                    textField.textFieldControl.becomeFirstResponder()
                 }
             })
-            .assign(to: \.isHidden, on: stagingNamespaceTextField)
+            .assign(to: \.isHidden, on: textField)
             .store(in: &cancellables)
     }
 }
