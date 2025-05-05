@@ -291,7 +291,7 @@ private extension MockArticleIndependentViewsViewModel {
                 switch callbackType {
                 case .adSizeChanged: break
                 case let .adEvent(event, index):
-                    let log = "preconversationAd: \(event.description) for index: \(index)\n"
+                    let log = "AdEvent (index: \(index)): \(event.description)\n"
                     self.loggerViewModel.inputs.log(text: log)
                 default:
                     let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
@@ -353,8 +353,15 @@ private extension MockArticleIndependentViewsViewModel {
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
                 guard let self else { return }
-                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                switch callbackType {
+                case .adSizeChanged: break
+                case let .adEvent(event, index):
+                    let log = "AdEvent (index: \(index)): \(event.description)\n"
+                    self.loggerViewModel.inputs.log(text: log)
+                default:
+                    let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                    self.loggerViewModel.inputs.log(text: log)
+                }
             }
 
             if shouldUseAsyncAwaitCallingMethod() {

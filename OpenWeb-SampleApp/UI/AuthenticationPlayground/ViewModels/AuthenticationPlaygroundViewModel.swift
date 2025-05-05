@@ -179,15 +179,12 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
                 let searchTerms = searchText.lowercased().components(separatedBy: .whitespaces).filter { !$0.isEmpty }
                 let optionNames = options.map { $0.displayName }
 
-                if let matchingOption = optionNames.first(where: { option in
+                return optionNames.firstIndex(where: { option in
                     let lowercasedOption = option.lowercased()
                     return searchTerms.allSatisfy { term in
                         lowercasedOption.contains(term)
                     }
-                }) {
-                    return optionNames.firstIndex(of: matchingOption) ?? 0
-                }
-                return 0
+                }) ?? 0
             }
             .eraseToAnyPublisher()
     }()
