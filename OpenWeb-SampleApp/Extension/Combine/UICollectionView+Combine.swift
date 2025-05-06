@@ -18,6 +18,6 @@ extension UICollectionView {
         -> AnySubscriber<Items, Never> where CellType: UICollectionViewCell,
         Items: RandomAccessCollection,
         Items: Equatable {
-            return itemsSubscriber(.init(cellIdentifier: cellType.identifierName, cellType: cellType, cellConfig: cellConfig))
+            return itemsSubscriber(CombineDataSources.CollectionViewItemsController(cellIdentifier: cellType.identifierName, cellType: cellType, cellConfig: cellConfig))
     }
 }
