@@ -144,6 +144,8 @@ class TestAPIViewModel: TestAPIViewModeling,
                     return NSLocalizedString("Staging", comment: "") + " " + (namespace ?? "")
                 case .cluster1d:
                     return NSLocalizedString("1DCluster", comment: "")
+                case .custom(let url):
+                    return NSLocalizedString("Custom", comment: "") + " " + (url ?? "")
                 }
 
             }
