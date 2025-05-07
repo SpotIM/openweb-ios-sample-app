@@ -91,7 +91,8 @@ class CommonCreatorService: CommonCreatorServicing {
 
         let settings = OWArticleSettings(section: section ?? "",
                                          headerStyle: persistenceArticleHeaderStyle,
-                                         readOnlyMode: persistenceReadOnlyMode)
+                                         readOnlyMode: persistenceReadOnlyMode,
+                                         starRatingEnabled: true)
 
         if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL),
