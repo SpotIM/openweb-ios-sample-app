@@ -212,8 +212,8 @@ private extension PreconversationFlowsWithAdViewModel {
             switch callbackType {
             case .adSizeChanged:
                 _adSizeChanged.send()
-            case let .adEvent(event, index):
-                let log = "AdEvent (index: \(index)): \(event.description)\n"
+            case let .adEvent(event, eventData):
+                let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
                 self.loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }

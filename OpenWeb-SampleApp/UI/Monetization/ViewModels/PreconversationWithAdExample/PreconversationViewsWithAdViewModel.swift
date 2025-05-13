@@ -211,9 +211,9 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
             switch callbackType {
             case .adSizeChanged:
                 _adSizeChanged.send()
-            case let .adEvent(event, index):
+            case let .adEvent(event, eventData):
                 guard loggerEnabled else { return }
-                let log = "AdEvent (index: \(index)): \(event.description)\n"
+                let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
                 self.loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }
