@@ -302,11 +302,17 @@ private extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> AnyPublisher<GenericSSOAuthentication, Never> in
                 // 2. Initialize SDK with appropriate spotId if needed
+                var genericSSO = genericSSO
+
+                // If spotId is '*', replace with actual spotIdToFilterBy if available
+                if genericSSO.spotId == "*", let actualSpotId = self.spotIdToFilterBy {
+                    genericSSO.spotId = actualSpotId
+                }
+
                 if shouldInitializeSDK {
                     let manager = OpenWeb.manager
                     manager.spotId = genericSSO.spotId
                 }
-                var genericSSO = genericSSO
                 genericSSO.user.username = customUsername
                 genericSSO.user.password = customPassword
                 genericSSO.ssoToken = customSSOToken
