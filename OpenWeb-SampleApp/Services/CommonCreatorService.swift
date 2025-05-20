@@ -89,10 +89,12 @@ class CommonCreatorService: CommonCreatorServicing {
             section = self.getSectionFromPreset(for: postId)
         }
 
+        let starRatingEnabled = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<Bool>.starRatingEnabled,
+                                                              defaultValue: false)
         let settings = OWArticleSettings(section: section ?? "",
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode,
-                                         starRatingEnabled: true)
+                                         starRatingEnabled: starRatingEnabled)
 
         if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL),

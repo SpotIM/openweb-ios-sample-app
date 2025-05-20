@@ -84,6 +84,7 @@ class UserDefaultsProvider: UserDefaultsProviderProtocol {
         case commentActionsFontStyle
         case callingMethodOption
         case flowsLoggerEnabled
+        case starRatingEnabled
     }
 }
 
