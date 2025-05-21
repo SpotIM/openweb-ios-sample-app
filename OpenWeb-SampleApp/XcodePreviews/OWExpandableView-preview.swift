@@ -15,7 +15,7 @@
 
     let summaryVM = OWStarRatingSummaryViewViewModel()
     summaryVM.inputs.summaryDataChange.onNext(summaryData)
-    let summaryView = OWStarRatingSummaryView(with: summaryVM)
+    let summaryView = OWStarRatingSummaryView(viewModel: summaryVM)
 
     summaryView.OWSnp.makeConstraints { make in
         make.width.equalTo(380)
