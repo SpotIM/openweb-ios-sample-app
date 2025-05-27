@@ -108,6 +108,7 @@ private extension ColorsCustomizationViewModel {
             .store(in: &cancellables)
     }
 
+    // swiftlint:disable no_magic_numbers
     func getTheme(from colors: [OWColor?]) -> OWTheme {
         return OWTheme(
             skeletonColor: colors[0],
@@ -131,6 +132,7 @@ private extension ColorsCustomizationViewModel {
             voteUpSelectedColor: colors[18],
             voteDownSelectedColor: colors[19])
     }
+    // swiftlint:enable no_magic_numbers
 }
 
 struct ThemeColorItem {

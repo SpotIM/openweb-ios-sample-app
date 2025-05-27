@@ -31,7 +31,7 @@ class PreconversationViewsWithAdVC: UIViewController {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 500
+        tableView.estimatedRowHeight = 500 // swiftlint:disable:this no_magic_numbers
         for option in PreconversationWithAdCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
         }
@@ -139,7 +139,7 @@ class PreconversationViewsWithAdVC: UIViewController {
             .store(in: &cancellables)
 
         viewModel.outputs.loggerEnabled
-            .delay(for: .milliseconds(10), scheduler: DispatchQueue.main)
+            .delay(for: .milliseconds(10), scheduler: DispatchQueue.main) // swiftlint:disable:this no_magic_numbers
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loggerEnabled in
                 guard let self else { return }

@@ -13,6 +13,7 @@ import SnapKit
 class MockArticleIndependentViewsVC: UIViewController {
     private struct Metrics {
         static let verticalMargin: CGFloat = 40
+        // swiftlint:disable:next no_magic_numbers
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let identifier = "mock_article_independent_views_vc_id"
         static let viewIdentifier = "mock_article_independent_views_view_id"

@@ -21,7 +21,7 @@ class ConversationBelowVideoVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let presentAnimationDuration: TimeInterval = 0.3
         static let preConversationHorizontalMargin: CGFloat = 16.0
-        static let videoRatio: CGFloat = 9 / 16
+        static let videoRatio: CGFloat = 9 / 16 // swiftlint:disable:this no_magic_numbers
         static let keyboardAnimationDuration: CGFloat = 0.25
         static let videoPlayerIdentifier = "video_player_id"
         static let videoLink = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_30MB.mp4"

@@ -12,7 +12,7 @@ class ArticleImageCell: UITableViewCell {
     static let identifier = "ArticleImageCell"
 
     private struct Metrics {
-        static let articleImageRatio: CGFloat = 2 / 3
+        static let articleImageRatio: CGFloat = 2 / 3 // swiftlint:disable:this no_magic_numbers
         static let articelImageViewCornerRadius: CGFloat = 10
         static let verticalPadding: CGFloat = 40
     }

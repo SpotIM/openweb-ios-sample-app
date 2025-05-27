@@ -24,6 +24,7 @@ extension OWInitialSortStrategy {
         return .useServerConfig
     }
 
+    // swiftlint:disable no_magic_numbers
     var index: Int {
         switch self {
         case .useServerConfig: return 0
@@ -33,4 +34,5 @@ extension OWInitialSortStrategy {
         default: return OWInitialSortStrategy.`default`.index
         }
     }
+    // swiftlint:enable no_magic_numbers
 }

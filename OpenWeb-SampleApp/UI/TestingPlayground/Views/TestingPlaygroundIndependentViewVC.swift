@@ -15,6 +15,7 @@ import CombineCocoa
 
 class TestingPlaygroundIndependentViewVC: UIViewController {
     private struct Metrics {
+        // swiftlint:disable:next no_magic_numbers
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let identifier = "testing_playground_independent_view_vc_id"
     }

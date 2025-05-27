@@ -15,6 +15,7 @@ enum ImageError: Error {
 extension UIImage {
     static func from(url: URL, completion: @escaping (Swift.Result<UIImage, ImageError>) -> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
+            // swiftlint:disable:next no_magic_numbers
             guard let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
                   let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
                   let data,
