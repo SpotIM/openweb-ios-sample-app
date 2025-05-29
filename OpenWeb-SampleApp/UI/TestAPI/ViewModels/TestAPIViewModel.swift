@@ -344,7 +344,8 @@ private extension TestAPIViewModel {
             uiFlowsTapped.voidify(),
             uiViewsTapped.voidify(),
             miscellaneousTapped.voidify(),
-            testingPlaygroundTapped.voidify()
+            testingPlaygroundTapped.voidify(),
+            authenticationTapped.voidify()
         )
             .withLatestFrom(spotId)
             .sink { [weak self] spotId in
