@@ -33,7 +33,7 @@ class MainPageVC: UIViewController {
     private lazy var welcomeLbl: UILabel = {
         return UILabel()
             .numberOfLines(0)
-            .textColor(ColorAsset.L6.color)
+            .textColor(.L_6)
             .font(FontBook.mainHeadingBold)
             .textAlignment(.center)
     }()
@@ -41,20 +41,20 @@ class MainPageVC: UIViewController {
     private lazy var descriptionLbl: UILabel = {
         return UILabel()
             .numberOfLines(0)
-            .textColor(ColorAsset.L6.color)
+            .textColor(.L_6)
             .font(FontBook.paragraph)
             .textAlignment(.center)
     }()
 
     private lazy var versionLbl: UILabel = {
         return UILabel()
-            .textColor(ColorAsset.L5.color)
+            .textColor(.L_5)
             .font(FontBook.helper)
     }()
 
     private lazy var buildLbl: UILabel = {
         return UILabel()
-            .textColor(ColorAsset.L5.color)
+            .textColor(.L_5)
             .font(FontBook.helper)
     }()
 
