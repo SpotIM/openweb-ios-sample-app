@@ -3,13 +3,13 @@ inhibit_all_warnings!
 use_frameworks!
 
 def openweb_pod
-  pod 'OpenWebSDK', '2.7.0'
+  pod 'OpenWebSDK', '2.8.0'
 end
 
-def rx_pods
-  pod 'RxSwift', '6.7.1'
-  pod 'RxRelay', '6.7.1'
-  pod 'RxCocoa', '6.7.1'
+def combine_pods
+  pod 'CombineCocoa', '0.4.1'
+  pod 'CombineExt', '1.8.0'
+  pod 'CombineDataSources', '0.2.5'
 end
 
 def general_pods
@@ -19,7 +19,7 @@ end
 
 target 'OpenWeb-SampleApp' do
   openweb_pod
-  rx_pods
+  combine_pods
   general_pods
 end
 
