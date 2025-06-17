@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 class UIViewsVC: UIViewController {
@@ -29,7 +29,7 @@ class UIViewsVC: UIViewController {
     }
 
     private let viewModel: UIViewsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -99,7 +99,7 @@ private extension UIViewsVC {
         btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -186,32 +186,32 @@ private extension UIViewsVC {
         title = viewModel.outputs.title
 
         // Bind buttons
-        btnPreConversation.rx.tap
+        btnPreConversation.tapPublisher
             .bind(to: viewModel.inputs.preConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnFullConversation.rx.tap
+        btnFullConversation.tapPublisher
             .bind(to: viewModel.inputs.fullConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentCreation.rx.tap
+        btnCommentCreation.tapPublisher
             .bind(to: viewModel.inputs.commentCreationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentThread.rx.tap
+        btnCommentThread.tapPublisher
             .bind(to: viewModel.inputs.commentThreadTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnClarityDetails.rx.tap
+        btnClarityDetails.tapPublisher
             .bind(to: viewModel.inputs.clarityDetailsTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnMonetization.rx.tap
+        btnMonetization.tapPublisher
             .bind(to: viewModel.inputs.monetizationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnExamples.rx.tap
+        btnExamples.tapPublisher
             .bind(to: viewModel.inputs.examplesTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

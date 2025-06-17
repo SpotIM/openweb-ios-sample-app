@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol PreconversationCellViewModelingInput {}
 
 protocol PreconversationCellViewModelingOutput {
-    var showPreConversation: Observable<UIView?> { get }
-    var adSizeChanged: Observable<Void> { get }
+    var showPreConversation: AnyPublisher<UIView?, Never> { get }
+    var adSizeChanged: AnyPublisher<Void, Never> { get }
 }
 
 protocol PreconversationCellViewModeling {
@@ -21,35 +21,35 @@ protocol PreconversationCellViewModeling {
     var outputs: PreconversationCellViewModelingOutput { get }
 }
 
-public final class PreconversationCellViewModel: PreconversationCellViewModeling,
+class PreconversationCellViewModel: PreconversationCellViewModeling,
                                                  PreconversationCellViewModelingOutput,
                                                  PreconversationCellViewModelingInput {
     var inputs: PreconversationCellViewModelingInput { self }
     var outputs: PreconversationCellViewModelingOutput { self }
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    private let _showPreConversation = BehaviorSubject<UIView?>(value: nil)
-    var showPreConversation: Observable<UIView?> {
+    private let _showPreConversation = CurrentValueSubject<UIView?, Never>(value: nil)
+    var showPreConversation: AnyPublisher<UIView?, Never> {
         return _showPreConversation
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _adSizeChanged = PublishSubject<Void>()
-    var adSizeChanged: Observable<Void> {
+    private let _adSizeChanged = PassthroughSubject<Void, Never>()
+    var adSizeChanged: AnyPublisher<Void, Never> {
         return _adSizeChanged
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    init(showPreConversation: Observable<UIView?>,
-         adSizeChanged: Observable<Void>) {
+    init(showPreConversation: AnyPublisher<UIView?, Never>,
+         adSizeChanged: AnyPublisher<Void, Never>) {
 
         showPreConversation
               .bind(to: _showPreConversation)
-              .disposed(by: disposeBag)
+              .store(in: &cancellables)
 
         adSizeChanged
             .bind(to: _adSizeChanged)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

@@ -6,20 +6,21 @@
 //  Copyright © 2023 OpenWeb. All rights reserved.
 //
 
-import RxSwift
 import UIKit
 import OpenWebSDK
+import Combine
+import CombineExt
 
 protocol ConversationCountersNewAPIViewModelingInputs {
-    var userPostIdsInput: BehaviorSubject<String> { get }
-    var loadConversationCounter: PublishSubject<Void> { get }
+    var userPostIdsInput: CurrentValueSubject<String, Never> { get }
+    var loadConversationCounter: PassthroughSubject<Void, Never> { get }
 }
 
 protocol ConversationCountersNewAPIViewModelingOutputs {
     var title: String { get }
-    var showLoader: Observable<Bool> { get }
-    var showError: Observable<String> { get }
-    var cellsViewModels: Observable<[ConversationCounterNewAPICellViewModeling]> { get }
+    var showLoader: AnyPublisher<Bool, Never> { get }
+    var showError: AnyPublisher<String, Never> { get }
+    var cellsViewModels: AnyPublisher<[ConversationCounterNewAPICellViewModel], Never> { get }
 }
 
 protocol ConversationCountersNewAPIViewModeling {
@@ -40,33 +41,33 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
     lazy var title: String = {
         return NSLocalizedString("ConversationCounterTitle", comment: "")
     }()
-    let userPostIdsInput = BehaviorSubject<String>(value: "")
-    let loadConversationCounter = PublishSubject<Void>()
+    let userPostIdsInput = CurrentValueSubject<String, Never>("")
+    let loadConversationCounter = PassthroughSubject<Void, Never>()
 
-    private let _showLoader = BehaviorSubject<Bool?>(value: nil)
-    var showLoader: Observable<Bool> {
+    private let _showLoader = CurrentValueSubject<Bool?, Never>(nil)
+    var showLoader: AnyPublisher<Bool, Never> {
         return _showLoader
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _showError = BehaviorSubject<String?>(value: nil)
-    var showError: Observable<String> {
+    private let _showError = CurrentValueSubject<String?, Never>(nil)
+    var showError: AnyPublisher<String, Never> {
         return _showError
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _cellsViewModels = BehaviorSubject<[ConversationCounterNewAPICellViewModeling]?>(value: nil)
-    var cellsViewModels: Observable<[ConversationCounterNewAPICellViewModeling]> {
+    private let _cellsViewModels = CurrentValueSubject<[ConversationCounterNewAPICellViewModel]?, Never>(nil)
+    var cellsViewModels: AnyPublisher<[ConversationCounterNewAPICellViewModel], Never> {
         _cellsViewModels
             .unwrap()
-            .asObservable()
-            .startWith([])
+            .prepend([])
+            .eraseToAnyPublisher()
     }
 
     private let userDefaultsProvider: UserDefaultsProviderProtocol
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -77,21 +78,22 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
 private extension ConversationCountersNewAPIViewModel {
     func setupObservers() {
         loadConversationCounter
-            .do(onNext: { [weak self] _ in
-                self?._showLoader.onNext(true)
-                self?._showError.onNext(nil)
-                self?._cellsViewModels.onNext([])
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?._showLoader.send(true)
+                self?._showError.send(nil)
+                self?._cellsViewModels.send([])
             })
-            .flatMapLatest { [weak self] _ -> Observable<String> in
-                guard let self else { return Observable.empty() }
+            .flatMapLatest { [weak self] _ -> AnyPublisher<String, Never> in
+                guard let self else { return Empty<String, Never>().eraseToAnyPublisher() }
                 return self.userPostIdsInput
-                    .take(1)
+                    .prefix(1)
+                    .eraseToAnyPublisher()
             }
             .map { [weak self] userInput -> [String] in
                 guard let self else { return [] }
                 return self.parse(postIds: userInput)
             }
-            .subscribe(onNext: { [weak self] postIds in
+            .sink { [weak self] postIds in
                 guard let self else { return }
                 let helper = OpenWeb.manager.helpers
                 if shouldUseAsyncAwaitCallingMethod() {
@@ -102,26 +104,26 @@ private extension ConversationCountersNewAPIViewModel {
                             updateCells(counts: counts)
                         } catch {
                             DLog(error)
-                            self._showError.onNext(error.localizedDescription)
+                            self._showError.send(error.localizedDescription)
                         }
-                        self._showLoader.onNext(false)
+                        self._showLoader.send(false)
                     }
                 } else {
                     helper.conversationCounters(forPostIds: postIds) { [weak self] result in
                         guard let self else { return }
-                        self._showLoader.onNext(false)
+                        self._showLoader.send(false)
 
                         switch result {
                         case .success(let commentDict):
                             updateCells(counts: commentDict)
                         case .failure(let error):
                             DLog(error)
-                            self._showError.onNext(error.description)
+                            self._showError.send(error.description)
                         }
                     }
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     func updateCells(counts: [OWPostId: OWConversationCounter]) {
@@ -129,7 +131,7 @@ private extension ConversationCountersNewAPIViewModel {
             ConversationCounterNewAPICellViewModel(counter: counter, postId: id)
         }
 
-        _cellsViewModels.onNext(cellViewModels)
+        _cellsViewModels.send(cellViewModels)
     }
 
     func parse(postIds: String) -> [String] {

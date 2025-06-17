@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 import OpenWebSDK
 
@@ -32,7 +32,7 @@ class UIFlowsVC: UIViewController {
     }
 
     private let viewModel: UIFlowsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -112,7 +112,7 @@ private extension UIFlowsVC {
         btnMonetization.accessibilityIdentifier = Metrics.btnMonetizationIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -209,62 +209,62 @@ private extension UIFlowsVC {
         title = viewModel.outputs.title
 
         // Bind buttons
-        btnPreConversationPushMode.rx.tap
+        btnPreConversationPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.preConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnPreConversationPresentMode.rx.tap
+        btnPreConversationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
                 let style = self.viewModel.outputs.presentStyle
                 return PresentationalModeCompact.present(style: style)
             }
             .bind(to: viewModel.inputs.preConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnFullConversationPushMode.rx.tap
+        btnFullConversationPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.fullConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnFullConversationPresentMode.rx.tap
+        btnFullConversationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
                 let style = self.viewModel.outputs.presentStyle
                 return PresentationalModeCompact.present(style: style)
             }
             .bind(to: viewModel.inputs.fullConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentCreationPushMode.rx.tap
+        btnCommentCreationPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.commentCreationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentCreationPresentMode.rx.tap
+        btnCommentCreationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
                 return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentCreationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentThreadPushMode.rx.tap
+        btnCommentThreadPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.commentThreadTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentThreadPresentMode.rx.tap
+        btnCommentThreadPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
                 return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentThreadTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnMonetization.rx.tap
+        btnMonetization.tapPublisher
             .bind(to: viewModel.inputs.monetizationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

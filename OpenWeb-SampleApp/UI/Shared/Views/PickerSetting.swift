@@ -6,9 +6,8 @@
 //  Copyright © 2023 OpenWeb. All rights reserved.
 //
 
+import Combine
 import UIKit
-import RxSwift
-import RxCocoa
 
 class PickerSetting: UIView {
 
@@ -19,8 +18,6 @@ class PickerSetting: UIView {
     }
 
     private let title: String
-    fileprivate let items = BehaviorSubject<[String]>(value: [])
-    private let disposeBag = DisposeBag()
 
     fileprivate lazy var pickerTitleLbl: UILabel = {
         return title
@@ -30,7 +27,7 @@ class PickerSetting: UIView {
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var pickerControl: UIPickerView = {
+    private(set) lazy var pickerControl: UIPickerView = {
         return UIPickerView()
     }()
 
@@ -38,12 +35,10 @@ class PickerSetting: UIView {
         self.title = title
         super.init(frame: .zero)
         setupViews()
-        setupObservers()
         applyAccessibility(prefixId: accessibilityPrefixId)
 
-        // Add items if exist after setupObservers since there is a skip(1) for skipping initial BehaviorSubject value
         if let items {
-            self.items.onNext(items)
+            pickerControl.publisher.itemTitles = items
         }
     }
 
@@ -59,7 +54,7 @@ private extension PickerSetting {
         pickerControl.accessibilityIdentifier = prefixId + "_picker_id"
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.addSubview(pickerControl)
         self.addSubview(pickerTitleLbl)
 
@@ -73,48 +68,6 @@ private extension PickerSetting {
             make.leading.greaterThanOrEqualTo(pickerTitleLbl.snp.trailing).offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.width.lessThanOrEqualTo(Metrics.pickerMaxWidth)
-        }
-    }
-
-    func setupObservers() {
-        items
-            .skip(1) // Skip initialize BehaviorSubject value
-            .take(1) // Take first value after initialize
-            .bind(to: pickerControl.rx.itemTitles) { _, element in
-                return element
-            }
-            .disposed(by: disposeBag)
-    }
-}
-
-extension Reactive where Base: PickerSetting {
-    var text: Binder<String?> {
-        return Binder(self.base.pickerTitleLbl) { label, text in
-            label.text = text
-        }
-    }
-
-    var selectedPickerIndex: ControlEvent<(row: Int, component: Int)> {
-        return value
-    }
-
-    private var value: ControlEvent<(row: Int, component: Int)> {
-        return base.pickerControl.rx.itemSelected
-    }
-
-    var setSelectedPickerIndex: Binder<(row: Int, component: Int)> {
-        return Binder(self.base.pickerControl) { picker, indexPath in
-            picker.selectRow(indexPath.row, inComponent: indexPath.component, animated: true)
-        }
-    }
-
-    var setPickerTitles: BehaviorSubject<[String]> {
-        return base.items
-    }
-
-    var isHidden: Binder<Bool> {
-        return Binder(self.base) { _, value in
-            base.isHidden = value
         }
     }
 }

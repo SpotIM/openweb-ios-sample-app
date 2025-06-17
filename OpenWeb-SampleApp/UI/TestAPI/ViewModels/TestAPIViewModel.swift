@@ -7,48 +7,47 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
+import CombineExt
 import OpenWebSDK
 #if !PUBLIC_DEMO_APP
 import OpenWeb_SampleApp_Internal_Configs
 #endif
 
 protocol TestAPIViewModelingInputs {
-    var enteredSpotId: PublishSubject<OWSpotId> { get }
-    var enteredPostId: PublishSubject<OWPostId> { get }
-    var uiFlowsTapped: PublishSubject<Void> { get }
-    var uiViewsTapped: PublishSubject<Void> { get }
-    var miscellaneousTapped: PublishSubject<Void> { get }
-    var testingPlaygroundTapped: PublishSubject<Void> { get }
-    var automationTapped: PublishSubject<Void> { get }
-    var selectPresetTapped: PublishSubject<Void> { get }
-    var doneSelectPresetTapped: PublishSubject<Void> { get }
-    var settingsTapped: PublishSubject<Void> { get }
-    var authenticationTapped: PublishSubject<Void> { get }
-    var selectedConversationPresetIndex: PublishSubject<Int> { get }
-    var viewWillAppear: PublishSubject<Void> { get }
+    var enteredSpotId: PassthroughSubject<OWSpotId, Never> { get }
+    var enteredPostId: PassthroughSubject<OWPostId, Never> { get }
+    var uiFlowsTapped: PassthroughSubject<Void, Never> { get }
+    var uiViewsTapped: PassthroughSubject<Void, Never> { get }
+    var miscellaneousTapped: PassthroughSubject<Void, Never> { get }
+    var testingPlaygroundTapped: PassthroughSubject<Void, Never> { get }
+    var automationTapped: PassthroughSubject<Void, Never> { get }
+    var selectPresetTapped: PassthroughSubject<Void, Never> { get }
+    var doneSelectPresetTapped: PassthroughSubject<Void, Never> { get }
+    var settingsTapped: PassthroughSubject<Void, Never> { get }
+    var authenticationTapped: PassthroughSubject<Void, Never> { get }
+    var selectedConversationPresetIndex: PassthroughSubject<Int, Never> { get }
+    var viewWillAppear: PassthroughSubject<Void, Never> { get }
 }
 
 protocol TestAPIViewModelingOutputs {
     var title: String { get }
-    var conversationPresets: Observable<[ConversationPreset]> { get }
-    var spotId: Observable<String> { get }
-    var postId: Observable<String> { get }
-    var shouldShowSelectPreset: Observable<Bool> { get }
+    var conversationPresets: AnyPublisher<[ConversationPreset], Never> { get }
+    var shouldShowSelectPreset: AnyPublisher<Bool, Never> { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
-    var openUIFlows: Observable<SDKConversationDataModel> { get }
-    var openUIViews: Observable<SDKConversationDataModel> { get }
-    var openMiscellaneous: Observable<SDKConversationDataModel> { get }
-    var openTestingPlayground: Observable<SDKConversationDataModel> { get }
-    var openAutomation: Observable<SDKConversationDataModel> { get }
-    var openSettings: Observable<Void> { get }
-    var openAuthentication: Observable<Void> { get }
-    var selectedSpotId: Observable<OWSpotId> { get }
-    var selectedPostId: Observable<OWPostId> { get }
-    var envLabelString: Observable<String> { get }
-    var isEnvLabelVisible: Observable<Bool> { get }
-    var configurationLabelString: Observable<String> { get }
-    var isConfigurationLabelVisible: Observable<Bool> { get }
+    var openUIFlows: AnyPublisher<SDKConversationDataModel, Never> { get }
+    var openUIViews: AnyPublisher<SDKConversationDataModel, Never> { get }
+    var openMiscellaneous: AnyPublisher<SDKConversationDataModel, Never> { get }
+    var openTestingPlayground: AnyPublisher<SDKConversationDataModel, Never> { get }
+    var openAutomation: AnyPublisher<SDKConversationDataModel, Never> { get }
+    var openSettings: AnyPublisher<Void, Never> { get }
+    var openAuthentication: AnyPublisher<Void, Never> { get }
+    var selectedSpotId: AnyPublisher<OWSpotId, Never> { get }
+    var selectedPostId: AnyPublisher<OWPostId, Never> { get }
+    var envLabelString: AnyPublisher<String, Never> { get }
+    var isEnvLabelVisible: AnyPublisher<Bool, Never> { get }
+    var configurationLabelString: AnyPublisher<String, Never> { get }
+    var isConfigurationLabelVisible: AnyPublisher<Bool, Never> { get }
 }
 
 protocol TestAPIViewModeling {
@@ -72,20 +71,20 @@ class TestAPIViewModel: TestAPIViewModeling,
         #endif
     }
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    let enteredSpotId = PublishSubject<OWSpotId>()
-    let enteredPostId = PublishSubject<OWPostId>()
-    let uiFlowsTapped = PublishSubject<Void>()
-    let uiViewsTapped = PublishSubject<Void>()
-    let miscellaneousTapped = PublishSubject<Void>()
-    let testingPlaygroundTapped = PublishSubject<Void>()
-    let automationTapped = PublishSubject<Void>()
-    let selectPresetTapped = PublishSubject<Void>()
-    let settingsTapped = PublishSubject<Void>()
-    let authenticationTapped = PublishSubject<Void>()
-    let doneSelectPresetTapped = PublishSubject<Void>()
-    let viewWillAppear = PublishSubject<Void>()
+    let enteredSpotId = PassthroughSubject<OWSpotId, Never>()
+    let enteredPostId = PassthroughSubject<OWPostId, Never>()
+    let uiFlowsTapped = PassthroughSubject<Void, Never>()
+    let uiViewsTapped = PassthroughSubject<Void, Never>()
+    let miscellaneousTapped = PassthroughSubject<Void, Never>()
+    let testingPlaygroundTapped = PassthroughSubject<Void, Never>()
+    let automationTapped = PassthroughSubject<Void, Never>()
+    let selectPresetTapped = PassthroughSubject<Void, Never>()
+    let settingsTapped = PassthroughSubject<Void, Never>()
+    let authenticationTapped = PassthroughSubject<Void, Never>()
+    let doneSelectPresetTapped = PassthroughSubject<Void, Never>()
+    let viewWillAppear = PassthroughSubject<Void, Never>()
 
     private lazy var isBetaConfiguration: Bool = {
         #if BETA
@@ -95,13 +94,13 @@ class TestAPIViewModel: TestAPIViewModeling,
         #endif
     }()
 
-    private lazy var isBetaConfigurationSubject: BehaviorSubject<Bool> = {
-        return BehaviorSubject(value: isBetaConfiguration)
+    private lazy var isBetaConfigurationSubject: CurrentValueSubject<Bool, Never> = {
+        return CurrentValueSubject(value: isBetaConfiguration)
     }()
 
-    var isEnvLabelVisible: Observable<Bool> {
+    var isEnvLabelVisible: AnyPublisher<Bool, Never> {
         return isBetaConfigurationSubject
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     private var configurationString: String? {
@@ -122,17 +121,17 @@ class TestAPIViewModel: TestAPIViewModeling,
         return !configurationString.isEmpty ? configurationString : nil
     }
 
-    private lazy var configurationStringSubject: BehaviorSubject<String?> = {
-        return BehaviorSubject(value: configurationString)
+    private lazy var configurationStringSubject: CurrentValueSubject<String?, Never> = {
+        return CurrentValueSubject(value: configurationString)
     }()
 
-    var isConfigurationLabelVisible: Observable<Bool> {
+    var isConfigurationLabelVisible: AnyPublisher<Bool, Never> {
         return configurationStringSubject
             .map { $0 != nil }
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    var envLabelString: Observable<String> {
+    var envLabelString: AnyPublisher<String, Never> {
         return viewWillAppear
             .map {
                 UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
@@ -141,10 +140,12 @@ class TestAPIViewModel: TestAPIViewModeling,
                 switch env {
                 case .production:
                     return nil // no label for production
-                case .staging:
-                    return NSLocalizedString("Staging", comment: "")
+                case .staging(let namespace):
+                    return NSLocalizedString("Staging", comment: "") + " " + (namespace ?? "")
                 case .cluster1d:
                     return NSLocalizedString("1DCluster", comment: "")
+                case .custom(let url):
+                    return NSLocalizedString("Custom", comment: "") + " " + (url ?? "")
                 }
 
             }
@@ -154,10 +155,10 @@ class TestAPIViewModel: TestAPIViewModeling,
                 }
                 return NSLocalizedString("NetworkEnvironment", comment: "") + ": \(envString)"
             }
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    var configurationLabelString: Observable<String> {
+    var configurationLabelString: AnyPublisher<String, Never> {
         return viewWillAppear
             .flatMap {
                 self.configurationStringSubject
@@ -168,84 +169,84 @@ class TestAPIViewModel: TestAPIViewModeling,
                 }
                 return NSLocalizedString("BuildConfiguration", comment: "") + ": \(configurationString)"
             }
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    var selectedSpotId: Observable<OWSpotId> {
+    var selectedSpotId: AnyPublisher<OWSpotId, Never> {
         return userDefaultsProvider.values(key: .selectedSpotId, defaultValue: Metrics.preFilledSpotId)
     }
 
-    var selectedPostId: Observable<OWPostId> {
+    var selectedPostId: AnyPublisher<OWPostId, Never> {
         return userDefaultsProvider.values(key: .selectedPostId, defaultValue: Metrics.preFilledPostId)
     }
 
-    private let _shouldShowSelectPreset = BehaviorSubject<Bool>(value: false)
-    var shouldShowSelectPreset: Observable<Bool> {
+    private let _shouldShowSelectPreset = CurrentValueSubject<Bool, Never>(value: false)
+    var shouldShowSelectPreset: AnyPublisher<Bool, Never> {
         return _shouldShowSelectPreset
-            .distinctUntilChanged()
-            .asObservable()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
-    private let _spotId = BehaviorSubject<String>(value: Metrics.preFilledSpotId)
-    var spotId: Observable<String> {
+    private let _spotId = CurrentValueSubject<String, Never>(value: Metrics.preFilledSpotId)
+    var spotId: AnyPublisher<String, Never> {
         return _spotId
-            .distinctUntilChanged()
-            .asObservable()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
-    private let _postId = BehaviorSubject<String>(value: Metrics.preFilledPostId)
-    var postId: Observable<String> {
+    private let _postId = CurrentValueSubject<String, Never>(value: Metrics.preFilledPostId)
+    var postId: AnyPublisher<String, Never> {
         return _postId
-            .distinctUntilChanged()
-            .asObservable()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
-    private let _openUIFlows = PublishSubject<SDKConversationDataModel>()
-    var openUIFlows: Observable<SDKConversationDataModel> {
-        return _openUIFlows.asObservable()
+    private let _openUIFlows = PassthroughSubject<SDKConversationDataModel, Never>()
+    var openUIFlows: AnyPublisher<SDKConversationDataModel, Never> {
+        return _openUIFlows.eraseToAnyPublisher()
     }
 
-    private let _openUIViews = PublishSubject<SDKConversationDataModel>()
-    var openUIViews: Observable<SDKConversationDataModel> {
-        return _openUIViews.asObservable()
+    private let _openUIViews = PassthroughSubject<SDKConversationDataModel, Never>()
+    var openUIViews: AnyPublisher<SDKConversationDataModel, Never> {
+        return _openUIViews.eraseToAnyPublisher()
     }
 
-    private let _openMiscellaneous = PublishSubject<SDKConversationDataModel>()
-    var openMiscellaneous: Observable<SDKConversationDataModel> {
-        return _openMiscellaneous.asObservable()
+    private let _openMiscellaneous = PassthroughSubject<SDKConversationDataModel, Never>()
+    var openMiscellaneous: AnyPublisher<SDKConversationDataModel, Never> {
+        return _openMiscellaneous.eraseToAnyPublisher()
     }
 
-    private let _openTestingPlayground = PublishSubject<SDKConversationDataModel>()
-    var openTestingPlayground: Observable<SDKConversationDataModel> {
-        return _openTestingPlayground.asObservable()
+    private let _openTestingPlayground = PassthroughSubject<SDKConversationDataModel, Never>()
+    var openTestingPlayground: AnyPublisher<SDKConversationDataModel, Never> {
+        return _openTestingPlayground.eraseToAnyPublisher()
     }
 
-    private let _openAutomation = PublishSubject<SDKConversationDataModel>()
-    var openAutomation: Observable<SDKConversationDataModel> {
-        return _openAutomation.asObservable()
+    private let _openAutomation = PassthroughSubject<SDKConversationDataModel, Never>()
+    var openAutomation: AnyPublisher<SDKConversationDataModel, Never> {
+        return _openAutomation.eraseToAnyPublisher()
     }
 
-    private let _openSettings = PublishSubject<Void>()
-    var openSettings: Observable<Void> {
-        return _openSettings.asObservable()
+    private let _openSettings = PassthroughSubject<Void, Never>()
+    var openSettings: AnyPublisher<Void, Never> {
+        return _openSettings.eraseToAnyPublisher()
     }
 
-    private let _openAuthentication = PublishSubject<Void>()
-    var openAuthentication: Observable<Void> {
-        return _openAuthentication.asObservable()
+    private let _openAuthentication = PassthroughSubject<Void, Never>()
+    var openAuthentication: AnyPublisher<Void, Never> {
+        return _openAuthentication.eraseToAnyPublisher()
     }
 
     lazy var title: String = {
         return NSLocalizedString("TestAPI", comment: "")
     }()
 
-    private let _selectedConversationPresetIndex = BehaviorSubject(value: 0)
-    var selectedConversationPresetIndex = PublishSubject<Int>()
+    private let _selectedConversationPresetIndex = CurrentValueSubject(value: 0)
+    var selectedConversationPresetIndex = PassthroughSubject<Int, Never>()
 
-    private let _conversationPresets = BehaviorSubject(value: ConversationPreset.mockModels)
-    var conversationPresets: Observable<[ConversationPreset]> {
+    private let _conversationPresets = CurrentValueSubject(value: ConversationPreset.mockModels)
+    var conversationPresets: AnyPublisher<[ConversationPreset], Never> {
         return _conversationPresets
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
@@ -259,102 +260,103 @@ class TestAPIViewModel: TestAPIViewModeling,
 private extension TestAPIViewModel {
     func setupObservers() {
         enteredSpotId
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: _spotId)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         enteredPostId
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: _postId)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         _spotId
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<OWSpotId>.selectedSpotId))
-            .disposed(by: disposeBag)
+            .dropFirst(1)
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWSpotId>.selectedSpotId))
+            .store(in: &cancellables)
 
         _postId
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<OWPostId>.selectedPostId))
-            .disposed(by: disposeBag)
+            .dropFirst(1)
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWPostId>.selectedPostId))
+            .store(in: &cancellables)
 
         let conversationDataModelObservable =
-        Observable.combineLatest(spotId, postId) { spotId, postId -> SDKConversationDataModel in
+        Publishers.CombineLatest(spotId, postId).map { spotId, postId -> SDKConversationDataModel in
             return SDKConversationDataModel(spotId: spotId, postId: postId)
-        }.asObservable()
+        }.eraseToAnyPublisher()
 
         uiFlowsTapped
             .withLatestFrom(conversationDataModelObservable)
             .bind(to: _openUIFlows)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         uiViewsTapped
             .withLatestFrom(conversationDataModelObservable)
             .bind(to: _openUIViews)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         miscellaneousTapped
             .withLatestFrom(conversationDataModelObservable)
             .bind(to: _openMiscellaneous)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         testingPlaygroundTapped
             .withLatestFrom(conversationDataModelObservable)
             .bind(to: _openTestingPlayground)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         automationTapped
             .withLatestFrom(conversationDataModelObservable)
             .bind(to: _openAutomation)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         selectPresetTapped
             .map { true }
             .bind(to: _shouldShowSelectPreset)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         settingsTapped
             .bind(to: _openSettings)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         authenticationTapped
             .bind(to: _openAuthentication)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        Observable.merge(uiFlowsTapped.voidify(),
-                         uiViewsTapped.voidify(),
-                         miscellaneousTapped.voidify(),
-                         testingPlaygroundTapped.voidify(),
-                         automationTapped.voidify(),
-                         settingsTapped.voidify(),
-                         authenticationTapped.voidify(),
-                         enteredSpotId.voidify().skip(1),
-                         enteredPostId.voidify().skip(1),
-                         doneSelectPresetTapped)
-            .subscribe(onNext: { [weak self] _ in
+        Publishers.MergeMany(
+            uiFlowsTapped.voidify(),
+            uiViewsTapped.voidify(),
+            miscellaneousTapped.voidify(),
+            testingPlaygroundTapped.voidify(),
+            automationTapped.voidify(),
+            settingsTapped.voidify(),
+            authenticationTapped.voidify(),
+            enteredSpotId.voidify().dropFirst(1).eraseToAnyPublisher(),
+            enteredPostId.voidify().dropFirst(1).eraseToAnyPublisher(),
+            doneSelectPresetTapped.eraseToAnyPublisher()
+        )
+            .sink { [weak self] _ in
+                self?._shouldShowSelectPreset.send(false)
+            }
+            .store(in: &cancellables)
 
-                self?._shouldShowSelectPreset.onNext(false)
-            })
-            .disposed(by: disposeBag)
-
-        Observable.merge(settingsTapped.voidify(),
-                         uiFlowsTapped.voidify(),
-                         uiViewsTapped.voidify(),
-                         miscellaneousTapped.voidify(),
-                         testingPlaygroundTapped.voidify())
+        Publishers.MergeMany(
+            settingsTapped.voidify(),
+            uiFlowsTapped.voidify(),
+            uiViewsTapped.voidify(),
+            miscellaneousTapped.voidify(),
+            testingPlaygroundTapped.voidify(),
+            authenticationTapped.voidify()
+        )
             .withLatestFrom(spotId)
-            .subscribe(onNext: { [weak self] spotId in
-
+            .sink { [weak self] spotId in
                 self?.setSDKConfigurations(spotId)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         // Different conversation preset selected
         selectedConversationPresetIndex
             .bind(to: _selectedConversationPresetIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         doneSelectPresetTapped
             .withLatestFrom(_selectedConversationPresetIndex)
@@ -366,12 +368,11 @@ private extension TestAPIViewModel {
                 return presets[index].conversationDataModel
             }
             .unwrap()
-            .do(onNext: { [weak self] dataModel in
-                self?._spotId.onNext(dataModel.spotId)
-                self?._postId.onNext(dataModel.postId)
-            })
-            .subscribe()
-            .disposed(by: disposeBag)
+            .sink { [weak self] dataModel in
+                self?._spotId.send(dataModel.spotId)
+                self?._postId.send(dataModel.postId)
+            }
+            .store(in: &cancellables)
     }
 
     func setSDKConfigurations(_ spotId: String) {

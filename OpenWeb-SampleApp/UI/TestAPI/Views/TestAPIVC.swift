@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 class TestAPIVC: UIViewController {
@@ -46,7 +46,7 @@ class TestAPIVC: UIViewController {
     }
 
     private let viewModel: TestAPIViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -175,7 +175,7 @@ class TestAPIVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-        viewModel.inputs.viewWillAppear.onNext()
+        viewModel.inputs.viewWillAppear.send()
     }
 
     override func loadView() {
@@ -211,7 +211,7 @@ private extension TestAPIVC {
         btnAutomation.accessibilityIdentifier = Metrics.btnAutomationIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -334,108 +334,110 @@ private extension TestAPIVC {
         title = viewModel.outputs.title
 
         viewModel.outputs.selectedSpotId
-            .bind(to: txtFieldSpotId.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: txtFieldSpotId.textFieldControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.selectedPostId
-            .bind(to: txtFieldPostId.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: txtFieldPostId.textFieldControl)
+            .store(in: &cancellables)
 
         // Bind text fields
-        txtFieldSpotId.rx.textFieldText
+        txtFieldSpotId.textFieldControl.textPublisher
             .unwrap()
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: viewModel.inputs.enteredSpotId)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        txtFieldPostId.rx.textFieldText
+        txtFieldPostId.textFieldControl.textPublisher
             .unwrap()
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: viewModel.inputs.enteredPostId)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Bind buttons
-        btnSelectPreset.rx.tap
+        btnSelectPreset.tapPublisher
             .bind(to: viewModel.inputs.selectPresetTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnUIFlows.rx.tap
+        btnUIFlows.tapPublisher
             .bind(to: viewModel.inputs.uiFlowsTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnUIViews.rx.tap
+        btnUIViews.tapPublisher
             .bind(to: viewModel.inputs.uiViewsTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnMiscellaneous.rx.tap
+        btnMiscellaneous.tapPublisher
             .bind(to: viewModel.inputs.miscellaneousTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnTestingPlayground.rx.tap
+        btnTestingPlayground.tapPublisher
             .bind(to: viewModel.inputs.testingPlaygroundTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnAutomation.rx.tap
+        btnAutomation.tapPublisher
             .bind(to: viewModel.inputs.automationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        settingsBarItem.rx.tap
+        settingsBarItem.tapPublisher
             .bind(to: viewModel.inputs.settingsTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        authBarItem.rx.tap
+        authBarItem.tapPublisher
             .bind(to: viewModel.inputs.authenticationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Bind select preset
         viewModel.outputs.shouldShowSelectPreset
-            .skip(1)
-            .subscribe(onNext: { [weak self] in
+            .dropFirst(1)
+            .sink { [weak self] in
                 self?.showPresetPicker($0)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
-        btnDone.rx.tap
+        btnDone.tapPublisher
             .map { false }
             .voidify()
             .bind(to: viewModel.inputs.doneSelectPresetTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Bind picker
-        presetPicker.rx.itemSelected
+        presetPicker.publisher.$selectedIndexPath
             .map { event in
                 return event.row
             }
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: viewModel.inputs.selectedConversationPresetIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.conversationPresets
             .map { options in
                 return options.map { $0.displayName }
             }
-            .bind(to: presetPicker.rx.itemTitles) { _, item in
-                return item
-            }
-            .disposed(by: disposeBag)
+            .assign(to: \.itemTitles, on: presetPicker.publisher)
+            .store(in: &cancellables)
 
         viewModel.outputs.envLabelString
-            .bind(to: envLabel.rx.text)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: envLabel)
+            .store(in: &cancellables)
 
         viewModel.outputs.isEnvLabelVisible
             .map { !$0 }
-            .bind(to: envLabel.rx.isHidden)
-            .disposed(by: disposeBag)
+            .assign(to: \.isHidden, on: envLabel)
+            .store(in: &cancellables)
 
         viewModel.outputs.configurationLabelString
-            .bind(to: configurationLabel.rx.text)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: configurationLabel)
+            .store(in: &cancellables)
 
         viewModel.outputs.isConfigurationLabelVisible
             .map { !$0 }
-            .bind(to: configurationLabel.rx.isHidden)
-            .disposed(by: disposeBag)
+            .assign(to: \.isHidden, on: configurationLabel)
+            .store(in: &cancellables)
     }
 }
 

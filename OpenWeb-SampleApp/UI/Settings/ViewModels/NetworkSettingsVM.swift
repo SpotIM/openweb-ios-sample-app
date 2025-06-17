@@ -7,18 +7,19 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol NetworkSettingsViewModelingInputs {
-    var networkEnvironmentSelectedIndex: BehaviorSubject<Int> { get }
+    var networkEnvironmentSelected: CurrentValueSubject<OWNetworkEnvironment, Never> { get }
 }
 
 protocol NetworkSettingsViewModelingOutputs {
     var title: String { get }
     var networkEnvironmentTitle: String { get }
+    var networkEnvironmentCustomTitle: String { get }
     var networkEnvironmentSettings: [String] { get }
-    var networkEnvironmentIndex: Observable<Int> { get }
+    var networkEnvironment: AnyPublisher<OWNetworkEnvironment, Never> { get }
 }
 
 protocol NetworkSettingsViewModeling {
@@ -30,12 +31,8 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     var inputs: NetworkSettingsViewModelingInputs { return self }
     var outputs: NetworkSettingsViewModelingOutputs { return self }
 
-    private struct Metrics {
-        static let delayInsertDataToPersistense = 100
-    }
-
     private var userDefaultsProvider: UserDefaultsProviderProtocol
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var title: String = {
         return NSLocalizedString("NetworkSettings", comment: "")
@@ -45,31 +42,27 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
         return NSLocalizedString("NetworkEnvironment", comment: "")
     }()
 
+    lazy var networkEnvironmentCustomTitle: String = {
+        return NSLocalizedString("NetworkEnvironmentCustom", comment: "")
+    }()
+
     lazy var networkEnvironmentSettings: [String] = {
         let _prod = NSLocalizedString("Production", comment: "")
         let _staging = NSLocalizedString("Staging", comment: "")
         let _cluster1d = NSLocalizedString("1DCluster", comment: "")
+        let _custom = NSLocalizedString("Custom", comment: "")
 
-        return [_prod, _staging, _cluster1d]
+        return [_prod, _staging, _cluster1d, _custom]
     }()
 
-    var networkEnvironmentSelectedIndex = BehaviorSubject<Int>(value: OWNetworkEnvironment.default.index)
+    lazy var networkEnvironmentSelected = CurrentValueSubject<OWNetworkEnvironment, Never>(
+        value: userDefaultsProvider.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.default)
+    )
 
-    var networkEnvironmentIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
-            .map { env in
-                env.index
-            }
-            .asObservable()
+    var networkEnvironment: AnyPublisher<OWNetworkEnvironment, Never> {
+        return networkEnvironmentSelected
+            .eraseToAnyPublisher()
     }
-
-    private lazy var environmentObservable: Observable<OWNetworkEnvironment> = {
-        return networkEnvironmentSelectedIndex
-            .map {
-                OWNetworkEnvironment(from: $0)
-            }
-            .asObservable()
-    }()
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -79,17 +72,15 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
 
 private extension NetworkSettingsVM {
     func setupObservers() {
-        environmentObservable
-            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
-            .skip(1)
-            .bind(to: self.userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
-            .disposed(by: disposeBag)
+        networkEnvironmentSelected
+            .dropFirst()
+            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
+            .store(in: &cancellables)
     }
 }
 
 extension NetworkSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        networkEnvironmentSelectedIndex.onNext(OWNetworkEnvironment.default.index)
+        networkEnvironmentSelected.send(OWNetworkEnvironment.default)
     }
 }

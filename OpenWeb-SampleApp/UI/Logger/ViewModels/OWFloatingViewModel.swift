@@ -5,13 +5,13 @@
 //  Created by Refael Sommer on 06/11/2024.
 //
 
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 
 protocol OWFloatingViewModelOutputs { }
 
 protocol OWFloatingViewModelInputs {
-    var setContentView: PublishSubject<UIView> { get }
+    var setContentView: PassthroughSubject<UIView, Never> { get }
 }
 
 protocol OWFloatingViewModeling {
@@ -23,7 +23,7 @@ class OWFloatingViewModel: OWFloatingViewModeling, OWFloatingViewModelOutputs, O
     var inputs: OWFloatingViewModelInputs { return self }
     var outputs: OWFloatingViewModelOutputs { return self }
 
-    var setContentView = PublishSubject<UIView>()
+    var setContentView = PassthroughSubject<UIView, Never>()
 
     init() {
     }

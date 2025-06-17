@@ -6,25 +6,25 @@
 //  Copyright © 2024 OpenWeb. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 import OpenWebSDK
 
 @available(iOS 14.0, *)
 protocol ColorSelectionItemCellViewModelingInputs {
-    var isEnabled: BehaviorSubject<Bool> { get }
-    var displayPicker: PublishSubject<ColorType> { get }
-    var lightColor: BehaviorSubject<UIColor?> { get }
-    var darkColor: BehaviorSubject<UIColor?> { get }
+    var isEnabled: CurrentValueSubject<Bool, Never> { get }
+    var displayPicker: PassthroughSubject<ColorType, Never> { get }
+    var lightColor: CurrentValueSubject<UIColor?, Never> { get }
+    var darkColor: CurrentValueSubject<UIColor?, Never> { get }
 }
 
 @available(iOS 14.0, *)
 protocol ColorSelectionItemCellViewModelingOutputs {
     var title: String { get }
-    var displayPickerObservable: Observable<ColorType> { get }
-    var color: Observable<OWColor?> { get }
-    var lightColorObservable: Observable<UIColor?> { get }
-    var darkColorObservable: Observable<UIColor?> { get }
+    var displayPickerObservable: AnyPublisher<ColorType, Never> { get }
+    var color: AnyPublisher<OWColor?, Never> { get }
+    var lightColorObservable: AnyPublisher<UIColor?, Never> { get }
+    var darkColorObservable: AnyPublisher<UIColor?, Never> { get }
 }
 
 @available(iOS 14.0, *)
@@ -42,37 +42,38 @@ class ColorSelectionItemCellViewModel: ColorSelectionItemCellViewModeling, Color
 
     init(item: ThemeColorItem) {
         self.item = item
-        self.lightColor = BehaviorSubject(value: item.initialColor?.lightColor)
-        self.darkColor = BehaviorSubject(value: item.initialColor?.darkColor)
+        self.lightColor = CurrentValueSubject(item.initialColor?.lightColor)
+        self.darkColor = CurrentValueSubject(item.initialColor?.darkColor)
     }
 
-    var displayPicker = PublishSubject<ColorType>()
-    lazy var displayPickerObservable: Observable<ColorType> = {
+    var displayPicker = PassthroughSubject<ColorType, Never>()
+    lazy var displayPickerObservable: AnyPublisher<ColorType, Never> = {
         displayPicker
-            .asObservable()
+            .eraseToAnyPublisher()
     }()
 
     var title: String {
         item.title
     }
 
-    var lightColor: BehaviorSubject<UIColor?>
-    lazy var lightColorObservable: Observable<UIColor?> = {
+    var lightColor: CurrentValueSubject<UIColor?, Never>
+    lazy var lightColorObservable: AnyPublisher<UIColor?, Never> = {
         lightColor
-            .asObservable()
+            .eraseToAnyPublisher()
     }()
-    var darkColor: BehaviorSubject<UIColor?>
-    lazy var darkColorObservable: Observable<UIColor?> = {
+    var darkColor: CurrentValueSubject<UIColor?, Never>
+    lazy var darkColorObservable: AnyPublisher<UIColor?, Never> = {
         darkColor
-            .asObservable()
+            .eraseToAnyPublisher()
     }()
 
-    lazy var color: Observable<OWColor?> = {
-        Observable.combineLatest(
+    lazy var color: AnyPublisher<OWColor?, Never> = {
+        Publishers.CombineLatest3(
             lightColorObservable,
             darkColorObservable,
-            isEnabled.asObservable()
-        ) { light, dark, enabled in
+            isEnabled
+        )
+        .map { light, dark, enabled in
             guard enabled,
                   let lightColor = light,
                   let darkColor = dark
@@ -80,8 +81,20 @@ class ColorSelectionItemCellViewModel: ColorSelectionItemCellViewModeling, Color
 
             return OWColor(lightColor: lightColor, darkColor: darkColor)
         }
-        .startWith(item.initialColor)
+        .prepend(item.initialColor)
+        .eraseToAnyPublisher()
     }()
 
-    var isEnabled = BehaviorSubject(value: true)
+    var isEnabled = CurrentValueSubject<Bool, Never>(true)
+}
+
+@available(iOS 14.0, *)
+extension ColorSelectionItemCellViewModel: Hashable {
+    static func == (lhs: ColorSelectionItemCellViewModel, rhs: ColorSelectionItemCellViewModel) -> Bool {
+        lhs.title == rhs.title
+    }
+
+    func hash(into hasher: inout Hasher) {
+        title.hash(into: &hasher)
+    }
 }

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import SnapKit
 
 class AuthenticationPlaygroundVC: UIViewController {
@@ -28,7 +28,7 @@ class AuthenticationPlaygroundVC: UIViewController {
     }
 
     private let viewModel: AuthenticationPlaygroundViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -154,10 +154,10 @@ class AuthenticationPlaygroundVC: UIViewController {
 
         if isBeingDismissed {
             // Handling dismiss from "presented" mode
-            viewModel.inputs.dismissing.onNext()
+            viewModel.inputs.dismissing.send()
         } else if isMovingFromParent {
             // Handling dismiss from "push" mode
-            viewModel.inputs.dismissing.onNext()
+            viewModel.inputs.dismissing.send()
         }
     }
 }
@@ -167,7 +167,7 @@ private extension AuthenticationPlaygroundVC {
         view.accessibilityIdentifier = Metrics.identifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 
@@ -295,100 +295,103 @@ private extension AuthenticationPlaygroundVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        pickerGenericSSO.rx.selectedPickerIndex
+        pickerGenericSSO.pickerControl.publisher.$selectedIndexPath
             .map { $0.row }
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: viewModel.inputs.selectedGenericSSOOptionIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        textFieldSSOToken.rx.textFieldText
+        textFieldSSOToken.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.customSSOToken)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        textFieldUsername.rx.textFieldText
+        textFieldUsername.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.customUsername)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        textFieldPassword.rx.textFieldText
+        textFieldPassword.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.customPassword)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        pickerThirdPartySSO.rx.selectedPickerIndex
+        pickerThirdPartySSO.pickerControl.publisher.$selectedIndexPath
             .map { $0.row }
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: viewModel.inputs.selectedThirdPartySSOOptionIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.genericSSOOptions
             .map { return $0.map { $0.displayName } }
-            .bind(to: pickerGenericSSO.rx.setPickerTitles)
-            .disposed(by: disposeBag)
+            .assign(to: \.itemTitles, on: pickerGenericSSO.pickerControl.publisher)
+            .store(in: &cancellables)
 
         viewModel.outputs.thirdPartySSOOptions
             .map { return $0.map { $0.displayName } }
-            .bind(to: pickerThirdPartySSO.rx.setPickerTitles)
-            .disposed(by: disposeBag)
+            .assign(to: \.itemTitles, on: pickerThirdPartySSO.pickerControl.publisher)
+            .store(in: &cancellables)
 
         viewModel.outputs.genericSSOAuthenticationStatus
             .map { $0.symbol }
-            .bind(to: lblGenericSSOStatusSymbol.rx.text)
-            .disposed(by: disposeBag)
+            .assign(to: \.text, on: lblGenericSSOStatusSymbol)
+            .store(in: &cancellables)
 
         viewModel.outputs.thirdPartySSOAuthenticationStatus
             .map { $0.symbol }
-            .bind(to: lblThirdPartySSOStatusSymbol.rx.text)
-            .disposed(by: disposeBag)
+            .assign(to: \.text, on: lblThirdPartySSOStatusSymbol)
+            .store(in: &cancellables)
 
         viewModel.outputs.logoutAuthenticationStatus
             .map { $0.symbol }
-            .bind(to: lblLogoutStatusSymbol.rx.text)
-            .disposed(by: disposeBag)
+            .assign(to: \.text, on: lblLogoutStatusSymbol)
+            .store(in: &cancellables)
 
-        btnGenericSSOAuthenticate.rx.tap
+        btnGenericSSOAuthenticate.tapPublisher
             .bind(to: viewModel.inputs.genericSSOAuthenticatePressed)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnThirdPartySSOAuthenticate.rx.tap
+        btnThirdPartySSOAuthenticate.tapPublisher
             .bind(to: viewModel.inputs.thirdPartySSOAuthenticatePressed)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnLogout.rx.tap
+        btnLogout.tapPublisher
             .bind(to: viewModel.inputs.logoutPressed)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        switchInitializeSDK.rx.isOn
+        switchInitializeSDK.switchControl.isOnPublisher
             .bind(to: viewModel.inputs.initializeSDKToggled)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        switchAutomaticallyDismiss.rx.isOn
+        switchAutomaticallyDismiss.switchControl.isOnPublisher
             .bind(to: viewModel.inputs.automaticallyDismissToggled)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        closeButton.rx.tap
+        closeButton.tapPublisher
             .bind(to: viewModel.inputs.closeClick)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.customSSOTokenChanged
-            .bind(to: textFieldSSOToken.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldSSOToken.textFieldControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.customPasswordChanged
-            .bind(to: textFieldPassword.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldPassword.textFieldControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.customUsernameChanged
-            .bind(to: textFieldUsername.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldUsername.textFieldControl)
+            .store(in: &cancellables)
 
         /*
          Responding to VC dismissed here and not at the Coordinator layer because this screen is a "mock" screen for
          autentication for the SDK. Therefore it's easier to dismiss it simply from here here, at least for now.
          */
         viewModel.outputs.dismissVC
-            .subscribe(onNext: { [weak self] in
+            .sink { [weak self] in
                 guard let self else { return }
                 if let navController = self.navigationController {
                     navController.popViewController(animated: true)
@@ -396,8 +399,8 @@ private extension AuthenticationPlaygroundVC {
                     self.dismiss(animated: true, completion: nil)
                 }
 
-                self.viewModel.inputs.dismissing.onNext(())
-            })
-            .disposed(by: disposeBag)
+                self.viewModel.inputs.dismissing.send(())
+            }
+            .store(in: &cancellables)
     }
 }

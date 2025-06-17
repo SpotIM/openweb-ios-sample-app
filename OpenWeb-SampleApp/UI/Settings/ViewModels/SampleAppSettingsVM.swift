@@ -8,25 +8,25 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol SampleAppSettingsViewModelingInputs {
-    var deeplinkOptionSelected: BehaviorSubject<SampleAppDeeplink> { get }
-    var callingMethodOptionSelected: BehaviorSubject<SampleAppCallingMethod> { get }
-    var flowsLoggerEnable: BehaviorSubject<Bool> { get }
+    var deeplinkOptionSelected: CurrentValueSubject<SampleAppDeeplink, Never> { get }
+    var callingMethodOptionSelected: CurrentValueSubject<SampleAppCallingMethod, Never> { get }
+    var flowsLoggerEnable: CurrentValueSubject<Bool, Never> { get }
 }
 
 protocol SampleAppSettingsViewModelingOutputs {
     var title: String { get }
     var appDeeplinkTitle: String { get }
     var appDeeplinkSettings: [String] { get }
-    var deeplinkOption: Observable<SampleAppDeeplink> { get }
+    var deeplinkOption: AnyPublisher<SampleAppDeeplink, Never> { get }
     var callingMethodTitle: String { get }
     var callingMethodSettings: [String] { get }
-    var callingMethodOption: Observable<SampleAppCallingMethod> { get }
+    var callingMethodOption: AnyPublisher<SampleAppCallingMethod, Never> { get }
     var flowsLoggerSwitchTitle: String { get }
-    var flowsLoggerEnabled: Observable<Bool> { get }
+    var flowsLoggerEnabled: AnyPublisher<Bool, Never> { get }
 }
 
 protocol SampleAppSettingsViewModeling {
@@ -38,14 +38,20 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
     var inputs: SampleAppSettingsViewModelingInputs { return self }
     var outputs: SampleAppSettingsViewModelingOutputs { return self }
 
-    var deeplinkOptionSelected = BehaviorSubject<SampleAppDeeplink>(value: SampleAppDeeplink.default)
-    var deeplinkOption: Observable<SampleAppDeeplink> {
-        return userDefaultsProvider.values(key: .deeplinkOption, defaultValue: SampleAppDeeplink.default)
+    lazy var deeplinkOptionSelected = CurrentValueSubject<SampleAppDeeplink, Never>(userDefaultsProvider.get(key: .deeplinkOption, defaultValue: SampleAppDeeplink.default))
+
+    var deeplinkOption: AnyPublisher<SampleAppDeeplink, Never> {
+        return deeplinkOptionSelected
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
-    var flowsLoggerEnable = BehaviorSubject<Bool>(value: false)
-    var flowsLoggerEnabled: Observable<Bool> {
-        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
+    lazy var flowsLoggerEnable = CurrentValueSubject<Bool, Never>(userDefaultsProvider.get(key: .flowsLoggerEnabled, defaultValue: false))
+
+    var flowsLoggerEnabled: AnyPublisher<Bool, Never> {
+        return flowsLoggerEnable
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {
@@ -64,9 +70,12 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
         return SampleAppCallingMethod.allCases.map { $0.description }
     }()
 
-    var callingMethodOptionSelected = BehaviorSubject<SampleAppCallingMethod>(value: .default)
-    var callingMethodOption: Observable<SampleAppCallingMethod> {
-        return userDefaultsProvider.values(key: .callingMethodOption, defaultValue: .default)
+    lazy var callingMethodOptionSelected = CurrentValueSubject<SampleAppCallingMethod, Never>(userDefaultsProvider.get(key: .callingMethodOption, defaultValue: .default))
+
+    var callingMethodOption: AnyPublisher<SampleAppCallingMethod, Never> {
+        return callingMethodOptionSelected
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     lazy var flowsLoggerSwitchTitle: String = {
@@ -83,7 +92,7 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
         return [none, about, testAPI, settings, authentication]
     }()
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
@@ -95,29 +104,26 @@ class SampleAppSettingsVM: SampleAppSettingsViewModeling, SampleAppSettingsViewM
 private extension SampleAppSettingsVM {
     func setupObservers() {
         deeplinkOptionSelected
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption))
-            .disposed(by: disposeBag)
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption))
+            .store(in: &cancellables)
 
         callingMethodOptionSelected
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<SampleAppCallingMethod>.callingMethodOption))
-            .disposed(by: disposeBag)
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<SampleAppCallingMethod>.callingMethodOption))
+            .store(in: &cancellables)
 
         flowsLoggerEnable
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<Bool>.flowsLoggerEnabled))
-            .disposed(by: disposeBag)
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.flowsLoggerEnabled))
+            .store(in: &cancellables)
     }
 }
 
 extension SampleAppSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        deeplinkOptionSelected.onNext(SampleAppDeeplink.default)
-        callingMethodOptionSelected.onNext(.default)
-        flowsLoggerEnable.onNext(false)
+        deeplinkOptionSelected.send(SampleAppDeeplink.default)
+        callingMethodOptionSelected.send(.default)
+        flowsLoggerEnable.send(false)
     }
 }

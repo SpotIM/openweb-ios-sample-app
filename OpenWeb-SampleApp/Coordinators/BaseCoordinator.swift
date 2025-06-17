@@ -6,12 +6,12 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 // Base abstract coordinator generic over the return type of the `start` method.
 class BaseCoordinator<ResultType> {
 
-    var disposeBag = DisposeBag()
+    var cancellables = Set<AnyCancellable>()
 
     // Unique identifier.
     private let identifier = UUID()
@@ -37,20 +37,21 @@ class BaseCoordinator<ResultType> {
     // 3. On the `onNext:` of returning observable of method `start()` removes coordinator from the dictionary.
     func coordinate<T>(to coordinator: BaseCoordinator<T>,
                        deepLinkOptions: DeepLinkOptions? = nil,
-                       coordinatorData: CoordinatorData? = nil) -> Observable<T> {
+                       coordinatorData: CoordinatorData? = nil) -> AnyPublisher<T, Never> {
         store(coordinator: coordinator)
         return coordinator.start(deepLinkOptions: deepLinkOptions,
                                  coordinatorData: coordinatorData)
-            .do(onNext: { [weak self, weak coordinator] _ in
+            .handleEvents(receiveOutput: { [weak self, weak coordinator] _ in
                 guard let self,
                     let coord = coordinator else { return }
                 self.free(coordinator: coord)
             })
+            .eraseToAnyPublisher()
     }
 
     // Starts job of the coordinator.
     func start(deepLinkOptions: DeepLinkOptions? = nil,
-               coordinatorData: CoordinatorData? = nil) -> Observable<ResultType> {
+               coordinatorData: CoordinatorData? = nil) -> AnyPublisher<ResultType, Never> {
         fatalError("Start method should be implemented.")
     }
 

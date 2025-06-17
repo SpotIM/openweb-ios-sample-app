@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 #if ADS
 import OpenWebIAUSDK
@@ -15,9 +15,9 @@ import OpenWebIAUSDK
 protocol IndependentAdCellViewModelingInput {}
 
 protocol IndependentAdCellViewModelingOutput {
-    var adView: Observable<UIView> { get }
-    var adSizeChanged: Observable<Void> { get }
-    var loggerEvents: Observable<String> { get }
+    var adView: AnyPublisher<UIView, Never> { get }
+    var adSizeChanged: AnyPublisher<Void, Never> { get }
+    var loggerEvents: AnyPublisher<String, Never> { get }
 }
 
 protocol IndependentAdCellViewModeling {
@@ -32,22 +32,22 @@ public final class IndependentAdCellViewModel: IndependentAdCellViewModeling,
     var outputs: IndependentAdCellViewModelingOutput { self }
 
     private let postId: OWPostId
-    private let _adView = BehaviorSubject<UIView?>(value: nil)
-    var adView: Observable<UIView> {
+    private let _adView = CurrentValueSubject<UIView?, Never>(value: nil)
+    var adView: AnyPublisher<UIView, Never> {
         return _adView
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _adSizeChanged = PublishSubject<Void>()
-    var adSizeChanged: Observable<Void> {
+    private let _adSizeChanged = PassthroughSubject<Void, Never>()
+    var adSizeChanged: AnyPublisher<Void, Never> {
         return _adSizeChanged
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _loggerEvents = PublishSubject<String>()
-    var loggerEvents: Observable<String> {
-        _loggerEvents.asObservable()
+    private let _loggerEvents = PassthroughSubject<String, Never>()
+    var loggerEvents: AnyPublisher<String, Never> {
+        _loggerEvents.eraseToAnyPublisher()
     }
 
     public init(postId: OWPostId) {
@@ -63,7 +63,7 @@ private extension IndependentAdCellViewModel {
         let adSettings: OWIAUAdSettingsProtocol = OWIAUAdSettings(configuration: adConfiguration)
 
         let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in
-            self?._loggerEvents.onNext("IndependentAd: \(eventType.description)\n")
+            self?._loggerEvents.send("IndependentAd: \(eventType.description)\n")
         }
 
         OpenWebIAU.manager.ui.ad(
@@ -73,7 +73,7 @@ private extension IndependentAdCellViewModel {
             actionsCallbacks: { [weak self] event, _, _ in
                 switch event {
                 case .adSizeChanged:
-                    self?._adSizeChanged.onNext()
+                    self?._adSizeChanged.send()
                 default:
                     break
                 }
@@ -82,7 +82,7 @@ private extension IndependentAdCellViewModel {
                 guard let self else { return }
                 switch result {
                 case .success(let adView):
-                    _adView.onNext(adView)
+                    _adView.send(adView)
                 case .failure(let error):
                     DLog("Independent Ad Cell failed with error: \(error.localizedDescription)")
                 }

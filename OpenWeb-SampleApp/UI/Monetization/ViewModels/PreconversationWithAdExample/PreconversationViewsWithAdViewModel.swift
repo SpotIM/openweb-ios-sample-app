@@ -6,7 +6,7 @@
 //
 
  import Foundation
- import RxSwift
+ import Combine
  import OpenWebSDK
 
  protocol PreconversationViewsWithAdViewModelingInput {
@@ -16,11 +16,11 @@
 
  protocol PreconversationViewsWithAdViewModelingOutput {
      var title: String { get }
-     var articleImageURL: Observable<URL> { get }
+     var articleImageURL: AnyPublisher<URL, Never> { get }
      var preconversationCellViewModel: PreconversationCellViewModeling { get }
      var independentAdCellViewModel: IndependentAdCellViewModeling { get }
-     var cells: Observable<[PreconversationWithAdCellOption]> { get }
-     var loggerEnabled: Observable<Bool> { get }
+     var cells: AnyPublisher<[PreconversationWithAdCellOption], Never> { get }
+     var loggerEnabled: AnyPublisher<Bool, Never> { get }
      var floatingViewViewModel: OWFloatingViewModeling { get }
      var loggerViewModel: UILoggerViewModeling { get }
  }
@@ -30,37 +30,37 @@
     var outputs: PreconversationViewsWithAdViewModelingOutput { get }
  }
 
- public final class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModeling,
+class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModeling,
                                                          PreconversationViewsWithAdViewModelingOutput,
                                                          PreconversationViewsWithAdViewModelingInput {
 
     var inputs: PreconversationViewsWithAdViewModelingInput { self }
     var outputs: PreconversationViewsWithAdViewModelingOutput { self }
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
     private let imageProviderAPI: ImageProviding
     private weak var navController: UINavigationController?
     private weak var presentationalVC: UIViewController?
     private let postId: OWPostId
-    private let _actionSettings = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
-    private var actionSettings: Observable<SDKUIIndependentViewsActionSettings> {
+    private let _actionSettings = CurrentValueSubject<SDKUIIndependentViewsActionSettings?, Never>(value: nil)
+    private var actionSettings: AnyPublisher<SDKUIIndependentViewsActionSettings, Never> {
         return _actionSettings
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {
         return NSLocalizedString("MockArticle", comment: "")
     }()
 
-    private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
-    var cells: Observable<[PreconversationWithAdCellOption]> = Observable.just(PreconversationWithAdCellOption.cells)
-    var articleImageURL: Observable<URL> {
+    private let _articleImageURL = CurrentValueSubject<URL?, Never>(value: nil)
+     var cells: AnyPublisher<[PreconversationWithAdCellOption], Never> = Just(PreconversationWithAdCellOption.cells).eraseToAnyPublisher()
+    var articleImageURL: AnyPublisher<URL, Never> {
         return _articleImageURL
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var floatingViewViewModel: OWFloatingViewModeling = {
@@ -72,17 +72,17 @@
                                      adSizeChanged: adSizeChanged)
     }()
 
-    private let _adSizeChanged = PublishSubject<Void>()
-    var adSizeChanged: Observable<Void> {
+    private let _adSizeChanged = PassthroughSubject<Void, Never>()
+    var adSizeChanged: AnyPublisher<Void, Never> {
         return _adSizeChanged
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
         IndependentAdCellViewModel(postId: postId)
     }()
 
-    lazy var loggerEnabled: Observable<Bool> = {
+    lazy var loggerEnabled: AnyPublisher<Bool, Never> = {
         return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
     }()
 
@@ -90,10 +90,10 @@
         return UILoggerViewModel(title: "Logger")
     }()
 
-    private let _showPreConversation = BehaviorSubject<UIView?>(value: nil)
-    var showPreConversation: Observable<UIView?> {
+    private let _showPreConversation = CurrentValueSubject<UIView?, Never>(value: nil)
+    var showPreConversation: AnyPublisher<UIView?, Never> {
         return _showPreConversation
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
@@ -105,7 +105,7 @@
         self.imageProviderAPI = imageProviderAPI
         self.commonCreatorService = commonCreatorService
         self.postId = postId
-        _actionSettings.onNext(actionSettings)
+        _actionSettings.send(actionSettings)
         setupObservers()
         setupBICallaback()
     }
@@ -122,13 +122,13 @@
  private extension PreconversationViewsWithAdViewModel {
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
-        _articleImageURL.onNext(articleURL)
+        _articleImageURL.send(articleURL)
 
         independentAdCellViewModel.outputs.loggerEvents
-            .subscribe(onNext: { [weak self] logEvent in
+            .sink(receiveValue: { [weak self] logEvent in
                 self?.loggerViewModel.inputs.log(text: logEvent)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         actionSettings
             .map { settings -> String? in
@@ -140,12 +140,12 @@
             }
             .unwrap()
         // Small delay so the navigation controller will be set from the view controller
-            .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive))
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (String, Bool) in
                 return (result, loggerEnabled)
             }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let postId = result.0
                 let loggerEnabled = result.1
@@ -166,7 +166,7 @@
                                 additionalSettings: additionalSettings,
                                 callbacks: actionCallbacks(loggerEnabled: loggerEnabled)
                             )
-                            _showPreConversation.onNext(preConversationView)
+                            _showPreConversation.send(preConversationView)
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling Views PreConversation error: \(message)")
@@ -181,7 +181,7 @@
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
-                            _showPreConversation.onNext(preConversationView)
+                            _showPreConversation.send(preConversationView)
 
                         case .failure(let error):
                             let message = error.description
@@ -190,7 +190,7 @@
                     })
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func setupBICallaback() {
@@ -210,7 +210,7 @@
 
             switch callbackType {
             case .adSizeChanged:
-                _adSizeChanged.onNext()
+                _adSizeChanged.send()
             case let .adEvent(event, index):
                 guard loggerEnabled else { return }
                 let log = "preconversationAd: \(event.description) for index: \(index)\n"

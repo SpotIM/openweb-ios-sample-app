@@ -7,29 +7,29 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol PreConversationSettingsViewModelingInputs {
-    var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
-    var customStyleModeSelectedNumberOfComments: BehaviorSubject<Int> { get }
-    var communityGuidelinesStyleSelectedIndex: BehaviorSubject<Int> { get }
-    var communityQuestionsStyleModeSelectedIndex: BehaviorSubject<Int> { get }
+    var customStyleModeSelectedIndex: CurrentValueSubject<Int, Never> { get }
+    var customStyleModeSelectedNumberOfComments: CurrentValueSubject<Int, Never> { get }
+    var communityGuidelinesStyleSelectedIndex: CurrentValueSubject<Int, Never> { get }
+    var communityQuestionsStyleModeSelectedIndex: CurrentValueSubject<Int, Never> { get }
 }
 
 protocol PreConversationSettingsViewModelingOutputs {
     var title: String { get }
     var styleModeTitle: String { get }
-    var styleModeIndex: Observable<Int> { get }
+    var styleModeIndex: AnyPublisher<Int, Never> { get }
     var styleModeSettings: [String] { get }
     var customStyleNumberOfCommentsTitle: String { get }
-    var customStyleNumberOfComments: Observable<Int> { get }
-    var showCustomStyleOptions: Observable<Bool> { get }
+    var customStyleNumberOfComments: AnyPublisher<Int, Never> { get }
+    var showCustomStyleOptions: AnyPublisher<Bool, Never> { get }
     var customStyleNumberOfCommentsSettings: [String] { get }
     var communityGuidelinesStyleModeTitle: String { get }
     var communityQuestionsStyleModeTitle: String { get }
-    var communityGuidelinesStyleModeIndex: Observable<Int> { get }
-    var communityQuestionsStyleModeIndex: Observable<Int> { get }
+    var communityGuidelinesStyleModeIndex: AnyPublisher<Int, Never> { get }
+    var communityQuestionsStyleModeIndex: AnyPublisher<Int, Never> { get }
     var communityGuidelinesModeSettings: [String] { get }
     var communityQuestionsStyleModeSettings: [String] { get }
 }
@@ -42,87 +42,48 @@ protocol PreConversationSettingsViewModeling {
 class PreConversationSettingsVM: PreConversationSettingsViewModeling,
                                  PreConversationSettingsViewModelingInputs,
                                  PreConversationSettingsViewModelingOutputs {
-    private struct Metrics {
-        static let delayInsertDataToPersistense = 100
-    }
-
     var inputs: PreConversationSettingsViewModelingInputs { return self }
     var outputs: PreConversationSettingsViewModelingOutputs { return self }
 
-    var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWPreConversationStyle.defaultIndex)
-    var customStyleModeSelectedNumberOfComments = BehaviorSubject<Int>(value: 0)
-    var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.default.index)
-    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.default.index)
+    private lazy var initialStyle: OWPreConversationStyle = userDefaultsProvider.get(
+        key: UserDefaultsProvider.UDKey<OWPreConversationStyle>.preConversationStyle,
+        defaultValue: OWPreConversationStyle.default
+    )
+
+    lazy var customStyleModeSelectedIndex = CurrentValueSubject<Int, Never>(initialStyle.index)
+    lazy var customStyleModeSelectedNumberOfComments = CurrentValueSubject<Int, Never>(initialStyle.numberOfComments)
+    lazy var communityGuidelinesStyleSelectedIndex = CurrentValueSubject<Int, Never>(initialStyle.communityGuidelinesStyleModeIndex)
+    lazy var communityQuestionsStyleModeSelectedIndex = CurrentValueSubject<Int, Never>(initialStyle.communityQuestionsStyleModeIndex)
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
 
-    var showCustomStyleOptions: Observable<Bool> {
+    var showCustomStyleOptions: AnyPublisher<Bool, Never> {
         return styleModeIndex
             .map { $0 == OWPreConversationStyleIndexer.custom.index } // Custom Style
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    var styleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-            .map { preConversationStyle in
-                switch preConversationStyle {
-                case .regular:
-                    return OWPreConversationStyleIndexer.regular.index
-                case .compact:
-                    return OWPreConversationStyleIndexer.compact.index
-                case .ctaButtonOnly:
-                    return OWPreConversationStyleIndexer.ctaButtonOnly.index
-                case .ctaWithSummary:
-                    return OWPreConversationStyleIndexer.ctaWithSummary.index
-                case .custom:
-                    return OWPreConversationStyleIndexer.custom.index
-                default:
-                    return OWPreConversationStyleIndexer.regular.index
-                }
-            }
-            .asObservable()
+    var styleModeIndex: AnyPublisher<Int, Never> {
+        return customStyleModeSelectedIndex
+            .eraseToAnyPublisher()
     }
 
-    var customStyleNumberOfComments: Observable<Int> {
-        return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-            .map { preConversationStyle in
-                switch preConversationStyle {
-                case .custom(let numberOfComments, _, _, _):
-                    return numberOfComments
-                default:
-                    return OWPreConversationStyle.Metrics.defaultRegularNumberOfComments
-                }
-            }
-            .asObservable()
+    var customStyleNumberOfComments: AnyPublisher<Int, Never> {
+        return customStyleModeSelectedNumberOfComments
+            .eraseToAnyPublisher()
     }
 
-    var communityGuidelinesStyleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-            .map { preConversationStyle in
-                switch preConversationStyle {
-                case .custom(_, let communityGuidelinesStyle, _, _):
-                    return communityGuidelinesStyle.index
-                default:
-                    return OWCommunityGuidelinesStyle.default.index
-                }
-            }
-            .asObservable()
+    var communityGuidelinesStyleModeIndex: AnyPublisher<Int, Never> {
+        return communityGuidelinesStyleSelectedIndex
+            .eraseToAnyPublisher()
     }
 
-    var communityQuestionsStyleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-            .map { preConversationStyle in
-                switch preConversationStyle {
-                case .custom(_, _, let communityQuestionStyle, _):
-                    return communityQuestionStyle.index
-                default:
-                    return OWCommunityQuestionStyle.default.index
-                }
-            }
-            .asObservable()
+    var communityQuestionsStyleModeIndex: AnyPublisher<Int, Never> {
+        return communityQuestionsStyleModeSelectedIndex
+            .eraseToAnyPublisher()
     }
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var title: String = {
         return NSLocalizedString("PreConversationSettings", comment: "")
@@ -176,13 +137,14 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
         Array(min...max).map { String($0) }
     }()
 
-    private lazy var customStyleModeObservable: Observable<OWPreConversationStyle> = {
-        return Observable.combineLatest(
+    private lazy var customStyleModeObservable: AnyPublisher<OWPreConversationStyle, Never> = {
+        return Publishers.CombineLatest4(
             customStyleModeSelectedIndex,
             customStyleModeSelectedNumberOfComments,
             communityGuidelinesStyleSelectedIndex,
             communityQuestionsStyleModeSelectedIndex
-        ) { styleIndex, numberOfComments, communityGuidelinesStyleIndex, questionStyleIndex -> OWPreConversationStyle in
+        )
+        .map { styleIndex, numberOfComments, communityGuidelinesStyleIndex, questionStyleIndex -> OWPreConversationStyle in
             return OWPreConversationStyle.preConversationStyle(
                 fromIndex: styleIndex,
                 numberOfComments: numberOfComments,
@@ -190,7 +152,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
                 communityQuestionsStyleIndex: questionStyleIndex
             )
         }
-        .asObservable()
+        .eraseToAnyPublisher()
     }()
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
@@ -202,19 +164,63 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
 private extension PreConversationSettingsVM {
     func setupObservers() {
         customStyleModeObservable
-            .skip(1)
-            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
-            .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<OWPreConversationStyle>.preConversationStyle))
-            .disposed(by: disposeBag)
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWPreConversationStyle>.preConversationStyle))
+            .store(in: &cancellables)
     }
 }
 
 extension PreConversationSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
-        customStyleModeSelectedIndex.onNext(OWPreConversationStyle.defaultIndex)
-        customStyleModeSelectedNumberOfComments.onNext(0)
-        communityGuidelinesStyleSelectedIndex.onNext(OWCommunityGuidelinesStyle.default.index)
-        communityQuestionsStyleModeSelectedIndex.onNext(OWCommunityQuestionStyle.default.index)
+        customStyleModeSelectedIndex.send(OWPreConversationStyle.defaultIndex)
+        customStyleModeSelectedNumberOfComments.send(0)
+        communityGuidelinesStyleSelectedIndex.send(OWCommunityGuidelinesStyle.default.index)
+        communityQuestionsStyleModeSelectedIndex.send(OWCommunityQuestionStyle.default.index)
+    }
+}
+
+extension OWPreConversationStyle {
+    var index: Int {
+        switch self {
+        case .regular:
+            return OWPreConversationStyleIndexer.regular.index
+        case .compact:
+            return OWPreConversationStyleIndexer.compact.index
+        case .ctaButtonOnly:
+            return OWPreConversationStyleIndexer.ctaButtonOnly.index
+        case .ctaWithSummary:
+            return OWPreConversationStyleIndexer.ctaWithSummary.index
+        case .custom:
+            return OWPreConversationStyleIndexer.custom.index
+        default:
+            return OWPreConversationStyleIndexer.regular.index
+        }
+    }
+
+    var numberOfComments: Int {
+        switch self {
+        case .custom(let numberOfComments, _, _, _):
+            return numberOfComments
+        default:
+            return OWPreConversationStyle.Metrics.defaultRegularNumberOfComments
+        }
+    }
+
+    var communityGuidelinesStyleModeIndex: Int {
+        switch self {
+        case .custom(_, let communityGuidelinesStyle, _, _):
+            return communityGuidelinesStyle.index
+        default:
+            return OWCommunityGuidelinesStyle.default.index
+        }
+    }
+
+    var communityQuestionsStyleModeIndex: Int {
+        switch self {
+        case .custom(_, _, let communityQuestionStyle, _):
+            return communityQuestionStyle.index
+        default:
+            return OWCommunityQuestionStyle.default.index
+        }
     }
 }

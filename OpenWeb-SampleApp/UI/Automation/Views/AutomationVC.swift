@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 #if AUTOMATION
@@ -21,12 +21,11 @@ class AutomationVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
-        static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
     }
 
     private let viewModel: AutomationViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -71,7 +70,7 @@ private extension AutomationVC {
         btnUserInformation.accessibilityIdentifier = Metrics.btnUserInformationIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -108,20 +107,20 @@ private extension AutomationVC {
 
         viewModel.inputs.setNavigationController(self.navigationController)
 
-        btnFonts.rx.tap
+        btnFonts.tapPublisher
             .bind(to: viewModel.inputs.fontsTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnUserInformation.rx.tap
+        btnUserInformation.tapPublisher
             .bind(to: viewModel.inputs.userInformationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Showing error if needed
         viewModel.outputs.showError
-            .subscribe(onNext: { [weak self] message in
+            .sink(receiveValue: { [weak self] message in
                 self?.showError(message: message)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func showError(message: String) {
