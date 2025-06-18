@@ -5,7 +5,7 @@
 //  Created by Anael on 15/01/2025.
 //
 
- import Foundation
+ import UIKit
  import Combine
  import OpenWebSDK
 
