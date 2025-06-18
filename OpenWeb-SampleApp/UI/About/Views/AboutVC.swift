@@ -23,14 +23,14 @@ class AboutVC: UIViewController {
     private lazy var aboutTextView: UITextView = {
         let textView = UITextView()
             .font(FontBook.paragraphMedium)
-            .textColor(ColorAsset.L6.color)
+            .textColor(.L_6)
 
         return textView
     }()
 
     private lazy var allRightsReservedLbl: UILabel = {
         return UILabel()
-            .textColor(ColorAsset.L4.color)
+            .textColor(.L_4)
             .font(FontBook.helper)
             .textAlignment(.center)
     }()

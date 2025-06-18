@@ -41,6 +41,7 @@ class GeneralSettingsView: UIView {
         static let segmentedCommentActionsFontStyleIdentifier = "comment_actions_font_style"
         static let pickerLanguageCodeIdentifier = "language_code"
         static let loginPromptSwitchIdentifier = "login_prompt"
+        static let starRatingSwitchIdentifier = "star_rating"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
         static let btnPadding: CGFloat = 12
@@ -233,6 +234,12 @@ class GeneralSettingsView: UIView {
             accessibilityPrefixId: Metrics.loginPromptSwitchIdentifier)
     }()
 
+    private lazy var showStarRatingSwitch: SwitchSetting = {
+        return SwitchSetting(
+            title: viewModel.outputs.showStarRatingTitle,
+            accessibilityPrefixId: Metrics.starRatingSwitchIdentifier)
+    }()
+
     private lazy var segmentedOrientationEnforcement: SegmentedControlSetting = {
         let title = viewModel.outputs.orientationEnforcementTitle
         let items = viewModel.outputs.orientationEnforcementSettings
@@ -315,6 +322,7 @@ private extension GeneralSettingsView {
         stackView.addArrangedSubview(pickerLanguageCode)
         stackView.addArrangedSubview(segmentedLocaleStrategy)
         stackView.addArrangedSubview(showLoginPromptSwitch)
+        stackView.addArrangedSubview(showStarRatingSwitch)
         stackView.addArrangedSubview(segmentedOrientationEnforcement)
         stackView.addArrangedSubview(segmentedCommentActionsColor)
         stackView.addArrangedSubview(segmentedCommentActionsFontStyle)
@@ -531,6 +539,14 @@ private extension GeneralSettingsView {
 
         showLoginPromptSwitch.switchControl.isOnPublisher
             .bind(to: viewModel.inputs.showLoginPromptSelected)
+            .store(in: &cancellables)
+
+        viewModel.outputs.showStarRating
+            .assign(to: \.isOn, on: showStarRatingSwitch.switchControl)
+            .store(in: &cancellables)
+
+        showStarRatingSwitch.switchControl.isOnPublisher
+            .bind(to: viewModel.inputs.showStarRatingSelected)
             .store(in: &cancellables)
 
         viewModel.outputs.languageName

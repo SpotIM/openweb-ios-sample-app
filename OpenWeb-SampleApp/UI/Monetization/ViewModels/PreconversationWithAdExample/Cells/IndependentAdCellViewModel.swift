@@ -5,7 +5,7 @@
 //  Created by Anael on 24/12/2024.
 //
 
-import Foundation
+import UIKit
 import Combine
 import OpenWebSDK
 #if ADS

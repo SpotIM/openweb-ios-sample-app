@@ -105,7 +105,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     lazy var genericSSOAuthenticationModels: [GenericSSOAuthentication] = {
         var models = GenericSSOAuthentication.mockModels
 
-        if let spotId = spotIdToFilterBy {
+        if let spotId = spotIdToFilterBy, !spotId.isEmpty {
             models = models.filter { $0.spotId == spotId || $0.spotId == "*" }
         }
 
@@ -121,7 +121,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     lazy var thirdPartySSOAuthenticationModels: [ThirdPartySSOAuthentication] = {
         var models = ThirdPartySSOAuthentication.mockModels
 
-        if let spotId = spotIdToFilterBy {
+        if let spotId = spotIdToFilterBy, !spotId.isEmpty {
             models = models.filter { $0.spotId == spotId }
         }
 
@@ -322,11 +322,17 @@ private extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> AnyPublisher<GenericSSOAuthentication, Never> in
                 // 2. Initialize SDK with appropriate spotId if needed
+                var genericSSO = genericSSO
+
+                // If spotId is '*', replace with actual spotIdToFilterBy if available
+                if genericSSO.spotId == "*", let actualSpotId = self.spotIdToFilterBy {
+                    genericSSO.spotId = actualSpotId
+                }
+
                 if shouldInitializeSDK {
                     let manager = OpenWeb.manager
                     manager.spotId = genericSSO.spotId
                 }
-                var genericSSO = genericSSO
                 genericSSO.user.username = customUsername
                 genericSSO.user.password = customPassword
                 genericSSO.ssoToken = customSSOToken

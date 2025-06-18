@@ -49,6 +49,7 @@ protocol ConversationSettingsViewModeling {
     var outputs: ConversationSettingsViewModelingOutputs { get }
 }
 
+// swiftlint:disable identifier_name
 class ConversationSettingsVM: ConversationSettingsViewModeling,
                               ConversationSettingsViewModelingInputs,
                               ConversationSettingsViewModelingOutputs {
@@ -274,6 +275,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
         setupObservers()
     }
 }
+// swiftlint:enable identifier_name
 
 private extension ConversationSettingsVM {
     func setupObservers() {
