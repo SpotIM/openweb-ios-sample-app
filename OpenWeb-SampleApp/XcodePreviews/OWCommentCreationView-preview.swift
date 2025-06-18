@@ -20,7 +20,8 @@
                         subtitle: "News Category",
                         thumbnailUrl: URL(string: "https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/parts-url.jpg?width=595&height=400&name=parts-url.jpg")!)
                     ),
-                    additionalSettings: OWArticleSettings(section: "default")
+                    additionalSettings: OWArticleSettings(section: "default",
+                                                          starRatingEnabled: true)
                 ),
                 settings: OWAdditionalSettings(),
                 commentCreationType: .comment,
