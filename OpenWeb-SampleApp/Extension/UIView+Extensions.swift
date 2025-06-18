@@ -19,4 +19,11 @@ extension UIView {
         }
         return nil
     }
+
+    var isVisible: Bool {
+        guard let window else { return false }
+        let frameInWindowCoordinates = convert(bounds, to: window)
+        let intersection = frameInWindowCoordinates.intersection(window.bounds)
+        return !intersection.isEmpty
+    }
 }

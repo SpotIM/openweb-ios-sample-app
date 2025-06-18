@@ -7,16 +7,16 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol CommentCreationToolbarViewModelingInputs {
-    var modelSelected: PublishSubject<ToolbarCollectionCellViewModeling> { get }
+    var modelSelected: PassthroughSubject<ToolbarCollectionCellViewModeling, Never> { get }
     func setCommentCreationSettings(_ settings: OWCommentCreationSettingsProtocol)
 }
 
 protocol CommentCreationToolbarViewModelingOutputs {
-    var toolbarCellsVM: Observable<[ToolbarCollectionCellViewModeling]> { get }
+    var toolbarCellsVM: CurrentValueSubject<[ToolbarCollectionCellViewModel]?, Never> { get }
 }
 
 protocol CommentCreationToolbarViewModeling {
@@ -30,21 +30,17 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
     var inputs: CommentCreationToolbarViewModelingInputs { return self }
     var outputs: CommentCreationToolbarViewModelingOutputs { return self }
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    var _toolbarCellsVM = BehaviorSubject<[ToolbarCollectionCellViewModeling]?>(value: nil)
-    var toolbarCellsVM: Observable<[ToolbarCollectionCellViewModeling]> {
-        return _toolbarCellsVM
-            .unwrap()
-    }
+    var toolbarCellsVM = CurrentValueSubject<[ToolbarCollectionCellViewModel]?, Never>(value: nil)
 
     init(toolbarElments: [ToolbarElementModel]) {
         let cellsVms = toolbarElments.map { ToolbarCollectionCellViewModel(model: $0) }
-        self._toolbarCellsVM.onNext(cellsVms)
+        self.toolbarCellsVM.send(cellsVms)
         setupObservers()
     }
 
-    var modelSelected = PublishSubject<ToolbarCollectionCellViewModeling>()
+    var modelSelected = PassthroughSubject<ToolbarCollectionCellViewModeling, Never>()
 
     private var commentCreationSettings: OWCommentCreationSettingsProtocol?
     func setCommentCreationSettings(_ settings: OWCommentCreationSettingsProtocol) {
@@ -55,7 +51,7 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
 private extension CommentCreationToolbarViewModel {
     func setupObservers() {
         modelSelected
-            .subscribe(onNext: { [weak self] cellViewModel in
+            .sink(receiveValue: { [weak self] cellViewModel in
                 guard let self,
                       let settings = self.commentCreationSettings else { return }
                 settings.request(.manipulateUserInputText(completion: { result in
@@ -72,6 +68,6 @@ private extension CommentCreationToolbarViewModel {
                     }
                 }))
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

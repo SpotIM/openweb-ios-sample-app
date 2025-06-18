@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 import OpenWebSDK
 #if !PUBLIC_DEMO_APP
 import OpenWeb_SampleApp_Internal_Configs
@@ -17,23 +17,23 @@ import OpenWeb_SampleApp_Internal_Configs
 protocol MockArticleFlowsViewModelingInputs {
     func setNavigationController(_ navController: UINavigationController?)
     func setPresentationalVC(_ viewController: UIViewController)
-    var fullConversationButtonTapped: PublishSubject<Void> { get }
-    var commentCreationButtonTapped: PublishSubject<Void> { get }
-    var commentThreadButtonTapped: PublishSubject<Void> { get }
+    var fullConversationButtonTapped: PassthroughSubject<Void, Never> { get }
+    var commentCreationButtonTapped: PassthroughSubject<Void, Never> { get }
+    var commentThreadButtonTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol MockArticleFlowsViewModelingOutputs {
     var title: String { get }
-    var showFullConversationButton: Observable<PresentationalModeCompact> { get }
-    var showCommentCreationButton: Observable<PresentationalModeCompact> { get }
-    var showPreConversation: Observable<UIView> { get }
-    var showCommentThreadButton: Observable<PresentationalModeCompact> { get }
-    var articleImageURL: Observable<URL> { get }
-    var showError: Observable<String> { get }
+    var showFullConversationButton: AnyPublisher<PresentationalModeCompact, Never> { get }
+    var showCommentCreationButton: AnyPublisher<PresentationalModeCompact, Never> { get }
+    var showPreConversation: AnyPublisher<UIView, Never> { get }
+    var showCommentThreadButton: AnyPublisher<PresentationalModeCompact, Never> { get }
+    var articleImageURL: AnyPublisher<URL, Never> { get }
+    var showError: AnyPublisher<String, Never> { get }
     var preConversationHorizontalMargin: CGFloat { get }
     var loggerViewModel: UILoggerViewModeling { get }
     var floatingViewViewModel: OWFloatingViewModeling { get }
-    var loggerEnabled: Observable<Bool> { get }
+    var loggerEnabled: AnyPublisher<Bool, Never> { get }
 }
 
 protocol MockArticleFlowsViewModeling {
@@ -53,7 +53,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
         return OWFloatingViewModel()
     }()
 
-    lazy var loggerEnabled: Observable<Bool> = {
+    lazy var loggerEnabled: AnyPublisher<Bool, Never> = {
         return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
     }()
 
@@ -61,7 +61,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
         static let preConversationCompactHorizontalMargin: CGFloat = 16.0
     }
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private let imageProviderAPI: ImageProviding
     private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
@@ -69,21 +69,21 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
     private weak var navController: UINavigationController?
     private weak var presentationalVC: UIViewController?
 
-    private let _articleImageURL = BehaviorSubject<URL?>(value: nil)
-    var articleImageURL: Observable<URL> {
+    private let _articleImageURL = CurrentValueSubject<URL?, Never>(value: nil)
+    var articleImageURL: AnyPublisher<URL, Never> {
         return _articleImageURL
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
 
-    private let _actionSettings = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
-    private var actionSettings: Observable<SDKUIFlowActionSettings> {
+    private let _actionSettings = CurrentValueSubject<SDKUIFlowActionSettings?, Never>(value: nil)
+    private var actionSettings: AnyPublisher<SDKUIFlowActionSettings, Never> {
         return _actionSettings
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
@@ -95,28 +95,28 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
         self.silentSSOAuthentication = silentSSOAuthentication
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
-        _actionSettings.onNext(actionSettings)
+        _actionSettings.send(actionSettings)
         setupBICallaback()
         setupObservers()
     }
 
-    private let _showError = PublishSubject<String>()
-    var showError: Observable<String> {
+    private let _showError = PassthroughSubject<String, Never>()
+    var showError: AnyPublisher<String, Never> {
         return _showError
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    private let _showPreConversation = PublishSubject<UIView>()
-    var showPreConversation: Observable<UIView> {
+    private let _showPreConversation = PassthroughSubject<UIView, Never>()
+    var showPreConversation: AnyPublisher<UIView, Never> {
         return _showPreConversation
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    let fullConversationButtonTapped = PublishSubject<Void>()
-    let commentCreationButtonTapped = PublishSubject<Void>()
-    let commentThreadButtonTapped = PublishSubject<Void>()
+    let fullConversationButtonTapped = PassthroughSubject<Void, Never>()
+    let commentCreationButtonTapped = PassthroughSubject<Void, Never>()
+    let commentThreadButtonTapped = PassthroughSubject<Void, Never>()
 
-    var showFullConversationButton: Observable<PresentationalModeCompact> {
+    var showFullConversationButton: AnyPublisher<PresentationalModeCompact, Never> {
         return actionSettings
             // Map here is also like a filter
             .map { settings in
@@ -130,7 +130,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
 
     }
 
-    var showCommentCreationButton: Observable<PresentationalModeCompact> {
+    var showCommentCreationButton: AnyPublisher<PresentationalModeCompact, Never> {
         return actionSettings
             // Map here is also like a filter
             .map { settings in
@@ -143,7 +143,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
             .unwrap()
     }
 
-    var showCommentThreadButton: Observable<PresentationalModeCompact> {
+    var showCommentThreadButton: AnyPublisher<PresentationalModeCompact, Never> {
         return actionSettings
             // Map here is also like a filter
             .map { settings in
@@ -179,7 +179,7 @@ private extension MockArticleFlowsViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
-        _articleImageURL.onNext(articleURL)
+        _articleImageURL.send(articleURL)
 
         // Pre conversation
         actionSettings
@@ -192,12 +192,12 @@ private extension MockArticleFlowsViewModel {
             }
             .unwrap()
             // Small delay so the navigation controller will be set from the view controller
-            .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive))
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
@@ -222,11 +222,11 @@ private extension MockArticleFlowsViewModel {
                                 additionalSettings: additionalSettings,
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
-                            _showPreConversation.onNext(preConversationView)
+                            _showPreConversation.send(preConversationView)
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling flows.preConversation error: \(error)")
-                            _showError.onNext(message)
+                            _showError.send(message)
                         }
                     }
                 } else {
@@ -239,16 +239,16 @@ private extension MockArticleFlowsViewModel {
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
-                            self._showPreConversation.onNext(preConversationView)
+                            self._showPreConversation.send(preConversationView)
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.preConversation error: \(error)")
-                            self._showError.onNext(message)
+                            self._showError.send(message)
                         }
                     })
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Full conversation
         fullConversationButtonTapped
@@ -259,8 +259,8 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
@@ -288,7 +288,7 @@ private extension MockArticleFlowsViewModel {
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling flows.conversation error: \(message)")
-                            _showError.onNext(message)
+                            _showError.send(message)
                         }
                     }
                 } else {
@@ -306,12 +306,12 @@ private extension MockArticleFlowsViewModel {
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.conversation error: \(message)")
-                            self._showError.onNext(message)
+                            self._showError.send(message)
                         }
                     })
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Comment creation
         commentCreationButtonTapped
@@ -322,8 +322,8 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
@@ -351,7 +351,7 @@ private extension MockArticleFlowsViewModel {
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling flows.commentCreation error: \(message)")
-                            _showError.onNext(message)
+                            _showError.send(message)
                         }
                     }
                 } else {
@@ -369,12 +369,12 @@ private extension MockArticleFlowsViewModel {
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.commentCreation error: \(message)")
-                            self._showError.onNext(message)
+                            self._showError.send(message)
                         }
                     })
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Comment creation
         commentThreadButtonTapped
@@ -385,8 +385,8 @@ private extension MockArticleFlowsViewModel {
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] result in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let mode = result.0
                 let postId = result.1
@@ -415,7 +415,7 @@ private extension MockArticleFlowsViewModel {
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling flows.commentThread error: \(message)")
-                            _showError.onNext(message)
+                            _showError.send(message)
                         }
                     }
                 } else {
@@ -434,12 +434,12 @@ private extension MockArticleFlowsViewModel {
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.commentThread error: \(message)")
-                            self._showError.onNext(message)
+                            self._showError.send(message)
                         }
                     })
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Providing `displayAuthenticationFlow` callback
         let authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
@@ -457,11 +457,12 @@ private extension MockArticleFlowsViewModel {
                 break
             }
 
-            _ = authenticationVM.outputs.dismissed
-                .take(1)
-                .subscribe(onNext: { [completion] _ in
+            authenticationVM.outputs.dismissed
+                .prefix(1)
+                .sink(receiveValue: { [completion] _ in
                     completion()
                 })
+                .store(in: &cancellables)
         }
 
         let authenticationUI = OpenWeb.manager.ui.authenticationUI
@@ -474,15 +475,18 @@ private extension MockArticleFlowsViewModel {
             let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
             if OpenWeb.manager.spotId == demoSpotId,
                let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
-                _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
-                    .take(1) // No need to disposed since we only take 1
-                    .subscribe(onNext: { userId in
+                self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+                    .prefix(1)
+                    .sink(receiveCompletion: { result in
+                        if case .failure(let error) = result {
+                            DLog("Silent SSO failed with error: \(error)")
+                            completion()
+                        }
+                    }, receiveValue: { userId in
                         DLog("Silent SSO completed successfully with userId: \(userId)")
                         completion()
-                    }, onError: { error in
-                        DLog("Silent SSO failed with error: \(error)")
-                        completion()
                     })
+                    .store(in: &cancellables)
             } else {
                 DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
                 completion()
@@ -499,7 +503,7 @@ private extension MockArticleFlowsViewModel {
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
         guard let navController = self.navController,
-              let presentationalVC = self.presentationalVC else { return nil }
+              let presentationalVC else { return nil }
 
         switch mode {
         case .present(let style):

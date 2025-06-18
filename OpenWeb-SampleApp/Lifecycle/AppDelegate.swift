@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 #if ADS
 import NimbusSDK
 #endif
@@ -18,11 +18,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var appCoordinator: AppCoordinator!
     var userDefaultsProvider: UserDefaultsProviderProtocol!
+    private var cancellables: Set<AnyCancellable> = []
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if ADS
         Nimbus.shared.testMode = true
+        #endif
+
+        #if canImport(InjectHotReload)
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+            if let injectionPath = Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle") {
+                injectionPath.load()
+                UIView.setupSwizzlingForHotReload()
+            } else {
+                DLog("InjectionIII bundle not found")
+            }
+        }
         #endif
 
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -32,11 +44,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let deeplink = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<SampleAppDeeplink>.deeplinkOption,
                                                 defaultValue: .none)
 
-        // No need to dispose, as we are taking only one and this observable should also never end
-        _ = appCoordinator
+        appCoordinator
             .start(deepLinkOptions: deeplink.toDeepLinkOptions)
-            .take(1)
-            .subscribe()
+            .prefix(1)
+            .sink {}
+            .store(in: &cancellables)
 
         return true
     }

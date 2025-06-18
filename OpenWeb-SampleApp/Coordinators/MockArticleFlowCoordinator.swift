@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class MockArticleFlowCoordinator: BaseCoordinator<Void> {
 
@@ -18,7 +18,7 @@ class MockArticleFlowCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.actionsFlowSettings(let settings) = data else {
@@ -28,13 +28,13 @@ class MockArticleFlowCoordinator: BaseCoordinator<Void> {
         let mockArticleFlowsVM: MockArticleFlowsViewModeling = MockArticleFlowsViewModel(actionSettings: settings)
         let mockArticleFlowsVC = MockArticleFlowsVC(viewModel: mockArticleFlowsVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         router.push(mockArticleFlowsVC,
                     animated: true,
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }

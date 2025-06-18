@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class IAUSettingsView: UIView {
 
@@ -24,6 +25,7 @@ class IAUSettingsView: UIView {
     }()
 
     private let viewModel: IAUSettingsViewModeling
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: IAUSettingsViewModeling) {
         self.viewModel = viewModel
@@ -43,7 +45,7 @@ private extension IAUSettingsView {
         self.accessibilityIdentifier = Metrics.identifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.backgroundColor = ColorPalette.shared.color(type: .background)
 
         self.addSubview(titleLabel)

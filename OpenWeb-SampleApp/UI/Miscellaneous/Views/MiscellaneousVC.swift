@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 class MiscellaneousVC: UIViewController {
@@ -22,7 +22,7 @@ class MiscellaneousVC: UIViewController {
     }
 
     private let viewModel: MiscellaneousViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -62,7 +62,7 @@ private extension MiscellaneousVC {
         btnConversationCounter.accessibilityIdentifier = Metrics.btnConversationCounterIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -89,8 +89,8 @@ private extension MiscellaneousVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        btnConversationCounter.rx.tap
+        btnConversationCounter.tapPublisher
             .bind(to: viewModel.inputs.conversationCounterTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

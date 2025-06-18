@@ -5,8 +5,7 @@
 //  Created by Anael on 25/12/2024.
 //
 
-import Foundation
-import RxSwift
+import UIKit
 
 enum PreconversationWithAdCellOption: CaseIterable {
     static var cells: [PreconversationWithAdCellOption] {

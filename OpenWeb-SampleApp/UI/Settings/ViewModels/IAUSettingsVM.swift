@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol IAUSettingsViewModelingInputs {
@@ -27,6 +27,7 @@ class IAUSettingsVM: IAUSettingsViewModeling, IAUSettingsViewModelingInputs, IAU
     var outputs: IAUSettingsViewModelingOutputs { return self }
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var title: String = {
         return NSLocalizedString("IAUSettings", comment: "")

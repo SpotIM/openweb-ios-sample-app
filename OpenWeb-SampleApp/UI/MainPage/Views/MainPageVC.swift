@@ -8,8 +8,8 @@
 
 import UIKit
 import SnapKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 
 class MainPageVC: UIViewController {
     private struct Metrics {
@@ -28,12 +28,12 @@ class MainPageVC: UIViewController {
     }
 
     private let viewModel: MainPageViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var welcomeLbl: UILabel = {
         return UILabel()
             .numberOfLines(0)
-            .textColor(ColorAsset.L6.color)
+            .textColor(.L_6)
             .font(FontBook.mainHeadingBold)
             .textAlignment(.center)
     }()
@@ -41,20 +41,20 @@ class MainPageVC: UIViewController {
     private lazy var descriptionLbl: UILabel = {
         return UILabel()
             .numberOfLines(0)
-            .textColor(ColorAsset.L6.color)
+            .textColor(.L_6)
             .font(FontBook.paragraph)
             .textAlignment(.center)
     }()
 
     private lazy var versionLbl: UILabel = {
         return UILabel()
-            .textColor(ColorAsset.L5.color)
+            .textColor(.L_5)
             .font(FontBook.helper)
     }()
 
     private lazy var buildLbl: UILabel = {
         return UILabel()
-            .textColor(ColorAsset.L5.color)
+            .textColor(.L_5)
             .font(FontBook.helper)
     }()
 
@@ -120,7 +120,7 @@ private extension MainPageVC {
         exploreAPIBtn.accessibilityIdentifier = Metrics.exploreButtonIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -185,12 +185,12 @@ private extension MainPageVC {
         versionLbl.text = viewModel.outputs.versionText
         buildLbl.text = viewModel.outputs.buildText
 
-        aboutBtn.rx.tap
+        aboutBtn.tapPublisher
             .bind(to: viewModel.inputs.aboutTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        exploreAPIBtn.rx.tap
+        exploreAPIBtn.tapPublisher
             .bind(to: viewModel.inputs.testAPITapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

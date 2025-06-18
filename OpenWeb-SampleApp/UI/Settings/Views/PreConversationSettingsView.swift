@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class PreConversationSettingsView: UIView {
 
@@ -71,7 +72,7 @@ class PreConversationSettingsView: UIView {
     }()
 
     private let viewModel: PreConversationSettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: PreConversationSettingsViewModeling) {
         self.viewModel = viewModel
@@ -91,7 +92,7 @@ private extension PreConversationSettingsView {
         self.accessibilityIdentifier = Metrics.identifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
@@ -111,12 +112,12 @@ private extension PreConversationSettingsView {
 
     func setupObservers() {
         viewModel.outputs.styleModeIndex
-            .bind(to: segmentedStyleMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedStyleMode.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedStyleMode.rx.selectedSegmentIndex
+        segmentedStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.customStyleModeSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.customStyleNumberOfComments
             .map { [weak self] in
@@ -125,40 +126,42 @@ private extension PreConversationSettingsView {
                 return (index, 0)
             }
             .unwrap()
-            .bind(to: pickerCustomStyleNumberOfComments.rx.setSelectedPickerIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedIndexPath, on: pickerCustomStyleNumberOfComments.pickerControl.publisher)
+            .store(in: &cancellables)
 
-        pickerCustomStyleNumberOfComments.rx.selectedPickerIndex
+        pickerCustomStyleNumberOfComments.pickerControl.publisher.$selectedIndexPath
             .map { [weak self] in
                 guard let self else { return nil }
                 return Int(self.viewModel.outputs.customStyleNumberOfCommentsSettings[$0.row])
             }
             .unwrap()
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: viewModel.inputs.customStyleModeSelectedNumberOfComments)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.showCustomStyleOptions
             .map { !$0 }
-            .bind(to: pickerCustomStyleNumberOfComments.rx.isHidden,
-                  segmentedCommunityGuidelinesStyleMode.rx.isHidden,
-                  segmentedCommunityQuestionsStyleMode.rx.isHidden)
-            .disposed(by: disposeBag)
+            .sink { [weak self] isHidden in
+                self?.pickerCustomStyleNumberOfComments.isHidden = isHidden
+                self?.segmentedCommunityGuidelinesStyleMode.isHidden = isHidden
+                self?.segmentedCommunityQuestionsStyleMode.isHidden = isHidden
+            }
+            .store(in: &cancellables)
 
         viewModel.outputs.communityGuidelinesStyleModeIndex
-            .bind(to: segmentedCommunityGuidelinesStyleMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedCommunityGuidelinesStyleMode.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedCommunityGuidelinesStyleMode.rx.selectedSegmentIndex
+        segmentedCommunityGuidelinesStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.communityGuidelinesStyleSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.communityQuestionsStyleModeIndex
-            .bind(to: segmentedCommunityQuestionsStyleMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedCommunityQuestionsStyleMode.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedCommunityQuestionsStyleMode.rx.selectedSegmentIndex
+        segmentedCommunityQuestionsStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.communityQuestionsStyleModeSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

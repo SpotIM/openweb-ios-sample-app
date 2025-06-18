@@ -114,6 +114,7 @@
 "ClarityDetailsSettings" = "Clarity Details:";
 "NetworkSettings" = "Network:";
 "NetworkEnvironment" = "Environment";
+"NetworkEnvironmentCustom" = "Namespace";
 "BuildConfiguration" = "Configuration";
 "ConfigurationDebug" = "Debug";
 "ConfigurationBeta" = "Beta";

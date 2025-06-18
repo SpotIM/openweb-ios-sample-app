@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 class UIViewsExamplesVC: UIViewController {
@@ -22,7 +22,7 @@ class UIViewsExamplesVC: UIViewController {
     }
 
     private let viewModel: UIViewsExamplesViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -63,7 +63,7 @@ private extension UIViewsExamplesVC {
         btnConversationBelowVideo.accessibilityIdentifier = Metrics.btnConversationBelowVideoIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -89,8 +89,8 @@ private extension UIViewsExamplesVC {
         title = viewModel.outputs.title
 
         // Bind buttons
-        btnConversationBelowVideo.rx.tap
+        btnConversationBelowVideo.tapPublisher
             .bind(to: viewModel.inputs.conversationBelowVideoTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

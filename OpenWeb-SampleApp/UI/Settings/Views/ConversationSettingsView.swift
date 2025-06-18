@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class ConversationSettingsView: UIView {
 
@@ -93,7 +94,7 @@ class ConversationSettingsView: UIView {
     }()
 
     private let viewModel: ConversationSettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: ConversationSettingsViewModeling) {
         self.viewModel = viewModel
@@ -113,7 +114,7 @@ private extension ConversationSettingsView {
         self.accessibilityIdentifier = Metrics.identifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
@@ -136,76 +137,86 @@ private extension ConversationSettingsView {
 
     func setupObservers() {
         viewModel.outputs.styleModeIndex
-            .bind(to: segmentedStyleMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedStyleMode.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedStyleMode.rx.selectedSegmentIndex
+        segmentedStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.styleModeSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.communityGuidelinesStyleModeIndex
-            .bind(to: segmentedCommunityGuidelinesStyleMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedCommunityGuidelinesStyleMode.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedCommunityGuidelinesStyleMode.rx.selectedSegmentIndex
+        segmentedCommunityGuidelinesStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.communityGuidelinesStyleSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.communityQuestionsStyleModeIndex
-            .bind(to: segmentedCommunityQuestionsStyleMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedCommunityQuestionsStyleMode.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedCommunityQuestionsStyleMode.rx.selectedSegmentIndex
+        segmentedCommunityQuestionsStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.communityQuestionsStyleModeSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.conversationSpacingModeIndex
-            .bind(to: segmentedConversationSpacingMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedConversationSpacingMode.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedConversationSpacingMode.rx.selectedSegmentIndex
+        segmentedConversationSpacingMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.conversationSpacingSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.betweenCommentsSpacing
-            .bind(to: textFieldBetweenCommentsSpacing.rx.textFieldTextAfterEnded)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldBetweenCommentsSpacing.textFieldControl)
+            .store(in: &cancellables)
 
-        textFieldBetweenCommentsSpacing.rx.textFieldTextAfterEnded
+        textFieldBetweenCommentsSpacing.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.betweenCommentsSpacingSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.communityGuidelinesSpacing
-            .bind(to: textFieldCommunityGuidelinesSpacing.rx.textFieldTextAfterEnded)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldCommunityGuidelinesSpacing.textFieldControl)
+            .store(in: &cancellables)
 
-        textFieldCommunityGuidelinesSpacing.rx.textFieldTextAfterEnded
+        textFieldCommunityGuidelinesSpacing.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.communityGuidelinesSpacingSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.communityQuestionsGuidelinesSpacing
-            .bind(to: textFieldCommunityQuestionsSpacing.rx.textFieldTextAfterEnded)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldCommunityQuestionsSpacing.textFieldControl)
+            .store(in: &cancellables)
 
-        textFieldCommunityQuestionsSpacing.rx.textFieldTextAfterEnded
+        textFieldCommunityQuestionsSpacing.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.communityQuestionsGuidelinesSpacingSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.showCustomStyleOptions
             .map { !$0 } // Not hide custom segmented style
-            .bind(to: segmentedCommunityGuidelinesStyleMode.rx.isHidden, segmentedCommunityQuestionsStyleMode.rx.isHidden, segmentedConversationSpacingMode.rx.isHidden)
-            .disposed(by: disposeBag)
+            .sink { [weak self] isHidden in
+                self?.segmentedCommunityGuidelinesStyleMode.isHidden = isHidden
+                self?.segmentedCommunityQuestionsStyleMode.isHidden = isHidden
+                self?.segmentedConversationSpacingMode.isHidden = isHidden
+            }
+            .store(in: &cancellables)
 
         // Observe conversation style mode and conversation spacing mode, If both are custom then we show spacing text fields
-        Observable.combineLatest(viewModel.outputs.showCustomStyleOptions, viewModel.outputs.showSpacingOptions) { showCustomStyleOptions, showSpacingOptions in
-            return !(showCustomStyleOptions && showSpacingOptions) // Not hide text fields
-        }
-        .bind(to: textFieldBetweenCommentsSpacing.rx.isHidden,
-              textFieldCommunityGuidelinesSpacing.rx.isHidden,
-              textFieldCommunityQuestionsSpacing.rx.isHidden)
-        .disposed(by: disposeBag)
+        Publishers.CombineLatest(viewModel.outputs.showSpacingOptions, viewModel.outputs.showCustomStyleOptions)
+            .map { showSpacingOptions, showCustomStyleOptions in
+                return !(showCustomStyleOptions && showSpacingOptions) // Not hide text fields
+            }
+            .sink { [weak self] isHidden in
+                self?.textFieldBetweenCommentsSpacing.isHidden = isHidden
+                self?.textFieldCommunityGuidelinesSpacing.isHidden = isHidden
+                self?.textFieldCommunityQuestionsSpacing.isHidden = isHidden
+            }
+            .store(in: &cancellables)
     }
 }

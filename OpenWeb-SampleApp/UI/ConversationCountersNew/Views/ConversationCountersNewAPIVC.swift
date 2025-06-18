@@ -7,8 +7,9 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
+import CombineDataSources
 import SnapKit
 
 class ConversationCountersNewAPIVC: UIViewController {
@@ -26,7 +27,7 @@ class ConversationCountersNewAPIVC: UIViewController {
     }
 
     private let viewModel: ConversationCountersNewAPIViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var txtFieldPostIds: TextFieldSetting = {
         let txtField = TextFieldSetting(title: NSLocalizedString("PostIdOrIds", comment: "") + ":",
@@ -54,7 +55,6 @@ class ConversationCountersNewAPIVC: UIViewController {
         let style: UIActivityIndicatorView.Style
         style = .large
         let loader = UIActivityIndicatorView(style: style)
-        loader.isHidden = true
         return loader
     }()
 
@@ -93,7 +93,7 @@ class ConversationCountersNewAPIVC: UIViewController {
 }
 
 private extension ConversationCountersNewAPIVC {
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 
@@ -139,43 +139,41 @@ private extension ConversationCountersNewAPIVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        txtFieldPostIds.rx.textFieldText
+        txtFieldPostIds.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.userPostIdsInput)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnExecute.rx.tap
-            .do(onNext: { [weak self] _ in
+        btnExecute.tapPublisher
+            .handleEvents(receiveOutput: { [weak self] _ in
                 self?.txtFieldPostIds.resignFirstResponder()
             })
             .bind(to: viewModel.inputs.loadConversationCounter)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        let showLoaderObservable = viewModel.outputs.showLoader
-            .share(replay: 0)
-
-        showLoaderObservable
-            .map { !$0 }
-            .bind(to: loader.rx.isHidden)
-            .disposed(by: disposeBag)
-
-        showLoaderObservable
-            .bind(to: loader.rx.isAnimating)
-            .disposed(by: disposeBag)
+        viewModel.outputs.showLoader
+            .sink { [weak self] showLoader in
+                guard let self else { return }
+                if showLoader {
+                    loader.startAnimating()
+                } else {
+                    loader.stopAnimating()
+                }
+            }
+            .store(in: &cancellables)
 
         viewModel.outputs.showError
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] message in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
                 self?.showError(message: message)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         viewModel.outputs.cellsViewModels
-            .bind(to: counterTableView.rx.items(cellIdentifier: ConversationCounterNewAPICell.identifierName,
-                                                cellType: ConversationCounterNewAPICell.self)) { _, viewModel, cell in
+            .bind(subscriber: counterTableView.rowsSubscriber(cellType: ConversationCounterNewAPICell.self, cellConfig: { cell, indexPath, viewModel in
                 cell.configure(with: viewModel)
-            }
-            .disposed(by: disposeBag)
+            }))
+            .store(in: &cancellables)
     }
 
     func showError(message: String) {

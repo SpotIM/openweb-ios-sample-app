@@ -7,13 +7,13 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 
 class IndependentAdCell: UITableViewCell {
     static let identifier = "IndependentAdCell"
     private weak var tableView: UITableView?
     private var viewModel: IndependentAdCellViewModeling!
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private struct Metrics {
         static let horizontalPadding: CGFloat = 16
@@ -30,15 +30,15 @@ class IndependentAdCell: UITableViewCell {
 }
 
 private extension IndependentAdCell {
-    func setupViews() {
+    @objc func setupViews() {
         selectionStyle = .none
         self.backgroundColor = .clear
     }
 
     func setupObservers() {
         viewModel.outputs.adView
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] independentAdView in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] independentAdView in
                 guard let self else { return }
                 contentView.addSubview(independentAdView)
                 independentAdView.snp.makeConstraints { make in
@@ -48,14 +48,14 @@ private extension IndependentAdCell {
                 tableView?.beginUpdates()
                 tableView?.endUpdates()
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.adSizeChanged
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
                 self?.tableView?.beginUpdates()
                 self?.tableView?.endUpdates()
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

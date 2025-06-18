@@ -6,8 +6,8 @@
 //  Copyright © 2024 OpenWeb. All rights reserved.
 //
 
-import Foundation
-import RxSwift
+import Combine
+import OpenWebSDK
 
 class AuthenticationPlaygroundCoordinator: BaseCoordinator<Void> {
 
@@ -18,11 +18,11 @@ class AuthenticationPlaygroundCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
-        let authenticationPlaygroundVM: AuthenticationPlaygroundViewModeling = AuthenticationPlaygroundViewModel()
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+        let authenticationPlaygroundVM: AuthenticationPlaygroundViewModeling = AuthenticationPlaygroundViewModel(filterBySpotId: OpenWeb.manager.spotId)
         let authenticationPlaygroundVC = AuthenticationPlaygroundVC(viewModel: authenticationPlaygroundVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         var shouldAnimate = true
         if let deepLink = deepLinkOptions, deepLink == .authenticationPlayground {
@@ -34,6 +34,6 @@ class AuthenticationPlaygroundCoordinator: BaseCoordinator<Void> {
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }
