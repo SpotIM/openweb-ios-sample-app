@@ -12,8 +12,8 @@ import Foundation
 #endif
 
 struct GenericSSOAuthentication {
-    let displayName: String
-    let spotId: String
+    var displayName: String
+    var spotId: String
     var ssoToken: String
     var user: UserAuthentication
 }
