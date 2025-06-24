@@ -126,7 +126,6 @@ class CommentPreviewTableView: UITableView, UITableViewDataSource {
     }
 }
 
-// swiftlint:disable line_length
 @available(iOS 17.0, *)
 #Preview {
     CommentPreviewTableView(comments: [
