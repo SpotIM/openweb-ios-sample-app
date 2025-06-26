@@ -54,13 +54,9 @@ class PreconversationViewsWithAdVC: UIViewController {
         floatingLoggerView.removeFromSuperview()
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
