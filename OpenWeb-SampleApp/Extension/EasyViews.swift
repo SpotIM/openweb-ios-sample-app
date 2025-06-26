@@ -169,18 +169,17 @@ extension UIButton {
         return self
     }
 
-    @discardableResult func contentEdgeInsets(_ inset: UIEdgeInsets) -> Self {
-        self.contentEdgeInsets = inset
-        return self
-    }
-
     @discardableResult func withPadding(_ padding: CGFloat) -> Self {
-        self.contentEdgeInsets = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+        var buttonConfiguration = configuration ?? .plain()
+        buttonConfiguration.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: padding, bottom: padding, trailing: padding)
+        configuration = buttonConfiguration
         return self
     }
 
     @discardableResult func withHorizontalPadding(_ padding: CGFloat) -> Self {
-        self.contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
+        var buttonConfiguration = configuration ?? .plain()
+        buttonConfiguration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: padding, bottom: 0, trailing: padding)
+        configuration = buttonConfiguration
         return self
     }
 
