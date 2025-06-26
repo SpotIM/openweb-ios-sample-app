@@ -1,9 +1,9 @@
-platform :ios, '13.0'
+platform :ios, '15.0'
 inhibit_all_warnings!
 use_frameworks!
 
 def openweb_pod
-  pod 'OpenWebSDK', '2.8.0'
+  pod 'OpenWebSDK', '2.9.0'
 end
 
 def combine_pods
