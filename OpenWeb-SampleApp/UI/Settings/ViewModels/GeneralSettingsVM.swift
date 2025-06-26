@@ -32,6 +32,7 @@ protocol GeneralSettingsViewModelingInputs {
     var languageSelectedName: CurrentValueSubject<String, Never> { get }
     var localeStrategySelectedIndex: CurrentValueSubject<Int, Never> { get }
     var showLoginPromptSelected: CurrentValueSubject<Bool, Never> { get }
+    var showStarRatingSelected: CurrentValueSubject<Bool, Never> { get }
     var openColorsCustomizationClicked: PassthroughSubject<Void, Never> { get }
     var commentActionsColorSelected: CurrentValueSubject<OWCommentActionsColor, Never> { get }
     var commentActionsFontStyleSelected: CurrentValueSubject<OWCommentActionsFontStyle, Never> { get }
@@ -101,6 +102,8 @@ protocol GeneralSettingsViewModelingOutputs {
 
     var showLoginPrompt: AnyPublisher<Bool, Never> { get }
     var showLoginPromptTitle: String { get }
+    var showStarRating: AnyPublisher<Bool, Never> { get }
+    var showStarRatingTitle: String { get }
 
     var orientationEnforcement: AnyPublisher<OWOrientationEnforcement, Never> { get }
     var orientationEnforcementTitle: String { get }
@@ -149,6 +152,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     lazy var languageSelectedName = CurrentValueSubject<String, Never>(userDefaultsProvider.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default).name)
     lazy var localeStrategySelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default).index)
     lazy var showLoginPromptSelected = CurrentValueSubject<Bool, Never>(userDefaultsProvider.get(key: .showLoginPrompt, defaultValue: false))
+    lazy var showStarRatingSelected = CurrentValueSubject<Bool, Never>(userDefaultsProvider.get(key: .starRatingEnabled, defaultValue: false))
     lazy var commentActionsColorSelected = CurrentValueSubject<OWCommentActionsColor, Never>(userDefaultsProvider.get(key: .commentActionsColor, defaultValue: .default))
     lazy var commentActionsFontStyleSelected = CurrentValueSubject<OWCommentActionsFontStyle, Never>(userDefaultsProvider.get(key: .commentActionsFontStyle, defaultValue: .default))
 
@@ -202,6 +206,12 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var showLoginPrompt: AnyPublisher<Bool, Never> {
         return showLoginPromptSelected
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    var showStarRating: AnyPublisher<Bool, Never> {
+        return showStarRatingSelected
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
@@ -418,6 +428,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     lazy var showLoginPromptTitle: String = {
         return NSLocalizedString("ShowLoginPromptTitle", comment: "")
+    }()
+
+    lazy var showStarRatingTitle: String = {
+        return NSLocalizedString("ShowStarRatingTitle", comment: "")
     }()
 
     lazy var readOnlySettings: [String] = {
@@ -714,6 +728,11 @@ private extension GeneralSettingsVM {
             .dropFirst()
             .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.showLoginPrompt))
             .store(in: &cancellables)
+
+        showStarRatingSelected
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.starRatingEnabled))
+            .store(in: &cancellables)
     }
     // swiftlint:enable function_body_length
 }
@@ -736,6 +755,7 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
         fontGroupTypeSelectedIndex.send(OWFontGroupFamilyIndexer.`default`.index)
         languageStrategySelectedIndex.send(OWLanguageStrategy.defaultStrategyIndex)
         showLoginPromptSelected.send(false)
+        showStarRatingSelected.send(false)
         orientationSelectedEnforcement.send(OWOrientationEnforcement.default)
         commentActionsColorSelected.send(OWCommentActionsColor.default)
         commentActionsFontStyleSelected.send(OWCommentActionsFontStyle.default)
