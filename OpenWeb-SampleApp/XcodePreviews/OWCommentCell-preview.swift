@@ -27,13 +27,13 @@ extension OWCommentCellViewModel {
 
 extension OWContent {
     static func text(_ text: String) -> OWContent {
-        let json = """
+        let json = Data("""
         {
             "id": "content1",
             "type": "text",
             "text": "\(text)"
         }
-        """.data(using: .utf8)!
+        """.utf8)
 
         // swiftlint:disable:next force_try
         return try! JSONDecoder().decode(OWContent.self, from: json)

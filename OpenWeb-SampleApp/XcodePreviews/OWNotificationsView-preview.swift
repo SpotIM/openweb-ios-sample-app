@@ -59,7 +59,7 @@ class MockListNotificationsAPI: OWNotificationsAPI {
         progressValue.completedUnitCount = 1
         progress.onNext(progressValue)
 
-        let jsonData = """
+        let jsonData = Data("""
         {
             "notifications": [
                 {
@@ -211,7 +211,7 @@ class MockListNotificationsAPI: OWNotificationsAPI {
                 "offset_v2": 0
             }
         }
-        """.data(using: .utf8)!
+        """.utf8)
 
         do {
             let decoder = JSONDecoder()
