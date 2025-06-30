@@ -806,6 +806,7 @@ extension OWLanguageStrategy {
     }
 }
 
+// swiftlint:disable no_magic_numbers
 extension OWSortOption {
     /// index into `GeneralSettingsVM.initialSortSettings`
     var titleIndex: Int {
@@ -821,3 +822,4 @@ extension OWSortOption {
         }
     }
 }
+// swiftlint:enable no_magic_numbers

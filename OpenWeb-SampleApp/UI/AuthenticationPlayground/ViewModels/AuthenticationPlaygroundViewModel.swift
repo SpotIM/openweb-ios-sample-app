@@ -152,6 +152,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     var dismissing = PassthroughSubject<Void, Never>()
     var dismissed: AnyPublisher<Void, Never> {
         return dismissing
+            // swiftlint:disable:next no_magic_numbers
             .delay(for: .milliseconds(250), scheduler: DispatchQueue.main) // Allow some time for dismissing animation
             .eraseToAnyPublisher()
     }

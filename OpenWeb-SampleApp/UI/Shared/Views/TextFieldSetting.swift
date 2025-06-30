@@ -84,7 +84,7 @@ private extension TextFieldSetting {
         }
 
         textFieldControl.snp.makeConstraints { make in
-            make.width.equalTo(self.snp.width).multipliedBy(1 - Metrics.titleWidthProportion).priority(250)
+            make.width.equalTo(self.snp.width).multipliedBy(1 - Metrics.titleWidthProportion).priority(.low)
         }
     }
 
