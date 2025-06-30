@@ -15,9 +15,11 @@ class MockArticleFlowsVC: UIViewController {
     private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
+        // swiftlint:disable no_magic_numbers
         // 1.2 * screen height, defualt to 1200
         static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2 / 3
+        // swiftlint:enable no_magic_numbers
         static let articelImageViewCornerRadius: CGFloat = 10
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
@@ -142,14 +144,10 @@ class MockArticleFlowsVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -315,7 +313,7 @@ private extension MockArticleFlowsVC {
                 self.articleScrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
-                    make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300)
+                    make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300) // swiftlint:disable:this no_magic_numbers
                     make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide).inset(self.viewModel.outputs.preConversationHorizontalMargin)
                 }
 
@@ -334,7 +332,7 @@ private extension MockArticleFlowsVC {
             .store(in: &cancellables)
 
         viewModel.outputs.loggerEnabled
-            .delay(for: .milliseconds(10), scheduler: DispatchQueue.main)
+            .delay(for: .milliseconds(10), scheduler: DispatchQueue.main) // swiftlint:disable:this no_magic_numbers
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loggerEnabled in
                 guard let self else { return }

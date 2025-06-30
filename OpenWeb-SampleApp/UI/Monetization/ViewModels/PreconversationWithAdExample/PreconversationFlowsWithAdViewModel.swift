@@ -140,7 +140,7 @@ private extension PreconversationFlowsWithAdViewModel {
             }
             .unwrap()
         // Small delay so the navigation controller will be set from the view controller
-            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive))
+            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive)) // swiftlint:disable:this no_magic_numbers
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }

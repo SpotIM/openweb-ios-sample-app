@@ -29,6 +29,7 @@ struct ColorModel {
         case highlightBlue
         case white
 
+        // swiftlint:disable no_magic_numbers
         var `default`: ColorModel {
             switch self {
             case .background:
@@ -65,6 +66,7 @@ struct ColorModel {
                 return ColorModel(color: .white)
             }
         }
+        // swiftlint:enable no_magic_numbers
     }
 }
 

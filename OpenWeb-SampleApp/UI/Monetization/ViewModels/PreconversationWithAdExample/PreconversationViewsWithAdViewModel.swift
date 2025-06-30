@@ -140,7 +140,7 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
             }
             .unwrap()
         // Small delay so the navigation controller will be set from the view controller
-            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive))
+            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive)) // swiftlint:disable:this no_magic_numbers
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (String, Bool) in
                 return (result, loggerEnabled)
             }

@@ -144,14 +144,10 @@ class AuthenticationPlaygroundVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
 
