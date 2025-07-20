@@ -206,8 +206,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
                                                 performActionType: performActionType)
         case (.commentThread, .closeCommentThread):
             self._removeCommentThread.send()
-        case (.conversation, .openNotifications(let data)):
-            self.retrieveNotificationsComponent(data: data)
+        case (.conversation, .openNotifications(let postId)):
+            self.retrieveNotificationsComponent(postId: postId)
         case (.notifications, .closeNotifications):
             self._removeNotifications.send()
         default:
@@ -381,12 +381,13 @@ private extension ConversationBelowVideoViewModel {
         })
     }
 
-    func retrieveNotificationsComponent(data: OWNotificationsRequiredData) {
+    func retrieveNotificationsComponent(postId: OWPostId) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
+        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
         uiViewsLayer.notifications(postId: postId,
-                                   data: data,
+                                   article: article,
                                    additionalSettings: additionalSettings,
                                    callbacks: self.actionsCallbacks,
                                    completion: { [weak self] result in
