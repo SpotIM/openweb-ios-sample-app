@@ -500,13 +500,6 @@ private extension ConversationBelowVideoVC {
         commentCreation = nil
     }
 
-    func handleRemoveNotifications() {
-        guard let notificationsView = notifications else { return }
-
-        notificationsView.removeFromSuperview()
-        notifications = nil
-    }
-
     func showError(message: String) {
         let alert = UIAlertController(title: "Error retrieving component", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
