@@ -418,10 +418,8 @@ private extension ConversationBelowVideoVC {
 
     func handleNotificationsRetrieved(view: UIView) {
         // 1. Remove notifications from UI hierarchy
-        if let notificationsView = notifications {
-            notificationsView.removeFromSuperview()
-            notifications = nil
-        }
+        notifications?.removeFromSuperview()
+        notifications = nil
 
         // 2. Set notifications and add to the UI hierarchy. Animation will happen internally in the component
         guard let conversationView = conversation else { return }
@@ -440,8 +438,6 @@ private extension ConversationBelowVideoVC {
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
             guard let self else { return }
             self.view.layoutIfNeeded()
-        } completion: { _ in
-            // Nothing here
         }
     }
 
