@@ -35,12 +35,14 @@ class ConversationBelowVideoVC: UIViewController {
     private var preConversation: UIView?
     private var conversation: UIView?
     private var commentCreation: UIView?
+    private var notifications: UIView?
     private var reportReasons: UIView?
     private var clarityDetails: UIView?
     private var commentThread: UIView?
     private var webPage: UIView?
 
     private unowned var conversationTopConstraint: Constraint!
+    private unowned var notificationsTopConstraint: Constraint!
     private unowned var reportReasonsTopConstraint: Constraint!
     private unowned var clarityDetailsTopConstraint: Constraint!
     private unowned var commentThreadTopConstraint: Constraint!
@@ -184,6 +186,12 @@ private extension ConversationBelowVideoVC {
             })
             .store(in: &cancellables)
 
+        viewModel.outputs.notificationsRetrieved
+            .sink(receiveValue: { [weak self] view in
+                self?.handleNotificationsRetrieved(view: view)
+            })
+            .store(in: &cancellables)
+
         viewModel.outputs.reportReasonsRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
@@ -271,6 +279,14 @@ private extension ConversationBelowVideoVC {
         viewModel.outputs.removeCommentCreation
             .sink(receiveValue: { [weak self] _ in
                 self?.handleRemoveCommentCreation()
+            })
+            .store(in: &cancellables)
+
+        viewModel.outputs.removeNotifications
+            .sink(receiveValue: { [weak self] _ in
+                guard let self else { return }
+                self.handleRemoveWithAnimation(component: &self.notifications,
+                                               componentTopConstraint: self.notificationsTopConstraint)
             })
             .store(in: &cancellables)
 
@@ -397,6 +413,31 @@ private extension ConversationBelowVideoVC {
         conversationView.addSubview(view)
         view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+    }
+
+    func handleNotificationsRetrieved(view: UIView) {
+        // 1. Remove notifications from UI hierarchy
+        notifications?.removeFromSuperview()
+        notifications = nil
+
+        // 2. Set notifications and add to the UI hierarchy. Animation will happen internally in the component
+        guard let conversationView = conversation else { return }
+        notifications = view
+        conversationView.addSubview(view)
+        view.snp.makeConstraints { make in
+            notificationsTopConstraint = make.top.equalTo(self.view.snp.bottom).constraint
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(containerBelowVideo.snp.height)
+        }
+        self.view.layoutIfNeeded()
+
+        // 3. Perform animation
+        let offset = -containerBelowVideo.frame.height - self.view.safeAreaInsets.bottom
+        notificationsTopConstraint.update(offset: offset)
+        UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
+            guard let self else { return }
+            self.view.layoutIfNeeded()
         }
     }
 

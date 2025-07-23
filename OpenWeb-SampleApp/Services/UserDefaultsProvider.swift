@@ -71,6 +71,7 @@ class UserDefaultsProvider: UserDefaultsProviderProtocol {
         case preConversationStyle = "preConversationCustomStyle"
         case conversationStyle = "conversationCustomStyleModeSelected"
         case commentCreationStyle = "commentCreationCustomStyleModeSelected"
+        case notificationsStyle = "notificationsCustomStyleModeSelected"
         case networkEnvironment = "networkEnvironmentSelected"
         case languageStrategy
         case localeStrategy
