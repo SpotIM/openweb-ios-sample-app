@@ -31,6 +31,11 @@ extension GenericSSOAuthentication {
     #if !PUBLIC_DEMO_APP
         let developmentModels = DevelopmentGenericSSOAuthentication.developmentModels().map { $0.toGenericSSOAuthentication() }
         authenticationModels.append(contentsOf: developmentModels)
+
+        #if ADS
+            let adsDevelopmentModels = DevelopmentGenericSSOAuthentication.developmentAdsModels().map { $0.toGenericSSOAuthentication() }
+            authenticationModels.append(contentsOf: adsDevelopmentModels)
+        #endif
     #endif
 
     #if AUTOMATION
