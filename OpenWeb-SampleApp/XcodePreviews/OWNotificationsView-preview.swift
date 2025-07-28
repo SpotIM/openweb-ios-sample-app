@@ -31,7 +31,7 @@ import RxSwift
 // swiftlint:disable function_body_length line_length
 class MockNotificationsNetworkAPI: OWNetworkAPIProtocol {
     // Return fatalError for API properties as they are not stubbed
-    var networkErrors = PublishSubject<(OWEndpoints, OWNetworkError)>()
+    var unauthorizedErrors = PublishSubject<OWEndpoints>()
     var analytics: OWAnalyticsAPI { fatalError("API not stubbed in MockingServicesProvider") }
     var realtime: OWRealtimeAPI { fatalError("API not stubbed in MockingServicesProvider") }
     var configuration: OWConfigurationAPI { fatalError("API not stubbed in MockingServicesProvider") }
