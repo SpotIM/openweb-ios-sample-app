@@ -5,7 +5,7 @@
 //  Created by Alon Haiut on 29/11/2021.
 //
 
-import RxSwift
+import Combine
 import OpenWebSDK
 import UIKit
 
@@ -27,7 +27,7 @@ class AppCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
         initialSetup()
 
         let mainPageCoordinator = MainPageCoordinator(router: router)
@@ -67,7 +67,7 @@ private extension AppCoordinator {
         settingsBuilder.storeURL(AppConstants.exampleStoreURL)
         manager.settings = settingsBuilder.build()
 
-        var socialManagerMonetization = OpenWeb.manager.monetization
+        let socialManagerMonetization = OpenWeb.manager.monetization
         socialManagerMonetization.iauProvider = manager.helpers.getIAUProvider()
     }
     #endif

@@ -8,7 +8,10 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
+import CombineExt
+import CombineCocoa
+import CombineDataSources
 
 @available(iOS 14.0, *)
 class ColorsCustomizationVC: UIViewController {
@@ -19,7 +22,7 @@ class ColorsCustomizationVC: UIViewController {
     }
 
     private let viewModel: ColorsCustomizationViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         return UIScrollView()
@@ -53,21 +56,17 @@ class ColorsCustomizationVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupViews()
         setupObservers()
     }
 }
 
 @available(iOS 14.0, *)
 private extension ColorsCustomizationVC {
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 
@@ -96,16 +95,18 @@ private extension ColorsCustomizationVC {
 
     func setupObservers() {
         let openPickerObservers = viewModel.outputs.cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<(ColorType, ColorSelectionItemCellViewModeling)> in
-                let openPickerObservable: [Observable<(ColorType, ColorSelectionItemCellViewModeling)>] = cellsVms.map { vm in
+            .flatMapLatest { cellsVms -> AnyPublisher<(ColorType, ColorSelectionItemCellViewModeling), Never> in
+                let openPickerObservable: [AnyPublisher<(ColorType, ColorSelectionItemCellViewModeling), Never>] = cellsVms.map { vm in
                     return vm.outputs.displayPickerObservable
                         .map { ($0, vm) }
+                        .eraseToAnyPublisher()
                 }
-                return Observable.merge(openPickerObservable)
+                return Publishers.MergeMany(openPickerObservable)
+                    .eraseToAnyPublisher()
             }
 
         openPickerObservers
-            .map { colorType, vm -> BehaviorSubject<UIColor?> in
+            .map { colorType, vm -> CurrentValueSubject<UIColor?, Never> in
                 switch colorType {
                 case .light:
                     return vm.inputs.lightColor
@@ -113,44 +114,34 @@ private extension ColorsCustomizationVC {
                     return vm.inputs.darkColor
                 }
             }
-            .do(onNext: { [weak self] _ in
+            .handleEvents(receiveOutput: { [weak self] _ in
                 self?.showPicker()
             })
-            .flatMapLatest { [weak self] updateColor -> Observable<(UIColor?, BehaviorSubject<UIColor?>)?> in
-                guard let self else { return .empty() }
-                return self.picker.rx.didSelectColor
+            .flatMapLatest { [weak self] updateColor -> AnyPublisher<(UIColor?, CurrentValueSubject<UIColor?, Never>)?, Never> in
+                guard let self else { return Just(nil).eraseToAnyPublisher() }
+                return self.pickerColorPublisher
                     .map { ($0, updateColor) }
+                    .eraseToAnyPublisher()
             }
             .unwrap()
-            .subscribe(onNext: { selectedColor, updateColor in
-                updateColor.onNext(selectedColor)
-            })
-            .disposed(by: disposeBag)
+            .sink { selectedColor, updateColor in
+                updateColor.send(selectedColor)
+            }
+            .store(in: &cancellables)
 
         viewModel.outputs.cellsViewModels
-            .bind(to: tableView.rx.items(cellIdentifier: ColorSelectionItemCell.identifierName,
-                                         cellType: ColorSelectionItemCell.self)) { _, viewModel, cell in
+            .bind(subscriber: tableView.rowsSubscriber(cellType: ColorSelectionItemCell.self, cellConfig: { cell, indexPath, viewModel in
                 cell.configure(with: viewModel)
-            }
-            .disposed(by: disposeBag)
+            }))
+            .store(in: &cancellables)
     }
 
     func showPicker() {
         self.present(self.picker, animated: true)
     }
-}
 
-@available(iOS 14.0, *)
-private extension Reactive where Base: UIColorPickerViewController {
-    var didSelectColor: Observable<UIColor?> {
-        return Observable.create { observer in
-            let token = self.base.observe(\.selectedColor) { _, _ in
-                observer.onNext(self.base.selectedColor)
-            }
-
-            return Disposables.create {
-                token.invalidate()
-            }
-        }
+    var pickerColorPublisher: AnyPublisher<UIColor, Never> {
+        return picker.publisher(for: \.selectedColor)
+            .eraseToAnyPublisher()
     }
 }

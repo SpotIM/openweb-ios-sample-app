@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class MiscellaneousCoordinator: BaseCoordinator<Void> {
 
@@ -18,7 +18,7 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -28,7 +28,7 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
         let miscellaneousVM: MiscellaneousViewModeling = MiscellaneousViewModel(dataModel: conversationDataModel)
         let miscellaneousVC = MiscellaneousVC(viewModel: miscellaneousVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         setupCoordinatorInternalNavigation(viewModel: miscellaneousVM)
 
@@ -37,14 +37,14 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }
 
 private extension MiscellaneousCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: MiscellaneousViewModeling) {
         viewModel.outputs.openConversationCounters
-            .subscribe(onNext: { [weak self] in
+            .sink(receiveValue: { [weak self] in
                 guard let self else { return }
                 let conversationCounterVM = ConversationCountersNewAPIViewModel()
                 let conversationCounterVC = ConversationCountersNewAPIVC(viewModel: conversationCounterVM)
@@ -52,6 +52,6 @@ private extension MiscellaneousCoordinator {
                             animated: true,
                             completion: nil)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

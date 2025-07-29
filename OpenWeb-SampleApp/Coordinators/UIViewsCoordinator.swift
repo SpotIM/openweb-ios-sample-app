@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class UIViewsCoordinator: BaseCoordinator<Void> {
 
@@ -18,7 +18,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -28,7 +28,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
         let viewsVM: UIViewsViewModeling = UIViewsViewModel(dataModel: conversationDataModel)
         let viewsVC = UIViewsVC(viewModel: viewsVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         router.push(viewsVC,
                     animated: true,
@@ -36,41 +36,42 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
 
         // Child coordinators
         let mockArticleIndependentCoordinator = viewsVM.outputs.openMockArticleScreen
-            .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.actionsViewSettings(data: dataModel)
                 let coordinator = MockArticleIndependentCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
-            .flatMap { _ -> Observable<Void> in
-                return .never()
+            .flatMap { _ -> AnyPublisher<Void, Never> in
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
         let viewsExamplesCoordinator = viewsVM.outputs.openExamplesScreen
-            .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
                 let coordinator = ViewsExamplesCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
-            .flatMap { _ -> Observable<Void> in
-                return .never()
+            .flatMap { _ -> AnyPublisher<Void, Never> in
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
         let monetizationCoordinator = viewsVM.outputs.openMonetizationScreen
-            .flatMap { [weak self] dataModel -> Observable<Void> in
-                guard let self else { return .empty() }
+            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = MonetizationCoordinator(router: self.router)
+                let coordinator = MonetizationViewsCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
-            .flatMap { _ -> Observable<Void> in
-                return .never()
+            .flatMap { _ -> AnyPublisher<Void, Never> in
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
-        return Observable.merge(vcPopped.asObservable(),
-                                mockArticleIndependentCoordinator,
-                                viewsExamplesCoordinator,
-                                monetizationCoordinator)
+        return Publishers.Merge4(vcPopped,
+                                 mockArticleIndependentCoordinator,
+                                 viewsExamplesCoordinator,
+                                 monetizationCoordinator)
+            .eraseToAnyPublisher()
     }
 }

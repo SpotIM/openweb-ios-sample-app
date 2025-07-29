@@ -7,20 +7,22 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol UIFlowsViewModelingInputs {
-    var preConversationTapped: PublishSubject<PresentationalModeCompact> { get }
-    var fullConversationTapped: PublishSubject<PresentationalModeCompact> { get }
-    var commentCreationTapped: PublishSubject<PresentationalModeCompact> { get }
-    var commentThreadTapped: PublishSubject<PresentationalModeCompact> { get }
+    var preConversationTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
+    var fullConversationTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
+    var commentCreationTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
+    var commentThreadTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
+    var monetizationTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol UIFlowsViewModelingOutputs {
     var title: String { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
-    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> { get }
+    var openMockArticleScreen: AnyPublisher<SDKUIFlowActionSettings, Never> { get }
+    var openMonetizationScreen: AnyPublisher<OWPostId, Never> { get }
     var presentStyle: OWModalPresentationStyle { get }
 }
 
@@ -35,22 +37,30 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
 
     private let dataModel: SDKConversationDataModel
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    let preConversationTapped = PublishSubject<PresentationalModeCompact>()
-    let fullConversationTapped = PublishSubject<PresentationalModeCompact>()
-    let commentCreationTapped = PublishSubject<PresentationalModeCompact>()
-    let commentThreadTapped = PublishSubject<PresentationalModeCompact>()
+    let preConversationTapped = PassthroughSubject<PresentationalModeCompact, Never>()
+    let fullConversationTapped = PassthroughSubject<PresentationalModeCompact, Never>()
+    let commentCreationTapped = PassthroughSubject<PresentationalModeCompact, Never>()
+    let commentThreadTapped = PassthroughSubject<PresentationalModeCompact, Never>()
+    let monetizationTapped = PassthroughSubject<Void, Never>()
 
-    private let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
-    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
+    private let _openMockArticleScreen = CurrentValueSubject<SDKUIFlowActionSettings?, Never>(value: nil)
+    var openMockArticleScreen: AnyPublisher<SDKUIFlowActionSettings, Never> {
         return _openMockArticleScreen
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     var presentStyle: OWModalPresentationStyle {
         return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
+    }
+
+    private let _openMonetizationScreen = CurrentValueSubject<OWPostId?, Never>(value: nil)
+    var openMonetizationScreen: AnyPublisher<OWPostId, Never> {
+        return _openMonetizationScreen
+            .unwrap()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {
@@ -96,8 +106,14 @@ private extension UIFlowsViewModel {
                 return model
             }
 
-        Observable.merge(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
+        Publishers.MergeMany(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
+            .map { $0 } // swiftlint:disable:this array_init
             .bind(to: _openMockArticleScreen)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
+
+        monetizationTapped
+            .map { postId }
+            .bind(to: _openMonetizationScreen)
+            .store(in: &cancellables)
     }
 }

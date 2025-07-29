@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineDataSources
 import SnapKit
 
 class CommentCreationToolbar: UIView {
@@ -33,7 +34,7 @@ class CommentCreationToolbar: UIView {
     }()
 
     private let viewModel: CommentCreationToolbarViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -63,15 +64,24 @@ private extension CommentCreationToolbar {
 
     func setupObservers() {
         viewModel.outputs.toolbarCellsVM
-            .observe(on: MainScheduler.instance)
-            .bind(to: toolbarCollection.rx.items(cellIdentifier: ToolbarCollectionCell.identifierName, cellType: ToolbarCollectionCell.self)) { _, viewModel, cell in
+            .unwrap()
+            .receive(on: DispatchQueue.main)
+            .bind(to: toolbarCollection.itemsSubscriber(cellType: ToolbarCollectionCell.self) { cell, _, viewModel in
                 cell.configure(with: viewModel)
-            }
-            .disposed(by: disposeBag)
+            })
+            .store(in: &cancellables)
 
-        toolbarCollection.rx.modelSelected(ToolbarCollectionCellViewModel.self)
-            .map { $0 as ToolbarCollectionCellViewModeling }
+        let modelSelectedPublisher = toolbarCollection.didSelectItemPublisher
+            .map { [weak self] indexPath in
+                guard let self, let cellsVM = viewModel.outputs.toolbarCellsVM.value, indexPath.item < cellsVM.count else {
+                    return nil as ToolbarCollectionCellViewModeling?
+                }
+                return cellsVM[indexPath.item]
+            }
+            .unwrap()
+
+        modelSelectedPublisher
             .bind(to: viewModel.inputs.modelSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

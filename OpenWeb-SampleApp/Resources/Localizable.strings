@@ -47,6 +47,7 @@
 "Miscellaneous" = "Miscellaneous";
 "MockArticle" = "Mock Article";
 "MockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";
+"PreconversationWithAdMockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";
 "PreConversation" = "Pre Conversation";
 "FullConversation" = "Full Conversation";
 "CommentCreation" = "Comment Creation";
@@ -113,6 +114,7 @@
 "ClarityDetailsSettings" = "Clarity Details:";
 "NetworkSettings" = "Network:";
 "NetworkEnvironment" = "Environment";
+"NetworkEnvironmentCustom" = "Namespace";
 "BuildConfiguration" = "Configuration";
 "ConfigurationDebug" = "Debug";
 "ConfigurationBeta" = "Beta";
@@ -141,11 +143,13 @@
 "AccessoryView" = "Accessory View";
 "Toolbar" = "Toolbar";
 "Examples" = "Examples";
+"Notifications" = "Notifications";
 "ConversationBelowVideo" = "Conversation below video";
 "VideoExample" = "Video example";
 "CommunityGuidelines" = "Community Guidelines";
 "ProfileTitle" = "Profile";
 "ShowLoginPromptTitle" = "Show Login Prompt";
+"ShowStarRatingTitle" = "Star Rating Enabled";
 "EnableAll" = "Enable All";
 "Landscape" = "Landscape";
 "Portrait" = "Portrait";

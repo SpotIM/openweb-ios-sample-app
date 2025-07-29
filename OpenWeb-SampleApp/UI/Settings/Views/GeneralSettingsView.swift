@@ -7,7 +7,9 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
+import CombineExt
 import OpenWebSDK
 
 class GeneralSettingsView: UIView {
@@ -24,6 +26,11 @@ class GeneralSettingsView: UIView {
         static let segmentedNavigationBarStyleIdentifier = "navigation_bar_style"
         static let segmentedModalStyleIdentifier = "modal_style"
         static let segmentedInitialSortIdentifier = "initial_sort"
+        static let textFieldCustomSortTitleIdentifier: [OWSortOption: String] = [
+            .best: "sort_title_best",
+            .newest: "sort_title_newest",
+            .oldest: "sort_title_oldest"
+        ]
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
         static let textFieldCustomFontNameIdentifier = "custom_font_name"
         static let textFieldArticleURLIdentifier = "article_url"
@@ -34,6 +41,7 @@ class GeneralSettingsView: UIView {
         static let segmentedCommentActionsFontStyleIdentifier = "comment_actions_font_style"
         static let pickerLanguageCodeIdentifier = "language_code"
         static let loginPromptSwitchIdentifier = "login_prompt"
+        static let starRatingSwitchIdentifier = "star_rating"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
         static let btnPadding: CGFloat = 12
@@ -149,6 +157,20 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
+    private lazy var customSortTitles: [OWSortOption: TextFieldSetting] = {
+        return OWSortOption.allCases.reduce(into: [:]) { result, option in
+            let title = viewModel.outputs.initialSortSettings[option.titleIndex]
+            let txtField = TextFieldSetting(
+                title: "\(title) sort title",
+                placeholder: title,
+                accessibilityPrefixId: Metrics.textFieldCustomSortTitleIdentifier[option] ?? "",
+                text: "",
+                font: FontBook.paragraph
+            )
+            result[option] = txtField
+        }
+    }()
+
     private lazy var segmentedFontGroupType: SegmentedControlSetting = {
         let title = viewModel.outputs.fontGroupTypeTitle
         let items = viewModel.outputs.fontGroupTypeSettings
@@ -212,6 +234,12 @@ class GeneralSettingsView: UIView {
             accessibilityPrefixId: Metrics.loginPromptSwitchIdentifier)
     }()
 
+    private lazy var showStarRatingSwitch: SwitchSetting = {
+        return SwitchSetting(
+            title: viewModel.outputs.showStarRatingTitle,
+            accessibilityPrefixId: Metrics.starRatingSwitchIdentifier)
+    }()
+
     private lazy var segmentedOrientationEnforcement: SegmentedControlSetting = {
         let title = viewModel.outputs.orientationEnforcementTitle
         let items = viewModel.outputs.orientationEnforcementSettings
@@ -222,7 +250,7 @@ class GeneralSettingsView: UIView {
     }()
 
     private let viewModel: GeneralSettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var segmentedCommentActionsColor: SegmentedControlSetting = {
         let title = viewModel.outputs.commentActionsColorTitle
@@ -260,7 +288,7 @@ private extension GeneralSettingsView {
         self.accessibilityIdentifier = Metrics.identifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
@@ -285,12 +313,16 @@ private extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedNavigationBarStyle)
         stackView.addArrangedSubview(segmentedModalStyle)
         stackView.addArrangedSubview(segmentedInitialSort)
+        for customSortTitleSetting in OWSortOption.allCases.compactMap({ customSortTitles[$0] }) {
+            stackView.addArrangedSubview(customSortTitleSetting)
+        }
         stackView.addArrangedSubview(segmentedFontGroupType)
         stackView.addArrangedSubview(textFieldCustomFontName)
         stackView.addArrangedSubview(segmentedLanguageStrategy)
         stackView.addArrangedSubview(pickerLanguageCode)
         stackView.addArrangedSubview(segmentedLocaleStrategy)
         stackView.addArrangedSubview(showLoginPromptSwitch)
+        stackView.addArrangedSubview(showStarRatingSwitch)
         stackView.addArrangedSubview(segmentedOrientationEnforcement)
         stackView.addArrangedSubview(segmentedCommentActionsColor)
         stackView.addArrangedSubview(segmentedCommentActionsFontStyle)
@@ -300,183 +332,222 @@ private extension GeneralSettingsView {
     func setupObservers() {
         viewModel.outputs.articleHeaderStyle
             .map { $0.index }
-            .bind(to: segmentedArticleHeaderStyle.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedArticleHeaderStyle.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.articleInformationStrategy
             .map { $0.index }
-            .bind(to: segmentedArticleInformationStrategy.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedArticleInformationStrategy.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.orientationEnforcement
             .map { $0.index }
-            .bind(to: segmentedOrientationEnforcement.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedOrientationEnforcement.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.commentActionsColor
             .map { $0.rawValue }
-            .bind(to: segmentedCommentActionsColor.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedCommentActionsColor.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.commentActionsFontStyle
             .map { $0.rawValue }
-            .bind(to: segmentedCommentActionsFontStyle.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedCommentActionsFontStyle.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.elementsCustomizationStyleIndex
-            .bind(to: segmentedElementsCustomizationStyle.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedElementsCustomizationStyle.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.colorsCustomizationStyleIndex
-            .bind(to: segmentedColorsCustomizationStyle.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedColorsCustomizationStyle.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.readOnlyModeIndex
-            .bind(to: segmentedReadOnlyMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedReadOnlyMode.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.themeModeIndex
-            .bind(to: segmentedThemeMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedThemeMode.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.statusBarStyleIndex
-            .bind(to: segmentedStatusBarStyle.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedStatusBarStyle.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.navigationBarStyleIndex
-            .bind(to: segmentedNavigationBarStyle.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedNavigationBarStyle.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.modalStyleIndex
-            .bind(to: segmentedModalStyle.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedModalStyle.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.initialSortIndex
-            .bind(to: segmentedInitialSort.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedInitialSort.segmentedControl)
+            .store(in: &cancellables)
+
+        viewModel.outputs.customSortTitles
+            .sink(receiveValue: { [weak self] customSortTitles in
+                for option in OWSortOption.allCases {
+                    self?.customSortTitles[option]?.textFieldControl.text = customSortTitles[option]
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.outputs.customSortTitles
+            .sink(receiveValue: { [weak self] customSortTitles in
+                for option in OWSortOption.allCases {
+                    self?.customSortTitles[option]?.textFieldControl.text = customSortTitles[option] ?? ""
+                }
+            })
+            .store(in: &cancellables)
 
         viewModel.outputs.fontGroupTypeIndex
-            .bind(to: segmentedFontGroupType.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedFontGroupType.segmentedControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.customFontGroupTypeName
-            .bind(to: textFieldCustomFontName.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldCustomFontName.textFieldControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.articleAssociatedURL
-            .bind(to: textFieldArticleURL.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldArticleURL.textFieldControl)
+            .store(in: &cancellables)
 
         viewModel.outputs.articleSection
-            .bind(to: textFieldArticleSection.rx.textFieldText)
-            .disposed(by: disposeBag)
+            .map { $0 as String? }
+            .assign(to: \.text, on: textFieldArticleSection.textFieldControl)
+            .store(in: &cancellables)
 
-        segmentedArticleHeaderStyle.rx.selectedSegmentIndex
+        segmentedArticleHeaderStyle.segmentedControl.selectedSegmentIndexPublisher
             .map { OWArticleHeaderStyle.articleHeaderStyle(fromIndex: $0) }
             .bind(to: viewModel.inputs.articleHeaderSelectedStyle)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedArticleInformationStrategy.rx.selectedSegmentIndex
+        segmentedArticleInformationStrategy.segmentedControl.selectedSegmentIndexPublisher
             .map { OWArticleInformationStrategy.articleInformationStrategy(fromIndex: $0) }
             .bind(to: viewModel.inputs.articleInformationSelectedStrategy)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedOrientationEnforcement.rx.selectedSegmentIndex
+        segmentedOrientationEnforcement.segmentedControl.selectedSegmentIndexPublisher
             .map { OWOrientationEnforcement.orientationEnforcement(fromIndex: $0) }
             .bind(to: viewModel.inputs.orientationSelectedEnforcement)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedCommentActionsColor.rx.selectedSegmentIndex
+        segmentedCommentActionsColor.segmentedControl.selectedSegmentIndexPublisher
             .map { OWCommentActionsColor(rawValue: $0) }
             .unwrap()
             .bind(to: viewModel.inputs.commentActionsColorSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedCommentActionsFontStyle.rx.selectedSegmentIndex
+        segmentedCommentActionsFontStyle.segmentedControl.selectedSegmentIndexPublisher
             .map { OWCommentActionsFontStyle(rawValue: $0) }
             .unwrap()
             .bind(to: viewModel.inputs.commentActionsFontStyleSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedElementsCustomizationStyle.rx.selectedSegmentIndex
+        segmentedElementsCustomizationStyle.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.elementsCustomizationStyleSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedColorsCustomizationStyle.rx.selectedSegmentIndex
+        segmentedColorsCustomizationStyle.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.colorsCustomizationStyleSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedReadOnlyMode.rx.selectedSegmentIndex
+        segmentedReadOnlyMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.readOnlyModeSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedThemeMode.rx.selectedSegmentIndex
+        segmentedThemeMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.themeModeSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedStatusBarStyle.rx.selectedSegmentIndex
+        segmentedStatusBarStyle.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.statusBarStyleSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedNavigationBarStyle.rx.selectedSegmentIndex
+        segmentedNavigationBarStyle.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.navigationBarStyleSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedModalStyle.rx.selectedSegmentIndex
+        segmentedModalStyle.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.modalStyleSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedInitialSort.rx.selectedSegmentIndex
+        segmentedInitialSort.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.initialSortSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        segmentedFontGroupType.rx.selectedSegmentIndex
+        let sortedCustomSortTitlesSettings = OWSortOption.allCases.compactMap { customSortTitles[$0] }
+        sortedCustomSortTitlesSettings.map { $0.textFieldControl.textPublisher }
+            .combineLatest()
+            .map { textValues in
+                return zip(OWSortOption.allCases, textValues)
+                    .reduce(into: [OWSortOption: String]()) { result, optionTextTuple in
+                        result[optionTextTuple.0] = optionTextTuple.1
+                    }
+            }
+            .bind(to: viewModel.inputs.customSortTitlesChanged)
+            .store(in: &cancellables)
+
+        segmentedFontGroupType.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.fontGroupTypeSelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        textFieldCustomFontName.rx.textFieldText
+        textFieldCustomFontName.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.customFontGroupSelectedName)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.showCustomFontName
             .map { !$0 }
-            .bind(to: textFieldCustomFontName.rx.isHidden)
-            .disposed(by: disposeBag)
+            .assign(to: \.isHidden, on: textFieldCustomFontName)
+            .store(in: &cancellables)
 
-        textFieldArticleURL.rx.textFieldText
+        textFieldArticleURL.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.articleAssociatedSelectedURL)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        textFieldArticleSection.rx.textFieldText
+        textFieldArticleSection.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.articleSelectedSection)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.languageStrategyIndex
-            .bind(to: segmentedLanguageStrategy.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedLanguageStrategy.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedLanguageStrategy.rx.selectedSegmentIndex
+        segmentedLanguageStrategy.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.languageStrategySelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.localeStrategyIndex
-            .bind(to: segmentedLocaleStrategy.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedLocaleStrategy.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedLocaleStrategy.rx.selectedSegmentIndex
+        segmentedLocaleStrategy.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.localeStrategySelectedIndex)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.showLoginPrompt
-            .bind(to: showLoginPromptSwitch.rx.isOn)
-            .disposed(by: disposeBag)
+            .assign(to: \.isOn, on: showLoginPromptSwitch.switchControl)
+            .store(in: &cancellables)
 
-        showLoginPromptSwitch.rx.isOn
+        showLoginPromptSwitch.switchControl.isOnPublisher
             .bind(to: viewModel.inputs.showLoginPromptSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
+
+        viewModel.outputs.showStarRating
+            .assign(to: \.isOn, on: showStarRatingSwitch.switchControl)
+            .store(in: &cancellables)
+
+        showStarRatingSwitch.switchControl.isOnPublisher
+            .bind(to: viewModel.inputs.showStarRatingSelected)
+            .store(in: &cancellables)
 
         viewModel.outputs.languageName
             .map { [weak self] in
@@ -485,36 +556,36 @@ private extension GeneralSettingsView {
                 return (index, 0)
             }
             .unwrap()
-            .bind(to: pickerLanguageCode.rx.setSelectedPickerIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedIndexPath, on: pickerLanguageCode.pickerControl.publisher)
+            .store(in: &cancellables)
 
-        pickerLanguageCode.rx.selectedPickerIndex
+        pickerLanguageCode.pickerControl.publisher.$selectedIndexPath
             .map { [weak self] in
                 guard let self else { return nil }
                 return self.viewModel.outputs.supportedLanguageItems[$0.row]
             }
             .unwrap()
-            .distinctUntilChanged()
+            .removeDuplicates()
             .bind(to: viewModel.inputs.languageSelectedName)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.shouldShowSetLanguage
             .map { !$0 }
-            .bind(to: pickerLanguageCode.rx.isHidden)
-            .disposed(by: disposeBag)
+            .assign(to: \.isHidden, on: pickerLanguageCode)
+            .store(in: &cancellables)
 
         viewModel.outputs.shouldShowArticleURL
             .map { !$0 }
-            .bind(to: textFieldArticleURL.rx.isHidden)
-            .disposed(by: disposeBag)
+            .assign(to: \.isHidden, on: textFieldArticleURL)
+            .store(in: &cancellables)
 
         viewModel.outputs.shouldShowColorSettingButton
             .map { !$0 }
-            .bind(to: openCustomColorsBtn.rx.isHidden)
-            .disposed(by: disposeBag)
+            .assign(to: \.isHidden, on: openCustomColorsBtn)
+            .store(in: &cancellables)
 
-        openCustomColorsBtn.rx.tap
+        openCustomColorsBtn.tapPublisher
             .bind(to: viewModel.inputs.openColorsCustomizationClicked)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

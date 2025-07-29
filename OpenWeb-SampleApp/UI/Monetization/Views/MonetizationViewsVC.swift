@@ -1,5 +1,5 @@
 //
-//  MonetizationViewVC.swift
+//  MonetizationViewsVC.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Anael on 25/11/2024.
@@ -7,21 +7,21 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 
-class MonetizationViewVC: UIViewController {
+class MonetizationViewsVC: UIViewController {
     private struct Metrics {
-        static let identifier = "uiviews_monetization_vc_id"
-        static let btnPreConversationExampleIdentifier = "btn_pre_conversation_example_id"
-        static let btnSingleAdExampleIdentifier = "btn_single_ad_example_id"
+        static let identifier = "views_monetization_vc_id"
+        static let btnPreConversationExampleIdentifier = "views_btn_pre_conversation_example_with_ad_id"
+        static let btnSingleAdExampleIdentifier = "views_btn_single_ad_example_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonHeight: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
     }
 
-    private let viewModel: MonetizationViewViewModeling
-    private let disposeBag = DisposeBag()
+    private let viewModel: MonetizationViewsViewModeling
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -40,7 +40,7 @@ class MonetizationViewVC: UIViewController {
             .blueRoundedButton
     }()
 
-    init(viewModel: MonetizationViewViewModeling) {
+    init(viewModel: MonetizationViewsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -49,26 +49,22 @@ class MonetizationViewVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
 }
 
-private extension MonetizationViewVC {
+private extension MonetizationViewsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         btnPreConversationExample.accessibilityIdentifier = Metrics.btnPreConversationExampleIdentifier
         btnSingleAdExample.accessibilityIdentifier = Metrics.btnSingleAdExampleIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -103,12 +99,12 @@ private extension MonetizationViewVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        btnSingleAdExample.rx.tap
+        btnSingleAdExample.tapPublisher
             .bind(to: viewModel.inputs.singleAdExampleTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnPreConversationExample.rx.tap
-            .bind(to: viewModel.inputs.preConversationExampleTapped)
-            .disposed(by: disposeBag)
+        btnPreConversationExample.tapPublisher
+            .bind(to: viewModel.inputs.preConversationWithAdTapped)
+            .store(in: &cancellables)
     }
 }

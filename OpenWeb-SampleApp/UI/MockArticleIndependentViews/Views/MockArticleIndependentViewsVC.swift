@@ -7,13 +7,13 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
 import SnapKit
 
 class MockArticleIndependentViewsVC: UIViewController {
     private struct Metrics {
         static let verticalMargin: CGFloat = 40
+        // swiftlint:disable:next no_magic_numbers
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let identifier = "mock_article_independent_views_vc_id"
         static let viewIdentifier = "mock_article_independent_views_view_id"
@@ -21,7 +21,7 @@ class MockArticleIndependentViewsVC: UIViewController {
     }
 
     private let viewModel: MockArticleIndependentViewsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var articleView: UIView = {
         let article = UIView()
@@ -74,14 +74,10 @@ class MockArticleIndependentViewsVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
         navigationItem.rightBarButtonItems = [settingsBarItem]
     }
@@ -94,7 +90,7 @@ private extension MockArticleIndependentViewsVC {
         settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -113,12 +109,13 @@ private extension MockArticleIndependentViewsVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        settingsBarItem.rx.tap
+        settingsBarItem.tapPublisher
             .bind(to: viewModel.inputs.settingsTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.showComponent
-            .subscribe(onNext: { [weak self] result in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
                 guard let self else { return }
                 let view = result.0
                 let type = result.1
@@ -130,19 +127,17 @@ private extension MockArticleIndependentViewsVC {
                 switch type {
                 case .preConversation:
                     self.handlePreConversationPresentation()
-                case.conversation:
-                    self.handleConversationPresentation()
-                case .commentCreation:
-                    self.handleCommentCreationPresentation()
-                case .commentThread:
-                    self.handleCommentThreadPresentation()
-                case .clarityDetails:
-                    self.handleClarityDetailsPresentation()
+                case .conversation,
+                     .commentCreation,
+                     .commentThread,
+                     .clarityDetails,
+                     .notifications:
+                    self.handlePresentation()
                 default:
                     break
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     func handlePreConversationPresentation() {
@@ -156,41 +151,11 @@ private extension MockArticleIndependentViewsVC {
         }
     }
 
-    func handleConversationPresentation() {
-        guard let conversation = self.independentView else { return }
+    func handlePresentation() {
+        guard let independentView = self.independentView else { return }
 
-        scrollView.addSubview(conversation)
-        conversation.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView.contentLayoutGuide)
-            make.height.equalTo(scrollView.snp.height)
-        }
-    }
-
-    func handleCommentCreationPresentation() {
-        guard let commentCreation = self.independentView else { return }
-
-        scrollView.addSubview(commentCreation)
-        commentCreation.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView.contentLayoutGuide)
-            make.height.equalTo(scrollView.snp.height)
-        }
-    }
-
-    func handleCommentThreadPresentation() {
-        guard let commentThread = self.independentView else { return }
-
-        scrollView.addSubview(commentThread)
-        commentThread.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView.contentLayoutGuide)
-            make.height.equalTo(scrollView.snp.height)
-        }
-    }
-
-    func handleClarityDetailsPresentation() {
-        guard let clarityDetails = self.independentView else { return }
-
-        scrollView.addSubview(clarityDetails)
-        clarityDetails.snp.makeConstraints { make in
+        scrollView.addSubview(independentView)
+        independentView.snp.makeConstraints { make in
             make.edges.equalTo(scrollView.contentLayoutGuide)
             make.height.equalTo(scrollView.snp.height)
         }

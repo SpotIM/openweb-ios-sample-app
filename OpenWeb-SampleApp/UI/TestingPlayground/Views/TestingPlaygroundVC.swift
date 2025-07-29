@@ -9,8 +9,8 @@
 import Foundation
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 #if BETA
@@ -28,7 +28,7 @@ class TestingPlaygroundVC: UIViewController {
     }
 
     private let viewModel: TestingPlaygroundViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -58,14 +58,10 @@ class TestingPlaygroundVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
 }
@@ -78,7 +74,7 @@ private extension TestingPlaygroundVC {
         btnPlaygroundIndependentMode.accessibilityIdentifier = Metrics.btnPlaygroundIndependentModeIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -124,24 +120,24 @@ private extension TestingPlaygroundVC {
         viewModel.inputs.setPresentationalVC(self)
 
         // Subscribing to buttons taps
-        btnPlaygroundPushMode.rx.tap
+        btnPlaygroundPushMode.tapPublisher
             .bind(to: viewModel.inputs.playgroundPushModeTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnPlaygroundPresentMode.rx.tap
+        btnPlaygroundPresentMode.tapPublisher
             .bind(to: viewModel.inputs.playgroundPresentModeTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnPlaygroundIndependentMode.rx.tap
+        btnPlaygroundIndependentMode.tapPublisher
             .bind(to: viewModel.inputs.playgroundIndependentModeTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Showing error if needed
         viewModel.outputs.showError
-            .subscribe(onNext: { [weak self] message in
+            .sink(receiveValue: { [weak self] message in
                 self?.showError(message: message)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func showError(message: String) {

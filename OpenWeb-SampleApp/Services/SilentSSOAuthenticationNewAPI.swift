@@ -7,19 +7,18 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import OpenWebSDK
 
 protocol SilentSSOAuthenticationNewAPIProtocol {
-    func silentSSO(for genericSSO: GenericSSOAuthentication, ignoreLoginStatus: Bool) -> Observable<String>
+    func silentSSO(for genericSSO: GenericSSOAuthentication, ignoreLoginStatus: Bool) -> AnyPublisher<String, Error>
 }
 
 class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
-    func silentSSO(for genericSSO: GenericSSOAuthentication, ignoreLoginStatus: Bool) -> Observable<String> {
-        return Observable.just(()) // Begin RX
-            .flatMapLatest { [weak self] _ -> Observable<Void> in
+    func silentSSO(for genericSSO: GenericSSOAuthentication, ignoreLoginStatus: Bool) -> AnyPublisher<String, Error> {
+        return AnyPublisher<Void, Error>.just(()) // Begin RX
+            .flatMapLatest { [unowned self] _ -> AnyPublisher<Void, Error> in
                 // Check user login status if needed
-                guard let self else { return .empty() }
                 if ignoreLoginStatus {
                     return .just(())
                 } else {
@@ -35,85 +34,83 @@ class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
                         .voidify()
                 }
             }
-            .flatMapLatest { [weak self] _ -> Observable<String> in
+            .flatMapLatest { [unowned self] _ -> AnyPublisher<String, Error> in
                 // Login
-                guard let self else { return .empty() }
                 return self.login(user: genericSSO.user)
             }
-            .flatMapLatest { [weak self] token -> Observable<(String, String)> in
+            .flatMapLatest { [unowned self] token -> AnyPublisher<(String, String), Error> in
                 // Start SSO
-                guard let self else { return .empty() }
                 return self.startSSO()
                     .map { ($0, token) }
+                    .eraseToAnyPublisher()
             }
-            .flatMapLatest { [weak self] codeA, token -> Observable<String> in
+            .flatMapLatest { [unowned self] codeA, token -> AnyPublisher<String, Error> in
                 // Get codeB
-                guard let self else { return .empty() }
                 return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
             }
-            .flatMapLatest { [weak self] codeB -> Observable<String> in
+            .flatMapLatest { [unowned self] codeB -> AnyPublisher<String, Error> in
                 // Complete SSO
-                guard let self else { return .empty() }
                 return self.completeSSO(codeB: codeB)
             }
+            .eraseToAnyPublisher()
     }
 }
 
 private extension SilentSSOAuthenticationNewAPI {
-    func startSSO() -> Observable<String> {
-        return Observable.create { observer in
+    func startSSO() -> AnyPublisher<String, Error> {
+        return AnyPublisher.create { observer in
             let authentication = OpenWeb.manager.authentication
             authentication.sso(.start(completion: { result in
                 switch result {
                 case .success(let ssoStartModel):
-                    observer.onNext(ssoStartModel.codeA)
-                    observer.onCompleted()
+                    observer.send(ssoStartModel.codeA)
+                    observer.send(completion: .finished)
                 case .failure(let error):
                     DLog("Failed in 'startSSO' with error: \(error)")
-                    observer.onError(error)
+                    observer.send(completion: .failure(error))
                 }
             }))
 
-            return Disposables.create()
+            return AnyCancellable {}
         }
     }
 
-    func completeSSO(codeB: String) -> Observable<String> {
-        return Observable.create { observer in
+    func completeSSO(codeB: String) -> AnyPublisher<String, Error> {
+        return AnyPublisher.create { observer in
             let authentication = OpenWeb.manager.authentication
             authentication.sso(.complete(codeB: codeB, completion: { result in
                 switch result {
                 case .success(let ssoCompleteModel):
-                    observer.onNext(ssoCompleteModel.userId)
-                    observer.onCompleted()
+                    observer.send(ssoCompleteModel.userId)
+                    observer.send(completion: .finished)
                 case .failure(let error):
                     DLog("Failed in 'completeSSO(codeB:)' with error: \(error)")
-                    observer.onError(error)
+                    observer.send(completion: .failure(error))
                 }
             }))
 
-            return Disposables.create()
+            return AnyCancellable {}
         }
     }
 
-    func login(user: UserAuthentication) -> Observable<String> {
-        return Observable.create { observer in
+    func login(user: UserAuthentication) -> AnyPublisher<String, Error> {
+        return AnyPublisher.create { observer in
             DemoUserAuthentication.logIn(with: user.username, password: user.password) { token, error in
                 guard let token else {
                     let loginError = error != nil ? error! : AuthenticationError.userLoginFailed
                     DLog("Failed in 'login(user:)' with error: \(loginError)")
-                    observer.onError(loginError)
+                    observer.send(completion: .failure(loginError))
                     return
                 }
-                observer.onNext(token)
-                observer.onCompleted()
+                observer.send(token)
+                observer.send(completion: .finished)
             }
-            return Disposables.create()
+            return AnyCancellable {}
         }
     }
 
-    func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String> {
-        return Observable.create { observer in
+    func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> AnyPublisher<String, Error> {
+        return AnyPublisher.create { observer in
             DemoUserAuthentication.getCodeB(with: codeA,
                                             accessToken: token,
                                             username: genericSSO.user.username,
@@ -121,31 +118,31 @@ private extension SilentSSOAuthenticationNewAPI {
                 guard let codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")
-                    observer.onError(codeBError)
+                    observer.send(completion: .failure(codeBError))
                     return
                 }
-                observer.onNext(codeB)
-                observer.onCompleted()
+                observer.send(codeB)
+                observer.send(completion: .finished)
             }
 
-            return Disposables.create()
+            return AnyCancellable {}
         }
     }
 
-    func userLoginStatus() -> Observable<OWUserAuthenticationStatus> {
-        return Observable.create { observer in
+    func userLoginStatus() -> AnyPublisher<OWUserAuthenticationStatus, Error> {
+        return AnyPublisher.create { observer in
             let authentication = OpenWeb.manager.authentication
             authentication.userStatus { loginStatus in
                 switch loginStatus {
                 case .success(let status):
-                    observer.onNext(status)
-                    observer.onCompleted()
+                    observer.send(status)
+                    observer.send(completion: .finished)
                 case .failure(let error):
-                    observer.onError(error)
+                    observer.send(completion: .failure(error))
                 }
             }
 
-            return Disposables.create()
+            return AnyCancellable {}
         }
     }
 }

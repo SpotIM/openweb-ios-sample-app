@@ -6,13 +6,13 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 class OWFloatingView: UIView {
     private var panGesture: UIPanGestureRecognizer!
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     private let viewModel: OWFloatingViewModeling
     private var targetCenter: CGPoint = .zero
     private var isDraggging = false
@@ -92,6 +92,7 @@ class OWFloatingView: UIView {
 
         // Determine if the view is closer to the left or right edge
         let isCloserToLeft = self.center.x < midX
+        // swiftlint:disable:next no_magic_numbers
         let isCloserToCenterX = abs(self.center.x - midX) < (superview.bounds.width / 4)
 
         // Horizontal snapping
@@ -124,6 +125,17 @@ class OWFloatingView: UIView {
             self.isDraggging = false
         }
     }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Fix the jump to top of the floating view when scrolling a table view -
+        // in the navigation view.
+        if !self.isDraggging, self.targetCenter != .zero {
+            // Notify about the frame change
+            self.center = self.targetCenter
+        }
+    }
 }
 
 private extension OWFloatingView {
@@ -133,22 +145,10 @@ private extension OWFloatingView {
 
     func setupObservers() {
         viewModel.inputs.setContentView
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
                 self.setContentView(view)
             })
-            .disposed(by: disposeBag)
-
-        // Fix the jump to top of the floating view when scrolling a table view -
-        // in the navigation view.
-        self.rx.methodInvoked(#selector(UIView.layoutSubviews))
-            .subscribe(onNext: { [weak self] _ in
-                guard let self,
-                      !self.isDraggging,
-                      self.targetCenter != .zero else { return }
-                // Notify about the frame change
-                self.center = self.targetCenter
-            })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

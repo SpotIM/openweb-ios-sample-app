@@ -69,7 +69,7 @@ private extension ElementsCustomizationCreatorService {
             case .navigationItem(let navigationItem):
                 let lbl = UILabel()
                 lbl.textColor = .green
-                lbl.font = .italicSystemFont(ofSize: 15.0)
+                lbl.font = .italicSystemFont(ofSize: 15.0) // swiftlint:disable:this no_magic_numbers
                 lbl.text = "TestNavigationItemTitle"
                 navigationItem.titleView = lbl
             case .navigationBar(let navigationBar):
@@ -102,7 +102,7 @@ private extension ElementsCustomizationCreatorService {
             case .title(let label):
                 label.text = "TestArticleTitle"
                 label.textColor = .green
-                label.font = UIFont.systemFont(ofSize: 30, weight: .regular)
+                label.font = UIFont.systemFont(ofSize: 30, weight: .regular) // swiftlint:disable:this no_magic_numbers
             case .author(let label):
                 label.text = "TestArticelAuthor"
                 label.textColor = .green
@@ -140,7 +140,7 @@ private extension ElementsCustomizationCreatorService {
                 default:
                     break
                 }
-                label.font = UIFont.systemFont(ofSize: 20, weight: .regular)
+                label.font = UIFont.systemFont(ofSize: 20, weight: .regular) // swiftlint:disable:this no_magic_numbers
             case .arrowIcon(let imageView):
                 switch themeStyle {
                 case .dark:
@@ -214,7 +214,7 @@ private extension ElementsCustomizationCreatorService {
                                                  value: UIColor.red,
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 attributedTitleText.addAttribute(.font,
-                                                 value: UIFont.italicSystemFont(ofSize: 18),
+                                                 value: UIFont.italicSystemFont(ofSize: 18), // swiftlint:disable:this no_magic_numbers
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 textView.attributedText = attributedTitleText
             case .compact(let containerView, let label):
@@ -233,7 +233,7 @@ private extension ElementsCustomizationCreatorService {
                                                  value: UIColor.blue,
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 attributedTitleText.addAttribute(.font,
-                                                 value: UIFont.systemFont(ofSize: 14, weight: .bold),
+                                                 value: UIFont.systemFont(ofSize: 14, weight: .bold), // swiftlint:disable:this no_magic_numbers
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 textView.attributedText = attributedTitleText
             case .compact(let containerView, let imageView, let textView):
@@ -242,7 +242,7 @@ private extension ElementsCustomizationCreatorService {
                                                  value: UIColor.green,
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 attributedTitleText.addAttribute(.font,
-                                                 value: UIFont.systemFont(ofSize: 16, weight: .bold),
+                                                 value: UIFont.systemFont(ofSize: 16, weight: .bold), // swiftlint:disable:this no_magic_numbers
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 textView.attributedText = attributedTitleText
                 textView.textColor = .green

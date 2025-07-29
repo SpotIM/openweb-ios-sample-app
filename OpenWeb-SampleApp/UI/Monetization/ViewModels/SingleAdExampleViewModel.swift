@@ -5,8 +5,8 @@
 //  Created by Anael on 26/11/2024.
 //
 
-import Foundation
-import RxSwift
+import UIKit
+import Combine
 import OpenWebCommon
 
 #if ADS
@@ -18,7 +18,7 @@ protocol SingleAdExampleViewModelingInputs {}
 protocol SingleAdExampleViewModelingOutputs {
     var title: String { get }
     var loggerViewModel: UILoggerViewModeling { get }
-    var adView: Observable<UIView> { get }
+    var adView: AnyPublisher<UIView, Never> { get }
 }
 
 protocol SingleAdExampleViewModeling {
@@ -31,11 +31,11 @@ class SingleAdExampleViewModel: SingleAdExampleViewModeling, SingleAdExampleView
     var outputs: SingleAdExampleViewModelingOutputs { return self }
 
     private let postId: OWPostId
-    private let _adView = BehaviorSubject<UIView?>(value: nil)
-    var adView: Observable<UIView> {
+    private let _adView = CurrentValueSubject<UIView?, Never>(value: nil)
+    var adView: AnyPublisher<UIView, Never> {
         return _adView
             .unwrap()
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     init(postId: OWPostId) {
@@ -68,7 +68,7 @@ private extension SingleAdExampleViewModel {
             guard let self else { return }
             switch result {
             case .success(let adView):
-                _adView.onNext(adView)
+                _adView.send(adView)
             case .failure(let error):
                 DLog("Social monetization example failed: \(error.localizedDescription)")
             }

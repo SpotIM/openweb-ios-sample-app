@@ -8,20 +8,20 @@
 
 import Foundation
 import UIKit
-import RxSwift
+import Combine
 import OpenWebSDK
 
 #if AUTOMATION
 
 protocol AutomationViewModelingInputs {
-    var fontsTapped: PublishSubject<Void> { get }
-    var userInformationTapped: PublishSubject<Void> { get }
+    var fontsTapped: PassthroughSubject<Void, Never> { get }
+    var userInformationTapped: PassthroughSubject<Void, Never> { get }
     func setNavigationController(_ navController: UINavigationController?)
 }
 
 protocol AutomationViewModelingOutputs {
     var title: String { get }
-    var showError: Observable<String> { get }
+    var showError: AnyPublisher<String, Never> { get }
 }
 
 protocol AutomationViewModeling {
@@ -38,15 +38,15 @@ class AutomationViewModel: AutomationViewModeling,
     private let dataModel: SDKConversationDataModel
     private weak var navController: UINavigationController?
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    let fontsTapped = PublishSubject<Void>()
-    let userInformationTapped = PublishSubject<Void>()
+    let fontsTapped = PassthroughSubject<Void, Never>()
+    let userInformationTapped = PassthroughSubject<Void, Never>()
 
-    private let _showError = PublishSubject<String>()
-    var showError: Observable<String> {
+    private let _showError = PassthroughSubject<String, Never>()
+    var showError: AnyPublisher<String, Never> {
         return _showError
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {
@@ -67,7 +67,7 @@ private extension AutomationViewModel {
 
     func setupObservers() {
         fontsTapped
-            .subscribe(onNext: { [weak self] _ in
+            .sink(receiveValue: { [weak self] _ in
                 guard let self,
                       let navigationController = self.navController else { return }
 
@@ -86,14 +86,14 @@ private extension AutomationViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.fonts error: \(message)")
-                        self._showError.onNext(message)
+                        self._showError.send(message)
                     }
                 })
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         userInformationTapped
-            .subscribe(onNext: { [weak self] _ in
+            .sink(receiveValue: { [weak self] _ in
                 guard let self,
                       let navigationController = self.navController else { return }
 
@@ -112,11 +112,11 @@ private extension AutomationViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.userStatus error: \(message)")
-                        self._showError.onNext(message)
+                        self._showError.send(message)
                     }
                 })
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
 

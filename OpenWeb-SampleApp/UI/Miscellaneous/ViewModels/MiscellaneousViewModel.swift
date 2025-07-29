@@ -1,5 +1,5 @@
 //
-//  MicellaneousViewModel.swift
+//  MiscellaneousViewModel.swift
 //  OpenWeb-Development
 //
 //  Created by Revital Pisman on 05/12/2022.
@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol MiscellaneousViewModelingInputs {
-    var conversationCounterTapped: PublishSubject<Void> { get }
+    var conversationCounterTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol MiscellaneousViewModelingOutputs {
     var title: String { get }
-    var openConversationCounters: Observable<Void> { get }
+    var openConversationCounters: AnyPublisher<Void, Never> { get }
 }
 
 protocol MiscellaneousViewModeling {
@@ -31,12 +31,10 @@ class MiscellaneousViewModel: MiscellaneousViewModeling,
 
     private let dataModel: SDKConversationDataModel
 
-    private let disposeBag = DisposeBag()
-
-    let conversationCounterTapped = PublishSubject<Void>()
-    var openConversationCounters: Observable<Void> {
+    let conversationCounterTapped = PassthroughSubject<Void, Never>()
+    var openConversationCounters: AnyPublisher<Void, Never> {
         return conversationCounterTapped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     lazy var title: String = {

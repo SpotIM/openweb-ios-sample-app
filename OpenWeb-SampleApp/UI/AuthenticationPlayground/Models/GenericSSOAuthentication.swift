@@ -12,8 +12,8 @@ import Foundation
 #endif
 
 struct GenericSSOAuthentication {
-    let displayName: String
-    let spotId: String
+    var displayName: String
+    var spotId: String
     var ssoToken: String
     var user: UserAuthentication
 }
@@ -31,6 +31,11 @@ extension GenericSSOAuthentication {
     #if !PUBLIC_DEMO_APP
         let developmentModels = DevelopmentGenericSSOAuthentication.developmentModels().map { $0.toGenericSSOAuthentication() }
         authenticationModels.append(contentsOf: developmentModels)
+
+        #if ADS
+            let adsDevelopmentModels = DevelopmentGenericSSOAuthentication.developmentAdsModels().map { $0.toGenericSSOAuthentication() }
+            authenticationModels.append(contentsOf: adsDevelopmentModels)
+        #endif
     #endif
 
     #if AUTOMATION

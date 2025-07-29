@@ -8,20 +8,20 @@
 
 import Foundation
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 
 #if BETA
 
 class TestingPlaygroundIndependentViewVC: UIViewController {
     private struct Metrics {
-        static let verticalMargin: CGFloat = 40
+        // swiftlint:disable:next no_magic_numbers
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let identifier = "testing_playground_independent_view_vc_id"
     }
 
     private let viewModel: TestingPlaygroundIndependentViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var contentView: UIView = {
         let view = UIView()
@@ -49,14 +49,10 @@ class TestingPlaygroundIndependentViewVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
 }
@@ -66,7 +62,7 @@ private extension TestingPlaygroundIndependentViewVC {
         view.accessibilityIdentifier = Metrics.identifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -87,7 +83,7 @@ private extension TestingPlaygroundIndependentViewVC {
         title = viewModel.outputs.title
 
         viewModel.outputs.testingPlaygroundView
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
                 self.testingPlaygroundView = view
                 self.contentView.addSubview(view)
@@ -95,7 +91,7 @@ private extension TestingPlaygroundIndependentViewVC {
                     make.edges.equalToSuperview()
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
 

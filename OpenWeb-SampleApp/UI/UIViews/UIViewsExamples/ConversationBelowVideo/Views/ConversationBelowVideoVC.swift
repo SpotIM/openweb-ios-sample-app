@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 import OpenWebSDK
 import AVFoundation
@@ -21,7 +21,7 @@ class ConversationBelowVideoVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let presentAnimationDuration: TimeInterval = 0.3
         static let preConversationHorizontalMargin: CGFloat = 16.0
-        static let videoRatio: CGFloat = 9 / 16
+        static let videoRatio: CGFloat = 9 / 16 // swiftlint:disable:this no_magic_numbers
         static let keyboardAnimationDuration: CGFloat = 0.25
         static let videoPlayerIdentifier = "video_player_id"
         static let videoLink = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_30MB.mp4"
@@ -30,17 +30,19 @@ class ConversationBelowVideoVC: UIViewController {
     }
 
     private let viewModel: ConversationBelowVideoViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private var preConversation: UIView?
     private var conversation: UIView?
     private var commentCreation: UIView?
+    private var notifications: UIView?
     private var reportReasons: UIView?
     private var clarityDetails: UIView?
     private var commentThread: UIView?
     private var webPage: UIView?
 
     private unowned var conversationTopConstraint: Constraint!
+    private unowned var notificationsTopConstraint: Constraint!
     private unowned var reportReasonsTopConstraint: Constraint!
     private unowned var clarityDetailsTopConstraint: Constraint!
     private unowned var commentThreadTopConstraint: Constraint!
@@ -117,14 +119,10 @@ class ConversationBelowVideoVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
         setupVideo()
     }
@@ -140,7 +138,7 @@ private extension ConversationBelowVideoVC {
         videoPlayerContainer.accessibilityIdentifier = Metrics.videoPlayerIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -165,31 +163,37 @@ private extension ConversationBelowVideoVC {
 
         // Showing error if needed
         viewModel.outputs.componentRetrievingError
-            .subscribe(onNext: { [weak self] err in
+            .sink(receiveValue: { [weak self] err in
                 self?.showError(message: err.description)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.preConversationRetrieved
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 self?.handlePreConversationRetrieved(view: view)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.conversationRetrieved
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 self?.handleConversationRetrieved(view: view)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.commentCreationRetrieved
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 self?.handleCommentCreationRetrieved(view: view)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
+
+        viewModel.outputs.notificationsRetrieved
+            .sink(receiveValue: { [weak self] view in
+                self?.handleNotificationsRetrieved(view: view)
+            })
+            .store(in: &cancellables)
 
         viewModel.outputs.reportReasonsRetrieved
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.reportReasons,
@@ -197,10 +201,10 @@ private extension ConversationBelowVideoVC {
                                      heightConstraint: &self.reportReasonsHeightConstraint,
                                      putWithAnimationOnComponent: self.conversation)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.commentThreadRetrieved
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.commentThread,
@@ -208,10 +212,10 @@ private extension ConversationBelowVideoVC {
                                      heightConstraint: &self.commentThreadHeightConstraint,
                                      putWithAnimationOnComponent: self.conversation)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.clarityDetailsRetrieved
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.clarityDetails,
@@ -219,10 +223,10 @@ private extension ConversationBelowVideoVC {
                                      heightConstraint: &self.clarityDetailsHeightConstraint,
                                      putWithAnimationOnComponent: self.conversation)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.webPageRetrieved
-            .subscribe(onNext: { [weak self] view in
+            .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.webPage,
@@ -230,57 +234,65 @@ private extension ConversationBelowVideoVC {
                                      heightConstraint: &self.webPageHeightConstraint,
                                      putWithAnimationOnComponent: self.conversation)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.removeConversation
-            .subscribe(onNext: { [weak self] _ in
+            .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.conversation,
                                                componentTopConstraint: self.conversationTopConstraint)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.removeReportReasons
-            .subscribe(onNext: { [weak self] _ in
+            .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.reportReasons,
                                                componentTopConstraint: self.reportReasonsTopConstraint)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.removeClarityDetails
-            .subscribe(onNext: { [weak self] _ in
+            .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.clarityDetails,
                                                componentTopConstraint: self.clarityDetailsTopConstraint)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.removeCommentThread
-            .subscribe(onNext: { [weak self] _ in
+            .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.commentThread,
                                                componentTopConstraint: self.commentThreadTopConstraint)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.removeWebPage
-            .subscribe(onNext: { [weak self] _ in
+            .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
                 self.handleRemoveWithAnimation(component: &self.webPage,
                                                componentTopConstraint: self.webPageTopConstraint)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.removeCommentCreation
-            .subscribe(onNext: { [weak self] _ in
+            .sink(receiveValue: { [weak self] _ in
                 self?.handleRemoveCommentCreation()
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
+
+        viewModel.outputs.removeNotifications
+            .sink(receiveValue: { [weak self] _ in
+                guard let self else { return }
+                self.handleRemoveWithAnimation(component: &self.notifications,
+                                               componentTopConstraint: self.notificationsTopConstraint)
+            })
+            .store(in: &cancellables)
 
         viewModel.outputs.openAuthentication
-            .flatMap { [weak self] result -> Observable<OWBasicCompletion> in
-                guard let self else { return Observable.empty() }
+            .flatMap { [weak self] result -> AnyPublisher<OWBasicCompletion, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
                 let spotId = result.0
                 let completion = result.1
                 let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: spotId)
@@ -288,55 +300,53 @@ private extension ConversationBelowVideoVC {
                 self.navigationController?.present(authenticationVC, animated: true)
 
                 return authenticationVM.outputs.dismissed
-                    .take(1)
+                    .prefix(1)
                     .map { completion }
+                    .eraseToAnyPublisher()
             }
-            .subscribe(onNext: { completion in
+            .sink(receiveValue: { completion in
                 completion()
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        let keyboardShowHeight = NotificationCenter.default.rx
-            .notification(UIResponder.keyboardWillShowNotification)
+        let keyboardShowHeight = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
             .map { notification -> CGFloat in
                 let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
                 return height ?? 0
             }
 
-        let keyboardHideHeight = NotificationCenter.default.rx
-            .notification(UIResponder.keyboardWillHideNotification)
+        let keyboardHideHeight = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
             .map { _ -> CGFloat in
                 0
             }
 
-        let keyboardHeight = Observable.from([keyboardShowHeight, keyboardHideHeight])
-            .merge()
+        let keyboardHeight = Publishers.Merge(keyboardShowHeight, keyboardHideHeight)
 
         // Chaning report reasons height according to the keyboard
         keyboardHeight
-            .subscribe(onNext: { [weak self] height in
+            .sink(receiveValue: { [weak self] height in
                 guard let self, self.reportReasons != nil,
-                let reportReasonsHeightConstraint = self.reportReasonsHeightConstraint else { return }
+                let reportReasonsHeightConstraint else { return }
                 let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
                 reportReasonsHeightConstraint.update(offset: -adjustedHeight)
                 UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
                     self.view.layoutIfNeeded()
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Changing clarity details height according to the keyboard
         keyboardHeight
-            .subscribe(onNext: { [weak self] height in
+            .sink(receiveValue: { [weak self] height in
                 guard let self, self.clarityDetails != nil,
-                let clarityDetailsHeightConstraint = self.clarityDetailsHeightConstraint else { return }
+                let clarityDetailsHeightConstraint else { return }
                 let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
                 clarityDetailsHeightConstraint.update(offset: -adjustedHeight)
                 UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
                     self.view.layoutIfNeeded()
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func setupVideo() {
@@ -403,6 +413,31 @@ private extension ConversationBelowVideoVC {
         conversationView.addSubview(view)
         view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+    }
+
+    func handleNotificationsRetrieved(view: UIView) {
+        // 1. Remove notifications from UI hierarchy
+        notifications?.removeFromSuperview()
+        notifications = nil
+
+        // 2. Set notifications and add to the UI hierarchy. Animation will happen internally in the component
+        guard let conversationView = conversation else { return }
+        notifications = view
+        conversationView.addSubview(view)
+        view.snp.makeConstraints { make in
+            notificationsTopConstraint = make.top.equalTo(self.view.snp.bottom).constraint
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(containerBelowVideo.snp.height)
+        }
+        self.view.layoutIfNeeded()
+
+        // 3. Perform animation
+        let offset = -containerBelowVideo.frame.height - self.view.safeAreaInsets.bottom
+        notificationsTopConstraint.update(offset: offset)
+        UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
+            guard let self else { return }
+            self.view.layoutIfNeeded()
         }
     }
 

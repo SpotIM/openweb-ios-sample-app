@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 
 class TextFieldSetting: UIView {
     private struct Metrics {
@@ -21,9 +21,9 @@ class TextFieldSetting: UIView {
 
     private let title: String
     private let placeholder: String
-    private let text = BehaviorSubject<String?>(value: nil)
+    private let text = CurrentValueSubject<String?, Never>(nil)
     private var font: UIFont
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     fileprivate lazy var textFieldTitleLbl: UILabel = {
         return title
@@ -33,7 +33,7 @@ class TextFieldSetting: UIView {
             .lineBreakMode(.byWordWrapping)
     }()
 
-    fileprivate lazy var textFieldControl = {
+    private(set) lazy var textFieldControl = {
         let textField = UITextField()
             .corner(radius: Metrics.textFieldCorners)
             .border(width: 1.0, color: ColorPalette.shared.color(type: .blackish))
@@ -46,11 +46,9 @@ class TextFieldSetting: UIView {
     init(title: String, placeholder: String = "", accessibilityPrefixId: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
         self.title = title
         self.placeholder = placeholder
-        if let text {
-            self.text.onNext(text)
-        }
         self.font = font
         super.init(frame: .zero)
+        textFieldControl.text = text
 
         setupViews()
         setupObservers()
@@ -60,7 +58,6 @@ class TextFieldSetting: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
 
 private extension TextFieldSetting {
@@ -69,7 +66,7 @@ private extension TextFieldSetting {
         textFieldControl.accessibilityIdentifier = prefixId + "_text_field_id"
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         let stackView = UIStackView()
         self.addSubview(stackView)
         stackView.distribution = .fillProportionally
@@ -87,41 +84,36 @@ private extension TextFieldSetting {
         }
 
         textFieldControl.snp.makeConstraints { make in
-            make.width.equalTo(self.snp.width).multipliedBy(1 - Metrics.titleWidthProportion).priority(250)
+            make.width.equalTo(self.snp.width).multipliedBy(1 - Metrics.titleWidthProportion).priority(.low)
         }
     }
 
     func setupObservers() {
         text
-            .skip(1) // Skip initialize BehaviorSubject value
-            .take(1) // Take first value after initialize
-            .bind(to: textFieldControl.rx.value)
-            .disposed(by: disposeBag)
+            .dropFirst() // Skip initialize CurrentValueSubject value
+            .prefix(1) // Take first value after initialize
+            .assign(to: \.text, on: textFieldControl)
+            .store(in: &cancellables)
 
-        textFieldControl.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
-            .subscribe(onNext: { [weak self] _ in
+        textFieldControl.controlEventPublisher(for: [.editingDidEnd, .editingDidEndOnExit])
+            .sink { [weak self] _ in
                 self?.textFieldControl.endEditing(true)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
-        let keyboardShowHeight = NotificationCenter.default.rx
-            .notification(UIResponder.keyboardWillShowNotification)
+        let keyboardShowHeight = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
             .map { notification -> CGFloat in
                 let height = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.height
                 return height ?? 0
             }
 
-        let keyboardHideHeight = NotificationCenter.default.rx
-            .notification(UIResponder.keyboardWillHideNotification)
+        let keyboardHideHeight = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
             .map { _ -> CGFloat in
                 0
             }
 
-        let keyboardHeight = Observable.from([keyboardShowHeight, keyboardHideHeight])
-            .merge()
-
-        keyboardHeight
-            .subscribe(onNext: { [weak self] keyboardHeight in
+        Publishers.Merge(keyboardShowHeight, keyboardHideHeight)
+            .sink { [weak self] keyboardHeight in
                 guard let self else { return }
                 if self.textFieldControl.isFirstResponder,
                    let scrollView = self.superview as? UIScrollView {
@@ -138,41 +130,11 @@ private extension TextFieldSetting {
                         scrollView.setContentOffset(scrollPoint, animated: true)
                     }
                 } else if let scrollView = self.superview as? UIScrollView {
-                        let insets = UIEdgeInsets.zero
-                        scrollView.contentInset = insets
-                        scrollView.scrollIndicatorInsets = insets
+                    let insets = UIEdgeInsets.zero
+                    scrollView.contentInset = insets
+                    scrollView.scrollIndicatorInsets = insets
                 }
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
-extension Reactive where Base: TextFieldSetting {
-    var titleText: Binder<String?> {
-        return Binder(self.base.textFieldTitleLbl) { textField, value in
-            textField.text = value
-        }
-    }
-
-    var textFieldText: ControlProperty<String?> {
-        return base.textFieldControl.rx.controlProperty(editingEvents: .editingChanged) { textField in
-            textField.text
-        } setter: { textField, value in
-            textField.text = value
-        }
-    }
-
-    var textFieldTextAfterEnded: ControlProperty<String?> {
-        return base.textFieldControl.rx.controlProperty(editingEvents: .editingDidEnd) { textField in
-            textField.text
-        } setter: { textField, value in
-            textField.text = value
-        }
-    }
-
-    var isHidden: Binder<Bool> {
-        return Binder(self.base) { _, value in
-            base.isHidden = value
-        }
+            }
+            .store(in: &cancellables)
     }
 }

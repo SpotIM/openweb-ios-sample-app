@@ -9,7 +9,7 @@
 #if BETA
 
 import Foundation
-import RxSwift
+import Combine
 
 class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
 
@@ -20,7 +20,7 @@ class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
     }
 
     override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> Observable<Void> {
+                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -30,7 +30,7 @@ class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
         let testingPlaygroundVM: TestingPlaygroundViewModeling = TestingPlaygroundViewModel(dataModel: conversationDataModel)
         let testingPlaygroundVC = TestingPlaygroundVC(viewModel: testingPlaygroundVM)
 
-        let vcPopped = PublishSubject<Void>()
+        let vcPopped = PassthroughSubject<Void, Never>()
 
         setupCoordinatorInternalNavigation(viewModel: testingPlaygroundVM)
 
@@ -39,14 +39,14 @@ class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
                     completion: vcPopped)
 
         return vcPopped
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 }
 
 private extension TestingPlaygroundCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: TestingPlaygroundViewModeling) {
         viewModel.outputs.openTestingPlaygroundIndependent
-            .subscribe(onNext: { [weak self] dataModel in
+            .sink(receiveValue: { [weak self] dataModel in
                 guard let self else { return }
                 let testingPlaygroundIndependentVM = TestingPlaygroundIndependentViewModel(dataModel: dataModel)
                 let testingPlaygroundIndependentVC = TestingPlaygroundIndependentViewVC(viewModel: testingPlaygroundIndependentVM)
@@ -54,7 +54,7 @@ private extension TestingPlaygroundCoordinator {
                             animated: true,
                             completion: nil)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
 

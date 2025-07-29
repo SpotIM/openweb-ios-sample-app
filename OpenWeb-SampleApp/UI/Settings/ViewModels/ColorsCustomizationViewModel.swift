@@ -7,7 +7,8 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
+import CombineExt
 import OpenWebSDK
 
 protocol ColorsCustomizationViewModelingInputs { }
@@ -15,7 +16,7 @@ protocol ColorsCustomizationViewModelingInputs { }
 @available(iOS 14.0, *)
 protocol ColorsCustomizationViewModelingOutputs {
     var title: String { get }
-    var cellsViewModels: Observable<[ColorSelectionItemCellViewModeling]> { get }
+    var cellsViewModels: AnyPublisher<[ColorSelectionItemCellViewModel], Never> { get }
 }
 
 @available(iOS 14.0, *)
@@ -58,23 +59,24 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         ]
     }()
 
-    private let _selectedTheme = PublishSubject<OWTheme>()
-    var selectedTheme: Observable<OWTheme> {
+    private let _selectedTheme = PassthroughSubject<OWTheme, Never>()
+    var selectedTheme: AnyPublisher<OWTheme, Never> {
         return _selectedTheme
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
-    lazy var cellsViewModels: Observable<[ColorSelectionItemCellViewModeling]> = {
-        return Observable.just(colorItems.map { item in
+    lazy var cellsViewModels: AnyPublisher<[ColorSelectionItemCellViewModel], Never> = {
+        return CurrentValueSubject(colorItems.map { item in
             return ColorSelectionItemCellViewModel(item: item)
         })
+        .eraseToAnyPublisher()
     }()
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     private var initialColorTheme: OWTheme
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol) {
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
         self.initialColorTheme = userDefaultsProvider.get(key: .colorCustomizationCustomTheme, defaultValue: OWTheme())
         setupObservers()
@@ -85,28 +87,28 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
 private extension ColorsCustomizationViewModel {
     func setupObservers() {
         cellsViewModels
-            .map { cellsVms -> [Observable<OWColor?>] in
+            .map { cellsVms -> [AnyPublisher<OWColor?, Never>] in
                 return cellsVms.map { vm in
                     return vm.outputs.color
                 }
             }
             .map { colors in
-                return Observable.combineLatest(colors) { [weak self] colorsValues -> OWTheme in
+                return colors.combineLatest().map { [weak self] colorsValues -> OWTheme in
                     guard let self else { return OWTheme() }
                     return self.getTheme(from: colorsValues)
                 }
             }
             .flatMapLatest { $0 }
             .bind(to: _selectedTheme)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         selectedTheme
-            .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
-                .setValues(key: UserDefaultsProvider.UDKey<OWTheme>.colorCustomizationCustomTheme))
-            .disposed(by: disposeBag)
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWTheme>.colorCustomizationCustomTheme))
+            .store(in: &cancellables)
     }
 
+    // swiftlint:disable no_magic_numbers
     func getTheme(from colors: [OWColor?]) -> OWTheme {
         return OWTheme(
             skeletonColor: colors[0],
@@ -130,6 +132,7 @@ private extension ColorsCustomizationViewModel {
             voteUpSelectedColor: colors[18],
             voteDownSelectedColor: colors[19])
     }
+    // swiftlint:enable no_magic_numbers
 }
 
 struct ThemeColorItem {

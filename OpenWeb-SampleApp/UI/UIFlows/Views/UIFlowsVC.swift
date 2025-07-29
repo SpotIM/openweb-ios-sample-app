@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 import OpenWebSDK
 
@@ -24,6 +24,7 @@ class UIFlowsVC: UIViewController {
         static let btnCommentCreationPresentModeIdentifier = "btn_comment_creation_present_mode_id"
         static let btnCommentThreadPushModeIdentifier = "btn_comment_thread_push_mode_id"
         static let btnCommentThreadPresentModeIdentifier = "btn_comment_thread_present_mode_id"
+        static let btnMonetizationIdentifier = "btn_monetization_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -31,7 +32,7 @@ class UIFlowsVC: UIViewController {
     }
 
     private let viewModel: UIFlowsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -72,6 +73,10 @@ class UIFlowsVC: UIViewController {
         return NSLocalizedString("CommentThreadPresentMode", comment: "").blueRoundedButton
     }()
 
+    private lazy var btnMonetization: UIButton = {
+        return NSLocalizedString("Monetization", comment: "").blueRoundedButton
+    }()
+
     init(viewModel: UIFlowsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -81,14 +86,10 @@ class UIFlowsVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
 }
@@ -104,9 +105,10 @@ private extension UIFlowsVC {
         btnCommentCreationPresentMode.accessibilityIdentifier = Metrics.btnCommentCreationPresentModeIdentifier
         btnCommentThreadPushMode.accessibilityIdentifier = Metrics.btnCommentThreadPushModeIdentifier
         btnCommentThreadPresentMode.accessibilityIdentifier = Metrics.btnCommentThreadPresentModeIdentifier
+        btnMonetization.accessibilityIdentifier = Metrics.btnMonetizationIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -186,64 +188,79 @@ private extension UIFlowsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
+
+        #if ADS
+        // Adding monetization button
+        scrollView.addSubview(btnMonetization)
+        btnMonetization.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentThreadPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+        #endif
     }
 
     func setupObservers() {
         title = viewModel.outputs.title
 
         // Bind buttons
-        btnPreConversationPushMode.rx.tap
+        btnPreConversationPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.preConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnPreConversationPresentMode.rx.tap
+        btnPreConversationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
                 let style = self.viewModel.outputs.presentStyle
                 return PresentationalModeCompact.present(style: style)
             }
             .bind(to: viewModel.inputs.preConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnFullConversationPushMode.rx.tap
+        btnFullConversationPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.fullConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnFullConversationPresentMode.rx.tap
+        btnFullConversationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
                 let style = self.viewModel.outputs.presentStyle
                 return PresentationalModeCompact.present(style: style)
             }
             .bind(to: viewModel.inputs.fullConversationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentCreationPushMode.rx.tap
+        btnCommentCreationPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.commentCreationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentCreationPresentMode.rx.tap
+        btnCommentCreationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
                 return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentCreationTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentThreadPushMode.rx.tap
+        btnCommentThreadPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.commentThreadTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentThreadPresentMode.rx.tap
+        btnCommentThreadPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
                 return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentThreadTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
+
+        btnMonetization.tapPublisher
+            .bind(to: viewModel.inputs.monetizationTapped)
+            .store(in: &cancellables)
     }
 }

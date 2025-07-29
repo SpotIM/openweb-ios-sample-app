@@ -23,14 +23,14 @@ class AboutVC: UIViewController {
     private lazy var aboutTextView: UITextView = {
         let textView = UITextView()
             .font(FontBook.paragraphMedium)
-            .textColor(ColorAsset.L6.color)
+            .textColor(.L_6)
 
         return textView
     }()
 
     private lazy var allRightsReservedLbl: UILabel = {
         return UILabel()
-            .textColor(ColorAsset.L4.color)
+            .textColor(.L_4)
             .font(FontBook.helper)
             .textAlignment(.center)
     }()
@@ -44,14 +44,10 @@ class AboutVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
 
@@ -68,7 +64,7 @@ private extension AboutVC {
         allRightsReservedLbl.accessibilityIdentifier = Metrics.rightsReservedIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 

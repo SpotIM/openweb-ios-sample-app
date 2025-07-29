@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 class SampleAppSettingsView: UIView {
 
@@ -57,7 +58,7 @@ class SampleAppSettingsView: UIView {
     }()
 
     private let viewModel: SampleAppSettingsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: SampleAppSettingsViewModeling) {
         self.viewModel = viewModel
@@ -77,7 +78,7 @@ private extension SampleAppSettingsView {
         self.accessibilityIdentifier = Metrics.identifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         self.backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
@@ -97,30 +98,30 @@ private extension SampleAppSettingsView {
     func setupObservers() {
         viewModel.outputs.deeplinkOption
             .map { $0.index }
-            .bind(to: segmentedDeeplink.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedDeeplink.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedDeeplink.rx.selectedSegmentIndex
+        segmentedDeeplink.segmentedControl.selectedSegmentIndexPublisher
             .map { SampleAppDeeplink.deeplink(fromIndex: $0) }
             .bind(to: viewModel.inputs.deeplinkOptionSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.callingMethodOption
             .map { $0.rawValue }
-            .bind(to: segmentedCallingMethod.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
+            .assign(to: \.selectedSegmentIndex, on: segmentedCallingMethod.segmentedControl)
+            .store(in: &cancellables)
 
-        segmentedCallingMethod.rx.selectedSegmentIndex
+        segmentedCallingMethod.segmentedControl.selectedSegmentIndexPublisher
             .compactMap { SampleAppCallingMethod(rawValue: $0) }
             .bind(to: viewModel.inputs.callingMethodOptionSelected)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.flowsLoggerEnabled
-            .bind(to: switchFlowsLogger.rx.isOn)
-            .disposed(by: disposeBag)
+            .assign(to: \.isOn, on: switchFlowsLogger.switchControl)
+            .store(in: &cancellables)
 
-        switchFlowsLogger.rx.isOn
+        switchFlowsLogger.switchControl.isOnPublisher
             .bind(to: viewModel.inputs.flowsLoggerEnable)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

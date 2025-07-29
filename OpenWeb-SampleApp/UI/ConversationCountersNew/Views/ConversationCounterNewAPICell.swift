@@ -71,7 +71,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
     }
 }
 private extension ConversationCounterNewAPICell {
-    func setupViews() {
+    @objc func setupViews() {
         selectionStyle = .none
         self.backgroundColor = .clear
 

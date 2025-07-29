@@ -7,17 +7,19 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 import SnapKit
 
 class MockArticleFlowsVC: UIViewController {
     private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
+        // swiftlint:disable no_magic_numbers
         // 1.2 * screen height, defualt to 1200
         static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2 / 3
+        // swiftlint:enable no_magic_numbers
         static let articelImageViewCornerRadius: CGFloat = 10
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
@@ -34,7 +36,7 @@ class MockArticleFlowsVC: UIViewController {
     }
 
     private let viewModel: MockArticleFlowsViewModeling
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
@@ -142,14 +144,10 @@ class MockArticleFlowsVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -164,7 +162,7 @@ private extension MockArticleFlowsVC {
         articleView.accessibilityIdentifier = Metrics.viewIdentifier
     }
 
-    func setupViews() {
+    @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         articleScrollView.backgroundColor = ColorPalette.shared.color(type: .background)
 
@@ -195,36 +193,36 @@ private extension MockArticleFlowsVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        viewModel.outputs.floatingViewViewModel.inputs.setContentView.onNext(loggerView)
+        viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
 
         // Setting those in the VM for integration with the SDK
         viewModel.inputs.setNavigationController(self.navigationController)
         viewModel.inputs.setPresentationalVC(self)
 
         // Binding button
-        btnFullConversation.rx.tap
+        btnFullConversation.tapPublisher
             .bind(to: viewModel.inputs.fullConversationButtonTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentCreation.rx.tap
+        btnCommentCreation.tapPublisher
             .bind(to: viewModel.inputs.commentCreationButtonTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        btnCommentThread.rx.tap
+        btnCommentThread.tapPublisher
             .bind(to: viewModel.inputs.commentThreadButtonTapped)
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Setup article image
         viewModel.outputs.articleImageURL
-            .subscribe(onNext: { [weak self] url in
+            .sink(receiveValue: { [weak self] url in
                 self?.imgViewArticle.image(from: url)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Adding full conversation button if needed
         let btnFullConversationObservable = viewModel.outputs.showFullConversationButton
-            .take(1)
-            .do(onNext: { [weak self] mode in
+            .prefix(1)
+            .handleEvents(receiveOutput: { [weak self] mode in
                 guard let self else { return }
                 let btnTitle: String
                 switch mode {
@@ -244,8 +242,8 @@ private extension MockArticleFlowsVC {
 
         // Adding comment creation button if needed
         let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
-            .take(1)
-            .do(onNext: { [weak self] mode in
+            .prefix(1)
+            .handleEvents(receiveOutput: { [weak self] mode in
                 guard let self else { return }
                 let btnTitle: String
                 switch mode {
@@ -265,8 +263,8 @@ private extension MockArticleFlowsVC {
 
         // Adding comment thread button if needed
         let btnCommentThreadObservable = viewModel.outputs.showCommentThreadButton
-            .take(1)
-            .do(onNext: { [weak self] mode in
+            .prefix(1)
+            .handleEvents(receiveOutput: { [weak self] mode in
                 guard let self else { return }
                 let btnTitle: String
                 switch mode {
@@ -284,8 +282,8 @@ private extension MockArticleFlowsVC {
             }
             .unwrap()
 
-        Observable.merge(btnFullConversationObservable, btnCommentCreationObservable, btnCommentThreadObservable)
-            .subscribe(onNext: { [weak self] btn in
+        Publishers.MergeMany(btnFullConversationObservable, btnCommentCreationObservable, btnCommentThreadObservable)
+            .sink(receiveValue: { [weak self] btn in
                 guard let self else { return }
 
                 self.articleView.removeFromSuperview()
@@ -303,11 +301,11 @@ private extension MockArticleFlowsVC {
                     make.bottom.equalTo(btn.snp.top).offset(-Metrics.verticalMargin)
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Adding pre conversation
         viewModel.outputs.showPreConversation
-            .subscribe(onNext: { [weak self] preConversationView in
+            .sink(receiveValue: { [weak self] preConversationView in
                 guard let self else { return }
 
                 self.articleView.removeFromSuperview()
@@ -315,7 +313,7 @@ private extension MockArticleFlowsVC {
                 self.articleScrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
-                    make.bottom.equalTo(self.articleScrollView.contentLayoutGuide)
+                    make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300) // swiftlint:disable:this no_magic_numbers
                     make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide).inset(self.viewModel.outputs.preConversationHorizontalMargin)
                 }
 
@@ -324,23 +322,23 @@ private extension MockArticleFlowsVC {
                     make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
                 }
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Showing error if needed
         viewModel.outputs.showError
-            .subscribe(onNext: { [weak self] message in
+            .sink(receiveValue: { [weak self] message in
                 self?.showError(message: message)
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.outputs.loggerEnabled
-            .delay(.milliseconds(10), scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] loggerEnabled in
+            .delay(for: .milliseconds(10), scheduler: DispatchQueue.main) // swiftlint:disable:this no_magic_numbers
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] loggerEnabled in
                 guard let self else { return }
                 self.floatingLoggerView.isHidden = !loggerEnabled
             })
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func showError(message: String) {

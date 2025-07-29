@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 import OpenWebSDK
 
 protocol ClarityDetailsSettingsViewModelingInputs {
@@ -26,11 +25,6 @@ class ClarityDetailsSettingsVM: ClarityDetailsSettingsViewModeling, ClarityDetai
     var outputs: ClarityDetailsSettingsViewModelingOutputs { return self }
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
-    private let disposeBag = DisposeBag()
-
-    lazy var title: String = {
-        return NSLocalizedString("ClarityDetailsSettings", comment: "")
-    }()
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
