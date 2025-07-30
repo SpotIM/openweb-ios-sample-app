@@ -39,7 +39,7 @@
 		3DA1DF132C6E200300EBFA7D /* OpenWeb-SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWeb-SampleApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DA1E6D02C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DA1E6D12C6E299A00EBFA7D /* OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3DA1E6D72C6E29B600EBFA7D /* GiphyUISDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GiphyUISDK.xcframework; path = "../Vendor-Frameworks/GiphyUISDK.xcframework"; sourceTree = "<group>"; };
+		3DA1E6D72C6E29B600EBFA7D /* GiphyUISDK.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:925PGC4MV7:Giphy, Inc."; lastKnownFileType = wrapper.xcframework; name = GiphyUISDK.xcframework; path = "../Vendor-Frameworks/GiphyUISDK.xcframework"; sourceTree = "<group>"; };
 		49275B8B9F306D027D4385D7 /* Pods-OpenWeb-SampleApp.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.beta.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.beta.xcconfig"; sourceTree = "<group>"; };
 		79F23DF8281BFAF3C691645B /* Pods_OpenWeb_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWeb_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		848D05A62E8E58EC0D6D0D41 /* Pods-OpenWeb-SampleApp.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp.releasepublic.xcconfig"; sourceTree = "<group>"; };
@@ -210,13 +210,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -253,13 +249,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
