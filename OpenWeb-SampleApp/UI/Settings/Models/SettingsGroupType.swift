@@ -72,6 +72,8 @@ extension SettingsGroupType {
             self = .clarityDetails
         case .independentAdUnit:
             self = .iau
+        case .notifications:
+            self = .general
         }
     }
 }

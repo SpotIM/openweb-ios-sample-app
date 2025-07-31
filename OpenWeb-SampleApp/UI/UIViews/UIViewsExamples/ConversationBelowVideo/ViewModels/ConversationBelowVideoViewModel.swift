@@ -21,6 +21,7 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var preConversationRetrieved: AnyPublisher<UIView, Never> { get }
     var conversationRetrieved: AnyPublisher<UIView, Never> { get }
     var commentCreationRetrieved: AnyPublisher<UIView, Never> { get }
+    var notificationsRetrieved: AnyPublisher<UIView, Never> { get }
     var clarityDetailsRetrieved: AnyPublisher<UIView, Never> { get }
     var webPageRetrieved: AnyPublisher<UIView, Never> { get }
     var reportReasonsRetrieved: AnyPublisher<UIView, Never> { get }
@@ -28,6 +29,7 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var removeConversation: AnyPublisher<Void, Never> { get }
     var removeReportReasons: AnyPublisher<Void, Never> { get }
     var removeCommentCreation: AnyPublisher<Void, Never> { get }
+    var removeNotifications: AnyPublisher<Void, Never> { get }
     var removeClarityDetails: AnyPublisher<Void, Never> { get }
     var removeCommentThread: AnyPublisher<Void, Never> { get }
     var removeWebPage: AnyPublisher<Void, Never> { get }
@@ -40,7 +42,6 @@ protocol ConversationBelowVideoViewModeling {
 }
 
 class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, ConversationBelowVideoViewModelingOutputs, ConversationBelowVideoViewModelingInputs {
-
     var inputs: ConversationBelowVideoViewModelingInputs { return self }
     var outputs: ConversationBelowVideoViewModelingOutputs { return self }
 
@@ -75,6 +76,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     private let _commentCreationRetrieved = PassthroughSubject<UIView, Never>()
     var commentCreationRetrieved: AnyPublisher<UIView, Never> {
         return _commentCreationRetrieved
+            .eraseToAnyPublisher()
+    }
+
+    private let _notificationsRetrieved = PassthroughSubject<UIView, Never>()
+    var notificationsRetrieved: AnyPublisher<UIView, Never> {
+        return _notificationsRetrieved
             .eraseToAnyPublisher()
     }
 
@@ -117,6 +124,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     private let _removeCommentCreation = PassthroughSubject<Void, Never>()
     var removeCommentCreation: AnyPublisher<Void, Never> {
         return _removeCommentCreation
+            .eraseToAnyPublisher()
+    }
+
+    private let _removeNotifications = PassthroughSubject<Void, Never>()
+    var removeNotifications: AnyPublisher<Void, Never> {
+        return _removeNotifications
             .eraseToAnyPublisher()
     }
 
@@ -187,11 +200,16 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self.retrieveWebPageComponent(options: options)
         case (_, .openLinkInComment(let url)):
             self.retrieveWebPageComponent(options: OWWebTabOptions(url: url, title: ""))
-        case (_, .openCommentThread(let commentId, let performActionType)):
+        case (_, .openCommentThread(let commentId, let postId, let performActionType)):
             self.retrieveCommentThreadComponent(commentId: commentId,
+                                                postId: postId,
                                                 performActionType: performActionType)
         case (.commentThread, .closeCommentThread):
             self._removeCommentThread.send()
+        case (.conversation, .openNotifications):
+            self.retrieveNotificationsComponent()
+        case (.notifications, .closeNotifications):
+            self._removeNotifications.send()
         default:
             break
         }
@@ -363,6 +381,27 @@ private extension ConversationBelowVideoViewModel {
         })
     }
 
+    func retrieveNotificationsComponent() {
+        let uiViewsLayer = OpenWeb.manager.ui.views
+        let additionalSettings = OWAdditionalSettings()
+        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+
+        uiViewsLayer.notifications(postId: self.postId,
+                                   article: article,
+                                   additionalSettings: additionalSettings,
+                                   callbacks: self.actionsCallbacks,
+                                   completion: { [weak self] result in
+
+            guard let self else { return }
+            switch result {
+            case .failure(let err):
+                self._componentRetrievingError.send(err)
+            case.success(let view):
+                self._notificationsRetrieved.send(view)
+            }
+        })
+    }
+
     func retrieveClarityDetailsComponent(data: OWClarityDetailsRequireData) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
@@ -404,14 +443,14 @@ private extension ConversationBelowVideoViewModel {
         })
     }
 
-    func  retrieveCommentThreadComponent(commentId: OWCommentId, performActionType: OWCommentThreadPerformActionType) {
+    func  retrieveCommentThreadComponent(commentId: OWCommentId, postId: OWPostId, performActionType: OWCommentThreadPerformActionType) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
         let commentThreadSettings = OWCommentThreadSettings(performActionType: performActionType)
         let additionalSettings = OWAdditionalSettings(commentThreadSettings: commentThreadSettings)
 
-        uiViewsLayer.commentThread(postId: self.postId,
+        uiViewsLayer.commentThread(postId: postId,
                                    article: article,
                                    commentId: commentId,
                                    additionalSettings: additionalSettings,

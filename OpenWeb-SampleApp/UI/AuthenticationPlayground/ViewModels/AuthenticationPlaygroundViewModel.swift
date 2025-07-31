@@ -25,6 +25,7 @@ protocol AuthenticationPlaygroundViewModelingInputs {
     var customSSOToken: CurrentValueSubject<String, Never> { get }
     var customUsername: CurrentValueSubject<String, Never> { get }
     var customPassword: CurrentValueSubject<String, Never> { get }
+    var ssoSearchText: PassthroughSubject<String, Never> { get }
 }
 
 protocol AuthenticationPlaygroundViewModelingOutputs {
@@ -39,6 +40,7 @@ protocol AuthenticationPlaygroundViewModelingOutputs {
     var customSSOTokenChanged: AnyPublisher<String, Never> { get }
     var customUsernameChanged: AnyPublisher<String, Never> { get }
     var customPasswordChanged: AnyPublisher<String, Never> { get }
+    var selectedSSOIndex: AnyPublisher<Int, Never> { get }
 }
 
 protocol AuthenticationPlaygroundViewModeling {
@@ -79,6 +81,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
     var customSSOToken = CurrentValueSubject<String, Never>("")
     var customUsername = CurrentValueSubject<String, Never>("")
     var customPassword = CurrentValueSubject<String, Never>("")
+    var ssoSearchText = PassthroughSubject<String, Never>()
 
     lazy var customSSOTokenChanged: AnyPublisher<String, Never> = {
         return customSSOToken
@@ -169,6 +172,23 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
         self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
     }
+
+    lazy var selectedSSOIndex: AnyPublisher<Int, Never> = {
+        return ssoSearchText
+            .combineLatest(genericSSOOptions)
+            .map { [weak self] searchText, options in
+                let searchTerms = searchText.lowercased().components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+                let optionNames = options.map { $0.displayName }
+
+                return optionNames.firstIndex(where: { option in
+                    let lowercasedOption = option.lowercased()
+                    return searchTerms.allSatisfy { term in
+                        lowercasedOption.contains(term)
+                    }
+                }) ?? 0
+            }
+            .eraseToAnyPublisher()
+    }()
 }
 
 private extension AuthenticationPlaygroundViewModel {

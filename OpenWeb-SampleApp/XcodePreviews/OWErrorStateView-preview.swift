@@ -21,10 +21,11 @@ extension OWErrorStateView {
 #Preview {
     let scrollView = UIScrollView()
     let stackView = UIStackView(arrangedSubviews: [
-            OWErrorStateView(type: .noNotifications),
-            OWErrorStateView(type: .loadNotifications),
-            OWErrorStateView(type: .loginNotifications),
-            OWErrorStateView(type: .loadMoreConversationComments)
+        OWErrorStateView(type: .generalError),
+        OWErrorStateView(type: .noNotifications),
+        OWErrorStateView(type: .loadNotifications),
+        OWErrorStateView(type: .loginNotifications),
+        OWErrorStateView(type: .loadMoreConversationComments),
     ])
         .axis(.vertical)
         .spacing(32)
