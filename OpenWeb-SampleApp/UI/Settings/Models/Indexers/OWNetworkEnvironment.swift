@@ -15,6 +15,7 @@ enum OWNetworkEnvironment: Codable {
     case cluster1d
     case custom(url: String? = "")
 
+    // swiftlint:disable no_magic_numbers
     var index: Int {
         switch self {
         case .production: return 0
@@ -23,6 +24,7 @@ enum OWNetworkEnvironment: Codable {
         case .custom: return 3
         }
     }
+    // swiftlint:enable no_magic_numbers
 
     static var `default`: OWNetworkEnvironment {
         return .production

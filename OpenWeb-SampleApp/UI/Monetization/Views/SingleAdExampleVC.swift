@@ -13,6 +13,7 @@ class SingleAdExampleVC: UIViewController {
     private struct Metrics {
         static let identifier = "uiviews_monetization_independent_example_id"
         static let adViewIdentifier = "social_monetization_ad_view_id"
+        // swiftlint:disable:next no_magic_numbers
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let adViewTopMargin: CGFloat = 16
         static let adViewHorizontalMargin: CGFloat = -16
@@ -34,14 +35,10 @@ class SingleAdExampleVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        super.loadView()
-        applyAccessibility()
-        setupViews()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
 }

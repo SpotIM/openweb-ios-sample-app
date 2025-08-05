@@ -24,8 +24,8 @@ extension String {
             .adjustsFontSizeToFitWidth
             .backgroundColor(color)
             .textColor(ColorPalette.shared.color(type: .white))
-            .corner(radius: 5)
-            .withHorizontalPadding(10)
+            .corner(radius: 5) // swiftlint:disable:this no_magic_numbers
+            .withHorizontalPadding(10) // swiftlint:disable:this no_magic_numbers
             .font(FontBook.paragraphBold)
     }
 }

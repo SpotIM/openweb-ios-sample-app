@@ -92,6 +92,7 @@ class OWFloatingView: UIView {
 
         // Determine if the view is closer to the left or right edge
         let isCloserToLeft = self.center.x < midX
+        // swiftlint:disable:next no_magic_numbers
         let isCloserToCenterX = abs(self.center.x - midX) < (superview.bounds.width / 4)
 
         // Horizontal snapping

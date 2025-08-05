@@ -56,14 +56,10 @@ class ColorsCustomizationVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupViews()
         setupObservers()
     }
 }

@@ -177,6 +177,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self.retrieveWebPageComponent(options: options)
         case (.commentCreation, .floatingCommentCreationDismissed):
             self._removeCommentCreation.send()
+        case (.commentCreation, .reviewSubmitted):
+            self._removeCommentCreation.send()
         case (.webView, .closeWebView):
             self._removeWebPage.send()
         case (_, .openOWProfile(let data)):
