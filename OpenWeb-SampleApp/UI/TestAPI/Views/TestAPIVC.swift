@@ -178,15 +178,10 @@ class TestAPIVC: UIViewController {
         viewModel.inputs.viewWillAppear.send()
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupViews()
+        applyAccessibility()
         navigationItem.rightBarButtonItems = [settingsBarItem, authBarItem]
         setupObservers()
     }

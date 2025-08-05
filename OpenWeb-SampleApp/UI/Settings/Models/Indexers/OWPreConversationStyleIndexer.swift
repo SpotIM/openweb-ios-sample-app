@@ -15,6 +15,7 @@ enum OWPreConversationStyleIndexer {
     case ctaWithSummary
     case custom
 
+    // swiftlint:disable no_magic_numbers
     var index: Int {
         switch self {
         case .regular: return 0
@@ -24,4 +25,5 @@ enum OWPreConversationStyleIndexer {
         case .custom: return 4
         }
     }
+    // swiftlint:enable no_magic_numbers
 }

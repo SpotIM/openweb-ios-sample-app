@@ -23,6 +23,7 @@ protocol Shadowable {
     func apply(shadow type: ShadowType, color: UIColor, direction: ShadowDirection)
 }
 
+// swiftlint:disable no_magic_numbers
 private extension ShadowType {
     var offset: CGSize {
         switch self {
@@ -51,6 +52,7 @@ private extension ShadowType {
         }
     }
 }
+// swiftlint:enable no_magic_numbers
 
 extension UIView: Shadowable {
     func apply(shadow type: ShadowType) {

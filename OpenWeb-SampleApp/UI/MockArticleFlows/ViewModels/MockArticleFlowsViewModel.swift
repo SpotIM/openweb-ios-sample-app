@@ -192,7 +192,7 @@ private extension MockArticleFlowsViewModel {
             }
             .unwrap()
             // Small delay so the navigation controller will be set from the view controller
-            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive))
+            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive)) // swiftlint:disable:this no_magic_numbers
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
                 return (result.0, result.1, loggerEnabled)
             }
@@ -534,8 +534,8 @@ private extension MockArticleFlowsViewModel {
             guard let self else { return }
             switch callbackType {
             case .adSizeChanged: break
-            case let .adEvent(event, index):
-                let log = "preconversationAd: \(event.description) for index: \(index)\n"
+            case let .adEvent(event, eventData):
+                let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
                 self.loggerViewModel.inputs.log(text: log)
             default:
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"

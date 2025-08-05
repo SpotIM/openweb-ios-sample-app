@@ -12,6 +12,7 @@ import UIKit
 // We might configure the font family in the future, but for now for the internal SampleApp it's good enough.
 
 class FontBook {
+    // swiftlint:disable no_magic_numbers
     static let largeHeading = font(with: .regular, size: 40)
     static let largeHeadingBold = font(with: .bold, size: 40)
     static let largeHeadingMedium = font(with: .medium, size: 40)
@@ -41,6 +42,7 @@ class FontBook {
     static let helperBold = font(with: .bold, size: 14)
     static let helperMedium = font(with: .medium, size: 14)
     static let helperLight = font(with: .light, size: 14)
+    // swiftlint:enable no_magic_numbers
 }
 
 private extension FontBook {

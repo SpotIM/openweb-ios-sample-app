@@ -20,6 +20,7 @@ class AuthenticationPlaygroundVC: UIViewController {
         static let textFieldSSOTokenIdentifier = "text_field_sso_token"
         static let textFieldUsernameIdentifier = "text_field_username"
         static let textFieldPasswordIdentifier = "text_field_password"
+        static let textFieldSSOAutocompleteIdentifier = "text_field_sso_autocomplete"
         static let verticalMargin: CGFloat = 20
         static let verticalBigMargin: CGFloat = 60
         static let horizontalMargin: CGFloat = 10
@@ -77,6 +78,11 @@ class AuthenticationPlaygroundVC: UIViewController {
     private lazy var switchAutomaticallyDismiss: SwitchSetting = {
         return SwitchSetting(title: NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":",
                              accessibilityPrefixId: Metrics.switchAutomaticallyDismissIdentifier, isOn: true)
+    }()
+
+    private lazy var textFieldSSOAutocomplete: TextFieldSetting = {
+        let title = NSLocalizedString("SearchSSO", comment: "") + ":"
+        return TextFieldSetting(title: title, accessibilityPrefixId: Metrics.textFieldSSOAutocompleteIdentifier, font: FontBook.paragraph)
     }()
 
     private lazy var customAuthStackView: UIStackView = {
@@ -138,14 +144,10 @@ class AuthenticationPlaygroundVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
-    override func loadView() {
-        super.loadView()
-        setupViews()
-        applyAccessibility()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
         setupObservers()
     }
 
@@ -167,6 +169,7 @@ private extension AuthenticationPlaygroundVC {
         view.accessibilityIdentifier = Metrics.identifier
     }
 
+    // swiftlint:disable function_body_length
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
@@ -209,9 +212,17 @@ private extension AuthenticationPlaygroundVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
+        // SSO Autocomplete section
+        scrollView.addSubview(textFieldSSOAutocomplete)
+        textFieldSSOAutocomplete.snp.makeConstraints { make in
+            make.top.equalTo(pickerGenericSSO.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
+
         scrollView.addSubview(customAuthStackView)
         customAuthStackView.snp.makeConstraints { make in
-            make.top.equalTo(pickerGenericSSO.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(textFieldSSOAutocomplete.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
@@ -291,9 +302,22 @@ private extension AuthenticationPlaygroundVC {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         }
     }
+    // swiftlint:enable function_body_length
 
     func setupObservers() {
         title = viewModel.outputs.title
+
+        // SSO Autocomplete text field
+        textFieldSSOAutocomplete.textFieldControl.textPublisher
+            .unwrap()
+            .bind(to: viewModel.inputs.ssoSearchText)
+            .store(in: &cancellables)
+
+        viewModel.outputs.selectedSSOIndex
+            .sink { [weak self] index in
+                self?.pickerGenericSSO.pickerControl.publisher.selectedIndexPath = (row: index, component: 0)
+            }
+            .store(in: &cancellables)
 
         pickerGenericSSO.pickerControl.publisher.$selectedIndexPath
             .map { $0.row }

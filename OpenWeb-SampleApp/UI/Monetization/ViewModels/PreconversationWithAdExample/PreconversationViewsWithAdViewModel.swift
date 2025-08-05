@@ -140,7 +140,7 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
             }
             .unwrap()
         // Small delay so the navigation controller will be set from the view controller
-            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive))
+            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive)) // swiftlint:disable:this no_magic_numbers
             .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (String, Bool) in
                 return (result, loggerEnabled)
             }
@@ -211,9 +211,9 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
             switch callbackType {
             case .adSizeChanged:
                 _adSizeChanged.send()
-            case let .adEvent(event, index):
+            case let .adEvent(event, eventData):
                 guard loggerEnabled else { return }
-                let log = "preconversationAd: \(event.description) for index: \(index)\n"
+                let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
                 self.loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }
