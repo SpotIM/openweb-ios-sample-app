@@ -3,7 +3,7 @@ inhibit_all_warnings!
 use_frameworks!
 
 def openweb_pod
-  pod 'OpenWebSDK', '2.9.0'
+  pod 'OpenWebSDK', '2.9.1'
 end
 
 def combine_pods
