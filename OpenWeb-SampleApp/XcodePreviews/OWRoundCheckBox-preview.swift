@@ -17,7 +17,7 @@ import UIKit
 
     Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
         isSelected.toggle()
-        checkBox.setSelected.onNext(isSelected)
+        checkBox.setSelected.send(isSelected)
     }
 
     let themeInjectorView = ThemeInjectorView()
