@@ -22,9 +22,7 @@ extension OWCommentCellViewModel {
         )
 
         self.init(
-            commentRequiredData: commentRequiredData, spacing: .zero, viewableMode: .partOfFlow,
-            isLast: false,
-            isFirst: false
+            commentRequiredData: commentRequiredData, spacing: .zero, viewableMode: .partOfFlow
         )
     }
 }
