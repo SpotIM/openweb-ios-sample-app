@@ -12,8 +12,6 @@
 		3DA1E6D32C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D02C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3DA1E6D42C6E299A00EBFA7D /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D12C6E299A00EBFA7D /* OpenWebSDK.framework */; };
 		3DA1E6D52C6E299A00EBFA7D /* OpenWebSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D12C6E299A00EBFA7D /* OpenWebSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3DA1E6D82C6E29B600EBFA7D /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D72C6E29B600EBFA7D /* GiphyUISDK.xcframework */; };
-		3DA1E6D92C6E29B600EBFA7D /* GiphyUISDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1E6D72C6E29B600EBFA7D /* GiphyUISDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +22,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				3DA1E6D52C6E299A00EBFA7D /* OpenWebSDK.framework in Embed Frameworks */,
-				3DA1E6D92C6E29B600EBFA7D /* GiphyUISDK.xcframework in Embed Frameworks */,
 				3DA1E6D32C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -77,7 +74,6 @@
 			files = (
 				3DA1E6D22C6E299A00EBFA7D /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */,
 				3DA1E6D42C6E299A00EBFA7D /* OpenWebSDK.framework in Frameworks */,
-				3DA1E6D82C6E29B600EBFA7D /* GiphyUISDK.xcframework in Frameworks */,
 				2F113A104F74133456A49735 /* Pods_OpenWeb_SampleApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
