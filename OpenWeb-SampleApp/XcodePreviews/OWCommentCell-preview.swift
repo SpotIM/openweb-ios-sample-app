@@ -21,9 +21,7 @@ extension OWCommentCellViewModel {
             postId: "somePostId"
         )
 
-        self.init(
-            commentRequiredData: commentRequiredData, spacing: .zero, viewableMode: .partOfFlow
-        )
+        self.init(commentRequiredData: commentRequiredData, spacing: .zero, viewableMode: .partOfFlow)
     }
 }
 
