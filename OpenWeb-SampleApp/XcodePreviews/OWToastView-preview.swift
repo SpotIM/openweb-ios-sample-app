@@ -12,7 +12,8 @@ import Combine
 
 extension OWToastViewModel {
     convenience init(requiredData: OWToastRequiredData) {
-        self.init(requiredData: requiredData, completions: [:])
+        let completions: [OWToastCompletion: PassthroughSubject<Void, Never>?] = [:]
+        self.init(requiredData: requiredData, completions: completions)
     }
 }
 
