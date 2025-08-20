@@ -23,7 +23,7 @@ import RxSwift
         data: notificationsData,
         servicesProvider: MockServicesProvider(networkAPI: MockNotificationsNetworkAPI())
     )
-    viewModel.inputs.viewInitialized.onNext(())
+    viewModel.inputs.viewInitialized.send()
 
     return OWNotificationsView(viewModel: viewModel)
 }
