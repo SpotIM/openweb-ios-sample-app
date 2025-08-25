@@ -11,7 +11,7 @@
 @available(iOS 17.0, *)
 #Preview {
     let viewModel = OWCommentOptionsViewModel()
-    viewModel.inputs.isCommentOfActiveUser.onNext(false)
+    viewModel.inputs.isCommentOfActiveUser.send(false)
 
     let optionsView = OWCommentOptionsView()
     optionsView.configure(with: viewModel)
