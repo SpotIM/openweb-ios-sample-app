@@ -127,14 +127,12 @@ private extension MockArticleIndependentViewsVC {
                 switch type {
                 case .preConversation:
                     self.handlePreConversationPresentation()
-                case .conversation:
-                    self.handleConversationPresentation()
-                case .commentCreation:
-                    self.handleCommentCreationPresentation()
-                case .commentThread:
-                    self.handleCommentThreadPresentation()
-                case .clarityDetails:
-                    self.handleClarityDetailsPresentation()
+                case .conversation,
+                     .commentCreation,
+                     .commentThread,
+                     .clarityDetails,
+                     .notifications:
+                    self.handlePresentation()
                 default:
                     break
                 }
@@ -153,41 +151,11 @@ private extension MockArticleIndependentViewsVC {
         }
     }
 
-    func handleConversationPresentation() {
-        guard let conversation = self.independentView else { return }
+    func handlePresentation() {
+        guard let independentView = self.independentView else { return }
 
-        scrollView.addSubview(conversation)
-        conversation.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView.contentLayoutGuide)
-            make.height.equalTo(scrollView.snp.height)
-        }
-    }
-
-    func handleCommentCreationPresentation() {
-        guard let commentCreation = self.independentView else { return }
-
-        scrollView.addSubview(commentCreation)
-        commentCreation.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView.contentLayoutGuide)
-            make.height.equalTo(scrollView.snp.height)
-        }
-    }
-
-    func handleCommentThreadPresentation() {
-        guard let commentThread = self.independentView else { return }
-
-        scrollView.addSubview(commentThread)
-        commentThread.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView.contentLayoutGuide)
-            make.height.equalTo(scrollView.snp.height)
-        }
-    }
-
-    func handleClarityDetailsPresentation() {
-        guard let clarityDetails = self.independentView else { return }
-
-        scrollView.addSubview(clarityDetails)
-        clarityDetails.snp.makeConstraints { make in
+        scrollView.addSubview(independentView)
+        independentView.snp.makeConstraints { make in
             make.edges.equalTo(scrollView.contentLayoutGuide)
             make.height.equalTo(scrollView.snp.height)
         }
