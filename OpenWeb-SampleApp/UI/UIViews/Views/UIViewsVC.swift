@@ -22,6 +22,7 @@ class UIViewsVC: UIViewController {
         static let btnClarityDetailsIdentifier = "btn_clarity_details_id"
         static let btnMonetizationIdentifier = "btn_monetization_id"
         static let btnExamplesIdentifier = "btn_examples_id"
+        static let btnNotificationsIdentifier = "btn_notifications_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -66,6 +67,10 @@ class UIViewsVC: UIViewController {
         return NSLocalizedString("Examples", comment: "").blueRoundedButton
     }()
 
+    private lazy var btnNotifications: UIButton = {
+        return NSLocalizedString("Notifications", comment: "").blueRoundedButton
+    }()
+
     init(viewModel: UIViewsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -93,6 +98,7 @@ private extension UIViewsVC {
         btnClarityDetails.accessibilityIdentifier = Metrics.btnClarityDetailsIdentifier
         btnMonetization.accessibilityIdentifier = Metrics.btnMonetizationIdentifier
         btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
+        btnNotifications.accessibilityIdentifier = Metrics.btnNotificationsIdentifier
     }
 
     @objc func setupViews() {
@@ -152,13 +158,22 @@ private extension UIViewsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
+        // Adding notifications button
+        scrollView.addSubview(btnNotifications)
+        btnNotifications.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
         #if ADS
         // Adding monetization button
         scrollView.addSubview(btnMonetization)
         btnMonetization.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(btnNotifications.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         #endif
@@ -171,7 +186,7 @@ private extension UIViewsVC {
             #if ADS
             make.top.equalTo(btnMonetization.snp.bottom).offset(Metrics.buttonVerticalMargin)
             #else
-            make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(btnNotifications.snp.bottom).offset(Metrics.buttonVerticalMargin)
             #endif
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
@@ -200,6 +215,10 @@ private extension UIViewsVC {
 
         btnClarityDetails.tapPublisher
             .bind(to: viewModel.inputs.clarityDetailsTapped)
+            .store(in: &cancellables)
+
+        btnNotifications.tapPublisher
+            .bind(to: viewModel.inputs.notificationsTapped)
             .store(in: &cancellables)
 
         btnMonetization.tapPublisher

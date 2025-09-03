@@ -71,6 +71,8 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             loggerViewTitle = "Independed ad unit logger"
         case .clarityDetails:
             loggerViewTitle = "Clarity details logger"
+        case .notifications:
+            loggerViewTitle = "Notifications logger"
         }
 
         setupCustomizationsCallaback()
@@ -107,13 +109,14 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }()
 
     private lazy var viewTypeUpdaters: AnyPublisher<SDKUIIndependentViewsActionSettings, Never> = {
-        return Publishers.Merge6(
+        return Publishers.Merge7(
             preConversationStyleChanged,
             conversationStyleChanged,
             commentCreationStyleChanged,
             commentThreadStyleChanged,
             independentAdUnitStyleChanged,
-            clarityDetailsStyleChanged
+            clarityDetailsStyleChanged,
+            notificationsStyleChanged
         )
         .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewsActionSettings, Never> in
             guard let self else { return Empty().eraseToAnyPublisher() }
@@ -195,6 +198,22 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }()
 
     // All the stuff which should trigger new comment thread component
+    private lazy var notificationsStyleChanged: AnyPublisher<Void, Never> = {
+        return self.userDefaultsProvider.values(key: .notificationsStyle, defaultValue: OWConversationStyle.default)
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                return self.actionSettings
+                    .first()
+                    .map { $0.viewType }
+                    .eraseToAnyPublisher()
+            }
+            .filter { $0 == .notifications }
+            .voidify()
+            .share()
+            .eraseToAnyPublisher()
+    }()
+
+    // All the stuff which should trigger new comment thread component
     private lazy var independentAdUnitStyleChanged: AnyPublisher<Void, Never> = {
         // TODO: Complete once developed
         return Empty().eraseToAnyPublisher()
@@ -270,6 +289,8 @@ private extension MockArticleIndependentViewsViewModel {
             return Empty().eraseToAnyPublisher()
         case .clarityDetails:
             return self.retrieveClarityDetails(settings: settings)
+        case .notifications:
+            return self.retrieveNotifications(settings: settings)
         }
     }
 
@@ -572,6 +593,64 @@ private extension MockArticleIndependentViewsViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling retrieveClarityDetails error: \(message)")
+                        observer.send(completion: .failure(error))
+                    }
+                })
+            }
+
+            return AnyCancellable {}
+        }
+    }
+
+    func retrieveNotifications(settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
+        return AnyPublisher<UIView, Error>.create { [weak self] observer in
+            guard let self else {
+                observer.send(completion: .failure(GeneralErrors.missingImplementation))
+                return AnyCancellable {}
+            }
+
+            let additionalSettings = self.commonCreatorService.additionalSettings()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+
+            let manager = OpenWeb.manager
+            let uiViews = manager.ui.views
+
+            let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                guard let self else { return }
+                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+
+            if shouldUseAsyncAwaitCallingMethod() {
+                Task { @MainActor in
+                    do {
+                        let notificationsView = try await uiViews.notifications(
+                            postId: settings.postId,
+                            article: article,
+                            additionalSettings: additionalSettings,
+                            callbacks: actionsCallbacks
+                        )
+                        observer.send(notificationsView)
+                        observer.send(completion: .finished)
+                    } catch {
+                        let message = error.localizedDescription
+                        DLog("Calling retrievePreConversation error: \(message)")
+                        observer.send(completion: .failure(error))
+                    }
+                }
+            } else {
+                uiViews.notifications(postId: settings.postId,
+                                        article: article,
+                                        additionalSettings: additionalSettings,
+                                        callbacks: actionsCallbacks,
+                                        completion: { result in
+                    switch result {
+                    case .success(let notificationsView):
+                        observer.send(notificationsView)
+                        observer.send(completion: .finished)
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling retrieveNotifications error: \(message)")
                         observer.send(completion: .failure(error))
                     }
                 })

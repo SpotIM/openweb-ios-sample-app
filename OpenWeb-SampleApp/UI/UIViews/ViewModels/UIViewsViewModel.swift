@@ -16,6 +16,7 @@ protocol UIViewsViewModelingInputs {
     var commentCreationTapped: PassthroughSubject<Void, Never> { get }
     var commentThreadTapped: PassthroughSubject<Void, Never> { get }
     var clarityDetailsTapped: PassthroughSubject<Void, Never> { get }
+    var notificationsTapped: PassthroughSubject<Void, Never> { get }
     var monetizationTapped: PassthroughSubject<Void, Never> { get }
     var examplesTapped: PassthroughSubject<Void, Never> { get }
 }
@@ -45,6 +46,7 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     let commentCreationTapped = PassthroughSubject<Void, Never>()
     let commentThreadTapped = PassthroughSubject<Void, Never>()
     let clarityDetailsTapped = PassthroughSubject<Void, Never>()
+    var notificationsTapped = PassthroughSubject<Void, Never>()
     let monetizationTapped = PassthroughSubject<Void, Never>()
     let examplesTapped = PassthroughSubject<Void, Never>()
 
@@ -111,6 +113,13 @@ private extension UIViewsViewModel {
                 return model
             }
 
+        let notificationsTappedModel = notificationsTapped
+            .map { _ -> SDKUIIndependentViewsActionSettings in
+                let viewType = SDKUIIndependentViewType.notifications
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
+                return model
+            }
+
         let preConversationTappedModel = preConversationTapped
             .map { _ -> SDKUIIndependentViewsActionSettings in
                 let viewType = SDKUIIndependentViewType.preConversation
@@ -123,6 +132,7 @@ private extension UIViewsViewModel {
             commentCreationTappedModel,
             commentThreadTappedModel,
             clarityDetailsTappedModel,
+            notificationsTappedModel,
             preConversationTappedModel)
         .map { $0 } // swiftlint:disable:this array_init
         .bind(to: _openMockArticleScreen)
