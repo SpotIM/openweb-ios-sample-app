@@ -14,7 +14,7 @@
     let summaryData = OWStarRatingSummary(summary: starRatingsData, total: 117, average: 3.5)
 
     let summaryVM = OWStarRatingSummaryViewViewModel()
-    summaryVM.inputs.summaryDataChange.onNext(summaryData)
+    summaryVM.inputs.summaryDataChange.send(summaryData)
     let summaryView = OWStarRatingSummaryView(viewModel: summaryVM)
 
     summaryView.OWSnp.makeConstraints { make in
