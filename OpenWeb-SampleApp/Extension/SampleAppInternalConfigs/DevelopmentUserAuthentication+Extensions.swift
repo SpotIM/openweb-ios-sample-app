@@ -11,7 +11,7 @@ import Foundation
 import OpenWeb_SampleApp_Internal_Configs
 
 extension DevelopmentUserAuthentication {
-    func toUserAuthentication () -> UserAuthentication {
+    func toUserAuthentication() -> UserAuthentication {
         return UserAuthentication(username: self.username,
                                   password: self.password,
                                   userId: self.userId)
