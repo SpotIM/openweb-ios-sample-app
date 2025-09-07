@@ -8,6 +8,7 @@
 #if DEBUG
 @testable import OpenWebSDK
 import RxSwift
+import Combine
 
 @available(iOS 17.0, *)
 #Preview {
@@ -87,15 +88,16 @@ private class MockUnseenCountRealtimeService: OWRealtimeServicing {
     func stopFetchingData() {}
     func reset() {}
 
-    private let _realtimeData = BehaviorSubject<OWRealTime?>(value: nil)
-    lazy var realtimeData: Observable<OWRealTime> = {
+    private let _realtimeData = CurrentValueSubject<OWRealTime?, Never>(value: nil)
+    lazy var realtimeData: AnyPublisher<OWRealTime, Never> = {
         _realtimeData
             .unwrap()
     }()
 
-    let onlineViewingUsersCount = Observable.just(0)
-    let currentPostIsReadOnly = Observable.just(false)
-    let currentPostId = Observable.just("mockPostId")
+    let onlineViewingUsersCount = Just(0).eraseToAnyPublisher()
+    let currentPostIsReadOnly = Just(false).eraseToAnyPublisher()
+    let currentPostId = Just("mockPostId").eraseToAnyPublisher()
+
 
     init(unseenCount: Int) {
         OWManager.manager.spotId = "sp_JO8jQVTJ_aio1"
@@ -104,7 +106,7 @@ private class MockUnseenCountRealtimeService: OWRealtimeServicing {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             let data = try decoder.decode(OWRealTime.self, from: json.data(using: .utf8)!)
-            _realtimeData.onNext(data)
+            _realtimeData.send(data)
         } catch {
             print("**** JSONDecoder error", error)
         }
