@@ -7,7 +7,6 @@
 
 #if DEBUG
 @testable import OpenWebSDK
-import RxSwift
 import Combine
 
 @available(iOS 17.0, *)
@@ -59,27 +58,27 @@ private class MockNetworkAPI: StubNetworkAPI {
 }
 
 private class MockNotificationsAPI: OWNotificationsAPI {
-    private let progress = PublishSubject<Progress>()
+    private let progress = PassthroughSubject<Progress, Never>()
     private let unseenCount: Int
 
     init(unseenCount: Int) {
         self.unseenCount = unseenCount
         let progressValue = Progress(totalUnitCount: 1)
         progressValue.completedUnitCount = 1
-        progress.onNext(progressValue)
+        progress.send(progressValue)
     }
 
     func getNotifications(offset: Int?, count: Int, postId: OWPostId) -> OWNetworkResponse<OWNotificationsResponse> {
         let response = OWNotificationsResponse(notifications: [], totalUnread: unseenCount, totalUnseen: unseenCount, total: unseenCount, cursor: nil)
-        return OWNetworkResponse(progress: progress, response: Observable.just(response))
+        return OWNetworkResponse(progress: progress, response: .just(response))
     }
 
     func resetUnseen(postId: OWPostId) -> OWNetworkResponse<OWNetworkEmpty> {
-        return OWNetworkResponse(progress: progress, response: Observable.just(OWNetworkEmpty()))
+        return OWNetworkResponse(progress: progress, response: .just(OWNetworkEmpty()))
     }
 
     func markAsRead(notificationIds: [String], postId: OWPostId) -> OWNetworkResponse<OWNetworkEmpty> {
-        return OWNetworkResponse(progress: progress, response: Observable.just(OWNetworkEmpty()))
+        return OWNetworkResponse(progress: progress, response: .just(OWNetworkEmpty()))
     }
 }
 

@@ -7,7 +7,7 @@
 
 #if DEBUG
 @testable import OpenWebSDK
-import RxSwift
+import Combine
 
 @available(iOS 17.0, *)
 #Preview {
@@ -31,7 +31,7 @@ import RxSwift
 // swiftlint:disable function_body_length line_length
 class MockNotificationsNetworkAPI: OWNetworkAPIProtocol {
     // Return fatalError for API properties as they are not stubbed
-    var unauthorizedErrors = PublishSubject<OWEndpoints>()
+    var unauthorizedErrors = PassthroughSubject<OWEndpoints, Never>()
     var analytics: OWAnalyticsAPI { fatalError("API not stubbed in MockingServicesProvider") }
     var realtime: OWRealtimeAPI { fatalError("API not stubbed in MockingServicesProvider") }
     var configuration: OWConfigurationAPI { fatalError("API not stubbed in MockingServicesProvider") }
@@ -52,13 +52,13 @@ class MockNotificationsNetworkAPI: OWNetworkAPIProtocol {
 }
 
 class MockListNotificationsAPI: OWNotificationsAPI {
-    private let progress = PublishSubject<Progress>()
+    private let progress = PassthroughSubject<Progress, Never>()
 
     func getNotifications(offset: Int?, count: Int, postId: OWPostId) -> OWNetworkResponse<OWNotificationsResponse> {
         // Complete the progress immediately to avoid showing loading state
         let progressValue = Progress(totalUnitCount: 1)
         progressValue.completedUnitCount = 1
-        progress.onNext(progressValue)
+        progress.send(progressValue)
 
         let jsonData = Data("""
         {
@@ -228,7 +228,7 @@ class MockListNotificationsAPI: OWNotificationsAPI {
     func resetUnseen(postId: OWPostId) -> OWNetworkResponse<OWNetworkEmpty> {
         let progressValue = Progress(totalUnitCount: 1)
         progressValue.completedUnitCount = 1
-        progress.onNext(progressValue)
+        progress.send(progressValue)
         return OWNetworkResponse(progress: progress, response: .just(OWNetworkEmpty()))
     }
 
