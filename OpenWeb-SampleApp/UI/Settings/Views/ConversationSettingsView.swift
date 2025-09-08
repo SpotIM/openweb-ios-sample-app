@@ -21,6 +21,7 @@ class ConversationSettingsView: UIView {
         static let textFieldBetweenCommentsSpacingIdentifier = "between_comments_spacing"
         static let textFieldBelowCommunityGuidelinesSpacingIdentifier = "below_community_guidelines_spacing"
         static let textFieldBelowCommunityQuestionsSpacingIdentifier = "below_community_questions_spacing"
+        static let switchAllowSwipeToRefreshIdentifier = "allow_swipe_to_refresh"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -93,6 +94,10 @@ class ConversationSettingsView: UIView {
                                 font: FontBook.paragraph)
     }()
 
+    private lazy var switchAllowSwipeToRefresh: SwitchSetting = {
+        return SwitchSetting(title: viewModel.outputs.allowSwipeToRefreshTitle, accessibilityPrefixId: Metrics.switchAllowSwipeToRefreshIdentifier)
+    }()
+
     private let viewModel: ConversationSettingsViewModeling
     private var cancellables = Set<AnyCancellable>()
 
@@ -133,6 +138,7 @@ private extension ConversationSettingsView {
         stackView.addArrangedSubview(textFieldBetweenCommentsSpacing)
         stackView.addArrangedSubview(textFieldCommunityGuidelinesSpacing)
         stackView.addArrangedSubview(textFieldCommunityQuestionsSpacing)
+        stackView.addArrangedSubview(switchAllowSwipeToRefresh)
     }
 
     func setupObservers() {
@@ -196,6 +202,14 @@ private extension ConversationSettingsView {
         textFieldCommunityQuestionsSpacing.textFieldControl.textPublisher
             .unwrap()
             .bind(to: viewModel.inputs.communityQuestionsGuidelinesSpacingSelected)
+            .store(in: &cancellables)
+
+        viewModel.outputs.allowSwipeToRefresh
+            .assign(to: \.isOn, on: switchAllowSwipeToRefresh.switchControl)
+            .store(in: &cancellables)
+
+        switchAllowSwipeToRefresh.switchControl.isOnPublisher
+            .bind(to: viewModel.inputs.allowSwipeToRefreshSelected)
             .store(in: &cancellables)
 
         viewModel.outputs.showCustomStyleOptions

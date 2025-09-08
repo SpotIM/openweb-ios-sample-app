@@ -18,6 +18,7 @@ protocol ConversationSettingsViewModelingInputs {
     var betweenCommentsSpacingSelected: CurrentValueSubject<String, Never> { get }
     var communityGuidelinesSpacingSelected: CurrentValueSubject<String, Never> { get }
     var communityQuestionsGuidelinesSpacingSelected: CurrentValueSubject<String, Never> { get }
+    var allowSwipeToRefreshSelected: CurrentValueSubject<Bool, Never> { get }
 }
 
 protocol ConversationSettingsViewModelingOutputs {
@@ -29,6 +30,7 @@ protocol ConversationSettingsViewModelingOutputs {
     var betweenCommentsSpacingTitle: String { get }
     var communityGuidelinesSpacingTitle: String { get }
     var communityQuestionsGuidelinesSpacingTitle: String { get }
+    var allowSwipeToRefreshTitle: String { get }
     var styleModeIndex: AnyPublisher<Int, Never> { get }
     var communityGuidelinesStyleModeIndex: AnyPublisher<Int, Never> { get }
     var communityQuestionsStyleModeIndex: AnyPublisher<Int, Never> { get }
@@ -36,6 +38,7 @@ protocol ConversationSettingsViewModelingOutputs {
     var betweenCommentsSpacing: AnyPublisher<String, Never> { get }
     var communityGuidelinesSpacing: AnyPublisher<String, Never> { get }
     var communityQuestionsGuidelinesSpacing: AnyPublisher<String, Never> { get }
+    var allowSwipeToRefresh: AnyPublisher<Bool, Never> { get }
     var styleModeSettings: [String] { get }
     var communityGuidelinesModeSettings: [String] { get }
     var communityQuestionsStyleModeSettings: [String] { get }
@@ -134,6 +137,10 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
         return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)"
     }())
 
+    lazy var allowSwipeToRefreshSelected = CurrentValueSubject<Bool, Never>({
+        return userDefaultsProvider.get(key: .allowSwipeToRefresh, defaultValue: true)
+    }())
+
     private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     var styleModeIndex: AnyPublisher<Int, Never> {
@@ -162,6 +169,10 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
 
     var communityQuestionsGuidelinesSpacing: AnyPublisher<String, Never> {
         return communityQuestionsGuidelinesSpacingSelected.eraseToAnyPublisher()
+    }
+
+    var allowSwipeToRefresh: AnyPublisher<Bool, Never> {
+        return allowSwipeToRefreshSelected.eraseToAnyPublisher()
     }
 
     private var cancellables = Set<AnyCancellable>()
@@ -196,6 +207,10 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
 
     lazy var communityQuestionsGuidelinesSpacingTitle: String = {
         return NSLocalizedString("CommunityQuestionsGuidelinesSpacingTitle", comment: "")
+    }()
+
+    lazy var allowSwipeToRefreshTitle: String = {
+        return NSLocalizedString("AllowSwipeToRefresh", comment: "")
     }()
 
     lazy var styleModeSettings: [String] = {
@@ -279,10 +294,14 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
 
 private extension ConversationSettingsVM {
     func setupObservers() {
-        // Conversation style mode data binder to persistence key conversationStyle
         styleModeObservable
             .dropFirst()
             .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
+            .store(in: &cancellables)
+
+        allowSwipeToRefreshSelected
+            .dropFirst()
+            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.allowSwipeToRefresh))
             .store(in: &cancellables)
     }
 }
@@ -296,5 +315,6 @@ extension ConversationSettingsVM: SettingsGroupVMProtocol {
         betweenCommentsSpacingSelected.send("\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)")
         communityGuidelinesSpacingSelected.send("\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)")
         communityQuestionsGuidelinesSpacingSelected.send("\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)")
+        allowSwipeToRefreshSelected.send(true)
     }
 }
