@@ -32,8 +32,8 @@ class CommonCreatorService: CommonCreatorServicing {
 
         // 2. Conversation related
         let conversationStyle = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-        let allowSwipeToRefresh = self.userDefaultsProvider.get(key: .allowSwipeToRefresh, defaultValue: true)
-        let conversationSettings = OWConversationSettings(style: conversationStyle, allowSwipeToRefresh: allowSwipeToRefresh)
+        let allowPullToRefresh = self.userDefaultsProvider.get(key: .allowPullToRefresh, defaultValue: true)
+        let conversationSettings = OWConversationSettings(style: conversationStyle, allowPullToRefresh: allowPullToRefresh)
 
         // 3. Comment creation related
         var commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
@@ -53,7 +53,7 @@ class CommonCreatorService: CommonCreatorServicing {
         newToolbarVM?.inputs.setCommentCreationSettings(commentCreationSettings)
 
         // 4. Comment thread related
-        let commentThreadSettings = OWCommentThreadSettings(allowSwipeToRefresh: allowSwipeToRefresh)
+        let commentThreadSettings = OWCommentThreadSettings(allowPullToRefresh: allowPullToRefresh)
 
         // 5. Final additional settings
         let additionalSettings = OWAdditionalSettingsBuilder(

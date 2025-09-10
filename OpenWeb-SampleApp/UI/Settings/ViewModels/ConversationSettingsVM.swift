@@ -38,7 +38,7 @@ protocol ConversationSettingsViewModelingOutputs {
     var betweenCommentsSpacing: AnyPublisher<String, Never> { get }
     var communityGuidelinesSpacing: AnyPublisher<String, Never> { get }
     var communityQuestionsGuidelinesSpacing: AnyPublisher<String, Never> { get }
-    var allowSwipeToRefresh: AnyPublisher<Bool, Never> { get }
+    var allowPullToRefresh: AnyPublisher<Bool, Never> { get }
     var styleModeSettings: [String] { get }
     var communityGuidelinesModeSettings: [String] { get }
     var communityQuestionsStyleModeSettings: [String] { get }
@@ -138,7 +138,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
     }())
 
     lazy var allowSwipeToRefreshSelected = CurrentValueSubject<Bool, Never>({
-        return userDefaultsProvider.get(key: .allowSwipeToRefresh, defaultValue: true)
+        return userDefaultsProvider.get(key: .allowPullToRefresh, defaultValue: true)
     }())
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
@@ -171,7 +171,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
         return communityQuestionsGuidelinesSpacingSelected.eraseToAnyPublisher()
     }
 
-    var allowSwipeToRefresh: AnyPublisher<Bool, Never> {
+    var allowPullToRefresh: AnyPublisher<Bool, Never> {
         return allowSwipeToRefreshSelected.eraseToAnyPublisher()
     }
 
@@ -210,7 +210,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
     }()
 
     lazy var allowSwipeToRefreshTitle: String = {
-        return NSLocalizedString("AllowSwipeToRefresh", comment: "")
+        return NSLocalizedString("AllowPullToRefresh", comment: "")
     }()
 
     lazy var styleModeSettings: [String] = {
@@ -301,7 +301,7 @@ private extension ConversationSettingsVM {
 
         allowSwipeToRefreshSelected
             .dropFirst()
-            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.allowSwipeToRefresh))
+            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.allowPullToRefresh))
             .store(in: &cancellables)
     }
 }

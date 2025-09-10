@@ -204,7 +204,7 @@ private extension ConversationSettingsView {
             .bind(to: viewModel.inputs.communityQuestionsGuidelinesSpacingSelected)
             .store(in: &cancellables)
 
-        viewModel.outputs.allowSwipeToRefresh
+        viewModel.outputs.allowPullToRefresh
             .assign(to: \.isOn, on: switchAllowSwipeToRefresh.switchControl)
             .store(in: &cancellables)
 

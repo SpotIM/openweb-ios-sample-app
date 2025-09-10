@@ -86,7 +86,7 @@ class UserDefaultsProvider: UserDefaultsProviderProtocol {
         case callingMethodOption
         case flowsLoggerEnabled
         case starRatingEnabled
-        case allowSwipeToRefresh
+        case allowPullToRefresh
     }
 }
 
