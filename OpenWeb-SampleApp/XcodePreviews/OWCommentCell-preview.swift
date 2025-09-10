@@ -7,7 +7,6 @@
 
 #if DEBUG
 @testable import OpenWebSDK
-import RxSwift
 import UIKit
 
 extension OWCommentCellViewModel {
