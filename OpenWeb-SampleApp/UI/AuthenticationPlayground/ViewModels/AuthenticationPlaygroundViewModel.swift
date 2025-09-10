@@ -321,12 +321,12 @@ private extension AuthenticationPlaygroundViewModel {
             ) { genericSSO, latestValues in
                 return (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3)
             }
-            .flatMapLatest { genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> AnyPublisher<GenericSSOAuthentication, Never> in
+            .flatMapLatest { [weak self] genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> AnyPublisher<GenericSSOAuthentication, Never> in
                 // 2. Initialize SDK with appropriate spotId if needed
                 var genericSSO = genericSSO
 
                 // If spotId is '*', replace with actual spotIdToFilterBy if available
-                if genericSSO.spotId == "*", let actualSpotId = self.spotIdToFilterBy {
+                if genericSSO.spotId == "*", let actualSpotId = self?.spotIdToFilterBy {
                     genericSSO.spotId = actualSpotId
                 }
 
