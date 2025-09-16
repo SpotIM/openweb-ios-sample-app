@@ -23,6 +23,8 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
             switch style {
             case 1:
                 getFirstStyle(element: element, source: source, themeStyle: themeStyle)
+            case 2:
+                getSecondStyle(element: element, source: source, themeStyle: themeStyle)
             default:
                 break
             }
@@ -329,4 +331,30 @@ private extension ElementsCustomizationCreatorService {
         }
     }
     // swiftlint:enable function_body_length
+
+    static func getSecondStyle(element: OWCustomizableElement, source: OWViewSourceType, themeStyle: OWThemeStyle) {
+        DispatchQueue.main.async {
+            switch element {
+            case .emptyState(element: let element):
+                switch element {
+                case .icon(let imageView):
+                    imageView.image = nil
+                    imageView.isHidden = true
+                case .title(let label):
+                    DispatchQueue.main.async {
+                        label.attributedText = NSAttributedString(
+                            // swiftlint:disable:next line_length
+                            string: "🌍 Welcome to the conversation arena! 💬 Share your thoughts, react with kindness 🤝, and spark ideas that inspire ✨. Whether it’s a deep dive into tech 💻, the latest game highlights 🏆, or just good vibes 🎶 — your voice matters! Let’s keep it lively 🔥, respectful 🙏, and full of energy ⚡️. Jump in, tag a friend 👯, and let the dialogue roll! 🚀🚀🚀",
+                            attributes: [.foregroundColor: UIColor.systemBlue]
+                        )
+                    }
+                default:
+                    break
+                }
+            default:
+                break
+            }
+        }
+
+    }
 }
