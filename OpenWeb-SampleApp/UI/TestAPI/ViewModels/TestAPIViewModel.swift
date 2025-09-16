@@ -113,10 +113,10 @@ class TestAPIViewModel: TestAPIViewModeling,
         configurationString.append(" | ")
         #endif
 
-        #if BETA
-        configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
-        #elseif ADS
+        #if ADS
         configurationString.append(NSLocalizedString("ConfigurationAds", comment: ""))
+        #elseif BETA
+        configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
         #endif
         return !configurationString.isEmpty ? configurationString : nil
     }
