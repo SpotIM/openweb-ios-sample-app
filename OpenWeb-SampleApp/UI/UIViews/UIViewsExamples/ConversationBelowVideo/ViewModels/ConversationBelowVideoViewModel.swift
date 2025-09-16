@@ -443,7 +443,7 @@ private extension ConversationBelowVideoViewModel {
         })
     }
 
-    func  retrieveCommentThreadComponent(commentId: OWCommentId, postId: OWPostId, performActionType: OWCommentThreadPerformActionType) {
+    func retrieveCommentThreadComponent(commentId: OWCommentId, postId: OWPostId, performActionType: OWCommentThreadPerformActionType) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
