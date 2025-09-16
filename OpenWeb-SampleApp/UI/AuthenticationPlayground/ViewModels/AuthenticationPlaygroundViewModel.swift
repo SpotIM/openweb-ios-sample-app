@@ -403,7 +403,7 @@ private extension AuthenticationPlaygroundViewModel {
             .filter { $0 == true }
             .delay(for: .milliseconds(Metrics.delayUntilDismissVC), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
-                // 7. Rx back to the view layer to dismiss itself
+                // 7. Back to the view layer to dismiss itself
                 self?.outputs.dismissVC.send()
             }
             .store(in: &cancellables)
@@ -458,7 +458,7 @@ private extension AuthenticationPlaygroundViewModel {
             .filter { $0 == true }
             .delay(for: .milliseconds(Metrics.delayUntilDismissVC), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
-                // 5. Rx back to the view layer to dismiss itself
+                // 5. Back to the view layer to dismiss itself
                 self?.outputs.dismissVC.send()
             }
             .store(in: &cancellables)

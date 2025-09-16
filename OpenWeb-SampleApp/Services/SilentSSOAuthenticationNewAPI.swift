@@ -16,7 +16,7 @@ protocol SilentSSOAuthenticationNewAPIProtocol {
 
 class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
     func silentSSO(for genericSSO: GenericSSOAuthentication, ignoreLoginStatus: Bool) -> AnyPublisher<String, Error> {
-        return AnyPublisher<Void, Error>.just(()) // Begin RX
+        return AnyPublisher<Void, Error>.just(())
             .flatMapLatest { [unowned self] _ -> AnyPublisher<Void, Error> in
                 // Check user login status if needed
                 if ignoreLoginStatus {
