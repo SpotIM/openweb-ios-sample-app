@@ -415,7 +415,6 @@ private extension TestAPIViewModel {
         let BIClosure: OWBIAnalyticEventCallback = { event, additionalInfo, postId in
             DLog("Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)")
         }
-
         analytics.addBICallback(BIClosure)
     }
 
