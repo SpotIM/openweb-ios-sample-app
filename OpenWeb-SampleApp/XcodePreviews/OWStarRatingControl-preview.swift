@@ -51,18 +51,4 @@ private extension UIStackView {
 
     return stackView
 }
-
-struct UIViewPreviewContainer<T: UIView>: UIViewRepresentable {
-    let viewBuilder: () -> T
-    
-    init(_ viewBuilder: @escaping () -> T) {
-        self.viewBuilder = viewBuilder
-    }
-    
-    func makeUIView(context: Context) -> T {
-        return viewBuilder()
-    }
-    
-    func updateUIView(_ uiView: T, context: Context) {}
-}
 #endif
