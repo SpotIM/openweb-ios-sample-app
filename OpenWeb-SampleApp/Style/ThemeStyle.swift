@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum ThemeStyle {
+enum ThemeStyle {
     case light
     case dark
 }

@@ -8,10 +8,18 @@
 #if DEBUG
 @testable import OpenWebSDK
 import SnapKit
+import Combine
+
+extension OWToastViewModel {
+    convenience init(requiredData: OWToastRequiredData) {
+        let completions: [OWToastCompletion: PassthroughSubject<Void, Never>?] = [:]
+        self.init(requiredData: requiredData, completions: completions)
+    }
+}
 
 extension OWToastView {
     convenience init(type: OWToastType, action: OWToastAction, title: String) {
-        let viewModel = OWToastViewModel(requiredData: OWToastRequiredData(type: type, action: action, title: title), completions: [:])
+        let viewModel = OWToastViewModel(requiredData: OWToastRequiredData(type: type, action: action, title: title))
         self.init(viewModel: viewModel)
     }
 }
@@ -26,6 +34,7 @@ extension OWToastView {
         OWToastView(type: .success, action: .learnMore, title: "Nicely done"),
         OWToastView(type: .warning, action: .undo, title: "Nicely undone"),
     ])
+    .alignment(.center)
     .axis(.vertical)
     .spacing(32)
     .padding(16)

@@ -7,7 +7,7 @@
 
 #if DEBUG
 @testable import OpenWebSDK
-import RxSwift
+import Combine
 
 @available(iOS 17.0, *)
 #Preview {
@@ -58,27 +58,27 @@ private class MockNetworkAPI: StubNetworkAPI {
 }
 
 private class MockNotificationsAPI: OWNotificationsAPI {
-    private let progress = PublishSubject<Progress>()
+    private let progress = PassthroughSubject<Progress, Never>()
     private let unseenCount: Int
 
     init(unseenCount: Int) {
         self.unseenCount = unseenCount
         let progressValue = Progress(totalUnitCount: 1)
         progressValue.completedUnitCount = 1
-        progress.onNext(progressValue)
+        progress.send(progressValue)
     }
 
     func getNotifications(offset: Int?, count: Int, postId: OWPostId) -> OWNetworkResponse<OWNotificationsResponse> {
         let response = OWNotificationsResponse(notifications: [], totalUnread: unseenCount, totalUnseen: unseenCount, total: unseenCount, cursor: nil)
-        return OWNetworkResponse(progress: progress, response: Observable.just(response))
+        return OWNetworkResponse(progress: progress, response: .just(response))
     }
 
     func resetUnseen(postId: OWPostId) -> OWNetworkResponse<OWNetworkEmpty> {
-        return OWNetworkResponse(progress: progress, response: Observable.just(OWNetworkEmpty()))
+        return OWNetworkResponse(progress: progress, response: .just(OWNetworkEmpty()))
     }
 
     func markAsRead(notificationIds: [String], postId: OWPostId) -> OWNetworkResponse<OWNetworkEmpty> {
-        return OWNetworkResponse(progress: progress, response: Observable.just(OWNetworkEmpty()))
+        return OWNetworkResponse(progress: progress, response: .just(OWNetworkEmpty()))
     }
 }
 
@@ -87,15 +87,16 @@ private class MockUnseenCountRealtimeService: OWRealtimeServicing {
     func stopFetchingData() {}
     func reset() {}
 
-    private let _realtimeData = BehaviorSubject<OWRealTime?>(value: nil)
-    lazy var realtimeData: Observable<OWRealTime> = {
+    private let _realtimeData = CurrentValueSubject<OWRealTime?, Never>(value: nil)
+    lazy var realtimeData: AnyPublisher<OWRealTime, Never> = {
         _realtimeData
             .unwrap()
     }()
 
-    let onlineViewingUsersCount = Observable.just(0)
-    let currentPostIsReadOnly = Observable.just(false)
-    let currentPostId = Observable.just("mockPostId")
+    let onlineViewingUsersCount = Just(0).eraseToAnyPublisher()
+    let currentPostIsReadOnly = Just(false).eraseToAnyPublisher()
+    let currentPostId = Just("mockPostId").eraseToAnyPublisher()
+
 
     init(unseenCount: Int) {
         OWManager.manager.spotId = "sp_JO8jQVTJ_aio1"
@@ -104,7 +105,7 @@ private class MockUnseenCountRealtimeService: OWRealtimeServicing {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             let data = try decoder.decode(OWRealTime.self, from: json.data(using: .utf8)!)
-            _realtimeData.onNext(data)
+            _realtimeData.send(data)
         } catch {
             print("**** JSONDecoder error", error)
         }

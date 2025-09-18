@@ -7,13 +7,13 @@
 
 #if DEBUG
 @testable import OpenWebSDK
-import RxSwift
+import Combine
 import UIKit
 
 class MockSpotConfigurationService: OWSpotConfigurationServicing {
-    func spotChanged(spotId: OpenWebCommon.OWSpotId) {}
+    func spotChanged(spotId: OWSpotId) {}
 
-    func config(spotId: String) -> Observable<SPSpotConfiguration> {
+    func config(spotId: OWSpotId) -> AnyPublisher<SPSpotConfiguration, any Error> {
         let jsonString = """
         {
             "shared": {
