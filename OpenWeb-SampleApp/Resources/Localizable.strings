@@ -41,6 +41,7 @@
 "CommentCreationPresentMode" = "Comment Creation - Present Mode";
 "CommentThreadPushMode" = "Comment Thread - Push Mode";
 "CommentThreadPresentMode" = "Comment Thread - Present Mode";
+"FullConversationView" = "Full Conversation View";
 "ConversationCounter" = "Conversation Counter";
 "UIFlows" = "UI Flows";
 "UIViews" = "UI Views";

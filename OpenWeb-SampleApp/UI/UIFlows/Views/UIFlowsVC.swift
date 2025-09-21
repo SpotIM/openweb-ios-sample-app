@@ -73,6 +73,10 @@ class UIFlowsVC: UIViewController {
         return NSLocalizedString("CommentThreadPresentMode", comment: "").blueRoundedButton
     }()
 
+    private lazy var btnFullConversationView: UIButton = {
+        return NSLocalizedString("FullConversationView", comment: "").blueRoundedButton
+    }()
+
     private lazy var btnMonetization: UIButton = {
         return NSLocalizedString("Monetization", comment: "").blueRoundedButton
     }()
@@ -186,6 +190,14 @@ private extension UIFlowsVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentThreadPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
+        scrollView.addSubview(btnFullConversationView)
+        btnFullConversationView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentThreadPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
 
@@ -195,7 +207,7 @@ private extension UIFlowsVC {
         btnMonetization.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnCommentThreadPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(btnFullConversationView.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         #endif
@@ -231,6 +243,10 @@ private extension UIFlowsVC {
                 return PresentationalModeCompact.present(style: style)
             }
             .bind(to: viewModel.inputs.fullConversationTapped)
+            .store(in: &cancellables)
+
+        btnFullConversationView.tapPublisher
+            .bind(to: viewModel.inputs.fullConversationViewTapped)
             .store(in: &cancellables)
 
         btnCommentCreationPushMode.tapPublisher

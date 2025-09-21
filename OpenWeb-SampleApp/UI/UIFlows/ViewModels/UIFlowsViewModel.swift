@@ -13,6 +13,7 @@ import OpenWebSDK
 protocol UIFlowsViewModelingInputs {
     var preConversationTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
     var fullConversationTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
+    var fullConversationViewTapped: PassthroughSubject<Void, Never> { get }
     var commentCreationTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
     var commentThreadTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
     var monetizationTapped: PassthroughSubject<Void, Never> { get }
@@ -41,6 +42,7 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
 
     let preConversationTapped = PassthroughSubject<PresentationalModeCompact, Never>()
     let fullConversationTapped = PassthroughSubject<PresentationalModeCompact, Never>()
+    let fullConversationViewTapped = PassthroughSubject<Void, Never>()
     let commentCreationTapped = PassthroughSubject<PresentationalModeCompact, Never>()
     let commentThreadTapped = PassthroughSubject<PresentationalModeCompact, Never>()
     let monetizationTapped = PassthroughSubject<Void, Never>()
@@ -84,6 +86,15 @@ private extension UIFlowsViewModel {
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .eraseToAnyPublisher()
+
+        let fullConversationViewTappedModel = fullConversationViewTapped
+            .map { _ -> SDKUIFlowActionSettings in
+                let action = SDKUIFlowActionType.fullConversationView
+                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
+                return model
+            }
+            .eraseToAnyPublisher()
 
         let commentCreationTappedModel = commentCreationTapped
             .map { mode -> SDKUIFlowActionSettings in
@@ -91,6 +102,7 @@ private extension UIFlowsViewModel {
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .eraseToAnyPublisher()
 
         let commentThreadTappedModel = commentThreadTapped
             .map { mode -> SDKUIFlowActionSettings in
@@ -98,6 +110,7 @@ private extension UIFlowsViewModel {
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .eraseToAnyPublisher()
 
         let preConversationTappedModel = preConversationTapped
             .map { mode -> SDKUIFlowActionSettings in
@@ -105,8 +118,9 @@ private extension UIFlowsViewModel {
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .eraseToAnyPublisher()
 
-        Publishers.MergeMany(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
+        Publishers.MergeMany(fullConversationTappedModel, fullConversationViewTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
             .map { $0 } // swiftlint:disable:this array_init
             .bind(to: _openMockArticleScreen)
             .store(in: &cancellables)
