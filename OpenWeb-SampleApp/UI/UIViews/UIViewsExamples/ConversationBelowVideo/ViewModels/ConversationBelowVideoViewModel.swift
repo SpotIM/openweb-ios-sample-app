@@ -332,21 +332,10 @@ private extension ConversationBelowVideoViewModel {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        // Always show accessory view in the floating keyboard for this example of conversation below video
-        let floatingBottomToolbarTuple = commonCreatorService.commentCreationFloatingBottomToolbar()
-        let toolbar = floatingBottomToolbarTuple.1
-        let toolbarVM = floatingBottomToolbarTuple.0
-        let accessoryViewStrategy = OWAccessoryViewStrategy.bottomToolbar(toolbar: toolbar)
-        let commentCreationStyle: OWCommentCreationStyle = .floatingKeyboard(accessoryViewStrategy: accessoryViewStrategy)
-        let commentCreationSettings = OWCommentCreationSettings(style: commentCreationStyle)
-        // Inject the settings into the toolbar VM
-        toolbarVM.inputs.setCommentCreationSettings(commentCreationSettings)
-        let additionalSettings = OWAdditionalSettings(commentCreationSettings: commentCreationSettings)
-
         uiViewsLayer.commentCreation(postId: self.postId,
                                      article: article,
                                      commentCreationType: type,
-                                     additionalSettings: additionalSettings,
+                                     additionalSettings: OWAdditionalSettings(),
                                      callbacks: self.actionsCallbacks,
                                      completion: { [weak self] result in
 
