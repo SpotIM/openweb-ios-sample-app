@@ -324,6 +324,30 @@ private extension MockArticleFlowsVC {
             })
             .store(in: &cancellables)
 
+        // Adding full conversation vc
+        viewModel.outputs.showFullConversationVc
+            .sink { [weak self] fullConversationVc in
+                guard let self else { return }
+                self.articleView.removeFromSuperview()
+                self.articleScrollView.addSubview(self.articleView)
+                self.articleScrollView.addSubview(fullConversationVc.view)
+
+                self.addChild(fullConversationVc)
+
+                fullConversationVc.view.snp.makeConstraints { make in
+                    make.height.equalTo(500) // swiftlint:disable:this no_magic_numbers
+                    make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300) // swiftlint:disable:this no_magic_numbers
+                    make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide).inset(self.viewModel.outputs.preConversationHorizontalMargin)
+                }
+                fullConversationVc.didMove(toParent: self)
+
+                self.articleView.snp.makeConstraints { make in
+                    make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
+                    make.bottom.equalTo(fullConversationVc.view.snp.top).offset(-Metrics.verticalMargin)
+                }
+            }
+            .store(in: &cancellables)
+
         // Showing error if needed
         viewModel.outputs.showError
             .sink(receiveValue: { [weak self] message in
