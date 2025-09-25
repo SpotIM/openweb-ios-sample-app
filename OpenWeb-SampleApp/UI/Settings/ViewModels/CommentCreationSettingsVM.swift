@@ -12,18 +12,13 @@ import OpenWebSDK
 
 protocol CommentCreationSettingsViewModelingInputs {
     var customStyleModeSelectedIndex: CurrentValueSubject<Int, Never> { get }
-    var accessoryViewSelectedIndex: CurrentValueSubject<Int, Never> { get }
 }
 
 protocol CommentCreationSettingsViewModelingOutputs {
     var title: String { get }
     var styleModeTitle: String { get }
-    var accessoryViewTitle: String { get }
     var styleModeIndex: AnyPublisher<Int, Never> { get }
-    var accessoryViewIndex: AnyPublisher<Int, Never> { get }
     var styleModeSettings: [String] { get }
-    var accessoryViewSettings: [String] { get }
-    var hideAccessoryViewOptions: AnyPublisher<Bool, Never> { get }
 }
 
 protocol CommentCreationSettingsViewModeling {
@@ -38,38 +33,10 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 
     lazy var customStyleModeSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default).index)
 
-    lazy var accessoryViewSelectedIndex = CurrentValueSubject<Int, Never>({
-        let defaultStyle = userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
-        switch defaultStyle {
-        case .floatingKeyboard(let accessoryViewStrategy):
-            return accessoryViewStrategy.index
-        default:
-            return 0
-        }
-    }())
-
     private var userDefaultsProvider: UserDefaultsProviderProtocol
-
-    var accessoryViewIndex: AnyPublisher<Int, Never> {
-        return accessoryViewSelectedIndex
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
 
     var styleModeIndex: AnyPublisher<Int, Never> {
         return customStyleModeSelectedIndex
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
-    var hideAccessoryViewOptions: AnyPublisher<Bool, Never> {
-        return customStyleModeSelectedIndex
-            .map {
-                if case .floatingKeyboard = OWCommentCreationStyle.commentCreationStyle(fromIndex: $0) {
-                    return false
-                }
-                return true
-            }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
@@ -84,23 +51,12 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return NSLocalizedString("StyleModeTitle", comment: "")
     }()
 
-    lazy var accessoryViewTitle: String = {
-        return NSLocalizedString("AccessoryView", comment: "")
-    }()
-
     lazy var styleModeSettings: [String] = {
         let _regular = NSLocalizedString("Regular", comment: "")
         let _light = NSLocalizedString("Light", comment: "")
         let _floatingKeyboard = NSLocalizedString("FloatingKeyboard", comment: "")
 
         return [_regular, _light, _floatingKeyboard]
-    }()
-
-    lazy var accessoryViewSettings: [String] = {
-        let _none = NSLocalizedString("None", comment: "")
-        let _toolbar = NSLocalizedString("Toolbar", comment: "")
-
-        return [_none, _toolbar]
     }()
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
@@ -111,15 +67,10 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 
 private extension CommentCreationSettingsVM {
     func setupObservers() {
-        Publishers.CombineLatest(customStyleModeSelectedIndex, accessoryViewSelectedIndex)
+        customStyleModeSelectedIndex
             .dropFirst()
-            .map { styleIndex, accessoryViewIndex -> OWCommentCreationStyle in
-                var style = OWCommentCreationStyle.commentCreationStyle(fromIndex: styleIndex)
-                if case .floatingKeyboard = style {
-                    let accessoryViewStrategy = OWAccessoryViewStrategy(index: accessoryViewIndex)
-                    style = .floatingKeyboard(accessoryViewStrategy: accessoryViewStrategy)
-                }
-                return style
+            .map { styleIndex -> OWCommentCreationStyle in
+                return OWCommentCreationStyle.commentCreationStyle(fromIndex: styleIndex)
             }
             .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
             .store(in: &cancellables)
@@ -129,7 +80,6 @@ private extension CommentCreationSettingsVM {
 extension CommentCreationSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
         customStyleModeSelectedIndex.send(0)
-        accessoryViewSelectedIndex.send(0)
     }
 }
 
