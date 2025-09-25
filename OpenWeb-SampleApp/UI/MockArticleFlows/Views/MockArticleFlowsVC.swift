@@ -337,7 +337,7 @@ private extension MockArticleFlowsVC {
                 fullConversationVc.view.snp.makeConstraints { make in
                     make.height.equalTo(500) // swiftlint:disable:this no_magic_numbers
                     make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300) // swiftlint:disable:this no_magic_numbers
-                    make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide).inset(self.viewModel.outputs.preConversationHorizontalMargin)
+                    make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide)
                 }
                 fullConversationVc.didMove(toParent: self)
 
