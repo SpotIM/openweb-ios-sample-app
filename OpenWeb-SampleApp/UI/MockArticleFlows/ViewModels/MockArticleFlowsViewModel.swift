@@ -285,9 +285,22 @@ private extension MockArticleFlowsViewModel {
                 let article = self.commonCreatorService.mockArticle(for: manager.spotId)
 
                 if shouldUseAsyncAwaitCallingMethod() {
-                    // TODO
-//                    Task { @MainActor [weak self] in
-//                    }
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        do {
+                            let conversationViewController = try await flows.conversation(
+                                postId: postId,
+                                article: article,
+                                additionalSettings: additionalSettings,
+                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
+                            )
+                            self._showFullConversationVc.send(conversationViewController)
+                        } catch {
+                            let message = error.localizedDescription
+                            DLog("Calling flows.conversation error: \(error)")
+                            _showError.send(message)
+                        }
+                    }
                 } else {
                     flows.conversation(postId: postId,
                                        article: article,
