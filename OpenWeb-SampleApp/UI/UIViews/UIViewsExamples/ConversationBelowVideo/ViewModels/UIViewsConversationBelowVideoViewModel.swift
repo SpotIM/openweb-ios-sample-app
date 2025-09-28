@@ -34,6 +34,7 @@ protocol UIViewsConversationBelowVideoViewModelingOutputs {
     var removeCommentThread: AnyPublisher<Void, Never> { get }
     var removeWebPage: AnyPublisher<Void, Never> { get }
     var openAuthentication: AnyPublisher<(OWSpotId, OWBasicCompletion), Never> { get }
+    var videoExampleViewModel: VideoExampleViewModeling { get }
 }
 
 protocol UIViewsConversationBelowVideoViewModeling {
@@ -52,6 +53,8 @@ class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewM
     lazy var title: String = {
         return NSLocalizedString("VideoExample", comment: "")
     }()
+
+    let videoExampleViewModel: VideoExampleViewModeling = VideoExampleViewModel()
 
     private let _componentRetrievingError = CurrentValueSubject<OWError?, Never>(value: nil)
     var componentRetrievingError: AnyPublisher<OWError, Never> {
