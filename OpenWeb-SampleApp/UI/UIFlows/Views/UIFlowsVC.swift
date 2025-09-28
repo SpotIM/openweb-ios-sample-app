@@ -25,6 +25,7 @@ class UIFlowsVC: UIViewController {
         static let btnCommentThreadPushModeIdentifier = "btn_comment_thread_push_mode_id"
         static let btnCommentThreadPresentModeIdentifier = "btn_comment_thread_present_mode_id"
         static let btnMonetizationIdentifier = "btn_monetization_id"
+        static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -81,6 +82,10 @@ class UIFlowsVC: UIViewController {
         return NSLocalizedString("Monetization", comment: "").blueRoundedButton
     }()
 
+    private lazy var btnExamples: UIButton = {
+        return NSLocalizedString("Examples", comment: "").blueRoundedButton
+    }()
+
     init(viewModel: UIFlowsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -110,6 +115,7 @@ private extension UIFlowsVC {
         btnCommentThreadPushMode.accessibilityIdentifier = Metrics.btnCommentThreadPushModeIdentifier
         btnCommentThreadPresentMode.accessibilityIdentifier = Metrics.btnCommentThreadPresentModeIdentifier
         btnMonetization.accessibilityIdentifier = Metrics.btnMonetizationIdentifier
+        btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
     @objc func setupViews() {
@@ -198,7 +204,6 @@ private extension UIFlowsVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentThreadPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
 
         #if ADS
@@ -211,6 +216,20 @@ private extension UIFlowsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         #endif
+
+        // Adding examples button
+        scrollView.addSubview(btnExamples)
+        btnExamples.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            #if ADS
+            make.top.equalTo(btnMonetization.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            #else
+            make.top.equalTo(btnFullConversationView.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            #endif
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
+        }
     }
 
     func setupObservers() {
@@ -277,6 +296,10 @@ private extension UIFlowsVC {
 
         btnMonetization.tapPublisher
             .bind(to: viewModel.inputs.monetizationTapped)
+            .store(in: &cancellables)
+
+        btnExamples.tapPublisher
+            .bind(to: viewModel.inputs.examplesTapped)
             .store(in: &cancellables)
     }
 }
