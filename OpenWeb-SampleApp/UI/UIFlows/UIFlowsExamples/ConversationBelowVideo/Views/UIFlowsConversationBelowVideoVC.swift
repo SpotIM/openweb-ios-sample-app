@@ -61,7 +61,7 @@ private extension UIFlowsConversationBelowVideoVC {
         view.accessibilityIdentifier = Metrics.identifier
     }
 
-    @objc func setupViews() {
+    func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
 
@@ -70,17 +70,43 @@ private extension UIFlowsConversationBelowVideoVC {
         videoPlayerContainer.snp.makeConstraints { make in
             make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
         }
-
-        // Adding container below video
-        view.addSubview(containerBelowVideo)
-        containerBelowVideo.snp.makeConstraints { make in
-            make.top.equalTo(videoPlayerContainer.snp.bottom)
-            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
     }
 
-    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
+
+        viewModel.outputs.conversationRetrieved
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] conversationVc in
+                guard let self else { return }
+                self.view.addSubview(conversationVc.view)
+                self.addChild(conversationVc)
+
+                conversationVc.view.snp.makeConstraints { make in
+                    make.top.equalTo(self.videoPlayerContainer.snp.bottom)
+                    make.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                }
+                conversationVc.didMove(toParent: self)
+            })
+            .store(in: &cancellables)
+
+        viewModel.outputs.openAuthentication
+            .flatMap { [weak self] result -> AnyPublisher<OWBasicCompletion, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                let spotId = result.0
+                let completion = result.1
+                let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: spotId)
+                let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
+                self.navigationController?.present(authenticationVC, animated: true)
+
+                return authenticationVM.outputs.dismissed
+                    .prefix(1)
+                    .map { completion }
+                    .eraseToAnyPublisher()
+            }
+            .sink(receiveValue: { completion in
+                completion()
+            })
+            .store(in: &cancellables)
     }
 }
