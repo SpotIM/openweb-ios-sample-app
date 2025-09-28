@@ -14,10 +14,6 @@ import OpenWebSDK
 class UIFlowsConversationBelowVideoVC: UIViewController {
     private struct Metrics {
         static let identifier = "uiflows_examples_vc_id"
-        static let verticalMargin: CGFloat = 40
-        static let presentAnimationDuration: TimeInterval = 0.3
-        static let preConversationHorizontalMargin: CGFloat = 16.0
-        static let keyboardAnimationDuration: CGFloat = 0.25
     }
 
     private let viewModel: UIFlowsConversationBelowVideoViewModeling
@@ -25,12 +21,6 @@ class UIFlowsConversationBelowVideoVC: UIViewController {
 
     private lazy var videoPlayerContainer: UIView = {
         let view = VideoExampleView(viewModel: viewModel.outputs.videoExampleViewModel)
-        return view
-    }()
-
-    private lazy var containerBelowVideo: UIView = {
-        let view = UIView()
-            .backgroundColor(ColorPalette.shared.color(type: .background))
         return view
     }()
 

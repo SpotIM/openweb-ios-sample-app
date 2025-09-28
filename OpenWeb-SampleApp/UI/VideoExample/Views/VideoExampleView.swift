@@ -49,7 +49,7 @@ class VideoExampleView: UIView {
     private lazy var videoPlayerLayer: AVPlayerLayer = {
         let playerLayer = AVPlayerLayer(player: self.videoQueuePlayer)
         playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        // Looper should be initialize at some point - the following line basically do that
+        // Looper should be initialized at some point - the following line basically do that
         _ = self.videoPlayerLooper
         return playerLayer
     }()
