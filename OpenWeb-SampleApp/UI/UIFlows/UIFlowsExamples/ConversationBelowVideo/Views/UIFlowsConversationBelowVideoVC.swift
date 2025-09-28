@@ -75,6 +75,13 @@ private extension UIFlowsConversationBelowVideoVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
+        // Showing error if needed
+        viewModel.outputs.componentRetrievingError
+            .sink(receiveValue: { [weak self] err in
+                self?.showError(message: err.description)
+            })
+            .store(in: &cancellables)
+
         viewModel.outputs.conversationRetrieved
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] conversationVc in
@@ -108,5 +115,11 @@ private extension UIFlowsConversationBelowVideoVC {
                 completion()
             })
             .store(in: &cancellables)
+    }
+
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Error retrieving component", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
