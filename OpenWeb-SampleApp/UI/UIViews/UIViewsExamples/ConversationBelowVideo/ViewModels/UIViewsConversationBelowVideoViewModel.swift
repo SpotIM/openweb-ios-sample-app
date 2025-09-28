@@ -1,5 +1,5 @@
 //
-//  ConversationBelowVideoViewModel.swift
+//  UIViewsConversationBelowVideoViewModel.swift
 //  OpenWeb-Development
 //
 //  Created by Alon Haiut on 21/09/2023.
@@ -13,9 +13,9 @@ import OpenWebSDK
 import OpenWeb_SampleApp_Internal_Configs
 #endif
 
-protocol ConversationBelowVideoViewModelingInputs {}
+protocol UIViewsConversationBelowVideoViewModelingInputs {}
 
-protocol ConversationBelowVideoViewModelingOutputs {
+protocol UIViewsConversationBelowVideoViewModelingOutputs {
     var title: String { get }
     var componentRetrievingError: AnyPublisher<OWError, Never> { get }
     var preConversationRetrieved: AnyPublisher<UIView, Never> { get }
@@ -36,14 +36,14 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var openAuthentication: AnyPublisher<(OWSpotId, OWBasicCompletion), Never> { get }
 }
 
-protocol ConversationBelowVideoViewModeling {
-    var inputs: ConversationBelowVideoViewModelingInputs { get }
-    var outputs: ConversationBelowVideoViewModelingOutputs { get }
+protocol UIViewsConversationBelowVideoViewModeling {
+    var inputs: UIViewsConversationBelowVideoViewModelingInputs { get }
+    var outputs: UIViewsConversationBelowVideoViewModelingOutputs { get }
 }
 
-class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, ConversationBelowVideoViewModelingOutputs, ConversationBelowVideoViewModelingInputs {
-    var inputs: ConversationBelowVideoViewModelingInputs { return self }
-    var outputs: ConversationBelowVideoViewModelingOutputs { return self }
+class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewModeling, UIViewsConversationBelowVideoViewModelingOutputs, UIViewsConversationBelowVideoViewModelingInputs {
+    var inputs: UIViewsConversationBelowVideoViewModelingInputs { return self }
+    var outputs: UIViewsConversationBelowVideoViewModelingOutputs { return self }
 
     private let postId: OWPostId
     private let commonCreatorService: CommonCreatorServicing
@@ -268,7 +268,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     }
 }
 
-private extension ConversationBelowVideoViewModel {
+private extension UIViewsConversationBelowVideoViewModel {
     func initialSetup() {
         // Setup authentication flow callback
         let authenticationUI = OpenWeb.manager.ui.authenticationUI

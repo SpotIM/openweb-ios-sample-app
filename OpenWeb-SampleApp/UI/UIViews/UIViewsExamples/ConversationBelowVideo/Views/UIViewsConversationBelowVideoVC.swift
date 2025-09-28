@@ -1,5 +1,5 @@
 //
-//  ConversationBelowVideoVC.swift
+//  UIViewsConversationBelowVideoVC.swift
 //  OpenWeb-Development
 //
 //  Created by Alon Haiut on 21/09/2023.
@@ -14,7 +14,7 @@ import OpenWebSDK
 import AVFoundation
 import AVKit
 
-class ConversationBelowVideoVC: UIViewController {
+class UIViewsConversationBelowVideoVC: UIViewController {
 
     private struct Metrics {
         static let identifier = "uiviews_examples_vc_id"
@@ -29,7 +29,7 @@ class ConversationBelowVideoVC: UIViewController {
         static let videoLink2 = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
 
-    private let viewModel: ConversationBelowVideoViewModeling
+    private let viewModel: UIViewsConversationBelowVideoViewModeling
     private var cancellables = Set<AnyCancellable>()
 
     private var preConversation: UIView?
@@ -110,7 +110,7 @@ class ConversationBelowVideoVC: UIViewController {
         return view
     }()
 
-    init(viewModel: ConversationBelowVideoViewModeling) {
+    init(viewModel: UIViewsConversationBelowVideoViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -132,7 +132,7 @@ class ConversationBelowVideoVC: UIViewController {
     }
 }
 
-private extension ConversationBelowVideoVC {
+private extension UIViewsConversationBelowVideoVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         videoPlayerContainer.accessibilityIdentifier = Metrics.videoPlayerIdentifier

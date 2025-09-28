@@ -46,8 +46,8 @@ private extension ViewsExamplesCoordinator {
         viewModel.outputs.openConversationBelowVideo
             .sink(receiveValue: { [weak self] postId in
                 guard let self else { return }
-                let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
-                let conversationBelowVideoVC = ConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
+                let conversationBelowVideoVM = UIViewsConversationBelowVideoViewModel(postId: postId)
+                let conversationBelowVideoVC = UIViewsConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
                 self.router.push(conversationBelowVideoVC,
                                  animated: true,
                                  completion: nil)
