@@ -15,7 +15,6 @@ protocol CommonCreatorServicing {
     func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
     func mockArticle(for postId: String) -> OWArticleProtocol
-    func commentCreationFloatingBottomToolbar() -> (CommentCreationToolbarViewModeling, CommentCreationToolbar)
 }
 
 class CommonCreatorService: CommonCreatorServicing {
@@ -32,28 +31,14 @@ class CommonCreatorService: CommonCreatorServicing {
 
         // 2. Conversation related
         let conversationStyle = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-        let allowPullToRefresh = self.userDefaultsProvider.get(key: .allowPullToRefresh, defaultValue: true)
-        let conversationSettings = OWConversationSettings(style: conversationStyle, allowPullToRefresh: allowPullToRefresh)
+        let conversationSettings = OWConversationSettingsBuilder(style: conversationStyle).build()
 
         // 3. Comment creation related
-        var commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
-        // Inject toolbar if needed
-        var newToolbarVM: CommentCreationToolbarViewModeling?
-        if case OWCommentCreationStyle.floatingKeyboard(let accessoryViewStrategy) = commentCreationStyle,
-           case OWAccessoryViewStrategy.bottomToolbar = accessoryViewStrategy {
-            // Since we can't actually save the toolbar UIView in the memory, we will re-create it
-            let floatingBottomToolbarTuple = self.commentCreationFloatingBottomToolbar()
-            let newToolbar = floatingBottomToolbarTuple.1
-            newToolbarVM = floatingBottomToolbarTuple.0
-            let newAccessoryViewStrategy = OWAccessoryViewStrategy.bottomToolbar(toolbar: newToolbar)
-            commentCreationStyle = OWCommentCreationStyle.floatingKeyboard(accessoryViewStrategy: newAccessoryViewStrategy)
-        }
+        let commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
         let commentCreationSettings = OWCommentCreationSettingsBuilder(style: commentCreationStyle).build()
-        // Inject the settings into the toolbar VM if such exist
-        newToolbarVM?.inputs.setCommentCreationSettings(commentCreationSettings)
 
         // 4. Comment thread related
-        let commentThreadSettings = OWCommentThreadSettings(allowPullToRefresh: allowPullToRefresh)
+        let commentThreadSettings = OWCommentThreadSettingsBuilder().build()
 
         // 5. Final additional settings
         let additionalSettings = OWAdditionalSettingsBuilder(
@@ -108,20 +93,6 @@ class CommonCreatorService: CommonCreatorServicing {
             articleInformationStrategy: persistenceArticleInformationStrategy,
             additionalSettings: settings)
         return article
-    }
-
-    func commentCreationFloatingBottomToolbar() -> (CommentCreationToolbarViewModeling, CommentCreationToolbar) {
-        let toolbarElements = [
-            ToolbarElementModel(emoji: "😍", accessibility: "heart_eyes", action: .append(text: "😍")),
-            ToolbarElementModel(emoji: "🔥", accessibility: "fire", action: .append(text: "🔥")),
-            ToolbarElementModel(emoji: "❤️", accessibility: "heart", action: .append(text: "❤️")),
-            ToolbarElementModel(emoji: "🚀", accessibility: "rocket", action: .append(text: "🚀")),
-            ToolbarElementModel(emoji: "🤩", accessibility: "starry_eyes", action: .append(text: "🤩")),
-            ToolbarElementModel(emoji: "␡", accessibility: "delete", action: .removeAll)
-        ]
-        let viewModel: CommentCreationToolbarViewModeling = CommentCreationToolbarViewModel(toolbarElments: toolbarElements)
-        let toolbar = CommentCreationToolbar(viewModel: viewModel)
-        return (viewModel, toolbar)
     }
 
     func getSectionFromPreset(for spotId: String) -> String? {

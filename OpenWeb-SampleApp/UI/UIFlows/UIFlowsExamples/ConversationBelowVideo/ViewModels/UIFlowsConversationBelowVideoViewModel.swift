@@ -127,7 +127,7 @@ private extension UIFlowsConversationBelowVideoViewModel {
 
         let additionalSettings = OWAdditionalSettings(
             fullConversationSettings: OWConversationSettings(style: .compact),
-            commentCreationSettings: OWCommentCreationSettings(style: .floatingKeyboard(accessoryViewStrategy: .none))
+            commentCreationSettings: OWCommentCreationSettings(style: .floatingKeyboard)
         )
 
         uiFlowsLayer.conversation(postId: postId,
