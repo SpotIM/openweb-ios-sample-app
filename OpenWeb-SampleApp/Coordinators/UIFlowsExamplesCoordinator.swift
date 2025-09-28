@@ -45,12 +45,11 @@ private extension UIFlowsExamplesCoordinator {
         viewModel.outputs.openConversationBelowVideo
             .sink(receiveValue: { [weak self] postId in
                 guard let self else { return }
-                // TODO: Implement for Flows
-//                let conversationBelowVideoVM = UIViewsConversationBelowVideoViewModel(postId: postId)
-//                let conversationBelowVideoVC = UIViewsConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
-//                self.router.push(conversationBelowVideoVC,
-//                                 animated: true,
-//                                 completion: nil)
+                let conversationBelowVideoVM = UIFlowsConversationBelowVideoViewModel(postId: postId)
+                let conversationBelowVideoVC = UIFlowsConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
+                self.router.push(conversationBelowVideoVC,
+                                 animated: true,
+                                 completion: nil)
             })
             .store(in: &cancellables)
     }
