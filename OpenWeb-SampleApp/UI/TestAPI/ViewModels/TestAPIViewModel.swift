@@ -160,8 +160,9 @@ class TestAPIViewModel: TestAPIViewModeling,
 
     var configurationLabelString: AnyPublisher<String, Never> {
         return viewWillAppear
-            .flatMap {
-                self.configurationStringSubject
+            .flatMap { [weak self] in
+                guard let self else { return Empty<String?, Never>().eraseToAnyPublisher() }
+                return self.configurationStringSubject.eraseToAnyPublisher()
             }
             .map { configurationString in
                 guard let configurationString else {
