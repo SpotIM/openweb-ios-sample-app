@@ -97,7 +97,7 @@ class CommentPreviewTableView: UITableView, UITableViewDataSource {
         super.init(frame: .zero, style: .plain)
         self.register(OWCommentCell.self, forCellReuseIdentifier: cellIdentifier)
         self.separatorStyle = .none
-        self.backgroundColor = OWColorPalette.shared.dynamicColor(type: .backgroundColor2)
+        self.backgroundColor = .owColor(.backgroundColor2)
         self.estimatedRowHeight = 200
         self.rowHeight = UITableView.automaticDimension
         self.dataSource = self
