@@ -358,16 +358,19 @@ private extension AuthenticationPlaygroundVC {
 
         viewModel.outputs.genericSSOAuthenticationStatus
             .map { $0.symbol }
+            .receive(on: DispatchQueue.main)
             .assign(to: \.text, on: lblGenericSSOStatusSymbol)
             .store(in: &cancellables)
 
         viewModel.outputs.thirdPartySSOAuthenticationStatus
             .map { $0.symbol }
+            .receive(on: DispatchQueue.main)
             .assign(to: \.text, on: lblThirdPartySSOStatusSymbol)
             .store(in: &cancellables)
 
         viewModel.outputs.logoutAuthenticationStatus
             .map { $0.symbol }
+            .receive(on: DispatchQueue.main)
             .assign(to: \.text, on: lblLogoutStatusSymbol)
             .store(in: &cancellables)
 
