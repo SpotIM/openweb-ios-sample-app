@@ -4,7 +4,7 @@ PODS:
   - CombineDataSources (0.2.5)
   - CombineExt (1.8.0)
   - OpenWebCommon (1.1.0)
-  - OpenWebSDK (2.10.1):
+  - OpenWebSDK (2.10.2):
     - OpenWebCommon (~> 1.1.0)
     - RxCocoa (~> 6.9.0)
     - RxRelay (~> 6.9.0)
@@ -22,7 +22,7 @@ DEPENDENCIES:
   - CombineCocoa (= 0.4.1)
   - CombineDataSources (= 0.2.5)
   - CombineExt (= 1.8.0)
-  - OpenWebSDK (= 2.10.1)
+  - OpenWebSDK (= 2.10.2)
   - SnapKit (~> 5.7.1)
 
 SPEC REPOS:
@@ -44,12 +44,12 @@ SPEC CHECKSUMS:
   CombineDataSources: dcbc3b06a038ffdf620b3b4533d3ecaf76ca6a2e
   CombineExt: c4daa97ef75754d8ef319bd79edeef82652f3eea
   OpenWebCommon: 8df2731b37238173eae8223923e7e6acc4a884a0
-  OpenWebSDK: 19064c4f87fb36ec124357629e879ce6dae4a2a8
+  OpenWebSDK: 59a91366d5cd39734de335a4896e671225397365
   RxCocoa: ac16414696ae706516be3e1ab00fcce5bdc9be8a
   RxRelay: 6b0c930e5cef57d5fe2032571e5e65b78e3cbdb1
   RxSwift: 31649ace6aceeb422e16ff71c60804f9c3281ed9
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
-PODFILE CHECKSUM: a68ea6e4a5a2fd93406f48d058f41d40e550722a
+PODFILE CHECKSUM: d78f72d58eb0455ce9f4da400464fbfaca11c6bb
 
 COCOAPODS: 1.16.2
