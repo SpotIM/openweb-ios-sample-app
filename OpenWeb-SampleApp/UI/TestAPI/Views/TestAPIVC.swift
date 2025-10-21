@@ -42,7 +42,6 @@ class TestAPIVC: UIViewController {
         static let animatePickerDuration: CGFloat = 0.6
         static let animatePickerDamping: CGFloat = 0.5
         static let animatePickerVelocity: CGFloat = 0.5
-        static let authBarItemMargin: CGFloat = 65
     }
 
     private let viewModel: TestAPIViewModeling
@@ -55,21 +54,9 @@ class TestAPIVC: UIViewController {
         return scrollView
     }()
 
-    private lazy var settingsBarItem: UIBarButtonItem = {
-        return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
-                               style: .plain,
-                               target: nil,
-                               action: nil)
-    }()
+    private lazy var settingsButton = UIButton(imageName: "settingsIcon")
 
-    private lazy var authBarItem: UIBarButtonItem = {
-        let authBarItem = UIBarButtonItem(image: UIImage(named: "authenticationIcon"),
-                                   style: .plain,
-                                   target: nil,
-                                   action: nil)
-        authBarItem.imageInsets = UIEdgeInsets(top: 0, left: Metrics.authBarItemMargin, bottom: 0, right: 0)
-        return authBarItem
-    }()
+    private lazy var authButton = UIButton(imageName: "authenticationIcon")
 
     private lazy var conversationPresetSelectionView: UIView = {
         let spotPresetSelection = UIView()
@@ -182,7 +169,8 @@ class TestAPIVC: UIViewController {
         super.viewDidLoad()
         setupViews()
         applyAccessibility()
-        navigationItem.rightBarButtonItems = [settingsBarItem, authBarItem]
+        navigationItem.rightBarButtonItems = [settingsButton, authButton]
+            .map { UIBarButtonItem(customView: $0) }
         setupObservers()
     }
 }
@@ -190,8 +178,8 @@ class TestAPIVC: UIViewController {
 private extension TestAPIVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
-        settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
-        authBarItem.accessibilityIdentifier = Metrics.authBarItemIdentifier
+        settingsButton.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
+        authButton.accessibilityIdentifier = Metrics.authBarItemIdentifier
         conversationPresetSelectionView.accessibilityIdentifier = Metrics.conversationPresetSelectionIdentifier
         presetPicker.accessibilityIdentifier = Metrics.presetPickerIdentifier
         toolbarPicker.accessibilityIdentifier = Metrics.toolbarPickerIdentifier
@@ -376,11 +364,11 @@ private extension TestAPIVC {
             .bind(to: viewModel.inputs.automationTapped)
             .store(in: &cancellables)
 
-        settingsBarItem.tapPublisher
+        settingsButton.tapPublisher
             .bind(to: viewModel.inputs.settingsTapped)
             .store(in: &cancellables)
 
-        authBarItem.tapPublisher
+        authButton.tapPublisher
             .bind(to: viewModel.inputs.authenticationTapped)
             .store(in: &cancellables)
 
@@ -452,5 +440,13 @@ private extension TestAPIVC {
             }
             self.view.layoutIfNeeded()
         }
+    }
+}
+
+extension UIButton {
+    convenience init(imageName: String) {
+        self.init(type: .system)
+        setImage(UIImage(named: imageName), for: .normal)
+        imageView?.contentMode = .scaleAspectFit
     }
 }
