@@ -10,12 +10,11 @@ import UIKit
 import Combine
 import CombineCocoa
 import SnapKit
-import OpenWebSDK
 
 class UIFlowsVC: UIViewController {
 
     private struct Metrics {
-        static let identifier = "uiviews_vc_id"
+        static let identifier = "uiflows_vc_id"
         static let btnPreConversationPushModeIdentifier = "btn_pre_conversation_push_mode_id"
         static let btnPreConversationPresentModeIdentifier = "btn_pre_conversation_present_mode_id"
         static let btnFullConversationPushModeIdentifier = "btn_full_conversation_push_mode_id"
@@ -74,16 +73,8 @@ class UIFlowsVC: UIViewController {
         return NSLocalizedString("CommentThreadPresentMode", comment: "").blueRoundedButton
     }()
 
-    private lazy var btnFullConversationView: UIButton = {
-        return NSLocalizedString("FullConversationView", comment: "").blueRoundedButton
-    }()
-
     private lazy var btnMonetization: UIButton = {
         return NSLocalizedString("Monetization", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnExamples: UIButton = {
-        return NSLocalizedString("Examples", comment: "").blueRoundedButton
     }()
 
     init(viewModel: UIFlowsViewModeling) {
@@ -115,7 +106,6 @@ private extension UIFlowsVC {
         btnCommentThreadPushMode.accessibilityIdentifier = Metrics.btnCommentThreadPushModeIdentifier
         btnCommentThreadPresentMode.accessibilityIdentifier = Metrics.btnCommentThreadPresentModeIdentifier
         btnMonetization.accessibilityIdentifier = Metrics.btnMonetizationIdentifier
-        btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
     @objc func setupViews() {
@@ -198,38 +188,17 @@ private extension UIFlowsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
-        scrollView.addSubview(btnFullConversationView)
-        btnFullConversationView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnCommentThreadPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-        }
-
         #if ADS
         // Adding monetization button
         scrollView.addSubview(btnMonetization)
         btnMonetization.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnFullConversationView.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-        }
-        #endif
-
-        // Adding examples button
-        scrollView.addSubview(btnExamples)
-        btnExamples.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.buttonHeight)
-            #if ADS
-            make.top.equalTo(btnMonetization.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            #else
-            make.top.equalTo(btnFullConversationView.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            #endif
+            make.top.equalTo(btnCommentThreadPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
+        #endif
     }
 
     func setupObservers() {
@@ -264,10 +233,6 @@ private extension UIFlowsVC {
             .bind(to: viewModel.inputs.fullConversationTapped)
             .store(in: &cancellables)
 
-        btnFullConversationView.tapPublisher
-            .bind(to: viewModel.inputs.fullConversationViewTapped)
-            .store(in: &cancellables)
-
         btnCommentCreationPushMode.tapPublisher
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.commentCreationTapped)
@@ -296,10 +261,6 @@ private extension UIFlowsVC {
 
         btnMonetization.tapPublisher
             .bind(to: viewModel.inputs.monetizationTapped)
-            .store(in: &cancellables)
-
-        btnExamples.tapPublisher
-            .bind(to: viewModel.inputs.examplesTapped)
             .store(in: &cancellables)
     }
 }

@@ -45,6 +45,7 @@
 "ConversationCounter" = "Conversation Counter";
 "UIFlows" = "UI Flows";
 "UIViews" = "UI Views";
+"UIFlowsPartialScreen" = "UI Flows - Partial Screen";
 "Miscellaneous" = "Miscellaneous";
 "MockArticle" = "Mock Article";
 "MockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";

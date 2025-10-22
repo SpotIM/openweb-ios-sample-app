@@ -1,0 +1,278 @@
+//
+//  MockArticleFlowsPartialScreenViewModel.swift
+//  OpenWeb-SampleApp
+//
+//  Created by Alon Shprung on 22/10/2025.
+//
+
+import Foundation
+import UIKit
+import Combine
+import OpenWebSDK
+#if !PUBLIC_DEMO_APP
+import OpenWeb_SampleApp_Internal_Configs
+#endif
+
+protocol MockArticleFlowsPartialScreenViewModelingInputs {
+    func setPresentationalVC(_ viewController: UIViewController)
+}
+
+protocol MockArticleFlowsPartialScreenViewModelingOutputs {
+    var title: String { get }
+    var showFullConversation: AnyPublisher<UIViewController, Never> { get }
+    var showPreConversation: AnyPublisher<UIView, Never> { get }
+    var articleImageURL: AnyPublisher<URL, Never> { get }
+    var showError: AnyPublisher<String, Never> { get }
+    var preConversationHorizontalMargin: CGFloat { get }
+    var loggerViewModel: UILoggerViewModeling { get }
+    var floatingViewViewModel: OWFloatingViewModeling { get }
+    var loggerEnabled: AnyPublisher<Bool, Never> { get }
+}
+
+protocol MockArticleFlowsPartialScreenViewModeling {
+    var inputs: MockArticleFlowsPartialScreenViewModelingInputs { get }
+    var outputs: MockArticleFlowsPartialScreenViewModelingOutputs { get }
+}
+
+class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewModeling, MockArticleFlowsPartialScreenViewModelingInputs, MockArticleFlowsPartialScreenViewModelingOutputs {
+    var inputs: MockArticleFlowsPartialScreenViewModelingInputs { return self }
+    var outputs: MockArticleFlowsPartialScreenViewModelingOutputs { return self }
+
+    lazy var loggerViewModel: UILoggerViewModeling = {
+        return UILoggerViewModel(title: "Flows Logger")
+    }()
+
+    lazy var floatingViewViewModel: OWFloatingViewModeling = {
+        return OWFloatingViewModel()
+    }()
+
+    lazy var loggerEnabled: AnyPublisher<Bool, Never> = {
+        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
+    }()
+
+    private struct Metrics {
+        static let preConversationCompactHorizontalMargin: CGFloat = 16.0
+    }
+
+    private var cancellables = Set<AnyCancellable>()
+
+    private let imageProviderAPI: ImageProviding
+    private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
+
+    private weak var presentationalVC: UIViewController?
+
+    private let _articleImageURL = CurrentValueSubject<URL?, Never>(value: nil)
+    var articleImageURL: AnyPublisher<URL, Never> {
+        return _articleImageURL
+            .unwrap()
+            .eraseToAnyPublisher()
+    }
+
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
+    private let commonCreatorService: CommonCreatorServicing
+
+    private let _actionSettings = CurrentValueSubject<SDKUIFlowPartialScreenActionSettings?, Never>(value: nil)
+    private var actionSettings: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> {
+        return _actionSettings
+            .unwrap()
+            .eraseToAnyPublisher()
+    }
+
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
+         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+         imageProviderAPI: ImageProviding = ImageProvider(),
+         actionSettings: SDKUIFlowPartialScreenActionSettings) {
+        self.imageProviderAPI = imageProviderAPI
+        self.silentSSOAuthentication = silentSSOAuthentication
+        self.commonCreatorService = commonCreatorService
+        self.userDefaultsProvider = userDefaultsProvider
+        _actionSettings.send(actionSettings)
+        setupBICallaback()
+        setupObservers()
+    }
+
+    private let _showError = PassthroughSubject<String, Never>()
+    var showError: AnyPublisher<String, Never> {
+        return _showError
+            .eraseToAnyPublisher()
+    }
+
+    private let _showPreConversation = PassthroughSubject<UIView, Never>()
+    var showPreConversation: AnyPublisher<UIView, Never> {
+        return _showPreConversation
+            .eraseToAnyPublisher()
+    }
+
+    private let _showFullConversation = PassthroughSubject<UIViewController, Never>()
+    var showFullConversation: AnyPublisher<UIViewController, Never> {
+        return _showFullConversation
+            .eraseToAnyPublisher()
+    }
+
+    var preConversationHorizontalMargin: CGFloat {
+        let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
+        let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
+        return margin
+    }
+
+    lazy var title: String = {
+        return NSLocalizedString("MockArticle", comment: "")
+    }()
+
+    func setPresentationalVC(_ viewController: UIViewController) {
+        presentationalVC = viewController
+    }
+}
+
+private extension MockArticleFlowsPartialScreenViewModel {
+    // swiftlint:disable function_body_length
+    func setupObservers() {
+        let articleURL = imageProviderAPI.randomImageUrl()
+        _articleImageURL.send(articleURL)
+
+        // Full conversation
+        actionSettings
+            .map { settings -> String? in
+                if case .fullConversation = settings.actionType {
+                    return settings.postId
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
+            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (String, Bool) in
+                return (result, loggerEnabled)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] result in
+                guard let self else { return }
+                let postId = result.0
+                let loggerEnabled = result.1
+
+                let manager = OpenWeb.manager
+                let flows = manager.ui.flows
+
+                let additionalSettings = self.commonCreatorService.additionalSettings()
+                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+
+                if shouldUseAsyncAwaitCallingMethod() {
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        do {
+                            let conversationViewController = try await flows.conversation(
+                                postId: postId,
+                                article: article,
+                                additionalSettings: additionalSettings,
+                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
+                            )
+                            self._showFullConversation.send(conversationViewController)
+                        } catch {
+                            let message = error.localizedDescription
+                            DLog("Calling flows.conversation error: \(error)")
+                            _showError.send(message)
+                        }
+                    }
+                } else {
+                    flows.conversation(postId: postId,
+                                       article: article,
+                                       additionalSettings: additionalSettings,
+                                       callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                                       completion: { [weak self] result in
+                        guard let self else { return }
+                        switch result {
+                        case .success(let conversationViewController):
+                            self._showFullConversation.send(conversationViewController)
+                        case .failure(let error):
+                            let message = error.description
+                            DLog("Calling flows.conversation error: \(error)")
+                            self._showError.send(message)
+                        }
+                    })
+                }
+            })
+            .store(in: &cancellables)
+
+        // Providing `displayAuthenticationFlow` callback
+        let authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] _, completion in
+            guard let self else { return }
+            let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: OpenWeb.manager.spotId)
+            let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
+
+            // Here we intentionally perform direct `navigation controller` methods, instead of doing so in the coordinators layer, to demonstrate how one would interact with OpenWeb SDK in a simple way
+            self.presentationalVC?.present(authenticationVC, animated: true)
+
+            authenticationVM.outputs.dismissed
+                .prefix(1)
+                .sink(receiveValue: { [completion] _ in
+                    completion()
+                })
+                .store(in: &cancellables)
+        }
+
+        let authenticationUI = OpenWeb.manager.ui.authenticationUI
+        authenticationUI.displayAuthenticationFlow = authenticationFlowCallback
+
+        // Providing `renewSSO` callback
+        let renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
+            guard let self else { return }
+            #if !PUBLIC_DEMO_APP
+            let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
+            if OpenWeb.manager.spotId == demoSpotId,
+               let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
+                self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+                    .prefix(1)
+                    .sink(receiveCompletion: { result in
+                        if case .failure(let error) = result {
+                            DLog("Silent SSO failed with error: \(error)")
+                            completion()
+                        }
+                    }, receiveValue: { userId in
+                        DLog("Silent SSO completed successfully with userId: \(userId)")
+                        completion()
+                    })
+                    .store(in: &cancellables)
+            } else {
+                DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
+                completion()
+            }
+            #else
+            DLog("`renewSSOCallback` triggered")
+            #endif
+        }
+
+        let authentication = OpenWeb.manager.authentication
+        authentication.renewSSO = renewSSOCallback
+    }
+
+    func setupBICallaback() {
+        let analytics: OWAnalytics = OpenWeb.manager.analytics
+
+        let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
+            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)\n"
+            self?.loggerViewModel.inputs.log(text: log)
+        }
+
+        analytics.addBICallback(BIClosure)
+    }
+
+    func shouldUseAsyncAwaitCallingMethod() -> Bool {
+        return SampleAppCallingMethod.asyncAwait == userDefaultsProvider.get(key: .callingMethodOption, defaultValue: .default)
+    }
+
+    func loggerActionCallbacks(loggerEnabled: Bool) -> OWFlowActionsCallbacks? {
+        guard loggerEnabled else { return nil }
+        return { [weak self] callbackType, sourceType, postId in
+            guard let self else { return }
+            switch callbackType {
+            case .adSizeChanged: break
+            case let .adEvent(event, eventData):
+                let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            default:
+                let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+        }
+    }
+}

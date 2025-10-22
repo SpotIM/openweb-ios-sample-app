@@ -89,6 +89,18 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             }
             .eraseToAnyPublisher()
 
+        let flowsPartialScreenCoordinator = testAPIVM.outputs.openUIFlowsPartialScreen
+            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
+                let coordinator = UIFlowsPartialScreenCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> AnyPublisher<Void, Never> in
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+
         let viewsCoordinator = testAPIVM.outputs.openUIViews
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
@@ -158,6 +170,7 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             authenticationPlaygroundCoordinator,
             settingsCoordinator,
             flowsCoordinator,
+            flowsPartialScreenCoordinator,
             viewsCoordinator,
             miscellaneousCoordinator,
         ]

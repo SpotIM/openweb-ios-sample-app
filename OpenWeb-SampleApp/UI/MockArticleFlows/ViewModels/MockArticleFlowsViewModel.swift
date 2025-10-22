@@ -27,7 +27,6 @@ protocol MockArticleFlowsViewModelingOutputs {
     var showFullConversationButton: AnyPublisher<PresentationalModeCompact, Never> { get }
     var showCommentCreationButton: AnyPublisher<PresentationalModeCompact, Never> { get }
     var showPreConversation: AnyPublisher<UIView, Never> { get }
-    var showFullConversationVc: AnyPublisher<UIViewController, Never> { get }
     var showCommentThreadButton: AnyPublisher<PresentationalModeCompact, Never> { get }
     var articleImageURL: AnyPublisher<URL, Never> { get }
     var showError: AnyPublisher<String, Never> { get }
@@ -110,12 +109,6 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
     private let _showPreConversation = PassthroughSubject<UIView, Never>()
     var showPreConversation: AnyPublisher<UIView, Never> {
         return _showPreConversation
-            .eraseToAnyPublisher()
-    }
-
-    private let _showFullConversationVc = PassthroughSubject<UIViewController, Never>()
-    var showFullConversationVc: AnyPublisher<UIViewController, Never> {
-        return _showFullConversationVc
             .eraseToAnyPublisher()
     }
 
@@ -250,70 +243,6 @@ private extension MockArticleFlowsViewModel {
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.preConversation error: \(error)")
-                            self._showError.send(message)
-                        }
-                    })
-                }
-            })
-            .store(in: &cancellables)
-
-        // Full conversation view
-        actionSettings
-            .map { settings -> String? in
-                if case .fullConversationView = settings.actionType {
-                    return settings.postId
-                } else {
-                    return nil
-                }
-            }
-            .unwrap()
-            // Small delay so the navigation controller will be set from the view controller
-            .delay(for: .milliseconds(50), scheduler: DispatchQueue.global(qos: .userInteractive)) // swiftlint:disable:this no_magic_numbers
-            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (String, Bool) in
-                return (result, loggerEnabled)
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] result in
-                guard let self else { return }
-                let postId = result.0
-                let loggerEnabled = result.1
-
-                let manager = OpenWeb.manager
-                let flows = manager.ui.flows
-
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
-
-                if shouldUseAsyncAwaitCallingMethod() {
-                    Task { @MainActor [weak self] in
-                        guard let self else { return }
-                        do {
-                            let conversationViewController = try await flows.conversation(
-                                postId: postId,
-                                article: article,
-                                additionalSettings: additionalSettings,
-                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
-                            )
-                            self._showFullConversationVc.send(conversationViewController)
-                        } catch {
-                            let message = error.localizedDescription
-                            DLog("Calling flows.conversation error: \(error)")
-                            _showError.send(message)
-                        }
-                    }
-                } else {
-                    flows.conversation(postId: postId,
-                                       article: article,
-                                       additionalSettings: additionalSettings,
-                                       callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                       completion: { [weak self] result in
-                        guard let self else { return }
-                        switch result {
-                        case .success(let conversationViewController):
-                            self._showFullConversationVc.send(conversationViewController)
-                        case .failure(let error):
-                            let message = error.description
-                            DLog("Calling flows.conversation error: \(error)")
                             self._showError.send(message)
                         }
                     })

@@ -1,15 +1,14 @@
 //
-//  UIFlowsCoordinator.swift
+//  UIFlowsPartialScreenCoordinator.swift
 //  OpenWeb-SampleApp
 //
-//  Created by Alon Haiut on 11/08/2024.
-//  Copyright © 2024 OpenWeb. All rights reserved.
+//  Created by Alon Shprung on 22/10/2025.
 //
 
 import Foundation
 import Combine
 
-class UIFlowsCoordinator: BaseCoordinator<Void> {
+class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
 
     private let router: Routering
 
@@ -25,8 +24,8 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
             fatalError("UIFlowsCoordinator requires coordinatorData from `CoordinatorData.conversationDataModel` type")
         }
 
-        let flowsVM: UIFlowsViewModeling = UIFlowsViewModel(dataModel: conversationDataModel)
-        let flowsVC = UIFlowsVC(viewModel: flowsVM)
+        let flowsVM: UIFlowsPartialScreenViewModeling = UIFlowsPartialScreenViewModel(dataModel: conversationDataModel)
+        let flowsVC = UIFlowsPartialScreenVC(viewModel: flowsVM)
 
         let vcPopped = PassthroughSubject<Void, Never>()
 
@@ -37,8 +36,8 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
         let mockArticleFlowCoordinator = flowsVM.outputs.openMockArticleScreen
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
-                let coordinator = MockArticleFlowCoordinator(router: self.router)
+                let coordinatorData = CoordinatorData.actionsFlowPartialScreenSettings(data: dataModel)
+                let coordinator = MockArticleFlowPartialScreenCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
@@ -56,21 +55,9 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
-        let monetizationCoordinator = flowsVM.outputs.openMonetizationScreen
-            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
-                guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = MonetizationFlowsCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
-            }
-            .flatMap { _ -> AnyPublisher<Void, Never> in
-                return Empty(completeImmediately: false).eraseToAnyPublisher()
-            }
-
-        return Publishers.Merge4(vcPopped,
+        return Publishers.Merge3(vcPopped,
                                  mockArticleFlowCoordinator,
-                                 viewsExamplesCoordinator,
-                                 monetizationCoordinator)
+                                 viewsExamplesCoordinator)
         .eraseToAnyPublisher()
     }
 }

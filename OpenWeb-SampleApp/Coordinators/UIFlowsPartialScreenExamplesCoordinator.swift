@@ -1,5 +1,5 @@
 //
-//  UIFlowsExamplesCoordinator.swift
+//  UIFlowsPartialScreenExamplesCoordinator.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Alon Shprung on 28/09/2025.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class UIFlowsExamplesCoordinator: BaseCoordinator<Void> {
+class UIFlowsPartialScreenExamplesCoordinator: BaseCoordinator<Void> {
 
     private let router: Routering
 
@@ -40,7 +40,7 @@ class UIFlowsExamplesCoordinator: BaseCoordinator<Void> {
     }
 }
 
-private extension UIFlowsExamplesCoordinator {
+private extension UIFlowsPartialScreenExamplesCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: UIFlowsExamplesViewModeling) {
         viewModel.outputs.openConversationBelowVideo
             .sink(receiveValue: { [weak self] postId in

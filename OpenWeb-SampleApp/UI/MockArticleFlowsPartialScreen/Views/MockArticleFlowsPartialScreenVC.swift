@@ -1,9 +1,8 @@
 //
-//  MockArticleFlowsVC.swift
-//  OpenWeb-Development
+//  MockArticleFlowsPartialScreenVC.swift
+//  OpenWeb-SampleApp
 //
-//  Created by Alon Haiut on 04/09/2022.
-//  Copyright © 2022 OpenWeb. All rights reserved.
+//  Created by Alon Shprung on 22/10/2025.
 //
 
 import UIKit
@@ -11,7 +10,7 @@ import Combine
 import CombineCocoa
 import SnapKit
 
-class MockArticleFlowsVC: UIViewController {
+class MockArticleFlowsPartialScreenVC: UIViewController {
     private struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
@@ -21,11 +20,8 @@ class MockArticleFlowsVC: UIViewController {
         static let articleImageRatio: CGFloat = 2 / 3
         // swiftlint:enable no_magic_numbers
         static let articelImageViewCornerRadius: CGFloat = 10
-        static let buttonCorners: CGFloat = 16
-        static let buttonPadding: CGFloat = 10
-        static let buttonHeight: CGFloat = 50
-        static let identifier = "mock_article_flows_vc_id"
-        static let viewIdentifier = "mock_article_flows_view_id"
+        static let identifier = "mock_article_flows_partial_screen_vc_id"
+        static let viewIdentifier = "mock_article_flows_partial_screen_view_id"
         static let loggerViewWidth: CGFloat = 300
         static let loggerViewHeight: CGFloat = 250
         static let loggerInitialTopPadding: CGFloat = 50
@@ -35,7 +31,7 @@ class MockArticleFlowsVC: UIViewController {
         floatingLoggerView.removeFromSuperview()
     }
 
-    private let viewModel: MockArticleFlowsViewModeling
+    private let viewModel: MockArticleFlowsPartialScreenViewModeling
     private var cancellables = Set<AnyCancellable>()
 
     private lazy var loggerView: UILoggerView = {
@@ -103,34 +99,7 @@ class MockArticleFlowsVC: UIViewController {
             .textColor(ColorPalette.shared.color(type: .text))
     }()
 
-    private lazy var btnFullConversation: UIButton = {
-        return UIButton()
-            .backgroundColor(ColorPalette.shared.color(type: .blue))
-            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-
-    private lazy var btnCommentCreation: UIButton = {
-        return UIButton()
-            .backgroundColor(ColorPalette.shared.color(type: .blue))
-            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-
-    private lazy var btnCommentThread: UIButton = {
-        return UIButton()
-            .backgroundColor(ColorPalette.shared.color(type: .blue))
-            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-
-    init(viewModel: MockArticleFlowsViewModeling) {
+    init(viewModel: MockArticleFlowsPartialScreenViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -150,13 +119,14 @@ class MockArticleFlowsVC: UIViewController {
         applyAccessibility()
         setupObservers()
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         applyLargeTitlesIfNeeded()
     }
 }
 
-private extension MockArticleFlowsVC {
+private extension MockArticleFlowsPartialScreenVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         articleView.accessibilityIdentifier = Metrics.viewIdentifier
@@ -189,28 +159,13 @@ private extension MockArticleFlowsVC {
         #endif
     }
 
-    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
 
-        viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
-
         // Setting those in the VM for integration with the SDK
-        viewModel.inputs.setNavigationController(self.navigationController)
         viewModel.inputs.setPresentationalVC(self)
 
-        // Binding button
-        btnFullConversation.tapPublisher
-            .bind(to: viewModel.inputs.fullConversationButtonTapped)
-            .store(in: &cancellables)
-
-        btnCommentCreation.tapPublisher
-            .bind(to: viewModel.inputs.commentCreationButtonTapped)
-            .store(in: &cancellables)
-
-        btnCommentThread.tapPublisher
-            .bind(to: viewModel.inputs.commentThreadButtonTapped)
-            .store(in: &cancellables)
+        viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
 
         // Setup article image
         viewModel.outputs.articleImageURL
@@ -219,109 +174,28 @@ private extension MockArticleFlowsVC {
             })
             .store(in: &cancellables)
 
-        // Adding full conversation button if needed
-        let btnFullConversationObservable = viewModel.outputs.showFullConversationButton
-            .prefix(1)
-            .handleEvents(receiveOutput: { [weak self] mode in
+        // Adding full conversation
+        viewModel.outputs.showFullConversation
+            .sink { [weak self] fullConversationVc in
                 guard let self else { return }
-                let btnTitle: String
-                switch mode {
-                case .push:
-                    btnTitle = NSLocalizedString("FullConversationPushMode", comment: "")
-                case .present:
-                    btnTitle = NSLocalizedString("FullConversationPresentMode", comment: "")
-                }
-
-                self.btnFullConversation.setTitle(btnTitle, for: .normal)
-            })
-            .map { [weak self] _ -> UIButton? in
-                guard let self else { return nil }
-                return self.btnFullConversation
-            }
-            .unwrap()
-
-        // Adding comment creation button if needed
-        let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
-            .prefix(1)
-            .handleEvents(receiveOutput: { [weak self] mode in
-                guard let self else { return }
-                let btnTitle: String
-                switch mode {
-                case .push:
-                    btnTitle = NSLocalizedString("CommentCreationPushMode", comment: "")
-                case .present:
-                    btnTitle = NSLocalizedString("CommentCreationPresentMode", comment: "")
-                }
-
-                self.btnCommentCreation.setTitle(btnTitle, for: .normal)
-            })
-            .map { [weak self] _ -> UIButton? in
-                guard let self else { return nil }
-                return self.btnCommentCreation
-            }
-            .unwrap()
-
-        // Adding comment thread button if needed
-        let btnCommentThreadObservable = viewModel.outputs.showCommentThreadButton
-            .prefix(1)
-            .handleEvents(receiveOutput: { [weak self] mode in
-                guard let self else { return }
-                let btnTitle: String
-                switch mode {
-                case .push:
-                    btnTitle = NSLocalizedString("CommentThreadPushMode", comment: "")
-                case .present:
-                    btnTitle = NSLocalizedString("CommentThreadPresentMode", comment: "")
-                }
-
-                self.btnCommentThread.setTitle(btnTitle, for: .normal)
-            })
-            .map { [weak self] _ -> UIButton? in
-                guard let self else { return nil }
-                return self.btnCommentThread
-            }
-            .unwrap()
-
-        Publishers.MergeMany(btnFullConversationObservable, btnCommentCreationObservable, btnCommentThreadObservable)
-            .sink(receiveValue: { [weak self] btn in
-                guard let self else { return }
-
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)
-                self.articleScrollView.addSubview(btn)
+                self.articleScrollView.addSubview(fullConversationVc.view)
 
-                btn.snp.makeConstraints { make in
-                    make.height.equalTo(Metrics.buttonHeight)
-                    make.centerX.equalTo(self.articleScrollView.contentLayoutGuide)
-                    make.bottom.equalTo(self.articleScrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
-                }
+                self.addChild(fullConversationVc)
 
-                self.articleView.snp.makeConstraints { make in
-                    make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
-                    make.bottom.equalTo(btn.snp.top).offset(-Metrics.verticalMargin)
-                }
-            })
-            .store(in: &cancellables)
-
-        // Adding pre conversation
-        viewModel.outputs.showPreConversation
-            .sink(receiveValue: { [weak self] preConversationView in
-                guard let self else { return }
-
-                self.articleView.removeFromSuperview()
-                self.articleScrollView.addSubview(self.articleView)
-                self.articleScrollView.addSubview(preConversationView)
-
-                preConversationView.snp.makeConstraints { make in
+                fullConversationVc.view.snp.makeConstraints { make in
+                    make.height.equalTo(500) // swiftlint:disable:this no_magic_numbers
                     make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300) // swiftlint:disable:this no_magic_numbers
-                    make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide).inset(self.viewModel.outputs.preConversationHorizontalMargin)
+                    make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide)
                 }
+                fullConversationVc.didMove(toParent: self)
 
                 self.articleView.snp.makeConstraints { make in
                     make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
-                    make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
+                    make.bottom.equalTo(fullConversationVc.view.snp.top).offset(-Metrics.verticalMargin)
                 }
-            })
+            }
             .store(in: &cancellables)
 
         // Showing error if needed

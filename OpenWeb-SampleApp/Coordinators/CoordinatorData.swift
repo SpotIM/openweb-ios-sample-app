@@ -12,6 +12,7 @@ import OpenWebSDK
 enum CoordinatorData {
     case conversationDataModel(data: SDKConversationDataModel)
     case actionsFlowSettings(data: SDKUIFlowActionSettings)
+    case actionsFlowPartialScreenSettings(data: SDKUIFlowPartialScreenActionSettings)
     case actionsViewSettings(data: SDKUIIndependentViewsActionSettings)
     case postId(data: OWPostId)
     case settingsScreen(data: [SettingsGroupType])

@@ -18,6 +18,7 @@ protocol TestAPIViewModelingInputs {
     var enteredSpotId: PassthroughSubject<OWSpotId, Never> { get }
     var enteredPostId: PassthroughSubject<OWPostId, Never> { get }
     var uiFlowsTapped: PassthroughSubject<Void, Never> { get }
+    var uiFlowsPartialScreenTapped: PassthroughSubject<Void, Never> { get }
     var uiViewsTapped: PassthroughSubject<Void, Never> { get }
     var miscellaneousTapped: PassthroughSubject<Void, Never> { get }
     var testingPlaygroundTapped: PassthroughSubject<Void, Never> { get }
@@ -36,6 +37,7 @@ protocol TestAPIViewModelingOutputs {
     var shouldShowSelectPreset: AnyPublisher<Bool, Never> { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
     var openUIFlows: AnyPublisher<SDKConversationDataModel, Never> { get }
+    var openUIFlowsPartialScreen: AnyPublisher<SDKConversationDataModel, Never> { get }
     var openUIViews: AnyPublisher<SDKConversationDataModel, Never> { get }
     var openMiscellaneous: AnyPublisher<SDKConversationDataModel, Never> { get }
     var openTestingPlayground: AnyPublisher<SDKConversationDataModel, Never> { get }
@@ -76,6 +78,7 @@ class TestAPIViewModel: TestAPIViewModeling,
     let enteredSpotId = PassthroughSubject<OWSpotId, Never>()
     let enteredPostId = PassthroughSubject<OWPostId, Never>()
     let uiFlowsTapped = PassthroughSubject<Void, Never>()
+    let uiFlowsPartialScreenTapped = PassthroughSubject<Void, Never>()
     let uiViewsTapped = PassthroughSubject<Void, Never>()
     let miscellaneousTapped = PassthroughSubject<Void, Never>()
     let testingPlaygroundTapped = PassthroughSubject<Void, Never>()
@@ -207,6 +210,11 @@ class TestAPIViewModel: TestAPIViewModeling,
         return _openUIFlows.eraseToAnyPublisher()
     }
 
+    private let _openUIFlowsPartialScreen = PassthroughSubject<SDKConversationDataModel, Never>()
+    var openUIFlowsPartialScreen: AnyPublisher<SDKConversationDataModel, Never> {
+        return _openUIFlowsPartialScreen.eraseToAnyPublisher()
+    }
+
     private let _openUIViews = PassthroughSubject<SDKConversationDataModel, Never>()
     var openUIViews: AnyPublisher<SDKConversationDataModel, Never> {
         return _openUIViews.eraseToAnyPublisher()
@@ -290,6 +298,11 @@ private extension TestAPIViewModel {
             .bind(to: _openUIFlows)
             .store(in: &cancellables)
 
+        uiFlowsPartialScreenTapped
+            .withLatestFrom(conversationDataModelObservable)
+            .bind(to: _openUIFlowsPartialScreen)
+            .store(in: &cancellables)
+
         uiViewsTapped
             .withLatestFrom(conversationDataModelObservable)
             .bind(to: _openUIViews)
@@ -325,6 +338,7 @@ private extension TestAPIViewModel {
 
         Publishers.MergeMany(
             uiFlowsTapped.voidify(),
+            uiFlowsPartialScreenTapped.voidify(),
             uiViewsTapped.voidify(),
             miscellaneousTapped.voidify(),
             testingPlaygroundTapped.voidify(),
@@ -343,6 +357,7 @@ private extension TestAPIViewModel {
         Publishers.MergeMany(
             settingsTapped.voidify(),
             uiFlowsTapped.voidify(),
+            uiFlowsPartialScreenTapped.voidify(),
             uiViewsTapped.voidify(),
             miscellaneousTapped.voidify(),
             testingPlaygroundTapped.voidify(),
