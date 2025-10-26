@@ -10,7 +10,6 @@ import Combine
 import OpenWebSDK
 
 protocol UIFlowsPartialScreenViewModelingInputs {
-    var preConversationTapped: PassthroughSubject<Void, Never> { get }
     var fullConversationTapped: PassthroughSubject<Void, Never> { get }
     var commentCreationTapped: PassthroughSubject<Void, Never> { get }
     var commentThreadTapped: PassthroughSubject<Void, Never> { get }
@@ -36,7 +35,6 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
 
     private var cancellables = Set<AnyCancellable>()
 
-    let preConversationTapped = PassthroughSubject<Void, Never>()
     let fullConversationTapped = PassthroughSubject<Void, Never>()
     let commentCreationTapped = PassthroughSubject<Void, Never>()
     let commentThreadTapped = PassthroughSubject<Void, Never>()
@@ -71,12 +69,6 @@ private extension UIFlowsPartialScreenViewModel {
     func setupObservers() {
         let postId = dataModel.postId
 
-        let preConversationModel = preConversationTapped
-            .map { _ -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .preConversation)
-            }
-            .eraseToAnyPublisher()
-
         let fullConversationModel = fullConversationTapped
             .map { route -> SDKUIFlowPartialScreenActionSettings in
                 return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation)
@@ -95,7 +87,7 @@ private extension UIFlowsPartialScreenViewModel {
             }
             .eraseToAnyPublisher()
 
-        Publishers.MergeMany(preConversationModel, fullConversationModel, commentCreationTappedModel, commentThreadTappedModel)
+        Publishers.MergeMany(fullConversationModel, commentCreationTappedModel, commentThreadTappedModel)
             .map { $0 } // swiftlint:disable:this array_init
             .bind(to: _openMockArticleScreen)
             .store(in: &cancellables)

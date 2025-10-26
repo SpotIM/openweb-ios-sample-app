@@ -15,7 +15,6 @@ class UIFlowsPartialScreenVC: UIViewController {
 
     private struct Metrics {
         static let identifier = "uiflows_partial_screen_vc_id"
-        static let btnPreConversationIdentifier = "btn_pre_conversation_id"
         static let btnFullConversationIdentifier = "btn_full_conversation_id"
         static let btnCommentCreationIdentifier = "btn_comment_creation_id"
         static let btnCommentThreadIdentifier = "btn_comment_thread_id"
@@ -34,10 +33,6 @@ class UIFlowsPartialScreenVC: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
-    }()
-
-    private lazy var btnPreConversation: UIButton = {
-        return NSLocalizedString("PreConversation", comment: "").blueRoundedButton
     }()
 
     private lazy var btnFullConversation: UIButton = {
@@ -76,7 +71,6 @@ class UIFlowsPartialScreenVC: UIViewController {
 private extension UIFlowsPartialScreenVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
-        btnPreConversation.accessibilityIdentifier = Metrics.btnPreConversationIdentifier
         btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
@@ -94,22 +88,12 @@ private extension UIFlowsPartialScreenVC {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
-        // Adding pre conversation button
-        scrollView.addSubview(btnPreConversation)
-        btnPreConversation.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(scrollView).offset(Metrics.verticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
-        }
-
         // Adding full conversation button
         scrollView.addSubview(btnFullConversation)
         btnFullConversation.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnPreConversation.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(scrollView).offset(Metrics.verticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
@@ -146,10 +130,6 @@ private extension UIFlowsPartialScreenVC {
         title = viewModel.outputs.title
 
         // Bind buttons
-        btnPreConversation.tapPublisher
-            .bind(to: viewModel.inputs.preConversationTapped)
-            .store(in: &cancellables)
-
         btnFullConversation.tapPublisher
             .bind(to: viewModel.inputs.fullConversationTapped)
             .store(in: &cancellables)

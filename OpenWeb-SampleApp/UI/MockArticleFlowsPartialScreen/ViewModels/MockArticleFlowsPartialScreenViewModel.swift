@@ -20,10 +20,8 @@ protocol MockArticleFlowsPartialScreenViewModelingInputs {
 protocol MockArticleFlowsPartialScreenViewModelingOutputs {
     var title: String { get }
     var showFullConversation: AnyPublisher<UIViewController, Never> { get }
-    var showPreConversation: AnyPublisher<UIView, Never> { get }
     var articleImageURL: AnyPublisher<URL, Never> { get }
     var showError: AnyPublisher<String, Never> { get }
-    var preConversationHorizontalMargin: CGFloat { get }
     var loggerViewModel: UILoggerViewModeling { get }
     var floatingViewViewModel: OWFloatingViewModeling { get }
     var loggerEnabled: AnyPublisher<Bool, Never> { get }
@@ -49,10 +47,6 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
     lazy var loggerEnabled: AnyPublisher<Bool, Never> = {
         return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
     }()
-
-    private struct Metrics {
-        static let preConversationCompactHorizontalMargin: CGFloat = 16.0
-    }
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -98,22 +92,10 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
             .eraseToAnyPublisher()
     }
 
-    private let _showPreConversation = PassthroughSubject<UIView, Never>()
-    var showPreConversation: AnyPublisher<UIView, Never> {
-        return _showPreConversation
-            .eraseToAnyPublisher()
-    }
-
     private let _showFullConversation = PassthroughSubject<UIViewController, Never>()
     var showFullConversation: AnyPublisher<UIViewController, Never> {
         return _showFullConversation
             .eraseToAnyPublisher()
-    }
-
-    var preConversationHorizontalMargin: CGFloat {
-        let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-        let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
-        return margin
     }
 
     lazy var title: String = {
