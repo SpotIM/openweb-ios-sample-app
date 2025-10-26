@@ -131,24 +131,22 @@ private extension MockArticleFlowsPartialScreenViewModel {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.send(articleURL)
 
-        // Full conversation
+        // Conversation-based flows (full conversation, comment creation, comment thread)
         actionSettings
-            .map { settings -> String? in
-                if case .fullConversation = settings.actionType {
-                    return settings.postId
-                } else {
+            .compactMap { [weak self] settings -> (postId: String, route: OWConversationRoute)? in
+                guard let self,
+                      let route = self.conversationRoute(for: settings.actionType) else {
                     return nil
                 }
+                return (settings.postId, route)
             }
-            .unwrap()
-            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (String, Bool) in
-                return (result, loggerEnabled)
+            .withLatestFrom(loggerEnabled) { payload, loggerEnabled -> (String, OWConversationRoute, Bool) in
+                return (payload.postId, payload.route, loggerEnabled)
             }
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
-                let postId = result.0
-                let loggerEnabled = result.1
+                let (postId, route, loggerEnabled) = result
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
@@ -163,6 +161,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                             let conversationViewController = try await flows.conversation(
                                 postId: postId,
                                 article: article,
+                                route: route,
                                 additionalSettings: additionalSettings,
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
@@ -176,6 +175,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 } else {
                     flows.conversation(postId: postId,
                                        article: article,
+                                       route: route,
                                        additionalSettings: additionalSettings,
                                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
                                        completion: { [weak self] result in
@@ -254,6 +254,19 @@ private extension MockArticleFlowsPartialScreenViewModel {
         }
 
         analytics.addBICallback(BIClosure)
+    }
+
+    func conversationRoute(for actionType: SDKUIFlowPartialScreenActionType) -> OWConversationRoute? {
+        switch actionType {
+        case .fullConversation:
+            return OWConversationRoute.none
+        case .commentCreation:
+            return .commentCreation(type: .comment)
+        case .commentThread:
+            return .commentThread(commentId: commonCreatorService.commentThreadCommentId())
+        default:
+            return nil
+        }
     }
 
     func shouldUseAsyncAwaitCallingMethod() -> Bool {
