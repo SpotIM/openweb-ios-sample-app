@@ -43,7 +43,6 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
     let fullConversationTapped = PassthroughSubject<PresentationalModeCompact, Never>()
     let commentCreationTapped = PassthroughSubject<PresentationalModeCompact, Never>()
     let commentThreadTapped = PassthroughSubject<PresentationalModeCompact, Never>()
-    let examplesTapped = PassthroughSubject<Void, Never>()
     let monetizationTapped = PassthroughSubject<Void, Never>()
 
     private let _openMockArticleScreen = CurrentValueSubject<SDKUIFlowActionSettings?, Never>(value: nil)
