@@ -267,6 +267,7 @@ class TestAPIViewModel: TestAPIViewModeling,
 }
 
 private extension TestAPIViewModel {
+    // swiftlint:disable line_length
     func setupObservers() {
         enteredSpotId
             .removeDuplicates()
