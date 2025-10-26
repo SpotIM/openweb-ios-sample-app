@@ -212,7 +212,7 @@ private extension TestAPIVC {
         btnAutomation.accessibilityIdentifier = Metrics.btnAutomationIdentifier
     }
 
-    // swiftlint:disable line_length
+    // swiftlint:disable function_body_length
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
