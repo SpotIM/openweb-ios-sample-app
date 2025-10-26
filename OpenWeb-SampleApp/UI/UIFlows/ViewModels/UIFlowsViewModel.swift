@@ -16,7 +16,6 @@ protocol UIFlowsViewModelingInputs {
     var commentCreationTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
     var commentThreadTapped: PassthroughSubject<PresentationalModeCompact, Never> { get }
     var monetizationTapped: PassthroughSubject<Void, Never> { get }
-    var examplesTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol UIFlowsViewModelingOutputs {
@@ -24,7 +23,6 @@ protocol UIFlowsViewModelingOutputs {
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
     var openMockArticleScreen: AnyPublisher<SDKUIFlowActionSettings, Never> { get }
     var openMonetizationScreen: AnyPublisher<OWPostId, Never> { get }
-    var openExamplesScreen: AnyPublisher<OWPostId, Never> { get }
     var presentStyle: OWModalPresentationStyle { get }
 }
 
@@ -57,13 +55,6 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
 
     var presentStyle: OWModalPresentationStyle {
         return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
-    }
-
-    private let _openExamplesScreen = CurrentValueSubject<OWPostId?, Never>(value: nil)
-    var openExamplesScreen: AnyPublisher<OWPostId, Never> {
-        return _openExamplesScreen
-            .unwrap()
-            .eraseToAnyPublisher()
     }
 
     private let _openMonetizationScreen = CurrentValueSubject<OWPostId?, Never>(value: nil)
@@ -123,11 +114,6 @@ private extension UIFlowsViewModel {
         Publishers.MergeMany(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
             .map { $0 } // swiftlint:disable:this array_init
             .bind(to: _openMockArticleScreen)
-            .store(in: &cancellables)
-
-        examplesTapped
-            .map { postId }
-            .bind(to: _openExamplesScreen)
             .store(in: &cancellables)
 
         monetizationTapped

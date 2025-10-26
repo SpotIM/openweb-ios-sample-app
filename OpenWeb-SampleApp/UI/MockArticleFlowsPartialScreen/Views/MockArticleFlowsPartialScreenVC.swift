@@ -15,11 +15,11 @@ class MockArticleFlowsPartialScreenVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         // swiftlint:disable no_magic_numbers
-        // 1.2 * screen height, defualt to 1200
+        // 1.2 * screen height, default to 1200
         static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2 / 3
         // swiftlint:enable no_magic_numbers
-        static let articelImageViewCornerRadius: CGFloat = 10
+        static let articleImageViewCornerRadius: CGFloat = 10
         static let identifier = "mock_article_flows_partial_screen_vc_id"
         static let viewIdentifier = "mock_article_flows_partial_screen_view_id"
         static let loggerViewWidth: CGFloat = 300
@@ -86,7 +86,7 @@ class MockArticleFlowsPartialScreenVC: UIViewController {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
-            .corner(radius: Metrics.articelImageViewCornerRadius)
+            .corner(radius: Metrics.articleImageViewCornerRadius)
     }()
 
     private lazy var lblArticleDescription: UILabel = {

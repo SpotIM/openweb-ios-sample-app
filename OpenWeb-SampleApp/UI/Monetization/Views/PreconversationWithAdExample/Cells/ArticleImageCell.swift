@@ -13,7 +13,7 @@ class ArticleImageCell: UITableViewCell {
 
     private struct Metrics {
         static let articleImageRatio: CGFloat = 2 / 3 // swiftlint:disable:this no_magic_numbers
-        static let articelImageViewCornerRadius: CGFloat = 10
+        static let articleImageViewCornerRadius: CGFloat = 10
         static let verticalPadding: CGFloat = 40
     }
 
@@ -21,7 +21,7 @@ class ArticleImageCell: UITableViewCell {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
-            .corner(radius: Metrics.articelImageViewCornerRadius)
+            .corner(radius: Metrics.articleImageViewCornerRadius)
     }()
 
     func configure(with imageURL: URL?) {

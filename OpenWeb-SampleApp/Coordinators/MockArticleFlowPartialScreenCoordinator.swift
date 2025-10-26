@@ -21,7 +21,7 @@ class MockArticleFlowPartialScreenCoordinator: BaseCoordinator<Void> {
 
         guard let data = coordinatorData,
               case CoordinatorData.actionsFlowPartialScreenSettings(let settings) = data else {
-            fatalError("MockArticleCoordinator requires coordinatorData from `CoordinatorData.actionsFlowSettings` type")
+            fatalError("MockArticleCoordinator requires coordinatorData from `CoordinatorData.actionsFlowPartialScreenSettings` type")
         }
 
         let mockArticleFlowsVM: MockArticleFlowsPartialScreenViewModeling = MockArticleFlowsPartialScreenViewModel(actionSettings: settings)

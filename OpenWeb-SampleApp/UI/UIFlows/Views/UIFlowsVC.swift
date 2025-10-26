@@ -24,7 +24,6 @@ class UIFlowsVC: UIViewController {
         static let btnCommentThreadPushModeIdentifier = "btn_comment_thread_push_mode_id"
         static let btnCommentThreadPresentModeIdentifier = "btn_comment_thread_present_mode_id"
         static let btnMonetizationIdentifier = "btn_monetization_id"
-        static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20

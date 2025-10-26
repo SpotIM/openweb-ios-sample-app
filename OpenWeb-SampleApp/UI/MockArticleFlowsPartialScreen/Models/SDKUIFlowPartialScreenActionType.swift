@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import OpenWebSDK
 
 enum SDKUIFlowPartialScreenActionType {
-    case preConversation
     case fullConversation
     case commentCreation
     case commentThread
