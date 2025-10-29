@@ -246,8 +246,6 @@ private extension MockArticleFlowsPartialScreenViewModel {
             return .commentCreation(type: .comment)
         case .commentThread:
             return .commentThread(commentId: commonCreatorService.commentThreadCommentId())
-        default:
-            return nil
         }
     }
 
