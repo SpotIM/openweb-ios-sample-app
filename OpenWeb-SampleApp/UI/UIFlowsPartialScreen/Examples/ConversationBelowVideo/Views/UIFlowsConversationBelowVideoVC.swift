@@ -14,13 +14,24 @@ import OpenWebSDK
 class UIFlowsConversationBelowVideoVC: UIViewController {
     private struct Metrics {
         static let identifier = "uiflows_examples_vc_id"
+        static let presentAnimationDuration: TimeInterval = 0.3
+        static let verticalMargin: CGFloat = 40
+        static let preConversationHorizontalMargin: CGFloat = 16.0
     }
 
     private let viewModel: UIFlowsConversationBelowVideoViewModeling
     private var cancellables = Set<AnyCancellable>()
 
+    private unowned var conversationTopConstraint: Constraint!
+
     private lazy var videoPlayerContainer: UIView = {
         let view = VideoExampleView(viewModel: viewModel.outputs.videoExampleViewModel)
+        return view
+    }()
+
+    private lazy var containerBelowVideo: UIView = {
+        let view = UIView()
+            .backgroundColor(ColorPalette.shared.color(type: .background))
         return view
     }()
 
@@ -60,6 +71,13 @@ private extension UIFlowsConversationBelowVideoVC {
         videoPlayerContainer.snp.makeConstraints { make in
             make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
         }
+
+        // Adding container below video
+        view.addSubview(containerBelowVideo)
+        containerBelowVideo.snp.makeConstraints { make in
+            make.top.equalTo(videoPlayerContainer.snp.bottom)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
     }
 
     func setupObservers() {
@@ -72,16 +90,42 @@ private extension UIFlowsConversationBelowVideoVC {
             })
             .store(in: &cancellables)
 
+        viewModel.outputs.preConversationRetrieved
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] preConversationView in
+                guard let self else { return }
+                self.containerBelowVideo.addSubview(preConversationView)
+
+                preConversationView.snp.makeConstraints { make in
+                    make.top.equalToSuperview().offset(Metrics.verticalMargin)
+                    make.leading.trailing.equalToSuperview().inset(Metrics.preConversationHorizontalMargin)
+                }
+            })
+            .store(in: &cancellables)
+
         viewModel.outputs.conversationRetrieved
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] conversationVc in
                 guard let self else { return }
-                self.view.addSubview(conversationVc.view)
+                self.containerBelowVideo.addSubview(conversationVc.view)
                 self.addChild(conversationVc)
 
+                self.view.addSubview(conversationVc.view)
                 conversationVc.view.snp.makeConstraints { make in
-                    make.top.equalTo(self.videoPlayerContainer.snp.bottom)
-                    make.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                    self.conversationTopConstraint = make.top.equalTo(self.view.snp.bottom).constraint
+                    make.leading.trailing.equalToSuperview()
+                    make.height.equalTo(self.containerBelowVideo.snp.height)
+                }
+                self.view.layoutIfNeeded()
+
+                // 3. Perform animation
+                let offset = -containerBelowVideo.frame.height - self.view.safeAreaInsets.bottom
+                conversationTopConstraint.update(offset: offset)
+                UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
+                    guard let self else { return }
+                    self.view.layoutIfNeeded()
+                } completion: { _ in
+                    // Nothing here
                 }
                 conversationVc.didMove(toParent: self)
             })

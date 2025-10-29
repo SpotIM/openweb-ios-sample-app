@@ -16,6 +16,7 @@ protocol UIFlowsConversationBelowVideoViewModelingInputs {}
 protocol UIFlowsConversationBelowVideoViewModelingOutputs {
     var title: String { get }
     var componentRetrievingError: AnyPublisher<OWError, Never> { get }
+    var preConversationRetrieved: AnyPublisher<UIView, Never> { get }
     var conversationRetrieved: AnyPublisher<UIViewController, Never> { get }
     var openAuthentication: AnyPublisher<(OWSpotId, OWBasicCompletion), Never> { get }
     var videoExampleViewModel: VideoExampleViewModeling { get }
@@ -42,9 +43,16 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
 
     let videoExampleViewModel: VideoExampleViewModeling = VideoExampleViewModel()
 
-    private let _componentRetrievingError = CurrentValueSubject<OWError?, Never>(value: nil)
+    private let _componentRetrievingError = PassthroughSubject<OWError?, Never>()
     var componentRetrievingError: AnyPublisher<OWError, Never> {
         return _componentRetrievingError
+            .unwrap()
+            .eraseToAnyPublisher()
+    }
+
+    private let _preConversationRetrieved = CurrentValueSubject<UIView?, Never>(value: nil)
+    var preConversationRetrieved: AnyPublisher<UIView, Never> {
+        return _preConversationRetrieved
             .unwrap()
             .eraseToAnyPublisher()
     }
@@ -105,6 +113,22 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
         DLog("`renewSSOCallback` triggered")
         #endif
     }
+
+    private lazy var actionsCallbacks: OWPreConversationActionsCallbacks = { [weak self] callbackType, postId in
+        guard let self else { return }
+
+        let log = "Received OWPreConversationActionsCallbacks type: \(callbackType), postId: \(postId)\n"
+        DLog(log)
+        switch callbackType {
+        case .openConversationFlow(let route):
+            retrieveConversationComponent(route: route)
+        case .openWebTabView(let options):
+            // TODO: Handle open web tab
+            break
+        default:
+            break
+        }
+    }
 }
 
 private extension UIFlowsConversationBelowVideoViewModel {
@@ -117,11 +141,34 @@ private extension UIFlowsConversationBelowVideoViewModel {
         let authentication = OpenWeb.manager.authentication
         authentication.renewSSO = renewSSOCallback
 
-        retrieveConversationComponent()
+        retrievePreConversationComponent()
     }
+
     func setupObservers() {}
 
-    func retrieveConversationComponent() {
+    func retrievePreConversationComponent() {
+        let uiViewsLayer = OpenWeb.manager.ui.views
+        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+
+        let additionalSettings = OWAdditionalSettings(preConversationSettings: OWPreConversationSettings(style: .compact))
+
+        uiViewsLayer.preConversation(postId: self.postId,
+                                     article: article,
+                                     additionalSettings: additionalSettings,
+                                     callbacks: self.actionsCallbacks,
+                                     completion: { [weak self] result in
+
+            guard let self else { return }
+            switch result {
+            case .failure(let err):
+                self._componentRetrievingError.send(err)
+            case.success(let view):
+                self._preConversationRetrieved.send(view)
+            }
+        })
+    }
+
+    func retrieveConversationComponent(route: OWConversationRoute = .none) {
         let uiFlowsLayer = OpenWeb.manager.ui.flows
         let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
@@ -132,6 +179,7 @@ private extension UIFlowsConversationBelowVideoViewModel {
 
         uiFlowsLayer.conversation(postId: postId,
                                   article: article,
+                                  route: route,
                                   additionalSettings: additionalSettings,
                                   callbacks: nil,
                                   completion: { [weak self] result in
