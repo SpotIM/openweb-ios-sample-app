@@ -122,9 +122,6 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
         switch callbackType {
         case .openConversationFlow(let route):
             retrieveConversationComponent(route: route)
-        case .openWebTabView(let options):
-            // TODO: Handle open web tab
-            break
         default:
             break
         }
