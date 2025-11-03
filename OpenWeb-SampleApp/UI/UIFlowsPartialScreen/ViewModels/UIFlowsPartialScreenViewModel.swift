@@ -13,6 +13,8 @@ protocol UIFlowsPartialScreenViewModelingInputs {
     var fullConversationTapped: PassthroughSubject<Void, Never> { get }
     var commentCreationTapped: PassthroughSubject<Void, Never> { get }
     var commentThreadTapped: PassthroughSubject<Void, Never> { get }
+    var notificationsTapped: PassthroughSubject<Void, Never> { get }
+    var profileTapped: PassthroughSubject<Void, Never> { get }
     var examplesTapped: PassthroughSubject<Void, Never> { get }
 }
 
@@ -31,6 +33,10 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
     var inputs: UIFlowsPartialScreenViewModelingInputs { return self }
     var outputs: UIFlowsPartialScreenViewModelingOutputs { return self }
 
+    private struct Metrics {
+        static let profileUserId = "u_lAt51Sg8WoDL" // Test-User
+    }
+
     private let dataModel: SDKConversationDataModel
 
     private var cancellables = Set<AnyCancellable>()
@@ -38,6 +44,8 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
     let fullConversationTapped = PassthroughSubject<Void, Never>()
     let commentCreationTapped = PassthroughSubject<Void, Never>()
     let commentThreadTapped = PassthroughSubject<Void, Never>()
+    let notificationsTapped = PassthroughSubject<Void, Never>()
+    let profileTapped = PassthroughSubject<Void, Never>()
     let examplesTapped = PassthroughSubject<Void, Never>()
 
     private let _openMockArticleScreen = CurrentValueSubject<SDKUIFlowPartialScreenActionSettings?, Never>(value: nil)
@@ -87,7 +95,25 @@ private extension UIFlowsPartialScreenViewModel {
             }
             .eraseToAnyPublisher()
 
-        Publishers.MergeMany(fullConversationModel, commentCreationTappedModel, commentThreadTappedModel)
+        let notificationsTappedModel = notificationsTapped
+            .map { route -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .notifications)
+            }
+            .eraseToAnyPublisher()
+
+        let profileTappedModel = profileTapped
+            .map { route -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .profile(userId: Metrics.profileUserId))
+            }
+            .eraseToAnyPublisher()
+
+        Publishers.MergeMany([
+            fullConversationModel,
+            commentCreationTappedModel,
+            commentThreadTappedModel,
+            notificationsTappedModel,
+            profileTappedModel
+        ])
             .map { $0 } // swiftlint:disable:this array_init
             .bind(to: _openMockArticleScreen)
             .store(in: &cancellables)

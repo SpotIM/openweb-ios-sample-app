@@ -246,6 +246,10 @@ private extension MockArticleFlowsPartialScreenViewModel {
             return .commentCreation(type: .comment)
         case .commentThread:
             return .commentThread(commentId: commonCreatorService.commentThreadCommentId())
+        case .notifications:
+            return .notifications
+        case .profile(let userId):
+            return .profile(userId: userId)
         }
     }
 

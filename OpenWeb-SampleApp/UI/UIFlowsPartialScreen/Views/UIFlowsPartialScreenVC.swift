@@ -18,6 +18,8 @@ class UIFlowsPartialScreenVC: UIViewController {
         static let btnFullConversationIdentifier = "btn_full_conversation_id"
         static let btnCommentCreationIdentifier = "btn_comment_creation_id"
         static let btnCommentThreadIdentifier = "btn_comment_thread_id"
+        static let btnNotificationsIdentifier = "btn_notifications_id"
+        static let btnProfileIdentifier = "btn_profile_id"
         static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
@@ -47,6 +49,14 @@ class UIFlowsPartialScreenVC: UIViewController {
         return NSLocalizedString("CommentThread", comment: "").blueRoundedButton
     }()
 
+    private lazy var btnNotifications: UIButton = {
+        return NSLocalizedString("Notifications", comment: "").blueRoundedButton
+    }()
+
+    private lazy var btnProfile: UIButton = {
+        return NSLocalizedString("ProfileTitle", comment: "").blueRoundedButton
+    }()
+
     private lazy var btnExamples: UIButton = {
         return NSLocalizedString("Examples", comment: "").blueRoundedButton
     }()
@@ -74,6 +84,8 @@ private extension UIFlowsPartialScreenVC {
         btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
+        btnNotifications.accessibilityIdentifier = Metrics.btnNotificationsIdentifier
+        btnProfile.accessibilityIdentifier = Metrics.btnProfileIdentifier
         btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
@@ -88,41 +100,30 @@ private extension UIFlowsPartialScreenVC {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
-        // Adding full conversation button
-        scrollView.addSubview(btnFullConversation)
-        btnFullConversation.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(scrollView).offset(Metrics.verticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-        }
+        let buttons = [
+            btnFullConversation,
+            btnCommentCreation,
+            btnCommentThread,
+            btnNotifications,
+            btnProfile,
+            btnExamples
+        ]
+        let buttonsStackView = UIStackView(arrangedSubviews: buttons)
+        buttonsStackView.axis = .vertical
+        buttonsStackView.spacing = Metrics.buttonVerticalMargin
+        buttonsStackView.alignment = .fill
 
-        // Adding comment creation button
-        scrollView.addSubview(btnCommentCreation)
-        btnCommentCreation.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnFullConversation.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-        }
-
-        // Adding comment thread button
-        scrollView.addSubview(btnCommentThread)
-        btnCommentThread.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnCommentCreation.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-        }
-
-        // Adding examples button
-        scrollView.addSubview(btnExamples)
-        btnExamples.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnCommentThread.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        scrollView.addSubview(buttonsStackView)
+        buttonsStackView.snp.makeConstraints { make in
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
+            make.leading.trailing.equalTo(scrollView.frameLayoutGuide).inset(Metrics.horizontalMargin)
+        }
+
+        buttons.forEach { button in
+            button.snp.makeConstraints { make in
+                make.height.equalTo(Metrics.buttonHeight)
+            }
         }
     }
 
@@ -140,6 +141,14 @@ private extension UIFlowsPartialScreenVC {
 
         btnCommentThread.tapPublisher
             .bind(to: viewModel.inputs.commentThreadTapped)
+            .store(in: &cancellables)
+
+        btnNotifications.tapPublisher
+            .bind(to: viewModel.inputs.notificationsTapped)
+            .store(in: &cancellables)
+
+        btnProfile.tapPublisher
+            .bind(to: viewModel.inputs.profileTapped)
             .store(in: &cancellables)
 
         btnExamples.tapPublisher

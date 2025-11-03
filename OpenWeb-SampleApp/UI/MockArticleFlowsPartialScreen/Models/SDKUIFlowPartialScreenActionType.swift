@@ -11,4 +11,6 @@ enum SDKUIFlowPartialScreenActionType {
     case fullConversation
     case commentCreation
     case commentThread
+    case notifications
+    case profile(userId: String)
 }
