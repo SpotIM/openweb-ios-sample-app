@@ -250,6 +250,10 @@ private extension MockArticleFlowsPartialScreenViewModel {
             return .notifications
         case .profile(let userId):
             return .profile(userId: userId)
+        case .clarityDetails:
+            return .clarityDetails(commentId: OWCommentThreadSettings.defaultCommentId, type: .pending)
+        case .reportReason:
+            return .reportReason(commentId: OWCommentThreadSettings.defaultCommentId)
         }
     }
 

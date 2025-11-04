@@ -15,6 +15,8 @@ protocol UIFlowsPartialScreenViewModelingInputs {
     var commentThreadTapped: PassthroughSubject<Void, Never> { get }
     var notificationsTapped: PassthroughSubject<Void, Never> { get }
     var profileTapped: PassthroughSubject<Void, Never> { get }
+    var clarityDetailsTapped: PassthroughSubject<Void, Never> { get }
+    var reportReasonTapped: PassthroughSubject<Void, Never> { get }
     var examplesTapped: PassthroughSubject<Void, Never> { get }
 }
 
@@ -46,6 +48,8 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
     let commentThreadTapped = PassthroughSubject<Void, Never>()
     let notificationsTapped = PassthroughSubject<Void, Never>()
     let profileTapped = PassthroughSubject<Void, Never>()
+    let clarityDetailsTapped = PassthroughSubject<Void, Never>()
+    let reportReasonTapped = PassthroughSubject<Void, Never>()
     let examplesTapped = PassthroughSubject<Void, Never>()
 
     private let _openMockArticleScreen = CurrentValueSubject<SDKUIFlowPartialScreenActionSettings?, Never>(value: nil)
@@ -107,12 +111,26 @@ private extension UIFlowsPartialScreenViewModel {
             }
             .eraseToAnyPublisher()
 
+        let clarityDetailsTappedModel = clarityDetailsTapped
+            .map { route -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .clarityDetails)
+            }
+            .eraseToAnyPublisher()
+
+        let reportReasonTappedModel = reportReasonTapped
+            .map { route -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .reportReason)
+            }
+            .eraseToAnyPublisher()
+
         Publishers.MergeMany([
             fullConversationModel,
             commentCreationTappedModel,
             commentThreadTappedModel,
             notificationsTappedModel,
-            profileTappedModel
+            profileTappedModel,
+            clarityDetailsTappedModel,
+            reportReasonTappedModel
         ])
             .map { $0 } // swiftlint:disable:this array_init
             .bind(to: _openMockArticleScreen)

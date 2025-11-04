@@ -20,6 +20,8 @@ class UIFlowsPartialScreenVC: UIViewController {
         static let btnCommentThreadIdentifier = "btn_comment_thread_id"
         static let btnNotificationsIdentifier = "btn_notifications_id"
         static let btnProfileIdentifier = "btn_profile_id"
+        static let btnClarityDetailsIdentifier = "btn_clarity_details_id"
+        static let btnReportReasonIdentifier = "btn_report_reason_id"
         static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
@@ -57,6 +59,14 @@ class UIFlowsPartialScreenVC: UIViewController {
         return NSLocalizedString("ProfileTitle", comment: "").blueRoundedButton
     }()
 
+    private lazy var btnClarityDetails: UIButton = {
+        return NSLocalizedString("ClarityDetails", comment: "").blueRoundedButton
+    }()
+
+    private lazy var btnReportReason: UIButton = {
+        return NSLocalizedString("ReportReason", comment: "").appending(" *").blueRoundedButton
+    }()
+
     private lazy var btnExamples: UIButton = {
         return NSLocalizedString("Examples", comment: "").blueRoundedButton
     }()
@@ -86,6 +96,8 @@ private extension UIFlowsPartialScreenVC {
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
         btnNotifications.accessibilityIdentifier = Metrics.btnNotificationsIdentifier
         btnProfile.accessibilityIdentifier = Metrics.btnProfileIdentifier
+        btnClarityDetails.accessibilityIdentifier = Metrics.btnClarityDetailsIdentifier
+        btnReportReason.accessibilityIdentifier = Metrics.btnReportReasonIdentifier
         btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
@@ -106,6 +118,8 @@ private extension UIFlowsPartialScreenVC {
             btnCommentThread,
             btnNotifications,
             btnProfile,
+            btnClarityDetails,
+            btnReportReason,
             btnExamples
         ]
         let buttonsStackView = UIStackView(arrangedSubviews: buttons)
@@ -149,6 +163,14 @@ private extension UIFlowsPartialScreenVC {
 
         btnProfile.tapPublisher
             .bind(to: viewModel.inputs.profileTapped)
+            .store(in: &cancellables)
+
+        btnClarityDetails.tapPublisher
+            .bind(to: viewModel.inputs.clarityDetailsTapped)
+            .store(in: &cancellables)
+
+        btnReportReason.tapPublisher
+            .bind(to: viewModel.inputs.reportReasonTapped)
             .store(in: &cancellables)
 
         btnExamples.tapPublisher
