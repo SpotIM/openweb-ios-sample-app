@@ -174,6 +174,26 @@ private extension MockArticleFlowsPartialScreenVC {
             })
             .store(in: &cancellables)
 
+        // Adding pre conversation
+        viewModel.outputs.showPreConversation
+            .sink(receiveValue: { [weak self] preConversationView in
+                guard let self else { return }
+                self.articleView.removeFromSuperview()
+                self.articleScrollView.addSubview(self.articleView)
+                self.articleScrollView.addSubview(preConversationView)
+
+                preConversationView.snp.makeConstraints { make in
+                    make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300) // swiftlint:disable:this no_magic_numbers
+                    make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide)
+                }
+
+                self.articleView.snp.makeConstraints { make in
+                    make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
+                    make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
+                }
+            })
+            .store(in: &cancellables)
+
         // Adding full conversation
         viewModel.outputs.showFullConversation
             .sink { [weak self] fullConversationVc in

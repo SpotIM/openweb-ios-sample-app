@@ -10,13 +10,8 @@ import Combine
 import OpenWebSDK
 
 protocol UIFlowsPartialScreenViewModelingInputs {
+    var preConversationToFullConversationTapped: PassthroughSubject<Void, Never> { get }
     var fullConversationTapped: PassthroughSubject<Void, Never> { get }
-    var commentCreationTapped: PassthroughSubject<Void, Never> { get }
-    var commentThreadTapped: PassthroughSubject<Void, Never> { get }
-    var notificationsTapped: PassthroughSubject<Void, Never> { get }
-    var profileTapped: PassthroughSubject<Void, Never> { get }
-    var clarityDetailsTapped: PassthroughSubject<Void, Never> { get }
-    var reportReasonTapped: PassthroughSubject<Void, Never> { get }
     var examplesTapped: PassthroughSubject<Void, Never> { get }
 }
 
@@ -43,13 +38,8 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
 
     private var cancellables = Set<AnyCancellable>()
 
+    let preConversationToFullConversationTapped = PassthroughSubject<Void, Never>()
     let fullConversationTapped = PassthroughSubject<Void, Never>()
-    let commentCreationTapped = PassthroughSubject<Void, Never>()
-    let commentThreadTapped = PassthroughSubject<Void, Never>()
-    let notificationsTapped = PassthroughSubject<Void, Never>()
-    let profileTapped = PassthroughSubject<Void, Never>()
-    let clarityDetailsTapped = PassthroughSubject<Void, Never>()
-    let reportReasonTapped = PassthroughSubject<Void, Never>()
     let examplesTapped = PassthroughSubject<Void, Never>()
 
     private let _openMockArticleScreen = CurrentValueSubject<SDKUIFlowPartialScreenActionSettings?, Never>(value: nil)
@@ -81,56 +71,21 @@ private extension UIFlowsPartialScreenViewModel {
     func setupObservers() {
         let postId = dataModel.postId
 
+        let preConversationToFullConversationModel = preConversationToFullConversationTapped
+            .map { route -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .preConversationToFullConversation)
+            }
+            .eraseToAnyPublisher()
+
         let fullConversationModel = fullConversationTapped
             .map { route -> SDKUIFlowPartialScreenActionSettings in
                 return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation)
             }
             .eraseToAnyPublisher()
 
-        let commentCreationTappedModel = commentCreationTapped
-            .map { route -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .commentCreation)
-            }
-            .eraseToAnyPublisher()
-
-        let commentThreadTappedModel = commentThreadTapped
-            .map { route -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .commentThread)
-            }
-            .eraseToAnyPublisher()
-
-        let notificationsTappedModel = notificationsTapped
-            .map { route -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .notifications)
-            }
-            .eraseToAnyPublisher()
-
-        let profileTappedModel = profileTapped
-            .map { route -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .profile(userId: Metrics.profileUserId))
-            }
-            .eraseToAnyPublisher()
-
-        let clarityDetailsTappedModel = clarityDetailsTapped
-            .map { route -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .clarityDetails)
-            }
-            .eraseToAnyPublisher()
-
-        let reportReasonTappedModel = reportReasonTapped
-            .map { route -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .reportReason)
-            }
-            .eraseToAnyPublisher()
-
         Publishers.MergeMany([
-            fullConversationModel,
-            commentCreationTappedModel,
-            commentThreadTappedModel,
-            notificationsTappedModel,
-            profileTappedModel,
-            clarityDetailsTappedModel,
-            reportReasonTappedModel
+            preConversationToFullConversationModel,
+            fullConversationModel
         ])
             .map { $0 } // swiftlint:disable:this array_init
             .bind(to: _openMockArticleScreen)

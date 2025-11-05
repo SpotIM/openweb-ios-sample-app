@@ -19,6 +19,8 @@ protocol MockArticleFlowsPartialScreenViewModelingInputs {
 
 protocol MockArticleFlowsPartialScreenViewModelingOutputs {
     var title: String { get }
+    var showPreConversation: AnyPublisher<UIView, Never> { get }
+    var openConversationFlow: AnyPublisher<OWConversationRoute, Never> { get }
     var showFullConversation: AnyPublisher<UIViewController, Never> { get }
     var articleImageURL: AnyPublisher<URL, Never> { get }
     var showError: AnyPublisher<String, Never> { get }
@@ -92,10 +94,35 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
             .eraseToAnyPublisher()
     }
 
+    private let _showPreConversation = PassthroughSubject<UIView, Never>()
+    var showPreConversation: AnyPublisher<UIView, Never> {
+        return _showPreConversation
+            .eraseToAnyPublisher()
+    }
+
+    private let _openConversationFlow = PassthroughSubject<OWConversationRoute, Never>()
+    var openConversationFlow: AnyPublisher<OWConversationRoute, Never> {
+        return _openConversationFlow
+            .eraseToAnyPublisher()
+    }
+
     private let _showFullConversation = PassthroughSubject<UIViewController, Never>()
     var showFullConversation: AnyPublisher<UIViewController, Never> {
         return _showFullConversation
             .eraseToAnyPublisher()
+    }
+
+    private lazy var actionsCallbacks: OWPreConversationActionsCallbacks = { [weak self] callbackType, postId in
+        guard let self else { return }
+
+        let log = "Received OWPreConversationActionsCallbacks type: \(callbackType), postId: \(postId)\n"
+        DLog(log)
+        switch callbackType {
+        case .openConversationFlow(let route):
+            self._openConversationFlow.send(route)
+        default:
+            break
+        }
     }
 
     lazy var title: String = {
@@ -113,22 +140,60 @@ private extension MockArticleFlowsPartialScreenViewModel {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.send(articleURL)
 
-        // Conversation-based flows (full conversation, comment creation, comment thread)
+        // Pre conversation
         actionSettings
-            .compactMap { [weak self] settings -> (postId: String, route: OWConversationRoute)? in
-                guard let self,
-                      let route = self.conversationRoute(for: settings.actionType) else {
+            .compactMap { settings -> String? in
+                if case .preConversationToFullConversation = settings.actionType {
+                    return settings.postId
+                } else {
                     return nil
                 }
-                return (settings.postId, route)
             }
-            .withLatestFrom(loggerEnabled) { payload, loggerEnabled -> (String, OWConversationRoute, Bool) in
-                return (payload.postId, payload.route, loggerEnabled)
+            .withLatestFrom(loggerEnabled) { postId, loggerEnabled -> (String, Bool) in
+                return (postId, loggerEnabled)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] postId, loggerEnabled in
+                guard let self else { return }
+
+                let manager = OpenWeb.manager
+                let views = manager.ui.views
+
+                let additionalSettings = self.commonCreatorService.additionalSettings()
+                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+
+                views.preConversation(postId: postId,
+                                      article: article,
+                                      additionalSettings: additionalSettings,
+                                      callbacks: actionsCallbacks) { result in
+                    switch result {
+                    case .success(let preConversationView):
+                        self._showPreConversation.send(preConversationView)
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling views.preConversation error: \(error)")
+                        self._showError.send(message)
+                    }
+                }
+            })
+            .store(in: &cancellables)
+
+        // Conversation-based flows (full conversation, comment creation, comment thread)
+        actionSettings
+            .compactMap { settings -> String? in
+                if case .fullConversation = settings.actionType {
+                    return settings.postId
+                } else {
+                    return nil
+                }
+            }
+            .withLatestFrom(loggerEnabled) { postId, loggerEnabled -> (String, Bool) in
+                return (postId, loggerEnabled)
             }
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
-                let (postId, route, loggerEnabled) = result
+                let (postId, loggerEnabled) = result
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
@@ -143,7 +208,6 @@ private extension MockArticleFlowsPartialScreenViewModel {
                             let conversationViewController = try await flows.conversation(
                                 postId: postId,
                                 article: article,
-                                route: route,
                                 additionalSettings: additionalSettings,
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
@@ -157,7 +221,6 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 } else {
                     flows.conversation(postId: postId,
                                        article: article,
-                                       route: route,
                                        additionalSettings: additionalSettings,
                                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
                                        completion: { [weak self] result in
@@ -236,25 +299,6 @@ private extension MockArticleFlowsPartialScreenViewModel {
         }
 
         analytics.addBICallback(BIClosure)
-    }
-
-    func conversationRoute(for actionType: SDKUIFlowPartialScreenActionType) -> OWConversationRoute? {
-        switch actionType {
-        case .fullConversation:
-            return OWConversationRoute.none
-        case .commentCreation:
-            return .commentCreation(type: .comment)
-        case .commentThread:
-            return .commentThread(commentId: commonCreatorService.commentThreadCommentId())
-        case .notifications:
-            return .notifications
-        case .profile(let userId):
-            return .profile(userId: userId)
-        case .clarityDetails:
-            return .clarityDetails(commentId: commonCreatorService.commentThreadCommentId(), type: .pending)
-        case .reportReason:
-            return .reportReason(commentId: commonCreatorService.commentThreadCommentId())
-        }
     }
 
     func shouldUseAsyncAwaitCallingMethod() -> Bool {

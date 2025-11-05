@@ -15,13 +15,8 @@ class UIFlowsPartialScreenVC: UIViewController {
 
     private struct Metrics {
         static let identifier = "uiflows_partial_screen_vc_id"
+        static let btnPreConversationToConversationIdentifier = "btn_pre_conversation_to_conversation_id"
         static let btnFullConversationIdentifier = "btn_full_conversation_id"
-        static let btnCommentCreationIdentifier = "btn_comment_creation_id"
-        static let btnCommentThreadIdentifier = "btn_comment_thread_id"
-        static let btnNotificationsIdentifier = "btn_notifications_id"
-        static let btnProfileIdentifier = "btn_profile_id"
-        static let btnClarityDetailsIdentifier = "btn_clarity_details_id"
-        static let btnReportReasonIdentifier = "btn_report_reason_id"
         static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
@@ -39,32 +34,12 @@ class UIFlowsPartialScreenVC: UIViewController {
         return scrollView
     }()
 
+    private lazy var btnPreConversationToConversation: UIButton = {
+        return NSLocalizedString("PreConversationToFullConversation", comment: "").blueRoundedButton
+    }()
+
     private lazy var btnFullConversation: UIButton = {
         return NSLocalizedString("FullConversation", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnCommentCreation: UIButton = {
-        return NSLocalizedString("CommentCreation", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnCommentThread: UIButton = {
-        return NSLocalizedString("CommentThread", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnNotifications: UIButton = {
-        return NSLocalizedString("Notifications", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnProfile: UIButton = {
-        return NSLocalizedString("ProfileTitle", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnClarityDetails: UIButton = {
-        return NSLocalizedString("ClarityDetails", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnReportReason: UIButton = {
-        return NSLocalizedString("ReportReason", comment: "").appending(" *").blueRoundedButton
     }()
 
     private lazy var btnExamples: UIButton = {
@@ -91,13 +66,8 @@ class UIFlowsPartialScreenVC: UIViewController {
 private extension UIFlowsPartialScreenVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
+        btnPreConversationToConversation.accessibilityIdentifier = Metrics.btnPreConversationToConversationIdentifier
         btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
-        btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
-        btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
-        btnNotifications.accessibilityIdentifier = Metrics.btnNotificationsIdentifier
-        btnProfile.accessibilityIdentifier = Metrics.btnProfileIdentifier
-        btnClarityDetails.accessibilityIdentifier = Metrics.btnClarityDetailsIdentifier
-        btnReportReason.accessibilityIdentifier = Metrics.btnReportReasonIdentifier
         btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
@@ -113,13 +83,8 @@ private extension UIFlowsPartialScreenVC {
         }
 
         let buttons = [
+            btnPreConversationToConversation,
             btnFullConversation,
-            btnCommentCreation,
-            btnCommentThread,
-            btnNotifications,
-            btnProfile,
-            btnClarityDetails,
-            btnReportReason,
             btnExamples
         ]
         let buttonsStackView = UIStackView(arrangedSubviews: buttons)
@@ -145,32 +110,12 @@ private extension UIFlowsPartialScreenVC {
         title = viewModel.outputs.title
 
         // Bind buttons
+        btnPreConversationToConversation.tapPublisher
+            .bind(to: viewModel.inputs.preConversationToFullConversationTapped)
+            .store(in: &cancellables)
+
         btnFullConversation.tapPublisher
             .bind(to: viewModel.inputs.fullConversationTapped)
-            .store(in: &cancellables)
-
-        btnCommentCreation.tapPublisher
-            .bind(to: viewModel.inputs.commentCreationTapped)
-            .store(in: &cancellables)
-
-        btnCommentThread.tapPublisher
-            .bind(to: viewModel.inputs.commentThreadTapped)
-            .store(in: &cancellables)
-
-        btnNotifications.tapPublisher
-            .bind(to: viewModel.inputs.notificationsTapped)
-            .store(in: &cancellables)
-
-        btnProfile.tapPublisher
-            .bind(to: viewModel.inputs.profileTapped)
-            .store(in: &cancellables)
-
-        btnClarityDetails.tapPublisher
-            .bind(to: viewModel.inputs.clarityDetailsTapped)
-            .store(in: &cancellables)
-
-        btnReportReason.tapPublisher
-            .bind(to: viewModel.inputs.reportReasonTapped)
             .store(in: &cancellables)
 
         btnExamples.tapPublisher

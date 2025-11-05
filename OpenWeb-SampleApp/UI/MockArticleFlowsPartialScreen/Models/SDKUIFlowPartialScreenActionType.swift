@@ -8,11 +8,6 @@
 import Foundation
 
 enum SDKUIFlowPartialScreenActionType {
+    case preConversationToFullConversation
     case fullConversation
-    case commentCreation
-    case commentThread
-    case notifications
-    case profile(userId: String)
-    case clarityDetails
-    case reportReason
 }
