@@ -33,6 +33,7 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
     var outputs: UIFlowsConversationBelowVideoViewModelingOutputs { return self }
 
     private let postId: OWPostId
+    private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
     private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
     private lazy var cancellables: Set<AnyCancellable> = []
@@ -71,9 +72,11 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
     }
 
     init(postId: OWPostId,
+         userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
          silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI()) {
         self.postId = postId
+        self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
         self.silentSSOAuthentication = silentSSOAuthentication
         setupObservers()
@@ -87,7 +90,7 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
     }
 
     // Providing `renewSSO` callback
-    private lazy var  renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
+    private lazy var renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
         guard let self else { return }
         #if !PUBLIC_DEMO_APP
         let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
@@ -147,46 +150,82 @@ private extension UIFlowsConversationBelowVideoViewModel {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        let additionalSettings = OWAdditionalSettings(preConversationSettings: OWPreConversationSettings(style: .compact))
+        let additionalSettings = self.commonCreatorService.additionalSettings()
 
-        uiViewsLayer.preConversation(postId: self.postId,
-                                     article: article,
-                                     additionalSettings: additionalSettings,
-                                     callbacks: self.actionsCallbacks,
-                                     completion: { [weak self] result in
-
-            guard let self else { return }
-            switch result {
-            case .failure(let err):
-                self._componentRetrievingError.send(err)
-            case.success(let view):
-                self._preConversationRetrieved.send(view)
+        if shouldUseAsyncAwaitCallingMethod() {
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    let view = try await uiViewsLayer.preConversation(
+                        postId: postId,
+                        article: article,
+                        additionalSettings: additionalSettings,
+                        callbacks: self.actionsCallbacks
+                    )
+                    self._preConversationRetrieved.send(view)
+                } catch {
+                    guard let err: OWError = error as? OWError else { return }
+                    self._componentRetrievingError.send(err)
+                }
             }
-        })
+        } else {
+            uiViewsLayer.preConversation(postId: self.postId,
+                                         article: article,
+                                         additionalSettings: additionalSettings,
+                                         callbacks: self.actionsCallbacks,
+                                         completion: { [weak self] result in
+
+                guard let self else { return }
+                switch result {
+                case .failure(let err):
+                    self._componentRetrievingError.send(err)
+                case.success(let view):
+                    self._preConversationRetrieved.send(view)
+                }
+            })
+        }
     }
 
     func retrieveConversationComponent(route: OWConversationRoute = .none) {
         let uiFlowsLayer = OpenWeb.manager.ui.flows
         let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        let additionalSettings = OWAdditionalSettings(
-            fullConversationSettings: OWConversationSettings(style: .compact),
-            commentCreationSettings: OWCommentCreationSettings(style: .floatingKeyboard)
-        )
+        let additionalSettings = self.commonCreatorService.additionalSettings()
 
-        uiFlowsLayer.conversation(postId: postId,
-                                  article: article,
-                                  route: route,
-                                  additionalSettings: additionalSettings,
-                                  callbacks: nil,
-                                  completion: { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let conversationViewController):
-                self._conversationRetrieved.send(conversationViewController)
-            case .failure(let error):
-                self._componentRetrievingError.send(error)
+        if shouldUseAsyncAwaitCallingMethod() {
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    let conversationViewController = try await uiFlowsLayer.conversation(
+                        postId: postId,
+                        article: article,
+                        route: route,
+                        additionalSettings: additionalSettings
+                    )
+                    self._conversationRetrieved.send(conversationViewController)
+                } catch {
+                    guard let err: OWError = error as? OWError else { return }
+                    self._componentRetrievingError.send(err)
+                }
             }
-        })
+        } else {
+            uiFlowsLayer.conversation(postId: postId,
+                                      article: article,
+                                      route: route,
+                                      additionalSettings: additionalSettings,
+                                      completion: { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let conversationViewController):
+                    self._conversationRetrieved.send(conversationViewController)
+                case .failure(let error):
+                    self._componentRetrievingError.send(error)
+                }
+            })
+        }
+    }
+
+    func shouldUseAsyncAwaitCallingMethod() -> Bool {
+        return SampleAppCallingMethod.asyncAwait == userDefaultsProvider.get(key: .callingMethodOption, defaultValue: .default)
     }
 }
