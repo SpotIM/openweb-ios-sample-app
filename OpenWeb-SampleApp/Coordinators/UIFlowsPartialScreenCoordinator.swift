@@ -44,11 +44,11 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
-        let viewsExamplesCoordinator = flowsVM.outputs.openExamplesScreen
-            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
+        let conversationBelowVideoCoordinator = flowsVM.outputs.openConversationBelowVideoScreen
+            .flatMap { [weak self] postId -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = UIFlowsPartialScreenExamplesCoordinator(router: self.router)
+                let coordinatorData = CoordinatorData.postId(data: postId)
+                let coordinator = UIFlowsConversationBelowVideoCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
@@ -57,7 +57,7 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
 
         return Publishers.Merge3(vcPopped,
                                  mockArticleFlowCoordinator,
-                                 viewsExamplesCoordinator)
+                                 conversationBelowVideoCoordinator)
         .eraseToAnyPublisher()
     }
 }

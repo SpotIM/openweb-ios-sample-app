@@ -53,6 +53,7 @@
 "PreConversation" = "Pre Conversation";
 "PreConversationToFullConversationPushMode" = "Pre Conversation > Push";
 "PreConversationToFullConversationPresentMode" = "Pre Conversation > Present";
+"PreConversationToFullConversationCoverMode" = "Pre Conversation > Cover";
 "FullConversation" = "Full Conversation";
 "CommentCreation" = "Comment Creation";
 "CommentThread" = "Comment Thread";

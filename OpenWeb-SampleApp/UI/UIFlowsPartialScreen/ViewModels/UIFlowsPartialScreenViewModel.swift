@@ -12,14 +12,14 @@ import OpenWebSDK
 protocol UIFlowsPartialScreenViewModelingInputs {
     var preConversationToFullConversationPushModeTapped: PassthroughSubject<Void, Never> { get }
     var preConversationToFullConversationPresentModeTapped: PassthroughSubject<Void, Never> { get }
+    var preConversationToFullConversationCoverModeTapped: PassthroughSubject<Void, Never> { get }
     var fullConversationTapped: PassthroughSubject<Void, Never> { get }
-    var examplesTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol UIFlowsPartialScreenViewModelingOutputs {
     var title: String { get }
     var openMockArticleScreen: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> { get }
-    var openExamplesScreen: AnyPublisher<OWPostId, Never> { get }
+    var openConversationBelowVideoScreen: AnyPublisher<OWPostId, Never> { get }
 }
 
 protocol UIFlowsPartialScreenViewModeling {
@@ -41,8 +41,8 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
 
     let preConversationToFullConversationPushModeTapped = PassthroughSubject<Void, Never>()
     let preConversationToFullConversationPresentModeTapped = PassthroughSubject<Void, Never>()
+    let preConversationToFullConversationCoverModeTapped = PassthroughSubject<Void, Never>()
     let fullConversationTapped = PassthroughSubject<Void, Never>()
-    let examplesTapped = PassthroughSubject<Void, Never>()
 
     private let _openMockArticleScreen = CurrentValueSubject<SDKUIFlowPartialScreenActionSettings?, Never>(value: nil)
     var openMockArticleScreen: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> {
@@ -51,9 +51,9 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
             .eraseToAnyPublisher()
     }
 
-    private let _openExamplesScreen = CurrentValueSubject<OWPostId?, Never>(value: nil)
-    var openExamplesScreen: AnyPublisher<OWPostId, Never> {
-        return _openExamplesScreen
+    private let _openConversationBelowVideoScreen = CurrentValueSubject<OWPostId?, Never>(value: nil)
+    var openConversationBelowVideoScreen: AnyPublisher<OWPostId, Never> {
+        return _openConversationBelowVideoScreen
             .unwrap()
             .eraseToAnyPublisher()
     }
@@ -100,9 +100,9 @@ private extension UIFlowsPartialScreenViewModel {
             .bind(to: _openMockArticleScreen)
             .store(in: &cancellables)
 
-        examplesTapped
+        preConversationToFullConversationCoverModeTapped
             .map { postId }
-            .bind(to: _openExamplesScreen)
+            .bind(to: _openConversationBelowVideoScreen)
             .store(in: &cancellables)
     }
 }
