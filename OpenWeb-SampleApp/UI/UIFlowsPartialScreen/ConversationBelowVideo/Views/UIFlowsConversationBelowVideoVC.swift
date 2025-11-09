@@ -107,15 +107,16 @@ private extension UIFlowsConversationBelowVideoVC {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] conversationVc in
                 guard let self else { return }
-                self.containerBelowVideo.addSubview(conversationVc.view)
                 self.addChild(conversationVc)
 
-                self.view.addSubview(conversationVc.view)
+                self.containerBelowVideo.addSubview(conversationVc.view)
                 conversationVc.view.snp.makeConstraints { make in
                     self.conversationTopConstraint = make.top.equalTo(self.view.snp.bottom).constraint
                     make.leading.trailing.equalToSuperview()
                     make.height.equalTo(self.containerBelowVideo.snp.height)
                 }
+                conversationVc.didMove(toParent: self)
+
                 self.view.layoutIfNeeded()
 
                 // 3. Perform animation
@@ -127,7 +128,6 @@ private extension UIFlowsConversationBelowVideoVC {
                 } completion: { _ in
                     // Nothing here
                 }
-                conversationVc.didMove(toParent: self)
             })
             .store(in: &cancellables)
 
