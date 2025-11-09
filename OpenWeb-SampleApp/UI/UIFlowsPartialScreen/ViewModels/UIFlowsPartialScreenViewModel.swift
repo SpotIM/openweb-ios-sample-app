@@ -31,10 +31,6 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
     var inputs: UIFlowsPartialScreenViewModelingInputs { return self }
     var outputs: UIFlowsPartialScreenViewModelingOutputs { return self }
 
-    private struct Metrics {
-        static let profileUserId = "u_lAt51Sg8WoDL" // Test-User
-    }
-
     private let dataModel: SDKConversationDataModel
 
     private var cancellables = Set<AnyCancellable>()
