@@ -21,7 +21,7 @@ class UIFlowsConversationBelowVideoCoordinator: BaseCoordinator<Void> {
 
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
-            fatalError("UIFlowsExamplesCoordinator requires coordinatorData from `CoordinatorData.postId` type")
+            fatalError("UIFlowsConversationBelowVideoCoordinator requires coordinatorData from `CoordinatorData.postId` type")
         }
 
         let vcPopped = PassthroughSubject<Void, Never>()
