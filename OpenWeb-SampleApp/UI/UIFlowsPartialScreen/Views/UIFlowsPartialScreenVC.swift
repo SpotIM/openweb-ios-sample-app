@@ -15,7 +15,8 @@ class UIFlowsPartialScreenVC: UIViewController {
 
     private struct Metrics {
         static let identifier = "uiflows_partial_screen_vc_id"
-        static let btnPreConversationToConversationIdentifier = "btn_pre_conversation_to_conversation_id"
+        static let btnPreConversationToConversationPushModeIdentifier = "btn_pre_conversation_to_conversation_push_mode_id"
+        static let btnPreConversationToConversationPresentModeIdentifier = "btn_pre_conversation_to_conversation_present_mode_id"
         static let btnFullConversationIdentifier = "btn_full_conversation_id"
         static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
@@ -34,8 +35,12 @@ class UIFlowsPartialScreenVC: UIViewController {
         return scrollView
     }()
 
-    private lazy var btnPreConversationToConversation: UIButton = {
-        return NSLocalizedString("PreConversationToFullConversation", comment: "").blueRoundedButton
+    private lazy var btnPreConversationToConversationPushMode: UIButton = {
+        return NSLocalizedString("PreConversationToFullConversationPushMode", comment: "").blueRoundedButton
+    }()
+
+    private lazy var btnPreConversationToConversationPresentMode: UIButton = {
+        return NSLocalizedString("PreConversationToFullConversationPresentMode", comment: "").blueRoundedButton
     }()
 
     private lazy var btnFullConversation: UIButton = {
@@ -66,7 +71,8 @@ class UIFlowsPartialScreenVC: UIViewController {
 private extension UIFlowsPartialScreenVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
-        btnPreConversationToConversation.accessibilityIdentifier = Metrics.btnPreConversationToConversationIdentifier
+        btnPreConversationToConversationPushMode.accessibilityIdentifier = Metrics.btnPreConversationToConversationPushModeIdentifier
+        btnPreConversationToConversationPresentMode.accessibilityIdentifier = Metrics.btnPreConversationToConversationPresentModeIdentifier
         btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
         btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
@@ -83,7 +89,8 @@ private extension UIFlowsPartialScreenVC {
         }
 
         let buttons = [
-            btnPreConversationToConversation,
+            btnPreConversationToConversationPushMode,
+            btnPreConversationToConversationPresentMode,
             btnFullConversation,
             btnExamples
         ]
@@ -110,9 +117,13 @@ private extension UIFlowsPartialScreenVC {
         title = viewModel.outputs.title
 
         // Bind buttons
-        btnPreConversationToConversation.tapPublisher
-            .bind(to: viewModel.inputs.preConversationToFullConversationTapped)
-            .store(in: &cancellables)
+        btnPreConversationToConversationPushMode.tapPublisher
+            .bind(to: viewModel.inputs.preConversationToFullConversationPushModeTapped)
+                .store(in: &cancellables)
+
+        btnPreConversationToConversationPresentMode.tapPublisher
+            .bind(to: viewModel.inputs.preConversationToFullConversationPresentModeTapped)
+                .store(in: &cancellables)
 
         btnFullConversation.tapPublisher
             .bind(to: viewModel.inputs.fullConversationTapped)

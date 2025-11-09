@@ -10,7 +10,8 @@ import Combine
 import OpenWebSDK
 
 protocol UIFlowsPartialScreenViewModelingInputs {
-    var preConversationToFullConversationTapped: PassthroughSubject<Void, Never> { get }
+    var preConversationToFullConversationPushModeTapped: PassthroughSubject<Void, Never> { get }
+    var preConversationToFullConversationPresentModeTapped: PassthroughSubject<Void, Never> { get }
     var fullConversationTapped: PassthroughSubject<Void, Never> { get }
     var examplesTapped: PassthroughSubject<Void, Never> { get }
 }
@@ -38,7 +39,8 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
 
     private var cancellables = Set<AnyCancellable>()
 
-    let preConversationToFullConversationTapped = PassthroughSubject<Void, Never>()
+    let preConversationToFullConversationPushModeTapped = PassthroughSubject<Void, Never>()
+    let preConversationToFullConversationPresentModeTapped = PassthroughSubject<Void, Never>()
     let fullConversationTapped = PassthroughSubject<Void, Never>()
     let examplesTapped = PassthroughSubject<Void, Never>()
 
@@ -71,9 +73,15 @@ private extension UIFlowsPartialScreenViewModel {
     func setupObservers() {
         let postId = dataModel.postId
 
-        let preConversationToFullConversationModel = preConversationToFullConversationTapped
+        let preConversationToFullConversationPushModeModel = preConversationToFullConversationPushModeTapped
             .map { route -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .preConversationToFullConversation)
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .preConversationToFullConversation(presentationalMode: .push))
+            }
+            .eraseToAnyPublisher()
+
+        let preConversationToFullConversationPresentModeModel = preConversationToFullConversationPresentModeTapped
+            .map { route -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .preConversationToFullConversation(presentationalMode: .present(style: .fullScreen)))
             }
             .eraseToAnyPublisher()
 
@@ -84,7 +92,8 @@ private extension UIFlowsPartialScreenViewModel {
             .eraseToAnyPublisher()
 
         Publishers.MergeMany([
-            preConversationToFullConversationModel,
+            preConversationToFullConversationPushModeModel,
+            preConversationToFullConversationPresentModeModel,
             fullConversationModel
         ])
             .map { $0 } // swiftlint:disable:this array_init

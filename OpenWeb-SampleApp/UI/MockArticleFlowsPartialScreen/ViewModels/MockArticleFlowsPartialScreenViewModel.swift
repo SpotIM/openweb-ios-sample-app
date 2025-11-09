@@ -20,7 +20,7 @@ protocol MockArticleFlowsPartialScreenViewModelingInputs {
 protocol MockArticleFlowsPartialScreenViewModelingOutputs {
     var title: String { get }
     var showPreConversation: AnyPublisher<UIView, Never> { get }
-    var openConversationFlow: AnyPublisher<OWConversationRoute, Never> { get }
+    var showWrappedConversation: AnyPublisher<(UIViewController, PresentationalModeCompact), Never> { get }
     var showFullConversation: AnyPublisher<UIViewController, Never> { get }
     var articleImageURL: AnyPublisher<URL, Never> { get }
     var showError: AnyPublisher<String, Never> { get }
@@ -100,9 +100,9 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
             .eraseToAnyPublisher()
     }
 
-    private let _openConversationFlow = PassthroughSubject<OWConversationRoute, Never>()
-    var openConversationFlow: AnyPublisher<OWConversationRoute, Never> {
-        return _openConversationFlow
+    private let _showWrappedConversation = PassthroughSubject<(UIViewController, PresentationalModeCompact), Never>()
+    var showWrappedConversation: AnyPublisher<(UIViewController, PresentationalModeCompact), Never> {
+        return _showWrappedConversation
             .eraseToAnyPublisher()
     }
 
@@ -119,7 +119,7 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
         DLog(log)
         switch callbackType {
         case .openConversationFlow(let route):
-            self._openConversationFlow.send(route)
+            self.handleConversationFlow(route: route, postId: postId)
         default:
             break
         }
@@ -319,5 +319,33 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
         }
+    }
+
+    func handleConversationFlow(route: OWConversationRoute, postId: String) {
+        guard case let .preConversationToFullConversation(presentationalMode) = _actionSettings.value?.actionType else {
+            return
+        }
+        let manager = OpenWeb.manager
+        let flows = manager.ui.flows
+
+        let additionalSettings = commonCreatorService.additionalSettings()
+        let article = commonCreatorService.mockArticle(for: manager.spotId)
+
+        flows.conversation(postId: postId,
+                           article: article,
+                           route: route,
+                           additionalSettings: additionalSettings,
+                           completion: { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let conversationViewController):
+                let wrapperVC = ConversationWrapperVC(conversationViewController: conversationViewController)
+                self._showWrappedConversation.send((wrapperVC, presentationalMode))
+            case .failure(let error):
+                let message = error.description
+                DLog("Calling flows.conversation error: \(error)")
+                self._showError.send(message)
+            }
+        })
     }
 }

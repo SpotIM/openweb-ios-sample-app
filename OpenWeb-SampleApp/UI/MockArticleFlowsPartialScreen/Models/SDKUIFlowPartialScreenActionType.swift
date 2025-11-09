@@ -8,6 +8,6 @@
 import Foundation
 
 enum SDKUIFlowPartialScreenActionType {
-    case preConversationToFullConversation
+    case preConversationToFullConversation(presentationalMode: PresentationalModeCompact)
     case fullConversation
 }
