@@ -7,29 +7,79 @@
 
 #if DEBUG
 @testable import OpenWebSDK
+import SnapKit
+import UIKit
+
+extension OWCommentCreationRequiredData {
+    static func mock(commentCreationStyle: OWCommentCreationStyle) -> OWCommentCreationRequiredData {
+        return OWCommentCreationRequiredData(
+            article: OWArticle(
+                articleInformationStrategy: .local(data: OWArticleExtraData(
+                    url: URL(string: "https://test.com")!,
+                    title: "This is a placeholder for the article title. The container is limited to two lines of text to avoid interface overwhelming but will show the context",
+                    subtitle: "News Category",
+                    thumbnailUrl: URL(string: "https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/parts-url.jpg?width=595&height=400&name=parts-url.jpg")!)
+                ),
+                additionalSettings: OWArticleSettings(section: "default",
+                                                      starRatingEnabled: true)
+            ),
+            settings: OWAdditionalSettings(commentCreationSettings: OWCommentCreationSettings(style: commentCreationStyle)),
+            commentCreationType: .comment,
+            presentationalStyle: .none,
+            postId: ""
+        )
+    }
+}
 
 @available(iOS 17.0, *)
-#Preview {
+#Preview("regular") {
     OWCommentCreationView(
         viewModel: OWCommentCreationViewViewModel(
-            commentCreationData: OWCommentCreationRequiredData(
-                article: OWArticle(
-                    articleInformationStrategy: .local(data: OWArticleExtraData(
-                        url: URL(string: "https://test.com")!,
-                        title: "This is a placeholder for the article title. The container is limited to two lines of text to avoid interface overwhelming but will show the context",
-                        subtitle: "News Category",
-                        thumbnailUrl: URL(string: "https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/parts-url.jpg?width=595&height=400&name=parts-url.jpg")!)
-                    ),
-                    additionalSettings: OWArticleSettings(section: "default",
-                                                          starRatingEnabled: true)
-                ),
-                settings: OWAdditionalSettings(),
-                commentCreationType: .comment,
-                presentationalStyle: .none,
-                postId: ""
-            ),
+            commentCreationData: .mock(commentCreationStyle: .regular),
             viewableMode: .independent
         )
     )
+}
+
+@available(iOS 17.0, *)
+#Preview("light") {
+    OWCommentCreationView(
+        viewModel: OWCommentCreationViewViewModel(
+            commentCreationData: .mock(commentCreationStyle: .light),
+            viewableMode: .independent
+        )
+    )
+}
+
+@available(iOS 17.0, *)
+#Preview("floating") {
+    let viewController = UIViewController() // ensure full screen
+    viewController.view.backgroundColor = .secondarySystemBackground
+
+    let mockKeyboardView = UIImageView(image: UIImage(systemName: "keyboard"))
+    mockKeyboardView.contentMode = .scaleAspectFit
+    mockKeyboardView.tintColor = .systemBackground
+    mockKeyboardView.backgroundColor = .placeholderText
+    viewController.view.addSubview(mockKeyboardView)
+    mockKeyboardView.snp.makeConstraints { make in
+        make.leading.trailing.bottom.equalToSuperview()
+        make.height.equalTo(300)
+    }
+
+    let commentCreationView = OWCommentCreationView(
+        viewModel: OWCommentCreationViewViewModel(
+            commentCreationData: .mock(commentCreationStyle: .floatingKeyboard),
+            viewableMode: .independent
+        )
+    )
+
+    viewController.view.addSubview(commentCreationView)
+    commentCreationView.snp.makeConstraints { make in
+        make.leading.trailing.equalToSuperview()
+        make.bottom.equalTo(mockKeyboardView.snp.top)
+    }
+
+    viewController.view.bringSubviewToFront(mockKeyboardView)
+    return viewController
 }
 #endif
