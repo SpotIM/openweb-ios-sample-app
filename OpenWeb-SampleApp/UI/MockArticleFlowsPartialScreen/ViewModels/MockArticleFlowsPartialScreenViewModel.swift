@@ -117,8 +117,13 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
     private lazy var actionsCallbacks: OWPreConversationActionsCallbacks = { [weak self] callbackType, postId in
         guard let self else { return }
 
-        let log = "Received OWPreConversationActionsCallbacks type: \(callbackType), postId: \(postId)\n"
+        let log = "Received OWPreConversationActionsCallback type: \(callbackType), postId: \(postId)\n"
         DLog(log)
+
+        if _loggerEnabled.value {
+            self.loggerViewModel.inputs.log(text: log)
+        }
+
         switch callbackType {
         case .openConversationFlow(let route):
             self.handleConversationFlow(route: route, postId: postId)
