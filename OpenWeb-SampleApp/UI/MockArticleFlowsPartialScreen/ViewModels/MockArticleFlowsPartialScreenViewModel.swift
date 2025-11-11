@@ -46,9 +46,11 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
         return OWFloatingViewModel()
     }()
 
-    lazy var loggerEnabled: AnyPublisher<Bool, Never> = {
-        return userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
-    }()
+    private var _loggerEnabled = CurrentValueSubject<Bool, Never>(value: false)
+    var loggerEnabled: AnyPublisher<Bool, Never> {
+        _loggerEnabled
+            .eraseToAnyPublisher()
+    }
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -139,6 +141,10 @@ private extension MockArticleFlowsPartialScreenViewModel {
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.send(articleURL)
+
+        userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
+            .bind(to: _loggerEnabled)
+            .store(in: &cancellables)
 
         // Pre conversation
         actionSettings
@@ -355,7 +361,8 @@ private extension MockArticleFlowsPartialScreenViewModel {
                         postId: postId,
                         article: article,
                         route: route,
-                        additionalSettings: additionalSettings
+                        additionalSettings: additionalSettings,
+                        callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value)
                     )
                     let wrapperVC = ConversationWrapperVC(conversationViewController: conversationViewController)
                     self._showWrappedConversation.send((wrapperVC, presentationalMode))
@@ -370,6 +377,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                                article: article,
                                route: route,
                                additionalSettings: additionalSettings,
+                               callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value),
                                completion: { [weak self] result in
                 guard let self else { return }
                 switch result {
