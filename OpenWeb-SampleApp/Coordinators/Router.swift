@@ -55,14 +55,12 @@ class Router: NSObject, Routering {
         navigationController.pushViewController(module.toPresentable(), animated: animated)
     }
 
-    // periphery:ignore
     func pop(animated: Bool) {
         if let controller = navigationController.popViewController(animated: animated) {
             runCompletion(for: controller)
         }
     }
 
-    // periphery:ignore
     func dismiss(animated: Bool, completion: PassthroughSubject<Void, Never>?) {
         navigationController.dismiss(animated: animated) {
             completion?.send()
@@ -73,7 +71,6 @@ class Router: NSObject, Routering {
         navigationController.setViewControllers([module.toPresentable()], animated: false)
     }
 
-    // periphery:ignore
     func popToRoot(animated: Bool) {
         if let controllers = navigationController.popToRootViewController(animated: animated) {
             controllers.forEach { runCompletion(for: $0) }
