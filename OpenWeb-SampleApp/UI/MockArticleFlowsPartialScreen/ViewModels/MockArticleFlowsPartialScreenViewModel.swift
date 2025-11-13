@@ -207,20 +207,20 @@ private extension MockArticleFlowsPartialScreenViewModel {
 
         // Conversation-based flows (full conversation, comment creation, comment thread)
         actionSettings
-            .compactMap { settings -> String? in
-                if case .fullConversation = settings.actionType {
-                    return settings.postId
+            .compactMap { settings -> (postId: OWPostId, route: OWConversationRoute)? in
+                if case let .fullConversation(route) = settings.actionType {
+                    return (postId: settings.postId, route: route)
                 } else {
                     return nil
                 }
             }
-            .withLatestFrom(loggerEnabled) { postId, loggerEnabled -> (String, Bool) in
-                return (postId, loggerEnabled)
+            .withLatestFrom(loggerEnabled) { postIdAndRoute, loggerEnabled -> (String, OWConversationRoute, Bool) in
+                return (postIdAndRoute.postId, postIdAndRoute.route, loggerEnabled)
             }
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
-                let (postId, loggerEnabled) = result
+                let (postId, route, loggerEnabled) = result
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
@@ -235,6 +235,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                             let conversationViewController = try await flows.conversation(
                                 postId: postId,
                                 article: article,
+                                route: route,
                                 additionalSettings: additionalSettings,
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
@@ -248,6 +249,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 } else {
                     flows.conversation(postId: postId,
                                        article: article,
+                                       route: route,
                                        additionalSettings: additionalSettings,
                                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
                                        completion: { [weak self] result in

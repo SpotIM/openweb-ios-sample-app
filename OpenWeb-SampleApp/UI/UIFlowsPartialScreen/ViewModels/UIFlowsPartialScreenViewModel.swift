@@ -14,6 +14,8 @@ protocol UIFlowsPartialScreenViewModelingInputs {
     var preConversationToFullConversationPresentModeTapped: PassthroughSubject<Void, Never> { get }
     var preConversationToFullConversationCoverModeTapped: PassthroughSubject<Void, Never> { get }
     var fullConversationTapped: PassthroughSubject<Void, Never> { get }
+    var commentCreationTapped: PassthroughSubject<Void, Never> { get }
+    var commentThreadTapped: PassthroughSubject<Void, Never> { get }
 }
 
 protocol UIFlowsPartialScreenViewModelingOutputs {
@@ -39,6 +41,8 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
     let preConversationToFullConversationPresentModeTapped = PassthroughSubject<Void, Never>()
     let preConversationToFullConversationCoverModeTapped = PassthroughSubject<Void, Never>()
     let fullConversationTapped = PassthroughSubject<Void, Never>()
+    let commentCreationTapped = PassthroughSubject<Void, Never>()
+    let commentThreadTapped = PassthroughSubject<Void, Never>()
 
     private let _openMockArticleScreen = CurrentValueSubject<SDKUIFlowPartialScreenActionSettings?, Never>(value: nil)
     var openMockArticleScreen: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> {
@@ -82,15 +86,30 @@ private extension UIFlowsPartialScreenViewModel {
             .eraseToAnyPublisher()
 
         let fullConversationModel = fullConversationTapped
-            .map { route -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation)
+            .map { _ -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation(route: .none))
+            }
+            .eraseToAnyPublisher()
+
+        let commentCreationModel = commentCreationTapped
+            .map { _ -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation(route: .commentCreation(type: .comment)))
+            }
+            .eraseToAnyPublisher()
+
+        let commentThreadModel = commentThreadTapped
+            .map { _ -> SDKUIFlowPartialScreenActionSettings in
+                let commentId = OWCommentThreadSettings.defaultCommentId
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation(route: .commentThread(commentId: commentId)))
             }
             .eraseToAnyPublisher()
 
         Publishers.MergeMany([
             preConversationToFullConversationPushModeModel,
             preConversationToFullConversationPresentModeModel,
-            fullConversationModel
+            fullConversationModel,
+            commentCreationModel,
+            commentThreadModel
         ])
             .map { $0 } // swiftlint:disable:this array_init
             .bind(to: _openMockArticleScreen)
