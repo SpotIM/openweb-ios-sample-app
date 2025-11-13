@@ -37,18 +37,6 @@ class UIFlowsPartialScreenVC: UIViewController {
         return scrollView
     }()
 
-    private lazy var btnPreConversationToConversationPushMode: UIButton = {
-        return NSLocalizedString("PreConversationToFullConversationPushMode", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnPreConversationToConversationPresentMode: UIButton = {
-        return NSLocalizedString("PreConversationToFullConversationPresentMode", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnPreConversationToConversationCoverMode: UIButton = {
-        return NSLocalizedString("PreConversationToFullConversationCoverMode", comment: "").blueRoundedButton
-    }()
-
     private lazy var btnFullConversation: UIButton = {
         return NSLocalizedString("FullConversation", comment: "").blueRoundedButton
     }()
@@ -81,9 +69,6 @@ class UIFlowsPartialScreenVC: UIViewController {
 private extension UIFlowsPartialScreenVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
-        btnPreConversationToConversationPushMode.accessibilityIdentifier = Metrics.btnPreConversationToConversationPushModeIdentifier
-        btnPreConversationToConversationPresentMode.accessibilityIdentifier = Metrics.btnPreConversationToConversationPresentModeIdentifier
-        btnPreConversationToConversationCoverMode.accessibilityIdentifier = Metrics.btnPreConversationToConversationCoverModeIdentifier
         btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
@@ -101,9 +86,6 @@ private extension UIFlowsPartialScreenVC {
         }
 
         let buttons = [
-            btnPreConversationToConversationPushMode,
-            btnPreConversationToConversationPresentMode,
-            btnPreConversationToConversationCoverMode,
             btnFullConversation,
             btnCommentCreation,
             btnCommentThread
@@ -131,18 +113,6 @@ private extension UIFlowsPartialScreenVC {
         title = viewModel.outputs.title
 
         // Bind buttons
-        btnPreConversationToConversationPushMode.tapPublisher
-            .bind(to: viewModel.inputs.preConversationToFullConversationPushModeTapped)
-                .store(in: &cancellables)
-
-        btnPreConversationToConversationPresentMode.tapPublisher
-            .bind(to: viewModel.inputs.preConversationToFullConversationPresentModeTapped)
-                .store(in: &cancellables)
-
-        btnPreConversationToConversationCoverMode.tapPublisher
-            .bind(to: viewModel.inputs.preConversationToFullConversationCoverModeTapped)
-                .store(in: &cancellables)
-
         btnFullConversation.tapPublisher
             .bind(to: viewModel.inputs.fullConversationTapped)
             .store(in: &cancellables)

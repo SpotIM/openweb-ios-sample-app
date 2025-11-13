@@ -33,18 +33,6 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
                     animated: true,
                     completion: vcPopped)
 
-        let mockArticleFlowCoordinator = flowsVM.outputs.openMockArticleScreen
-            .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
-                guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinatorData = CoordinatorData.actionsFlowPartialScreenSettings(data: dataModel)
-                let coordinator = MockArticleFlowPartialScreenCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
-            }
-            .flatMap { _ -> AnyPublisher<Void, Never> in
-                return Empty(completeImmediately: false).eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
-
         let conversationWrapperCoordinator = flowsVM.outputs.openConversationWrapperFlow
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
@@ -57,23 +45,9 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
             }
             .eraseToAnyPublisher()
 
-        let conversationBelowVideoCoordinator = flowsVM.outputs.openConversationBelowVideoScreen
-            .flatMap { [weak self] postId -> AnyPublisher<Void, Never> in
-                guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinatorData = CoordinatorData.postId(data: postId)
-                let coordinator = UIFlowsConversationBelowVideoCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
-            }
-            .flatMap { _ -> AnyPublisher<Void, Never> in
-                return Empty(completeImmediately: false).eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
-
         return Publishers.MergeMany([
             vcPopped.eraseToAnyPublisher(),
-            mockArticleFlowCoordinator,
             conversationWrapperCoordinator,
-            conversationBelowVideoCoordinator
         ])
         .eraseToAnyPublisher()
     }

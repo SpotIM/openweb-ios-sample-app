@@ -116,24 +116,6 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
             .eraseToAnyPublisher()
     }
 
-    private lazy var actionsCallbacks: OWPreConversationActionsCallbacks = { [weak self] callbackType, postId in
-        guard let self else { return }
-
-        let log = "Received OWPreConversationActionsCallback type: \(callbackType), postId: \(postId)\n"
-        DLog(log)
-
-        if _loggerEnabled.value {
-            self.loggerViewModel.inputs.log(text: log)
-        }
-
-        switch callbackType {
-        case .openConversationFlow(let route):
-            self.handleConversationFlow(route: route, postId: postId)
-        default:
-            break
-        }
-    }
-
     lazy var title: String = {
         return NSLocalizedString("MockArticle", comment: "")
     }()
@@ -151,60 +133,6 @@ private extension MockArticleFlowsPartialScreenViewModel {
 
         userDefaultsProvider.values(key: .flowsLoggerEnabled, defaultValue: false)
             .bind(to: _loggerEnabled)
-            .store(in: &cancellables)
-
-        // Pre conversation
-        actionSettings
-            .compactMap { settings -> String? in
-                if case .preConversationToFullConversation = settings.actionType {
-                    return settings.postId
-                } else {
-                    return nil
-                }
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] postId in
-                guard let self else { return }
-
-                let manager = OpenWeb.manager
-                let views = manager.ui.views
-
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
-
-                if shouldUseAsyncAwaitCallingMethod() {
-                    Task { @MainActor [weak self] in
-                        guard let self else { return }
-                        do {
-                            let preConversationView = try await views.preConversation(
-                                postId: postId,
-                                article: article,
-                                additionalSettings: additionalSettings,
-                                callbacks: actionsCallbacks
-                            )
-                            self._showPreConversation.send(preConversationView)
-                        } catch {
-                            let message = error.localizedDescription
-                            DLog("Calling views.preConversation error: \(error)")
-                            _showError.send(message)
-                        }
-                    }
-                } else {
-                    views.preConversation(postId: postId,
-                                          article: article,
-                                          additionalSettings: additionalSettings,
-                                          callbacks: actionsCallbacks) { result in
-                        switch result {
-                        case .success(let preConversationView):
-                            self._showPreConversation.send(preConversationView)
-                        case .failure(let error):
-                            let message = error.description
-                            DLog("Calling views.preConversation error: \(error)")
-                            self._showError.send(message)
-                        }
-                    }
-                }
-            })
             .store(in: &cancellables)
 
         // Conversation-based flows (full conversation, comment creation, comment thread)
