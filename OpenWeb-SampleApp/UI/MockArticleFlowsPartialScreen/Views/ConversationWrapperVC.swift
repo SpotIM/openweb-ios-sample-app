@@ -28,11 +28,6 @@ class ConversationWrapperVC: UIViewController {
         return view
     }()
 
-    convenience init(conversationViewController: UIViewController) {
-        self.init()
-        setConversationViewController(conversationViewController)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
