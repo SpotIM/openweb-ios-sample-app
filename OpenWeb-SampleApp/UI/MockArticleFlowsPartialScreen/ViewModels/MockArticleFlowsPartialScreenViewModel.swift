@@ -108,9 +108,11 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
             .eraseToAnyPublisher()
     }
 
-    private let _showFullConversation = PassthroughSubject<UIViewController, Never>()
+    private let _showFullConversation = CurrentValueSubject<UIViewController?, Never>(value: nil)
     var showFullConversation: AnyPublisher<UIViewController, Never> {
         return _showFullConversation
+            .unwrap()
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
@@ -217,7 +219,6 @@ private extension MockArticleFlowsPartialScreenViewModel {
             .withLatestFrom(loggerEnabled) { postIdAndRoute, loggerEnabled -> (String, OWConversationRoute, Bool) in
                 return (postIdAndRoute.postId, postIdAndRoute.route, loggerEnabled)
             }
-            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] result in
                 guard let self else { return }
                 let (postId, route, loggerEnabled) = result

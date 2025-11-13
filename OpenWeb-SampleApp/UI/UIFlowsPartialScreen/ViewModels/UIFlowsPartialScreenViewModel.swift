@@ -21,6 +21,7 @@ protocol UIFlowsPartialScreenViewModelingInputs {
 protocol UIFlowsPartialScreenViewModelingOutputs {
     var title: String { get }
     var openMockArticleScreen: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> { get }
+    var openConversationWrapperFlow: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> { get }
     var openConversationBelowVideoScreen: AnyPublisher<OWPostId, Never> { get }
 }
 
@@ -48,6 +49,12 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
     var openMockArticleScreen: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> {
         return _openMockArticleScreen
             .unwrap()
+            .eraseToAnyPublisher()
+    }
+
+    private let _openConversationWrapperFlow = PassthroughSubject<SDKUIFlowPartialScreenActionSettings, Never>()
+    var openConversationWrapperFlow: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> {
+        return _openConversationWrapperFlow
             .eraseToAnyPublisher()
     }
 
@@ -104,15 +111,20 @@ private extension UIFlowsPartialScreenViewModel {
             }
             .eraseToAnyPublisher()
 
-        Publishers.MergeMany([
+        Publishers.Merge(
             preConversationToFullConversationPushModeModel,
-            preConversationToFullConversationPresentModeModel,
+            preConversationToFullConversationPresentModeModel
+        )
+            .map { Optional($0) }
+            .bind(to: _openMockArticleScreen)
+            .store(in: &cancellables)
+
+        Publishers.Merge3(
             fullConversationModel,
             commentCreationModel,
             commentThreadModel
-        ])
-            .map { $0 } // swiftlint:disable:this array_init
-            .bind(to: _openMockArticleScreen)
+        )
+            .bind(to: _openConversationWrapperFlow)
             .store(in: &cancellables)
 
         preConversationToFullConversationCoverModeTapped

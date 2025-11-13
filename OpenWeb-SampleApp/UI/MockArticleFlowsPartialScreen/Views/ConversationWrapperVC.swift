@@ -16,8 +16,6 @@ class ConversationWrapperVC: UIViewController {
         static let coloredViewHeight: CGFloat = 50
     }
 
-    private let conversationViewController: UIViewController
-
     private lazy var topColoredView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBlue
@@ -30,19 +28,24 @@ class ConversationWrapperVC: UIViewController {
         return view
     }()
 
-    init(conversationViewController: UIViewController) {
-        self.conversationViewController = conversationViewController
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    convenience init(conversationViewController: UIViewController) {
+        self.init()
+        setConversationViewController(conversationViewController)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         applyAccessibility()
+    }
+
+    func setConversationViewController(_ viewController: UIViewController) {
+        for child in children {
+            child.willMove(toParent: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParent()
+        }
+        addConversationViewController(viewController)
     }
 }
 
@@ -68,8 +71,9 @@ private extension ConversationWrapperVC {
             make.bottom.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.coloredViewHeight)
         }
+    }
 
-        // Add conversation view controller as child
+    func addConversationViewController(_ conversationViewController: UIViewController) {
         addChild(conversationViewController)
         view.addSubview(conversationViewController.view)
         conversationViewController.view.snp.makeConstraints { make in
