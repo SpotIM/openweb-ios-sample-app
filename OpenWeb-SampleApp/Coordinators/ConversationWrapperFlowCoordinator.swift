@@ -44,6 +44,14 @@ final class ConversationWrapperFlowCoordinator: BaseCoordinator<Void> {
             })
             .store(in: &cancellables)
 
+        #if !PUBLIC_DEMO_APP
+        wrapperVC.configureLogger(
+            floatingViewModel: viewModel.outputs.floatingViewViewModel,
+            loggerViewModel: viewModel.outputs.loggerViewModel,
+            loggerEnabled: viewModel.outputs.loggerEnabled
+        )
+        #endif
+
         router.push(wrapperVC,
                     animated: true,
                     completion: completion)
