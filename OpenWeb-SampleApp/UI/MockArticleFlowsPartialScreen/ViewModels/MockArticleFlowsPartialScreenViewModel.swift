@@ -19,6 +19,8 @@ protocol MockArticleFlowsPartialScreenViewModelingInputs {
 
 protocol MockArticleFlowsPartialScreenViewModelingOutputs {
     var title: String { get }
+    var showPreConversation: AnyPublisher<UIView, Never> { get }
+    var showWrappedConversation: AnyPublisher<(UIViewController, PresentationalModeCompact), Never> { get }
     var showFullConversation: AnyPublisher<UIViewController, Never> { get }
     var articleImageURL: AnyPublisher<URL, Never> { get }
     var showError: AnyPublisher<String, Never> { get }
@@ -91,6 +93,18 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
     private let _showError = PassthroughSubject<String, Never>()
     var showError: AnyPublisher<String, Never> {
         return _showError
+            .eraseToAnyPublisher()
+    }
+
+    private let _showPreConversation = PassthroughSubject<UIView, Never>()
+    var showPreConversation: AnyPublisher<UIView, Never> {
+        return _showPreConversation
+            .eraseToAnyPublisher()
+    }
+
+    private let _showWrappedConversation = PassthroughSubject<(UIViewController, PresentationalModeCompact), Never>()
+    var showWrappedConversation: AnyPublisher<(UIViewController, PresentationalModeCompact), Never> {
+        return _showWrappedConversation
             .eraseToAnyPublisher()
     }
 
@@ -262,6 +276,56 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
                 self.loggerViewModel.inputs.log(text: log)
             }
+        }
+    }
+
+    func handleConversationFlow(route: OWConversationRoute, postId: String) {
+        guard case let .preConversationToFullConversation(presentationalMode) = _actionSettings.value?.actionType else {
+            return
+        }
+        let manager = OpenWeb.manager
+        let flows = manager.ui.flows
+
+        let additionalSettings = commonCreatorService.additionalSettings()
+        let article = commonCreatorService.mockArticle(for: manager.spotId)
+
+        if shouldUseAsyncAwaitCallingMethod() {
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    let conversationViewController = try await flows.conversation(
+                        postId: postId,
+                        article: article,
+                        route: route,
+                        additionalSettings: additionalSettings,
+                        callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value)
+                    )
+                    let wrapperVC = ConversationWrapperVC(conversationViewController: conversationViewController)
+                    self._showWrappedConversation.send((wrapperVC, presentationalMode))
+                } catch {
+                    let message = error.localizedDescription
+                    DLog("Calling flows.conversation error: \(error)")
+                    _showError.send(message)
+                }
+            }
+        } else {
+            flows.conversation(postId: postId,
+                               article: article,
+                               route: route,
+                               additionalSettings: additionalSettings,
+                               callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value),
+                               completion: { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let conversationViewController):
+                    let wrapperVC = ConversationWrapperVC(conversationViewController: conversationViewController)
+                    self._showWrappedConversation.send((wrapperVC, presentationalMode))
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling flows.conversation error: \(error)")
+                    self._showError.send(message)
+                }
+            })
         }
     }
 }

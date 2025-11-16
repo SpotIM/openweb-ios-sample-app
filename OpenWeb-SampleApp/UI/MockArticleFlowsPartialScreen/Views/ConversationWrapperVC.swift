@@ -35,6 +35,11 @@ class ConversationWrapperVC: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     private var floatingLoggerView: OWFloatingView?
 
+    convenience init(conversationViewController: UIViewController) {
+        self.init()
+        setConversationViewController(conversationViewController)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
