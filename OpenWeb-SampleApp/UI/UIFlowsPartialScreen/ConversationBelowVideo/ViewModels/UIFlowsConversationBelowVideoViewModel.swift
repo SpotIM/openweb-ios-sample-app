@@ -179,7 +179,7 @@ private extension UIFlowsConversationBelowVideoViewModel {
                 switch result {
                 case .failure(let err):
                     self._componentRetrievingError.send(err)
-                case.success(let view):
+                case .success(let view):
                     self._preConversationRetrieved.send(view)
                 }
             })

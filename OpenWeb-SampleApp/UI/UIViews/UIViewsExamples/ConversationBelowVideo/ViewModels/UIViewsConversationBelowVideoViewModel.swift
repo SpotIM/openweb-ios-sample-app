@@ -303,7 +303,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._preConversationRetrieved.send(view)
             }
         })
@@ -325,7 +325,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._conversationRetrieved.send(view)
             }
         })
@@ -346,7 +346,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._commentCreationRetrieved.send(view)
             }
         })
@@ -367,7 +367,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._reportReasonsRetrieved.send(view)
             }
         })
@@ -388,7 +388,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._notificationsRetrieved.send(view)
             }
         })
@@ -409,7 +409,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._clarityDetailsRetrieved.send(view)
             }
         })
@@ -429,7 +429,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._clarityDetailsRetrieved.send(view)
             }
         })
@@ -453,7 +453,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._commentThreadRetrieved.send(view)
             }
         })
@@ -473,7 +473,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             switch result {
             case .failure(let err):
                 self._componentRetrievingError.send(err)
-            case.success(let view):
+            case .success(let view):
                 self._webPageRetrieved.send(view)
             }
         })
