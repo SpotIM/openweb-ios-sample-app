@@ -1,0 +1,159 @@
+//
+//  UIFlowsConversationBelowVideoVC.swift
+//  OpenWeb-SampleApp
+//
+//  Created by Alon Shprung on 28/09/2025.
+//
+
+import UIKit
+import Combine
+import CombineCocoa
+import SnapKit
+import OpenWebSDK
+
+class UIFlowsConversationBelowVideoVC: UIViewController {
+    private struct Metrics {
+        static let identifier = "uiflows_examples_vc_id"
+        static let presentAnimationDuration: TimeInterval = 0.3
+        static let verticalMargin: CGFloat = 40
+        static let preConversationHorizontalMargin: CGFloat = 16.0
+    }
+
+    private let viewModel: UIFlowsConversationBelowVideoViewModeling
+    private var cancellables = Set<AnyCancellable>()
+
+    private unowned var conversationTopConstraint: Constraint!
+
+    private lazy var videoPlayerContainer: UIView = {
+        let view = VideoExampleView(viewModel: viewModel.outputs.videoExampleViewModel)
+        return view
+    }()
+
+    private lazy var containerBelowVideo: UIView = {
+        let view = UIView()
+            .backgroundColor(ColorPalette.shared.color(type: .background))
+        return view
+    }()
+
+    init(viewModel: UIFlowsConversationBelowVideoViewModeling) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+        applyAccessibility()
+        setupObservers()
+        viewModel.outputs.videoExampleViewModel.inputs.play()
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+}
+
+private extension UIFlowsConversationBelowVideoVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+    }
+
+    func setupViews() {
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        self.navigationItem.largeTitleDisplayMode = .never
+
+        // Adding video player view
+        view.addSubview(videoPlayerContainer)
+        videoPlayerContainer.snp.makeConstraints { make in
+            make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
+        }
+
+        // Adding container below video
+        view.addSubview(containerBelowVideo)
+        containerBelowVideo.snp.makeConstraints { make in
+            make.top.equalTo(videoPlayerContainer.snp.bottom)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+
+    func setupObservers() {
+        title = viewModel.outputs.title
+
+        // Showing error if needed
+        viewModel.outputs.componentRetrievingError
+            .sink(receiveValue: { [weak self] err in
+                self?.showError(message: err.description)
+            })
+            .store(in: &cancellables)
+
+        viewModel.outputs.preConversationRetrieved
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] preConversationView in
+                guard let self else { return }
+                self.containerBelowVideo.addSubview(preConversationView)
+
+                preConversationView.snp.makeConstraints { make in
+                    make.top.equalToSuperview().offset(Metrics.verticalMargin)
+                    make.leading.trailing.equalToSuperview().inset(Metrics.preConversationHorizontalMargin)
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.outputs.conversationRetrieved
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] conversationVc in
+                guard let self else { return }
+                self.addChild(conversationVc)
+
+                self.containerBelowVideo.addSubview(conversationVc.view)
+                conversationVc.view.snp.makeConstraints { make in
+                    self.conversationTopConstraint = make.top.equalTo(self.view.snp.bottom).constraint
+                    make.leading.trailing.equalToSuperview()
+                    make.height.equalTo(self.containerBelowVideo.snp.height)
+                }
+                conversationVc.didMove(toParent: self)
+
+                self.view.layoutIfNeeded()
+
+                // 3. Perform animation
+                let offset = -containerBelowVideo.frame.height - self.view.safeAreaInsets.bottom
+                conversationTopConstraint.update(offset: offset)
+                UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
+                    guard let self else { return }
+                    self.view.layoutIfNeeded()
+                } completion: { _ in
+                    // Nothing here
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.outputs.openAuthentication
+            .flatMap { [weak self] result -> AnyPublisher<OWBasicCompletion, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                let spotId = result.0
+                let completion = result.1
+                let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: spotId)
+                let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
+                self.navigationController?.present(authenticationVC, animated: true)
+
+                return authenticationVM.outputs.dismissed
+                    .prefix(1)
+                    .map { completion }
+                    .eraseToAnyPublisher()
+            }
+            .sink(receiveValue: { completion in
+                completion()
+            })
+            .store(in: &cancellables)
+    }
+
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Error retrieving component", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
