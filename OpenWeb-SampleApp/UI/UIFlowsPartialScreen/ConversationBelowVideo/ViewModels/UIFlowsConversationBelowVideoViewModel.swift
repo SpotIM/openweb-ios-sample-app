@@ -35,7 +35,6 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
     private let postId: OWPostId
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
-    private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
     private lazy var cancellables: Set<AnyCancellable> = []
 
     lazy var title: String = {
@@ -73,12 +72,10 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
 
     init(postId: OWPostId,
          userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI()) {
+         commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {
         self.postId = postId
         self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
-        self.silentSSOAuthentication = silentSSOAuthentication
         setupObservers()
         initialSetup()
     }
@@ -87,34 +84,6 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
     private lazy var authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] _, completion in
         guard let self else { return }
         self._openAuthentication.send((OpenWeb.manager.spotId, completion))
-    }
-
-    // Providing `renewSSO` callback
-    private lazy var renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
-        guard let self else { return }
-        #if !PUBLIC_DEMO_APP
-        let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
-        if OpenWeb.manager.spotId == demoSpotId,
-           let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
-            self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
-                .prefix(1) // No need to disposed since we only take 1
-                .sink(receiveCompletion: { result in
-                    if case .failure(let error) = result {
-                        DLog("Silent SSO failed with error: \(error)")
-                        completion()
-                    }
-                }, receiveValue: { userId in
-                    DLog("Silent SSO completed successfully with userId: \(userId)")
-                    completion()
-                })
-                .store(in: &cancellables)
-        } else {
-            DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
-            completion()
-        }
-        #else
-        DLog("`renewSSOCallback` triggered")
-        #endif
     }
 
     private lazy var actionsCallbacks: OWPreConversationActionsCallbacks = { [weak self] callbackType, postId in
@@ -139,7 +108,7 @@ private extension UIFlowsConversationBelowVideoViewModel {
 
         // Setup renew SSO callback
         let authentication = OpenWeb.manager.authentication
-        authentication.renewSSO = renewSSOCallback
+        authentication.renewSSO = commonCreatorService.renewSSOCallback
 
         retrievePreConversationComponent()
     }

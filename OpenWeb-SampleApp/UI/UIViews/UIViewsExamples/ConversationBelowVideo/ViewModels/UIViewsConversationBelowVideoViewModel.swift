@@ -48,7 +48,6 @@ class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewM
 
     private let postId: OWPostId
     private let commonCreatorService: CommonCreatorServicing
-    private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
 
     lazy var title: String = {
         return NSLocalizedString("VideoExample", comment: "")
@@ -230,42 +229,12 @@ class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewM
         }
     }
 
-    // Providing `renewSSO` callback
-    private lazy var  renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
-        guard let self else { return }
-        #if !PUBLIC_DEMO_APP
-        let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
-        if OpenWeb.manager.spotId == demoSpotId,
-           let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
-            self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
-                .prefix(1) // No need to disposed since we only take 1
-                .sink(receiveCompletion: { result in
-                    if case .failure(let error) = result {
-                        DLog("Silent SSO failed with error: \(error)")
-                        completion()
-                    }
-                }, receiveValue: { userId in
-                    DLog("Silent SSO completed successfully with userId: \(userId)")
-                    completion()
-                })
-                .store(in: &cancellables)
-        } else {
-            DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
-            completion()
-        }
-        #else
-        DLog("`renewSSOCallback` triggered")
-        #endif
-    }
-
     private lazy var cancellables: Set<AnyCancellable> = []
 
     init(postId: OWPostId,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI()) {
+         commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {
         self.postId = postId
         self.commonCreatorService = commonCreatorService
-        self.silentSSOAuthentication = silentSSOAuthentication
         setupObservers()
         initialSetup()
     }
@@ -279,7 +248,7 @@ private extension UIViewsConversationBelowVideoViewModel {
 
         // Setup renew SSO callback
         let authentication = OpenWeb.manager.authentication
-        authentication.renewSSO = renewSSOCallback
+        authentication.renewSSO = commonCreatorService.renewSSOCallback
 
         // We are going to retrieve pre conversation component as soon as the user entered the screen.
         // We even perform the API in the init of the VM to speed things up

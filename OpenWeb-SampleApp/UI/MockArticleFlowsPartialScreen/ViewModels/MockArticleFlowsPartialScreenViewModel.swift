@@ -55,7 +55,6 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
     private var cancellables = Set<AnyCancellable>()
 
     private let imageProviderAPI: ImageProviding
-    private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
 
     private weak var presentationalVC: UIViewController?
 
@@ -77,12 +76,10 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
     }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
          imageProviderAPI: ImageProviding = ImageProvider(),
          actionSettings: SDKUIFlowPartialScreenActionSettings) {
         self.imageProviderAPI = imageProviderAPI
-        self.silentSSOAuthentication = silentSSOAuthentication
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
         _actionSettings.send(actionSettings)
@@ -289,35 +286,8 @@ private extension MockArticleFlowsPartialScreenViewModel {
         authenticationUI.displayAuthenticationFlow = authenticationFlowCallback
 
         // Providing `renewSSO` callback
-        let renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
-            guard let self else { return }
-            #if !PUBLIC_DEMO_APP
-            let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
-            if OpenWeb.manager.spotId == demoSpotId,
-               let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
-                self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
-                    .prefix(1)
-                    .sink(receiveCompletion: { result in
-                        if case .failure(let error) = result {
-                            DLog("Silent SSO failed with error: \(error)")
-                            completion()
-                        }
-                    }, receiveValue: { userId in
-                        DLog("Silent SSO completed successfully with userId: \(userId)")
-                        completion()
-                    })
-                    .store(in: &cancellables)
-            } else {
-                DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
-                completion()
-            }
-            #else
-            DLog("`renewSSOCallback` triggered")
-            #endif
-        }
-
         let authentication = OpenWeb.manager.authentication
-        authentication.renewSSO = renewSSOCallback
+        authentication.renewSSO = commonCreatorService.renewSSOCallback
     }
 
     func setupBICallaback() {
