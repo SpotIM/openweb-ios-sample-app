@@ -9,9 +9,6 @@
 import UIKit
 import Combine
 import OpenWebSDK
-#if !PUBLIC_DEMO_APP
-import OpenWeb_SampleApp_Internal_Configs
-#endif
 
 protocol UIViewsConversationBelowVideoViewModelingInputs {}
 
@@ -228,8 +225,6 @@ class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewM
             break
         }
     }
-
-    private lazy var cancellables: Set<AnyCancellable> = []
 
     init(postId: OWPostId,
          commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {

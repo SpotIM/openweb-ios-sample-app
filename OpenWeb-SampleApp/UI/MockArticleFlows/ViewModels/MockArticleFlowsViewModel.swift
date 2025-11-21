@@ -10,9 +10,6 @@ import Foundation
 import UIKit
 import Combine
 import OpenWebSDK
-#if !PUBLIC_DEMO_APP
-import OpenWeb_SampleApp_Internal_Configs
-#endif
 
 protocol MockArticleFlowsViewModelingInputs {
     func setNavigationController(_ navController: UINavigationController?)

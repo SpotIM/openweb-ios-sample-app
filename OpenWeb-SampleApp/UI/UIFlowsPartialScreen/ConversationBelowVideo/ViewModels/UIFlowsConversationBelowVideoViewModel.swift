@@ -7,9 +7,6 @@
 
 import Combine
 import OpenWebSDK
-#if !PUBLIC_DEMO_APP
-import OpenWeb_SampleApp_Internal_Configs
-#endif
 
 protocol UIFlowsConversationBelowVideoViewModelingInputs {}
 
@@ -35,7 +32,6 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
     private let postId: OWPostId
     private let userDefaultsProvider: UserDefaultsProviderProtocol
     private let commonCreatorService: CommonCreatorServicing
-    private lazy var cancellables: Set<AnyCancellable> = []
 
     lazy var title: String = {
         return NSLocalizedString("VideoExample", comment: "")

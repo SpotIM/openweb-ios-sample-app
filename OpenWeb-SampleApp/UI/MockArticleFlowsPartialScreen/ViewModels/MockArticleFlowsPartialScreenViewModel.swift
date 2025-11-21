@@ -9,9 +9,6 @@ import Foundation
 import UIKit
 import Combine
 import OpenWebSDK
-#if !PUBLIC_DEMO_APP
-import OpenWeb_SampleApp_Internal_Configs
-#endif
 
 protocol MockArticleFlowsPartialScreenViewModelingInputs {
     func setPresentationalVC(_ viewController: UIViewController)
