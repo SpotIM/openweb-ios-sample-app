@@ -9,6 +9,6 @@
 import Foundation
 
 struct SDKConversationDataModel {
-    let spotId: String
-    let postId: String
+    var spotId: String
+    var postId: String
 }

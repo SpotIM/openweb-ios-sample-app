@@ -15,7 +15,6 @@ class CommentCreationSettingsView: UIView {
     private struct Metrics {
         static let identifier = "comment_creation_settings_view_id"
         static let segmentedStyleModeIdentifier = "custom_style_mode"
-        static let switchAccessoryViewIdentifier = "accessory_view"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -40,15 +39,6 @@ class CommentCreationSettingsView: UIView {
 
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
-                                       items: items)
-    }()
-
-    private lazy var segmentedAccessoryView: SegmentedControlSetting = {
-        let title = viewModel.outputs.accessoryViewTitle
-        let items = viewModel.outputs.accessoryViewSettings
-
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.switchAccessoryViewIdentifier,
                                        items: items)
     }()
 
@@ -86,7 +76,6 @@ private extension CommentCreationSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedStyleMode)
-        stackView.addArrangedSubview(segmentedAccessoryView)
     }
 
     func setupObservers() {
@@ -96,18 +85,6 @@ private extension CommentCreationSettingsView {
 
         segmentedStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.customStyleModeSelectedIndex)
-            .store(in: &cancellables)
-
-        viewModel.outputs.accessoryViewIndex
-            .assign(to: \.selectedSegmentIndex, on: segmentedAccessoryView.segmentedControl)
-            .store(in: &cancellables)
-
-        segmentedAccessoryView.segmentedControl.selectedSegmentIndexPublisher
-            .bind(to: viewModel.inputs.accessoryViewSelectedIndex)
-            .store(in: &cancellables)
-
-        viewModel.outputs.hideAccessoryViewOptions
-            .assign(to: \.isHidden, on: segmentedAccessoryView)
             .store(in: &cancellables)
     }
 }

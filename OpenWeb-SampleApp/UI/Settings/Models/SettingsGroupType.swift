@@ -26,7 +26,7 @@ enum SettingsGroupType: CaseIterable {
         allSettings.removeAll { $0 == .iau }
         #endif
 
-        #if !ADS && !BETA
+        #if !BETA
         allSettings.removeAll { $0 == .network }
         #endif
 

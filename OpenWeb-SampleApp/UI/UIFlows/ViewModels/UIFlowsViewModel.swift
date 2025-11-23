@@ -84,6 +84,7 @@ private extension UIFlowsViewModel {
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .eraseToAnyPublisher()
 
         let commentCreationTappedModel = commentCreationTapped
             .map { mode -> SDKUIFlowActionSettings in
@@ -91,6 +92,7 @@ private extension UIFlowsViewModel {
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .eraseToAnyPublisher()
 
         let commentThreadTappedModel = commentThreadTapped
             .map { mode -> SDKUIFlowActionSettings in
@@ -98,6 +100,7 @@ private extension UIFlowsViewModel {
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .eraseToAnyPublisher()
 
         let preConversationTappedModel = preConversationTapped
             .map { mode -> SDKUIFlowActionSettings in
@@ -105,6 +108,7 @@ private extension UIFlowsViewModel {
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .eraseToAnyPublisher()
 
         Publishers.MergeMany(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
             .map { $0 } // swiftlint:disable:this array_init

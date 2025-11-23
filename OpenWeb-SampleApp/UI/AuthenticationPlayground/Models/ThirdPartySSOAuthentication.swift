@@ -13,10 +13,10 @@ import OpenWebSDK
 #endif
 
 struct ThirdPartySSOAuthentication {
-    let displayName: String
-    let spotId: String
-    let token: String
-    let provider: OWSSOProvider
+    var displayName: String
+    var spotId: String
+    var token: String
+    var provider: OWSSOProvider
 }
 
 extension ThirdPartySSOAuthentication {

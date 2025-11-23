@@ -9,6 +9,6 @@
 import Foundation
 
 struct SDKUIFlowActionSettings {
-    let postId: String
-    let actionType: SDKUIFlowActionType
+    var postId: String
+    var actionType: SDKUIFlowActionType
 }

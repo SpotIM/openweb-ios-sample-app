@@ -1,5 +1,5 @@
 //
-//  ViewsExamplesCoordinator.swift
+//  UIViewsExamplesCoordinator.swift
 //  OpenWeb-SampleApp
 //
 //  Created by Alon Haiut on 12/08/2024.
@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-class ViewsExamplesCoordinator: BaseCoordinator<Void> {
+class UIViewsExamplesCoordinator: BaseCoordinator<Void> {
 
     private let router: Routering
 
@@ -22,7 +22,7 @@ class ViewsExamplesCoordinator: BaseCoordinator<Void> {
 
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
-            fatalError("ViewsExamplesCoordinator requires coordinatorData from `CoordinatorData.postId` type")
+            fatalError("UIViewsExamplesCoordinator requires coordinatorData from `CoordinatorData.postId` type")
         }
 
         let examplesViewModel: UIViewsExamplesViewModeling = UIViewsExamplesViewModel(postId: postId)
@@ -41,13 +41,13 @@ class ViewsExamplesCoordinator: BaseCoordinator<Void> {
     }
 }
 
-private extension ViewsExamplesCoordinator {
+private extension UIViewsExamplesCoordinator {
     func setupCoordinatorInternalNavigation(viewModel: UIViewsExamplesViewModeling) {
         viewModel.outputs.openConversationBelowVideo
             .sink(receiveValue: { [weak self] postId in
                 guard let self else { return }
-                let conversationBelowVideoVM = ConversationBelowVideoViewModel(postId: postId)
-                let conversationBelowVideoVC = ConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
+                let conversationBelowVideoVM = UIViewsConversationBelowVideoViewModel(postId: postId)
+                let conversationBelowVideoVC = UIViewsConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
                 self.router.push(conversationBelowVideoVC,
                                  animated: true,
                                  completion: nil)

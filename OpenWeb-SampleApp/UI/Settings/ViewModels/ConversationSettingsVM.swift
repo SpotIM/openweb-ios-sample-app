@@ -18,7 +18,7 @@ protocol ConversationSettingsViewModelingInputs {
     var betweenCommentsSpacingSelected: CurrentValueSubject<String, Never> { get }
     var communityGuidelinesSpacingSelected: CurrentValueSubject<String, Never> { get }
     var communityQuestionsGuidelinesSpacingSelected: CurrentValueSubject<String, Never> { get }
-    var allowSwipeToRefreshSelected: CurrentValueSubject<Bool, Never> { get }
+    var allowPullToRefreshSelected: CurrentValueSubject<Bool, Never> { get }
 }
 
 protocol ConversationSettingsViewModelingOutputs {
@@ -30,7 +30,7 @@ protocol ConversationSettingsViewModelingOutputs {
     var betweenCommentsSpacingTitle: String { get }
     var communityGuidelinesSpacingTitle: String { get }
     var communityQuestionsGuidelinesSpacingTitle: String { get }
-    var allowSwipeToRefreshTitle: String { get }
+    var allowPullToRefreshTitle: String { get }
     var styleModeIndex: AnyPublisher<Int, Never> { get }
     var communityGuidelinesStyleModeIndex: AnyPublisher<Int, Never> { get }
     var communityQuestionsStyleModeIndex: AnyPublisher<Int, Never> { get }
@@ -137,7 +137,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
         return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)"
     }())
 
-    lazy var allowSwipeToRefreshSelected = CurrentValueSubject<Bool, Never>({
+    lazy var allowPullToRefreshSelected = CurrentValueSubject<Bool, Never>({
         return userDefaultsProvider.get(key: .allowPullToRefresh, defaultValue: true)
     }())
 
@@ -172,7 +172,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
     }
 
     var allowPullToRefresh: AnyPublisher<Bool, Never> {
-        return allowSwipeToRefreshSelected.eraseToAnyPublisher()
+        return allowPullToRefreshSelected.eraseToAnyPublisher()
     }
 
     private var cancellables = Set<AnyCancellable>()
@@ -209,7 +209,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
         return NSLocalizedString("CommunityQuestionsGuidelinesSpacingTitle", comment: "")
     }()
 
-    lazy var allowSwipeToRefreshTitle: String = {
+    lazy var allowPullToRefreshTitle: String = {
         return NSLocalizedString("AllowPullToRefresh", comment: "")
     }()
 
@@ -299,7 +299,7 @@ private extension ConversationSettingsVM {
             .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
             .store(in: &cancellables)
 
-        allowSwipeToRefreshSelected
+        allowPullToRefreshSelected
             .dropFirst()
             .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.allowPullToRefresh))
             .store(in: &cancellables)
@@ -315,6 +315,6 @@ extension ConversationSettingsVM: SettingsGroupVMProtocol {
         betweenCommentsSpacingSelected.send("\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)")
         communityGuidelinesSpacingSelected.send("\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)")
         communityQuestionsGuidelinesSpacingSelected.send("\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)")
-        allowSwipeToRefreshSelected.send(true)
+        allowPullToRefreshSelected.send(true)
     }
 }

@@ -136,6 +136,6 @@ private extension ColorsCustomizationViewModel {
 }
 
 struct ThemeColorItem {
-    let title: String
-    let initialColor: OWColor?
+    var title: String
+    var initialColor: OWColor?
 }

@@ -9,6 +9,6 @@
 import Foundation
 
 struct SDKUIIndependentViewsActionSettings {
-    let postId: String
-    let viewType: SDKUIIndependentViewType
+    var postId: String
+    var viewType: SDKUIIndependentViewType
 }

@@ -11,5 +11,5 @@ import Foundation
 struct UserAuthentication {
     var username: String
     var password: String
-    let userId: String
+    var userId: String
 }
