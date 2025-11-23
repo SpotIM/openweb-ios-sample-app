@@ -34,20 +34,22 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func additionalSettings() -> OWAdditionalSettingsProtocol {
+        let allowPullToRefresh = self.userDefaultsProvider.get(key: .allowPullToRefresh, defaultValue: true)
+
         // 1. Pre conversation related
         let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let preConversationSettings = OWPreConversationSettingsBuilder(style: preConversationStyle).build()
 
         // 2. Conversation related
         let conversationStyle = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-        let conversationSettings = OWConversationSettingsBuilder(style: conversationStyle).build()
+        let conversationSettings = OWConversationSettings(style: conversationStyle, allowPullToRefresh: allowPullToRefresh)
 
         // 3. Comment creation related
         let commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
         let commentCreationSettings = OWCommentCreationSettingsBuilder(style: commentCreationStyle).build()
 
         // 4. Comment thread related
-        let commentThreadSettings = OWCommentThreadSettingsBuilder().build()
+        let commentThreadSettings = OWCommentThreadSettings(allowPullToRefresh: allowPullToRefresh)
 
         // 5. Final additional settings
         let additionalSettings = OWAdditionalSettingsBuilder(
