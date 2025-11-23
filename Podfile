@@ -3,7 +3,7 @@ inhibit_all_warnings!
 use_frameworks!
 
 def openweb_pod
-  pod 'OpenWebSDK', '2.10.2'
+  pod 'OpenWebSDK', '2.11.0'
 end
 
 def combine_pods
@@ -23,15 +23,10 @@ target 'OpenWeb-SampleApp' do
   general_pods
 end
 
-# Setting `BUILD_LIBRARY_FOR_DISTRIBUTION` to `YES` in the host application for Rx dependencies.
-# This step is required for `OpenWebSDK.xcframework` to find symbols of the Rx dependencies at runtime.
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
-      if target.name == "RxSwift" || target.name == "RxCocoa" || target.name == "RxRelay"
-        config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-      end
     end
   end
 end
