@@ -21,7 +21,7 @@ class ConversationSettingsView: UIView {
         static let textFieldBetweenCommentsSpacingIdentifier = "between_comments_spacing"
         static let textFieldBelowCommunityGuidelinesSpacingIdentifier = "below_community_guidelines_spacing"
         static let textFieldBelowCommunityQuestionsSpacingIdentifier = "below_community_questions_spacing"
-        static let switchAllowSwipeToRefreshIdentifier = "allow_swipe_to_refresh"
+        static let switchAllowPullToRefreshIdentifier = "allow_swipe_to_refresh"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -94,8 +94,8 @@ class ConversationSettingsView: UIView {
                                 font: FontBook.paragraph)
     }()
 
-    private lazy var switchAllowSwipeToRefresh: SwitchSetting = {
-        return SwitchSetting(title: viewModel.outputs.allowSwipeToRefreshTitle, accessibilityPrefixId: Metrics.switchAllowSwipeToRefreshIdentifier)
+    private lazy var switchAllowPullToRefresh: SwitchSetting = {
+        return SwitchSetting(title: viewModel.outputs.allowPullToRefreshTitle, accessibilityPrefixId: Metrics.switchAllowPullToRefreshIdentifier)
     }()
 
     private let viewModel: ConversationSettingsViewModeling
@@ -138,7 +138,7 @@ private extension ConversationSettingsView {
         stackView.addArrangedSubview(textFieldBetweenCommentsSpacing)
         stackView.addArrangedSubview(textFieldCommunityGuidelinesSpacing)
         stackView.addArrangedSubview(textFieldCommunityQuestionsSpacing)
-        stackView.addArrangedSubview(switchAllowSwipeToRefresh)
+        stackView.addArrangedSubview(switchAllowPullToRefresh)
     }
 
     func setupObservers() {
@@ -205,11 +205,11 @@ private extension ConversationSettingsView {
             .store(in: &cancellables)
 
         viewModel.outputs.allowPullToRefresh
-            .assign(to: \.isOn, on: switchAllowSwipeToRefresh.switchControl)
+            .assign(to: \.isOn, on: switchAllowPullToRefresh.switchControl)
             .store(in: &cancellables)
 
-        switchAllowSwipeToRefresh.switchControl.isOnPublisher
-            .bind(to: viewModel.inputs.allowSwipeToRefreshSelected)
+        switchAllowPullToRefresh.switchControl.isOnPublisher
+            .bind(to: viewModel.inputs.allowPullToRefreshSelected)
             .store(in: &cancellables)
 
         viewModel.outputs.showCustomStyleOptions

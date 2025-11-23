@@ -1,5 +1,5 @@
 //
-//  ConversationBelowVideoViewModel.swift
+//  UIViewsConversationBelowVideoViewModel.swift
 //  OpenWeb-Development
 //
 //  Created by Alon Haiut on 21/09/2023.
@@ -13,9 +13,9 @@ import OpenWebSDK
 import OpenWeb_SampleApp_Internal_Configs
 #endif
 
-protocol ConversationBelowVideoViewModelingInputs {}
+protocol UIViewsConversationBelowVideoViewModelingInputs {}
 
-protocol ConversationBelowVideoViewModelingOutputs {
+protocol UIViewsConversationBelowVideoViewModelingOutputs {
     var title: String { get }
     var componentRetrievingError: AnyPublisher<OWError, Never> { get }
     var preConversationRetrieved: AnyPublisher<UIView, Never> { get }
@@ -34,16 +34,17 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var removeCommentThread: AnyPublisher<Void, Never> { get }
     var removeWebPage: AnyPublisher<Void, Never> { get }
     var openAuthentication: AnyPublisher<(OWSpotId, OWBasicCompletion), Never> { get }
+    var videoExampleViewModel: VideoExampleViewModeling { get }
 }
 
-protocol ConversationBelowVideoViewModeling {
-    var inputs: ConversationBelowVideoViewModelingInputs { get }
-    var outputs: ConversationBelowVideoViewModelingOutputs { get }
+protocol UIViewsConversationBelowVideoViewModeling {
+    var inputs: UIViewsConversationBelowVideoViewModelingInputs { get }
+    var outputs: UIViewsConversationBelowVideoViewModelingOutputs { get }
 }
 
-class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, ConversationBelowVideoViewModelingOutputs, ConversationBelowVideoViewModelingInputs {
-    var inputs: ConversationBelowVideoViewModelingInputs { return self }
-    var outputs: ConversationBelowVideoViewModelingOutputs { return self }
+class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewModeling, UIViewsConversationBelowVideoViewModelingOutputs, UIViewsConversationBelowVideoViewModelingInputs {
+    var inputs: UIViewsConversationBelowVideoViewModelingInputs { return self }
+    var outputs: UIViewsConversationBelowVideoViewModelingOutputs { return self }
 
     private let postId: OWPostId
     private let commonCreatorService: CommonCreatorServicing
@@ -52,6 +53,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     lazy var title: String = {
         return NSLocalizedString("VideoExample", comment: "")
     }()
+
+    let videoExampleViewModel: VideoExampleViewModeling = VideoExampleViewModel()
 
     private let _componentRetrievingError = CurrentValueSubject<OWError?, Never>(value: nil)
     var componentRetrievingError: AnyPublisher<OWError, Never> {
@@ -268,7 +271,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     }
 }
 
-private extension ConversationBelowVideoViewModel {
+private extension UIViewsConversationBelowVideoViewModel {
     func initialSetup() {
         // Setup authentication flow callback
         let authenticationUI = OpenWeb.manager.ui.authenticationUI
@@ -332,21 +335,10 @@ private extension ConversationBelowVideoViewModel {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        // Always show accessory view in the floating keyboard for this example of conversation below video
-        let floatingBottomToolbarTuple = commonCreatorService.commentCreationFloatingBottomToolbar()
-        let toolbar = floatingBottomToolbarTuple.1
-        let toolbarVM = floatingBottomToolbarTuple.0
-        let accessoryViewStrategy = OWAccessoryViewStrategy.bottomToolbar(toolbar: toolbar)
-        let commentCreationStyle: OWCommentCreationStyle = .floatingKeyboard(accessoryViewStrategy: accessoryViewStrategy)
-        let commentCreationSettings = OWCommentCreationSettings(style: commentCreationStyle)
-        // Inject the settings into the toolbar VM
-        toolbarVM.inputs.setCommentCreationSettings(commentCreationSettings)
-        let additionalSettings = OWAdditionalSettings(commentCreationSettings: commentCreationSettings)
-
         uiViewsLayer.commentCreation(postId: self.postId,
                                      article: article,
                                      commentCreationType: type,
-                                     additionalSettings: additionalSettings,
+                                     additionalSettings: OWAdditionalSettings(),
                                      callbacks: self.actionsCallbacks,
                                      completion: { [weak self] result in
 

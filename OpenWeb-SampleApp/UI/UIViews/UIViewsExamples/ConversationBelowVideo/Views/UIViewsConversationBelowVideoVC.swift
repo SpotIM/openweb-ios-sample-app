@@ -1,5 +1,5 @@
 //
-//  ConversationBelowVideoVC.swift
+//  UIViewsConversationBelowVideoVC.swift
 //  OpenWeb-Development
 //
 //  Created by Alon Haiut on 21/09/2023.
@@ -11,25 +11,18 @@ import Combine
 import CombineCocoa
 import SnapKit
 import OpenWebSDK
-import AVFoundation
-import AVKit
 
-class ConversationBelowVideoVC: UIViewController {
+class UIViewsConversationBelowVideoVC: UIViewController {
 
     private struct Metrics {
         static let identifier = "uiviews_examples_vc_id"
         static let verticalMargin: CGFloat = 40
         static let presentAnimationDuration: TimeInterval = 0.3
         static let preConversationHorizontalMargin: CGFloat = 16.0
-        static let videoRatio: CGFloat = 9 / 16 // swiftlint:disable:this no_magic_numbers
         static let keyboardAnimationDuration: CGFloat = 0.25
-        static let videoPlayerIdentifier = "video_player_id"
-        static let videoLink = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_30MB.mp4"
-        // For some reason this longer video isn't working on a simulator, so we will show it only one a real device
-        static let videoLink2 = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
 
-    private let viewModel: ConversationBelowVideoViewModeling
+    private let viewModel: UIViewsConversationBelowVideoViewModeling
     private var cancellables = Set<AnyCancellable>()
 
     private var preConversation: UIView?
@@ -54,53 +47,8 @@ class ConversationBelowVideoVC: UIViewController {
     private unowned var commentThreadHeightConstraint: Constraint!
     private unowned var webPageHeightConstraint: Constraint!
 
-    private lazy var videoPlayerItem: AVPlayerItem = {
-        let urlString: String
-        #if targetEnvironment(simulator)
-        urlString = Metrics.videoLink
-        #else
-        urlString = Metrics.videoLink2
-        #endif
-
-        let videoURL = URL(string: urlString)
-        let playerItem = AVPlayerItem(url: videoURL!)
-        return playerItem
-    }()
-
-    private lazy var videoQueuePlayer: AVQueuePlayer = {
-        let queuePlayer = AVQueuePlayer(playerItem: videoPlayerItem)
-        return queuePlayer
-    }()
-
-    private lazy var videoPlayerLooper: AVPlayerLooper = {
-        let playerLooper = AVPlayerLooper(player: self.videoQueuePlayer, templateItem: self.videoPlayerItem)
-        return playerLooper
-    }()
-
-    private lazy var videoPlayerLayer: AVPlayerLayer = {
-        let playerLayer = AVPlayerLayer(player: self.videoQueuePlayer)
-        playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        // Looper should be initialize at some point - the following line basically do that
-        _ = self.videoPlayerLooper
-        return playerLayer
-    }()
-
-    private lazy var imgViewPlaceholder: UIImageView = {
-        return UIImageView()
-            .image(UIImage(named: "video_placeholder")!)
-            .contentMode(.scaleAspectFill)
-    }()
-
     private lazy var videoPlayerContainer: UIView = {
-        let view = UIView()
-            .backgroundColor(.clear)
-
-        view.addSubview(imgViewPlaceholder)
-        imgViewPlaceholder.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-
-        view.layer.addSublayer(videoPlayerLayer)
+        let view = VideoExampleView(viewModel: viewModel.outputs.videoExampleViewModel)
         return view
     }()
 
@@ -110,7 +58,7 @@ class ConversationBelowVideoVC: UIViewController {
         return view
     }()
 
-    init(viewModel: ConversationBelowVideoViewModeling) {
+    init(viewModel: UIViewsConversationBelowVideoViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -124,7 +72,7 @@ class ConversationBelowVideoVC: UIViewController {
         setupViews()
         applyAccessibility()
         setupObservers()
-        setupVideo()
+        viewModel.outputs.videoExampleViewModel.inputs.play()
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -132,10 +80,9 @@ class ConversationBelowVideoVC: UIViewController {
     }
 }
 
-private extension ConversationBelowVideoVC {
+private extension UIViewsConversationBelowVideoVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
-        videoPlayerContainer.accessibilityIdentifier = Metrics.videoPlayerIdentifier
     }
 
     @objc func setupViews() {
@@ -146,7 +93,6 @@ private extension ConversationBelowVideoVC {
         view.addSubview(videoPlayerContainer)
         videoPlayerContainer.snp.makeConstraints { make in
             make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(videoPlayerContainer.snp.width).multipliedBy(Metrics.videoRatio)
         }
 
         // Adding container below video
@@ -347,12 +293,6 @@ private extension ConversationBelowVideoVC {
                 }
             })
             .store(in: &cancellables)
-    }
-
-    func setupVideo() {
-        self.view.layoutIfNeeded()
-        videoPlayerLayer.frame = videoPlayerContainer.bounds
-        videoQueuePlayer.play()
     }
 
     func handlePreConversationRetrieved(view: UIView) {

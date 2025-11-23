@@ -50,7 +50,7 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = ViewsExamplesCoordinator(router: self.router)
+                let coordinator = UIViewsExamplesCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in

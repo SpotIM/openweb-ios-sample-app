@@ -15,9 +15,7 @@ extension OWCommentCreationStyle {
         switch index {
         case OWCommentCreationStyleIndexer.regular.index: return .regular
         case OWCommentCreationStyleIndexer.light.index: return .light
-        case OWCommentCreationStyleIndexer.floatingKeyboard.index:
-            let toolbar = commonCreatorService.commentCreationFloatingBottomToolbar().1
-            return .floatingKeyboard(accessoryViewStrategy: .bottomToolbar(toolbar: toolbar))
+        case OWCommentCreationStyleIndexer.floatingKeyboard.index: return .floatingKeyboard
         default: return .regular
         }
     }

@@ -18,7 +18,7 @@ extension UITableView {
         -> AnySubscriber<Items, Never> where CellType: UITableViewCell,
         Items: RandomAccessCollection,
         Items: Equatable {
-            return rowsSubscriber(.init(cellIdentifier: cellType.identifierName, cellType: cellType, cellConfig: cellConfig))
+            return rowsSubscriber(CombineDataSources.TableViewItemsController(cellIdentifier: cellType.identifierName, cellType: cellType, cellConfig: cellConfig))
     }
 
     func rowsSubscriber<Items>(

@@ -321,12 +321,12 @@ private extension AuthenticationPlaygroundViewModel {
             ) { genericSSO, latestValues in
                 return (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3)
             }
-            .flatMapLatest { genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> AnyPublisher<GenericSSOAuthentication, Never> in
+            .flatMapLatest { [weak self] genericSSO, shouldInitializeSDK, customUsername, customPassword, customSSOToken -> AnyPublisher<GenericSSOAuthentication, Never> in
                 // 2. Initialize SDK with appropriate spotId if needed
                 var genericSSO = genericSSO
 
                 // If spotId is '*', replace with actual spotIdToFilterBy if available
-                if genericSSO.spotId == "*", let actualSpotId = self.spotIdToFilterBy {
+                if genericSSO.spotId == "*", let actualSpotId = self?.spotIdToFilterBy {
                     genericSSO.spotId = actualSpotId
                 }
 
@@ -403,7 +403,7 @@ private extension AuthenticationPlaygroundViewModel {
             .filter { $0 == true }
             .delay(for: .milliseconds(Metrics.delayUntilDismissVC), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
-                // 7. Rx back to the view layer to dismiss itself
+                // 7. Back to the view layer to dismiss itself
                 self?.outputs.dismissVC.send()
             }
             .store(in: &cancellables)
@@ -458,7 +458,7 @@ private extension AuthenticationPlaygroundViewModel {
             .filter { $0 == true }
             .delay(for: .milliseconds(Metrics.delayUntilDismissVC), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
-                // 5. Rx back to the view layer to dismiss itself
+                // 5. Back to the view layer to dismiss itself
                 self?.outputs.dismissVC.send()
             }
             .store(in: &cancellables)

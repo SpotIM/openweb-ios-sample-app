@@ -26,6 +26,7 @@ class TestAPIVC: UIViewController {
         static let txtFieldSpotIdIdentifier = "spot_id"
         static let txtFieldPostIdIdentifier = "post_id"
         static let btnUIFlowsIdentifier = "btn_ui_flows_id"
+        static let btnUIFlowsPartialScreenIdentifier = "btn_ui_flows_partial_screen_id"
         static let btnUIViewsIdentifier = "btn_ui_views_id"
         static let btnMiscellaneousIdentifier = "btn_miscellaneous_id"
         static let btnTestingPlaygroundIdentifier = "btn_testing_playground_id"
@@ -42,7 +43,6 @@ class TestAPIVC: UIViewController {
         static let animatePickerDuration: CGFloat = 0.6
         static let animatePickerDamping: CGFloat = 0.5
         static let animatePickerVelocity: CGFloat = 0.5
-        static let authBarItemMargin: CGFloat = 65
     }
 
     private let viewModel: TestAPIViewModeling
@@ -55,21 +55,9 @@ class TestAPIVC: UIViewController {
         return scrollView
     }()
 
-    private lazy var settingsBarItem: UIBarButtonItem = {
-        return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
-                               style: .plain,
-                               target: nil,
-                               action: nil)
-    }()
+    private lazy var settingsButton = UIButton(imageName: "settingsIcon")
 
-    private lazy var authBarItem: UIBarButtonItem = {
-        let authBarItem = UIBarButtonItem(image: UIImage(named: "authenticationIcon"),
-                                   style: .plain,
-                                   target: nil,
-                                   action: nil)
-        authBarItem.imageInsets = UIEdgeInsets(top: 0, left: Metrics.authBarItemMargin, bottom: 0, right: 0)
-        return authBarItem
-    }()
+    private lazy var authButton = UIButton(imageName: "authenticationIcon")
 
     private lazy var conversationPresetSelectionView: UIView = {
         let spotPresetSelection = UIView()
@@ -147,6 +135,10 @@ class TestAPIVC: UIViewController {
         return NSLocalizedString("UIFlows", comment: "").blueRoundedButton
     }()
 
+    private lazy var btnUIFlowsPartialScreen: UIButton = {
+        return NSLocalizedString("UIFlowsPartialScreen", comment: "").blueRoundedButton
+    }()
+
     private lazy var btnUIViews: UIButton = {
         return NSLocalizedString("UIViews", comment: "").blueRoundedButton
     }()
@@ -182,7 +174,8 @@ class TestAPIVC: UIViewController {
         super.viewDidLoad()
         setupViews()
         applyAccessibility()
-        navigationItem.rightBarButtonItems = [settingsBarItem, authBarItem]
+        navigationItem.rightBarButtonItems = [settingsButton, authButton]
+            .map { UIBarButtonItem(customView: $0) }
         setupObservers()
     }
 }
@@ -190,8 +183,8 @@ class TestAPIVC: UIViewController {
 private extension TestAPIVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
-        settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
-        authBarItem.accessibilityIdentifier = Metrics.authBarItemIdentifier
+        settingsButton.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
+        authButton.accessibilityIdentifier = Metrics.authBarItemIdentifier
         conversationPresetSelectionView.accessibilityIdentifier = Metrics.conversationPresetSelectionIdentifier
         presetPicker.accessibilityIdentifier = Metrics.presetPickerIdentifier
         toolbarPicker.accessibilityIdentifier = Metrics.toolbarPickerIdentifier
@@ -200,12 +193,14 @@ private extension TestAPIVC {
         envLabel.accessibilityIdentifier = Metrics.envLabelIdentifier
         configurationLabel.accessibilityIdentifier = Metrics.configurationLabelIdentifier
         btnUIFlows.accessibilityIdentifier = Metrics.btnUIFlowsIdentifier
+        btnUIFlowsPartialScreen.accessibilityIdentifier = Metrics.btnUIFlowsPartialScreenIdentifier
         btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
         btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
         btnTestingPlayground.accessibilityIdentifier = Metrics.btnTestingPlaygroundIdentifier
         btnAutomation.accessibilityIdentifier = Metrics.btnAutomationIdentifier
     }
 
+    // swiftlint:disable function_body_length
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         self.navigationItem.largeTitleDisplayMode = .never
@@ -265,12 +260,21 @@ private extension TestAPIVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
+        // Adding UIFlows - Partial Screen button
+        scrollView.addSubview(btnUIFlowsPartialScreen)
+        btnUIFlowsPartialScreen.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnUIFlows.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
         // Adding UIViews button
         scrollView.addSubview(btnUIViews)
         btnUIViews.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnUIFlows.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(btnUIFlowsPartialScreen.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
@@ -360,6 +364,10 @@ private extension TestAPIVC {
             .bind(to: viewModel.inputs.uiFlowsTapped)
             .store(in: &cancellables)
 
+        btnUIFlowsPartialScreen.tapPublisher
+            .bind(to: viewModel.inputs.uiFlowsPartialScreenTapped)
+            .store(in: &cancellables)
+
         btnUIViews.tapPublisher
             .bind(to: viewModel.inputs.uiViewsTapped)
             .store(in: &cancellables)
@@ -376,11 +384,11 @@ private extension TestAPIVC {
             .bind(to: viewModel.inputs.automationTapped)
             .store(in: &cancellables)
 
-        settingsBarItem.tapPublisher
+        settingsButton.tapPublisher
             .bind(to: viewModel.inputs.settingsTapped)
             .store(in: &cancellables)
 
-        authBarItem.tapPublisher
+        authButton.tapPublisher
             .bind(to: viewModel.inputs.authenticationTapped)
             .store(in: &cancellables)
 
@@ -452,5 +460,13 @@ private extension TestAPIVC {
             }
             self.view.layoutIfNeeded()
         }
+    }
+}
+
+extension UIButton {
+    convenience init(imageName: String) {
+        self.init(type: .system)
+        setImage(UIImage(named: imageName), for: .normal)
+        imageView?.contentMode = .scaleAspectFit
     }
 }

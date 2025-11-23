@@ -18,6 +18,7 @@ protocol TestAPIViewModelingInputs {
     var enteredSpotId: PassthroughSubject<OWSpotId, Never> { get }
     var enteredPostId: PassthroughSubject<OWPostId, Never> { get }
     var uiFlowsTapped: PassthroughSubject<Void, Never> { get }
+    var uiFlowsPartialScreenTapped: PassthroughSubject<Void, Never> { get }
     var uiViewsTapped: PassthroughSubject<Void, Never> { get }
     var miscellaneousTapped: PassthroughSubject<Void, Never> { get }
     var testingPlaygroundTapped: PassthroughSubject<Void, Never> { get }
@@ -36,6 +37,7 @@ protocol TestAPIViewModelingOutputs {
     var shouldShowSelectPreset: AnyPublisher<Bool, Never> { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
     var openUIFlows: AnyPublisher<SDKConversationDataModel, Never> { get }
+    var openUIFlowsPartialScreen: AnyPublisher<SDKConversationDataModel, Never> { get }
     var openUIViews: AnyPublisher<SDKConversationDataModel, Never> { get }
     var openMiscellaneous: AnyPublisher<SDKConversationDataModel, Never> { get }
     var openTestingPlayground: AnyPublisher<SDKConversationDataModel, Never> { get }
@@ -76,6 +78,7 @@ class TestAPIViewModel: TestAPIViewModeling,
     let enteredSpotId = PassthroughSubject<OWSpotId, Never>()
     let enteredPostId = PassthroughSubject<OWPostId, Never>()
     let uiFlowsTapped = PassthroughSubject<Void, Never>()
+    let uiFlowsPartialScreenTapped = PassthroughSubject<Void, Never>()
     let uiViewsTapped = PassthroughSubject<Void, Never>()
     let miscellaneousTapped = PassthroughSubject<Void, Never>()
     let testingPlaygroundTapped = PassthroughSubject<Void, Never>()
@@ -113,10 +116,10 @@ class TestAPIViewModel: TestAPIViewModeling,
         configurationString.append(" | ")
         #endif
 
-        #if BETA
-        configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
-        #elseif ADS
+        #if ADS
         configurationString.append(NSLocalizedString("ConfigurationAds", comment: ""))
+        #elseif BETA
+        configurationString.append(NSLocalizedString("ConfigurationBeta", comment: ""))
         #endif
         return !configurationString.isEmpty ? configurationString : nil
     }
@@ -160,8 +163,9 @@ class TestAPIViewModel: TestAPIViewModeling,
 
     var configurationLabelString: AnyPublisher<String, Never> {
         return viewWillAppear
-            .flatMap {
-                self.configurationStringSubject
+            .flatMap { [weak self] in
+                guard let self else { return Empty<String?, Never>().eraseToAnyPublisher() }
+                return self.configurationStringSubject.eraseToAnyPublisher()
             }
             .map { configurationString in
                 guard let configurationString else {
@@ -204,6 +208,11 @@ class TestAPIViewModel: TestAPIViewModeling,
     private let _openUIFlows = PassthroughSubject<SDKConversationDataModel, Never>()
     var openUIFlows: AnyPublisher<SDKConversationDataModel, Never> {
         return _openUIFlows.eraseToAnyPublisher()
+    }
+
+    private let _openUIFlowsPartialScreen = PassthroughSubject<SDKConversationDataModel, Never>()
+    var openUIFlowsPartialScreen: AnyPublisher<SDKConversationDataModel, Never> {
+        return _openUIFlowsPartialScreen.eraseToAnyPublisher()
     }
 
     private let _openUIViews = PassthroughSubject<SDKConversationDataModel, Never>()
@@ -258,6 +267,7 @@ class TestAPIViewModel: TestAPIViewModeling,
 }
 
 private extension TestAPIViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         enteredSpotId
             .removeDuplicates()
@@ -287,6 +297,11 @@ private extension TestAPIViewModel {
         uiFlowsTapped
             .withLatestFrom(conversationDataModelObservable)
             .bind(to: _openUIFlows)
+            .store(in: &cancellables)
+
+        uiFlowsPartialScreenTapped
+            .withLatestFrom(conversationDataModelObservable)
+            .bind(to: _openUIFlowsPartialScreen)
             .store(in: &cancellables)
 
         uiViewsTapped
@@ -324,6 +339,7 @@ private extension TestAPIViewModel {
 
         Publishers.MergeMany(
             uiFlowsTapped.voidify(),
+            uiFlowsPartialScreenTapped.voidify(),
             uiViewsTapped.voidify(),
             miscellaneousTapped.voidify(),
             testingPlaygroundTapped.voidify(),
@@ -342,6 +358,7 @@ private extension TestAPIViewModel {
         Publishers.MergeMany(
             settingsTapped.voidify(),
             uiFlowsTapped.voidify(),
+            uiFlowsPartialScreenTapped.voidify(),
             uiViewsTapped.voidify(),
             miscellaneousTapped.voidify(),
             testingPlaygroundTapped.voidify(),
@@ -397,6 +414,8 @@ private extension TestAPIViewModel {
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
         helpers.localeStrategy = UserDefaultsProvider.shared.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
         helpers.orientationEnforcement = UserDefaultsProvider.shared.get(key: .orientationEnforcement, defaultValue: OWOrientationEnforcement.default)
+        helpers.loggerConfiguration.level = .verbose
+        helpers.loggerConfiguration.methods = [.nsLog]
         let authentication = OpenWeb.manager.authentication
         authentication.shouldDisplayLoginPrompt = UserDefaultsProvider.shared.get(key: .showLoginPrompt, defaultValue: false)
         customizations.commentActions.color = UserDefaultsProvider.shared.get(key: .commentActionsColor, defaultValue: OWCommentActionsColor.default)
@@ -413,7 +432,6 @@ private extension TestAPIViewModel {
         let BIClosure: OWBIAnalyticEventCallback = { event, additionalInfo, postId in
             DLog("Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)")
         }
-
         analytics.addBICallback(BIClosure)
     }
 

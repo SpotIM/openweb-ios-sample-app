@@ -12,8 +12,8 @@ import Foundation
 #endif
 
 struct ConversationPreset {
-    let displayName: String
-    let conversationDataModel: SDKConversationDataModel
+    var displayName: String
+    var conversationDataModel: SDKConversationDataModel
     var section: String?
 }
 

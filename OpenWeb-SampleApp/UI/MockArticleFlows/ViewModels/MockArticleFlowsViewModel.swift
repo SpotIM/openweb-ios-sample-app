@@ -323,44 +323,48 @@ private extension MockArticleFlowsViewModel {
                 return (result.0, result.1, loggerEnabled)
             }
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] result in
-                guard let self else { return }
-                let mode = result.0
-                let postId = result.1
-                let loggerEnabled = result.2
+            .sink(
+                receiveValue: { [weak self] result in
+                    guard let self else { return }
+                    let mode = result.0
+                    let postId = result.1
+                    let loggerEnabled = result.2
 
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                    guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
-                let manager = OpenWeb.manager
-                let flows = manager.ui.flows
+                    let manager = OpenWeb.manager
+                    let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+                    let additionalSettings = self.commonCreatorService.additionalSettings()
+                    let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-                if shouldUseAsyncAwaitCallingMethod() {
-                    Task { @MainActor [weak self] in
-                        guard let self else { return }
-                        do {
-                            try await flows.commentCreation(
-                                postId: postId,
-                                article: article,
-                                presentationalMode: presentationalMode,
-                                additionalSettings: additionalSettings,
-                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
-                            )
-                        } catch {
-                            let message = error.localizedDescription
-                            DLog("Calling flows.commentCreation error: \(message)")
-                            _showError.send(message)
+                    if shouldUseAsyncAwaitCallingMethod() {
+                        Task { @MainActor [weak self] in
+                            guard let self else { return }
+                            do {
+                                try await flows.conversation(
+                                    postId: postId,
+                                    article: article,
+                                    route: .commentCreation(type: .comment),
+                                    presentationalMode: presentationalMode,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
+                                )
+                            } catch {
+                                let message = error.localizedDescription
+                                DLog("Calling flows.commentCreation error: \(message)")
+                                _showError.send(message)
+                            }
                         }
-                    }
-                } else {
-                    flows.commentCreation(postId: postId,
-                                          article: article,
-                                          presentationalMode: presentationalMode,
-                                          additionalSettings: additionalSettings,
-                                          callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                          completion: { [weak self] result in
+                    } else {
+                        flows.conversation(
+                            postId: postId,
+                            article: article,
+                            route: .commentCreation(type: .comment),
+                            presentationalMode: presentationalMode,
+                            additionalSettings: additionalSettings,
+                            callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                            completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success:
@@ -371,9 +375,9 @@ private extension MockArticleFlowsViewModel {
                             DLog("Calling flows.commentCreation error: \(message)")
                             self._showError.send(message)
                         }
-                    })
+                            })
                 }
-            })
+                })
             .store(in: &cancellables)
 
         // Comment creation
@@ -386,46 +390,50 @@ private extension MockArticleFlowsViewModel {
                 return (result.0, result.1, loggerEnabled)
             }
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] result in
-                guard let self else { return }
-                let mode = result.0
-                let postId = result.1
-                let loggerEnabled = result.2
+            .sink(
+                receiveValue: { [weak self] result in
+                    guard let self else { return }
+                    let mode = result.0
+                    let postId = result.1
+                    let loggerEnabled = result.2
 
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                    guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
-                let manager = OpenWeb.manager
-                let flows = manager.ui.flows
+                    let manager = OpenWeb.manager
+                    let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+                    let additionalSettings = self.commonCreatorService.additionalSettings()
+                    let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-                if shouldUseAsyncAwaitCallingMethod() {
-                    Task { @MainActor [weak self] in
-                        guard let self else { return }
-                        do {
-                            try await flows.commentThread(
-                                postId: postId,
-                                article: article,
-                                commentId: self.commonCreatorService.commentThreadCommentId(),
-                                presentationalMode: presentationalMode,
-                                additionalSettings: additionalSettings,
-                                callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
-                            )
-                        } catch {
-                            let message = error.localizedDescription
-                            DLog("Calling flows.commentThread error: \(message)")
-                            _showError.send(message)
+                    if shouldUseAsyncAwaitCallingMethod() {
+                        Task { @MainActor [weak self] in
+                            guard let self else { return }
+                            do {
+                                try await flows.conversation(
+                                    postId: postId,
+                                    article: article,
+                                    route: .commentThread(commentId: self.commonCreatorService.commentThreadCommentId()),
+                                    presentationalMode: presentationalMode,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
+                                )
+                            } catch {
+                                let message = error.localizedDescription
+                                DLog("Calling flows.commentThread error: \(message)")
+                                _showError.send(message)
+                            }
                         }
-                    }
-                } else {
-                    flows.commentThread(postId: postId,
-                                        article: article,
-                                        commentId: self.commonCreatorService.commentThreadCommentId(),
-                                        presentationalMode: presentationalMode,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                        completion: { [weak self] result in
+                    } else {
+                        flows.conversation(
+                            postId: postId,
+                            article: article,
+                            route: .commentThread(commentId: self.commonCreatorService.commentThreadCommentId()),
+                            presentationalMode: presentationalMode,
+                            additionalSettings: additionalSettings,
+                            callbacks: loggerActionCallbacks(
+                                loggerEnabled: loggerEnabled
+                            ),
+                            completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success:
@@ -436,9 +444,9 @@ private extension MockArticleFlowsViewModel {
                             DLog("Calling flows.commentThread error: \(message)")
                             self._showError.send(message)
                         }
-                    })
+                            })
                 }
-            })
+                })
             .store(in: &cancellables)
 
         // Providing `displayAuthenticationFlow` callback

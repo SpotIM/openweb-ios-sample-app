@@ -16,11 +16,11 @@ class MockArticleFlowsVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         // swiftlint:disable no_magic_numbers
-        // 1.2 * screen height, defualt to 1200
+        // 1.2 * screen height, default to 1200
         static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2 / 3
         // swiftlint:enable no_magic_numbers
-        static let articelImageViewCornerRadius: CGFloat = 10
+        static let articleImageViewCornerRadius: CGFloat = 10
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
@@ -90,7 +90,7 @@ class MockArticleFlowsVC: UIViewController {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
-            .corner(radius: Metrics.articelImageViewCornerRadius)
+            .corner(radius: Metrics.articleImageViewCornerRadius)
     }()
 
     private lazy var lblArticleDescription: UILabel = {

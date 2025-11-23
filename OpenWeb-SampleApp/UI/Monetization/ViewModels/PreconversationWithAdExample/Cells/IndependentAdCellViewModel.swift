@@ -25,7 +25,7 @@ protocol IndependentAdCellViewModeling {
     var outputs: IndependentAdCellViewModelingOutput { get }
 }
 
-public final class IndependentAdCellViewModel: IndependentAdCellViewModeling,
+class IndependentAdCellViewModel: IndependentAdCellViewModeling,
                                                IndependentAdCellViewModelingOutput,
                                                IndependentAdCellViewModelingInput {
     var inputs: IndependentAdCellViewModelingInput { self }
@@ -50,7 +50,7 @@ public final class IndependentAdCellViewModel: IndependentAdCellViewModeling,
         _loggerEvents.eraseToAnyPublisher()
     }
 
-    public init(postId: OWPostId) {
+    init(postId: OWPostId) {
         self.postId = postId
         setupObservers()
     }

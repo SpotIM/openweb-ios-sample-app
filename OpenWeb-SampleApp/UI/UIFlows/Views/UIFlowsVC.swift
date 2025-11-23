@@ -10,12 +10,11 @@ import UIKit
 import Combine
 import CombineCocoa
 import SnapKit
-import OpenWebSDK
 
 class UIFlowsVC: UIViewController {
 
     private struct Metrics {
-        static let identifier = "uiviews_vc_id"
+        static let identifier = "uiflows_vc_id"
         static let btnPreConversationPushModeIdentifier = "btn_pre_conversation_push_mode_id"
         static let btnPreConversationPresentModeIdentifier = "btn_pre_conversation_present_mode_id"
         static let btnFullConversationPushModeIdentifier = "btn_full_conversation_push_mode_id"
@@ -186,7 +185,6 @@ private extension UIFlowsVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentThreadPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
 
         #if ADS
@@ -197,6 +195,7 @@ private extension UIFlowsVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentThreadPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
         #endif
     }
