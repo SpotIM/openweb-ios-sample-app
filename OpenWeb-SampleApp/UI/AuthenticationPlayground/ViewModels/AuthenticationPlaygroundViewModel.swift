@@ -369,7 +369,7 @@ private extension AuthenticationPlaygroundViewModel {
                     .map { ($0, token, genericSSO) }
                     .eraseToAnyPublisher()
             }
-            .flatMapLatest { [weak self] codeA, token, genericSSO -> AnyPublisher<String, Never> in
+            .flatMapLatest { [weak self] codeA, token, genericSSO -> AnyPublisher<(String, GenericSSOAuthentication), Never> in
             // 5. Retrieving Code B
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
@@ -381,8 +381,10 @@ private extension AuthenticationPlaygroundViewModel {
                         }
                     })
                     .unwrap()
+                    .map { ($0, genericSSO) }
+                    .eraseToAnyPublisher()
             }
-            .flatMapLatest { [weak self] codeB -> AnyPublisher<Void, Never> in
+            .flatMapLatest { [weak self] codeB, genericSSO -> AnyPublisher<Void, Never> in
                 // 6. Complete SSO
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 return self.completeSSO(codeB: codeB)
@@ -394,6 +396,11 @@ private extension AuthenticationPlaygroundViewModel {
                         }
                     })
                     .unwrap()
+                    .handleEvents(receiveOutput: { userId in
+                        if let index = GenericSSOAuthentication.mockModels.firstIndex(where: { $0.user.username == genericSSO.user.username }) {
+                            GenericSSOAuthentication.mockModels[index].user.userId = userId
+                        }
+                    })
                     .voidify()
             }
             .handleEvents(receiveOutput: { [weak self] _ in

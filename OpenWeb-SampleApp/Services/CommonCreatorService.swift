@@ -118,7 +118,7 @@ class CommonCreatorService: CommonCreatorServicing {
             let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
             if OpenWeb.manager.spotId == demoSpotId,
                let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
-            self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+                self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
                     .prefix(1)
                     .sink(receiveCompletion: { result in
                         if case .failure(let error) = result {

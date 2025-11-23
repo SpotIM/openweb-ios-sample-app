@@ -19,7 +19,7 @@ struct GenericSSOAuthentication {
 }
 
 extension GenericSSOAuthentication {
-    static let mockModels = Self.createMockModels()
+    static var mockModels = Self.createMockModels()
 
     static func createMockModels() -> [GenericSSOAuthentication] {
         var authenticationModels: [GenericSSOAuthentication] = []
