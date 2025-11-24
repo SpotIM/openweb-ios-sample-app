@@ -397,7 +397,7 @@ private extension AuthenticationPlaygroundViewModel {
                     })
                     .unwrap()
                     .handleEvents(receiveOutput: { userId in
-                        if let index = GenericSSOAuthentication.mockModels.firstIndex(where: { $0.user.username == genericSSO.user.username }) {
+                        if let index = GenericSSOAuthentication.mockModels.firstIndex(where: { $0.matches(genericSSO) }) {
                             GenericSSOAuthentication.mockModels[index].user.userId = userId
                         }
                     })

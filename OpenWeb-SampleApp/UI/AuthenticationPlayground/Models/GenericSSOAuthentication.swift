@@ -45,4 +45,8 @@ extension GenericSSOAuthentication {
 
         return authenticationModels
     }
+
+    func matches(_ rhs: GenericSSOAuthentication) -> Bool {
+        return spotId == rhs.spotId && user.userId == rhs.user.userId
+    }
 }
