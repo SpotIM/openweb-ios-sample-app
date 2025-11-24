@@ -15,10 +15,30 @@ struct GenericSSOAuthentication {
     var displayName: String
     var spotId: String
     var ssoToken: String
-    var user: UserAuthentication
+    var user: UserAuthentication {
+        didSet {
+            guard user.userId != oldValue.userId, !user.userId.isEmpty else { return }
+            UserDefaults.standard.set(user.userId, forKey: persistenceKey)
+        }
+    }
+
+    init(displayName: String, spotId: String, ssoToken: String, user: UserAuthentication) {
+        self.displayName = displayName
+        self.spotId = spotId
+        self.ssoToken = ssoToken
+        self.user = user
+
+        if let persistedUserId = UserDefaults.standard.string(forKey: persistenceKey), !persistedUserId.isEmpty {
+            self.user.userId = persistedUserId
+        }
+    }
 }
 
 extension GenericSSOAuthentication {
+    var persistenceKey: String {
+        return user.username + "_" + spotId
+    }
+
     static var mockModels = Self.createMockModels()
 
     static func createMockModels() -> [GenericSSOAuthentication] {
@@ -44,9 +64,5 @@ extension GenericSSOAuthentication {
     #endif
 
         return authenticationModels
-    }
-
-    func matches(_ rhs: GenericSSOAuthentication) -> Bool {
-        return spotId == rhs.spotId && user.userId == rhs.user.userId
     }
 }
