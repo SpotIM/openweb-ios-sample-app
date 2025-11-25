@@ -6,13 +6,9 @@
 //
 
 import Foundation
+import OpenWebSDK
 
 enum SDKUIFlowPartialScreenActionType {
-    case fullConversation
-    case commentCreation
-    case commentThread
-    case notifications
-    case profile(userId: String)
-    case clarityDetails
-    case reportReason
+    case preConversationToFullConversation(presentationalMode: PresentationalModeCompact)
+    case fullConversation(route: OWConversationRoute)
 }

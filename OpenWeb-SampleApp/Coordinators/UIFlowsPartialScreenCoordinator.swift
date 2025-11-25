@@ -43,21 +43,38 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
+            .eraseToAnyPublisher()
 
-        let viewsExamplesCoordinator = flowsVM.outputs.openExamplesScreen
+        let conversationWrapperCoordinator = flowsVM.outputs.openConversationWrapperFlow
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = UIFlowsPartialScreenExamplesCoordinator(router: self.router)
+                let coordinatorData = CoordinatorData.actionsFlowPartialScreenSettings(data: dataModel)
+                let coordinator = ConversationWrapperFlowCoordinator(router: self.router)
                 return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
+            .eraseToAnyPublisher()
 
-        return Publishers.Merge3(vcPopped,
-                                 mockArticleFlowCoordinator,
-                                 viewsExamplesCoordinator)
+        let conversationBelowVideoCoordinator = flowsVM.outputs.openConversationBelowVideoScreen
+            .flatMap { [weak self] postId -> AnyPublisher<Void, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                let coordinatorData = CoordinatorData.postId(data: postId)
+                let coordinator = UIFlowsConversationBelowVideoCoordinator(router: self.router)
+                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+            }
+            .flatMap { _ -> AnyPublisher<Void, Never> in
+                return Empty(completeImmediately: false).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+
+        return Publishers.MergeMany([
+            vcPopped.eraseToAnyPublisher(),
+            mockArticleFlowCoordinator,
+            conversationWrapperCoordinator,
+            conversationBelowVideoCoordinator
+        ])
         .eraseToAnyPublisher()
     }
 }

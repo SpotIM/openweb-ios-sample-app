@@ -29,6 +29,20 @@ class MockArticleFlowPartialScreenCoordinator: BaseCoordinator<Void> {
 
         let vcPopped = PassthroughSubject<Void, Never>()
 
+        mockArticleFlowsVM.outputs.showWrappedConversation
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] wrapperVC, presentationalMode in
+                guard let self else { return }
+                switch presentationalMode {
+                case .present:
+                    self.router.present(wrapperVC, animated: true)
+                case .push:
+                    self.router.push(wrapperVC, animated: true, completion: nil)
+                }
+
+            })
+            .store(in: &cancellables)
+
         router.push(mockArticleFlowsVC,
                     animated: true,
                     completion: vcPopped)

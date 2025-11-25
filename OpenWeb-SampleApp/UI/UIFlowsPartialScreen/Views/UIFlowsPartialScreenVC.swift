@@ -15,14 +15,12 @@ class UIFlowsPartialScreenVC: UIViewController {
 
     private struct Metrics {
         static let identifier = "uiflows_partial_screen_vc_id"
+        static let btnPreConversationToConversationPushModeIdentifier = "btn_pre_conversation_to_conversation_push_mode_id"
+        static let btnPreConversationToConversationPresentModeIdentifier = "btn_pre_conversation_to_conversation_present_mode_id"
+        static let btnPreConversationToConversationCoverModeIdentifier = "btn_pre_conversation_to_conversation_cover_mode_id"
         static let btnFullConversationIdentifier = "btn_full_conversation_id"
         static let btnCommentCreationIdentifier = "btn_comment_creation_id"
         static let btnCommentThreadIdentifier = "btn_comment_thread_id"
-        static let btnNotificationsIdentifier = "btn_notifications_id"
-        static let btnProfileIdentifier = "btn_profile_id"
-        static let btnClarityDetailsIdentifier = "btn_clarity_details_id"
-        static let btnReportReasonIdentifier = "btn_report_reason_id"
-        static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -39,6 +37,18 @@ class UIFlowsPartialScreenVC: UIViewController {
         return scrollView
     }()
 
+    private lazy var btnPreConversationToConversationPushMode: UIButton = {
+        return NSLocalizedString("PreConversationToFullConversationPushMode", comment: "").blueRoundedButton
+    }()
+
+    private lazy var btnPreConversationToConversationPresentMode: UIButton = {
+        return NSLocalizedString("PreConversationToFullConversationPresentMode", comment: "").blueRoundedButton
+    }()
+
+    private lazy var btnPreConversationToConversationCoverMode: UIButton = {
+        return NSLocalizedString("PreConversationToFullConversationCoverMode", comment: "").blueRoundedButton
+    }()
+
     private lazy var btnFullConversation: UIButton = {
         return NSLocalizedString("FullConversation", comment: "").blueRoundedButton
     }()
@@ -49,26 +59,6 @@ class UIFlowsPartialScreenVC: UIViewController {
 
     private lazy var btnCommentThread: UIButton = {
         return NSLocalizedString("CommentThread", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnNotifications: UIButton = {
-        return NSLocalizedString("Notifications", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnProfile: UIButton = {
-        return NSLocalizedString("ProfileTitle", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnClarityDetails: UIButton = {
-        return NSLocalizedString("ClarityDetails", comment: "").blueRoundedButton
-    }()
-
-    private lazy var btnReportReason: UIButton = {
-        return NSLocalizedString("ReportReason", comment: "").appending(" *").blueRoundedButton
-    }()
-
-    private lazy var btnExamples: UIButton = {
-        return NSLocalizedString("Examples", comment: "").blueRoundedButton
     }()
 
     init(viewModel: UIFlowsPartialScreenViewModeling) {
@@ -91,14 +81,12 @@ class UIFlowsPartialScreenVC: UIViewController {
 private extension UIFlowsPartialScreenVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
+        btnPreConversationToConversationPushMode.accessibilityIdentifier = Metrics.btnPreConversationToConversationPushModeIdentifier
+        btnPreConversationToConversationPresentMode.accessibilityIdentifier = Metrics.btnPreConversationToConversationPresentModeIdentifier
+        btnPreConversationToConversationCoverMode.accessibilityIdentifier = Metrics.btnPreConversationToConversationCoverModeIdentifier
         btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
-        btnNotifications.accessibilityIdentifier = Metrics.btnNotificationsIdentifier
-        btnProfile.accessibilityIdentifier = Metrics.btnProfileIdentifier
-        btnClarityDetails.accessibilityIdentifier = Metrics.btnClarityDetailsIdentifier
-        btnReportReason.accessibilityIdentifier = Metrics.btnReportReasonIdentifier
-        btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
     @objc func setupViews() {
@@ -113,14 +101,12 @@ private extension UIFlowsPartialScreenVC {
         }
 
         let buttons = [
+            btnPreConversationToConversationPushMode,
+            btnPreConversationToConversationPresentMode,
+            btnPreConversationToConversationCoverMode,
             btnFullConversation,
             btnCommentCreation,
-            btnCommentThread,
-            btnNotifications,
-            btnProfile,
-            btnClarityDetails,
-            btnReportReason,
-            btnExamples
+            btnCommentThread
         ]
         let buttonsStackView = UIStackView(arrangedSubviews: buttons)
         buttonsStackView.axis = .vertical
@@ -145,6 +131,18 @@ private extension UIFlowsPartialScreenVC {
         title = viewModel.outputs.title
 
         // Bind buttons
+        btnPreConversationToConversationPushMode.tapPublisher
+            .bind(to: viewModel.inputs.preConversationToFullConversationPushModeTapped)
+                .store(in: &cancellables)
+
+        btnPreConversationToConversationPresentMode.tapPublisher
+            .bind(to: viewModel.inputs.preConversationToFullConversationPresentModeTapped)
+                .store(in: &cancellables)
+
+        btnPreConversationToConversationCoverMode.tapPublisher
+            .bind(to: viewModel.inputs.preConversationToFullConversationCoverModeTapped)
+                .store(in: &cancellables)
+
         btnFullConversation.tapPublisher
             .bind(to: viewModel.inputs.fullConversationTapped)
             .store(in: &cancellables)
@@ -155,26 +153,6 @@ private extension UIFlowsPartialScreenVC {
 
         btnCommentThread.tapPublisher
             .bind(to: viewModel.inputs.commentThreadTapped)
-            .store(in: &cancellables)
-
-        btnNotifications.tapPublisher
-            .bind(to: viewModel.inputs.notificationsTapped)
-            .store(in: &cancellables)
-
-        btnProfile.tapPublisher
-            .bind(to: viewModel.inputs.profileTapped)
-            .store(in: &cancellables)
-
-        btnClarityDetails.tapPublisher
-            .bind(to: viewModel.inputs.clarityDetailsTapped)
-            .store(in: &cancellables)
-
-        btnReportReason.tapPublisher
-            .bind(to: viewModel.inputs.reportReasonTapped)
-            .store(in: &cancellables)
-
-        btnExamples.tapPublisher
-            .bind(to: viewModel.inputs.examplesTapped)
             .store(in: &cancellables)
     }
 }
