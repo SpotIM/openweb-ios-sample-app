@@ -91,7 +91,7 @@ extension OWCommentCreationRequiredData {
         viewableMode: .independent
     )
 
-    let nudgeData = OWModerationNudgeData(state: .pending, tag: .toxicity)
+    let nudgeData = OWCommentCreationErrorResponse(verdict: .pending, tags: [.toxicity])
     viewModel.outputs.commentCreationRegularViewVm.inputs.showModerationNudge.send(nudgeData)
 
     return OWCommentCreationView(viewModel: viewModel)
@@ -104,7 +104,7 @@ extension OWCommentCreationRequiredData {
         viewableMode: .independent
     )
 
-    let nudgeData = OWModerationNudgeData(state: .pending, tag: .toxicity)
+    let nudgeData = OWCommentCreationErrorResponse(verdict: .pending, tags: [.toxicity])
     viewModel.outputs.commentCreationLightViewVm.inputs.showModerationNudge.send(nudgeData)
 
     return OWCommentCreationView(viewModel: viewModel)
@@ -130,7 +130,7 @@ extension OWCommentCreationRequiredData {
         viewableMode: .independent
     )
 
-    let nudgeData = OWModerationNudgeData(state: .pending, tag: .toxicity)
+    let nudgeData = OWCommentCreationErrorResponse(verdict: .pending, tags: [.toxicity])
     viewModel.outputs.commentCreationFloatingKeyboardViewVm.inputs.showModerationNudge.send(nudgeData)
 
     let commentCreationView = OWCommentCreationView(viewModel: viewModel)
