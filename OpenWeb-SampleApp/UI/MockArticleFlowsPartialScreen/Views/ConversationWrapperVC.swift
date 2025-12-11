@@ -32,6 +32,8 @@ class ConversationWrapperVC: UIViewController {
         return view
     }()
 
+    private lazy var resizeGripView = ResizeGripView()
+
     private var cancellables = Set<AnyCancellable>()
     private var floatingLoggerView: OWFloatingView?
 
@@ -115,10 +117,12 @@ private extension ConversationWrapperVC {
 
         // Add bottom colored view
         view.addSubview(bottomColoredView)
+        var heightConstraint: Constraint?
         bottomColoredView.snp.makeConstraints { make in
             make.bottom.leading.trailing.equalToSuperview()
-            make.height.equalTo(Metrics.coloredViewHeight)
+            heightConstraint = make.height.equalTo(Metrics.coloredViewHeight).constraint
         }
+        resizeGripView.attach(to: bottomColoredView, heightConstraint: heightConstraint!)
     }
 
     func addConversationViewController(_ conversationViewController: UIViewController) {
