@@ -17,10 +17,16 @@ class ResizeGripView: UIView {
         static let defaultHeight: CGFloat = 50
     }
 
+    enum Position {
+        case top
+        case bottom
+    }
+
     private let maxHeight: CGFloat
     private weak var targetView: UIView?
     private var heightConstraint: Constraint?
     private var currentHeight: CGFloat = 0
+    private var position: Position = .top
 
     private lazy var handleView: UIView = {
         let view = UIView()
@@ -39,13 +45,20 @@ class ResizeGripView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func attach(to targetView: UIView, heightConstraint: Constraint) {
+    func attach(to targetView: UIView, heightConstraint: Constraint, position: Position = .top) {
         self.targetView = targetView
         self.heightConstraint = heightConstraint
+        self.position = position
         self.currentHeight = targetView.frame.height > 0 ? targetView.frame.height : (heightConstraint.layoutConstraints.first?.constant ?? Metrics.defaultHeight)
         targetView.addSubview(self)
         snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            switch position {
+            case .top:
+                make.top.equalToSuperview()
+            case .bottom:
+                make.bottom.equalToSuperview()
+            }
         }
     }
 }
@@ -54,14 +67,13 @@ private extension ResizeGripView {
     func setupViews() {
         addSubview(handleView)
         handleView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Metrics.handlePadding)
+            make.top.bottom.equalToSuperview().inset(Metrics.handlePadding)
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview()
             make.width.equalTo(Metrics.handleWidth)
             make.height.equalTo(Metrics.handleHeight)
         }
 
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         addGestureRecognizer(panGesture)
     }
 
@@ -69,7 +81,8 @@ private extension ResizeGripView {
         switch gesture.state {
         case .changed:
             let translation = gesture.translation(in: superview)
-            let newHeight = currentHeight - translation.y
+            let delta = position == .top ? -translation.y : translation.y
+            let newHeight = currentHeight + delta
             let clampedHeight = min(max(newHeight, 0), maxHeight)
             heightConstraint?.update(offset: clampedHeight)
         case .ended, .cancelled:
