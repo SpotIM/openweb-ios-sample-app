@@ -10,7 +10,7 @@ import Foundation
 import OpenWebSDK
 import UIKit
 
-extension OWColor: Codable {
+extension OWColor: @retroactive Codable {
     enum CodingKeys: String, CodingKey {
         case lightColor
         case darkColor

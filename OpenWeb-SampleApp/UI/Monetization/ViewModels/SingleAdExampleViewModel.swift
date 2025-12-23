@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import OpenWebCommon
+import OpenWebSDK
 
 #if ADS
 import OpenWebIAUSDK
