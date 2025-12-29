@@ -95,7 +95,7 @@ private class MockUnseenCountRealtimeService: OWRealtimeServicing {
     }()
 
     let onlineViewingUsersCount = Just(0).eraseToAnyPublisher()
-    let currentPostIsReadOnly = Just(false).eraseToAnyPublisher()
+    let postReadOnlyState = Just((isReadOnly: false, postId: "mockPostId")).eraseToAnyPublisher()
     let currentPostId = Just("mockPostId").eraseToAnyPublisher()
 
 
