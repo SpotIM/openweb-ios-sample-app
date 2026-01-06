@@ -35,6 +35,14 @@ class UIFlowsConversationBelowVideoVC: UIViewController {
         return view
     }()
 
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.backgroundColor = ColorPalette.shared.color(type: .background)
+        return scrollView
+    }()
+
     init(viewModel: UIFlowsConversationBelowVideoViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -78,6 +86,11 @@ private extension UIFlowsConversationBelowVideoVC {
             make.top.equalTo(videoPlayerContainer.snp.bottom)
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+
+        containerBelowVideo.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func setupObservers() {
@@ -94,11 +107,12 @@ private extension UIFlowsConversationBelowVideoVC {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] preConversationView in
                 guard let self else { return }
-                self.containerBelowVideo.addSubview(preConversationView)
+                self.scrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
-                    make.top.equalToSuperview().offset(Metrics.verticalMargin)
-                    make.leading.trailing.equalToSuperview().inset(Metrics.preConversationHorizontalMargin)
+                    make.top.equalTo(self.scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
+                    make.leading.trailing.equalTo(self.scrollView.frameLayoutGuide).inset(Metrics.preConversationHorizontalMargin)
+                    make.bottom.equalTo(self.scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
                 }
             })
             .store(in: &cancellables)
