@@ -110,9 +110,9 @@ private extension UIFlowsConversationBelowVideoVC {
                 self.scrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
-                    make.top.equalTo(self.scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
-                    make.leading.trailing.equalTo(self.scrollView.frameLayoutGuide).inset(Metrics.preConversationHorizontalMargin)
-                    make.bottom.equalTo(self.scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
+                    make.top.bottom.equalTo(self.scrollView.contentLayoutGuide).inset(Metrics.verticalMargin)
+                    make.leading.trailing.equalTo(self.scrollView.contentLayoutGuide).inset(Metrics.preConversationHorizontalMargin)
+                    make.width.equalTo(self.scrollView.frameLayoutGuide).inset(Metrics.preConversationHorizontalMargin)
                 }
             })
             .store(in: &cancellables)
