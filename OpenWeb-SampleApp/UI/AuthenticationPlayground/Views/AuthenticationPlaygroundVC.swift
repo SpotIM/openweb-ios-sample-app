@@ -21,6 +21,12 @@ class AuthenticationPlaygroundVC: UIViewController {
         static let textFieldUsernameIdentifier = "text_field_username"
         static let textFieldPasswordIdentifier = "text_field_password"
         static let textFieldSSOAutocompleteIdentifier = "text_field_sso_autocomplete"
+        static let btnGenericSSOAuthenticateIdentifier = "btn_generic_sso_authenticate"
+        static let btnThirdPartySSOAuthenticateIdentifier = "btn_third_party_sso_authenticate"
+        static let btnLogoutIdentifier = "btn_logout"
+        static let lblGenericSSOStatusSymbolIdentifier = "lbl_generic_sso_status_symbol"
+        static let lblThirdPartySSOStatusSymbolIdentifier = "lbl_third_party_sso_status_symbol"
+        static let lblLogoutStatusSymbolIdentifier = "lbl_logout_status_symbol"
         static let verticalMargin: CGFloat = 20
         static let verticalBigMargin: CGFloat = 60
         static let horizontalMargin: CGFloat = 10
@@ -167,6 +173,12 @@ class AuthenticationPlaygroundVC: UIViewController {
 private extension AuthenticationPlaygroundVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
+        btnGenericSSOAuthenticate.accessibilityIdentifier = Metrics.btnGenericSSOAuthenticateIdentifier
+        btnThirdPartySSOAuthenticate.accessibilityIdentifier = Metrics.btnThirdPartySSOAuthenticateIdentifier
+        btnLogout.accessibilityIdentifier = Metrics.btnLogoutIdentifier
+        lblGenericSSOStatusSymbol.accessibilityIdentifier = Metrics.lblGenericSSOStatusSymbolIdentifier
+        lblThirdPartySSOStatusSymbol.accessibilityIdentifier = Metrics.lblThirdPartySSOStatusSymbolIdentifier
+        lblLogoutStatusSymbol.accessibilityIdentifier = Metrics.lblLogoutStatusSymbolIdentifier
     }
 
     // swiftlint:disable function_body_length
