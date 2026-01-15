@@ -26,7 +26,8 @@ extension OWCommentCreationRequiredData {
             settings: OWAdditionalSettings(commentCreationSettings: OWCommentCreationSettings(style: commentCreationStyle)),
             commentCreationType: .comment,
             presentationalStyle: .none,
-            postId: ""
+            postId: "",
+            openKeyboardType: .instant
         )
     }
 }
@@ -56,6 +57,9 @@ extension OWCommentCreationRequiredData {
     let viewController = UIViewController() // ensure full screen
     viewController.view.backgroundColor = .secondarySystemBackground
 
+    let commentCreationData = OWCommentCreationRequiredData.mock(commentCreationStyle: .floatingKeyboard)
+    OWSharedServicesProvider.shared.readOnlyService().set(readOnlyMode: .disable, postId: commentCreationData.postId)
+
     let mockKeyboardView = UIImageView(image: UIImage(systemName: "keyboard"))
     mockKeyboardView.contentMode = .scaleAspectFit
     mockKeyboardView.tintColor = .systemBackground
@@ -68,7 +72,7 @@ extension OWCommentCreationRequiredData {
 
     let commentCreationView = OWCommentCreationView(
         viewModel: OWCommentCreationViewViewModel(
-            commentCreationData: .mock(commentCreationStyle: .floatingKeyboard),
+            commentCreationData: commentCreationData,
             viewableMode: .independent
         )
     )
@@ -115,6 +119,9 @@ extension OWCommentCreationRequiredData {
     let viewController = UIViewController() // ensure full screen
     viewController.view.backgroundColor = .secondarySystemBackground
 
+    let commentCreationData = OWCommentCreationRequiredData.mock(commentCreationStyle: .floatingKeyboard)
+    OWSharedServicesProvider.shared.readOnlyService().set(readOnlyMode: .disable, postId: commentCreationData.postId)
+
     let mockKeyboardView = UIImageView(image: UIImage(systemName: "keyboard"))
     mockKeyboardView.contentMode = .scaleAspectFit
     mockKeyboardView.tintColor = .systemBackground
@@ -126,7 +133,7 @@ extension OWCommentCreationRequiredData {
     }
 
     let viewModel = OWCommentCreationViewViewModel(
-        commentCreationData: .mock(commentCreationStyle: .floatingKeyboard),
+        commentCreationData: commentCreationData,
         viewableMode: .independent
     )
 
