@@ -8,37 +8,48 @@
 
 import Foundation
 import UIKit
+import Combine
 import OpenWebSDK
+#if !PUBLIC_DEMO_APP
+import OpenWeb_SampleApp_Internal_Configs
+#endif
 
 protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
     func mockArticle(for postId: String) -> OWArticleProtocol
+    var renewSSOCallback: OWRenewSSOCallback { get }
 }
 
 class CommonCreatorService: CommonCreatorServicing {
     private let userDefaultsProvider: UserDefaultsProviderProtocol
+    private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
+    private var cancellables = Set<AnyCancellable>()
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI()) {
         self.userDefaultsProvider = userDefaultsProvider
+        self.silentSSOAuthentication = silentSSOAuthentication
     }
 
     func additionalSettings() -> OWAdditionalSettingsProtocol {
+        let allowPullToRefresh = self.userDefaultsProvider.get(key: .allowPullToRefresh, defaultValue: true)
+
         // 1. Pre conversation related
         let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let preConversationSettings = OWPreConversationSettingsBuilder(style: preConversationStyle).build()
 
         // 2. Conversation related
         let conversationStyle = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-        let conversationSettings = OWConversationSettingsBuilder(style: conversationStyle).build()
+        let conversationSettings = OWConversationSettings(style: conversationStyle, allowPullToRefresh: allowPullToRefresh)
 
         // 3. Comment creation related
         let commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
         let commentCreationSettings = OWCommentCreationSettingsBuilder(style: commentCreationStyle).build()
 
         // 4. Comment thread related
-        let commentThreadSettings = OWCommentThreadSettingsBuilder().build()
+        let commentThreadSettings = OWCommentThreadSettings(allowPullToRefresh: allowPullToRefresh)
 
         // 5. Final additional settings
         let additionalSettings = OWAdditionalSettingsBuilder(
@@ -99,5 +110,33 @@ class CommonCreatorService: CommonCreatorServicing {
         let presets = ConversationPreset.createMockModels()
         let presetForSpot = presets.first(where: { $0.conversationDataModel.spotId == spotId })
         return presetForSpot?.section
+    }
+
+    lazy var renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
+        guard let self else { return }
+            #if !PUBLIC_DEMO_APP
+            let demoSpotId = DevelopmentConversationPreset.demoSpot().toConversationPreset().conversationDataModel.spotId
+            if OpenWeb.manager.spotId == demoSpotId,
+               let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
+                self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+                    .prefix(1)
+                    .sink(receiveCompletion: { result in
+                        if case .failure(let error) = result {
+                            DLog("Silent SSO failed with error: \(error)")
+                            completion()
+                        }
+                    }, receiveValue: { userId in
+                        DLog("Silent SSO completed successfully with userId: \(userId)")
+                        completion()
+                    })
+                    .store(in: &cancellables)
+            } else {
+                DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
+                completion()
+            }
+            #else
+            DLog("`renewSSOCallback` triggered")
+            completion()
+            #endif
     }
 }

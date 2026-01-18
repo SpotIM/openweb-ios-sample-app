@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1620"
+   LastUpgradeVersion = "2620"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -60,7 +60,7 @@
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
-            key = "MallocStackLogging"
+            key = "MallocScribble"
             value = ""
             isEnabled = "YES">
          </AdditionalOption>
@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </AdditionalOption>
          <AdditionalOption
-            key = "MallocScribble"
+            key = "MallocStackLogging"
             value = ""
             isEnabled = "YES">
          </AdditionalOption>

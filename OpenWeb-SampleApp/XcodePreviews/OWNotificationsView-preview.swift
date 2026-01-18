@@ -8,6 +8,7 @@
 #if DEBUG
 @testable import OpenWebSDK
 import Combine
+import UIKit
 
 @available(iOS 17.0, *)
 #Preview {

@@ -10,6 +10,9 @@ import Combine
 import OpenWebSDK
 
 protocol UIFlowsPartialScreenViewModelingInputs {
+    var preConversationToFullConversationPushModeTapped: PassthroughSubject<Void, Never> { get }
+    var preConversationToFullConversationPresentModeTapped: PassthroughSubject<Void, Never> { get }
+    var preConversationToFullConversationCoverModeTapped: PassthroughSubject<Void, Never> { get }
     var fullConversationTapped: PassthroughSubject<Void, Never> { get }
     var commentCreationTapped: PassthroughSubject<Void, Never> { get }
     var commentThreadTapped: PassthroughSubject<Void, Never> { get }
@@ -17,7 +20,9 @@ protocol UIFlowsPartialScreenViewModelingInputs {
 
 protocol UIFlowsPartialScreenViewModelingOutputs {
     var title: String { get }
+    var openMockArticleScreen: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> { get }
     var openConversationWrapperFlow: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> { get }
+    var openConversationBelowVideoScreen: AnyPublisher<OWPostId, Never> { get }
 }
 
 protocol UIFlowsPartialScreenViewModeling {
@@ -33,13 +38,30 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
 
     private var cancellables = Set<AnyCancellable>()
 
+    let preConversationToFullConversationPushModeTapped = PassthroughSubject<Void, Never>()
+    let preConversationToFullConversationPresentModeTapped = PassthroughSubject<Void, Never>()
+    let preConversationToFullConversationCoverModeTapped = PassthroughSubject<Void, Never>()
     let fullConversationTapped = PassthroughSubject<Void, Never>()
     let commentCreationTapped = PassthroughSubject<Void, Never>()
     let commentThreadTapped = PassthroughSubject<Void, Never>()
 
+    private let _openMockArticleScreen = CurrentValueSubject<SDKUIFlowPartialScreenActionSettings?, Never>(value: nil)
+    var openMockArticleScreen: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> {
+        return _openMockArticleScreen
+            .unwrap()
+            .eraseToAnyPublisher()
+    }
+
     private let _openConversationWrapperFlow = PassthroughSubject<SDKUIFlowPartialScreenActionSettings, Never>()
     var openConversationWrapperFlow: AnyPublisher<SDKUIFlowPartialScreenActionSettings, Never> {
         return _openConversationWrapperFlow
+            .eraseToAnyPublisher()
+    }
+
+    private let _openConversationBelowVideoScreen = CurrentValueSubject<OWPostId?, Never>(value: nil)
+    var openConversationBelowVideoScreen: AnyPublisher<OWPostId, Never> {
+        return _openConversationBelowVideoScreen
+            .unwrap()
             .eraseToAnyPublisher()
     }
 
@@ -57,6 +79,18 @@ private extension UIFlowsPartialScreenViewModel {
 
     func setupObservers() {
         let postId = dataModel.postId
+
+        let preConversationToFullConversationPushModeModel = preConversationToFullConversationPushModeTapped
+            .map { route -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .preConversationToFullConversation(presentationalMode: .push))
+            }
+            .eraseToAnyPublisher()
+
+        let preConversationToFullConversationPresentModeModel = preConversationToFullConversationPresentModeTapped
+            .map { route -> SDKUIFlowPartialScreenActionSettings in
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .preConversationToFullConversation(presentationalMode: .present(style: .fullScreen)))
+            }
+            .eraseToAnyPublisher()
 
         let fullConversationModel = fullConversationTapped
             .map { _ -> SDKUIFlowPartialScreenActionSettings in
@@ -77,12 +111,25 @@ private extension UIFlowsPartialScreenViewModel {
             }
             .eraseToAnyPublisher()
 
+        Publishers.Merge(
+            preConversationToFullConversationPushModeModel,
+            preConversationToFullConversationPresentModeModel
+        )
+            .map { Optional($0) }
+            .bind(to: _openMockArticleScreen)
+            .store(in: &cancellables)
+
         Publishers.Merge3(
             fullConversationModel,
             commentCreationModel,
             commentThreadModel
         )
             .bind(to: _openConversationWrapperFlow)
+            .store(in: &cancellables)
+
+        preConversationToFullConversationCoverModeTapped
+            .map { postId }
+            .bind(to: _openConversationBelowVideoScreen)
             .store(in: &cancellables)
     }
 }

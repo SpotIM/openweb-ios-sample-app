@@ -7,6 +7,7 @@
 
 #if DEBUG
 @testable import OpenWebSDK
+import UIKit
 
 @available(iOS 17, *)
 #Preview {

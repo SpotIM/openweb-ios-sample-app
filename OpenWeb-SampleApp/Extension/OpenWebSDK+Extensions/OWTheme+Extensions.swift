@@ -9,7 +9,7 @@
 import Foundation
 import OpenWebSDK
 
-extension OWTheme: Codable {
+extension OWTheme: @retroactive Codable {
     enum CodingKeys: String, CodingKey {
         case skeletonColor
         case skeletonShimmeringColor
