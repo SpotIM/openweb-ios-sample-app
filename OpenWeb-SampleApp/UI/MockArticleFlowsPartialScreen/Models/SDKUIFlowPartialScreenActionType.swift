@@ -9,5 +9,6 @@ import Foundation
 import OpenWebSDK
 
 enum SDKUIFlowPartialScreenActionType {
+    case preConversationToFullConversation(presentationalMode: PresentationalModeCompact)
     case fullConversation(route: OWConversationRoute)
 }

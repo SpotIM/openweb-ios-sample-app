@@ -9,14 +9,14 @@
 /* Begin PBXBuildFile section */
 		3D11D9202C722BD3003794C6 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 3D11D91F2C722BD3003794C6 /* Podfile */; };
 		3D11D9252C7C9D7B003794C6 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D11D9242C7C9D7B003794C6 /* Colors.xcassets */; };
-		3DA1E62E2C6E221800EBFA7D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		3DA1E62F2C6E221800EBFA7D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		3DA1E6302C6E221800EBFA7D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		3DA1E6312C6E221800EBFA7D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		3DA1E6322C6E221800EBFA7D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		3DA1E6332C6E221800EBFA7D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		3DA1E6362C6E221800EBFA7D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		3DA1E6372C6E221800EBFA7D /* (null) in Resources */ = {isa = PBXBuildFile; };
+		3DA1E62E2C6E221800EBFA7D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		3DA1E62F2C6E221800EBFA7D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		3DA1E6302C6E221800EBFA7D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		3DA1E6312C6E221800EBFA7D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		3DA1E6322C6E221800EBFA7D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		3DA1E6332C6E221800EBFA7D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		3DA1E6362C6E221800EBFA7D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		3DA1E6372C6E221800EBFA7D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		48EB4CD59C7C1A0C395B6656 /* Pods_OpenWeb_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 379490C5D064FF260AAA482F /* Pods_OpenWeb_SampleApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -133,6 +133,7 @@
 				3DA1DF102C6E200300EBFA7D /* Frameworks */,
 				3DA1DF112C6E200300EBFA7D /* Resources */,
 				5BDD5876F0737E71EEA23054 /* [CP] Embed Pods Frameworks */,
+				DA5525826060F3977218D92E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -185,15 +186,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D11D9252C7C9D7B003794C6 /* Colors.xcassets in Resources */,
-				3DA1E6362C6E221800EBFA7D /* (null) in Resources */,
-				3DA1E6312C6E221800EBFA7D /* (null) in Resources */,
-				3DA1E62E2C6E221800EBFA7D /* (null) in Resources */,
-				3DA1E6322C6E221800EBFA7D /* (null) in Resources */,
-				3DA1E6372C6E221800EBFA7D /* (null) in Resources */,
-				3DA1E62F2C6E221800EBFA7D /* (null) in Resources */,
+				3DA1E6362C6E221800EBFA7D /* BuildFile in Resources */,
+				3DA1E6312C6E221800EBFA7D /* BuildFile in Resources */,
+				3DA1E62E2C6E221800EBFA7D /* BuildFile in Resources */,
+				3DA1E6322C6E221800EBFA7D /* BuildFile in Resources */,
+				3DA1E6372C6E221800EBFA7D /* BuildFile in Resources */,
+				3DA1E62F2C6E221800EBFA7D /* BuildFile in Resources */,
 				3D11D9202C722BD3003794C6 /* Podfile in Resources */,
-				3DA1E6332C6E221800EBFA7D /* (null) in Resources */,
-				3DA1E6302C6E221800EBFA7D /* (null) in Resources */,
+				3DA1E6332C6E221800EBFA7D /* BuildFile in Resources */,
+				3DA1E6302C6E221800EBFA7D /* BuildFile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +238,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA5525826060F3977218D92E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenWeb-SampleApp/Pods-OpenWeb-SampleApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
