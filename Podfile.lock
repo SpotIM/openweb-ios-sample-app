@@ -4,7 +4,7 @@ PODS:
   - CombineDataSources (0.2.5)
   - CombineExt (1.8.0)
   - OpenWebCommon (1.1.0)
-  - OpenWebSDK (2.11.0):
+  - OpenWebSDK (2.11.1):
     - OpenWebCommon (~> 1.1.0)
   - SnapKit (5.7.1)
 
@@ -13,7 +13,7 @@ DEPENDENCIES:
   - CombineCocoa (= 0.4.1)
   - CombineDataSources (= 0.2.5)
   - CombineExt (= 1.8.0)
-  - OpenWebSDK (= 2.11.0)
+  - OpenWebSDK (= 2.11.1)
   - SnapKit (~> 5.7.1)
 
 SPEC REPOS:
@@ -32,9 +32,9 @@ SPEC CHECKSUMS:
   CombineDataSources: dcbc3b06a038ffdf620b3b4533d3ecaf76ca6a2e
   CombineExt: c4daa97ef75754d8ef319bd79edeef82652f3eea
   OpenWebCommon: 8df2731b37238173eae8223923e7e6acc4a884a0
-  OpenWebSDK: dd1eb9d26707212c8f562c896b473032d9825b20
+  OpenWebSDK: 820a8c26bd7525f8f8a2ebe0a32053143a7218ff
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
-PODFILE CHECKSUM: 1cc179af11ccab58e0dcbc3c56aa5fc05a23d874
+PODFILE CHECKSUM: 332893c167498ecbea4fc86bf70ddc266fe02a0f
 
 COCOAPODS: 1.16.2
