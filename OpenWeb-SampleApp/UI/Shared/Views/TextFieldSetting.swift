@@ -55,6 +55,7 @@ class TextFieldSetting: UIView {
         applyAccessibility(prefixId: accessibilityPrefixId)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
