@@ -120,7 +120,7 @@ private extension UILoggerView {
     }
 
     func scrollTextViewToBottom(textView: UITextView) {
-        if textView.text.count > 0,
+        if !textView.text.isEmpty,
            !textView.isDragging,
            textView.contentOffset.y + textView.frame.size.height <= textView.contentSize.height - Metrics.verticalPaddingForAutoScrollToBottom {
             let location = textView.text.count - 1
