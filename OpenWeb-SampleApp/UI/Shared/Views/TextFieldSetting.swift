@@ -68,7 +68,7 @@ private extension TextFieldSetting {
 
     @objc func setupViews() {
         let stackView = UIStackView()
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.distribution = .fillProportionally
         stackView.addArrangedSubview(textFieldTitleLbl)
         stackView.addArrangedSubview(textFieldControl)

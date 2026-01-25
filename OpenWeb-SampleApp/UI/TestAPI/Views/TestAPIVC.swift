@@ -166,7 +166,7 @@ class TestAPIVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         viewModel.inputs.viewWillAppear.send()
     }
 
@@ -203,7 +203,7 @@ private extension TestAPIVC {
     // swiftlint:disable function_body_length
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         // Adding scroll view
         view.addSubview(scrollView)
@@ -449,7 +449,7 @@ private extension TestAPIVC {
     func showPresetPicker(_ shouldShow: Bool) {
         if shouldShow {
             // Dismiss keyboard
-            self.view.endEditing(true)
+            view.endEditing(true)
         }
         UIView.animate(withDuration: Metrics.animatePickerDuration,
                        delay: 0.0,

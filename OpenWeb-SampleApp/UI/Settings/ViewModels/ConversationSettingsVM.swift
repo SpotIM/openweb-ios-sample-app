@@ -296,12 +296,12 @@ private extension ConversationSettingsVM {
     func setupObservers() {
         styleModeObservable
             .dropFirst()
-            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
             .store(in: &cancellables)
 
         allowPullToRefreshSelected
             .dropFirst()
-            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.allowPullToRefresh))
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.allowPullToRefresh))
             .store(in: &cancellables)
     }
 }

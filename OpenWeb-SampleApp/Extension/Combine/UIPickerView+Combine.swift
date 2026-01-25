@@ -22,8 +22,8 @@ extension UIPickerView {
         }
         set {
             newValue.pickerView = self
-            self.delegate = newValue
-            self.dataSource = newValue
+            delegate = newValue
+            dataSource = newValue
             setObjectiveCAssociatedObject(key: &AssociatedKeys.pickerPublisher, value: newValue)
         }
     }

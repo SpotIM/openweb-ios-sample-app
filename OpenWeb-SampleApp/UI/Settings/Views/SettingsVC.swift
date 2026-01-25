@@ -111,7 +111,7 @@ private extension SettingsVC {
             // Get the Y position of your child view
             let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
             // swiftlint:disable:next no_magic_numbers
-            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - self.view.frame.height / 3), animated: true)
+            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - view.frame.height / 3), animated: true)
         }
     }
 

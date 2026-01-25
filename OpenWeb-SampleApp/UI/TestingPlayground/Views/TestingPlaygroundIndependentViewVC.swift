@@ -64,7 +64,7 @@ private extension TestingPlaygroundIndependentViewVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(loggerView)
         loggerView.snp.makeConstraints { make in

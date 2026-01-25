@@ -49,7 +49,7 @@ class ResizeGripView: UIView {
         self.targetView = targetView
         self.heightConstraint = heightConstraint
         self.position = position
-        self.currentHeight = targetView.frame.height > 0 ? targetView.frame.height : (heightConstraint.layoutConstraints.first?.constant ?? Metrics.defaultHeight)
+        currentHeight = targetView.frame.height > 0 ? targetView.frame.height : (heightConstraint.layoutConstraints.first?.constant ?? Metrics.defaultHeight)
         targetView.addSubview(self)
         snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()

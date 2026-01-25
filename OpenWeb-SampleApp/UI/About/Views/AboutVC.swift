@@ -53,7 +53,7 @@ class AboutVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 }
 
@@ -66,7 +66,7 @@ private extension AboutVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(aboutTextView)
         view.addSubview(allRightsReservedLbl)

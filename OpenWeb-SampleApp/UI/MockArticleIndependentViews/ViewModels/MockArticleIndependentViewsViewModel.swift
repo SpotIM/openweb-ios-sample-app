@@ -278,19 +278,19 @@ private extension MockArticleIndependentViewsViewModel {
     func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
         switch settings.viewType {
         case .preConversation:
-            return self.retrievePreConversation(settings: settings)
+            return retrievePreConversation(settings: settings)
         case .conversation:
-            return self.retrieveConversation(settings: settings)
+            return retrieveConversation(settings: settings)
         case .commentCreation:
-            return self.retrieveCommentCreation(settings: settings)
+            return retrieveCommentCreation(settings: settings)
         case .commentThread:
-            return self.retrieveCommentThread(settings: settings)
+            return retrieveCommentThread(settings: settings)
         case .independentAdUnit:
             return Empty().eraseToAnyPublisher()
         case .clarityDetails:
-            return self.retrieveClarityDetails(settings: settings)
+            return retrieveClarityDetails(settings: settings)
         case .notifications:
-            return self.retrieveNotifications(settings: settings)
+            return retrieveNotifications(settings: settings)
         }
     }
 

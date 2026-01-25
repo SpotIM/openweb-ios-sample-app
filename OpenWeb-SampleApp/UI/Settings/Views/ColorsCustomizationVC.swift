@@ -137,7 +137,7 @@ private extension ColorsCustomizationVC {
     }
 
     func showPicker() {
-        self.present(self.picker, animated: true)
+        present(picker, animated: true)
     }
 
     var pickerColorPublisher: AnyPublisher<UIColor, Never> {

@@ -10,8 +10,8 @@ import UIKit
 
 extension UIViewController {
     func applyLargeTitlesIfNeeded() {
-        if let navBar = self.navigationController?.navigationBar, navBar.prefersLargeTitles {
-            self.navigationItem.largeTitleDisplayMode = .always
+        if let navBar = navigationController?.navigationBar, navBar.prefersLargeTitles {
+            navigationItem.largeTitleDisplayMode = .always
         }
     }
 }

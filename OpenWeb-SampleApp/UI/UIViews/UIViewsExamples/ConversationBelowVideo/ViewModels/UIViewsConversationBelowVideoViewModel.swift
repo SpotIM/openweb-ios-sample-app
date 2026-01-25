@@ -253,14 +253,14 @@ private extension UIViewsConversationBelowVideoViewModel {
 
     func retrievePreConversationComponent() {
         let uiViewsLayer = OpenWeb.manager.ui.views
-        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+        let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
         let additionalSettings = OWAdditionalSettings(preConversationSettings: OWPreConversationSettings(style: .compact))
 
-        uiViewsLayer.preConversation(postId: self.postId,
+        uiViewsLayer.preConversation(postId: postId,
                                      article: article,
                                      additionalSettings: additionalSettings,
-                                     callbacks: self.actionsCallbacks,
+                                     callbacks: actionsCallbacks,
                                      completion: { [weak self] result in
 
             guard let self else { return }
@@ -275,14 +275,14 @@ private extension UIViewsConversationBelowVideoViewModel {
 
     func retrieveConversationComponent() {
         let uiViewsLayer = OpenWeb.manager.ui.views
-        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+        let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
         let additionalSettings = OWAdditionalSettings(fullConversationSettings: OWConversationSettings(style: .compact))
 
-        uiViewsLayer.conversation(postId: self.postId,
+        uiViewsLayer.conversation(postId: postId,
                                   article: article,
                                   additionalSettings: additionalSettings,
-                                  callbacks: self.actionsCallbacks,
+                                  callbacks: actionsCallbacks,
                                   completion: { [weak self] result in
 
             guard let self else { return }
@@ -297,13 +297,13 @@ private extension UIViewsConversationBelowVideoViewModel {
 
     func retrieveCommentCreationComponent(type: OWCommentCreationType) {
         let uiViewsLayer = OpenWeb.manager.ui.views
-        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+        let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        uiViewsLayer.commentCreation(postId: self.postId,
+        uiViewsLayer.commentCreation(postId: postId,
                                      article: article,
                                      commentCreationType: type,
                                      additionalSettings: OWAdditionalSettings(),
-                                     callbacks: self.actionsCallbacks,
+                                     callbacks: actionsCallbacks,
                                      completion: { [weak self] result in
 
             guard let self else { return }
@@ -320,11 +320,11 @@ private extension UIViewsConversationBelowVideoViewModel {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
-        uiViewsLayer.reportReason(postId: self.postId,
+        uiViewsLayer.reportReason(postId: postId,
                                   commentId: commentId,
                                   parentId: parentId,
                                   additionalSettings: additionalSettings,
-                                  callbacks: self.actionsCallbacks,
+                                  callbacks: actionsCallbacks,
                                   completion: { [weak self] result in
 
             guard let self else { return }
@@ -340,12 +340,12 @@ private extension UIViewsConversationBelowVideoViewModel {
     func retrieveNotificationsComponent() {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
-        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+        let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        uiViewsLayer.notifications(postId: self.postId,
+        uiViewsLayer.notifications(postId: postId,
                                    article: article,
                                    additionalSettings: additionalSettings,
-                                   callbacks: self.actionsCallbacks,
+                                   callbacks: actionsCallbacks,
                                    completion: { [weak self] result in
 
             guard let self else { return }
@@ -362,11 +362,11 @@ private extension UIViewsConversationBelowVideoViewModel {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
-        uiViewsLayer.clarityDetails(postId: self.postId,
+        uiViewsLayer.clarityDetails(postId: postId,
                                     commentId: data.commentId,
                                     type: data.type,
                                     additionalSettings: additionalSettings,
-                                    callbacks: self.actionsCallbacks,
+                                    callbacks: actionsCallbacks,
                                     completion: { [weak self] result in
 
             guard let self else { return }
@@ -383,10 +383,10 @@ private extension UIViewsConversationBelowVideoViewModel {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
-        uiViewsLayer.commenterAppeal(postId: self.postId,
+        uiViewsLayer.commenterAppeal(postId: postId,
                                      data: data,
                                      additionalSettings: additionalSettings,
-                                     callbacks: self.actionsCallbacks,
+                                     callbacks: actionsCallbacks,
                                      completion: { [weak self] result in
 
             guard let self else { return }
@@ -401,7 +401,7 @@ private extension UIViewsConversationBelowVideoViewModel {
 
     func retrieveCommentThreadComponent(commentId: OWCommentId, postId: OWPostId, performActionType: OWCommentThreadPerformActionType) {
         let uiViewsLayer = OpenWeb.manager.ui.views
-        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+        let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
         let commentThreadSettings = OWCommentThreadSettings(performActionType: performActionType)
         let additionalSettings = OWAdditionalSettings(commentThreadSettings: commentThreadSettings)
@@ -410,7 +410,7 @@ private extension UIViewsConversationBelowVideoViewModel {
                                    article: article,
                                    commentId: commentId,
                                    additionalSettings: additionalSettings,
-                                   callbacks: self.actionsCallbacks,
+                                   callbacks: actionsCallbacks,
                                    completion: { [weak self] result in
 
             guard let self else { return }
@@ -427,10 +427,10 @@ private extension UIViewsConversationBelowVideoViewModel {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
-        uiViewsLayer.webTab(postId: self.postId,
+        uiViewsLayer.webTab(postId: postId,
                             tabOptions: options,
                             additionalSettings: additionalSettings,
-                            callbacks: self.actionsCallbacks,
+                            callbacks: actionsCallbacks,
                             completion: { [weak self] result in
 
             guard let self else { return }

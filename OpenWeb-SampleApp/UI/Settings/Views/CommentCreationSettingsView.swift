@@ -60,14 +60,14 @@ class CommentCreationSettingsView: UIView {
 
 private extension CommentCreationSettingsView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = ColorPalette.shared.color(type: .background)
+        backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalToSuperview()

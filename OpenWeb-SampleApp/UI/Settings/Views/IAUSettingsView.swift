@@ -42,13 +42,13 @@ class IAUSettingsView: UIView {
 
 private extension IAUSettingsView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = ColorPalette.shared.color(type: .background)
+        backgroundColor = ColorPalette.shared.color(type: .background)
 
-        self.addSubview(titleLabel)
+        addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalTo(self.snp.top)

@@ -115,39 +115,39 @@ class ColorSelectionItemCell: UITableViewCell {
 @available(iOS 14.0, *)
 private extension ColorSelectionItemCell {
     @objc func setupViews() {
-        self.contentView.isUserInteractionEnabled = false
+        contentView.isUserInteractionEnabled = false
 
-        self.addSubview(enableCheckbox)
+        addSubview(enableCheckbox)
         enableCheckbox.snp.makeConstraints { make in
             make.leading.centerY.equalToSuperview()
         }
 
-        self.addSubview(title)
+        addSubview(title)
         title.snp.makeConstraints { make in
             make.leading.equalTo(enableCheckbox.snp.trailing).offset(Metrics.generalSpacing)
             make.top.bottom.equalToSuperview()
         }
 
-        self.addSubview(lightLabel)
+        addSubview(lightLabel)
         lightLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.greaterThanOrEqualTo(title.snp.trailing).offset(Metrics.generalSpacing)
         }
 
-        self.addSubview(lightColorRectangleView)
+        addSubview(lightColorRectangleView)
         lightColorRectangleView.snp.makeConstraints { make in
             make.leading.equalTo(lightLabel.snp.trailing).offset(Metrics.colorLabelSpacing)
             make.size.equalTo(Metrics.colorRectangleSize)
             make.centerY.equalToSuperview()
         }
 
-        self.addSubview(darkLabel)
+        addSubview(darkLabel)
         darkLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(lightColorRectangleView.snp.trailing).offset(Metrics.generalSpacing)
         }
 
-        self.addSubview(darkColorRectangleView)
+        addSubview(darkColorRectangleView)
         darkColorRectangleView.snp.makeConstraints { make in
             make.leading.equalTo(darkLabel.snp.trailing).offset(Metrics.colorLabelSpacing)
             make.size.equalTo(Metrics.colorRectangleSize)

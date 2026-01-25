@@ -50,10 +50,10 @@ private extension SingleAdExampleVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
-        self.view.addSubview(self.loggerView)
-        self.loggerView.snp.makeConstraints { make in
+        view.addSubview(loggerView)
+        loggerView.snp.makeConstraints { make in
             make.top.equalTo(self.view.layoutMarginsGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.loggerHeight)

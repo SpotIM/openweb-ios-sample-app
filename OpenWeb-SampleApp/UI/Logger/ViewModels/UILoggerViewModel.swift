@@ -43,7 +43,7 @@ class UILoggerViewModel: UILoggerViewModeling, UILoggerViewModelingInputs, UILog
     private var cancellables: Set<AnyCancellable> = []
 
     init(title: String = "") {
-        self._title.send(title)
+        _title.send(title)
     }
 
     func log(text: String) {

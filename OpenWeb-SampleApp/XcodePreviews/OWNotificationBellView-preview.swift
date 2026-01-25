@@ -51,7 +51,7 @@ private class MockNetworkAPI: StubNetworkAPI {
     private let mockNotificationsAPI: MockNotificationsAPI
 
     init(unseenCount: Int) {
-        self.mockNotificationsAPI = MockNotificationsAPI(unseenCount: unseenCount)
+        mockNotificationsAPI = MockNotificationsAPI(unseenCount: unseenCount)
         super.init()
     }
 

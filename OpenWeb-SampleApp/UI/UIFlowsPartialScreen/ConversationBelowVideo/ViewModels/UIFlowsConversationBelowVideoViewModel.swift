@@ -114,9 +114,9 @@ private extension UIFlowsConversationBelowVideoViewModel {
 
     func retrievePreConversationComponent() {
         let uiViewsLayer = OpenWeb.manager.ui.views
-        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+        let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        let additionalSettings = self.commonCreatorService.additionalSettings()
+        let additionalSettings = commonCreatorService.additionalSettings()
 
         if shouldUseAsyncAwaitCallingMethod() {
             Task { @MainActor [weak self] in
@@ -135,10 +135,10 @@ private extension UIFlowsConversationBelowVideoViewModel {
                 }
             }
         } else {
-            uiViewsLayer.preConversation(postId: self.postId,
+            uiViewsLayer.preConversation(postId: postId,
                                          article: article,
                                          additionalSettings: additionalSettings,
-                                         callbacks: self.actionsCallbacks,
+                                         callbacks: actionsCallbacks,
                                          completion: { [weak self] result in
 
                 guard let self else { return }
@@ -154,9 +154,9 @@ private extension UIFlowsConversationBelowVideoViewModel {
 
     func retrieveConversationComponent(route: OWConversationRoute = .none) {
         let uiFlowsLayer = OpenWeb.manager.ui.flows
-        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+        let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        let additionalSettings = self.commonCreatorService.additionalSettings()
+        let additionalSettings = commonCreatorService.additionalSettings()
 
         if shouldUseAsyncAwaitCallingMethod() {
             Task { @MainActor [weak self] in

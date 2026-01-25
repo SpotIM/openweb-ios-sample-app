@@ -196,7 +196,7 @@ private extension MockArticleFlowsVC {
         viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
 
         // Setting those in the VM for integration with the SDK
-        viewModel.inputs.setNavigationController(self.navigationController)
+        viewModel.inputs.setNavigationController(navigationController)
         viewModel.inputs.setPresentationalVC(self)
 
         // Binding button
@@ -344,6 +344,6 @@ private extension MockArticleFlowsVC {
     func showError(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }

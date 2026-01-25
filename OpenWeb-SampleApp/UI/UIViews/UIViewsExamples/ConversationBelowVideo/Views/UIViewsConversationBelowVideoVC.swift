@@ -87,7 +87,7 @@ private extension UIViewsConversationBelowVideoVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         // Adding video player view
         view.addSubview(videoPlayerContainer)
@@ -402,7 +402,7 @@ private extension UIViewsConversationBelowVideoVC {
             make.leading.trailing.equalToSuperview()
             heightConstraint = make.height.equalTo(baseComponentView.snp.height).constraint
         }
-        self.view.layoutIfNeeded()
+        view.layoutIfNeeded()
 
         // 3. Perform animation
         let offset = -baseComponentView.frame.height
@@ -439,6 +439,6 @@ private extension UIViewsConversationBelowVideoVC {
     func showError(message: String) {
         let alert = UIAlertController(title: "Error retrieving component", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }

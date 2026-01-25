@@ -132,7 +132,7 @@ private extension TestingPlaygroundViewModel {
     }
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
-        guard let navController = self.navController,
+        guard let navController,
               let presentationalVC else { return nil }
 
         switch mode {

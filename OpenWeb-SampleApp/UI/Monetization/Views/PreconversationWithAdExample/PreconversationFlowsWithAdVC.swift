@@ -88,7 +88,7 @@ class PreconversationFlowsWithAdVC: UIViewController {
     private func setupObservers() {
         title = viewModel.outputs.title
 
-        viewModel.inputs.setNavigationController(self.navigationController)
+        viewModel.inputs.setNavigationController(navigationController)
         viewModel.inputs.setPresentationalVC(self)
 
         viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)

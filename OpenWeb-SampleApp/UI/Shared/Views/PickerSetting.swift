@@ -55,8 +55,8 @@ private extension PickerSetting {
     }
 
     @objc func setupViews() {
-        self.addSubview(pickerControl)
-        self.addSubview(pickerTitleLbl)
+        addSubview(pickerControl)
+        addSubview(pickerTitleLbl)
 
         pickerTitleLbl.snp.makeConstraints { make in
             make.centerY.equalTo(pickerControl)

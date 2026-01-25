@@ -477,7 +477,7 @@ private extension MockArticleFlowsViewModel {
     // swiftlint:enable function_body_length
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
-        guard let navController = self.navController,
+        guard let navController,
               let presentationalVC else { return nil }
 
         switch mode {

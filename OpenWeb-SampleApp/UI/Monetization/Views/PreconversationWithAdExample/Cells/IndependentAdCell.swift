@@ -24,15 +24,15 @@ class IndependentAdCell: UITableViewCell {
                    tableView: UITableView) {
         self.viewModel = viewModel
         self.tableView = tableView
-        self.setupObservers()
-        self.setupViews()
+        setupObservers()
+        setupViews()
     }
 }
 
 private extension IndependentAdCell {
     @objc func setupViews() {
         selectionStyle = .none
-        self.backgroundColor = .clear
+        backgroundColor = .clear
     }
 
     func setupObservers() {

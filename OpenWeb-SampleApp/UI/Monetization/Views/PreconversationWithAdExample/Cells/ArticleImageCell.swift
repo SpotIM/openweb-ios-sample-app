@@ -50,6 +50,6 @@ private extension ArticleImageCell {
             make.height.equalTo(imgViewArticle.snp.width)
         }
         selectionStyle = .none
-        self.backgroundColor = .clear
+        backgroundColor = .clear
     }
 }

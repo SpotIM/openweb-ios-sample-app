@@ -93,20 +93,20 @@ private extension ConversationCountersNewAPIVC {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         applyLargeTitlesIfNeeded()
 
-        self.view.addSubview(txtFieldPostIds)
+        view.addSubview(txtFieldPostIds)
         txtFieldPostIds.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalSmallMargin)
             make.height.equalTo(Metrics.textFieldHeight)
         }
 
-        self.view.addSubview(lblDescription)
+        view.addSubview(lblDescription)
         lblDescription.snp.makeConstraints { make in
             make.top.equalTo(txtFieldPostIds.snp.bottom).offset(Metrics.verticalMargin / 2)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalMargin)
         }
 
-        self.view.addSubview(btnExecute)
+        view.addSubview(btnExecute)
         btnExecute.snp.makeConstraints { make in
             make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(lblDescription.snp.bottom).offset(Metrics.btnTopPadding)
@@ -119,14 +119,14 @@ private extension ConversationCountersNewAPIVC {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
-        self.view.addSubview(loader)
+        view.addSubview(loader)
         loader.snp.makeConstraints { make in
             make.center.equalTo(view.safeAreaLayoutGuide)
         }
     }
 
     func applyAccessibility() {
-        self.view.accessibilityIdentifier = Metrics.identifier
+        view.accessibilityIdentifier = Metrics.identifier
         btnExecute.accessibilityIdentifier = Metrics.btnExecuteIdentifier
         txtFieldPostIds.accessibilityIdentifier = Metrics.txtFieldPostIdsIdentifier
         counterTableView.accessibilityIdentifier = Metrics.countersTableIdentifier
@@ -175,6 +175,6 @@ private extension ConversationCountersNewAPIVC {
     func showError(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }

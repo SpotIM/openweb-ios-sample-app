@@ -13,7 +13,7 @@ extension OWErrorStateView {
     convenience init(type: OWErrorStateType) {
         let viewModel = OWErrorStateViewViewModel(errorStateType: type)
         self.init(with: viewModel)
-        self.backgroundColor = .systemBackground
+        backgroundColor = .systemBackground
     }
 }
 

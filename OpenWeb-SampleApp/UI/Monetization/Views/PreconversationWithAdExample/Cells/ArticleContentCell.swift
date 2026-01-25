@@ -43,6 +43,6 @@ class ArticleContentCell: UITableViewCell {
 private extension ArticleContentCell {
     @objc func setupViews() {
         selectionStyle = .none
-        self.backgroundColor = .clear
+        backgroundColor = .clear
     }
 }

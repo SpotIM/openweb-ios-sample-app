@@ -70,9 +70,9 @@ class ConversationWrapperVC: UIViewController {
         let loggerView = UILoggerView(viewModel: loggerViewModel)
 
         // Add floating view to the window immediately (hidden), then toggle via setting
-        if self.floatingLoggerView == nil {
+        if floatingLoggerView == nil {
             let floatingView = OWFloatingView(viewModel: floatingViewModel)
-            self.floatingLoggerView = floatingView
+            floatingLoggerView = floatingView
 
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {

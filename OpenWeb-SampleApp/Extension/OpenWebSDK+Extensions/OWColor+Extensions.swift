@@ -29,8 +29,8 @@ extension OWColor: @retroactive Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        let lightColorComponents = ColorComponents(from: self.lightColor)
-        let darkColorComponents = ColorComponents(from: self.darkColor)
+        let lightColorComponents = ColorComponents(from: lightColor)
+        let darkColorComponents = ColorComponents(from: darkColor)
         try container.encode(lightColorComponents, forKey: .lightColor)
         try container.encode(darkColorComponents, forKey: .darkColor)
     }

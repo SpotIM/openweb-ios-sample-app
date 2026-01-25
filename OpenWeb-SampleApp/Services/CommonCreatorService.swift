@@ -34,18 +34,18 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func additionalSettings() -> OWAdditionalSettingsProtocol {
-        let allowPullToRefresh = self.userDefaultsProvider.get(key: .allowPullToRefresh, defaultValue: true)
+        let allowPullToRefresh = userDefaultsProvider.get(key: .allowPullToRefresh, defaultValue: true)
 
         // 1. Pre conversation related
-        let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
+        let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let preConversationSettings = OWPreConversationSettingsBuilder(style: preConversationStyle).build()
 
         // 2. Conversation related
-        let conversationStyle = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        let conversationStyle = userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
         let conversationSettings = OWConversationSettings(style: conversationStyle, allowPullToRefresh: allowPullToRefresh)
 
         // 3. Comment creation related
-        let commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
+        let commentCreationStyle = userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
         let commentCreationSettings = OWCommentCreationSettingsBuilder(style: commentCreationStyle).build()
 
         // 4. Comment thread related
@@ -62,7 +62,7 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func commentThreadCommentId() -> String {
-        let commentId = self.userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
+        let commentId = userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
         if commentId.isEmpty {
             // If value is empty on user defaults, we want to use the default comment ID
             return OWCommentThreadSettings.defaultCommentId
@@ -72,28 +72,28 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func mockArticle(for postId: String) -> OWArticleProtocol {
-        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex,
+        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: userDefaultsProvider.get(key: .readOnlyModeIndex,
                                                                                                            defaultValue: OWReadOnlyMode.default.index))
-        let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
+        let persistenceArticleHeaderStyle = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
                                                                           defaultValue: OWArticleHeaderStyle.default)
 
-        var persistenceArticleInformationStrategy = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
+        var persistenceArticleInformationStrategy = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
                                                                           defaultValue: OWArticleInformationStrategy.default)
 
-        var section = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
+        var section = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
                                                                           defaultValue: nil)
         if section == nil || section?.isEmpty == true {
-            section = self.getSectionFromPreset(for: postId)
+            section = getSectionFromPreset(for: postId)
         }
 
-        let starRatingEnabled = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<Bool>.starRatingEnabled,
+        let starRatingEnabled = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<Bool>.starRatingEnabled,
                                                               defaultValue: false)
         let settings = OWArticleSettings(section: section ?? "",
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode,
                                          starRatingEnabled: starRatingEnabled)
 
-        if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
+        if let strURL = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL),
            case .local(let data) = persistenceArticleInformationStrategy {
             let extraData = OWArticleExtraData(url: persistenceURL, title: data.title, subtitle: data.subtitle, thumbnailUrl: data.thumbnailUrl)

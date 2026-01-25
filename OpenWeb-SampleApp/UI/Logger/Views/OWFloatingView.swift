@@ -29,10 +29,10 @@ class OWFloatingView: UIView {
     init(viewModel: OWFloatingViewModeling = OWFloatingViewModel()) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        self.setupView()
-        self.applyAccessibility()
-        self.setupObservers()
-        self.isHidden = true
+        setupView()
+        applyAccessibility()
+        setupObservers()
+        isHidden = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -48,8 +48,8 @@ class OWFloatingView: UIView {
     }
 
     private func setContentView(_ view: UIView) {
-        self.subviews.forEach { $0.removeFromSuperview() }
-        self.addSubview(view)
+        subviews.forEach { $0.removeFromSuperview() }
+        addSubview(view)
         view.snp.makeConstraints { make in
             make.edges.leading.trailing.equalToSuperview()
             make.edges.top.bottom.equalToSuperview()
@@ -72,7 +72,7 @@ class OWFloatingView: UIView {
 
         if gesture.state == .changed {
             isDraggging = true
-            self.center = CGPoint(x: self.center.x + translation.x, y: self.center.y + translation.y)
+            center = CGPoint(x: center.x + translation.x, y: center.y + translation.y)
             gesture.setTranslation(.zero, in: superview)
         } else if gesture.state == .ended {
             snapToEdge()
@@ -88,12 +88,12 @@ class OWFloatingView: UIView {
         // Calculate midpoints of superview
         let midX = superview.bounds.midX
 
-        targetCenter = self.center
+        targetCenter = center
 
         // Determine if the view is closer to the left or right edge
-        let isCloserToLeft = self.center.x < midX
+        let isCloserToLeft = center.x < midX
         // swiftlint:disable:next no_magic_numbers
-        let isCloserToCenterX = abs(self.center.x - midX) < (superview.bounds.width / 4)
+        let isCloserToCenterX = abs(center.x - midX) < (superview.bounds.width / 4)
 
         // Horizontal snapping
         if isCloserToCenterX {
@@ -101,22 +101,22 @@ class OWFloatingView: UIView {
             targetCenter.x = midX
         } else if isCloserToLeft {
             // Snap to the left edge, leaving only pullOutFromEdgeWidth visible
-            targetCenter.x = -self.frame.width / 2 + pullOutFromEdgeWidth
+            targetCenter.x = -frame.width / 2 + pullOutFromEdgeWidth
         } else {
             // Snap to the right edge, leaving only pullOutFromEdgeWidth visible
-            targetCenter.x = superview.bounds.width + self.frame.width / 2 - pullOutFromEdgeWidth
+            targetCenter.x = superview.bounds.width + frame.width / 2 - pullOutFromEdgeWidth
         }
 
         // Vertical snapping: prevent the view from going out of bounds
-        if self.frame.minY < 0 {
+        if frame.minY < 0 {
             // Snap to top edge, leaving only pullOutFromEdgeWidth visible
-            targetCenter.y = self.frame.height / 2 - pullOutFromEdgeWidth
-        } else if self.frame.maxY > superview.bounds.height {
+            targetCenter.y = frame.height / 2 - pullOutFromEdgeWidth
+        } else if frame.maxY > superview.bounds.height {
             // Snap to bottom edge, leaving only pullOutFromEdgeWidth visible
-            targetCenter.y = superview.bounds.height - self.frame.height / 2 + pullOutFromEdgeWidth
+            targetCenter.y = superview.bounds.height - frame.height / 2 + pullOutFromEdgeWidth
         }
 
-        self.center = targetCenter
+        center = targetCenter
 
         // Animate to the calculated position
         UIView.animate(withDuration: animationDuration) {
@@ -131,16 +131,16 @@ class OWFloatingView: UIView {
 
         // Fix the jump to top of the floating view when scrolling a table view -
         // in the navigation view.
-        if !self.isDraggging, self.targetCenter != .zero {
+        if !isDraggging, targetCenter != .zero {
             // Notify about the frame change
-            self.center = self.targetCenter
+            center = targetCenter
         }
     }
 }
 
 private extension OWFloatingView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
     }
 
     func setupObservers() {

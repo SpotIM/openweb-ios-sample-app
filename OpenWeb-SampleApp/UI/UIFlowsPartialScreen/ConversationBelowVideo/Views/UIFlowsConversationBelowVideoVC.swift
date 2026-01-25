@@ -72,7 +72,7 @@ private extension UIFlowsConversationBelowVideoVC {
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         // Adding video player view
         view.addSubview(videoPlayerContainer)
@@ -168,6 +168,6 @@ private extension UIFlowsConversationBelowVideoVC {
     func showError(message: String) {
         let alert = UIAlertController(title: "Error retrieving component", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }

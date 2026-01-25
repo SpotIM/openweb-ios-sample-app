@@ -30,7 +30,7 @@ class Router: NSObject, Routering {
 
     public init(navigationController: UINavigationController) {
         self.navigationController = navigationController
-        self.completions = [:]
+        completions = [:]
         super.init()
         self.navigationController.delegate = self
     }

@@ -28,7 +28,7 @@ class UIFlowsConversationBelowVideoCoordinator: BaseCoordinator<Void> {
 
         let conversationBelowVideoVM = UIFlowsConversationBelowVideoViewModel(postId: postId)
         let conversationBelowVideoVC = UIFlowsConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
-        self.router.push(conversationBelowVideoVC,
+        router.push(conversationBelowVideoVC,
                          animated: true,
                          completion: nil)
 
