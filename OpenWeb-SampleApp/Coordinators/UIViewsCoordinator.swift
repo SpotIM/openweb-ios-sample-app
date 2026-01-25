@@ -39,8 +39,8 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.actionsViewSettings(data: dataModel)
-                let coordinator = MockArticleIndependentCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = MockArticleIndependentCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -50,8 +50,8 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = UIViewsExamplesCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = UIViewsExamplesCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -61,8 +61,8 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = MonetizationViewsCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = MonetizationViewsCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()

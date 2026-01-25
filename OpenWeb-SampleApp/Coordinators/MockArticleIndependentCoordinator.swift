@@ -38,8 +38,8 @@ class MockArticleIndependentCoordinator: BaseCoordinator<Void> {
         let settingsCoordinator = mockArticleIndependentVM.outputs.openSettings
             .flatMap { [weak self] settingsType -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinator = SettingsCoordinator(router: self.router)
-                return self.coordinate(to: coordinator,
+                let coordinator = SettingsCoordinator(router: router)
+                return coordinate(to: coordinator,
                                        deepLinkOptions: nil,
                                        coordinatorData: .settingsScreen(data: [settingsType]))
             }

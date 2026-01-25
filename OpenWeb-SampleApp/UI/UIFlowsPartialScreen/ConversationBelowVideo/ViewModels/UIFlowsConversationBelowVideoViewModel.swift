@@ -80,7 +80,7 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
     // Providing `displayAuthenticationFlow` callback
     private lazy var authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] _, completion in
         guard let self else { return }
-        self._openAuthentication.send((OpenWeb.manager.spotId, completion))
+        _openAuthentication.send((OpenWeb.manager.spotId, completion))
     }
 
     private lazy var actionsCallbacks: OWPreConversationActionsCallbacks = { [weak self] callbackType, postId in
@@ -126,12 +126,12 @@ private extension UIFlowsConversationBelowVideoViewModel {
                         postId: postId,
                         article: article,
                         additionalSettings: additionalSettings,
-                        callbacks: self.actionsCallbacks
+                        callbacks: actionsCallbacks
                     )
-                    self._preConversationRetrieved.send(view)
+                    _preConversationRetrieved.send(view)
                 } catch {
                     guard let err: OWError = error as? OWError else { return }
-                    self._componentRetrievingError.send(err)
+                    _componentRetrievingError.send(err)
                 }
             }
         } else {
@@ -144,9 +144,9 @@ private extension UIFlowsConversationBelowVideoViewModel {
                 guard let self else { return }
                 switch result {
                 case .failure(let err):
-                    self._componentRetrievingError.send(err)
+                    _componentRetrievingError.send(err)
                 case .success(let view):
-                    self._preConversationRetrieved.send(view)
+                    _preConversationRetrieved.send(view)
                 }
             })
         }
@@ -168,10 +168,10 @@ private extension UIFlowsConversationBelowVideoViewModel {
                         route: route,
                         additionalSettings: additionalSettings
                     )
-                    self._conversationRetrieved.send(conversationViewController)
+                    _conversationRetrieved.send(conversationViewController)
                 } catch {
                     guard let err: OWError = error as? OWError else { return }
-                    self._componentRetrievingError.send(err)
+                    _componentRetrievingError.send(err)
                 }
             }
         } else {
@@ -183,9 +183,9 @@ private extension UIFlowsConversationBelowVideoViewModel {
                 guard let self else { return }
                 switch result {
                 case .success(let conversationViewController):
-                    self._conversationRetrieved.send(conversationViewController)
+                    _conversationRetrieved.send(conversationViewController)
                 case .failure(let error):
-                    self._componentRetrievingError.send(error)
+                    _componentRetrievingError.send(error)
                 }
             })
         }

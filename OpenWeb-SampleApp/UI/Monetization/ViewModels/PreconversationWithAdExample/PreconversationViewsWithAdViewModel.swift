@@ -153,8 +153,8 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
                 let manager = OpenWeb.manager
                 let uiViews = manager.ui.views
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -214,11 +214,11 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
             case let .adEvent(event, eventData):
                 guard loggerEnabled else { return }
                 let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
         }
     }

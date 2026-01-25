@@ -119,7 +119,7 @@ private extension ColorsCustomizationVC {
             })
             .flatMapLatest { [weak self] updateColor -> AnyPublisher<(UIColor?, CurrentValueSubject<UIColor?, Never>)?, Never> in
                 guard let self else { return Just(nil).eraseToAnyPublisher() }
-                return self.pickerColorPublisher
+                return pickerColorPublisher
                     .map { ($0, updateColor) }
                     .eraseToAnyPublisher()
             }

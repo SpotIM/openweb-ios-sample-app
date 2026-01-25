@@ -58,10 +58,10 @@ class OWFloatingView: UIView {
         DispatchQueue.main.async { [weak self] in
             guard let self,
                   let superview else { return }
-            self.targetCenter.x = superview.bounds.width + self.frame.width / 2 - Metrics.pullOutFromEdgeWidth
-            self.targetCenter.y = self.frame.height / 2 + Metrics.topInitialPadding
-            self.center = targetCenter
-            self.isHidden = false
+            targetCenter.x = superview.bounds.width + frame.width / 2 - Metrics.pullOutFromEdgeWidth
+            targetCenter.y = frame.height / 2 + Metrics.topInitialPadding
+            center = targetCenter
+            isHidden = false
         }
     }
 
@@ -147,7 +147,7 @@ private extension OWFloatingView {
         viewModel.inputs.setContentView
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                self.setContentView(view)
+                setContentView(view)
             })
             .store(in: &cancellables)
     }

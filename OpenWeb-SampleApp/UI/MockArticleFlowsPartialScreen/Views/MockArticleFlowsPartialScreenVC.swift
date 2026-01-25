@@ -178,16 +178,16 @@ private extension MockArticleFlowsPartialScreenVC {
         viewModel.outputs.showPreConversation
             .sink(receiveValue: { [weak self] preConversationView in
                 guard let self else { return }
-                self.articleView.removeFromSuperview()
-                self.articleScrollView.addSubview(self.articleView)
-                self.articleScrollView.addSubview(preConversationView)
+                articleView.removeFromSuperview()
+                articleScrollView.addSubview(articleView)
+                articleScrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
                     make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300) // swiftlint:disable:this no_magic_numbers
                     make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide)
                 }
 
-                self.articleView.snp.makeConstraints { make in
+                articleView.snp.makeConstraints { make in
                     make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
                 }
@@ -198,11 +198,11 @@ private extension MockArticleFlowsPartialScreenVC {
         viewModel.outputs.showFullConversation
             .sink { [weak self] fullConversationVc in
                 guard let self else { return }
-                self.articleView.removeFromSuperview()
-                self.articleScrollView.addSubview(self.articleView)
-                self.articleScrollView.addSubview(fullConversationVc.view)
+                articleView.removeFromSuperview()
+                articleScrollView.addSubview(articleView)
+                articleScrollView.addSubview(fullConversationVc.view)
 
-                self.addChild(fullConversationVc)
+                addChild(fullConversationVc)
 
                 fullConversationVc.view.snp.makeConstraints { make in
                     make.height.equalTo(500) // swiftlint:disable:this no_magic_numbers
@@ -211,7 +211,7 @@ private extension MockArticleFlowsPartialScreenVC {
                 }
                 fullConversationVc.didMove(toParent: self)
 
-                self.articleView.snp.makeConstraints { make in
+                articleView.snp.makeConstraints { make in
                     make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(fullConversationVc.view.snp.top).offset(-Metrics.verticalMargin)
                 }
@@ -230,7 +230,7 @@ private extension MockArticleFlowsPartialScreenVC {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loggerEnabled in
                 guard let self else { return }
-                self.floatingLoggerView.isHidden = !loggerEnabled
+                floatingLoggerView.isHidden = !loggerEnabled
             })
             .store(in: &cancellables)
     }

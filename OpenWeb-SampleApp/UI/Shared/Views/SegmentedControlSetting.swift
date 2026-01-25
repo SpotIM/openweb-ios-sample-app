@@ -29,7 +29,7 @@ class SegmentedControlSetting: UIView {
     }()
 
     private(set) lazy var segmentedControl: UISegmentedControl = {
-        let segment = UISegmentedControl(items: self.items)
+        let segment = UISegmentedControl(items: items)
             .wrapContent(axis: .horizontal)
 
         return segment

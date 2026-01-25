@@ -38,8 +38,8 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.actionsFlowSettings(data: dataModel)
-                let coordinator = MockArticleFlowCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = MockArticleFlowCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -49,8 +49,8 @@ class UIFlowsCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.postId(data: dataModel)
-                let coordinator = MonetizationFlowsCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = MonetizationFlowsCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()

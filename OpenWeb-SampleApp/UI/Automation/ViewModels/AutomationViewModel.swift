@@ -69,7 +69,7 @@ private extension AutomationViewModel {
         fontsTapped
             .sink(receiveValue: { [weak self] _ in
                 guard let self,
-                      let navigationController = self.navController else { return }
+                      let navigationController = navController else { return }
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
@@ -86,7 +86,7 @@ private extension AutomationViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.fonts error: \(message)")
-                        self._showError.send(message)
+                        _showError.send(message)
                     }
                 })
             })
@@ -95,7 +95,7 @@ private extension AutomationViewModel {
         userInformationTapped
             .sink(receiveValue: { [weak self] _ in
                 guard let self,
-                      let navigationController = self.navController else { return }
+                      let navigationController = navController else { return }
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
@@ -112,7 +112,7 @@ private extension AutomationViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.userStatus error: \(message)")
-                        self._showError.send(message)
+                        _showError.send(message)
                     }
                 })
             })

@@ -95,7 +95,7 @@ private extension ColorsCustomizationViewModel {
             .map { colors in
                 return colors.combineLatest().map { [weak self] colorsValues -> OWTheme in
                     guard let self else { return OWTheme() }
-                    return self.getTheme(from: colorsValues)
+                    return getTheme(from: colorsValues)
                 }
             }
             .flatMapLatest { $0 }

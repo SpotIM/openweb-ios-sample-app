@@ -43,16 +43,16 @@ class MainPageCoordinator: BaseCoordinator<Void> {
                                                 deepLinkToAbout.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinator = AboutCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
+                let coordinator = AboutCoordinator(router: router)
+                return coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
 
         let testAPICoordinator = Publishers.MergeMany(mainPageVM.outputs.testAPI.map { nil },
                                                   deepLinkToTestAPI.map { deepLinkOptions })
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinator = TestAPICoordinator(router: self.router)
-                return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
+                let coordinator = TestAPICoordinator(router: router)
+                return coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
 
         // Perfoem deep link if such

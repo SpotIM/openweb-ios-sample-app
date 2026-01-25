@@ -128,17 +128,17 @@ private extension SettingsVC {
                     let expandedKeyboardHeight = notification.keyboardSize?.height,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
-                self.resetButton.snp.updateConstraints { make in
+                resetButton.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-expandedKeyboardHeight)
                 }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self else { return }
-                    self.view.layoutIfNeeded()
+                    view.layoutIfNeeded()
                 } completion: { [weak self] finished in
                     guard let self else { return }
                     if finished,
-                       let firstResponder = self.view.firstResponder {
-                        self.scrollToView(toView: firstResponder)
+                       let firstResponder = view.firstResponder {
+                        scrollToView(toView: firstResponder)
                     }
                 }
             }
@@ -148,7 +148,7 @@ private extension SettingsVC {
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
             .sink { [weak self] _ in
                 guard let self else { return }
-                self.resetButton.snp.updateConstraints { make in
+                resetButton.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-Metrics.resetButtonVerticalPadding)
                 }
             }

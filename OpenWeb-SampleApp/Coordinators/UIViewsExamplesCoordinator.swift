@@ -48,7 +48,7 @@ private extension UIViewsExamplesCoordinator {
                 guard let self else { return }
                 let conversationBelowVideoVM = UIViewsConversationBelowVideoViewModel(postId: postId)
                 let conversationBelowVideoVC = UIViewsConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
-                self.router.push(conversationBelowVideoVC,
+                router.push(conversationBelowVideoVC,
                                  animated: true,
                                  completion: nil)
             })

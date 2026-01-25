@@ -48,7 +48,7 @@ private extension MiscellaneousCoordinator {
                 guard let self else { return }
                 let conversationCounterVM = ConversationCountersNewAPIViewModel()
                 let conversationCounterVC = ConversationCountersNewAPIVC(viewModel: conversationCounterVM)
-                self.router.push(conversationCounterVC,
+                router.push(conversationCounterVC,
                             animated: true,
                             completion: nil)
             })

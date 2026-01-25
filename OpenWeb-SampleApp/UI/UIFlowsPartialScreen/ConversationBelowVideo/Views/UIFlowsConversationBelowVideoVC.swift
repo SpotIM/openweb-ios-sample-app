@@ -107,7 +107,7 @@ private extension UIFlowsConversationBelowVideoVC {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] preConversationView in
                 guard let self else { return }
-                self.scrollView.addSubview(preConversationView)
+                scrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
                     make.top.bottom.equalTo(self.scrollView.contentLayoutGuide).inset(Metrics.verticalMargin)
@@ -121,9 +121,9 @@ private extension UIFlowsConversationBelowVideoVC {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] conversationVc in
                 guard let self else { return }
-                self.addChild(conversationVc)
+                addChild(conversationVc)
 
-                self.containerBelowVideo.addSubview(conversationVc.view)
+                containerBelowVideo.addSubview(conversationVc.view)
                 conversationVc.view.snp.makeConstraints { make in
                     self.conversationTopConstraint = make.top.equalTo(self.view.snp.bottom).constraint
                     make.leading.trailing.equalToSuperview()
@@ -131,14 +131,14 @@ private extension UIFlowsConversationBelowVideoVC {
                 }
                 conversationVc.didMove(toParent: self)
 
-                self.view.layoutIfNeeded()
+                view.layoutIfNeeded()
 
                 // 3. Perform animation
-                let offset = -containerBelowVideo.frame.height - self.view.safeAreaInsets.bottom
+                let offset = -containerBelowVideo.frame.height - view.safeAreaInsets.bottom
                 conversationTopConstraint.update(offset: offset)
                 UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
                     guard let self else { return }
-                    self.view.layoutIfNeeded()
+                    view.layoutIfNeeded()
                 } completion: { _ in
                     // Nothing here
                 }
@@ -152,7 +152,7 @@ private extension UIFlowsConversationBelowVideoVC {
                 let completion = result.1
                 let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: spotId)
                 let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
-                self.navigationController?.present(authenticationVC, animated: true)
+                navigationController?.present(authenticationVC, animated: true)
 
                 return authenticationVM.outputs.dismissed
                     .prefix(1)

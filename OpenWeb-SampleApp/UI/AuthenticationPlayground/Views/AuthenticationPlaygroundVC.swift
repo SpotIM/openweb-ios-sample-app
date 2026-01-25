@@ -432,13 +432,13 @@ private extension AuthenticationPlaygroundVC {
         viewModel.outputs.dismissVC
             .sink { [weak self] in
                 guard let self else { return }
-                if let navController = self.navigationController {
+                if let navController = navigationController {
                     navController.popViewController(animated: true)
                 } else {
-                    self.dismiss(animated: true, completion: nil)
+                    dismiss(animated: true, completion: nil)
                 }
 
-                self.viewModel.inputs.dismissing.send(())
+                viewModel.inputs.dismissing.send(())
             }
             .store(in: &cancellables)
     }

@@ -50,7 +50,7 @@ private extension TestingPlaygroundCoordinator {
                 guard let self else { return }
                 let testingPlaygroundIndependentVM = TestingPlaygroundIndependentViewModel(dataModel: dataModel)
                 let testingPlaygroundIndependentVC = TestingPlaygroundIndependentViewVC(viewModel: testingPlaygroundIndependentVM)
-                self.router.push(testingPlaygroundIndependentVC,
+                router.push(testingPlaygroundIndependentVC,
                             animated: true,
                             completion: nil)
             })

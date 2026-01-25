@@ -45,7 +45,7 @@ private extension MonetizationFlowsCoordinator {
                 guard let self else { return }
                 let singleAdExampleViewModel = SingleAdExampleViewModel(postId: postId)
                 let singleAdExampleVC = SingleAdExampleVC(viewModel: singleAdExampleViewModel)
-                self.router.push(singleAdExampleVC,
+                router.push(singleAdExampleVC,
                                  animated: true,
                                  completion: nil)
             })
@@ -65,7 +65,7 @@ private extension MonetizationFlowsCoordinator {
                         postId: dataModel.postId
                     )
                     let preconversationFlowsWithAdVC = PreconversationFlowsWithAdVC(viewModel: preconversationFlowsWithAdVM)
-                    self.router.push(preconversationFlowsWithAdVC,
+                    router.push(preconversationFlowsWithAdVC,
                                      animated: true,
                                      completion: nil)
                 }

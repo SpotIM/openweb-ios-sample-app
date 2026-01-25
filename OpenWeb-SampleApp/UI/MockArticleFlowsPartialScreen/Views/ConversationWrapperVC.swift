@@ -93,7 +93,7 @@ class ConversationWrapperVC: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] enabled in
                 guard let self else { return }
-                self.floatingLoggerView?.isHidden = !enabled
+                floatingLoggerView?.isHidden = !enabled
             }
             .store(in: &cancellables)
     }

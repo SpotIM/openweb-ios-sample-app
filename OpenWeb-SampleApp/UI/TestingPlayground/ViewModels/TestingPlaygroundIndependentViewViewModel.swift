@@ -65,7 +65,7 @@ private extension TestingPlaygroundIndependentViewModel {
         Just(())
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                let postId = self.dataModel.postId
+                let postId = dataModel.postId
 
                 let manager = OpenWeb.manager
                 let views = manager.ui.views
@@ -73,7 +73,7 @@ private extension TestingPlaygroundIndependentViewModel {
                 let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
                     guard let self else { return }
                     let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                    self.loggerViewModel.inputs.log(text: log)
+                    loggerViewModel.inputs.log(text: log)
                 }
 
                 views.testingPlayground(postId: postId,
@@ -83,11 +83,11 @@ private extension TestingPlaygroundIndependentViewModel {
                     guard let self else { return }
                     switch result {
                     case .success(let view):
-                        self._testingPlaygroundView.send(view)
+                        _testingPlaygroundView.send(view)
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.testingPlayground error: \(message)")
-                        self.loggerViewModel.inputs.log(text: message)
+                        loggerViewModel.inputs.log(text: message)
                     }
                 })
             })

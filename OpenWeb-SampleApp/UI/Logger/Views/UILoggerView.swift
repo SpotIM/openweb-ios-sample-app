@@ -103,7 +103,7 @@ private extension UILoggerView {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.scrollTextViewToBottom(textView: self.loggerTextView)
+                scrollTextViewToBottom(textView: loggerTextView)
             })
             .store(in: &cancellables)
 

@@ -35,9 +35,9 @@ class MockArticleFlowPartialScreenCoordinator: BaseCoordinator<Void> {
                 guard let self else { return }
                 switch presentationalMode {
                 case .present:
-                    self.router.present(wrapperVC, animated: true)
+                    router.present(wrapperVC, animated: true)
                 case .push:
-                    self.router.push(wrapperVC, animated: true, completion: nil)
+                    router.push(wrapperVC, animated: true, completion: nil)
                 }
 
             })

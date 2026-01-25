@@ -34,7 +34,7 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     lazy var settingsVMs: [SettingsGroupVMProtocol] = {
         let settingsVMs: [SettingsGroupVMProtocol] = settingViewTypes.map { [weak self] type in
             guard let self else { return nil }
-            return type.createAppropriateVM(userDefaultsProvider: self.userDefaultsProvider, manager: self.manager)
+            return type.createAppropriateVM(userDefaultsProvider: userDefaultsProvider, manager: manager)
         }.unwrap()
         return settingsVMs
     }()
@@ -62,7 +62,7 @@ private extension SettingsViewModel {
         resetToDefaultTap
             .sink { [weak self] in
                 guard let self else { return }
-                self.settingsVMs.forEach { $0.resetToDefault() }
+                settingsVMs.forEach { $0.resetToDefault() }
             }
             .store(in: &cancellables)
     }

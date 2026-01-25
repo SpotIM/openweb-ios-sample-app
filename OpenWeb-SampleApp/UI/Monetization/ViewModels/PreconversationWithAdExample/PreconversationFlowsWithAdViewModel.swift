@@ -154,10 +154,10 @@ private extension PreconversationFlowsWithAdViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                guard let presentationalMode = presentationalMode(fromCompactMode: mode) else { return }
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -185,7 +185,7 @@ private extension PreconversationFlowsWithAdViewModel {
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
-                            self._showPreConversation.send(preConversationView)
+                            _showPreConversation.send(preConversationView)
                         case .failure(let error):
                             DLog("Calling flows.preConversation error: \(error)")
                         }
@@ -215,11 +215,11 @@ private extension PreconversationFlowsWithAdViewModel {
                 _adSizeChanged.send()
             case let .adEvent(event, eventData):
                 let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
         }
     }

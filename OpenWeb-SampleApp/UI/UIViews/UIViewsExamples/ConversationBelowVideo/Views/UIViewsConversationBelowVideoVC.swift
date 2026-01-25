@@ -141,84 +141,84 @@ private extension UIViewsConversationBelowVideoVC {
         viewModel.outputs.reportReasonsRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                self.handleRetrieved(component: view,
-                                     assignToComponent: &self.reportReasons,
-                                     topConstraint: &self.reportReasonsTopConstraint,
-                                     heightConstraint: &self.reportReasonsHeightConstraint,
-                                     putWithAnimationOnComponent: self.conversation)
+                handleRetrieved(component: view,
+                                     assignToComponent: &reportReasons,
+                                     topConstraint: &reportReasonsTopConstraint,
+                                     heightConstraint: &reportReasonsHeightConstraint,
+                                     putWithAnimationOnComponent: conversation)
             })
             .store(in: &cancellables)
 
         viewModel.outputs.commentThreadRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                self.handleRetrieved(component: view,
-                                     assignToComponent: &self.commentThread,
-                                     topConstraint: &self.commentThreadTopConstraint,
-                                     heightConstraint: &self.commentThreadHeightConstraint,
-                                     putWithAnimationOnComponent: self.conversation)
+                handleRetrieved(component: view,
+                                     assignToComponent: &commentThread,
+                                     topConstraint: &commentThreadTopConstraint,
+                                     heightConstraint: &commentThreadHeightConstraint,
+                                     putWithAnimationOnComponent: conversation)
             })
             .store(in: &cancellables)
 
         viewModel.outputs.clarityDetailsRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                self.handleRetrieved(component: view,
-                                     assignToComponent: &self.clarityDetails,
-                                     topConstraint: &self.clarityDetailsTopConstraint,
-                                     heightConstraint: &self.clarityDetailsHeightConstraint,
-                                     putWithAnimationOnComponent: self.conversation)
+                handleRetrieved(component: view,
+                                     assignToComponent: &clarityDetails,
+                                     topConstraint: &clarityDetailsTopConstraint,
+                                     heightConstraint: &clarityDetailsHeightConstraint,
+                                     putWithAnimationOnComponent: conversation)
             })
             .store(in: &cancellables)
 
         viewModel.outputs.webPageRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                self.handleRetrieved(component: view,
-                                     assignToComponent: &self.webPage,
-                                     topConstraint: &self.webPageTopConstraint,
-                                     heightConstraint: &self.webPageHeightConstraint,
-                                     putWithAnimationOnComponent: self.conversation)
+                handleRetrieved(component: view,
+                                     assignToComponent: &webPage,
+                                     topConstraint: &webPageTopConstraint,
+                                     heightConstraint: &webPageHeightConstraint,
+                                     putWithAnimationOnComponent: conversation)
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeConversation
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.handleRemoveWithAnimation(component: &self.conversation,
-                                               componentTopConstraint: self.conversationTopConstraint)
+                handleRemoveWithAnimation(component: &conversation,
+                                               componentTopConstraint: conversationTopConstraint)
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeReportReasons
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.handleRemoveWithAnimation(component: &self.reportReasons,
-                                               componentTopConstraint: self.reportReasonsTopConstraint)
+                handleRemoveWithAnimation(component: &reportReasons,
+                                               componentTopConstraint: reportReasonsTopConstraint)
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeClarityDetails
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.handleRemoveWithAnimation(component: &self.clarityDetails,
-                                               componentTopConstraint: self.clarityDetailsTopConstraint)
+                handleRemoveWithAnimation(component: &clarityDetails,
+                                               componentTopConstraint: clarityDetailsTopConstraint)
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeCommentThread
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.handleRemoveWithAnimation(component: &self.commentThread,
-                                               componentTopConstraint: self.commentThreadTopConstraint)
+                handleRemoveWithAnimation(component: &commentThread,
+                                               componentTopConstraint: commentThreadTopConstraint)
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeWebPage
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.handleRemoveWithAnimation(component: &self.webPage,
-                                               componentTopConstraint: self.webPageTopConstraint)
+                handleRemoveWithAnimation(component: &webPage,
+                                               componentTopConstraint: webPageTopConstraint)
             })
             .store(in: &cancellables)
 
@@ -231,8 +231,8 @@ private extension UIViewsConversationBelowVideoVC {
         viewModel.outputs.removeNotifications
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.handleRemoveWithAnimation(component: &self.notifications,
-                                               componentTopConstraint: self.notificationsTopConstraint)
+                handleRemoveWithAnimation(component: &notifications,
+                                               componentTopConstraint: notificationsTopConstraint)
             })
             .store(in: &cancellables)
 
@@ -243,7 +243,7 @@ private extension UIViewsConversationBelowVideoVC {
                 let completion = result.1
                 let authenticationVM = AuthenticationPlaygroundViewModel(filterBySpotId: spotId)
                 let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
-                self.navigationController?.present(authenticationVC, animated: true)
+                navigationController?.present(authenticationVC, animated: true)
 
                 return authenticationVM.outputs.dismissed
                     .prefix(1)
@@ -271,9 +271,9 @@ private extension UIViewsConversationBelowVideoVC {
         // Chaning report reasons height according to the keyboard
         keyboardHeight
             .sink(receiveValue: { [weak self] height in
-                guard let self, self.reportReasons != nil,
+                guard let self, reportReasons != nil,
                 let reportReasonsHeightConstraint else { return }
-                let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
+                let adjustedHeight = height == 0 ? 0 : height - view.safeAreaInsets.bottom
                 reportReasonsHeightConstraint.update(offset: -adjustedHeight)
                 UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
                     self.view.layoutIfNeeded()
@@ -284,9 +284,9 @@ private extension UIViewsConversationBelowVideoVC {
         // Changing clarity details height according to the keyboard
         keyboardHeight
             .sink(receiveValue: { [weak self] height in
-                guard let self, self.clarityDetails != nil,
+                guard let self, clarityDetails != nil,
                 let clarityDetailsHeightConstraint else { return }
-                let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
+                let adjustedHeight = height == 0 ? 0 : height - view.safeAreaInsets.bottom
                 clarityDetailsHeightConstraint.update(offset: -adjustedHeight)
                 UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
                     self.view.layoutIfNeeded()
@@ -409,7 +409,7 @@ private extension UIViewsConversationBelowVideoVC {
         topConstraint.update(offset: offset)
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
             guard let self else { return }
-            self.view.layoutIfNeeded()
+            view.layoutIfNeeded()
         } completion: { _ in
             // Nothing here
         }
@@ -422,7 +422,7 @@ private extension UIViewsConversationBelowVideoVC {
         componentTopConstraint.update(offset: 0)
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
             guard let self else { return }
-            self.view.layoutIfNeeded()
+            view.layoutIfNeeded()
         } completion: { [weak component] _ in
             component?.removeFromSuperview()
             component = nil

@@ -42,15 +42,15 @@ class VideoExampleView: UIView {
     }()
 
     private lazy var videoPlayerLooper: AVPlayerLooper = {
-        let playerLooper = AVPlayerLooper(player: self.videoQueuePlayer, templateItem: self.videoPlayerItem)
+        let playerLooper = AVPlayerLooper(player: videoQueuePlayer, templateItem: videoPlayerItem)
         return playerLooper
     }()
 
     private lazy var videoPlayerLayer: AVPlayerLayer = {
-        let playerLayer = AVPlayerLayer(player: self.videoQueuePlayer)
+        let playerLayer = AVPlayerLayer(player: videoQueuePlayer)
         playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         // Looper should be initialized at some point - the following line basically do that
-        _ = self.videoPlayerLooper
+        _ = videoPlayerLooper
         return playerLayer
     }()
 
@@ -110,7 +110,7 @@ private extension VideoExampleView {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.videoQueuePlayer.play()
+                videoQueuePlayer.play()
             })
             .store(in: &cancellables)
     }

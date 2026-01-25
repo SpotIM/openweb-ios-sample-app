@@ -37,8 +37,8 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.actionsFlowPartialScreenSettings(data: dataModel)
-                let coordinator = MockArticleFlowPartialScreenCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = MockArticleFlowPartialScreenCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -49,8 +49,8 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.actionsFlowPartialScreenSettings(data: dataModel)
-                let coordinator = ConversationWrapperFlowCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = ConversationWrapperFlowCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -61,8 +61,8 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] postId -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.postId(data: postId)
-                let coordinator = UIFlowsConversationBelowVideoCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = UIFlowsConversationBelowVideoCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()

@@ -44,7 +44,7 @@ class BaseCoordinator<ResultType> {
             .handleEvents(receiveOutput: { [weak self, weak coordinator] _ in
                 guard let self,
                     let coord = coordinator else { return }
-                self.free(coordinator: coord)
+                free(coordinator: coord)
             })
             .eraseToAnyPublisher()
     }

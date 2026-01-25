@@ -78,16 +78,16 @@ class ColorSelectionItemCell: UITableViewCell {
 
     private lazy var lightTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
-        self.addGestureRecognizer(tap)
-        self.isUserInteractionEnabled = true
+        addGestureRecognizer(tap)
+        isUserInteractionEnabled = true
 
         return tap
     }()
 
     private lazy var darkTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
-        self.addGestureRecognizer(tap)
-        self.isUserInteractionEnabled = true
+        addGestureRecognizer(tap)
+        isUserInteractionEnabled = true
 
         return tap
     }()
@@ -184,9 +184,9 @@ private extension ColorSelectionItemCell {
             .sink { [weak self] isColorSet in
                 guard let self else { return }
                 if isColorSet {
-                    self.lightNoColorRedLine.removeFromSuperlayer()
+                    lightNoColorRedLine.removeFromSuperlayer()
                 } else {
-                    self.lightColorRectangleView.layer.addSublayer(self.lightNoColorRedLine)
+                    lightColorRectangleView.layer.addSublayer(lightNoColorRedLine)
                 }
             }
             .store(in: &cancellables)
@@ -201,9 +201,9 @@ private extension ColorSelectionItemCell {
             .sink { [weak self] isColorSet in
                 guard let self else { return }
                 if isColorSet {
-                    self.darkNoColorRedLine.removeFromSuperlayer()
+                    darkNoColorRedLine.removeFromSuperlayer()
                 } else {
-                    self.darkColorRectangleView.layer.addSublayer(self.darkNoColorRedLine)
+                    darkColorRectangleView.layer.addSublayer(darkNoColorRedLine)
                 }
             }
             .store(in: &cancellables)

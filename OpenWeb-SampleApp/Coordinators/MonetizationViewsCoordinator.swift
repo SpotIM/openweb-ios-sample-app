@@ -46,7 +46,7 @@ private extension MonetizationViewsCoordinator {
                 guard let self else { return }
                 let singleAdExampleViewModel = SingleAdExampleViewModel(postId: postId)
                 let singleAdExampleVC = SingleAdExampleVC(viewModel: singleAdExampleViewModel)
-                self.router.push(singleAdExampleVC,
+                router.push(singleAdExampleVC,
                                  animated: true,
                                  completion: nil)
             })
@@ -66,7 +66,7 @@ private extension MonetizationViewsCoordinator {
                         postId: dataModel.postId
                     )
                     let preconversationViewsWithAdVC = PreconversationViewsWithAdVC(viewModel: preconversationViewsWithAdVM)
-                    self.router.push(preconversationViewsWithAdVC,
+                    router.push(preconversationViewsWithAdVC,
                                      animated: true,
                                      completion: nil)
 

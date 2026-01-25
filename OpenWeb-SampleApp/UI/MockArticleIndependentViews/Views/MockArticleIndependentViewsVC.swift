@@ -121,18 +121,18 @@ private extension MockArticleIndependentViewsVC {
                 let type = result.1
 
                 // Clean ups
-                self.independentView?.removeFromSuperview()
-                self.independentView = view
+                independentView?.removeFromSuperview()
+                independentView = view
 
                 switch type {
                 case .preConversation:
-                    self.handlePreConversationPresentation()
+                    handlePreConversationPresentation()
                 case .conversation,
                      .commentCreation,
                      .commentThread,
                      .clarityDetails,
                      .notifications:
-                    self.handlePresentation()
+                    handlePresentation()
                 default:
                     break
                 }

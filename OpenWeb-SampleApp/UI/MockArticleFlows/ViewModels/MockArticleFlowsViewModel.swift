@@ -200,10 +200,10 @@ private extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                guard let presentationalMode = presentationalMode(fromCompactMode: mode) else { return }
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -233,11 +233,11 @@ private extension MockArticleFlowsViewModel {
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
-                            self._showPreConversation.send(preConversationView)
+                            _showPreConversation.send(preConversationView)
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.preConversation error: \(error)")
-                            self._showError.send(message)
+                            _showError.send(message)
                         }
                     })
                 }
@@ -260,13 +260,13 @@ private extension MockArticleFlowsViewModel {
                 let postId = result.1
                 let loggerEnabled = result.2
 
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                guard let presentationalMode = presentationalMode(fromCompactMode: mode) else { return }
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -300,7 +300,7 @@ private extension MockArticleFlowsViewModel {
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.conversation error: \(message)")
-                            self._showError.send(message)
+                            _showError.send(message)
                         }
                     })
                 }
@@ -324,13 +324,13 @@ private extension MockArticleFlowsViewModel {
                     let postId = result.1
                     let loggerEnabled = result.2
 
-                    guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                    guard let presentationalMode = presentationalMode(fromCompactMode: mode) else { return }
 
                     let manager = OpenWeb.manager
                     let flows = manager.ui.flows
 
-                    let additionalSettings = self.commonCreatorService.additionalSettings()
-                    let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+                    let additionalSettings = commonCreatorService.additionalSettings()
+                    let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
                     if shouldUseAsyncAwaitCallingMethod() {
                         Task { @MainActor [weak self] in
@@ -367,7 +367,7 @@ private extension MockArticleFlowsViewModel {
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.commentCreation error: \(message)")
-                            self._showError.send(message)
+                            _showError.send(message)
                         }
                             })
                 }
@@ -391,13 +391,13 @@ private extension MockArticleFlowsViewModel {
                     let postId = result.1
                     let loggerEnabled = result.2
 
-                    guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                    guard let presentationalMode = presentationalMode(fromCompactMode: mode) else { return }
 
                     let manager = OpenWeb.manager
                     let flows = manager.ui.flows
 
-                    let additionalSettings = self.commonCreatorService.additionalSettings()
-                    let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+                    let additionalSettings = commonCreatorService.additionalSettings()
+                    let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
                     if shouldUseAsyncAwaitCallingMethod() {
                         Task { @MainActor [weak self] in
@@ -406,7 +406,7 @@ private extension MockArticleFlowsViewModel {
                                 try await flows.conversation(
                                     postId: postId,
                                     article: article,
-                                    route: .commentThread(commentId: self.commonCreatorService.commentThreadCommentId()),
+                                    route: .commentThread(commentId: commonCreatorService.commentThreadCommentId()),
                                     presentationalMode: presentationalMode,
                                     additionalSettings: additionalSettings,
                                     callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
@@ -421,7 +421,7 @@ private extension MockArticleFlowsViewModel {
                         flows.conversation(
                             postId: postId,
                             article: article,
-                            route: .commentThread(commentId: self.commonCreatorService.commentThreadCommentId()),
+                            route: .commentThread(commentId: commonCreatorService.commentThreadCommentId()),
                             presentationalMode: presentationalMode,
                             additionalSettings: additionalSettings,
                             callbacks: loggerActionCallbacks(
@@ -436,7 +436,7 @@ private extension MockArticleFlowsViewModel {
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.commentThread error: \(message)")
-                            self._showError.send(message)
+                            _showError.send(message)
                         }
                             })
                 }
@@ -454,7 +454,7 @@ private extension MockArticleFlowsViewModel {
             case .flow(let navController):
                 navController.pushViewController(authenticationVC, animated: true)
             case .none:
-                self.navController?.pushViewController(authenticationVC, animated: true)
+                navController?.pushViewController(authenticationVC, animated: true)
             default:
                 break
             }
@@ -511,10 +511,10 @@ private extension MockArticleFlowsViewModel {
             case .adSizeChanged: break
             case let .adEvent(event, eventData):
                 let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             default:
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
         }
     }

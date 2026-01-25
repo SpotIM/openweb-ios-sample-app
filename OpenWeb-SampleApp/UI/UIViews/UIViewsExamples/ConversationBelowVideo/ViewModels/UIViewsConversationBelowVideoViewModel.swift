@@ -164,51 +164,51 @@ class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewM
 
         switch (sourceType, callbackType) {
         case (.preConversation, .contentPressed):
-            self.retrieveConversationComponent()
+            retrieveConversationComponent()
         case (.conversation, .closeConversationPressed):
-            self._removeConversation.send()
+            _removeConversation.send()
         case (.conversation, .openReportReason(let commentId, let parentId)):
-            self.retrieveReportReasonsComponent(commentId: commentId, parentId: parentId)
+            retrieveReportReasonsComponent(commentId: commentId, parentId: parentId)
         case (.reportReason, .closeReportReason):
-            self._removeReportReasons.send()
+            _removeReportReasons.send()
         case (.conversation, .openCommentCreation(let commentCreationType)):
-            self.retrieveCommentCreationComponent(type: commentCreationType)
+            retrieveCommentCreationComponent(type: commentCreationType)
         case (.conversation, .openClarityDetails(let data)):
-            self.retrieveClarityDetailsComponent(data: data)
+            retrieveClarityDetailsComponent(data: data)
         case (.commentThread, .openCommentCreation(let commentCreationType)):
-            self.retrieveCommentCreationComponent(type: commentCreationType)
+            retrieveCommentCreationComponent(type: commentCreationType)
         case (.clarityDetails, .closeClarityDetails):
-            self._removeClarityDetails.send()
+            _removeClarityDetails.send()
         case (.commenterAppeal, .closeClarityDetails):
-            self._removeClarityDetails.send()
+            _removeClarityDetails.send()
         case (_, .openCommenterAppeal(let data)):
-            self.retrieveCommenterAppealComponent(data: data)
+            retrieveCommenterAppealComponent(data: data)
         case (_, .communityGuidelinesPressed(let url)):
             let title = NSLocalizedString("CommunityGuidelines", comment: "")
             let options = OWWebTabOptions(url: url, title: title)
-            self.retrieveWebPageComponent(options: options)
+            retrieveWebPageComponent(options: options)
         case (.commentCreation, .floatingCommentCreationDismissed):
-            self._removeCommentCreation.send()
+            _removeCommentCreation.send()
         case (.commentCreation, .reviewSubmitted):
-            self._removeCommentCreation.send()
+            _removeCommentCreation.send()
         case (.webView, .closeWebView):
-            self._removeWebPage.send()
+            _removeWebPage.send()
         case (_, .openOWProfile(let data)):
             let title = NSLocalizedString("ProfileTitle", comment: "")
             let options = OWWebTabOptions(url: data.url, title: title)
-            self.retrieveWebPageComponent(options: options)
+            retrieveWebPageComponent(options: options)
         case (_, .openLinkInComment(let url)):
-            self.retrieveWebPageComponent(options: OWWebTabOptions(url: url, title: ""))
+            retrieveWebPageComponent(options: OWWebTabOptions(url: url, title: ""))
         case (_, .openCommentThread(let commentId, let postId, let performActionType)):
-            self.retrieveCommentThreadComponent(commentId: commentId,
+            retrieveCommentThreadComponent(commentId: commentId,
                                                 postId: postId,
                                                 performActionType: performActionType)
         case (.commentThread, .closeCommentThread):
-            self._removeCommentThread.send()
+            _removeCommentThread.send()
         case (.conversation, .openNotifications):
-            self.retrieveNotificationsComponent()
+            retrieveNotificationsComponent()
         case (.notifications, .closeNotifications):
-            self._removeNotifications.send()
+            _removeNotifications.send()
         default:
             break
         }
@@ -220,7 +220,7 @@ class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewM
 
         switch routeringMode {
         case .none:
-            self._openAuthentication.send((OpenWeb.manager.spotId, completion))
+            _openAuthentication.send((OpenWeb.manager.spotId, completion))
         default:
             break
         }
@@ -266,9 +266,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._preConversationRetrieved.send(view)
+                _preConversationRetrieved.send(view)
             }
         })
     }
@@ -288,9 +288,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._conversationRetrieved.send(view)
+                _conversationRetrieved.send(view)
             }
         })
     }
@@ -309,9 +309,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._commentCreationRetrieved.send(view)
+                _commentCreationRetrieved.send(view)
             }
         })
     }
@@ -330,9 +330,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._reportReasonsRetrieved.send(view)
+                _reportReasonsRetrieved.send(view)
             }
         })
     }
@@ -351,9 +351,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._notificationsRetrieved.send(view)
+                _notificationsRetrieved.send(view)
             }
         })
     }
@@ -372,9 +372,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._clarityDetailsRetrieved.send(view)
+                _clarityDetailsRetrieved.send(view)
             }
         })
     }
@@ -392,9 +392,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._clarityDetailsRetrieved.send(view)
+                _clarityDetailsRetrieved.send(view)
             }
         })
     }
@@ -416,9 +416,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._commentThreadRetrieved.send(view)
+                _commentThreadRetrieved.send(view)
             }
         })
     }
@@ -436,9 +436,9 @@ private extension UIViewsConversationBelowVideoViewModel {
             guard let self else { return }
             switch result {
             case .failure(let err):
-                self._componentRetrievingError.send(err)
+                _componentRetrievingError.send(err)
             case .success(let view):
-                self._webPageRetrieved.send(view)
+                _webPageRetrieved.send(view)
             }
         })
     }

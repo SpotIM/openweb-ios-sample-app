@@ -22,7 +22,7 @@ class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
                 if ignoreLoginStatus {
                     return .just(())
                 } else {
-                    return self.userLoginStatus()
+                    return userLoginStatus()
                         .map { loginStatus in
                             if case .ssoLoggedIn = loginStatus {
                                 return false
@@ -36,21 +36,21 @@ class SilentSSOAuthenticationNewAPI: SilentSSOAuthenticationNewAPIProtocol {
             }
             .flatMapLatest { [unowned self] _ -> AnyPublisher<String, Error> in
                 // Login
-                return self.login(user: genericSSO.user)
+                return login(user: genericSSO.user)
             }
             .flatMapLatest { [unowned self] token -> AnyPublisher<(String, String), Error> in
                 // Start SSO
-                return self.startSSO()
+                return startSSO()
                     .map { ($0, token) }
                     .eraseToAnyPublisher()
             }
             .flatMapLatest { [unowned self] codeA, token -> AnyPublisher<String, Error> in
                 // Get codeB
-                return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
+                return codeB(codeA: codeA, token: token, genericSSO: genericSSO)
             }
             .flatMapLatest { [unowned self] codeB -> AnyPublisher<String, Error> in
                 // Complete SSO
-                return self.completeSSO(codeB: codeB)
+                return completeSSO(codeB: codeB)
             }
             .eraseToAnyPublisher()
     }

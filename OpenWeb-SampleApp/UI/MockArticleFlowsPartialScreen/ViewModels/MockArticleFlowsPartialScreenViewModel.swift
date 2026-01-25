@@ -117,12 +117,12 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
         DLog(log)
 
         if _loggerEnabled.value {
-            self.loggerViewModel.inputs.log(text: log)
+            loggerViewModel.inputs.log(text: log)
         }
 
         switch callbackType {
         case .openConversationFlow(let route):
-            self.handleConversationFlow(route: route, postId: postId)
+            handleConversationFlow(route: route, postId: postId)
         default:
             break
         }
@@ -163,8 +163,8 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 let manager = OpenWeb.manager
                 let views = manager.ui.views
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -176,7 +176,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                                 additionalSettings: additionalSettings,
                                 callbacks: actionsCallbacks
                             )
-                            self._showPreConversation.send(preConversationView)
+                            _showPreConversation.send(preConversationView)
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling views.preConversation error: \(error)")
@@ -220,8 +220,8 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -234,7 +234,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                                 additionalSettings: additionalSettings,
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
-                            self._showFullConversation.send(conversationViewController)
+                            _showFullConversation.send(conversationViewController)
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling flows.conversation error: \(error)")
@@ -251,11 +251,11 @@ private extension MockArticleFlowsPartialScreenViewModel {
                         guard let self else { return }
                         switch result {
                         case .success(let conversationViewController):
-                            self._showFullConversation.send(conversationViewController)
+                            _showFullConversation.send(conversationViewController)
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.conversation error: \(error)")
-                            self._showError.send(message)
+                            _showError.send(message)
                         }
                     })
                 }
@@ -310,10 +310,10 @@ private extension MockArticleFlowsPartialScreenViewModel {
             case .adSizeChanged: break
             case let .adEvent(event, eventData):
                 let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             default:
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
         }
     }
@@ -340,7 +340,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                         callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value)
                     )
                     let wrapperVC = ConversationWrapperVC(conversationViewController: conversationViewController)
-                    self._showWrappedConversation.send((wrapperVC, presentationalMode))
+                    _showWrappedConversation.send((wrapperVC, presentationalMode))
                 } catch {
                     let message = error.localizedDescription
                     DLog("Calling flows.conversation error: \(error)")
@@ -358,11 +358,11 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 switch result {
                 case .success(let conversationViewController):
                     let wrapperVC = ConversationWrapperVC(conversationViewController: conversationViewController)
-                    self._showWrappedConversation.send((wrapperVC, presentationalMode))
+                    _showWrappedConversation.send((wrapperVC, presentationalMode))
                 case .failure(let error):
                     let message = error.description
                     DLog("Calling flows.conversation error: \(error)")
-                    self._showError.send(message)
+                    _showError.send(message)
                 }
             })
         }

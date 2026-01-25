@@ -53,7 +53,7 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
         return playgroundIndependentModeTapped
             .map { [weak self] _ -> SDKConversationDataModel? in
                 guard let self else { return nil }
-                return self.dataModel
+                return dataModel
             }
             .unwrap()
     }
@@ -96,7 +96,7 @@ private extension TestingPlaygroundViewModel {
         let playgroundPresentModeObservable = playgroundPresentModeTapped
             .map { [weak self] _ -> PresentationalModeCompact? in
                 guard let self else { return nil }
-                return PresentationalModeCompact.present(style: self.present)
+                return PresentationalModeCompact.present(style: present)
             }
             .unwrap()
 
@@ -104,9 +104,9 @@ private extension TestingPlaygroundViewModel {
         Publishers.Merge(playgroundPushModeObservable, playgroundPresentModeObservable)
             .sink(receiveValue: { [weak self] mode in
                 guard let self else { return }
-                let postId = self.dataModel.postId
+                let postId = dataModel.postId
 
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                guard let presentationalMode = presentationalMode(fromCompactMode: mode) else { return }
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
@@ -124,7 +124,7 @@ private extension TestingPlaygroundViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.testingPlayground error: \(message)")
-                        self._showError.send(message)
+                        _showError.send(message)
                     }
                 })
             })

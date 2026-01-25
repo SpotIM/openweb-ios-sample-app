@@ -52,7 +52,7 @@ private extension SettingsCoordinator {
             generalSettingsVM.outputs.openColorsCustomizationScreen
                 .sink(receiveValue: { [weak self] colorsCustomizationVC in
                     guard let self else { return }
-                    self.router.push(colorsCustomizationVC,
+                    router.push(colorsCustomizationVC,
                                      animated: true,
                                      completion: nil)
                 })
