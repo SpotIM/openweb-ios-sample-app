@@ -41,8 +41,10 @@ class PreconversationCellViewModel: PreconversationCellViewModeling,
             .eraseToAnyPublisher()
     }
 
-    init(showPreConversation: AnyPublisher<UIView?, Never>,
-         adSizeChanged: AnyPublisher<Void, Never>) {
+    init(
+        showPreConversation: AnyPublisher<UIView?, Never>,
+        adSizeChanged: AnyPublisher<Void, Never>
+    ) {
 
         showPreConversation
               .bind(to: _showPreConversation)

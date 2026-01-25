@@ -17,8 +17,10 @@ class UIViewsExamplesCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
@@ -32,9 +34,11 @@ class UIViewsExamplesCoordinator: BaseCoordinator<Void> {
 
         setupCoordinatorInternalNavigation(viewModel: examplesViewModel)
 
-        router.push(examplesVC,
-                    animated: true,
-                    completion: vcPopped)
+        router.push(
+            examplesVC,
+            animated: true,
+            completion: vcPopped
+        )
 
         return vcPopped
             .eraseToAnyPublisher()
@@ -48,9 +52,11 @@ private extension UIViewsExamplesCoordinator {
                 guard let self else { return }
                 let conversationBelowVideoVM = UIViewsConversationBelowVideoViewModel(postId: postId)
                 let conversationBelowVideoVC = UIViewsConversationBelowVideoVC(viewModel: conversationBelowVideoVM)
-                router.push(conversationBelowVideoVC,
-                                 animated: true,
-                                 completion: nil)
+                router.push(
+                    conversationBelowVideoVC,
+                    animated: true,
+                    completion: nil
+                )
             })
             .store(in: &cancellables)
     }

@@ -17,8 +17,10 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -30,9 +32,11 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
 
         let vcPopped = PassthroughSubject<Void, Never>()
 
-        router.push(viewsVC,
-                    animated: true,
-                    completion: vcPopped)
+        router.push(
+            viewsVC,
+            animated: true,
+            completion: vcPopped
+        )
 
         // Child coordinators
         let mockArticleIndependentCoordinator = viewsVM.outputs.openMockArticleScreen
@@ -68,10 +72,12 @@ class UIViewsCoordinator: BaseCoordinator<Void> {
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
-        return Publishers.Merge4(vcPopped,
-                                 mockArticleIndependentCoordinator,
-                                 viewsExamplesCoordinator,
-                                 monetizationCoordinator)
+        return Publishers.Merge4(
+            vcPopped,
+            mockArticleIndependentCoordinator,
+            viewsExamplesCoordinator,
+            monetizationCoordinator
+        )
             .eraseToAnyPublisher()
     }
 }

@@ -16,8 +16,10 @@ class MockArticleFlowPartialScreenCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.actionsFlowPartialScreenSettings(let settings) = data else {
@@ -43,9 +45,11 @@ class MockArticleFlowPartialScreenCoordinator: BaseCoordinator<Void> {
             })
             .store(in: &cancellables)
 
-        router.push(mockArticleFlowsVC,
-                    animated: true,
-                    completion: vcPopped)
+        router.push(
+            mockArticleFlowsVC,
+            animated: true,
+            completion: vcPopped
+        )
 
         return vcPopped
             .eraseToAnyPublisher()

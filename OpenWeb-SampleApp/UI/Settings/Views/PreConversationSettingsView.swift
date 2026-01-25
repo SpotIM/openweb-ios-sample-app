@@ -40,16 +40,20 @@ class PreConversationSettingsView: UIView {
         let title = viewModel.outputs.styleModeTitle
         let items = viewModel.outputs.styleModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var pickerCustomStyleNumberOfComments: PickerSetting = {
         let title = viewModel.outputs.customStyleNumberOfCommentsTitle
-        let picker = PickerSetting(title: title,
-                                   accessibilityPrefixId: Metrics.pickerCustomStyleNumberOfCommentsIdentifier,
-                                   items: viewModel.outputs.customStyleNumberOfCommentsSettings)
+        let picker = PickerSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.pickerCustomStyleNumberOfCommentsIdentifier,
+            items: viewModel.outputs.customStyleNumberOfCommentsSettings
+        )
         return picker
     }()
 
@@ -57,18 +61,22 @@ class PreConversationSettingsView: UIView {
         let title = viewModel.outputs.communityGuidelinesStyleModeTitle
         let items = viewModel.outputs.communityGuidelinesModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCommunityGuidelinesStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedCommunityGuidelinesStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedCommunityQuestionsStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.communityQuestionsStyleModeTitle
         let items = viewModel.outputs.communityQuestionsStyleModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCommunityQuestionsStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedCommunityQuestionsStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private let viewModel: PreConversationSettingsViewModeling

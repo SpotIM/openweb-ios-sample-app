@@ -82,10 +82,12 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
             .eraseToAnyPublisher()
     }
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIFlowActionSettings) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        imageProviderAPI: ImageProviding = ImageProvider(),
+        actionSettings: SDKUIFlowActionSettings
+    ) {
         self.imageProviderAPI = imageProviderAPI
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
@@ -224,12 +226,13 @@ private extension MockArticleFlowsViewModel {
                         }
                     }
                 } else {
-                    flows.preConversation(postId: postId,
-                                          article: article,
-                                          presentationalMode: presentationalMode,
-                                          additionalSettings: additionalSettings,
-                                          callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                          completion: { [weak self] result in
+                    flows.preConversation(
+                        postId: postId,
+                        article: article,
+                        presentationalMode: presentationalMode,
+                        additionalSettings: additionalSettings,
+                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                        completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
@@ -239,7 +242,8 @@ private extension MockArticleFlowsViewModel {
                             DLog("Calling flows.preConversation error: \(error)")
                             _showError.send(message)
                         }
-                    })
+                        }
+                    )
                 }
             })
             .store(in: &cancellables)
@@ -286,12 +290,13 @@ private extension MockArticleFlowsViewModel {
                         }
                     }
                 } else {
-                    flows.conversation(postId: postId,
-                                       article: article,
-                                       presentationalMode: presentationalMode,
-                                       additionalSettings: additionalSettings,
-                                       callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                       completion: { [weak self] result in
+                    flows.conversation(
+                        postId: postId,
+                        article: article,
+                        presentationalMode: presentationalMode,
+                        additionalSettings: additionalSettings,
+                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                        completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success:
@@ -302,7 +307,8 @@ private extension MockArticleFlowsViewModel {
                             DLog("Calling flows.conversation error: \(message)")
                             _showError.send(message)
                         }
-                    })
+                        }
+                    )
                 }
             })
             .store(in: &cancellables)
@@ -369,7 +375,8 @@ private extension MockArticleFlowsViewModel {
                             DLog("Calling flows.commentCreation error: \(message)")
                             _showError.send(message)
                         }
-                            })
+                            }
+                        )
                 }
                 })
             .store(in: &cancellables)
@@ -438,7 +445,8 @@ private extension MockArticleFlowsViewModel {
                             DLog("Calling flows.commentThread error: \(message)")
                             _showError.send(message)
                         }
-                            })
+                            }
+                        )
                 }
                 })
             .store(in: &cancellables)

@@ -12,10 +12,12 @@ import OpenWeb_SampleApp_Internal_Configs
 
 extension DevelopmentGenericSSOAuthentication {
     func toGenericSSOAuthentication() -> GenericSSOAuthentication {
-        return GenericSSOAuthentication(displayName: displayName,
-                                        spotId: spotId,
-                                        ssoToken: ssoToken,
-                                        user: user.toUserAuthentication())
+        return GenericSSOAuthentication(
+            displayName: displayName,
+            spotId: spotId,
+            ssoToken: ssoToken,
+            user: user.toUserAuthentication()
+        )
     }
 }
 

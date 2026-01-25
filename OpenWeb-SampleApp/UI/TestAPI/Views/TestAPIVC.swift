@@ -120,14 +120,18 @@ class TestAPIVC: UIViewController {
     }()
 
     private lazy var txtFieldSpotId: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: NSLocalizedString("SpotId", comment: "") + ":",
-                                        accessibilityPrefixId: Metrics.txtFieldSpotIdIdentifier)
+        let txtField = TextFieldSetting(
+            title: NSLocalizedString("SpotId", comment: "") + ":",
+            accessibilityPrefixId: Metrics.txtFieldSpotIdIdentifier
+        )
         return txtField
     }()
 
     private lazy var txtFieldPostId: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: NSLocalizedString("PostId", comment: "") + ":",
-                                        accessibilityPrefixId: Metrics.txtFieldPostIdIdentifier)
+        let txtField = TextFieldSetting(
+            title: NSLocalizedString("PostId", comment: "") + ":",
+            accessibilityPrefixId: Metrics.txtFieldPostIdIdentifier
+        )
         return txtField
     }()
 
@@ -451,10 +455,12 @@ private extension TestAPIVC {
             // Dismiss keyboard
             view.endEditing(true)
         }
-        UIView.animate(withDuration: Metrics.animatePickerDuration,
-                       delay: 0.0,
-                       usingSpringWithDamping: Metrics.animatePickerDamping,
-                       initialSpringVelocity: Metrics.animatePickerVelocity) {
+        UIView.animate(
+            withDuration: Metrics.animatePickerDuration,
+            delay: 0.0,
+            usingSpringWithDamping: Metrics.animatePickerDamping,
+            initialSpringVelocity: Metrics.animatePickerVelocity
+        ) {
             self.conversationPresetSelectionView.snp.updateConstraints { update in
                 update.bottom.equalToSuperview().inset(shouldShow ? 0 : -Metrics.pickerHeight)
             }

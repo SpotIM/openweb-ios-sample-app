@@ -124,8 +124,10 @@ extension UILabel {
             text = NSMutableAttributedString(string: self.text ?? "")
         }
 
-        text.addAttributes([NSAttributedString.Key.paragraphStyle: paragraph],
-                           range: NSRange(location: 0, length: text.length))
+        text.addAttributes(
+            [NSAttributedString.Key.paragraphStyle: paragraph],
+            range: NSRange(location: 0, length: text.length)
+        )
         attributedText = text
 
         return self
@@ -139,9 +141,11 @@ extension UILabel {
             text = NSMutableAttributedString(string: self.text ?? "")
         }
 
-        text.addAttribute(NSAttributedString.Key.kern,
-                          value: spacing,
-                          range: NSRange(location: 0, length: text.length - 1))
+        text.addAttribute(
+            NSAttributedString.Key.kern,
+            value: spacing,
+            range: NSRange(location: 0, length: text.length - 1)
+        )
         attributedText = text
 
         return self

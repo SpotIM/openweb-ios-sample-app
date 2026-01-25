@@ -16,8 +16,10 @@ extension OWArticle {
         let title = "This is a placeholder for the article title. The container is limited to two lines of text to avoid interface overwhelming but will show the context"
         let subtitle = "News Category"
         let section = "default"
-        let settings = OWArticleSettings(section: section,
-                                         starRatingEnabled: true)
+        let settings = OWArticleSettings(
+            section: section,
+            starRatingEnabled: true
+        )
 
         return OWArticle(
             articleInformationStrategy:
@@ -26,8 +28,10 @@ extension OWArticle {
                                 url: URL(string: url)!,
                                 title: title,
                                 subtitle: subtitle,
-                                thumbnailUrl: URL(string: imageUrl)!)
+                                thumbnailUrl: URL(string: imageUrl)!
+                            )
                           ),
-            additionalSettings: settings)
+            additionalSettings: settings
+        )
     }
 }

@@ -64,9 +64,11 @@ class ConversationWrapperVC: UIViewController {
     }
 
     #if !PUBLIC_DEMO_APP
-    func configureLogger(floatingViewModel: OWFloatingViewModeling,
-                         loggerViewModel: UILoggerViewModeling,
-                         loggerEnabled: AnyPublisher<Bool, Never>) {
+    func configureLogger(
+        floatingViewModel: OWFloatingViewModeling,
+        loggerViewModel: UILoggerViewModeling,
+        loggerEnabled: AnyPublisher<Bool, Never>
+    ) {
         let loggerView = UILoggerView(viewModel: loggerViewModel)
 
         // Add floating view to the window immediately (hidden), then toggle via setting

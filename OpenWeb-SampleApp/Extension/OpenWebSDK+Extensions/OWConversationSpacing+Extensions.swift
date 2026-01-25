@@ -14,9 +14,11 @@ extension OWConversationSpacing {
         switch index {
         case OWConversationSpacingIndexer.regular.index: self = .regular
         case OWConversationSpacingIndexer.compact.index: self = .compact
-        case OWConversationSpacingIndexer.custom.index: self = .custom(betweenComments: betweenComments,
-                                                                       communityGuidelines: communityGuidelines,
-                                                                       communityQuestions: communityQuestions)
+        case OWConversationSpacingIndexer.custom.index: self = .custom(
+            betweenComments: betweenComments,
+            communityGuidelines: communityGuidelines,
+            communityQuestions: communityQuestions
+        )
         default:
             self = .regular
         }

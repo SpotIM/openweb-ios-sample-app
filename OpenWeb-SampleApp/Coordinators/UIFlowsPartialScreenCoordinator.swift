@@ -16,8 +16,10 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -29,9 +31,11 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
 
         let vcPopped = PassthroughSubject<Void, Never>()
 
-        router.push(flowsVC,
-                    animated: true,
-                    completion: vcPopped)
+        router.push(
+            flowsVC,
+            animated: true,
+            completion: vcPopped
+        )
 
         let mockArticleFlowCoordinator = flowsVM.outputs.openMockArticleScreen
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in

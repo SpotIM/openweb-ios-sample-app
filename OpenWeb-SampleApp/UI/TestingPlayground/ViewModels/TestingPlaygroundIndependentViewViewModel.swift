@@ -76,10 +76,11 @@ private extension TestingPlaygroundIndependentViewModel {
                     loggerViewModel.inputs.log(text: log)
                 }
 
-                views.testingPlayground(postId: postId,
-                                    additionalSettings: OWTestingPlaygroundSettings(),
-                                    callbacks: actionsCallbacks,
-                                    completion: { [weak self] result in
+                views.testingPlayground(
+                    postId: postId,
+                    additionalSettings: OWTestingPlaygroundSettings(),
+                    callbacks: actionsCallbacks,
+                    completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success(let view):
@@ -89,7 +90,8 @@ private extension TestingPlaygroundIndependentViewModel {
                         DLog("Calling flows.testingPlayground error: \(message)")
                         loggerViewModel.inputs.log(text: message)
                     }
-                })
+                    }
+                )
             })
             .store(in: &cancellables)
     }

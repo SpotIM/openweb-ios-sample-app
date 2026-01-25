@@ -130,7 +130,8 @@ private extension ColorsCustomizationViewModel {
             voteUpUnselectedColor: colors[16],
             voteDownUnselectedColor: colors[17],
             voteUpSelectedColor: colors[18],
-            voteDownSelectedColor: colors[19])
+            voteDownSelectedColor: colors[19]
+        )
     }
     // swiftlint:enable no_magic_numbers
 }

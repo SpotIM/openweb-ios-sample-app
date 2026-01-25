@@ -200,9 +200,11 @@ class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewM
         case (_, .openLinkInComment(let url)):
             retrieveWebPageComponent(options: OWWebTabOptions(url: url, title: ""))
         case (_, .openCommentThread(let commentId, let postId, let performActionType)):
-            retrieveCommentThreadComponent(commentId: commentId,
-                                                postId: postId,
-                                                performActionType: performActionType)
+            retrieveCommentThreadComponent(
+                commentId: commentId,
+                postId: postId,
+                performActionType: performActionType
+            )
         case (.commentThread, .closeCommentThread):
             _removeCommentThread.send()
         case (.conversation, .openNotifications):
@@ -226,8 +228,10 @@ class UIViewsConversationBelowVideoViewModel: UIViewsConversationBelowVideoViewM
         }
     }
 
-    init(postId: OWPostId,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {
+    init(
+        postId: OWPostId,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService()
+    ) {
         self.postId = postId
         self.commonCreatorService = commonCreatorService
         setupObservers()
@@ -257,11 +261,12 @@ private extension UIViewsConversationBelowVideoViewModel {
 
         let additionalSettings = OWAdditionalSettings(preConversationSettings: OWPreConversationSettings(style: .compact))
 
-        uiViewsLayer.preConversation(postId: postId,
-                                     article: article,
-                                     additionalSettings: additionalSettings,
-                                     callbacks: actionsCallbacks,
-                                     completion: { [weak self] result in
+        uiViewsLayer.preConversation(
+            postId: postId,
+            article: article,
+            additionalSettings: additionalSettings,
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -270,7 +275,8 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _preConversationRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 
     func retrieveConversationComponent() {
@@ -279,11 +285,12 @@ private extension UIViewsConversationBelowVideoViewModel {
 
         let additionalSettings = OWAdditionalSettings(fullConversationSettings: OWConversationSettings(style: .compact))
 
-        uiViewsLayer.conversation(postId: postId,
-                                  article: article,
-                                  additionalSettings: additionalSettings,
-                                  callbacks: actionsCallbacks,
-                                  completion: { [weak self] result in
+        uiViewsLayer.conversation(
+            postId: postId,
+            article: article,
+            additionalSettings: additionalSettings,
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -292,19 +299,21 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _conversationRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 
     func retrieveCommentCreationComponent(type: OWCommentCreationType) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        uiViewsLayer.commentCreation(postId: postId,
-                                     article: article,
-                                     commentCreationType: type,
-                                     additionalSettings: OWAdditionalSettings(),
-                                     callbacks: actionsCallbacks,
-                                     completion: { [weak self] result in
+        uiViewsLayer.commentCreation(
+            postId: postId,
+            article: article,
+            commentCreationType: type,
+            additionalSettings: OWAdditionalSettings(),
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -313,19 +322,21 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _commentCreationRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 
     func retrieveReportReasonsComponent(commentId: OWCommentId, parentId: OWCommentId) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
-        uiViewsLayer.reportReason(postId: postId,
-                                  commentId: commentId,
-                                  parentId: parentId,
-                                  additionalSettings: additionalSettings,
-                                  callbacks: actionsCallbacks,
-                                  completion: { [weak self] result in
+        uiViewsLayer.reportReason(
+            postId: postId,
+            commentId: commentId,
+            parentId: parentId,
+            additionalSettings: additionalSettings,
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -334,7 +345,8 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _reportReasonsRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 
     func retrieveNotificationsComponent() {
@@ -342,11 +354,12 @@ private extension UIViewsConversationBelowVideoViewModel {
         let additionalSettings = OWAdditionalSettings()
         let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
-        uiViewsLayer.notifications(postId: postId,
-                                   article: article,
-                                   additionalSettings: additionalSettings,
-                                   callbacks: actionsCallbacks,
-                                   completion: { [weak self] result in
+        uiViewsLayer.notifications(
+            postId: postId,
+            article: article,
+            additionalSettings: additionalSettings,
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -355,19 +368,21 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _notificationsRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 
     func retrieveClarityDetailsComponent(data: OWClarityDetailsRequireData) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
-        uiViewsLayer.clarityDetails(postId: postId,
-                                    commentId: data.commentId,
-                                    type: data.type,
-                                    additionalSettings: additionalSettings,
-                                    callbacks: actionsCallbacks,
-                                    completion: { [weak self] result in
+        uiViewsLayer.clarityDetails(
+            postId: postId,
+            commentId: data.commentId,
+            type: data.type,
+            additionalSettings: additionalSettings,
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -376,18 +391,20 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _clarityDetailsRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 
     func retrieveCommenterAppealComponent(data: OWAppealRequiredData) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
-        uiViewsLayer.commenterAppeal(postId: postId,
-                                     data: data,
-                                     additionalSettings: additionalSettings,
-                                     callbacks: actionsCallbacks,
-                                     completion: { [weak self] result in
+        uiViewsLayer.commenterAppeal(
+            postId: postId,
+            data: data,
+            additionalSettings: additionalSettings,
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -396,7 +413,8 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _clarityDetailsRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 
     func retrieveCommentThreadComponent(commentId: OWCommentId, postId: OWPostId, performActionType: OWCommentThreadPerformActionType) {
@@ -406,12 +424,13 @@ private extension UIViewsConversationBelowVideoViewModel {
         let commentThreadSettings = OWCommentThreadSettings(performActionType: performActionType)
         let additionalSettings = OWAdditionalSettings(commentThreadSettings: commentThreadSettings)
 
-        uiViewsLayer.commentThread(postId: postId,
-                                   article: article,
-                                   commentId: commentId,
-                                   additionalSettings: additionalSettings,
-                                   callbacks: actionsCallbacks,
-                                   completion: { [weak self] result in
+        uiViewsLayer.commentThread(
+            postId: postId,
+            article: article,
+            commentId: commentId,
+            additionalSettings: additionalSettings,
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -420,18 +439,20 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _commentThreadRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 
     func retrieveWebPageComponent(options: OWWebTabOptions) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
-        uiViewsLayer.webTab(postId: postId,
-                            tabOptions: options,
-                            additionalSettings: additionalSettings,
-                            callbacks: actionsCallbacks,
-                            completion: { [weak self] result in
+        uiViewsLayer.webTab(
+            postId: postId,
+            tabOptions: options,
+            additionalSettings: additionalSettings,
+            callbacks: actionsCallbacks,
+            completion: { [weak self] result in
 
             guard let self else { return }
             switch result {
@@ -440,6 +461,7 @@ private extension UIViewsConversationBelowVideoViewModel {
             case .success(let view):
                 _webPageRetrieved.send(view)
             }
-        })
+            }
+        )
     }
 }

@@ -17,8 +17,10 @@ class MainPageCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
         let mainPageVM: MainPageViewModeling = MainPageViewModel()
         let mainPageVC = MainPageVC(viewModel: mainPageVM)
         router.setRoot(mainPageVC)
@@ -39,16 +41,20 @@ class MainPageCoordinator: BaseCoordinator<Void> {
         }
 
         // Define childs coordinators
-        let aboutCoordinator = Publishers.MergeMany(mainPageVM.outputs.showAbout.map { nil },
-                                                deepLinkToAbout.map { deepLinkOptions })
+        let aboutCoordinator = Publishers.MergeMany(
+            mainPageVM.outputs.showAbout.map { nil },
+            deepLinkToAbout.map { deepLinkOptions }
+        )
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinator = AboutCoordinator(router: router)
                 return coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
 
-        let testAPICoordinator = Publishers.MergeMany(mainPageVM.outputs.testAPI.map { nil },
-                                                  deepLinkToTestAPI.map { deepLinkOptions })
+        let testAPICoordinator = Publishers.MergeMany(
+            mainPageVM.outputs.testAPI.map { nil },
+            deepLinkToTestAPI.map { deepLinkOptions }
+        )
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinator = TestAPICoordinator(router: router)

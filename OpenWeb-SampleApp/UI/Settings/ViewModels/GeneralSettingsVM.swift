@@ -584,8 +584,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return OWSupportedLanguage.allCases.map { $0.languageName }
     }()
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         manager: OWManagerProtocol = OpenWeb.manager) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        manager: OWManagerProtocol = OpenWeb.manager
+    ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.manager = manager
         setupObservers()

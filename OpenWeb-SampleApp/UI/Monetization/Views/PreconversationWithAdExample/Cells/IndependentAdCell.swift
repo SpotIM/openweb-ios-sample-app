@@ -20,8 +20,10 @@ class IndependentAdCell: UITableViewCell {
         static let verticalPadding: CGFloat = 16
     }
 
-    func configure(with viewModel: IndependentAdCellViewModeling,
-                   tableView: UITableView) {
+    func configure(
+        with viewModel: IndependentAdCellViewModeling,
+        tableView: UITableView
+    ) {
         self.viewModel = viewModel
         self.tableView = tableView
         setupObservers()

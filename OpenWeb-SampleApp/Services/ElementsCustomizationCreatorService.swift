@@ -212,12 +212,16 @@ private extension ElementsCustomizationCreatorService {
             switch element {
             case .regular(let textView):
                 let attributedTitleText = NSMutableAttributedString(string: "TestCommunityQuestionRegular")
-                attributedTitleText.addAttribute(.foregroundColor,
-                                                 value: UIColor.red,
-                                                 range: NSRange(location: 0, length: attributedTitleText.length))
-                attributedTitleText.addAttribute(.font,
-                                                 value: UIFont.italicSystemFont(ofSize: 18), // swiftlint:disable:this no_magic_numbers
-                                                 range: NSRange(location: 0, length: attributedTitleText.length))
+                attributedTitleText.addAttribute(
+                    .foregroundColor,
+                    value: UIColor.red,
+                    range: NSRange(location: 0, length: attributedTitleText.length)
+                )
+                attributedTitleText.addAttribute(
+                    .font,
+                    value: UIFont.italicSystemFont(ofSize: 18), // swiftlint:disable:this no_magic_numbers
+                    range: NSRange(location: 0, length: attributedTitleText.length)
+                )
                 textView.attributedText = attributedTitleText
             case .compact(let containerView, let label):
                 label.text = "TestCommunityQuestionCompact"
@@ -231,21 +235,29 @@ private extension ElementsCustomizationCreatorService {
             switch element {
             case .regular(let textView):
                 let attributedTitleText = NSMutableAttributedString(string: "TestCommunityGuidelinesRegular")
-                attributedTitleText.addAttribute(.foregroundColor,
-                                                 value: UIColor.blue,
-                                                 range: NSRange(location: 0, length: attributedTitleText.length))
-                attributedTitleText.addAttribute(.font,
-                                                 value: UIFont.systemFont(ofSize: 14, weight: .bold), // swiftlint:disable:this no_magic_numbers
-                                                 range: NSRange(location: 0, length: attributedTitleText.length))
+                attributedTitleText.addAttribute(
+                    .foregroundColor,
+                    value: UIColor.blue,
+                    range: NSRange(location: 0, length: attributedTitleText.length)
+                )
+                attributedTitleText.addAttribute(
+                    .font,
+                    value: UIFont.systemFont(ofSize: 14, weight: .bold), // swiftlint:disable:this no_magic_numbers
+                    range: NSRange(location: 0, length: attributedTitleText.length)
+                )
                 textView.attributedText = attributedTitleText
             case .compact(let containerView, let imageView, let textView):
                 let attributedTitleText = NSMutableAttributedString(string: "TestCommunityGuidelinesCompact")
-                attributedTitleText.addAttribute(.foregroundColor,
-                                                 value: UIColor.green,
-                                                 range: NSRange(location: 0, length: attributedTitleText.length))
-                attributedTitleText.addAttribute(.font,
-                                                 value: UIFont.systemFont(ofSize: 16, weight: .bold), // swiftlint:disable:this no_magic_numbers
-                                                 range: NSRange(location: 0, length: attributedTitleText.length))
+                attributedTitleText.addAttribute(
+                    .foregroundColor,
+                    value: UIColor.green,
+                    range: NSRange(location: 0, length: attributedTitleText.length)
+                )
+                attributedTitleText.addAttribute(
+                    .font,
+                    value: UIFont.systemFont(ofSize: 16, weight: .bold), // swiftlint:disable:this no_magic_numbers
+                    range: NSRange(location: 0, length: attributedTitleText.length)
+                )
                 textView.attributedText = attributedTitleText
                 textView.textColor = .green
 

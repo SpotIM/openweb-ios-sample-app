@@ -37,9 +37,11 @@ class CommentCreationSettingsView: UIView {
         let title = viewModel.outputs.styleModeTitle
         let items = viewModel.outputs.styleModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private let viewModel: CommentCreationSettingsViewModeling

@@ -83,8 +83,10 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
     }()
 
     lazy var preconversationCellViewModel: PreconversationCellViewModeling = {
-        PreconversationCellViewModel(showPreConversation: showPreConversation,
-                                     adSizeChanged: adSizeChanged)
+        PreconversationCellViewModel(
+            showPreConversation: showPreConversation,
+            adSizeChanged: adSizeChanged
+        )
     }()
 
     lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
@@ -95,11 +97,12 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
         return NSLocalizedString("MockArticle", comment: "")
     }()
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIFlowActionSettings,
-         postId: OWPostId
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        imageProviderAPI: ImageProviding = ImageProvider(),
+        actionSettings: SDKUIFlowActionSettings,
+        postId: OWPostId
     ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
@@ -176,12 +179,13 @@ private extension PreconversationFlowsWithAdViewModel {
                         }
                     }
                 } else {
-                    flows.preConversation(postId: postId,
-                                          article: article,
-                                          presentationalMode: presentationalMode,
-                                          additionalSettings: additionalSettings,
-                                          callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
-                                          completion: { [weak self] result in
+                    flows.preConversation(
+                        postId: postId,
+                        article: article,
+                        presentationalMode: presentationalMode,
+                        additionalSettings: additionalSettings,
+                        callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
+                        completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
@@ -189,7 +193,8 @@ private extension PreconversationFlowsWithAdViewModel {
                         case .failure(let error):
                             DLog("Calling flows.preConversation error: \(error)")
                         }
-                    })
+                        }
+                    )
                 }
             })
             .store(in: &cancellables)

@@ -141,84 +141,102 @@ private extension UIViewsConversationBelowVideoVC {
         viewModel.outputs.reportReasonsRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                handleRetrieved(component: view,
-                                     assignToComponent: &reportReasons,
-                                     topConstraint: &reportReasonsTopConstraint,
-                                     heightConstraint: &reportReasonsHeightConstraint,
-                                     putWithAnimationOnComponent: conversation)
+                handleRetrieved(
+                    component: view,
+                    assignToComponent: &reportReasons,
+                    topConstraint: &reportReasonsTopConstraint,
+                    heightConstraint: &reportReasonsHeightConstraint,
+                    putWithAnimationOnComponent: conversation
+                )
             })
             .store(in: &cancellables)
 
         viewModel.outputs.commentThreadRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                handleRetrieved(component: view,
-                                     assignToComponent: &commentThread,
-                                     topConstraint: &commentThreadTopConstraint,
-                                     heightConstraint: &commentThreadHeightConstraint,
-                                     putWithAnimationOnComponent: conversation)
+                handleRetrieved(
+                    component: view,
+                    assignToComponent: &commentThread,
+                    topConstraint: &commentThreadTopConstraint,
+                    heightConstraint: &commentThreadHeightConstraint,
+                    putWithAnimationOnComponent: conversation
+                )
             })
             .store(in: &cancellables)
 
         viewModel.outputs.clarityDetailsRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                handleRetrieved(component: view,
-                                     assignToComponent: &clarityDetails,
-                                     topConstraint: &clarityDetailsTopConstraint,
-                                     heightConstraint: &clarityDetailsHeightConstraint,
-                                     putWithAnimationOnComponent: conversation)
+                handleRetrieved(
+                    component: view,
+                    assignToComponent: &clarityDetails,
+                    topConstraint: &clarityDetailsTopConstraint,
+                    heightConstraint: &clarityDetailsHeightConstraint,
+                    putWithAnimationOnComponent: conversation
+                )
             })
             .store(in: &cancellables)
 
         viewModel.outputs.webPageRetrieved
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                handleRetrieved(component: view,
-                                     assignToComponent: &webPage,
-                                     topConstraint: &webPageTopConstraint,
-                                     heightConstraint: &webPageHeightConstraint,
-                                     putWithAnimationOnComponent: conversation)
+                handleRetrieved(
+                    component: view,
+                    assignToComponent: &webPage,
+                    topConstraint: &webPageTopConstraint,
+                    heightConstraint: &webPageHeightConstraint,
+                    putWithAnimationOnComponent: conversation
+                )
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeConversation
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                handleRemoveWithAnimation(component: &conversation,
-                                               componentTopConstraint: conversationTopConstraint)
+                handleRemoveWithAnimation(
+                    component: &conversation,
+                    componentTopConstraint: conversationTopConstraint
+                )
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeReportReasons
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                handleRemoveWithAnimation(component: &reportReasons,
-                                               componentTopConstraint: reportReasonsTopConstraint)
+                handleRemoveWithAnimation(
+                    component: &reportReasons,
+                    componentTopConstraint: reportReasonsTopConstraint
+                )
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeClarityDetails
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                handleRemoveWithAnimation(component: &clarityDetails,
-                                               componentTopConstraint: clarityDetailsTopConstraint)
+                handleRemoveWithAnimation(
+                    component: &clarityDetails,
+                    componentTopConstraint: clarityDetailsTopConstraint
+                )
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeCommentThread
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                handleRemoveWithAnimation(component: &commentThread,
-                                               componentTopConstraint: commentThreadTopConstraint)
+                handleRemoveWithAnimation(
+                    component: &commentThread,
+                    componentTopConstraint: commentThreadTopConstraint
+                )
             })
             .store(in: &cancellables)
 
         viewModel.outputs.removeWebPage
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                handleRemoveWithAnimation(component: &webPage,
-                                               componentTopConstraint: webPageTopConstraint)
+                handleRemoveWithAnimation(
+                    component: &webPage,
+                    componentTopConstraint: webPageTopConstraint
+                )
             })
             .store(in: &cancellables)
 
@@ -231,8 +249,10 @@ private extension UIViewsConversationBelowVideoVC {
         viewModel.outputs.removeNotifications
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                handleRemoveWithAnimation(component: &notifications,
-                                               componentTopConstraint: notificationsTopConstraint)
+                handleRemoveWithAnimation(
+                    component: &notifications,
+                    componentTopConstraint: notificationsTopConstraint
+                )
             })
             .store(in: &cancellables)
 
@@ -381,11 +401,13 @@ private extension UIViewsConversationBelowVideoVC {
         }
     }
 
-    func handleRetrieved(component: UIView,
-                         assignToComponent componentToAssignOn: inout UIView?,
-                         topConstraint: inout Constraint!,
-                         heightConstraint: inout Constraint!,
-                         putWithAnimationOnComponent baseComponent: UIView?) {
+    func handleRetrieved(
+        component: UIView,
+        assignToComponent componentToAssignOn: inout UIView?,
+        topConstraint: inout Constraint!,
+        heightConstraint: inout Constraint!,
+        putWithAnimationOnComponent baseComponent: UIView?
+    ) {
         // 1. Remove report reasons from UI hierarchy
         if let existedComponent = componentToAssignOn {
             existedComponent.removeFromSuperview()

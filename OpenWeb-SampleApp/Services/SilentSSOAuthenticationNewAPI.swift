@@ -111,10 +111,12 @@ private extension SilentSSOAuthenticationNewAPI {
 
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> AnyPublisher<String, Error> {
         return AnyPublisher.create { observer in
-            DemoUserAuthentication.getCodeB(with: codeA,
-                                            accessToken: token,
-                                            username: genericSSO.user.username,
-                                            accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
+            DemoUserAuthentication.getCodeB(
+                with: codeA,
+                accessToken: token,
+                username: genericSSO.user.username,
+                accessTokenNetwork: genericSSO.ssoToken
+            ) { codeB, error in
                 guard let codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")

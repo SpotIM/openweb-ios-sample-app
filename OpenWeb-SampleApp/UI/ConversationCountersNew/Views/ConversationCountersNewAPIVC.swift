@@ -30,8 +30,10 @@ class ConversationCountersNewAPIVC: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     private lazy var txtFieldPostIds: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: NSLocalizedString("PostIdOrIds", comment: "") + ":",
-                                        accessibilityPrefixId: Metrics.txtFieldPostIdsIdentifier)
+        let txtField = TextFieldSetting(
+            title: NSLocalizedString("PostIdOrIds", comment: "") + ":",
+            accessibilityPrefixId: Metrics.txtFieldPostIdsIdentifier
+        )
         return txtField
     }()
 

@@ -44,8 +44,10 @@ extension ConversationCounterNewAPICellViewModel: Hashable {
         hasher.combine(postId)
     }
 
-    public static func == (lhs: ConversationCounterNewAPICellViewModel,
-                           rhs: ConversationCounterNewAPICellViewModel) -> Bool {
+    public static func == (
+        lhs: ConversationCounterNewAPICellViewModel,
+        rhs: ConversationCounterNewAPICellViewModel
+    ) -> Bool {
         return lhs.postId == rhs.postId
     }
 }

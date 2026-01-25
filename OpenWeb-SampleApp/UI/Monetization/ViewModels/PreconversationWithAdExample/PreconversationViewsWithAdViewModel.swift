@@ -68,8 +68,10 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
     }()
 
     lazy var preconversationCellViewModel: PreconversationCellViewModeling = {
-        PreconversationCellViewModel(showPreConversation: showPreConversation,
-                                     adSizeChanged: adSizeChanged)
+        PreconversationCellViewModel(
+            showPreConversation: showPreConversation,
+            adSizeChanged: adSizeChanged
+        )
     }()
 
     private let _adSizeChanged = PassthroughSubject<Void, Never>()
@@ -96,11 +98,13 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
             .eraseToAnyPublisher()
     }
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIIndependentViewsActionSettings,
-         postId: OWPostId) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        imageProviderAPI: ImageProviding = ImageProvider(),
+        actionSettings: SDKUIIndependentViewsActionSettings,
+        postId: OWPostId
+    ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.imageProviderAPI = imageProviderAPI
         self.commonCreatorService = commonCreatorService
@@ -173,11 +177,12 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
                         }
                     }
                 } else {
-                    uiViews.preConversation(postId: postId,
-                                            article: article,
-                                            additionalSettings: additionalSettings,
-                                            callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
-                                            completion: { [weak self] result in
+                    uiViews.preConversation(
+                        postId: postId,
+                        article: article,
+                        additionalSettings: additionalSettings,
+                        callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
+                        completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
@@ -187,7 +192,8 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
                             let message = error.description
                             DLog("Calling Views PreConversation error: \(message)")
                         }
-                    })
+                        }
+                    )
                 }
             })
             .store(in: &cancellables)

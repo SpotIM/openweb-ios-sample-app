@@ -18,8 +18,10 @@ class TestAPICoordinator: BaseCoordinator<Void> {
     }
 
     // swiftlint:disable function_body_length
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
         let testAPIVM: TestAPIViewModeling = TestAPIViewModel()
         let testAPIVC = TestAPIVC(viewModel: testAPIVM)
 
@@ -31,9 +33,11 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             shouldAnimate = false
         }
 
-        router.push(testAPIVC,
-                    animated: shouldAnimate,
-                    completion: vcPopped)
+        router.push(
+            testAPIVC,
+            animated: shouldAnimate,
+            completion: vcPopped
+        )
 
         // 1. Define deep links variables
         let deepLinkSettingsScreen = CurrentValueSubject<Void?, Never>(value: nil)
@@ -51,22 +55,28 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         }
 
         // 2. Define childs coordinators
-        let settingsCoordinator = Publishers.MergeMany(testAPIVM.outputs.openSettings.map { nil },
-                                                deepLinkToSettings.map { deepLinkOptions })
+        let settingsCoordinator = Publishers.MergeMany(
+            testAPIVM.outputs.openSettings.map { nil },
+            deepLinkToSettings.map { deepLinkOptions }
+        )
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinator = SettingsCoordinator(router: router)
-                return coordinate(to: coordinator,
-                                       deepLinkOptions: deepLink,
-                                       coordinatorData: .settingsScreen(data: SettingsGroupType.all))
+                return coordinate(
+                    to: coordinator,
+                    deepLinkOptions: deepLink,
+                    coordinatorData: .settingsScreen(data: SettingsGroupType.all)
+                )
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
 
-        let authenticationPlaygroundCoordinator = Publishers.MergeMany(testAPIVM.outputs.openAuthentication.map { nil },
-                                                                   deepLinkToAuthentication.map { deepLinkOptions })
+        let authenticationPlaygroundCoordinator = Publishers.MergeMany(
+            testAPIVM.outputs.openAuthentication.map { nil },
+            deepLinkToAuthentication.map { deepLinkOptions }
+        )
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinator = AuthenticationPlaygroundCoordinator(router: router)

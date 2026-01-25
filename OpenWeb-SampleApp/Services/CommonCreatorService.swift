@@ -27,8 +27,10 @@ class CommonCreatorService: CommonCreatorServicing {
     private let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
     private var cancellables = Set<AnyCancellable>()
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI()) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI()
+    ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.silentSSOAuthentication = silentSSOAuthentication
     }
@@ -72,26 +74,38 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func mockArticle(for postId: String) -> OWArticleProtocol {
-        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: userDefaultsProvider.get(key: .readOnlyModeIndex,
-                                                                                                           defaultValue: OWReadOnlyMode.default.index))
-        let persistenceArticleHeaderStyle = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
-                                                                          defaultValue: OWArticleHeaderStyle.default)
+        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: userDefaultsProvider.get(
+            key: .readOnlyModeIndex,
+            defaultValue: OWReadOnlyMode.default.index
+        ))
+        let persistenceArticleHeaderStyle = userDefaultsProvider.get(
+            key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
+            defaultValue: OWArticleHeaderStyle.default
+        )
 
-        var persistenceArticleInformationStrategy = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
-                                                                          defaultValue: OWArticleInformationStrategy.default)
+        var persistenceArticleInformationStrategy = userDefaultsProvider.get(
+            key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
+            defaultValue: OWArticleInformationStrategy.default
+        )
 
-        var section = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
-                                                                          defaultValue: nil)
+        var section = userDefaultsProvider.get(
+            key: UserDefaultsProvider.UDKey<String?>.articleSection,
+            defaultValue: nil
+        )
         if section == nil || section?.isEmpty == true {
             section = getSectionFromPreset(for: postId)
         }
 
-        let starRatingEnabled = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<Bool>.starRatingEnabled,
-                                                              defaultValue: false)
-        let settings = OWArticleSettings(section: section ?? "",
-                                         headerStyle: persistenceArticleHeaderStyle,
-                                         readOnlyMode: persistenceReadOnlyMode,
-                                         starRatingEnabled: starRatingEnabled)
+        let starRatingEnabled = userDefaultsProvider.get(
+            key: UserDefaultsProvider.UDKey<Bool>.starRatingEnabled,
+            defaultValue: false
+        )
+        let settings = OWArticleSettings(
+            section: section ?? "",
+            headerStyle: persistenceArticleHeaderStyle,
+            readOnlyMode: persistenceReadOnlyMode,
+            starRatingEnabled: starRatingEnabled
+        )
 
         if let strURL = userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL),
@@ -102,7 +116,8 @@ class CommonCreatorService: CommonCreatorServicing {
 
         let article = OWArticle(
             articleInformationStrategy: persistenceArticleInformationStrategy,
-            additionalSettings: settings)
+            additionalSettings: settings
+        )
         return article
     }
 

@@ -117,10 +117,12 @@ private extension TextFieldSetting {
                 guard let self else { return }
                 if textFieldControl.isFirstResponder,
                    let scrollView = superview as? UIScrollView {
-                    let insets = UIEdgeInsets(top: 0,
-                                              left: 0,
-                                              bottom: keyboardHeight + Metrics.keyboardPadding,
-                                              right: 0)
+                    let insets = UIEdgeInsets(
+                        top: 0,
+                        left: 0,
+                        bottom: keyboardHeight + Metrics.keyboardPadding,
+                        right: 0
+                    )
                     scrollView.contentInset = insets
                     scrollView.scrollIndicatorInsets = insets
 

@@ -39,9 +39,11 @@ class SampleAppSettingsView: UIView {
         let title = viewModel.outputs.appDeeplinkTitle
         let items = viewModel.outputs.appDeeplinkSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.deeplinkIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.deeplinkIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedCallingMethod: SegmentedControlSetting = {

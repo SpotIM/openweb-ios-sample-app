@@ -34,9 +34,11 @@ class CommentThreadSettingsView: UIView {
     }()
 
     private lazy var textFieldOpenCommentId: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: viewModel.outputs.openCommentIdTitle,
-                                        accessibilityPrefixId: Metrics.textFieldOpenCommentIdIdentifier,
-                                        font: FontBook.paragraph)
+        let txtField = TextFieldSetting(
+            title: viewModel.outputs.openCommentIdTitle,
+            accessibilityPrefixId: Metrics.textFieldOpenCommentIdIdentifier,
+            font: FontBook.paragraph
+        )
         return txtField
     }()
 

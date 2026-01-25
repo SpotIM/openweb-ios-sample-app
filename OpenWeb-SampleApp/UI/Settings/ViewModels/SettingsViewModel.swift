@@ -47,8 +47,11 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
 
     var resetToDefaultTap = PassthroughSubject<Void, Never>()
 
-    init(settingViewTypes: [SettingsGroupType] = SettingsGroupType.all, userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         manager: OWManagerProtocol = OpenWeb.manager) {
+    init(
+        settingViewTypes: [SettingsGroupType] = SettingsGroupType.all,
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        manager: OWManagerProtocol = OpenWeb.manager
+    ) {
         self.settingViewTypes = settingViewTypes
         self.userDefaultsProvider = userDefaultsProvider
         self.manager = manager

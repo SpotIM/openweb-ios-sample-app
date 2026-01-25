@@ -9,11 +9,13 @@ import UIKit
 
 enum PreconversationWithAdCellOption: CaseIterable {
     static var cells: [PreconversationWithAdCellOption] {
-        return [.image,
-                .content,
-                .independentAd,
-                .content,
-                .preconversation]
+        return [
+            .image,
+            .content,
+            .independentAd,
+            .content,
+            .preconversation
+        ]
     }
 
     case image

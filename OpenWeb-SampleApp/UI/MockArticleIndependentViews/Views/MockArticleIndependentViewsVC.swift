@@ -50,10 +50,12 @@ class MockArticleIndependentViewsVC: UIViewController {
     private var independentView: UIView?
 
     private lazy var settingsBarItem: UIBarButtonItem = {
-        return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
-                               style: .plain,
-                               target: nil,
-                               action: nil)
+        return UIBarButtonItem(
+            image: UIImage(named: "settingsIcon"),
+            style: .plain,
+            target: nil,
+            action: nil
+        )
     }()
 
     private lazy var loggerView: UILoggerView = {

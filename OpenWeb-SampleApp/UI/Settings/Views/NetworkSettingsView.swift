@@ -38,23 +38,29 @@ class NetworkSettingsView: UIView {
         let title = viewModel.outputs.networkEnvironmentTitle
         let items = viewModel.outputs.networkEnvironmentSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedNetworkEnvironmentIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedNetworkEnvironmentIdentifier,
+            items: items
+        )
     }()
 
     private lazy var stagingNamespaceTextField: TextFieldSetting = {
-        return TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
-                                placeholder: "staging-v2",
-                                accessibilityPrefixId: Metrics.identifier,
-                                font: FontBook.helperLight)
+        return TextFieldSetting(
+            title: viewModel.outputs.networkEnvironmentCustomTitle,
+            placeholder: "staging-v2",
+            accessibilityPrefixId: Metrics.identifier,
+            font: FontBook.helperLight
+        )
     }()
 
     private lazy var customUrlTextField: TextFieldSetting = {
-        return TextFieldSetting(title: "Custom URL",
-                                placeholder: "https://example.com",
-                                accessibilityPrefixId: Metrics.customUrlTextFieldIdentifier,
-                                font: FontBook.helperLight)
+        return TextFieldSetting(
+            title: "Custom URL",
+            placeholder: "https://example.com",
+            accessibilityPrefixId: Metrics.customUrlTextFieldIdentifier,
+            font: FontBook.helperLight
+        )
     }()
 
     private let viewModel: NetworkSettingsViewModeling

@@ -12,10 +12,12 @@ import OpenWeb_SampleApp_Internal_Configs
 
 extension DevelopmentThirdPartySSOAuthentication {
     func toThirdPartySSOAuthentication() -> ThirdPartySSOAuthentication {
-        return ThirdPartySSOAuthentication(displayName: displayName,
-                                           spotId: spotId,
-                                           token: token,
-                                           provider: provider)
+        return ThirdPartySSOAuthentication(
+            displayName: displayName,
+            spotId: spotId,
+            token: token,
+            provider: provider
+        )
     }
 }
 

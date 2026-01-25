@@ -17,8 +17,10 @@ class MockArticleIndependentCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.actionsViewSettings(let settings) = data else {
@@ -30,25 +32,31 @@ class MockArticleIndependentCoordinator: BaseCoordinator<Void> {
 
         let vcPopped = PassthroughSubject<Void, Never>()
 
-        router.push(mockArticleIndependentVC,
-                    animated: true,
-                    completion: vcPopped)
+        router.push(
+            mockArticleIndependentVC,
+            animated: true,
+            completion: vcPopped
+        )
 
         // Define childs coordinators
         let settingsCoordinator = mockArticleIndependentVM.outputs.openSettings
             .flatMap { [weak self] settingsType -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinator = SettingsCoordinator(router: router)
-                return coordinate(to: coordinator,
-                                       deepLinkOptions: nil,
-                                       coordinatorData: .settingsScreen(data: [settingsType]))
+                return coordinate(
+                    to: coordinator,
+                    deepLinkOptions: nil,
+                    coordinatorData: .settingsScreen(data: [settingsType])
+                )
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
 
-        return Publishers.Merge(vcPopped,
-                                settingsCoordinator)
+        return Publishers.Merge(
+            vcPopped,
+            settingsCoordinator
+        )
             .eraseToAnyPublisher()
     }
 }

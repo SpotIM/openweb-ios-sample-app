@@ -36,14 +36,18 @@ class Router: NSObject, Routering {
     }
 
     func present(_ module: Presentable, animated: Bool) {
-        navigationController.present(module.toPresentable(),
-                                     animated: animated,
-                                     completion: nil)
+        navigationController.present(
+            module.toPresentable(),
+            animated: animated,
+            completion: nil
+        )
     }
 
-    func push(_ module: Presentable,
-              animated: Bool,
-              completion: PassthroughSubject<Void, Never>?) {
+    func push(
+        _ module: Presentable,
+        animated: Bool,
+        completion: PassthroughSubject<Void, Never>?
+    ) {
         guard module.toPresentable() is UINavigationController == false else {
                 return
         }

@@ -26,8 +26,10 @@ class AppCoordinator: BaseCoordinator<Void> {
         self.window = window
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
         initialSetup()
 
         let mainPageCoordinator = MainPageCoordinator(router: router)

@@ -51,9 +51,11 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .eraseToAnyPublisher()
     }
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         actionSettings: SDKUIIndependentViewsActionSettings) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        actionSettings: SDKUIIndependentViewsActionSettings
+    ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
         _actionSettings.send(actionSettings)
@@ -338,11 +340,12 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.preConversation(postId: settings.postId,
-                                        article: article,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: actionsCallbacks,
-                                        completion: { result in
+                uiViews.preConversation(
+                    postId: settings.postId,
+                    article: article,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let preConversationView):
                         observer.send(preConversationView)
@@ -352,7 +355,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrievePreConversation error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -403,11 +407,12 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.conversation(postId: settings.postId,
-                                     article: article,
-                                     additionalSettings: additionalSettings,
-                                     callbacks: actionsCallbacks,
-                                     completion: { result in
+                uiViews.conversation(
+                    postId: settings.postId,
+                    article: article,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let conversationView):
                         observer.send(conversationView)
@@ -417,7 +422,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveConversation error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -462,12 +468,13 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.commentCreation(postId: settings.postId,
-                                        article: article,
-                                        commentCreationType: .comment,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: actionsCallbacks,
-                                        completion: { result in
+                uiViews.commentCreation(
+                    postId: settings.postId,
+                    article: article,
+                    commentCreationType: .comment,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let commentCreationView):
                         observer.send(commentCreationView)
@@ -477,7 +484,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveCommentCreation error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -522,12 +530,13 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.commentThread(postId: settings.postId,
-                                      article: article,
-                                      commentId: commonCreatorService.commentThreadCommentId(),
-                                      additionalSettings: additionalSettings,
-                                      callbacks: actionsCallbacks,
-                                      completion: { result in
+                uiViews.commentThread(
+                    postId: settings.postId,
+                    article: article,
+                    commentId: commonCreatorService.commentThreadCommentId(),
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let commentThreadView):
                         observer.send(commentThreadView)
@@ -537,7 +546,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveCommentThread error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -580,12 +590,13 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.clarityDetails(postId: settings.postId,
-                                       commentId: commonCreatorService.commentThreadCommentId(),
-                                       type: .rejected,
-                                       additionalSettings: additionalSettings,
-                                       callbacks: actionsCallbacks,
-                                       completion: { result in
+                uiViews.clarityDetails(
+                    postId: settings.postId,
+                    commentId: commonCreatorService.commentThreadCommentId(),
+                    type: .rejected,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let clarityDetailsView):
                         observer.send(clarityDetailsView)
@@ -595,7 +606,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveClarityDetails error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -639,11 +651,12 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.notifications(postId: settings.postId,
-                                        article: article,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: actionsCallbacks,
-                                        completion: { result in
+                uiViews.notifications(
+                    postId: settings.postId,
+                    article: article,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let notificationsView):
                         observer.send(notificationsView)
@@ -653,7 +666,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveNotifications error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}

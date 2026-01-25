@@ -314,10 +314,12 @@ private extension AuthenticationPlaygroundViewModel {
                 self?._logoutAuthenticationStatus.send(.initial)
             })
             .withLatestFrom(
-                Publishers.CombineLatest4(shouldInitializeSDK,
-                                          customUsername,
-                                          customPassword,
-                                          customSSOToken)
+                Publishers.CombineLatest4(
+                    shouldInitializeSDK,
+                    customUsername,
+                    customPassword,
+                    customSSOToken
+                )
             ) { genericSSO, latestValues in
                 return (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3)
             }
@@ -549,10 +551,12 @@ private extension AuthenticationPlaygroundViewModel {
 
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> AnyPublisher<String?, Error> {
         return AnyPublisher<String?, Error>.create { observer in
-            DemoUserAuthentication.getCodeB(with: codeA,
-                                            accessToken: token,
-                                            username: genericSSO.user.username,
-                                            accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
+            DemoUserAuthentication.getCodeB(
+                with: codeA,
+                accessToken: token,
+                username: genericSSO.user.username,
+                accessTokenNetwork: genericSSO.ssoToken
+            ) { codeB, error in
                 guard let codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")

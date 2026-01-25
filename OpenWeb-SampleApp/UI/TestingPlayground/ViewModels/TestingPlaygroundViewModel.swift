@@ -111,11 +111,12 @@ private extension TestingPlaygroundViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                flows.testingPlayground(postId: postId,
-                                        presentationalMode: presentationalMode,
-                                        additionalSettings: OWTestingPlaygroundSettings(),
-                                        callbacks: nil,
-                                        completion: { [weak self] result in
+                flows.testingPlayground(
+                    postId: postId,
+                    presentationalMode: presentationalMode,
+                    additionalSettings: OWTestingPlaygroundSettings(),
+                    callbacks: nil,
+                    completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success:
@@ -126,7 +127,8 @@ private extension TestingPlaygroundViewModel {
                         DLog("Calling flows.testingPlayground error: \(message)")
                         _showError.send(message)
                     }
-                })
+                    }
+                )
             })
             .store(in: &cancellables)
     }

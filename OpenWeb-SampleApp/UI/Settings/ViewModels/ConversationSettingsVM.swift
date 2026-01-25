@@ -275,13 +275,15 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
             let (styleIndex, communityGuidelinesStyleIndex, questionsStyleIndex, conversationSpacingIndex) = indices
             let (betweenCommentsSpace, communityGuidelinesSpace, communityQuestionsGuidelinesSpace) = spacings
 
-            return OWConversationStyle.conversationStyle(fromIndex: styleIndex,
-                                                         communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
-                                                         communityQuestionsStyleIndex: questionsStyleIndex,
-                                                         spacingIndex: conversationSpacingIndex,
-                                                         betweenComments: OWConversationSpacing.validateSpacing(betweenCommentsSpace),
-                                                         belowCommunityGuidelines: OWConversationSpacing.validateSpacing(communityGuidelinesSpace),
-                                                         belowCommunityQuestions: OWConversationSpacing.validateSpacing(communityQuestionsGuidelinesSpace))
+            return OWConversationStyle.conversationStyle(
+                fromIndex: styleIndex,
+                communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
+                communityQuestionsStyleIndex: questionsStyleIndex,
+                spacingIndex: conversationSpacingIndex,
+                betweenComments: OWConversationSpacing.validateSpacing(betweenCommentsSpace),
+                belowCommunityGuidelines: OWConversationSpacing.validateSpacing(communityGuidelinesSpace),
+                belowCommunityQuestions: OWConversationSpacing.validateSpacing(communityQuestionsGuidelinesSpace)
+            )
         }
         .eraseToAnyPublisher()
 

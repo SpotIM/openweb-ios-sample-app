@@ -45,8 +45,10 @@ class AuthenticationPlaygroundVC: UIViewController {
     }()
 
     private lazy var switchInitializeSDK: SwitchSetting = {
-        return SwitchSetting(title: NSLocalizedString("InitializeSDKFirst", comment: "") + ":",
-                             accessibilityPrefixId: Metrics.switchInitializeSDKIdentifier)
+        return SwitchSetting(
+            title: NSLocalizedString("InitializeSDKFirst", comment: "") + ":",
+            accessibilityPrefixId: Metrics.switchInitializeSDKIdentifier
+        )
     }()
 
     private lazy var lblAutomaticallyDismissDescription: UILabel = {
@@ -82,8 +84,11 @@ class AuthenticationPlaygroundVC: UIViewController {
     }()
 
     private lazy var switchAutomaticallyDismiss: SwitchSetting = {
-        return SwitchSetting(title: NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":",
-                             accessibilityPrefixId: Metrics.switchAutomaticallyDismissIdentifier, isOn: true)
+        return SwitchSetting(
+            title: NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":",
+            accessibilityPrefixId: Metrics.switchAutomaticallyDismissIdentifier,
+            isOn: true
+        )
     }()
 
     private lazy var textFieldSSOAutocomplete: TextFieldSetting = {

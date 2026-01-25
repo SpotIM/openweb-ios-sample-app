@@ -17,8 +17,10 @@ class SettingsCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.settingsScreen(let settingsGroups) = data else {
@@ -37,9 +39,11 @@ class SettingsCoordinator: BaseCoordinator<Void> {
 
         setupCoordinatorInternalNavigation(viewModel: settingsVM)
 
-        router.push(settingsVC,
-                    animated: shouldAnimate,
-                    completion: vcPopped)
+        router.push(
+            settingsVC,
+            animated: shouldAnimate,
+            completion: vcPopped
+        )
 
         return vcPopped
             .eraseToAnyPublisher()
@@ -52,9 +56,11 @@ private extension SettingsCoordinator {
             generalSettingsVM.outputs.openColorsCustomizationScreen
                 .sink(receiveValue: { [weak self] colorsCustomizationVC in
                     guard let self else { return }
-                    router.push(colorsCustomizationVC,
-                                     animated: true,
-                                     completion: nil)
+                    router.push(
+                        colorsCustomizationVC,
+                        animated: true,
+                        completion: nil
+                    )
                 })
                 .store(in: &cancellables)
         }

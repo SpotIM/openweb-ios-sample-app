@@ -67,9 +67,11 @@ class UIFlowsConversationBelowVideoViewModel: UIFlowsConversationBelowVideoViewM
             .eraseToAnyPublisher()
     }
 
-    init(postId: OWPostId,
-         userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {
+    init(
+        postId: OWPostId,
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService()
+    ) {
         self.postId = postId
         self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
@@ -135,11 +137,12 @@ private extension UIFlowsConversationBelowVideoViewModel {
                 }
             }
         } else {
-            uiViewsLayer.preConversation(postId: postId,
-                                         article: article,
-                                         additionalSettings: additionalSettings,
-                                         callbacks: actionsCallbacks,
-                                         completion: { [weak self] result in
+            uiViewsLayer.preConversation(
+                postId: postId,
+                article: article,
+                additionalSettings: additionalSettings,
+                callbacks: actionsCallbacks,
+                completion: { [weak self] result in
 
                 guard let self else { return }
                 switch result {
@@ -148,7 +151,8 @@ private extension UIFlowsConversationBelowVideoViewModel {
                 case .success(let view):
                     _preConversationRetrieved.send(view)
                 }
-            })
+                }
+            )
         }
     }
 
@@ -175,11 +179,12 @@ private extension UIFlowsConversationBelowVideoViewModel {
                 }
             }
         } else {
-            uiFlowsLayer.conversation(postId: postId,
-                                      article: article,
-                                      route: route,
-                                      additionalSettings: additionalSettings,
-                                      completion: { [weak self] result in
+            uiFlowsLayer.conversation(
+                postId: postId,
+                article: article,
+                route: route,
+                additionalSettings: additionalSettings,
+                completion: { [weak self] result in
                 guard let self else { return }
                 switch result {
                 case .success(let conversationViewController):
@@ -187,7 +192,8 @@ private extension UIFlowsConversationBelowVideoViewModel {
                 case .failure(let error):
                     _componentRetrievingError.send(error)
                 }
-            })
+                }
+            )
         }
     }
 

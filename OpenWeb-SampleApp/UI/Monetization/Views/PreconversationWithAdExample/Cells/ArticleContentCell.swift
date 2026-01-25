@@ -24,8 +24,10 @@ class ArticleContentCell: UITableViewCell {
             .textColor(ColorPalette.shared.color(type: .text))
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(lblArticleDescription)
         lblArticleDescription.snp.makeConstraints { make in

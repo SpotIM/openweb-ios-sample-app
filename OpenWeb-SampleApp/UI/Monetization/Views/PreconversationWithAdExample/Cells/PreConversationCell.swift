@@ -15,8 +15,10 @@ class PreConversationCell: UITableViewCell {
     private var viewModel: PreconversationCellViewModeling!
     private var cancellables = Set<AnyCancellable>()
 
-    func configure(with viewModel: PreconversationCellViewModeling,
-                   tableView: UITableView) {
+    func configure(
+        with viewModel: PreconversationCellViewModeling,
+        tableView: UITableView
+    ) {
         self.viewModel = viewModel
         self.tableView = tableView
         setupObservers()

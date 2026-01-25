@@ -72,10 +72,12 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
             .eraseToAnyPublisher()
     }
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIFlowPartialScreenActionSettings) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        imageProviderAPI: ImageProviding = ImageProvider(),
+        actionSettings: SDKUIFlowPartialScreenActionSettings
+    ) {
         self.imageProviderAPI = imageProviderAPI
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
@@ -184,10 +186,12 @@ private extension MockArticleFlowsPartialScreenViewModel {
                         }
                     }
                 } else {
-                    views.preConversation(postId: postId,
-                                          article: article,
-                                          additionalSettings: additionalSettings,
-                                          callbacks: actionsCallbacks) { result in
+                    views.preConversation(
+                        postId: postId,
+                        article: article,
+                        additionalSettings: additionalSettings,
+                        callbacks: actionsCallbacks
+                    ) { result in
                         switch result {
                         case .success(let preConversationView):
                             self._showPreConversation.send(preConversationView)
@@ -242,12 +246,13 @@ private extension MockArticleFlowsPartialScreenViewModel {
                         }
                     }
                 } else {
-                    flows.conversation(postId: postId,
-                                       article: article,
-                                       route: route,
-                                       additionalSettings: additionalSettings,
-                                       callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                       completion: { [weak self] result in
+                    flows.conversation(
+                        postId: postId,
+                        article: article,
+                        route: route,
+                        additionalSettings: additionalSettings,
+                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                        completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let conversationViewController):
@@ -257,7 +262,8 @@ private extension MockArticleFlowsPartialScreenViewModel {
                             DLog("Calling flows.conversation error: \(error)")
                             _showError.send(message)
                         }
-                    })
+                        }
+                    )
                 }
             })
             .store(in: &cancellables)
@@ -348,12 +354,13 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 }
             }
         } else {
-            flows.conversation(postId: postId,
-                               article: article,
-                               route: route,
-                               additionalSettings: additionalSettings,
-                               callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value),
-                               completion: { [weak self] result in
+            flows.conversation(
+                postId: postId,
+                article: article,
+                route: route,
+                additionalSettings: additionalSettings,
+                callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value),
+                completion: { [weak self] result in
                 guard let self else { return }
                 switch result {
                 case .success(let conversationViewController):
@@ -364,7 +371,8 @@ private extension MockArticleFlowsPartialScreenViewModel {
                     DLog("Calling flows.conversation error: \(error)")
                     _showError.send(message)
                 }
-            })
+                }
+            )
         }
     }
 }

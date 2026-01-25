@@ -19,8 +19,10 @@ class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -34,9 +36,11 @@ class TestingPlaygroundCoordinator: BaseCoordinator<Void> {
 
         setupCoordinatorInternalNavigation(viewModel: testingPlaygroundVM)
 
-        router.push(testingPlaygroundVC,
-                    animated: true,
-                    completion: vcPopped)
+        router.push(
+            testingPlaygroundVC,
+            animated: true,
+            completion: vcPopped
+        )
 
         return vcPopped
             .eraseToAnyPublisher()
@@ -50,9 +54,11 @@ private extension TestingPlaygroundCoordinator {
                 guard let self else { return }
                 let testingPlaygroundIndependentVM = TestingPlaygroundIndependentViewModel(dataModel: dataModel)
                 let testingPlaygroundIndependentVC = TestingPlaygroundIndependentViewVC(viewModel: testingPlaygroundIndependentVM)
-                router.push(testingPlaygroundIndependentVC,
-                            animated: true,
-                            completion: nil)
+                router.push(
+                    testingPlaygroundIndependentVC,
+                    animated: true,
+                    completion: nil
+                )
             })
             .store(in: &cancellables)
     }
