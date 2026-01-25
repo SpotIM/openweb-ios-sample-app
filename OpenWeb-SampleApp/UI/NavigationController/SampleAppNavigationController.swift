@@ -40,7 +40,7 @@ private extension SampleAppNavigationController {
         // Setup Title font
         let navigationTitleTextAttributes = [
             NSAttributedString.Key.font: FontBook.secondaryHeadingBold,
-            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text)
+            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text),
         ]
 
         let appearance = UINavigationBarAppearance()

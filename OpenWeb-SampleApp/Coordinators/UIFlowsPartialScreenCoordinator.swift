@@ -77,7 +77,7 @@ class UIFlowsPartialScreenCoordinator: BaseCoordinator<Void> {
             vcPopped.eraseToAnyPublisher(),
             mockArticleFlowCoordinator,
             conversationWrapperCoordinator,
-            conversationBelowVideoCoordinator
+            conversationBelowVideoCoordinator,
         ])
         .eraseToAnyPublisher()
     }

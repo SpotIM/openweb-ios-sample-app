@@ -55,7 +55,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             ThemeColorItem(title: "Vote Up Unselected", initialColor: initialColorTheme.voteUpUnselectedColor),
             ThemeColorItem(title: "Vote Down Unselected", initialColor: initialColorTheme.voteDownUnselectedColor),
             ThemeColorItem(title: "Vote Up Selected", initialColor: initialColorTheme.voteUpSelectedColor),
-            ThemeColorItem(title: "Vote Down Selected", initialColor: initialColorTheme.voteDownSelectedColor)
+            ThemeColorItem(title: "Vote Down Selected", initialColor: initialColorTheme.voteDownSelectedColor),
         ]
     }()
 

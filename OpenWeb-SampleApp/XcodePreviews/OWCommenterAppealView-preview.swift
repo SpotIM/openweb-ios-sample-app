@@ -18,7 +18,7 @@ extension OWAppealRequiredData {
             OWAppealReason(type: .dontUnderstandGuidelines, requiredAdditionalInfo: false),
             OWAppealReason(type: .commentFollowsGuidelines, requiredAdditionalInfo: false),
             OWAppealReason(type: .misunderstanding, requiredAdditionalInfo: false),
-            OWAppealReason(type: .other, requiredAdditionalInfo: true)
+            OWAppealReason(type: .other, requiredAdditionalInfo: true),
         ]
         
         return OWAppealRequiredData(

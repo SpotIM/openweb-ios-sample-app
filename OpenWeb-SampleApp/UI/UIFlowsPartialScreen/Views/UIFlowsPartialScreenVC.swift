@@ -107,7 +107,7 @@ private extension UIFlowsPartialScreenVC {
             btnPreConversationToConversationCoverMode,
             btnFullConversation,
             btnCommentCreation,
-            btnCommentThread
+            btnCommentThread,
         ]
         let buttonsStackView = UIStackView(arrangedSubviews: buttons)
         buttonsStackView.axis = .vertical

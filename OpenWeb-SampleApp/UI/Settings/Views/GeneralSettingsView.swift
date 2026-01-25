@@ -29,7 +29,7 @@ class GeneralSettingsView: UIView {
         static let textFieldCustomSortTitleIdentifier: [OWSortOption: String] = [
             .best: "sort_title_best",
             .newest: "sort_title_newest",
-            .oldest: "sort_title_oldest"
+            .oldest: "sort_title_oldest",
         ]
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
         static let textFieldCustomFontNameIdentifier = "custom_font_name"

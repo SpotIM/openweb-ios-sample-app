@@ -14,7 +14,7 @@ enum PreconversationWithAdCellOption: CaseIterable {
             .content,
             .independentAd,
             .content,
-            .preconversation
+            .preconversation,
         ]
     }
 

@@ -62,7 +62,7 @@ class DemoUserAuthentication {
 
         let params = [
             "username": username,
-            "password": password
+            "password": password,
         ]
 
         struct Response: Codable {
@@ -107,7 +107,7 @@ class DemoUserAuthentication {
             "code_a": codeA ?? "",
             "access_token": accessToken ?? "",
             "username": username ?? "",
-            "env": environment
+            "env": environment,
         ]
 
         let headers: HTTPHeaders = ["access-token-network": accessTokenNetwork ?? ""]
