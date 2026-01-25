@@ -27,8 +27,8 @@ extension OWLocaleStrategy {
         switch self {
         case .useDevice: return 0
         case .useServerConfig: return 1
-        case .`default`: return 2
-        default: return OWLocaleStrategy.`default`.index
+        case .default: return 2
+        default: return OWLocaleStrategy.default.index
         }
     }
 

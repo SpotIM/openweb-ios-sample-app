@@ -28,7 +28,7 @@ extension OWStatusBarEnforcement {
         case .matchTheme: return 0
         case .style(.lightContent): return 1
         case .style(.darkContent): return 2
-        default: return OWStatusBarEnforcement.`default`.index
+        default: return OWStatusBarEnforcement.default.index
         }
     }
 }

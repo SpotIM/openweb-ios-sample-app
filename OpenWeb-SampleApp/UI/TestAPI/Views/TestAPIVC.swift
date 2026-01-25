@@ -305,7 +305,7 @@ private extension TestAPIVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnMiscellaneous.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            #if !(AUTOMATION)
+            #if !AUTOMATION
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
             #endif
         }

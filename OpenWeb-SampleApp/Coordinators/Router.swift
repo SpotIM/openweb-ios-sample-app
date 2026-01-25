@@ -28,7 +28,7 @@ class Router: NSObject, Routering {
         return navigationController.viewControllers.first
     }
 
-    public init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController) {
         self.navigationController = navigationController
         completions = [:]
         super.init()

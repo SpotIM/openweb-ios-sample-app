@@ -34,7 +34,7 @@ class SettingsVC: UIViewController {
     }()
 
     private lazy var settingViews: [UIView] = {
-        let views = viewModel.outputs.settingsVMs.map { SettingsViewsFactory.factor(from: ($0)) }.unwrap()
+        let views = viewModel.outputs.settingsVMs.map { SettingsViewsFactory.factor(from: $0) }.unwrap()
         return views
     }()
 

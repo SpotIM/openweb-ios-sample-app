@@ -28,7 +28,7 @@ extension OWThemeStyleEnforcement {
         case .none: return 0
         case .theme(.light): return 1
         case .theme(.dark): return 2
-        default: return OWThemeStyleEnforcement.`default`.index
+        default: return OWThemeStyleEnforcement.default.index
         }
     }
 }

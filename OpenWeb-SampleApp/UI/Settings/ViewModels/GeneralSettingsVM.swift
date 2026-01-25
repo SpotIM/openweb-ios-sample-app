@@ -754,7 +754,7 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
         modalStyleSelectedIndex.send(OWModalPresentationStyle.default.index)
         initialSortSelectedIndex.send(OWInitialSortStrategy.default.index)
         customSortTitlesChanged.send([:])
-        fontGroupTypeSelectedIndex.send(OWFontGroupFamilyIndexer.`default`.index)
+        fontGroupTypeSelectedIndex.send(OWFontGroupFamilyIndexer.default.index)
         languageStrategySelectedIndex.send(OWLanguageStrategy.defaultStrategyIndex)
         showLoginPromptSelected.send(false)
         showStarRatingSelected.send(false)

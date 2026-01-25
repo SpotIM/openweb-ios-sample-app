@@ -40,11 +40,11 @@ class ConversationCounterNewAPICellViewModel: ConversationCounterNewAPICellViewM
 }
 
 extension ConversationCounterNewAPICellViewModel: Hashable {
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         hasher.combine(postId)
     }
 
-    public static func == (
+    static func == (
         lhs: ConversationCounterNewAPICellViewModel,
         rhs: ConversationCounterNewAPICellViewModel
     ) -> Bool {

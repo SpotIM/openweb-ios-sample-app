@@ -14,7 +14,7 @@ enum OWFontGroupFamilyIndexer {
 
     var index: Int {
         switch self {
-        case .`default`: return 0
+        case .default: return 0
         case .custom: return 1
         }
     }

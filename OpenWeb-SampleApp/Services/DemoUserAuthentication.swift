@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import OpenWebSDK
 
-internal class DemoUserAuthentication {
+class DemoUserAuthentication {
 
     /*
      Using a mock sso server for the demo login which is valid in our demo spots.
@@ -48,7 +48,7 @@ internal class DemoUserAuthentication {
         #endif
     }
 
-    internal static func logIn(
+    static func logIn(
         with username: String,
         password: String,
         completion: @escaping (_ token: String?, _ error: Error?) -> Void
@@ -87,7 +87,7 @@ internal class DemoUserAuthentication {
         }
     }
 
-    internal static func getCodeB(
+    static func getCodeB(
         with codeA: String?,
         accessToken: String?,
         username: String?,
