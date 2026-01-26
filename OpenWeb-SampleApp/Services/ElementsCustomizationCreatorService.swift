@@ -353,13 +353,11 @@ private extension ElementsCustomizationCreatorService {
                     imageView.image = nil
                     imageView.isHidden = true
                 case .title(let label):
-                    DispatchQueue.main.async {
-                        label.attributedText = NSAttributedString(
-                            // swiftlint:disable:next line_length
-                            string: "🌍 Welcome to the conversation arena! 💬 Share your thoughts, react with kindness 🤝, and spark ideas that inspire ✨. Whether it’s a deep dive into tech 💻, the latest game highlights 🏆, or just good vibes 🎶 — your voice matters! Let’s keep it lively 🔥, respectful 🙏, and full of energy ⚡️. Jump in, tag a friend 👯, and let the dialogue roll! 🚀🚀🚀",
-                            attributes: [.foregroundColor: UIColor.systemBlue]
-                        )
-                    }
+                    label.attributedText = NSAttributedString(
+                        // swiftlint:disable:next line_length
+                        string: "🌍 Welcome to the conversation arena! 💬 Share your thoughts, react with kindness 🤝, and spark ideas that inspire ✨. Whether it’s a deep dive into tech 💻, the latest game highlights 🏆, or just good vibes 🎶 — your voice matters! Let’s keep it lively 🔥, respectful 🙏, and full of energy ⚡️. Jump in, tag a friend 👯, and let the dialogue roll! 🚀🚀🚀",
+                        attributes: [.foregroundColor: UIColor.systemBlue]
+                    )
                 default:
                     break
                 }
