@@ -11,4 +11,5 @@ import OpenWebSDK
 enum SDKUIFlowPartialScreenActionType {
     case preConversationToFullConversation(presentationalMode: PresentationalModeCompact)
     case fullConversation(route: OWConversationRoute)
+    case commentCreation(presentationalMode: PresentationalModeCompact, type: OWCommentCreationType)
 }

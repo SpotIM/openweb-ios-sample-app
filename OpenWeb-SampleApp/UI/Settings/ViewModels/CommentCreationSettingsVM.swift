@@ -12,6 +12,7 @@ import OpenWebSDK
 
 protocol CommentCreationSettingsViewModelingInputs {
     var customStyleModeSelectedIndex: CurrentValueSubject<Int, Never> { get }
+    var typeSelectedIndex: CurrentValueSubject<Int, Never> { get }
 }
 
 protocol CommentCreationSettingsViewModelingOutputs {
@@ -19,6 +20,9 @@ protocol CommentCreationSettingsViewModelingOutputs {
     var styleModeTitle: String { get }
     var styleModeIndex: AnyPublisher<Int, Never> { get }
     var styleModeSettings: [String] { get }
+    var typeTitle: String { get }
+    var typeIndex: AnyPublisher<Int, Never> { get }
+    var typeSettings: [String] { get }
 }
 
 protocol CommentCreationSettingsViewModeling {
@@ -32,11 +36,18 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
 
     lazy var customStyleModeSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default).index)
+    lazy var typeSelectedIndex = CurrentValueSubject<Int, Never>(userDefaultsProvider.get(key: .commentCreationTypeIndex, defaultValue: SampleAppCommentCreationType.default.rawValue))
 
     private var userDefaultsProvider: UserDefaultsProviderProtocol
 
     var styleModeIndex: AnyPublisher<Int, Never> {
         return customStyleModeSelectedIndex
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    var typeIndex: AnyPublisher<Int, Never> {
+        return typeSelectedIndex
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
@@ -59,6 +70,14 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return [_regular, _light, _floatingKeyboard]
     }()
 
+    lazy var typeTitle: String = {
+        return NSLocalizedString("CommentCreationType", comment: "")
+    }()
+
+    lazy var typeSettings: [String] = {
+        return SampleAppCommentCreationType.allCases.map { $0.title }
+    }()
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
@@ -74,12 +93,18 @@ private extension CommentCreationSettingsVM {
             }
             .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
             .store(in: &cancellables)
+
+        typeSelectedIndex
+            .dropFirst()
+            .bind(to: userDefaultsProvider.setValues(key: .commentCreationTypeIndex))
+            .store(in: &cancellables)
     }
 }
 
 extension CommentCreationSettingsVM: SettingsGroupVMProtocol {
     func resetToDefault() {
         customStyleModeSelectedIndex.send(0)
+        typeSelectedIndex.send(SampleAppCommentCreationType.default.rawValue)
     }
 }
 

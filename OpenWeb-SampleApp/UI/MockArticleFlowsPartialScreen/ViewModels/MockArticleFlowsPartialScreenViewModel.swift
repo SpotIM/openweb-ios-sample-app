@@ -208,9 +208,12 @@ private extension MockArticleFlowsPartialScreenViewModel {
         // Conversation-based flows (full conversation, comment creation, comment thread)
         actionSettings
             .compactMap { settings -> (postId: OWPostId, route: OWConversationRoute)? in
-                if case let .fullConversation(route) = settings.actionType {
+                switch settings.actionType {
+                case .fullConversation(let route):
                     return (postId: settings.postId, route: route)
-                } else {
+                case .commentCreation(_, let type):
+                    return (postId: settings.postId, route: .commentCreation(type: type))
+                case .preConversationToFullConversation:
                     return nil
                 }
             }

@@ -101,9 +101,12 @@ private extension UIFlowsPartialScreenViewModel {
             .eraseToAnyPublisher()
 
         let commentCreationModel = commentCreationTapped
-            .map { _ -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation(route: .commentCreation(type: .comment)))
+            .map { [weak self] _ -> SDKUIFlowPartialScreenActionSettings? in
+                guard let self else { return nil }
+                let creationType = commonCreatorService.commentCreationType()
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .commentCreation(presentationalMode: .push, type: creationType))
             }
+            .unwrap()
             .eraseToAnyPublisher()
 
         let commentThreadModel = commentThreadTapped
