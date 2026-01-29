@@ -78,7 +78,8 @@ private extension MonetizationViewsCoordinator {
                         completion: nil
                     )
 
-                })
+                }
+            )
             .store(in: &cancellables)
     }
 }

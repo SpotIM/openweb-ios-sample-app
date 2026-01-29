@@ -22,15 +22,12 @@ extension OWArticle {
         )
 
         return OWArticle(
-            articleInformationStrategy:
-                    .local(data:
-                            OWArticleExtraData(
-                                url: URL(string: url)!,
-                                title: title,
-                                subtitle: subtitle,
-                                thumbnailUrl: URL(string: imageUrl)!
-                            )
-                          ),
+            articleInformationStrategy: .local(data: OWArticleExtraData(
+                url: URL(string: url)!,
+                title: title,
+                subtitle: subtitle,
+                thumbnailUrl: URL(string: imageUrl)!
+            )),
             additionalSettings: settings
         )
     }

@@ -365,20 +365,21 @@ private extension MockArticleFlowsViewModel {
                             additionalSettings: additionalSettings,
                             callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
                             completion: { [weak self] result in
-                        guard let self else { return }
-                        switch result {
-                        case .success:
-                            // All good
-                            break
-                        case .failure(let error):
-                            let message = error.description
-                            DLog("Calling flows.commentCreation error: \(message)")
-                            _showError.send(message)
-                        }
+                                guard let self else { return }
+                                switch result {
+                                case .success:
+                                    // All good
+                                    break
+                                case .failure(let error):
+                                    let message = error.description
+                                    DLog("Calling flows.commentCreation error: \(message)")
+                                    _showError.send(message)
+                                }
                             }
                         )
+                    }
                 }
-                })
+            )
             .store(in: &cancellables)
 
         // Comment creation
@@ -447,8 +448,9 @@ private extension MockArticleFlowsViewModel {
                         }
                             }
                         )
+                    }
                 }
-                })
+            )
             .store(in: &cancellables)
 
         // Providing `displayAuthenticationFlow` callback
