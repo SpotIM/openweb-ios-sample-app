@@ -211,8 +211,6 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 switch settings.actionType {
                 case .fullConversation(let route):
                     return (postId: settings.postId, route: route)
-                case .commentCreation(_, let type):
-                    return (postId: settings.postId, route: .commentCreation(type: type))
                 case .preConversationToFullConversation:
                     return nil
                 }
