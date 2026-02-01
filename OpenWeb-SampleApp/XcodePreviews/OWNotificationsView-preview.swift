@@ -16,6 +16,7 @@ import UIKit
 
     let notificationsData = OWNotificationsRequiredData(
         presentationalMode: .push,
+        settings: OWAdditionalSettings(),
         article: OWArticle.stub(),
         postId: "sp_JO8jQVTJ_aio1"
     )
