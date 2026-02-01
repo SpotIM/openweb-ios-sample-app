@@ -179,3 +179,7 @@
 "SingleAd" = "Single Ad";
 "Monetization" = "Monetization";
 "SingleAdExample" = "Single Ad Example";
+"CommentCreationType" = "Type";
+"CommentCreationTypeNew" = "New";
+"CommentCreationTypeReply" = "Reply";
+"CommentCreationTypeEdit" = "Edit";

@@ -244,7 +244,7 @@ private extension MockArticleFlowsVC {
         // Adding comment creation button if needed
         let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
             .prefix(1)
-            .handleEvents(receiveOutput: { [weak self] mode in
+            .handleEvents(receiveOutput: { [weak self] mode, _ in
                 guard let self else { return }
                 let btnTitle: String
                 switch mode {

@@ -22,7 +22,7 @@ protocol MockArticleFlowsViewModelingInputs {
 protocol MockArticleFlowsViewModelingOutputs {
     var title: String { get }
     var showFullConversationButton: AnyPublisher<PresentationalModeCompact, Never> { get }
-    var showCommentCreationButton: AnyPublisher<PresentationalModeCompact, Never> { get }
+    var showCommentCreationButton: AnyPublisher<(PresentationalModeCompact, OWCommentCreationType), Never> { get }
     var showPreConversation: AnyPublisher<UIView, Never> { get }
     var showCommentThreadButton: AnyPublisher<PresentationalModeCompact, Never> { get }
     var articleImageURL: AnyPublisher<URL, Never> { get }
@@ -126,12 +126,12 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
 
     }
 
-    var showCommentCreationButton: AnyPublisher<PresentationalModeCompact, Never> {
+    var showCommentCreationButton: AnyPublisher<(PresentationalModeCompact, OWCommentCreationType), Never> {
         return actionSettings
             // Map here is also like a filter
             .map { settings in
-                if case .commentCreation(let mode) = settings.actionType {
-                    return mode
+                if case .commentCreation(let mode, let type) = settings.actionType {
+                    return (mode, type)
                 } else {
                     return nil
                 }
@@ -316,17 +316,17 @@ private extension MockArticleFlowsViewModel {
         // Comment creation
         commentCreationButtonTapped
             .withLatestFrom(showCommentCreationButton)
-            .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
+            .withLatestFrom(actionSettings) { mode, settings in
                 return (mode, settings.postId)
             }
-            .withLatestFrom(loggerEnabled) { result, loggerEnabled -> (PresentationalModeCompact, String, Bool) in
+            .withLatestFrom(loggerEnabled) { result, loggerEnabled in
                 return (result.0, result.1, loggerEnabled)
             }
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveValue: { [weak self] result in
                     guard let self else { return }
-                    let mode = result.0
+                    let (mode, type) = result.0
                     let postId = result.1
                     let loggerEnabled = result.2
 
@@ -345,7 +345,7 @@ private extension MockArticleFlowsViewModel {
                                 try await flows.conversation(
                                     postId: postId,
                                     article: article,
-                                    route: .commentCreation(type: .comment),
+                                    route: .commentCreation(type: type),
                                     presentationalMode: presentationalMode,
                                     additionalSettings: additionalSettings,
                                     callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
@@ -360,7 +360,7 @@ private extension MockArticleFlowsViewModel {
                         flows.conversation(
                             postId: postId,
                             article: article,
-                            route: .commentCreation(type: .comment),
+                            route: .commentCreation(type: type),
                             presentationalMode: presentationalMode,
                             additionalSettings: additionalSettings,
                             callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),

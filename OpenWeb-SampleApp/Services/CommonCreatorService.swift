@@ -18,6 +18,7 @@ protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
+    func commentCreationType() -> OWCommentCreationType
     func mockArticle(for postId: String) -> OWArticleProtocol
     var renewSSOCallback: OWRenewSSOCallback { get }
 }
@@ -70,6 +71,20 @@ class CommonCreatorService: CommonCreatorServicing {
             return OWCommentThreadSettings.defaultCommentId
         } else {
             return commentId
+        }
+    }
+
+    func commentCreationType() -> OWCommentCreationType {
+        let routeIndex = userDefaultsProvider.get(key: .commentCreationTypeIndex, defaultValue: SampleAppCommentCreationType.default.rawValue)
+        let route = SampleAppCommentCreationType(rawValue: routeIndex) ?? .default
+
+        switch route {
+        case .new:
+            return .comment
+        case .reply:
+            return .replyTo(commentId: commentThreadCommentId())
+        case .edit:
+            return .edit(commentId: commentThreadCommentId())
         }
     }
 

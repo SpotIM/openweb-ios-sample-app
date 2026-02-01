@@ -15,6 +15,7 @@ class CommentCreationSettingsView: UIView {
     private struct Metrics {
         static let identifier = "comment_creation_settings_view_id"
         static let segmentedStyleModeIdentifier = "custom_style_mode"
+        static let segmentedTypeIdentifier = "custom_type"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -40,6 +41,17 @@ class CommentCreationSettingsView: UIView {
         return SegmentedControlSetting(
             title: title,
             accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
+            items: items
+        )
+    }()
+
+    private lazy var segmentedControlType: SegmentedControlSetting = {
+        let title = viewModel.outputs.typeTitle
+        let items = viewModel.outputs.typeSettings
+
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedTypeIdentifier,
             items: items
         )
     }()
@@ -79,6 +91,7 @@ private extension CommentCreationSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedStyleMode)
+        stackView.addArrangedSubview(segmentedControlType)
     }
 
     func setupObservers() {
@@ -88,6 +101,14 @@ private extension CommentCreationSettingsView {
 
         segmentedStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.customStyleModeSelectedIndex)
+            .store(in: &cancellables)
+
+        viewModel.outputs.typeIndex
+            .assign(to: \.selectedSegmentIndex, on: segmentedControlType.segmentedControl)
+            .store(in: &cancellables)
+
+        segmentedControlType.segmentedControl.selectedSegmentIndexPublisher
+            .bind(to: viewModel.inputs.typeSelectedIndex)
             .store(in: &cancellables)
     }
 }
