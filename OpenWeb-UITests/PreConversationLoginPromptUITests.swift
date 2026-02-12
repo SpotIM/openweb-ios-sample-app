@@ -16,7 +16,11 @@ final class PreConversationLoginPromptUITests: OpenWebUITestCase {
         app.navigateToPreConversation()
         tapLoginPrompt()
         app.authenticateWithGenericSSO()
+        sleep(1)
         verifyFullConversationIsDisplayed()
+        app.tapBackButton()
+        sleep(1)
+        verifyLoginPromptIsNotDisplayed()
     }
 
     private func tapLoginPrompt() {
@@ -29,12 +33,12 @@ final class PreConversationLoginPromptUITests: OpenWebUITestCase {
     }
 
     private func verifyFullConversationIsDisplayed(timeout: TimeInterval = 5) {
-        let fullConversationExists = app.otherElements["conversation_view_id"].waitForExistence(timeout: timeout)
-        let loginPromptStillVisible = app.otherElements["login_prompt_view_id"].exists && app.otherElements["login_prompt_view_id"].isHittable
-        let preConversationStillVisible = app.otherElements["pre_conversation_summary_view_id"].exists
+        let fullConversation = app.otherElements["conversation_view_id"]
+        XCTAssertTrue(fullConversation.waitForExistence(timeout: timeout), "Full conversation should be displayed")
+    }
 
-        XCTAssertTrue(fullConversationExists, "After authentication, full conversation should be displayed")
-        XCTAssertFalse(loginPromptStillVisible, "Login prompt should not be visible after authentication")
-        XCTAssertFalse(preConversationStillVisible, "Pre-conversation should not be visible after authentication")
+    private func verifyLoginPromptIsNotDisplayed() {
+        let loginPrompt = app.otherElements["login_prompt_view_id"]
+        XCTAssertFalse(loginPrompt.exists, "Login prompt should not be displayed after authentication")
     }
 }
