@@ -11,11 +11,11 @@ import UIKit
 
 @available(iOS 17.0, *)
 #Preview("Report Reason") {
-    OWCancelView(viewModel: OWCancelViewViewModel(type: .reportReason))
+    OWCancelView(viewModel: OWCancelViewViewModel(type: .reportReason, postId: "preview-post-id"))
 }
 
 @available(iOS 17.0, *)
 #Preview("Commenter Appeal") {
-    OWCancelView(viewModel: OWCancelViewViewModel(type: .commenterAppeal))
+    OWCancelView(viewModel: OWCancelViewViewModel(type: .commenterAppeal, postId: "preview-post-id"))
 }
 #endif

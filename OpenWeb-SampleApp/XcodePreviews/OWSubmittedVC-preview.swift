@@ -63,7 +63,7 @@ private class PreviewSpotConfigurationService: StubSpotConfigurationService {
 #Preview("Report Reason - Standard") {
     let configService = PreviewSpotConfigurationService(isAppealEnabled: false, isReportAppealEnabled: false)
     let servicesProvider = MockServicesProvider(spotConfigurationService: configService)
-    let viewModel = OWSubmittedViewViewModel(type: .reportReason, servicesProvider: servicesProvider, localizationManager: PreviewLocalizationManager())
+    let viewModel = OWSubmittedViewViewModel(type: .reportReason, postId: "preview-post-id", servicesProvider: servicesProvider, localizationManager: PreviewLocalizationManager())
     return OWSubmittedVC(submittedViewViewModel: viewModel)
 }
 
@@ -71,13 +71,13 @@ private class PreviewSpotConfigurationService: StubSpotConfigurationService {
 #Preview("Report Reason - Appeal Enabled") {
     let configService = PreviewSpotConfigurationService(isAppealEnabled: true, isReportAppealEnabled: true)
     let servicesProvider = MockServicesProvider(spotConfigurationService: configService)
-    let viewModel = OWSubmittedViewViewModel(type: .reportReason, servicesProvider: servicesProvider, localizationManager: PreviewLocalizationManager())
+    let viewModel = OWSubmittedViewViewModel(type: .reportReason, postId: "preview-post-id", servicesProvider: servicesProvider, localizationManager: PreviewLocalizationManager())
     return OWSubmittedVC(submittedViewViewModel: viewModel)
 }
 
 @available(iOS 17.0, *)
 #Preview("Commenter Appeal Submitted") {
-    let viewModel = OWSubmittedViewViewModel(type: .commenterAppeal, localizationManager: PreviewLocalizationManager())
+    let viewModel = OWSubmittedViewViewModel(type: .commenterAppeal, postId: "preview-post-id", localizationManager: PreviewLocalizationManager())
     return OWSubmittedVC(submittedViewViewModel: viewModel)
 }
 
@@ -133,7 +133,7 @@ private class PreviewSpotConfigurationServiceWithOverrides: StubSpotConfiguratio
 #Preview("Report Reason - With Overrides") {
     let configService = PreviewSpotConfigurationServiceWithOverrides()
     let servicesProvider = MockServicesProvider(spotConfigurationService: configService)
-    let viewModel = OWSubmittedViewViewModel(type: .reportReason, servicesProvider: servicesProvider, localizationManager: PreviewLocalizationManager())
+    let viewModel = OWSubmittedViewViewModel(type: .reportReason, postId: "preview-post-id", servicesProvider: servicesProvider, localizationManager: PreviewLocalizationManager())
     return OWSubmittedVC(submittedViewViewModel: viewModel)
 }
 
