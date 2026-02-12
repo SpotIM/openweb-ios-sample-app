@@ -43,7 +43,6 @@ class MockNotificationsNetworkAPI: OWNetworkAPIProtocol {
     var authentication: OWAuthenticationAPI { fatalError("API not stubbed in MockingServicesProvider") }
     var conversation: OWConversationAPI { fatalError("API not stubbed in MockingServicesProvider") }
     var reportReason: OWReportReasonAPI { fatalError("API not stubbed in MockingServicesProvider") }
-    var failureReporter: OWFailureReportAPI { fatalError("API not stubbed in MockingServicesProvider") }
     var appeal: OWAppealAPI { fatalError("API not stubbed in MockingServicesProvider") }
 
     lazy var notifications: OWNotificationsAPI = MockListNotificationsAPI()

@@ -215,16 +215,34 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .eraseToAnyPublisher()
     }()
 
-    // All the stuff which should trigger new comment thread component
     private lazy var independentAdUnitStyleChanged: AnyPublisher<Void, Never> = {
-        // TODO: Complete once developed
-        return Empty().eraseToAnyPublisher()
+        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                return actionSettings
+                    .first()
+                    .map { $0.viewType }
+                    .eraseToAnyPublisher()
+            }
+            .filter { $0 == .independentAdUnit }
+            .voidify()
+            .share()
+            .eraseToAnyPublisher()
     }()
 
-    // All the stuff which should trigger new comment thread component
     private lazy var clarityDetailsStyleChanged: AnyPublisher<Void, Never> = {
-        // TODO: Complete once developed
-        return Empty().eraseToAnyPublisher()
+        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                return actionSettings
+                    .first()
+                    .map { $0.viewType }
+                    .eraseToAnyPublisher()
+            }
+            .filter { $0 == .clarityDetails }
+            .voidify()
+            .share()
+            .eraseToAnyPublisher()
     }()
 }
 

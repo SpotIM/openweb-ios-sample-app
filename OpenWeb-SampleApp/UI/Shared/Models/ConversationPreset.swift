@@ -36,7 +36,6 @@ extension ConversationPreset {
     }
 
     static func publicMainPreset() -> ConversationPreset {
-        // TODO: Return a dedicated "main demo" preset for public Sample App preset
         return ConversationPreset(
             displayName: "Demo Spot - Public",
             conversationDataModel: SDKConversationDataModel(
@@ -47,7 +46,6 @@ extension ConversationPreset {
     }
 
     private static func publicPresets() -> [ConversationPreset] {
-        // TODO: Add more presets
         return [publicMainPreset()]
     }
 }
