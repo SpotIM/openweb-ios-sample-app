@@ -10,7 +10,7 @@
 import UIKit
 
 extension OWCommentCellViewModel {
-    convenience init(comment: OWComment, user: SPUser, depth: Int = 0) {
+    convenience init(comment: OWComment, user: SPUser) {
         let commentRequiredData = OWCommentRequiredData(
             comment: comment,
             user: user,
@@ -118,8 +118,7 @@ class CommentPreviewTableView: UITableView, UITableViewDataSource {
 
         let viewModel = OWCommentCellViewModel(
             comment: comments[indexPath.row],
-            user: authors[indexPath.row % authors.count],
-            depth: comments[indexPath.row].depth ?? 0
+            user: authors[indexPath.row % authors.count]
         )
         cell.configure(with: viewModel)
         return cell

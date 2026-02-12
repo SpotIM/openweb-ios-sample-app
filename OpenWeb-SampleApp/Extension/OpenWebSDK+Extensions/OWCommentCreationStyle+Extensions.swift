@@ -10,10 +10,7 @@ import Foundation
 import OpenWebSDK
 
 extension OWCommentCreationStyle {
-    static func commentCreationStyle(
-        fromIndex index: Int,
-        commonCreatorService: CommonCreatorServicing = CommonCreatorService()
-    ) -> OWCommentCreationStyle {
+    static func commentCreationStyle(fromIndex index: Int) -> OWCommentCreationStyle {
         switch index {
         case OWCommentCreationStyleIndexer.regular.index: return .regular
         case OWCommentCreationStyleIndexer.light.index: return .light

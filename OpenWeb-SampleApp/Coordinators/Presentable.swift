@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public protocol Presentable {
+protocol Presentable {
     func toPresentable() -> UIViewController
 }
 
