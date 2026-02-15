@@ -16,10 +16,8 @@ final class PreConversationLoginPromptUITests: OpenWebUITestCase {
         app.navigateToPreConversation()
         tapLoginPrompt()
         app.authenticateWithGenericSSO()
-        sleep(1)
         verifyFullConversationIsDisplayed()
         app.tapBackButton()
-        sleep(1)
         verifyLoginPromptIsNotDisplayed()
     }
 
@@ -32,12 +30,18 @@ final class PreConversationLoginPromptUITests: OpenWebUITestCase {
         }
     }
 
-    private func verifyFullConversationIsDisplayed(timeout: TimeInterval = 5) {
+    private func verifyFullConversationIsDisplayed(timeout: TimeInterval = 10) {
         let fullConversation = app.otherElements["conversation_view_id"]
-        XCTAssertTrue(fullConversation.waitForExistence(timeout: timeout), "Full conversation should be displayed")
+        fullConversation.waitUntilExists(timeout: timeout)
+        XCTAssertTrue(fullConversation.exists, "Full conversation should be displayed")
     }
 
-    private func verifyLoginPromptIsNotDisplayed() {
+    private func verifyLoginPromptIsNotDisplayed(timeout: TimeInterval = 10) {
+        let preConversation = app.otherElements.matching(
+            NSPredicate(format: "identifier BEGINSWITH %@", "pre_conversation_view_")
+        ).firstMatch
+        preConversation.waitUntilExists(timeout: timeout)
+        XCTAssertTrue(preConversation.exists, "Pre-conversation should be displayed")
         let loginPrompt = app.otherElements["login_prompt_view_id"]
         XCTAssertFalse(loginPrompt.exists, "Login prompt should not be displayed after authentication")
     }

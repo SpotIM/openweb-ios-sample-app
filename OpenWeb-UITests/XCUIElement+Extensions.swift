@@ -37,6 +37,15 @@ extension XCUIElement {
         return false
     }
 
+    /// Like `waitForExistence`, but uses predicate polling which is more reliable for accessibility container elements.
+    func waitUntilExists(timeout: TimeInterval = 10) {
+        let expectation = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true"),
+            object: self
+        )
+        _ = XCTWaiter.wait(for: [expectation], timeout: timeout)
+    }
+
     func ensureSwitch(isOn: Bool, timeout: TimeInterval = 3) {
         guard waitForExistence(timeout: timeout) else { return }
         let currentlyOn = value as? String == "1"
