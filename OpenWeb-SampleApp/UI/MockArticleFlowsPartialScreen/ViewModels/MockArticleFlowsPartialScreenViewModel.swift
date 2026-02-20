@@ -269,7 +269,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
             let authenticationVC = AuthenticationPlaygroundVC(viewModel: authenticationVM)
 
             // Here we intentionally perform direct `navigation controller` methods, instead of doing so in the coordinators layer, to demonstrate how one would interact with OpenWeb SDK in a simple way
-            self.presentationalVC?.present(authenticationVC, animated: true)
+            presentationalVC?.topPresentedViewController?.present(authenticationVC, animated: true)
 
             authenticationVM.outputs.dismissed
                 .prefix(1)
@@ -366,5 +366,15 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 }
             })
         }
+    }
+}
+
+private extension UIViewController {
+    var topPresentedViewController: UIViewController? {
+        var presenter = self
+        while let presented = presenter.presentedViewController {
+            presenter = presented
+        }
+        return presenter
     }
 }
