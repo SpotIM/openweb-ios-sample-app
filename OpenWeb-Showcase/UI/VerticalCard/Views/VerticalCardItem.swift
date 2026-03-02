@@ -1,24 +1,26 @@
 import SwiftUI
 
-enum HomeScreenDimensions {
-    static let cardHeight: CGFloat = 180
-    static let cardCornerRadius: CGFloat = 16
-    static let cardElevation: CGFloat = 2
-
-    static let paddingLarge: CGFloat = 16
-    static let paddingMedium: CGFloat = 12
-
-    static let iconContainerSize: CGFloat = 56
-    static let iconContainerCornerRadius: CGFloat = 12
-
-    static let fontSizeIcon: CGFloat = 28
-    static let fontSizeCardTitle: CGFloat = 18
-    static let fontSizeSection: CGFloat = 14
-    static let fontSizeCardDescription: CGFloat = 13
-    static let lineHeightCardDescription: CGFloat = 18
-}
-
 struct VerticalCardItem: View {
+    private struct Metrics {
+        static let cardHeight: CGFloat = 180
+        static let cardCornerRadius: CGFloat = 16
+        static let cardElevation: CGFloat = 2
+        static let paddingLarge: CGFloat = 16
+        static let paddingMedium: CGFloat = 12
+        static let iconContainerSize: CGFloat = 56
+        static let iconContainerCornerRadius: CGFloat = 12
+        static let fontSizeIcon: CGFloat = 28
+        static let fontSizeCardTitle: CGFloat = 18
+        static let fontSizeCardDescription: CGFloat = 13
+        static let lineHeightCardDescription: CGFloat = 18
+        static let iconBackgroundOpacity: CGFloat = 0.15
+        static let borderOpacity: CGFloat = 0.08
+        static let borderWidth: CGFloat = 1
+        static let shadowOpacity: CGFloat = 0.12
+        static let shadowY: CGFloat = 2
+        static let titleDescriptionSpacing: CGFloat = 4
+    }
+
     var vertical: VerticalCard
     var onClick: () -> Void
 
@@ -26,44 +28,44 @@ struct VerticalCardItem: View {
         Button(action: onClick) {
             VStack(alignment: .center, spacing: 0) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: HomeScreenDimensions.iconContainerCornerRadius, style: .continuous)
-                        .fill(vertical.color.opacity(0.15))
-                        .frame(width: HomeScreenDimensions.iconContainerSize, height: HomeScreenDimensions.iconContainerSize)
+                    RoundedRectangle(cornerRadius: Metrics.iconContainerCornerRadius, style: .continuous)
+                        .fill(vertical.color.opacity(Metrics.iconBackgroundOpacity))
+                        .frame(width: Metrics.iconContainerSize, height: Metrics.iconContainerSize)
 
                     Text(vertical.icon)
-                        .font(.system(size: HomeScreenDimensions.fontSizeIcon))
+                        .font(.system(size: Metrics.fontSizeIcon))
                 }
 
-                Spacer().frame(height: HomeScreenDimensions.paddingMedium)
+                Spacer().frame(height: Metrics.paddingMedium)
 
                 Text(vertical.title)
-                    .font(.system(size: HomeScreenDimensions.fontSizeCardTitle, weight: .semibold))
+                    .font(.system(size: Metrics.fontSizeCardTitle, weight: .semibold))
                     .foregroundStyle(.primary)
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .multilineTextAlignment(.center)
 
-                Spacer().frame(height: 4)
+                Spacer().frame(height: Metrics.titleDescriptionSpacing)
 
                 Text(vertical.description)
-                    .font(.system(size: HomeScreenDimensions.fontSizeCardDescription))
+                    .font(.system(size: Metrics.fontSizeCardDescription))
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                     .truncationMode(.tail)
                     .multilineTextAlignment(.center)
-                    .lineSpacing(HomeScreenDimensions.lineHeightCardDescription - HomeScreenDimensions.fontSizeCardDescription)
+                    .lineSpacing(Metrics.lineHeightCardDescription - Metrics.fontSizeCardDescription)
             }
-            .padding(HomeScreenDimensions.paddingLarge)
-            .frame(maxWidth: .infinity, minHeight: HomeScreenDimensions.cardHeight, maxHeight: HomeScreenDimensions.cardHeight)
+            .padding(Metrics.paddingLarge)
+            .frame(maxWidth: .infinity, minHeight: Metrics.cardHeight, maxHeight: Metrics.cardHeight)
             .background {
-                RoundedRectangle(cornerRadius: HomeScreenDimensions.cardCornerRadius, style: .continuous)
+                RoundedRectangle(cornerRadius: Metrics.cardCornerRadius, style: .continuous)
                     .fill(Color(uiColor: .systemBackground))
                     .overlay {
-                        RoundedRectangle(cornerRadius: HomeScreenDimensions.cardCornerRadius, style: .continuous)
-                            .stroke(Color.black.opacity(0.08), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: Metrics.cardCornerRadius, style: .continuous)
+                            .stroke(Color.black.opacity(Metrics.borderOpacity), lineWidth: Metrics.borderWidth)
                     }
             }
-            .shadow(color: Color.black.opacity(0.12), radius: HomeScreenDimensions.cardElevation, x: 0, y: 2)
+            .shadow(color: Color.black.opacity(Metrics.shadowOpacity), radius: Metrics.cardElevation, x: 0, y: Metrics.shadowY)
         }
         .buttonStyle(.plain)
     }

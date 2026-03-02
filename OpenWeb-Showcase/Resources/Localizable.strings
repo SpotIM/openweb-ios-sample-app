@@ -1,5 +1,7 @@
 /* Home Screen */
 "homeTitle" = "OpenWeb Showcase";
+"homeScreenTitle" = "OpenWeb SDK Demo";
+"homeScreenDescription" = "Engagement solutions for every vertical";
 "chooseVerticalSectionTitle" = "Choose a Vertical";
 
 /* Vertical Titles */
