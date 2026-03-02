@@ -19,3 +19,13 @@
 "verticalSportDescription" = "Champions League Final: Preview and Predictions";
 "verticalVideoDescription" = "Behind the Scenes: Making of a Viral Hit";
 "verticalSiderailDescription" = "The Future of Remote Work: A Deep Dive";
+
+/* About Screen */
+"aboutScreenTitle" = "About";
+"aboutCompanyTitle" = "OpenWeb SDK Demo";
+"aboutCompanyDescription" = "The OpenWeb Sample App is a live showcase of our SDK capabilities and recommended implementation patterns.\n\nIt features production-ready examples of OpenWeb's engagement experiences - including pre-conversation units, full conversations, side-rail placements, and video integrations across multiple content verticals such as news, finance, sports, recipes, and more.\n\nDesigned as both a demonstration environment and a best-practice reference, the app highlights the flexibility, performance, and adaptability of the OpenWeb platform, helping partners better understand how our solutions can be integrated into their own products.";
+"aboutLinksSectionTitle" = "LINKS & CONTACT";
+"aboutSdkDocsTitle" = "SDK Documentation";
+"aboutGithubTitle" = "GitHub Repository";
+"aboutPrivacyPolicyTitle" = "Privacy Policy";
+"aboutTermsTitle" = "Terms of Service";

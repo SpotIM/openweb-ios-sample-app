@@ -17,6 +17,7 @@ struct HomeScreen: View {
     }
 
     @State private var viewModel = HomeScreenViewModel()
+    @State private var navigationPath = NavigationPath()
 
     private let columns = [
         GridItem(.flexible(), spacing: Metrics.gridSpacing),
@@ -24,31 +25,40 @@ struct HomeScreen: View {
     ]
 
     var body: some View {
-        VStack(spacing: 0) {
-            HomeToolbar {
-                // TODO: handle about tap
-            }
-
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: Metrics.gridSpacing) {
-                    Section {
-                        ForEach(viewModel.verticals, id: \.id) { vertical in
-                            VerticalCardItem(vertical: vertical) {
-                                // TODO: handle card tap
-                            }
-                        }
-                    } header: {
-                        Text(NSLocalizedString("chooseVerticalSectionTitle", comment: ""))
-                            .font(.system(size: Metrics.fontSizeSection, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                            .tracking(Metrics.sectionHeaderLetterSpacing)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, Metrics.sectionHeaderBottomPadding)
-                    }
+        NavigationStack(path: $navigationPath) {
+            VStack(spacing: 0) {
+                HomeToolbar {
+                    navigationPath.append(Destination.about)
                 }
-                .padding(Metrics.gridPadding)
+
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: Metrics.gridSpacing) {
+                        Section {
+                            ForEach(viewModel.verticals, id: \.id) { vertical in
+                                VerticalCardItem(vertical: vertical) {
+                                    // TODO: handle card tap
+                                }
+                            }
+                        } header: {
+                            Text(NSLocalizedString("chooseVerticalSectionTitle", comment: ""))
+                                .font(.system(size: Metrics.fontSizeSection, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                                .tracking(Metrics.sectionHeaderLetterSpacing)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.bottom, Metrics.sectionHeaderBottomPadding)
+                        }
+                    }
+                    .padding(Metrics.gridPadding)
+                }
+                .background(Color(uiColor: .systemGroupedBackground))
             }
-            .background(Color(uiColor: .systemGroupedBackground))
+            .navigationBarHidden(true)
+            .navigationDestination(for: Destination.self) { destination in
+                switch destination {
+                case .about:
+                    AboutScreen()
+                }
+            }
         }
     }
 }
