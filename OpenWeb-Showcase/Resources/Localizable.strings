@@ -1,0 +1,19 @@
+/* Home Screen */
+"homeTitle" = "OpenWeb Showcase";
+"chooseVerticalSectionTitle" = "Choose a Vertical";
+
+/* Vertical Titles */
+"verticalNewsTitle" = "News";
+"verticalFinanceTitle" = "Finance";
+"verticalRecipesTitle" = "Recipes";
+"verticalSportTitle" = "Sport";
+"verticalVideoTitle" = "Video";
+"verticalSiderailTitle" = "Side Rail";
+
+/* Vertical Descriptions */
+"verticalNewsDescription" = "Breaking: Major Policy Changes Expected Next Week";
+"verticalFinanceDescription" = "Apple Stock Surges Amid Strong Q4 Earnings Report";
+"verticalRecipesDescription" = "The Ultimate Homemade Pasta Recipe Everyone Loves";
+"verticalSportDescription" = "Champions League Final: Preview and Predictions";
+"verticalVideoDescription" = "Behind the Scenes: Making of a Viral Hit";
+"verticalSiderailDescription" = "The Future of Remote Work: A Deep Dive";
