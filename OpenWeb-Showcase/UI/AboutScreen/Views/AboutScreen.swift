@@ -23,46 +23,20 @@ struct AboutScreen: View {
         static let bottomSpacing: CGFloat = 24
     }
 
-    @Environment(\.dismiss) private var dismiss
     @State private var viewModel = AboutScreenViewModel()
 
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                Image("openweb_logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Metrics.logoSize, height: Metrics.logoSize)
-
+                logoView
                 Spacer().frame(height: Metrics.logoBottomSpacing)
-
-                Text(NSLocalizedString("aboutCompanyTitle", comment: ""))
-                    .font(.system(size: Metrics.titleFontSize, weight: .bold))
-                    .foregroundStyle(.primary)
-                    .multilineTextAlignment(.center)
-
+                titleView
                 Spacer().frame(height: Metrics.titleBottomSpacing)
-
-                Text(NSLocalizedString("aboutCompanyDescription", comment: ""))
-                    .font(.system(size: Metrics.descriptionFontSize))
-                    .foregroundStyle(.primary)
-                    .lineSpacing(Metrics.descriptionLineHeight - Metrics.descriptionFontSize)
-
+                descriptionView
                 Spacer().frame(height: Metrics.sectionTitleTopSpacing)
-
-                Text(NSLocalizedString("aboutLinksSectionTitle", comment: ""))
-                    .font(.system(size: Metrics.sectionTitleFontSize, weight: .semibold))
-                    .foregroundStyle(.primary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
+                sectionTitleView
                 Spacer().frame(height: Metrics.sectionTitleBottomSpacing)
-
-                VStack(spacing: Metrics.resourceItemSpacing) {
-                    ForEach(viewModel.resources) { resource in
-                        ResourceItemCard(item: resource)
-                    }
-                }
-
+                resourcesListView
                 Spacer().frame(height: Metrics.bottomSpacing)
             }
             .padding(Metrics.contentPadding)
@@ -70,6 +44,46 @@ struct AboutScreen: View {
         .background(Color(uiColor: .systemBackground))
         .navigationTitle(NSLocalizedString("aboutScreenTitle", comment: ""))
         .navigationBarTitleDisplayMode(.automatic)
+    }
+}
+
+// MARK: - Subviews
+
+private extension AboutScreen {
+    var logoView: some View {
+        Image("openweb_logo")
+            .resizable()
+            .scaledToFit()
+            .frame(width: Metrics.logoSize, height: Metrics.logoSize)
+    }
+
+    var titleView: some View {
+        Text(NSLocalizedString("aboutCompanyTitle", comment: ""))
+            .font(.system(size: Metrics.titleFontSize, weight: .bold))
+            .foregroundStyle(.primary)
+            .multilineTextAlignment(.center)
+    }
+
+    var descriptionView: some View {
+        Text(NSLocalizedString("aboutCompanyDescription", comment: ""))
+            .font(.system(size: Metrics.descriptionFontSize))
+            .foregroundStyle(.primary)
+            .lineSpacing(Metrics.descriptionLineHeight - Metrics.descriptionFontSize)
+    }
+
+    var sectionTitleView: some View {
+        Text(NSLocalizedString("aboutLinksSectionTitle", comment: ""))
+            .font(.system(size: Metrics.sectionTitleFontSize, weight: .semibold))
+            .foregroundStyle(.primary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    var resourcesListView: some View {
+        VStack(spacing: Metrics.resourceItemSpacing) {
+            ForEach(viewModel.resources) { resource in
+                ResourceItemCard(item: resource)
+            }
+        }
     }
 }
 

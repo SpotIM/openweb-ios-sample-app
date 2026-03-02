@@ -1,3 +1,10 @@
+//
+//  VerticalCardItem.swift
+//  OpenWeb-Showcase
+//
+//  Created by  Nogah Melamed on 02/03/2026.
+//
+
 import SwiftUI
 
 struct VerticalCardItem: View {
@@ -26,48 +33,65 @@ struct VerticalCardItem: View {
 
     var body: some View {
         Button(action: onClick) {
-            VStack(alignment: .center, spacing: 0) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: Metrics.iconContainerCornerRadius, style: .continuous)
-                        .fill(vertical.color.opacity(Metrics.iconBackgroundOpacity))
-                        .frame(width: Metrics.iconContainerSize, height: Metrics.iconContainerSize)
-
-                    Text(vertical.icon)
-                        .font(.system(size: Metrics.fontSizeIcon))
-                }
-
-                Spacer().frame(height: Metrics.paddingMedium)
-
-                Text(vertical.title)
-                    .font(.system(size: Metrics.fontSizeCardTitle, weight: .semibold))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                    .multilineTextAlignment(.center)
-
-                Spacer().frame(height: Metrics.titleDescriptionSpacing)
-
-                Text(vertical.description)
-                    .font(.system(size: Metrics.fontSizeCardDescription))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-                    .truncationMode(.tail)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(Metrics.lineHeightCardDescription - Metrics.fontSizeCardDescription)
-            }
-            .padding(Metrics.paddingLarge)
-            .frame(maxWidth: .infinity, minHeight: Metrics.cardHeight, maxHeight: Metrics.cardHeight)
-            .background {
-                RoundedRectangle(cornerRadius: Metrics.cardCornerRadius, style: .continuous)
-                    .fill(Color(uiColor: .systemBackground))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: Metrics.cardCornerRadius, style: .continuous)
-                            .stroke(Color.black.opacity(Metrics.borderOpacity), lineWidth: Metrics.borderWidth)
-                    }
-            }
-            .shadow(color: Color.black.opacity(Metrics.shadowOpacity), radius: Metrics.cardElevation, x: 0, y: Metrics.shadowY)
+            cardContent
+                .padding(Metrics.paddingLarge)
+                .frame(maxWidth: .infinity, minHeight: Metrics.cardHeight, maxHeight: Metrics.cardHeight)
+                .background { cardBackground }
+                .shadow(color: Color.black.opacity(Metrics.shadowOpacity), radius: Metrics.cardElevation, x: 0, y: Metrics.shadowY)
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Subviews
+
+private extension VerticalCardItem {
+    var cardContent: some View {
+        VStack(alignment: .center, spacing: 0) {
+            iconView
+            Spacer().frame(height: Metrics.paddingMedium)
+            titleView
+            Spacer().frame(height: Metrics.titleDescriptionSpacing)
+            descriptionView
+        }
+    }
+
+    var iconView: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: Metrics.iconContainerCornerRadius, style: .continuous)
+                .fill(vertical.color.opacity(Metrics.iconBackgroundOpacity))
+                .frame(width: Metrics.iconContainerSize, height: Metrics.iconContainerSize)
+            Text(vertical.icon)
+                .font(.system(size: Metrics.fontSizeIcon))
+        }
+    }
+
+    var titleView: some View {
+        Text(vertical.title)
+            .font(.system(size: Metrics.fontSizeCardTitle, weight: .semibold))
+            .foregroundStyle(.primary)
+            .lineLimit(1)
+            .truncationMode(.tail)
+            .multilineTextAlignment(.center)
+    }
+
+    var descriptionView: some View {
+        Text(vertical.description)
+            .font(.system(size: Metrics.fontSizeCardDescription))
+            .foregroundStyle(.secondary)
+            .lineLimit(2)
+            .truncationMode(.tail)
+            .multilineTextAlignment(.center)
+            .lineSpacing(Metrics.lineHeightCardDescription - Metrics.fontSizeCardDescription)
+    }
+
+    var cardBackground: some View {
+        RoundedRectangle(cornerRadius: Metrics.cardCornerRadius, style: .continuous)
+            .fill(Color(uiColor: .systemBackground))
+            .overlay {
+                RoundedRectangle(cornerRadius: Metrics.cardCornerRadius, style: .continuous)
+                    .stroke(Color.black.opacity(Metrics.borderOpacity), lineWidth: Metrics.borderWidth)
+            }
     }
 }
 

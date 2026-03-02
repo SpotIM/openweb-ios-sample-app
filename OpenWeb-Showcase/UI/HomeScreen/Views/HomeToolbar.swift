@@ -27,22 +27,18 @@ struct HomeToolbar: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: Metrics.logoSize, height: Metrics.logoSize)
-
             VStack(alignment: .leading, spacing: Metrics.textSpacing) {
                 Text(NSLocalizedString("homeScreenTitle", comment: ""))
                     .font(.system(size: Metrics.titleFontSize, weight: .bold))
                     .foregroundStyle(.primary)
                     .lineLimit(1)
-
                 Text(NSLocalizedString("homeScreenDescription", comment: ""))
                     .font(.system(size: Metrics.descriptionFontSize))
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
             }
             .padding(.horizontal, Metrics.textHorizontalPadding)
-
             Spacer()
-
             Button(action: onAboutClick) {
                 Image(systemName: "info.circle")
                     .font(.system(size: Metrics.infoIconSize))

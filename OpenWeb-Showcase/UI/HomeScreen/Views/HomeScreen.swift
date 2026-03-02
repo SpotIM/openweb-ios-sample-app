@@ -30,27 +30,7 @@ struct HomeScreen: View {
                 HomeToolbar {
                     navigationPath.append(Destination.about)
                 }
-
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: Metrics.gridSpacing) {
-                        Section {
-                            ForEach(viewModel.verticals, id: \.id) { vertical in
-                                VerticalCardItem(vertical: vertical) {
-                                    // TODO: handle card tap
-                                }
-                            }
-                        } header: {
-                            Text(NSLocalizedString("chooseVerticalSectionTitle", comment: ""))
-                                .font(.system(size: Metrics.fontSizeSection, weight: .semibold))
-                                .foregroundStyle(.secondary)
-                                .tracking(Metrics.sectionHeaderLetterSpacing)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.bottom, Metrics.sectionHeaderBottomPadding)
-                        }
-                    }
-                    .padding(Metrics.gridPadding)
-                }
-                .background(Color(uiColor: .systemGroupedBackground))
+                verticalsGridView
             }
             .navigationBarHidden(true)
             .navigationDestination(for: Destination.self) { destination in
@@ -60,6 +40,33 @@ struct HomeScreen: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Subviews
+
+private extension HomeScreen {
+    var verticalsGridView: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: Metrics.gridSpacing) {
+                Section {
+                    ForEach(viewModel.verticals) { vertical in
+                        VerticalCardItem(vertical: vertical) {
+                            // TODO: handle card tap
+                        }
+                    }
+                } header: {
+                    Text(NSLocalizedString("chooseVerticalSectionTitle", comment: ""))
+                        .font(.system(size: Metrics.fontSizeSection, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .tracking(Metrics.sectionHeaderLetterSpacing)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, Metrics.sectionHeaderBottomPadding)
+                }
+            }
+            .padding(Metrics.gridPadding)
+        }
+        .background(Color(uiColor: .systemGroupedBackground))
     }
 }
 

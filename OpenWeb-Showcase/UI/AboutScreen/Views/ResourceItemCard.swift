@@ -28,44 +28,63 @@ struct ResourceItemCard: View {
             }
         } label: {
             HStack(spacing: 0) {
-                HStack(spacing: Metrics.iconTextSpacing) {
-                    Image(item.icon)
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(.primary)
-                        .frame(width: Metrics.iconSize, height: Metrics.iconSize)
-
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(item.title)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.primary)
-
-                        if let description = item.description {
-                            Spacer().frame(height: Metrics.descriptionTopSpacing)
-                            Text(description)
-                                .font(.caption)
-                                .foregroundStyle(.primary)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                        }
-                    }
-                }
-                .padding(.trailing, Metrics.trailingSpacing)
-
+                leadingContent
+                    .padding(.trailing, Metrics.trailingSpacing)
                 Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.system(size: Metrics.chevronSize))
-                    .foregroundStyle(Color.accentColor)
-                    .frame(width: Metrics.chevronSize, height: Metrics.chevronSize)
+                chevronView
             }
             .padding(Metrics.contentPadding)
-            .overlay {
-                RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous)
-                    .stroke(Color(uiColor: .separator), lineWidth: Metrics.borderWidth)
-            }
+            .overlay { cardBorder }
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Subviews
+
+private extension ResourceItemCard {
+    var leadingContent: some View {
+        HStack(spacing: Metrics.iconTextSpacing) {
+            iconView
+            textContent
+        }
+    }
+
+    var iconView: some View {
+        Image(item.icon.rawValue)
+            .resizable()
+            .scaledToFit()
+            .foregroundStyle(.primary)
+            .frame(width: Metrics.iconSize, height: Metrics.iconSize)
+    }
+
+    var textContent: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(item.title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.primary)
+
+            if let description = item.description {
+                Spacer().frame(height: Metrics.descriptionTopSpacing)
+                Text(description)
+                    .font(.caption)
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
+        }
+    }
+
+    var chevronView: some View {
+        Image(systemName: "chevron.right")
+            .font(.system(size: Metrics.chevronSize))
+            .foregroundStyle(Color.accentColor)
+            .frame(width: Metrics.chevronSize, height: Metrics.chevronSize)
+    }
+
+    var cardBorder: some View {
+        RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous)
+            .stroke(Color(uiColor: .separator), lineWidth: Metrics.borderWidth)
     }
 }
 
@@ -73,7 +92,7 @@ struct ResourceItemCard: View {
     ResourceItemCard(
         item: ResourceItem(
             title: "SDK Documentation",
-            icon: "ic_info",
+            icon: .info,
             url: URL(string: "https://developers.openweb.com")
         )
     )
