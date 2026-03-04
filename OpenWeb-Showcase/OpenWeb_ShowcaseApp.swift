@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct OpenWeb_ShowcaseApp: App {
+struct OpenWebShowcaseApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
