@@ -29,6 +29,6 @@ class AboutScreenViewModel {
             title: NSLocalizedString("aboutTermsTitle", comment: ""),
             icon: .terms,
             url: URL(string: AppConstants.termsURL)
-        )
+        ),
     ]
 }

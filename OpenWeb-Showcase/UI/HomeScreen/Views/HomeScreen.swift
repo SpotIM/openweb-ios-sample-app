@@ -21,7 +21,7 @@ struct HomeScreen: View {
 
     private let columns = [
         GridItem(.flexible(), spacing: Metrics.gridSpacing),
-        GridItem(.flexible(), spacing: Metrics.gridSpacing)
+        GridItem(.flexible(), spacing: Metrics.gridSpacing),
     ]
 
     var body: some View {
