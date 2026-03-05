@@ -14,43 +14,43 @@ class HomeScreenViewModel {
         VerticalCard(
             id: "news",
             icon: "📰",
-            title: NSLocalizedString("verticalNewsTitle", comment: ""),
-            description: NSLocalizedString("verticalNewsDescription", comment: ""),
+            title: "verticalNewsTitle",
+            description: "verticalNewsDescription",
             color: Color("NewsColor")
         ),
         VerticalCard(
             id: "finance",
             icon: "📈",
-            title: NSLocalizedString("verticalFinanceTitle", comment: ""),
-            description: NSLocalizedString("verticalFinanceDescription", comment: ""),
+            title: "verticalFinanceTitle",
+            description: "verticalFinanceDescription",
             color: Color("FinanceColor")
         ),
         VerticalCard(
             id: "recipes",
             icon: "🍲",
-            title: NSLocalizedString("verticalRecipesTitle", comment: ""),
-            description: NSLocalizedString("verticalRecipesDescription", comment: ""),
+            title: "verticalRecipesTitle",
+            description: "verticalRecipesDescription",
             color: Color("RecipesColor")
         ),
         VerticalCard(
             id: "sport",
             icon: "⚽",
-            title: NSLocalizedString("verticalSportTitle", comment: ""),
-            description: NSLocalizedString("verticalSportDescription", comment: ""),
+            title: "verticalSportTitle",
+            description: "verticalSportDescription",
             color: Color("SportColor")
         ),
         VerticalCard(
             id: "video",
             icon: "▶️",
-            title: NSLocalizedString("verticalVideoTitle", comment: ""),
-            description: NSLocalizedString("verticalVideoDescription", comment: ""),
+            title: "verticalVideoTitle",
+            description: "verticalVideoDescription",
             color: Color("VideoColor")
         ),
         VerticalCard(
             id: "siderail",
             icon: "📄",
-            title: NSLocalizedString("verticalSiderailTitle", comment: ""),
-            description: NSLocalizedString("verticalSiderailDescription", comment: ""),
+            title: "verticalSiderailTitle",
+            description: "verticalSiderailDescription",
             color: Color("SideRailColor")
         ),
     ]

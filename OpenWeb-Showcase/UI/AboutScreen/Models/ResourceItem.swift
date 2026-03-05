@@ -6,7 +6,7 @@
 //  Copyright © 2026 OpenWeb. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
 enum ResourceItem: String, Identifiable, CaseIterable {
     case sdkDocs
@@ -16,16 +16,14 @@ enum ResourceItem: String, Identifiable, CaseIterable {
 
     var id: String { rawValue }
 
-    var title: String {
+    var title: LocalizedStringKey {
         switch self {
-        case .sdkDocs: NSLocalizedString("aboutSdkDocsTitle", comment: "")
-        case .github: NSLocalizedString("aboutGithubTitle", comment: "")
-        case .privacyPolicy: NSLocalizedString("aboutPrivacyPolicyTitle", comment: "")
-        case .terms: NSLocalizedString("aboutTermsTitle", comment: "")
+        case .sdkDocs: "aboutSdkDocsTitle"
+        case .github: "aboutGithubTitle"
+        case .privacyPolicy: "aboutPrivacyPolicyTitle"
+        case .terms: "aboutTermsTitle"
         }
     }
-
-    var description: String? { nil }
 
     var icon: String {
         switch self {

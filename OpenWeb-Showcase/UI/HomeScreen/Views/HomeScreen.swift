@@ -57,7 +57,7 @@ private extension HomeScreen {
                         }
                     }
                 } header: {
-                    Text(NSLocalizedString("chooseVerticalSectionTitle", comment: ""))
+                    Text("chooseVerticalSectionTitle")
                         .font(.system(size: Metrics.fontSizeSection, weight: .semibold))
                         .foregroundStyle(.secondary)
                         .tracking(Metrics.sectionHeaderLetterSpacing)

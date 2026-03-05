@@ -60,20 +60,9 @@ private extension ResourceItemCard {
     }
 
     var textContent: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(item.title)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.primary)
-
-            if let description = item.description {
-                Spacer().frame(height: Metrics.descriptionTopSpacing)
-                Text(description)
-                    .font(.caption)
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-            }
-        }
+        Text(item.title)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.primary)
     }
 
     var chevronView: some View {

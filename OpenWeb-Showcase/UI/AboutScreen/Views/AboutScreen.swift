@@ -43,7 +43,7 @@ struct AboutScreen: View {
             .padding(Metrics.contentPadding)
         }
         .background(Color(uiColor: .systemBackground))
-        .navigationTitle(NSLocalizedString("aboutScreenTitle", comment: ""))
+        .navigationTitle("aboutScreenTitle")
         .navigationBarTitleDisplayMode(.automatic)
     }
 }
@@ -59,21 +59,21 @@ private extension AboutScreen {
     }
 
     var titleView: some View {
-        Text(NSLocalizedString("aboutCompanyTitle", comment: ""))
+        Text("aboutCompanyTitle")
             .font(.system(size: Metrics.titleFontSize, weight: .bold))
             .foregroundStyle(.primary)
             .multilineTextAlignment(.center)
     }
 
     var descriptionView: some View {
-        Text(NSLocalizedString("aboutCompanyDescription", comment: ""))
+        Text("aboutCompanyDescription")
             .font(.system(size: Metrics.descriptionFontSize))
             .foregroundStyle(.primary)
             .lineSpacing(Metrics.descriptionLineHeight - Metrics.descriptionFontSize)
     }
 
     var sectionTitleView: some View {
-        Text(NSLocalizedString("aboutLinksSectionTitle", comment: ""))
+        Text("aboutLinksSectionTitle")
             .font(.system(size: Metrics.sectionTitleFontSize, weight: .semibold))
             .foregroundStyle(.primary)
             .frame(maxWidth: .infinity, alignment: .leading)
