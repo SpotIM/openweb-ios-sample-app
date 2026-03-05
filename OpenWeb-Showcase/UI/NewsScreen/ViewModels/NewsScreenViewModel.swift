@@ -15,6 +15,9 @@ class NewsScreenViewModel {
 
     var article: ArticleData { vertical.article }
     var implementationInfo: ImplementationInfo { vertical.implementationInfo }
+    var conversationArticle: OWArticleProtocol {
+        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
+    }
 
     func initialize() {
         OpenWeb.manager.spotId = article.conversationIds.spotId

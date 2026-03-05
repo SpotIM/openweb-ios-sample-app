@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 
 struct NewsScreen: View {
     @State private var viewModel = NewsScreenViewModel()
@@ -18,7 +19,12 @@ struct NewsScreen: View {
                 info: viewModel.implementationInfo,
                 iconColor: VerticalCard.news.color
             )
+            OpenWebPreConversation(
+                postId: viewModel.article.conversationIds.postId,
+                article: viewModel.conversationArticle
+            )
         }
+        .background(Color(.systemGroupedBackground))
         .verticalToolbar(
             title: VerticalCard.news.title,
             color: VerticalCard.news.color,
