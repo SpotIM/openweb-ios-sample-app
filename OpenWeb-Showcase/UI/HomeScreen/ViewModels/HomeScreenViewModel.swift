@@ -16,42 +16,42 @@ class HomeScreenViewModel {
             icon: "📰",
             title: "verticalNewsTitle",
             description: "verticalNewsDescription",
-            color: Color("NewsColor")
+            color: Color(.news)
         ),
         VerticalCard(
             id: "finance",
             icon: "📈",
             title: "verticalFinanceTitle",
             description: "verticalFinanceDescription",
-            color: Color("FinanceColor")
+            color: Color(.finance)
         ),
         VerticalCard(
             id: "recipes",
             icon: "🍲",
             title: "verticalRecipesTitle",
             description: "verticalRecipesDescription",
-            color: Color("RecipesColor")
+            color: Color(.recipes)
         ),
         VerticalCard(
             id: "sport",
             icon: "⚽",
             title: "verticalSportTitle",
             description: "verticalSportDescription",
-            color: Color("SportColor")
+            color: Color(.sport)
         ),
         VerticalCard(
             id: "video",
             icon: "▶️",
             title: "verticalVideoTitle",
             description: "verticalVideoDescription",
-            color: Color("VideoColor")
+            color: Color(.video)
         ),
         VerticalCard(
             id: "siderail",
             icon: "📄",
             title: "verticalSiderailTitle",
             description: "verticalSiderailDescription",
-            color: Color("SideRailColor")
+            color: Color(.sideRail)
         ),
     ]
 }

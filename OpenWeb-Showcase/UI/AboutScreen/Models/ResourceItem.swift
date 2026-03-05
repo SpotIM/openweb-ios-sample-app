@@ -25,12 +25,12 @@ enum ResourceItem: String, Identifiable, CaseIterable {
         }
     }
 
-    var icon: String {
+    var icon: ImageResource {
         switch self {
-        case .sdkDocs: "ic_info"
-        case .github: "ic_github"
-        case .privacyPolicy: "ic_privacy_policy"
-        case .terms: "ic_terms"
+        case .sdkDocs: .icInfo
+        case .github: .icGithub
+        case .privacyPolicy: .icPrivacyPolicy
+        case .terms: .icTerms
         }
     }
 
