@@ -21,5 +21,7 @@ class NewsScreenViewModel {
 
     func initialize() {
         OpenWeb.manager.spotId = article.conversationIds.spotId
+        let uiColor = UIColor(vertical.color)
+        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(lightColor: uiColor, darkColor: uiColor)
     }
 }
