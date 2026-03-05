@@ -12,8 +12,14 @@ struct NewsScreen: View {
     @State private var viewModel = NewsScreenViewModel()
 
     var body: some View {
-        Text(viewModel.article.title)
-            .navigationTitle("newsScreenTitle")
+        ScrollView {
+            // Article content will go here
+        }
+        .verticalToolbar(
+            title: VerticalCard.news.title,
+            color: VerticalCard.news.color,
+            onSettingsClick: {}
+        )
     }
 }
 
