@@ -16,7 +16,7 @@ struct HomeScreen: View {
         static let sectionHeaderBottomPadding: CGFloat = 4
     }
 
-    @State private var viewModel = HomeScreenViewModel()
+    @StateObject private var viewModel = HomeScreenViewModel()
     @State private var navigationPath = NavigationPath()
 
     private let columns = [

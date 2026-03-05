@@ -21,7 +21,7 @@ struct AboutScreen: View {
         static let bottomSpacing: CGFloat = 24
     }
 
-    @State private var viewModel = AboutScreenViewModel()
+    @StateObject private var viewModel = AboutScreenViewModel()
 
     var body: some View {
         ScrollView {

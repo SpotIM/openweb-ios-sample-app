@@ -7,9 +7,9 @@
 //
 
 import SwiftUI
+import Combine
 
-@Observable
-class HomeScreenViewModel {
+class HomeScreenViewModel: ObservableObject {
     let verticals: [VerticalCard] = [
         VerticalCard(
             id: "news",

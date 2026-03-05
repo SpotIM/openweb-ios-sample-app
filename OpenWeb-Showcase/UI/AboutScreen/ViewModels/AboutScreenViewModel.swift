@@ -7,8 +7,8 @@
 //
 
 import SwiftUI
+import Combine
 
-@Observable
-class AboutScreenViewModel {
+class AboutScreenViewModel: ObservableObject {
     let resources: [ResourceItem] = ResourceItem.allCases
 }
