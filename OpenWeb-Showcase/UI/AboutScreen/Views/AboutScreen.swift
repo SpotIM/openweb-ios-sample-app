@@ -16,7 +16,7 @@ struct AboutScreen: View {
         static let titleFontSize: CGFloat = 20
         static let titleBottomSpacing: CGFloat = 16
         static let descriptionFontSize: CGFloat = 14
-        static let descriptionLineHeight: CGFloat = 26
+        static let descriptionLineSpacing: CGFloat = 12
         static let sectionTitleTopSpacing: CGFloat = 40
         static let sectionTitleFontSize: CGFloat = 14
         static let sectionTitleBottomSpacing: CGFloat = 16
@@ -44,7 +44,6 @@ struct AboutScreen: View {
         }
         .background(Color(uiColor: .systemBackground))
         .navigationTitle("aboutScreenTitle")
-        .navigationBarTitleDisplayMode(.automatic)
     }
 }
 
@@ -52,7 +51,7 @@ struct AboutScreen: View {
 
 private extension AboutScreen {
     var logoView: some View {
-        Image("openweb_logo")
+        Image(.openwebLogo)
             .resizable()
             .scaledToFit()
             .frame(width: Metrics.logoSize, height: Metrics.logoSize)
@@ -69,7 +68,7 @@ private extension AboutScreen {
         Text("aboutCompanyDescription")
             .font(.system(size: Metrics.descriptionFontSize))
             .foregroundStyle(.primary)
-            .lineSpacing(Metrics.descriptionLineHeight - Metrics.descriptionFontSize)
+            .lineSpacing(Metrics.descriptionLineSpacing)
     }
 
     var sectionTitleView: some View {

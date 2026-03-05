@@ -24,7 +24,7 @@ struct HomeToolbar: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Image("openweb_logo")
+            Image(.openwebLogo)
                 .resizable()
                 .scaledToFit()
                 .frame(width: Metrics.logoSize, height: Metrics.logoSize)
