@@ -53,7 +53,8 @@ enum MockImplementationInfo {
         ImplementationInfo(
             subtitle: "Partial screen implementation",
             description: """
-            This implementation places the conversation directly alongside the content - in this example, live match data, removing any friction between content consumption and participation.
+            This implementation places the conversation directly alongside the content - in this example, \
+            live match data, removing any friction between content consumption and participation.
 
             Users can react and comment in real time while following the game, creating a fast-paced and highly engaging second-screen experience.
 
