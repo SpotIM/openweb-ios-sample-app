@@ -24,6 +24,7 @@ struct NewsScreen: View {
             color: VerticalCard.news.color,
             onSettingsClick: {}
         )
+        .onAppear { viewModel.initialize() }
     }
 }
 

@@ -7,9 +7,16 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 
 @Observable
 class NewsScreenViewModel {
-    let article = MockArticles.news()
-    let implementationInfo = MockImplementationInfo.news()
+    private let vertical: VerticalCard = .news
+
+    var article: ArticleData { vertical.article }
+    var implementationInfo: ImplementationInfo { vertical.implementationInfo }
+
+    func initialize() {
+        OpenWeb.manager.spotId = article.conversationIds.spotId
+    }
 }
