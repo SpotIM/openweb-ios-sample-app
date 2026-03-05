@@ -24,9 +24,7 @@ struct ResourceItemCard: View {
 
     var body: some View {
         Button {
-            if let url = item.url {
-                UIApplication.shared.open(url)
-            }
+            UIApplication.shared.open(item.url)
         } label: {
             HStack(spacing: 0) {
                 leadingContent

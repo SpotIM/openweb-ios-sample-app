@@ -34,12 +34,12 @@ enum ResourceItem: String, Identifiable, CaseIterable {
         }
     }
 
-    var url: URL? {
+    var url: URL {
         switch self {
-        case .sdkDocs: URL(string: AppConstants.sdkDocsURL)
-        case .github: URL(string: AppConstants.githubURL)
-        case .privacyPolicy: URL(string: AppConstants.privacyPolicyURL)
-        case .terms: URL(string: AppConstants.termsURL)
+        case .sdkDocs: URL(string: AppConstants.sdkDocsURL)!
+        case .github: URL(string: AppConstants.githubURL)!
+        case .privacyPolicy: URL(string: AppConstants.privacyPolicyURL)!
+        case .terms: URL(string: AppConstants.termsURL)!
         }
     }
 }
