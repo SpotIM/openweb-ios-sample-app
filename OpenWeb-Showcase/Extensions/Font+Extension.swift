@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// swiftlint:disable no_magic_numbers
 extension Font {
     static let screenTitle: Font = .system(size: 20, weight: .bold)
     static let toolbarTitle: Font = .system(size: 18, weight: .bold)

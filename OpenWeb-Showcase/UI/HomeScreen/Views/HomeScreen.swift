@@ -52,7 +52,7 @@ private extension HomeScreen {
                 Section {
                     ForEach(viewModel.verticals) { vertical in
                         VerticalCardItem(vertical: vertical) {
-                            // TODO: handle card tap
+                            // handle card tap
                         }
                     }
                 } header: {
