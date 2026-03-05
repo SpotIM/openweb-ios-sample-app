@@ -12,7 +12,6 @@ struct HomeScreen: View {
     private struct Metrics {
         static let gridSpacing: CGFloat = 12
         static let gridPadding: CGFloat = 16
-        static let fontSizeSection: CGFloat = 14
         static let sectionHeaderLetterSpacing: CGFloat = 0.5
         static let sectionHeaderBottomPadding: CGFloat = 4
     }
@@ -58,7 +57,7 @@ private extension HomeScreen {
                     }
                 } header: {
                     Text("chooseVerticalSectionTitle")
-                        .font(.system(size: Metrics.fontSizeSection, weight: .semibold))
+                        .font(.sectionTitle)
                         .foregroundStyle(.secondary)
                         .tracking(Metrics.sectionHeaderLetterSpacing)
                         .frame(maxWidth: .infinity, alignment: .leading)

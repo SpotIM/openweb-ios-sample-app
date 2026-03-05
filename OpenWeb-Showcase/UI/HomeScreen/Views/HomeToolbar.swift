@@ -11,8 +11,6 @@ import SwiftUI
 struct HomeToolbar: View {
     private struct Metrics {
         static let logoSize: CGFloat = 40
-        static let titleFontSize: CGFloat = 18
-        static let descriptionFontSize: CGFloat = 12
         static let infoIconSize: CGFloat = 18
         static let textSpacing: CGFloat = 2
         static let textHorizontalPadding: CGFloat = 12
@@ -30,11 +28,11 @@ struct HomeToolbar: View {
                 .frame(width: Metrics.logoSize, height: Metrics.logoSize)
             VStack(alignment: .leading, spacing: Metrics.textSpacing) {
                 Text("homeScreenTitle")
-                    .font(.system(size: Metrics.titleFontSize, weight: .bold))
+                    .font(.toolbarTitle)
                     .foregroundStyle(.primary)
                     .lineLimit(1)
                 Text("homeScreenDescription")
-                    .font(.system(size: Metrics.descriptionFontSize))
+                    .font(.toolbarDescription)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
             }

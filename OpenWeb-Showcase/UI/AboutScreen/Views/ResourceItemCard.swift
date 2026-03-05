@@ -61,7 +61,7 @@ private extension ResourceItemCard {
 
     var textContent: some View {
         Text(item.title)
-            .font(.subheadline.weight(.semibold))
+            .font(.resourceTitle)
             .foregroundStyle(.primary)
     }
 

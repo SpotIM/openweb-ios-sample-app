@@ -17,10 +17,7 @@ struct VerticalCardItem: View {
         static let paddingMedium: CGFloat = 12
         static let iconContainerSize: CGFloat = 56
         static let iconContainerCornerRadius: CGFloat = 12
-        static let fontSizeIcon: CGFloat = 28
-        static let fontSizeCardTitle: CGFloat = 18
-        static let fontSizeCardDescription: CGFloat = 13
-        static let lineHeightCardDescription: CGFloat = 18
+        static let cardDescriptionLineSpacing: CGFloat = 5
         static let iconBackgroundOpacity: CGFloat = 0.15
         static let borderOpacity: CGFloat = 0.08
         static let borderWidth: CGFloat = 1
@@ -63,13 +60,13 @@ private extension VerticalCardItem {
                 .fill(vertical.color.opacity(Metrics.iconBackgroundOpacity))
                 .frame(width: Metrics.iconContainerSize, height: Metrics.iconContainerSize)
             Text(vertical.icon)
-                .font(.system(size: Metrics.fontSizeIcon))
+                .font(.cardIcon)
         }
     }
 
     var titleView: some View {
         Text(vertical.title)
-            .font(.system(size: Metrics.fontSizeCardTitle, weight: .semibold))
+            .font(.cardTitle)
             .foregroundStyle(.primary)
             .lineLimit(1)
             .truncationMode(.tail)
@@ -78,12 +75,12 @@ private extension VerticalCardItem {
 
     var descriptionView: some View {
         Text(vertical.description)
-            .font(.system(size: Metrics.fontSizeCardDescription))
+            .font(.cardDescription)
             .foregroundStyle(.secondary)
             .lineLimit(2)
             .truncationMode(.tail)
             .multilineTextAlignment(.center)
-            .lineSpacing(Metrics.lineHeightCardDescription - Metrics.fontSizeCardDescription)
+            .lineSpacing(Metrics.cardDescriptionLineSpacing)
     }
 
     var cardBackground: some View {

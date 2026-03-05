@@ -13,12 +13,9 @@ struct AboutScreen: View {
         static let logoSize: CGFloat = 80
         static let contentPadding: CGFloat = 24
         static let logoBottomSpacing: CGFloat = 24
-        static let titleFontSize: CGFloat = 20
         static let titleBottomSpacing: CGFloat = 16
-        static let descriptionFontSize: CGFloat = 14
         static let descriptionLineSpacing: CGFloat = 12
         static let sectionTitleTopSpacing: CGFloat = 40
-        static let sectionTitleFontSize: CGFloat = 14
         static let sectionTitleBottomSpacing: CGFloat = 16
         static let resourceItemSpacing: CGFloat = 12
         static let bottomSpacing: CGFloat = 24
@@ -59,21 +56,21 @@ private extension AboutScreen {
 
     var titleView: some View {
         Text("aboutCompanyTitle")
-            .font(.system(size: Metrics.titleFontSize, weight: .bold))
+            .font(.screenTitle)
             .foregroundStyle(.primary)
             .multilineTextAlignment(.center)
     }
 
     var descriptionView: some View {
         Text("aboutCompanyDescription")
-            .font(.system(size: Metrics.descriptionFontSize))
+            .font(.bodyText)
             .foregroundStyle(.primary)
             .lineSpacing(Metrics.descriptionLineSpacing)
     }
 
     var sectionTitleView: some View {
         Text("aboutLinksSectionTitle")
-            .font(.system(size: Metrics.sectionTitleFontSize, weight: .semibold))
+            .font(.sectionTitle)
             .foregroundStyle(.primary)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
