@@ -8,7 +8,6 @@
 
 import Foundation
 
-// swiftlint:disable function_body_length
 enum MockArticles {
     static func news() -> ArticleData {
         ArticleData(
@@ -49,7 +48,7 @@ enum MockArticles {
                 """
                 The measures are expected to face debate in Congress next week, with votes anticipated before \
                 the end of the month.
-                """
+                """,
             ]
         )
     }
@@ -97,7 +96,7 @@ enum MockArticles {
                 Looking ahead, Apple provided guidance suggesting continued momentum, \
                 though management cautioned about potential supply chain constraints affecting \
                 the upcoming holiday quarter.
-                """
+                """,
             ]
         )
     }
@@ -149,7 +148,7 @@ enum MockArticles {
                 • **Room temperature eggs** incorporate better
                 • **Don't skip the resting time**—it makes rolling much easier
                 • **Dust with semolina flour** to prevent sticking
-                """
+                """,
             ]
         )
     }
@@ -176,7 +175,7 @@ enum MockArticles {
                 """
                 Watch Big Buck Bunny, an animated short film showcasing beautiful graphics and storytelling. \
                 Join the conversation and share your thoughts about this classic animation!
-                """
+                """,
             ]
         )
     }
@@ -231,9 +230,8 @@ enum MockArticles {
                 collaboration benefits of in-person interaction. \
                 Organizations that master this balance will have a significant advantage \
                 in attracting and retaining talent.
-                """
+                """,
             ]
         )
     }
 }
-// swiftlint:enable function_body_length

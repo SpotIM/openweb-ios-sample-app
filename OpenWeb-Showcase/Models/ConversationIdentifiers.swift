@@ -9,6 +9,6 @@
 import Foundation
 
 struct ConversationIdentifiers {
-    let spotId: String
-    let postId: String
+    var spotId: String
+    var postId: String
 }

@@ -94,15 +94,6 @@ private extension VerticalCardItem {
 }
 
 #Preview {
-    VerticalCardItem(
-        vertical: VerticalCard(
-            id: "news",
-            icon: "🌍",
-            title: "News",
-            description: "A short description that can wrap to two lines.",
-            color: .blue
-        ),
-        onClick: {}
-    )
-    .padding()
+    VerticalCardItem(vertical: .news, onClick: {})
+        .padding()
 }

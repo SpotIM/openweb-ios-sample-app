@@ -9,7 +9,7 @@
 import Foundation
 
 struct ArticleData {
-    let conversationIds: ConversationIdentifiers
-    let title: String
-    let paragraphs: [String]
+    var conversationIds: ConversationIdentifiers
+    var title: String
+    var paragraphs: [String]
 }

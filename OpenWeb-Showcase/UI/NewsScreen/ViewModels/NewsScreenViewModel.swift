@@ -1,5 +1,5 @@
 //
-//  HomeScreenViewModel.swift
+//  NewsScreenViewModel.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 02/03/2026.
@@ -9,6 +9,6 @@
 import SwiftUI
 
 @Observable
-class HomeScreenViewModel {
-    let verticals: [VerticalCard] = VerticalCard.allCases
+class NewsScreenViewModel {
+    let article = MockArticles.news()
 }
