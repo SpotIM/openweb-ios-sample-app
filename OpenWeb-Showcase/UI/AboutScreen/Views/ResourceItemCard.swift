@@ -52,7 +52,7 @@ private extension ResourceItemCard {
     }
 
     var iconView: some View {
-        Image(item.icon.rawValue)
+        Image(item.icon)
             .resizable()
             .scaledToFit()
             .foregroundStyle(.primary)
@@ -90,12 +90,6 @@ private extension ResourceItemCard {
 }
 
 #Preview {
-    ResourceItemCard(
-        item: ResourceItem(
-            title: "SDK Documentation",
-            icon: .info,
-            url: URL(string: "https://developers.openweb.com")
-        )
-    )
-    .padding()
+    ResourceItemCard(item: .sdkDocs)
+        .padding()
 }
