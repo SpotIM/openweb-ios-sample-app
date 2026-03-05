@@ -13,7 +13,7 @@ struct NewsScreen: View {
 
     var body: some View {
         ScrollView {
-            // Article content will go here
+            ArticleContent(article: viewModel.article)
         }
         .verticalToolbar(
             title: VerticalCard.news.title,

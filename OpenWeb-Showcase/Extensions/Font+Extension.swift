@@ -18,5 +18,6 @@ extension Font {
     static let cardTitle: Font = .system(size: 18, weight: .semibold)
     static let cardDescription: Font = .system(size: 13)
     static let cardIcon: Font = .system(size: 28)
+    static let articleTitle: Font = .system(size: 22, weight: .semibold)
     static let resourceTitle: Font = .subheadline.weight(.semibold)
 }
