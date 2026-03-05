@@ -14,6 +14,10 @@ struct NewsScreen: View {
     var body: some View {
         ScrollView {
             ArticleContent(article: viewModel.article)
+            ImplementationInfoCard(
+                info: viewModel.implementationInfo,
+                iconColor: VerticalCard.news.color
+            )
         }
         .verticalToolbar(
             title: VerticalCard.news.title,

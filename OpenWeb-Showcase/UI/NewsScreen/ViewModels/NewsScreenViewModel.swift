@@ -11,4 +11,5 @@ import SwiftUI
 @Observable
 class NewsScreenViewModel {
     let article = MockArticles.news()
+    let implementationInfo = MockImplementationInfo.news()
 }
