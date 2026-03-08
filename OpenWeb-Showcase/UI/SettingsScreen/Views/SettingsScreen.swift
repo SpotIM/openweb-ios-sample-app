@@ -28,7 +28,7 @@ struct SettingsScreen: View {
             case .articleSettings:
                 ArticleSettingsScreen()
             case .screenSettings:
-                Text("Coming soon") // TODO
+                ScreenSettingsScreen()
             }
         }
         .navigationTitle("settingsScreenTitle")

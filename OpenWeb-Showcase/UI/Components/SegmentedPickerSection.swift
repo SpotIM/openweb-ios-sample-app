@@ -15,6 +15,7 @@ struct SegmentedPickerSection<Option: Hashable & Identifiable & CaseIterable>: V
     var subtitle: LocalizedStringKey?
     @Binding var selection: Option
     var optionTitle: (Option) -> String
+    var isEnabled: Bool = true
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -32,5 +33,7 @@ struct SegmentedPickerSection<Option: Hashable & Identifiable & CaseIterable>: V
             }
             .pickerStyle(.segmented)
         }
+        .disabled(!isEnabled)
+        .opacity(isEnabled ? 1 : 0.4)
     }
 }

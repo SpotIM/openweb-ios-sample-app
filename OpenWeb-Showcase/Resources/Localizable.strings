@@ -83,3 +83,34 @@
 "articleSettingsHideHeaderSubtitle" = "Hide the article header in the conversation";
 "articleSettingsReadOnlyModeTitle" = "Read Only Mode";
 "articleSettingsReadOnlyModeSubtitle" = "Control whether comments are read-only";
+
+/* Screen Settings Screen */
+"screenSettingsScreenTitle" = "Screens Settings";
+"screenSettingsPreConversationSectionTitle" = "Pre Conversation";
+"screenSettingsPreConversationStyleTitle" = "Pre Conversation Style";
+"screenSettingsPreConversationStyleSubtitle" = "Choose pre-conversation display style";
+"screenSettingsNumberOfCommentsTitle" = "Number of Comments";
+"screenSettingsNumberOfCommentsSubtitle" = "Number of comments to show in pre-conversation";
+"screenSettingsPreConversationGuidelinesTitle" = "Community Guidelines Style";
+"screenSettingsPreConversationGuidelinesSubtitle" = "Choose guidelines display style";
+"screenSettingsPreConversationQuestionsTitle" = "Community Questions Style";
+"screenSettingsPreConversationQuestionsSubtitle" = "Choose community questions display style";
+"screenSettingsConversationSectionTitle" = "Conversation";
+"screenSettingsConversationStyleTitle" = "Conversation Style";
+"screenSettingsConversationStyleSubtitle" = "Choose conversation display style";
+"screenSettingsConversationGuidelinesTitle" = "Community Guidelines Style";
+"screenSettingsConversationGuidelinesSubtitle" = "Choose guidelines display style";
+"screenSettingsConversationQuestionsTitle" = "Community Questions Style";
+"screenSettingsConversationQuestionsSubtitle" = "Choose community questions display style";
+"screenSettingsConversationSpacingTitle" = "Conversation Spacing";
+"screenSettingsConversationSpacingSubtitle" = "Choose spacing between conversation elements";
+"screenSettingsBetweenCommentsSpacingTitle" = "Between Comments Spacing";
+"screenSettingsBetweenCommentsSpacingSubtitle" = "Spacing in pixels (5-40)";
+"screenSettingsGuidelinesSpacingTitle" = "Guidelines Spacing";
+"screenSettingsGuidelinesSpacingSubtitle" = "Spacing in pixels (5-40)";
+"screenSettingsQuestionsSpacingTitle" = "Questions Spacing";
+"screenSettingsQuestionsSpacingSubtitle" = "Spacing in pixels (5-40)";
+"screenSettingsSpacingPlaceholder" = "Enter value";
+"screenSettingsGeneralSectionTitle" = "General";
+"screenSettingsEnablePullToRefreshTitle" = "Enable Pull To Refresh";
+"screenSettingsEnablePullToRefreshSubtitle" = "Allow pull-to-refresh gesture in conversation view";

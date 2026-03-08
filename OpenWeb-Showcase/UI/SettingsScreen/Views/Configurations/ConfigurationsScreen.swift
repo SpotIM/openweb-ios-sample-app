@@ -25,6 +25,7 @@ struct ConfigurationsScreen: View {
                 }
             }
             .disabled(!viewModel.isCustomLanguageEnabled)
+            .opacity(viewModel.isCustomLanguageEnabled ? 1 : 0.4)
             SegmentedPickerSection(
                 title: "configurationsLocaleStrategyTitle",
                 subtitle: "configurationsLocaleStrategySubtitle",
