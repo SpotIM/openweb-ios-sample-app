@@ -10,43 +10,43 @@ import SwiftUI
 
 @Observable
 class HomeScreenViewModel {
-    let verticals: [VerticalCard] = [
-        VerticalCard(
+    let verticals: [VerticalCardData] = [
+        VerticalCardData(
             id: "news",
             icon: "📰",
             title: "verticalNewsTitle",
             description: "verticalNewsDescription",
             color: Color(.news)
         ),
-        VerticalCard(
+        VerticalCardData(
             id: "finance",
             icon: "📈",
             title: "verticalFinanceTitle",
             description: "verticalFinanceDescription",
             color: Color(.finance)
         ),
-        VerticalCard(
+        VerticalCardData(
             id: "recipes",
             icon: "🍲",
             title: "verticalRecipesTitle",
             description: "verticalRecipesDescription",
             color: Color(.recipes)
         ),
-        VerticalCard(
+        VerticalCardData(
             id: "sport",
             icon: "⚽",
             title: "verticalSportTitle",
             description: "verticalSportDescription",
             color: Color(.sport)
         ),
-        VerticalCard(
+        VerticalCardData(
             id: "video",
             icon: "▶️",
             title: "verticalVideoTitle",
             description: "verticalVideoDescription",
             color: Color(.video)
         ),
-        VerticalCard(
+        VerticalCardData(
             id: "siderail",
             icon: "📄",
             title: "verticalSiderailTitle",

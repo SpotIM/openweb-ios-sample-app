@@ -1,5 +1,5 @@
 //
-//  VerticalCard.swift
+//  VerticalCardData.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 02/03/2026.
@@ -8,13 +8,13 @@
 
 import SwiftUI
 
-struct VerticalCard: Identifiable, Hashable {
+struct VerticalCardData: Identifiable, Hashable {
     var id: String
     var icon: String
     var title: LocalizedStringKey
     var description: LocalizedStringKey
     var color: Color
 
-    static func == (lhs: VerticalCard, rhs: VerticalCard) -> Bool { lhs.id == rhs.id }
+    static func == (lhs: VerticalCardData, rhs: VerticalCardData) -> Bool { lhs.id == rhs.id }
     func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }
