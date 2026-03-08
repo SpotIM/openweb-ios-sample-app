@@ -70,7 +70,7 @@ private extension HomeScreen {
                         }
                     }
                 } header: {
-                    Text("chooseVerticalSectionTitle")
+                    Text(.chooseVerticalSectionTitle)
                         .font(.sectionTitle)
                         .foregroundStyle(.secondary)
                         .tracking(Metrics.sectionHeaderLetterSpacing)

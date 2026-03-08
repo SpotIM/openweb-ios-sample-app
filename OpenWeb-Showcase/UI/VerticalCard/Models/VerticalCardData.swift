@@ -29,25 +29,25 @@ enum VerticalCardData: Identifiable, CaseIterable, Hashable {
         }
     }
 
-    var title: LocalizedStringKey {
+    var title: LocalizedStringResource {
         switch self {
-        case .news: "verticalNewsTitle"
-        case .finance: "verticalFinanceTitle"
-        case .recipes: "verticalRecipesTitle"
-        case .sport: "verticalSportTitle"
-        case .video: "verticalVideoTitle"
-        case .sideRail: "verticalSiderailTitle"
+        case .news: .verticalNewsTitle
+        case .finance: .verticalFinanceTitle
+        case .recipes: .verticalRecipesTitle
+        case .sport: .verticalSportTitle
+        case .video: .verticalVideoTitle
+        case .sideRail: .verticalSiderailTitle
         }
     }
 
-    var description: LocalizedStringKey {
+    var description: LocalizedStringResource {
         switch self {
-        case .news: "verticalNewsDescription"
-        case .finance: "verticalFinanceDescription"
-        case .recipes: "verticalRecipesDescription"
-        case .sport: "verticalSportDescription"
-        case .video: "verticalVideoDescription"
-        case .sideRail: "verticalSiderailDescription"
+        case .news: .verticalNewsDescription
+        case .finance: .verticalFinanceDescription
+        case .recipes: .verticalRecipesDescription
+        case .sport: .verticalSportDescription
+        case .video: .verticalVideoDescription
+        case .sideRail: .verticalSiderailDescription
         }
     }
 

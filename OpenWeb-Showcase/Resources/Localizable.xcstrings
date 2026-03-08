@@ -1,0 +1,263 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "aboutCompanyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The OpenWeb Sample App is a live showcase of our SDK capabilities and recommended implementation patterns.\n\nIt features production-ready examples of OpenWeb's engagement experiences - including pre-conversation units, full conversations, side-rail placements, and video integrations across multiple content verticals such as news, finance, sports, recipes, and more.\n\nDesigned as both a demonstration environment and a best-practice reference, the app highlights the flexibility, performance, and adaptability of the OpenWeb platform, helping partners better understand how our solutions can be integrated into their own products."
+          }
+        }
+      }
+    },
+    "aboutCompanyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenWeb SDK Demo"
+          }
+        }
+      }
+    },
+    "aboutGithubTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub Repository"
+          }
+        }
+      }
+    },
+    "aboutLinksSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LINKS & CONTACT"
+          }
+        }
+      }
+    },
+    "aboutPrivacyPolicyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        }
+      }
+    },
+    "aboutScreenTitle" : {
+      "comment" : "About Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
+          }
+        }
+      }
+    },
+    "aboutSdkDocsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SDK Documentation"
+          }
+        }
+      }
+    },
+    "aboutTermsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terms of Service"
+          }
+        }
+      }
+    },
+    "chooseVerticalSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a Vertical"
+          }
+        }
+      }
+    },
+    "homeScreenDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engagement solutions for every vertical"
+          }
+        }
+      }
+    },
+    "homeScreenTitle" : {
+      "comment" : "Home Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenWeb SDK Demo"
+          }
+        }
+      }
+    },
+    "verticalFinanceDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Stock Surges Amid Strong Q4 Earnings Report"
+          }
+        }
+      }
+    },
+    "verticalFinanceTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finance"
+          }
+        }
+      }
+    },
+    "verticalNewsDescription" : {
+      "comment" : "Vertical Descriptions",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breaking: Major Policy Changes Expected Next Week"
+          }
+        }
+      }
+    },
+    "verticalNewsTitle" : {
+      "comment" : "Vertical Titles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "News"
+          }
+        }
+      }
+    },
+    "verticalRecipesDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Ultimate Homemade Pasta Recipe Everyone Loves"
+          }
+        }
+      }
+    },
+    "verticalRecipesTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipes"
+          }
+        }
+      }
+    },
+    "verticalSiderailDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Future of Remote Work: A Deep Dive"
+          }
+        }
+      }
+    },
+    "verticalSiderailTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Side Rail"
+          }
+        }
+      }
+    },
+    "verticalSportDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Champions League Final: Preview and Predictions"
+          }
+        }
+      }
+    },
+    "verticalSportTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sport"
+          }
+        }
+      }
+    },
+    "verticalVideoDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Behind the Scenes: Making of a Viral Hit"
+          }
+        }
+      }
+    },
+    "verticalVideoTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}

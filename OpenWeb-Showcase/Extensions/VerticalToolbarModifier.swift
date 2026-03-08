@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct VerticalToolbarModifier: ViewModifier {
-    var title: LocalizedStringKey
+    var title: LocalizedStringResource
     var color: Color
     var onSettingsClick: () -> Void
 
@@ -30,7 +30,7 @@ struct VerticalToolbarModifier: ViewModifier {
 }
 
 extension View {
-    func verticalToolbar(title: LocalizedStringKey, color: Color, onSettingsClick: @escaping () -> Void) -> some View {
+    func verticalToolbar(title: LocalizedStringResource, color: Color, onSettingsClick: @escaping () -> Void) -> some View {
         modifier(VerticalToolbarModifier(title: title, color: color, onSettingsClick: onSettingsClick))
     }
 }
