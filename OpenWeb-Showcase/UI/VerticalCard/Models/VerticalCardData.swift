@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-enum VerticalCardData: String, Identifiable, CaseIterable, Hashable {
+enum VerticalCardData: Identifiable, CaseIterable, Hashable {
     case news
     case finance
     case recipes
@@ -16,7 +16,7 @@ enum VerticalCardData: String, Identifiable, CaseIterable, Hashable {
     case video
     case sideRail
 
-    var id: String { rawValue }
+    var id: Self { self }
 
     var icon: String {
         switch self {
