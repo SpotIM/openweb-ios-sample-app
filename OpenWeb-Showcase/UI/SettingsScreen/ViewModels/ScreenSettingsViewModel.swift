@@ -10,23 +10,26 @@ import SwiftUI
 import Combine
 
 class ScreenSettingsViewModel: ObservableObject {
+    private let manager = SettingsManager.shared
+    private var cancellables = Set<AnyCancellable>()
+
     // Pre Conversation
-    @Published var selectedPreConversationStyle: PreConversationStyleSetting = .regular
-    @Published var numberOfComments: Int = 3
-    @Published var selectedPreConversationGuidelinesStyle: GuidelinesStyleSetting = .regular
-    @Published var selectedPreConversationQuestionsStyle: QuestionsStyleSetting = .regular
+    @Published var selectedPreConversationStyle: PreConversationStyleSetting = SettingsItems.preConversationStyle.defaultValue
+    @Published var numberOfComments: Int = SettingsItems.numberOfComments.defaultValue
+    @Published var selectedPreConversationGuidelinesStyle: GuidelinesStyleSetting = SettingsItems.preConversationGuidelinesStyle.defaultValue
+    @Published var selectedPreConversationQuestionsStyle: QuestionsStyleSetting = SettingsItems.preConversationQuestionsStyle.defaultValue
 
     // Conversation
-    @Published var selectedConversationStyle: ConversationStyleSetting = .regular
-    @Published var selectedConversationGuidelinesStyle: GuidelinesStyleSetting = .regular
-    @Published var selectedConversationQuestionsStyle: QuestionsStyleSetting = .regular
-    @Published var selectedConversationSpacing: ConversationSpacingSetting = .regular
-    @Published var betweenCommentsSpacing: String = "16"
-    @Published var guidelinesSpacing: String = "12"
-    @Published var questionsSpacing: String = "12"
+    @Published var selectedConversationStyle: ConversationStyleSetting = SettingsItems.conversationStyle.defaultValue
+    @Published var selectedConversationGuidelinesStyle: GuidelinesStyleSetting = SettingsItems.conversationGuidelinesStyle.defaultValue
+    @Published var selectedConversationQuestionsStyle: QuestionsStyleSetting = SettingsItems.conversationQuestionsStyle.defaultValue
+    @Published var selectedConversationSpacing: ConversationSpacingSetting = SettingsItems.conversationSpacing.defaultValue
+    @Published var betweenCommentsSpacing: String = SettingsItems.betweenCommentsSpacing.defaultValue
+    @Published var guidelinesSpacing: String = SettingsItems.guidelinesSpacing.defaultValue
+    @Published var questionsSpacing: String = SettingsItems.questionsSpacing.defaultValue
 
     // General
-    @Published var enablePullToRefresh: Bool = true
+    @Published var enablePullToRefresh: Bool = SettingsItems.enablePullToRefresh.defaultValue
 
     var isNumberOfCommentsEnabled: Bool {
         selectedPreConversationStyle == .custom
@@ -39,12 +42,52 @@ class ScreenSettingsViewModel: ObservableObject {
     var isCustomSpacingEnabled: Bool {
         isCustomConversationEnabled && selectedConversationSpacing == .custom
     }
+
+
+    init() {
+        loadSettings()
+        observeChanges()
+    }
+
+    func loadSettings() {
+        selectedPreConversationStyle = manager.get(SettingsItems.preConversationStyle)
+        numberOfComments = manager.get(SettingsItems.numberOfComments)
+        selectedPreConversationGuidelinesStyle = manager.get(SettingsItems.preConversationGuidelinesStyle)
+        selectedPreConversationQuestionsStyle = manager.get(SettingsItems.preConversationQuestionsStyle)
+        selectedConversationStyle = manager.get(SettingsItems.conversationStyle)
+        selectedConversationGuidelinesStyle = manager.get(SettingsItems.conversationGuidelinesStyle)
+        selectedConversationQuestionsStyle = manager.get(SettingsItems.conversationQuestionsStyle)
+        selectedConversationSpacing = manager.get(SettingsItems.conversationSpacing)
+        betweenCommentsSpacing = manager.get(SettingsItems.betweenCommentsSpacing)
+        guidelinesSpacing = manager.get(SettingsItems.guidelinesSpacing)
+        questionsSpacing = manager.get(SettingsItems.questionsSpacing)
+        enablePullToRefresh = manager.get(SettingsItems.enablePullToRefresh)
+    }
+}
+
+// MARK: - Private
+
+private extension ScreenSettingsViewModel {
+    func observeChanges() {
+        $selectedPreConversationStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.preConversationStyle, value: $0) }.store(in: &cancellables)
+        $numberOfComments.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.numberOfComments, value: $0) }.store(in: &cancellables)
+        $selectedPreConversationGuidelinesStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.preConversationGuidelinesStyle, value: $0) }.store(in: &cancellables)
+        $selectedPreConversationQuestionsStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.preConversationQuestionsStyle, value: $0) }.store(in: &cancellables)
+        $selectedConversationStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationStyle, value: $0) }.store(in: &cancellables)
+        $selectedConversationGuidelinesStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationGuidelinesStyle, value: $0) }.store(in: &cancellables)
+        $selectedConversationQuestionsStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationQuestionsStyle, value: $0) }.store(in: &cancellables)
+        $selectedConversationSpacing.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationSpacing, value: $0) }.store(in: &cancellables)
+        $betweenCommentsSpacing.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.betweenCommentsSpacing, value: $0) }.store(in: &cancellables)
+        $guidelinesSpacing.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.guidelinesSpacing, value: $0) }.store(in: &cancellables)
+        $questionsSpacing.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.questionsSpacing, value: $0) }.store(in: &cancellables)
+        $enablePullToRefresh.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enablePullToRefresh, value: $0) }.store(in: &cancellables)
+    }
 }
 
 // MARK: - Setting Enums
 
 extension ScreenSettingsViewModel {
-    enum PreConversationStyleSetting: CaseIterable, Identifiable {
+    enum PreConversationStyleSetting: Codable, CaseIterable, Identifiable {
         case regular
         case compact
         case summary
@@ -63,7 +106,7 @@ extension ScreenSettingsViewModel {
         }
     }
 
-    enum ConversationStyleSetting: CaseIterable, Identifiable {
+    enum ConversationStyleSetting: Codable, CaseIterable, Identifiable {
         case regular
         case compact
         case custom
@@ -78,7 +121,7 @@ extension ScreenSettingsViewModel {
         }
     }
 
-    enum GuidelinesStyleSetting: CaseIterable, Identifiable {
+    enum GuidelinesStyleSetting: Codable, CaseIterable, Identifiable {
         case none
         case regular
         case compact
@@ -93,7 +136,7 @@ extension ScreenSettingsViewModel {
         }
     }
 
-    enum QuestionsStyleSetting: CaseIterable, Identifiable {
+    enum QuestionsStyleSetting: Codable, CaseIterable, Identifiable {
         case none
         case regular
         case compact
@@ -108,7 +151,7 @@ extension ScreenSettingsViewModel {
         }
     }
 
-    enum ConversationSpacingSetting: CaseIterable, Identifiable {
+    enum ConversationSpacingSetting: Codable, CaseIterable, Identifiable {
         case regular
         case compact
         case custom

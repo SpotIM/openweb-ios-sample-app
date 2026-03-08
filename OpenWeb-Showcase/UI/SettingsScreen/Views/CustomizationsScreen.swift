@@ -19,15 +19,7 @@ struct CustomizationsScreen: View {
             uiDelegationSection
         }
         .navigationTitle("customizationsScreenTitle")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    // TODO: Reset customizations
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                }
-            }
-        }
+        .settingsToolbar { viewModel.loadSettings() }
     }
 }
 

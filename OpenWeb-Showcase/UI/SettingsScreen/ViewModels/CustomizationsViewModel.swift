@@ -10,19 +10,51 @@ import SwiftUI
 import Combine
 
 class CustomizationsViewModel: ObservableObject {
-    @Published var selectedSortOption: SortOptionSetting = .server
-    @Published var selectedActionColor: ActionColorSetting = .default
-    @Published var selectedActionFont: ActionFontSetting = .default
-    @Published var selectedFontFamily: FontFamilySetting = .default
-    @Published var selectedThemeMode: ThemeModeSetting = .system
-    @Published var customDarkColor: Color = Color(hex: "#070707")
-    @Published var enableCustomUIDelegation: Bool = false
+    private let manager = SettingsManager.shared
+    private var cancellables = Set<AnyCancellable>()
+
+    @Published var selectedSortOption: SortOptionSetting = SettingsItems.sortOption.defaultValue
+    @Published var selectedActionColor: ActionColorSetting = SettingsItems.actionColor.defaultValue
+    @Published var selectedActionFont: ActionFontSetting = SettingsItems.actionFont.defaultValue
+    @Published var selectedFontFamily: FontFamilySetting = SettingsItems.fontFamily.defaultValue
+    @Published var selectedThemeMode: ThemeModeSetting = SettingsItems.themeMode.defaultValue
+    @Published var customDarkColor: Color = Color(hex: SettingsItems.customDarkColor.defaultValue)
+    @Published var enableCustomUIDelegation: Bool = SettingsItems.enableCustomUIDelegation.defaultValue
+
+    init() {
+        loadSettings()
+        observeChanges()
+    }
+
+    func loadSettings() {
+        selectedSortOption = manager.get(SettingsItems.sortOption)
+        selectedActionColor = manager.get(SettingsItems.actionColor)
+        selectedActionFont = manager.get(SettingsItems.actionFont)
+        selectedFontFamily = manager.get(SettingsItems.fontFamily)
+        selectedThemeMode = manager.get(SettingsItems.themeMode)
+        customDarkColor = Color(hex: manager.get(SettingsItems.customDarkColor))
+        enableCustomUIDelegation = manager.get(SettingsItems.enableCustomUIDelegation)
+    }
+}
+
+// MARK: - Private
+
+private extension CustomizationsViewModel {
+    func observeChanges() {
+        $selectedSortOption.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.sortOption, value: $0) }.store(in: &cancellables)
+        $selectedActionColor.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.actionColor, value: $0) }.store(in: &cancellables)
+        $selectedActionFont.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.actionFont, value: $0) }.store(in: &cancellables)
+        $selectedFontFamily.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.fontFamily, value: $0) }.store(in: &cancellables)
+        $selectedThemeMode.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.themeMode, value: $0) }.store(in: &cancellables)
+        $customDarkColor.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.customDarkColor, value: $0.hexString) }.store(in: &cancellables)
+        $enableCustomUIDelegation.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enableCustomUIDelegation, value: $0) }.store(in: &cancellables)
+    }
 }
 
 // MARK: - Setting Enums
 
 extension CustomizationsViewModel {
-    enum SortOptionSetting: CaseIterable, Identifiable {
+    enum SortOptionSetting: Codable, CaseIterable, Identifiable {
         case server
         case best
         case newest
@@ -39,7 +71,7 @@ extension CustomizationsViewModel {
         }
     }
 
-    enum ActionColorSetting: CaseIterable, Identifiable {
+    enum ActionColorSetting: Codable, CaseIterable, Identifiable {
         case `default`
         case brandColor
 
@@ -52,7 +84,7 @@ extension CustomizationsViewModel {
         }
     }
 
-    enum ActionFontSetting: CaseIterable, Identifiable {
+    enum ActionFontSetting: Codable, CaseIterable, Identifiable {
         case `default`
         case semiBold
 
@@ -65,7 +97,7 @@ extension CustomizationsViewModel {
         }
     }
 
-    enum FontFamilySetting: CaseIterable, Identifiable {
+    enum FontFamilySetting: Codable, CaseIterable, Identifiable {
         case `default`
         case custom
 
@@ -78,7 +110,7 @@ extension CustomizationsViewModel {
         }
     }
 
-    enum ThemeModeSetting: CaseIterable, Identifiable {
+    enum ThemeModeSetting: Codable, CaseIterable, Identifiable {
         case system
         case light
         case dark

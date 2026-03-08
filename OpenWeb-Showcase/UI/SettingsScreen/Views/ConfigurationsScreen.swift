@@ -39,15 +39,7 @@ struct ConfigurationsScreen: View {
             )
         }
         .navigationTitle("configurationsScreenTitle")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    // TODO: Reset configurations
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                }
-            }
-        }
+        .settingsToolbar { viewModel.loadSettings() }
     }
 }
 

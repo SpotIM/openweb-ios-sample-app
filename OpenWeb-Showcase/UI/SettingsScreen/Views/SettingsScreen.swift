@@ -32,15 +32,7 @@ struct SettingsScreen: View {
             }
         }
         .navigationTitle("settingsScreenTitle")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    viewModel.resetSettings()
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                }
-            }
-        }
+        .settingsToolbar()
     }
 }
 

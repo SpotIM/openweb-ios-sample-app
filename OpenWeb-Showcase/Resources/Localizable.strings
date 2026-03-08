@@ -29,6 +29,12 @@
 "aboutPrivacyPolicyTitle" = "Privacy Policy";
 "aboutTermsTitle" = "Terms of Service";
 
+/* Reset Alert */
+"resetAlertTitle" = "Reset Settings";
+"resetAlertMessage" = "Are you sure you want to reset all settings to their default values?";
+"resetAlertConfirm" = "Reset";
+"resetAlertCancel" = "Cancel";
+
 /* Settings Screen */
 "settingsScreenTitle" = "Settings";
 "settingsCustomizationsTitle" = "Customizations";

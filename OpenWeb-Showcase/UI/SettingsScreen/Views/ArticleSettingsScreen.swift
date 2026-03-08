@@ -38,15 +38,7 @@ struct ArticleSettingsScreen: View {
             )
         }
         .navigationTitle("articleSettingsScreenTitle")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    // TODO: Reset article settings
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                }
-            }
-        }
+        .settingsToolbar { viewModel.loadSettings() }
     }
 }
 

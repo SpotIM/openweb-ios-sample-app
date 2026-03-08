@@ -18,15 +18,7 @@ struct ScreenSettingsScreen: View {
             generalSection
         }
         .navigationTitle("screenSettingsScreenTitle")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    // TODO: Reset screen settings
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                }
-            }
-        }
+        .settingsToolbar { viewModel.loadSettings() }
     }
 }
 

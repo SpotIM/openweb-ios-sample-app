@@ -11,8 +11,4 @@ import Combine
 
 class SettingsScreenViewModel: ObservableObject {
     let sections: [SettingsSection] = SettingsSection.allCases
-
-    func resetSettings() {
-        // TODO: Reset all settings to defaults
-    }
 }

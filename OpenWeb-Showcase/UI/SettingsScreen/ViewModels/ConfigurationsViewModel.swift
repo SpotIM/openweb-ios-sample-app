@@ -10,20 +10,46 @@ import SwiftUI
 import Combine
 
 class ConfigurationsViewModel: ObservableObject {
-    @Published var selectedLanguageStrategy: LanguageStrategySetting = .device
-    @Published var selectedLanguage: SupportedLanguage = .english
-    @Published var selectedLocaleStrategy: LocaleStrategySetting = .device
-    @Published var enableLandscape: Bool = false
+    private let manager = SettingsManager.shared
+    private var cancellables = Set<AnyCancellable>()
+
+    @Published var selectedLanguageStrategy: LanguageStrategySetting = SettingsItems.languageStrategy.defaultValue
+    @Published var selectedLanguage: SupportedLanguage = SettingsItems.customLanguage.defaultValue
+    @Published var selectedLocaleStrategy: LocaleStrategySetting = SettingsItems.localeStrategy.defaultValue
+    @Published var enableLandscape: Bool = SettingsItems.enableLandscape.defaultValue
 
     var isCustomLanguageEnabled: Bool {
         selectedLanguageStrategy == .custom
+    }
+
+    init() {
+        loadSettings()
+        observeChanges()
+    }
+
+    func loadSettings() {
+        selectedLanguageStrategy = manager.get(SettingsItems.languageStrategy)
+        selectedLanguage = manager.get(SettingsItems.customLanguage)
+        selectedLocaleStrategy = manager.get(SettingsItems.localeStrategy)
+        enableLandscape = manager.get(SettingsItems.enableLandscape)
+    }
+}
+
+// MARK: - Private
+
+private extension ConfigurationsViewModel {
+    func observeChanges() {
+        $selectedLanguageStrategy.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.languageStrategy, value: $0) }.store(in: &cancellables)
+        $selectedLanguage.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.customLanguage, value: $0) }.store(in: &cancellables)
+        $selectedLocaleStrategy.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.localeStrategy, value: $0) }.store(in: &cancellables)
+        $enableLandscape.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enableLandscape, value: $0) }.store(in: &cancellables)
     }
 }
 
 // MARK: - Setting Enums
 
 extension ConfigurationsViewModel {
-    enum LanguageStrategySetting: CaseIterable, Identifiable {
+    enum LanguageStrategySetting: Codable, CaseIterable, Identifiable {
         case device
         case server
         case custom
@@ -38,7 +64,7 @@ extension ConfigurationsViewModel {
         }
     }
 
-    enum SupportedLanguage: CaseIterable, Identifiable {
+    enum SupportedLanguage: Codable, CaseIterable, Identifiable {
         case english
         case arabic
         case dutch
@@ -79,7 +105,7 @@ extension ConfigurationsViewModel {
         }
     }
 
-    enum LocaleStrategySetting: CaseIterable, Identifiable {
+    enum LocaleStrategySetting: Codable, CaseIterable, Identifiable {
         case device
         case server
 
