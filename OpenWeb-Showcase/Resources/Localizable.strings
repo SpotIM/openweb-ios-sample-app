@@ -62,3 +62,13 @@
 "customizationsUIDelegationSectionTitle" = "UI Delegation";
 "customizationsUIDelegationTitle" = "Enable Custom UI Delegation";
 "customizationsUIDelegationSubtitle" = "Use custom UI delegate for SDK components";
+
+/* Configurations Screen */
+"configurationsScreenTitle" = "Configurations";
+"configurationsLanguageStrategyTitle" = "Language Strategy";
+"configurationsLanguageStrategySubtitle" = "Select how the SDK determines language";
+"configurationsLanguageTitle" = "Language";
+"configurationsLocaleStrategyTitle" = "Locale Strategy";
+"configurationsLocaleStrategySubtitle" = "Select how the SDK determines locale";
+"configurationsEnableLandscapeTitle" = "Enable Landscape";
+"configurationsEnableLandscapeSubtitle" = "Allow landscape orientation in SDK screens";

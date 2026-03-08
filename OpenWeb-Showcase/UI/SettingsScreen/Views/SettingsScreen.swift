@@ -24,7 +24,7 @@ struct SettingsScreen: View {
             case .customizations:
                 CustomizationsScreen()
             case .configurations:
-                Text("Coming soon") // TODO
+                ConfigurationsScreen()
             case .articleSettings:
                 Text("Coming soon") // TODO
             case .screenSettings:
