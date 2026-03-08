@@ -39,3 +39,26 @@
 "settingsArticleSettingsSubtitle" = "Article information and display options";
 "settingsScreenSettingsTitle" = "Screens Settings";
 "settingsScreenSettingsSubtitle" = "PreConversation, Conversation, and screen styles";
+
+/* Customizations Screen */
+"customizationsScreenTitle" = "Customizations";
+"customizationsSortingSectionTitle" = "Sorting";
+"customizationsSortOptionTitle" = "Initial Sort Option";
+"customizationsSortOptionSubtitle" = "Choose default comment sorting order";
+"customizationsCommentActionsSectionTitle" = "Comment Actions";
+"customizationsActionColorTitle" = "Comment Action Color Style";
+"customizationsActionColorSubtitle" = "Customize color style of comment action buttons";
+"customizationsActionFontTitle" = "Comment Action Font Style";
+"customizationsActionFontSubtitle" = "Customize font style of comment action buttons";
+"customizationsThemeSectionTitle" = "Theme";
+"customizationsFontFamilyTitle" = "Font Family Strategy";
+"customizationsFontFamilySubtitle" = "Select which font family to use";
+"customizationsThemeModeTitle" = "Theme Mode";
+"customizationsThemeModeSubtitle" = "Choose light, dark, or follow system theme";
+"customizationsCustomDarkColorTitle" = "Custom Dark Color";
+"customizationsCustomDarkColorSubtitle" = "Choose a custom dark mode color";
+"customizationsCustomThemeColorsTitle" = "Custom Theme Colors";
+"customizationsCustomThemeColorsSubtitle" = "Customize individual theme colors";
+"customizationsUIDelegationSectionTitle" = "UI Delegation";
+"customizationsUIDelegationTitle" = "Enable Custom UI Delegation";
+"customizationsUIDelegationSubtitle" = "Use custom UI delegate for SDK components";

@@ -9,11 +9,6 @@
 import SwiftUI
 
 struct SettingsScreen: View {
-    private struct Metrics {
-        static let sectionSpacing: CGFloat = 12
-        static let contentPadding: CGFloat = 16
-    }
-
     @StateObject private var viewModel = SettingsScreenViewModel()
 
     var body: some View {
@@ -22,6 +17,18 @@ struct SettingsScreen: View {
                 NavigationLink(value: section) {
                     SettingsSectionRow(section: section)
                 }
+            }
+        }
+        .navigationDestination(for: SettingsSection.self) { section in
+            switch section {
+            case .customizations:
+                CustomizationsScreen()
+            case .configurations:
+                Text("Coming soon") // TODO
+            case .articleSettings:
+                Text("Coming soon") // TODO
+            case .screenSettings:
+                Text("Coming soon") // TODO
             }
         }
         .navigationTitle("settingsScreenTitle")
