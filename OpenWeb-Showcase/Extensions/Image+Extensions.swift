@@ -1,5 +1,5 @@
 //
-//  SquareFrameModifier.swift
+//  Image+Extensions.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 08/03/2026.

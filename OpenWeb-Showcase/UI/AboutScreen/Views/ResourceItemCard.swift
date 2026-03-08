@@ -62,7 +62,6 @@ private extension ResourceItemCard {
         Image(systemName: "chevron.right")
             .font(.system(size: Metrics.chevronSize))
             .foregroundStyle(Color.accentColor)
-            .frame(width: Metrics.chevronSize, height: Metrics.chevronSize)
     }
 
 }
