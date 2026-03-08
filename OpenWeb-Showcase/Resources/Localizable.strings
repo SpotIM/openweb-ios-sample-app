@@ -72,3 +72,14 @@
 "configurationsLocaleStrategySubtitle" = "Select how the SDK determines locale";
 "configurationsEnableLandscapeTitle" = "Enable Landscape";
 "configurationsEnableLandscapeSubtitle" = "Allow landscape orientation in SDK screens";
+
+/* Article Settings Screen */
+"articleSettingsScreenTitle" = "Article Settings";
+"articleSettingsInformationStrategyTitle" = "Article Information Strategy";
+"articleSettingsInformationStrategySubtitle" = "Choose how article information is provided";
+"articleSettingsAssociatedURLTitle" = "Article Associated URL";
+"articleSettingsAssociatedURLPlaceholder" = "Enter URL";
+"articleSettingsHideHeaderTitle" = "Hide Article Header";
+"articleSettingsHideHeaderSubtitle" = "Hide the article header in the conversation";
+"articleSettingsReadOnlyModeTitle" = "Read Only Mode";
+"articleSettingsReadOnlyModeSubtitle" = "Control whether comments are read-only";
