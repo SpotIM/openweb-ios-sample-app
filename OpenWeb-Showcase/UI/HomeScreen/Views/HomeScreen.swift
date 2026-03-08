@@ -51,7 +51,7 @@ private extension HomeScreen {
             LazyVGrid(columns: columns, spacing: Metrics.gridSpacing) {
                 Section {
                     ForEach(viewModel.verticals) { vertical in
-                        VerticalCardItem(vertical: vertical) {
+                        VerticalCard(vertical: vertical) {
                             // handle card tap
                         }
                     }

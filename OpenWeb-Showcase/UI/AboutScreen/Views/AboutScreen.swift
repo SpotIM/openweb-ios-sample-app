@@ -49,29 +49,23 @@ struct AboutScreen: View {
 private extension AboutScreen {
     var logoView: some View {
         Image(.openwebLogo)
-            .resizable()
-            .scaledToFit()
-            .frame(width: Metrics.logoSize, height: Metrics.logoSize)
+            .squareFrame(size: Metrics.logoSize)
     }
 
     var titleView: some View {
         Text("aboutCompanyTitle")
             .font(.screenTitle)
-            .foregroundStyle(.primary)
-            .multilineTextAlignment(.center)
     }
 
     var descriptionView: some View {
         Text("aboutCompanyDescription")
             .font(.bodyText)
-            .foregroundStyle(.primary)
             .lineSpacing(Metrics.descriptionLineSpacing)
     }
 
     var sectionTitleView: some View {
         Text("aboutLinksSectionTitle")
             .font(.sectionTitle)
-            .foregroundStyle(.primary)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 
@@ -85,5 +79,7 @@ private extension AboutScreen {
 }
 
 #Preview {
-    AboutScreen()
+    NavigationStack {
+        AboutScreen()
+    }
 }

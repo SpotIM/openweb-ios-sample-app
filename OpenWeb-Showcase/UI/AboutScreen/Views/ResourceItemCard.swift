@@ -11,7 +11,6 @@ import SwiftUI
 struct ResourceItemCard: View {
     private struct Metrics {
         static let cornerRadius: CGFloat = 12
-        static let borderWidth: CGFloat = 1
         static let contentPadding: CGFloat = 16
         static let iconSize: CGFloat = 24
         static let iconTextSpacing: CGFloat = 12
@@ -33,7 +32,7 @@ struct ResourceItemCard: View {
                 chevronView
             }
             .padding(Metrics.contentPadding)
-            .overlay { cardBorder }
+            .roundedRectBorder(cornerRadius: Metrics.cornerRadius)
         }
         .buttonStyle(.plain)
     }
@@ -51,29 +50,20 @@ private extension ResourceItemCard {
 
     var iconView: some View {
         Image(item.icon)
-            .resizable()
-            .scaledToFit()
-            .foregroundStyle(.primary)
-            .frame(width: Metrics.iconSize, height: Metrics.iconSize)
+            .squareFrame(size: Metrics.iconSize)
     }
 
     var textContent: some View {
         Text(item.title)
             .font(.resourceTitle)
-            .foregroundStyle(.primary)
     }
 
     var chevronView: some View {
         Image(systemName: "chevron.right")
             .font(.system(size: Metrics.chevronSize))
             .foregroundStyle(Color.accentColor)
-            .frame(width: Metrics.chevronSize, height: Metrics.chevronSize)
     }
 
-    var cardBorder: some View {
-        RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous)
-            .stroke(Color(uiColor: .separator), lineWidth: Metrics.borderWidth)
-    }
 }
 
 #Preview {

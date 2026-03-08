@@ -23,13 +23,10 @@ struct HomeToolbar: View {
     var body: some View {
         HStack(spacing: 0) {
             Image(.openwebLogo)
-                .resizable()
-                .scaledToFit()
-                .frame(width: Metrics.logoSize, height: Metrics.logoSize)
+                .squareFrame(size: Metrics.logoSize)
             VStack(alignment: .leading, spacing: Metrics.textSpacing) {
                 Text("homeScreenTitle")
                     .font(.toolbarTitle)
-                    .foregroundStyle(.primary)
                     .lineLimit(1)
                 Text("homeScreenDescription")
                     .font(.toolbarDescription)
@@ -41,7 +38,6 @@ struct HomeToolbar: View {
             Button(action: onAboutClick) {
                 Image(systemName: "info.circle")
                     .font(.system(size: Metrics.infoIconSize))
-                    .foregroundStyle(.primary)
             }
         }
         .padding(.horizontal, Metrics.contentHorizontalPadding)

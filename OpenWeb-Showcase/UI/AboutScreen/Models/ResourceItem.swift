@@ -8,13 +8,13 @@
 
 import SwiftUI
 
-enum ResourceItem: String, Identifiable, CaseIterable {
+enum ResourceItem: Identifiable, CaseIterable {
     case sdkDocs
     case github
     case privacyPolicy
     case terms
 
-    var id: String { rawValue }
+    var id: Self { self }
 
     var title: LocalizedStringKey {
         switch self {
@@ -36,10 +36,10 @@ enum ResourceItem: String, Identifiable, CaseIterable {
 
     var url: URL {
         switch self {
-        case .sdkDocs: URL(string: AppConstants.sdkDocsURL)!
-        case .github: URL(string: AppConstants.githubURL)!
-        case .privacyPolicy: URL(string: AppConstants.privacyPolicyURL)!
-        case .terms: URL(string: AppConstants.termsURL)!
+        case .sdkDocs: URL(string: "https://developers.openweb.com/docs/android-social-sdk-getting-started")!
+        case .github: URL(string: "https://github.com/SpotIM/spotim-android-sample-app")! // TODO: change to iOS repo
+        case .privacyPolicy: URL(string: "https://www.openweb.com/privacy")!
+        case .terms: URL(string: "https://www.openweb.com/terms")!
         }
     }
 }
