@@ -25,7 +25,6 @@ struct VerticalToolbarModifier: ViewModifier {
                         Image(systemName: "gearshape")
                     }
                 }
-                .sharedBackgroundVisibility(.hidden)
             }
     }
 }

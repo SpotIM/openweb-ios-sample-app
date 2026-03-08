@@ -8,9 +8,9 @@
 
 import SwiftUI
 import OpenWebSDK
+import Combine
 
-@Observable
-class NewsScreenViewModel {
+class NewsScreenViewModel: ObservableObject {
     private let vertical: VerticalCardData = .news
 
     var article: ArticleData { vertical.article }
