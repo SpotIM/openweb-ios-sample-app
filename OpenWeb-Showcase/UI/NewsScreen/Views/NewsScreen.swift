@@ -17,7 +17,7 @@ struct NewsScreen: View {
             ArticleContent(article: viewModel.article)
             ImplementationInfoCard(
                 info: viewModel.implementationInfo,
-                iconColor: VerticalCard.news.color
+                iconColor: VerticalCardData.news.color
             )
             OpenWebPreConversation(
                 postId: viewModel.article.conversationIds.postId,
@@ -26,8 +26,8 @@ struct NewsScreen: View {
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
-            title: VerticalCard.news.title,
-            color: VerticalCard.news.color,
+            title: VerticalCardData.news.title,
+            color: VerticalCardData.news.color,
             onSettingsClick: {}
         )
         .onAppear { viewModel.initialize() }

@@ -10,5 +10,5 @@ import Foundation
 
 enum Destination: Hashable {
     case about
-    case vertical(VerticalCard)
+    case vertical(VerticalCardData)
 }

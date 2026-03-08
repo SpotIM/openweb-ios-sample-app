@@ -11,7 +11,7 @@ import OpenWebSDK
 
 @Observable
 class NewsScreenViewModel {
-    private let vertical: VerticalCard = .news
+    private let vertical: VerticalCardData = .news
 
     var article: ArticleData { vertical.article }
     var implementationInfo: ImplementationInfo { vertical.implementationInfo }

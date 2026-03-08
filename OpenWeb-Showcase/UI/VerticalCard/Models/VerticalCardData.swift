@@ -1,5 +1,5 @@
 //
-//  VerticalCard.swift
+//  VerticalCardData.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 02/03/2026.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-enum VerticalCard: String, Identifiable, CaseIterable, Hashable {
+enum VerticalCardData: String, Identifiable, CaseIterable, Hashable {
     case news
     case finance
     case recipes

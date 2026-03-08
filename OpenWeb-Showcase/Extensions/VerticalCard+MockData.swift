@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension VerticalCard {
+extension VerticalCardData {
     var article: ArticleData {
         switch self {
         case .news: MockArticles.news()

@@ -49,7 +49,7 @@ struct HomeScreen: View {
 
 private extension HomeScreen {
     @ViewBuilder
-    func verticalScreen(for card: VerticalCard) -> some View {
+    func verticalScreen(for card: VerticalCardData) -> some View {
         switch card {
         case .news: NewsScreen()
         default: EmptyView()
@@ -65,7 +65,7 @@ private extension HomeScreen {
             LazyVGrid(columns: columns, spacing: Metrics.gridSpacing) {
                 Section {
                     ForEach(viewModel.verticals) { vertical in
-                        VerticalCardItem(vertical: vertical) {
+                        VerticalCard(vertical: vertical) {
                             navigationPath.append(Destination.vertical(vertical))
                         }
                     }

@@ -10,5 +10,5 @@ import SwiftUI
 
 @Observable
 class HomeScreenViewModel {
-    let verticals: [VerticalCard] = VerticalCard.allCases
+    let verticals: [VerticalCardData] = VerticalCardData.allCases
 }
