@@ -16,7 +16,6 @@ struct ImplementationInfoCard: View {
         static let iconTextSpacing: CGFloat = 12
         static let subtitleTopSpacing: CGFloat = 2
         static let descriptionTopSpacing: CGFloat = 12
-        static let borderWidth: CGFloat = 1
         static let cornerRadius: CGFloat = 12
         static let borderOpacity: CGFloat = 0.15
     }
@@ -28,12 +27,11 @@ struct ImplementationInfoCard: View {
     var body: some View {
         cardContent
             .padding(Metrics.contentPadding)
-            .background(Color(uiColor: .systemBackground))
-            .overlay {
-                RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous)
-                    .stroke(Color.black.opacity(Metrics.borderOpacity), lineWidth: Metrics.borderWidth)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous))
+            .roundedRectBackground(cornerRadius: Metrics.cornerRadius)
+            .roundedRectBorder(
+                cornerRadius: Metrics.cornerRadius,
+                color: Color.black.opacity(Metrics.borderOpacity)
+            )
             .padding(.horizontal, Metrics.cardPadding)
             .onTapGesture { withAnimation { expanded.toggle() } }
     }
@@ -60,7 +58,6 @@ private extension ImplementationInfoCard {
             VStack(alignment: .leading, spacing: Metrics.subtitleTopSpacing) {
                 Text(info.title)
                     .font(.bodyText)
-                    .foregroundStyle(.primary)
                 Text(info.subtitle)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -69,7 +66,6 @@ private extension ImplementationInfoCard {
             Spacer()
             Image(systemName: expanded ? "chevron.up" : "chevron.down")
                 .font(.system(size: Metrics.iconSize))
-                .foregroundStyle(.primary)
         }
     }
 

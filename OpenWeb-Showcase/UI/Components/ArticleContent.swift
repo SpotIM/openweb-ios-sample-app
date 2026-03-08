@@ -21,7 +21,6 @@ struct ArticleContent: View {
         VStack(alignment: .leading, spacing: 0) {
             Text(article.title)
                 .font(.articleTitle)
-                .foregroundStyle(.primary)
             Spacer().frame(height: Metrics.titleBottomSpacing)
             ForEach(Array(article.paragraphs.enumerated()), id: \.offset) { _, paragraph in
                 Text(markdown(paragraph))
