@@ -28,3 +28,14 @@
 "aboutGithubTitle" = "GitHub Repository";
 "aboutPrivacyPolicyTitle" = "Privacy Policy";
 "aboutTermsTitle" = "Terms of Service";
+
+/* Settings Screen */
+"settingsScreenTitle" = "Settings";
+"settingsCustomizationsTitle" = "Customizations";
+"settingsCustomizationsSubtitle" = "Theme, colors, fonts, and UI customization";
+"settingsConfigurationsTitle" = "Configurations";
+"settingsConfigurationsSubtitle" = "Language, locale, and general configurations";
+"settingsArticleSettingsTitle" = "Article Settings";
+"settingsArticleSettingsSubtitle" = "Article information and display options";
+"settingsScreenSettingsTitle" = "Screens Settings";
+"settingsScreenSettingsSubtitle" = "PreConversation, Conversation, and screen styles";
