@@ -15,7 +15,7 @@ struct NewsScreen: View {
     var body: some View {
         ScrollView {
             ArticleContent(article: viewModel.article)
-            ImplementationInfoCard(
+            SDKUsageInfoCard(
                 info: viewModel.implementationInfo,
                 iconColor: VerticalCardData.news.color
             )

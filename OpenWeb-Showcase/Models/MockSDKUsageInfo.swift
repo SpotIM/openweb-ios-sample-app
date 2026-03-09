@@ -1,5 +1,5 @@
 //
-//  MockImplementationInfo.swift
+//  MockSDKUsageInfo.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 05/03/2026.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-enum MockImplementationInfo {
-    static func news() -> ImplementationInfo {
-        ImplementationInfo(
+enum MockSDKUsageInfo {
+    static func news() -> SDKUsageInfo {
+        SDKUsageInfo(
             subtitle: "Pre-Conversation Module – Compact Mode",
             description: """
             This implementation gently introduces the conversation without distracting users from the article itself.
@@ -23,8 +23,8 @@ enum MockImplementationInfo {
         )
     }
 
-    static func finance() -> ImplementationInfo {
-        ImplementationInfo(
+    static func finance() -> SDKUsageInfo {
+        SDKUsageInfo(
             subtitle: "Sentiment-Based Comments",
             description: """
             This implementation adds sentiment labels (Bullish, Neutral, Bearish) to comments, helping users quickly understand the overall tone of the discussion.
@@ -36,8 +36,8 @@ enum MockImplementationInfo {
         )
     }
 
-    static func recipes() -> ImplementationInfo {
-        ImplementationInfo(
+    static func recipes() -> SDKUsageInfo {
+        SDKUsageInfo(
             subtitle: "Rating Summary + Star Reviews",
             description: """
             This implementation combines star ratings with written comments and a summarized rating overview, turning the conversation into a source of practical feedback.
@@ -49,8 +49,8 @@ enum MockImplementationInfo {
         )
     }
 
-    static func sport() -> ImplementationInfo {
-        ImplementationInfo(
+    static func sport() -> SDKUsageInfo {
+        SDKUsageInfo(
             subtitle: "Partial screen implementation",
             description: """
             This implementation places the conversation directly alongside the content - in this example, \
@@ -63,8 +63,8 @@ enum MockImplementationInfo {
         )
     }
 
-    static func video() -> ImplementationInfo {
-        ImplementationInfo(
+    static func video() -> SDKUsageInfo {
+        SDKUsageInfo(
             subtitle: "Bottom Sheet Overlay",
             description: """
             This implementation opens the full conversation in a bottom-sheet overlay triggered by a floating comment icon, allowing users to engage without leaving the video.
@@ -76,8 +76,8 @@ enum MockImplementationInfo {
         )
     }
 
-    static func sideRail() -> ImplementationInfo {
-        ImplementationInfo(
+    static func sideRail() -> SDKUsageInfo {
+        SDKUsageInfo(
             subtitle: "Side Rail Panel",
             description: """
             This implementation separates content and conversation into a side rail, enabling users to read and engage simultaneously without cluttering the main article view.

@@ -1,5 +1,5 @@
 //
-//  ImplementationInfoCard.swift
+//  SDKUsageInfoCard.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 05/03/2026.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ImplementationInfoCard: View {
+struct SDKUsageInfoCard: View {
     private struct Metrics {
         static let cardPadding: CGFloat = 16
         static let contentPadding: CGFloat = 16
@@ -20,7 +20,7 @@ struct ImplementationInfoCard: View {
         static let borderOpacity: CGFloat = 0.15
     }
 
-    var info: ImplementationInfo
+    var info: SDKUsageInfo
     var iconColor: Color
     @State private var expanded = false
 
@@ -39,7 +39,7 @@ struct ImplementationInfoCard: View {
 
 // MARK: - Subviews
 
-private extension ImplementationInfoCard {
+private extension SDKUsageInfoCard {
     var cardContent: some View {
         VStack(alignment: .leading, spacing: 0) {
             headerRow
@@ -77,8 +77,8 @@ private extension ImplementationInfoCard {
 }
 
 #Preview {
-    ImplementationInfoCard(
-        info: MockImplementationInfo.news(),
+    SDKUsageInfoCard(
+        info: MockSDKUsageInfo.news(),
         iconColor: Color(.news)
     )
 }

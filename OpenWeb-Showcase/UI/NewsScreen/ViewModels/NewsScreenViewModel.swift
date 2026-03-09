@@ -11,8 +11,8 @@ import OpenWebSDK
 import Combine
 
 class NewsScreenViewModel: ObservableObject {
-    var article: ArticleData { MockArticles.news() }
-    var implementationInfo: ImplementationInfo { MockImplementationInfo.news() }
+    var article: ArticleData { SampleArticles.news() }
+    var implementationInfo: SDKUsageInfo { MockSDKUsageInfo.news() }
     var conversationArticle: OWArticleProtocol {
         OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
     }

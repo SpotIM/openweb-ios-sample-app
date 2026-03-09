@@ -1,5 +1,5 @@
 //
-//  ImplementationInfo.swift
+//  SDKUsageInfo.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 05/03/2026.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ImplementationInfo {
+struct SDKUsageInfo {
     var title: String = "Implementation Info"
     var subtitle: String
     var description: String

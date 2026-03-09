@@ -1,5 +1,5 @@
 //
-//  MockArticles.swift
+//  SampleArticles.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 02/03/2026.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum MockArticles {
+enum SampleArticles {
     static func news() -> ArticleData {
         ArticleData(
             spotId: "sp_LmNIcv7z",
@@ -66,7 +66,7 @@ enum MockArticles {
 
 // MARK: - Private
 
-private extension MockArticles {
+private extension SampleArticles {
     static func loadArticle(named name: String) -> String {
         guard let url = Bundle.main.url(forResource: name, withExtension: "md"),
               let content = try? String(contentsOf: url, encoding: .utf8) else {
