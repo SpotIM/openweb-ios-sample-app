@@ -11,10 +11,8 @@ import Foundation
 enum MockArticles {
     static func news() -> ArticleData {
         ArticleData(
-            conversationIds: ConversationIdentifiers(
-                spotId: "sp_LmNIcv7z",
-                postId: "news_1"
-            ),
+            spotId: "sp_LmNIcv7z",
+            postId: "news_1",
             title: "Government officials announce sweeping reforms that could reshape the economic landscape",
             body: loadArticle(named: "news")
         )
@@ -22,10 +20,8 @@ enum MockArticles {
 
     static func finance() -> ArticleData {
         ArticleData(
-            conversationIds: ConversationIdentifiers(
-                spotId: "sp_xT4NGStS",
-                postId: "finance_1"
-            ),
+            spotId: "sp_xT4NGStS",
+            postId: "finance_1",
             title: "Apple Stock Surges Amid Strong Q4 Earnings Report.",
             body: loadArticle(named: "finance")
         )
@@ -33,10 +29,8 @@ enum MockArticles {
 
     static func recipes() -> ArticleData {
         ArticleData(
-            conversationIds: ConversationIdentifiers(
-                spotId: "sp_LmNIcv7z",
-                postId: "recipes_1"
-            ),
+            spotId: "sp_LmNIcv7z",
+            postId: "recipes_1",
             title: "The Ultimate Homemade Pasta Recipe Everyone Loves",
             body: loadArticle(named: "recipes")
         )
@@ -44,10 +38,8 @@ enum MockArticles {
 
     static func sport() -> ArticleData {
         ArticleData(
-            conversationIds: ConversationIdentifiers(
-                spotId: "sp_LmNIcv7z",
-                postId: "sport_1"
-            ),
+            spotId: "sp_LmNIcv7z",
+            postId: "sport_1",
             title: "Champions League Final: Preview and Predictions",
             body: ""
         )
@@ -55,10 +47,8 @@ enum MockArticles {
 
     static func video() -> ArticleData {
         ArticleData(
-            conversationIds: ConversationIdentifiers(
-                spotId: "sp_LmNIcv7z",
-                postId: "video_1"
-            ),
+            spotId: "sp_LmNIcv7z",
+            postId: "video_1",
             title: "Big Buck Bunny - Animated Short Film",
             body: loadArticle(named: "video")
         )
@@ -66,10 +56,8 @@ enum MockArticles {
 
     static func sideRail() -> ArticleData {
         ArticleData(
-            conversationIds: ConversationIdentifiers(
-                spotId: "sp_LmNIcv7z",
-                postId: "siderail_1"
-            ),
+            spotId: "sp_LmNIcv7z",
+            postId: "siderail_1",
             title: "The Future of Remote Work: A Deep Dive",
             body: loadArticle(named: "siderail")
         )

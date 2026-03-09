@@ -20,7 +20,7 @@ struct NewsScreen: View {
                 iconColor: VerticalCardData.news.color
             )
             OpenWebPreConversation(
-                postId: viewModel.article.conversationIds.postId,
+                postId: viewModel.article.postId,
                 article: viewModel.conversationArticle
             )
         }

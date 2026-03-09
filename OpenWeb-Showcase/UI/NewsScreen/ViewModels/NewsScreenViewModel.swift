@@ -18,7 +18,7 @@ class NewsScreenViewModel: ObservableObject {
     }
 
     func initialize() {
-        OpenWeb.manager.spotId = article.conversationIds.spotId
+        OpenWeb.manager.spotId = article.spotId
         let uiColor = UIColor(VerticalCardData.news.color)
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(lightColor: uiColor, darkColor: uiColor)
     }

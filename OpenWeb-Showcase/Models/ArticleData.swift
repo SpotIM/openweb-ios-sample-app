@@ -9,7 +9,8 @@
 import Foundation
 
 struct ArticleData {
-    var conversationIds: ConversationIdentifiers
+    var spotId: String
+    var postId: String
     var title: String
     var body: String
 }
