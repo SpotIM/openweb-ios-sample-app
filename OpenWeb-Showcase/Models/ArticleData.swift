@@ -11,5 +11,5 @@ import Foundation
 struct ArticleData {
     var conversationIds: ConversationIdentifiers
     var title: String
-    var paragraphs: [String]
+    var body: String
 }

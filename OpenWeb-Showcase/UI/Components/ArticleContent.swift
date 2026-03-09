@@ -12,7 +12,6 @@ struct ArticleContent: View {
     private struct Metrics {
         static let contentPadding: CGFloat = 16
         static let titleBottomSpacing: CGFloat = 16
-        static let paragraphSpacing: CGFloat = 12
     }
 
     var article: ArticleData
@@ -22,22 +21,11 @@ struct ArticleContent: View {
             Text(article.title)
                 .font(.articleTitle)
             Spacer().frame(height: Metrics.titleBottomSpacing)
-            ForEach(Array(article.paragraphs.enumerated()), id: \.offset) { _, paragraph in
-                Text(markdown(paragraph))
-                    .font(.bodyText)
-                    .foregroundStyle(.secondary)
-                Spacer().frame(height: Metrics.paragraphSpacing)
-            }
+            Text(article.body.markdown())
+                .font(.bodyText)
+                .foregroundStyle(.secondary)
         }
         .padding(Metrics.contentPadding)
-    }
-}
-
-// MARK: - Private
-
-private extension ArticleContent {
-    func markdown(_ text: String) -> AttributedString {
-        (try? AttributedString(markdown: text)) ?? AttributedString(text)
     }
 }
 
