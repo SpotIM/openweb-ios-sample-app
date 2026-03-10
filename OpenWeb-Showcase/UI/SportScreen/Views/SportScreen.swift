@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 
 struct SportScreen: View {
     @StateObject private var viewModel = SportScreenViewModel()
@@ -20,13 +21,16 @@ struct SportScreen: View {
                 isLive: viewModel.isLive,
                 goalEvent: viewModel.goalEvent
             )
-            ScrollView {
-                SDKUsageInfoCard(
-                    info: viewModel.sdkUsageInfo,
-                    iconColor: viewModel.color
-                )
-                .padding(.top)
-            }
+            SDKUsageInfoCard(
+                info: viewModel.sdkUsageInfo,
+                iconColor: viewModel.color
+            )
+            .padding(.top)
+            // MARK: OpenWeb SDK
+            OpenWebConversation(
+                postId: viewModel.article.postId,
+                article: viewModel.conversationArticle
+            )
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
@@ -34,6 +38,7 @@ struct SportScreen: View {
             color: viewModel.color,
             onSettingsClick: {}
         )
+        .onAppear { viewModel.initialize() }
     }
 }
 

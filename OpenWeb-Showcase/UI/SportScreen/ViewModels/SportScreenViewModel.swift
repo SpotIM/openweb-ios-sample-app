@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 import Combine
 
 // swiftlint:disable no_magic_numbers
@@ -16,6 +17,10 @@ class SportScreenViewModel: ObservableObject {
     var title: LocalizedStringResource { vertical.title }
     var color: Color { vertical.color }
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
+    var article: ArticleData { vertical.article }
+    var conversationArticle: OWArticleProtocol {
+        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
+    }
 
     @Published var homeScore = 2
     @Published var awayScore = 1
@@ -29,6 +34,12 @@ class SportScreenViewModel: ObservableObject {
 
     init() {
         startMatch()
+    }
+
+    func initialize() {
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.spotId = article.spotId
+        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
     }
 }
 
