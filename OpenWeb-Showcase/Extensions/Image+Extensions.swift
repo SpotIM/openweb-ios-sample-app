@@ -10,8 +10,7 @@ import SwiftUI
 
 extension Image {
     func squareFrame(size: CGFloat) -> some View {
-        self
-            .resizable()
+        resizable()
             .scaledToFit()
             .frame(width: size, height: size)
     }

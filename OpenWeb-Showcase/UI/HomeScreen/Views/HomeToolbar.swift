@@ -25,10 +25,10 @@ struct HomeToolbar: View {
             Image(.openwebLogo)
                 .squareFrame(size: Metrics.logoSize)
             VStack(alignment: .leading, spacing: Metrics.textSpacing) {
-                Text("homeScreenTitle")
+                Text(.homeScreenTitle)
                     .font(.toolbarTitle)
                     .lineLimit(1)
-                Text("homeScreenDescription")
+                Text(.homeScreenDescription)
                     .font(.toolbarDescription)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)

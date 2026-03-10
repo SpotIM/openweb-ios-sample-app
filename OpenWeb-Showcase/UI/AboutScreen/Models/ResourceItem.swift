@@ -16,12 +16,12 @@ enum ResourceItem: Identifiable, CaseIterable {
 
     var id: Self { self }
 
-    var title: LocalizedStringKey {
+    var title: LocalizedStringResource {
         switch self {
-        case .sdkDocs: "aboutSdkDocsTitle"
-        case .github: "aboutGithubTitle"
-        case .privacyPolicy: "aboutPrivacyPolicyTitle"
-        case .terms: "aboutTermsTitle"
+        case .sdkDocs: .aboutSdkDocsTitle
+        case .github: .aboutGithubTitle
+        case .privacyPolicy: .aboutPrivacyPolicyTitle
+        case .terms: .aboutTermsTitle
         }
     }
 
