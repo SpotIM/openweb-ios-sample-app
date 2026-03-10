@@ -10,5 +10,5 @@ import SwiftUI
 import Combine
 
 class HomeScreenViewModel: ObservableObject {
-    let verticals: [VerticalCardData] = VerticalCardData.allCases
+    let verticals: [SampleVertical] = SampleVertical.allCases
 }

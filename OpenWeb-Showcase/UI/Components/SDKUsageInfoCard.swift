@@ -53,9 +53,9 @@ struct SDKUsageInfoCard: View {
     }
 }
 
-#Preview("Custom (current)") {
+#Preview {
     SDKUsageInfoCard(
-        info: MockSDKUsageInfo.news(),
-        iconColor: Color(.news)
+        info: SampleVertical.news.sdkUsageInfo,
+        iconColor: SampleVertical.news.color
     )
 }

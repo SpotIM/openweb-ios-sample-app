@@ -11,15 +11,19 @@ import OpenWebSDK
 import Combine
 
 class NewsScreenViewModel: ObservableObject {
-    var article: ArticleData { SampleArticles.news() }
-    var implementationInfo: SDKUsageInfo { MockSDKUsageInfo.news() }
+    private let vertical: SampleVertical = .news
+
+    var article: ArticleData { vertical.article }
+    var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
+    var color: Color { vertical.color }
+    var title: LocalizedStringResource { vertical.title }
     var conversationArticle: OWArticleProtocol {
         OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
     }
 
     func initialize() {
         OpenWeb.manager.spotId = article.spotId
-        let uiColor = UIColor(VerticalCardData.news.color)
+        let uiColor = UIColor(color)
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(lightColor: uiColor, darkColor: uiColor)
     }
 }

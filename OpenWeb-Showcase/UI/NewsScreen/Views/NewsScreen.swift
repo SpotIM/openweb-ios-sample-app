@@ -16,8 +16,8 @@ struct NewsScreen: View {
         ScrollView {
             ArticleContent(article: viewModel.article)
             SDKUsageInfoCard(
-                info: viewModel.implementationInfo,
-                iconColor: VerticalCardData.news.color
+                info: viewModel.sdkUsageInfo,
+                iconColor: viewModel.color
             )
             OpenWebPreConversation(
                 postId: viewModel.article.postId,
@@ -26,8 +26,8 @@ struct NewsScreen: View {
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
-            title: VerticalCardData.news.title,
-            color: VerticalCardData.news.color,
+            title: viewModel.title,
+            color: viewModel.color,
             onSettingsClick: {}
         )
         .onAppear { viewModel.initialize() }

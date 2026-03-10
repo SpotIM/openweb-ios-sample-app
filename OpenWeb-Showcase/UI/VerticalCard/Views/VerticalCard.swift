@@ -25,7 +25,7 @@ struct VerticalCard: View {
         static let titleDescriptionSpacing: CGFloat = 4
     }
 
-    var vertical: VerticalCardData
+    var vertical: SampleVertical
     var onClick: () -> Void
 
     var body: some View {

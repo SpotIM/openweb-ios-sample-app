@@ -30,6 +30,6 @@ struct ArticleContent: View {
 
 #Preview {
     ScrollView {
-        ArticleContent(article: SampleArticles.news())
+        ArticleContent(article: SampleVertical.news.article)
     }
 }
