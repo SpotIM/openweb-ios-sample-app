@@ -11,7 +11,7 @@ import OpenWebSDK
 import Combine
 
 class NewsScreenViewModel: ObservableObject {
-    private let vertical: SampleVertical = .news
+    private let vertical: ShowcaseVertical = .news
 
     var article: ArticleData { vertical.article }
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }

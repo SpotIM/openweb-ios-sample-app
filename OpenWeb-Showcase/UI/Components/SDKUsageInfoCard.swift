@@ -47,6 +47,7 @@ struct SDKUsageInfoCard: View {
         .padding(Metrics.contentPadding)
         .roundedRect(
             cornerRadius: Metrics.cornerRadius,
+            background: Color(uiColor: .systemBackground),
             border: Color.black.opacity(Metrics.borderOpacity)
         )
         .padding(.horizontal, Metrics.cardPadding)
@@ -55,7 +56,7 @@ struct SDKUsageInfoCard: View {
 
 #Preview {
     SDKUsageInfoCard(
-        info: SampleVertical.news.sdkUsageInfo,
-        iconColor: SampleVertical.news.color
+        info: ShowcaseVertical.news.sdkUsageInfo,
+        iconColor: ShowcaseVertical.news.color
     )
 }

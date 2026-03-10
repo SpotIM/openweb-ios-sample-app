@@ -34,7 +34,6 @@ struct ResourceItemCard: View {
             .padding(Metrics.contentPadding)
             .roundedRect(
                 cornerRadius: Metrics.cornerRadius,
-                background: nil,
                 border: Color(uiColor: .separator)
             )
         }

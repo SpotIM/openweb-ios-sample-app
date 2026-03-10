@@ -10,5 +10,5 @@ import SwiftUI
 import Combine
 
 class HomeScreenViewModel: ObservableObject {
-    let verticals: [SampleVertical] = SampleVertical.allCases
+    let verticals: [ShowcaseVertical] = ShowcaseVertical.allCases
 }

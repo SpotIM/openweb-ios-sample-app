@@ -25,7 +25,7 @@ struct VerticalCard: View {
         static let titleDescriptionSpacing: CGFloat = 4
     }
 
-    var vertical: SampleVertical
+    var vertical: ShowcaseVertical
     var onClick: () -> Void
 
     var body: some View {
@@ -35,6 +35,7 @@ struct VerticalCard: View {
                 .frame(maxWidth: .infinity, minHeight: Metrics.cardHeight, maxHeight: Metrics.cardHeight)
                 .roundedRect(
                     cornerRadius: Metrics.cardCornerRadius,
+                    background: Color(uiColor: .systemBackground),
                     border: Color.black.opacity(Metrics.borderOpacity)
                 )
                 .shadow(color: Color.black.opacity(Metrics.shadowOpacity), radius: Metrics.cardElevation, x: 0, y: Metrics.shadowY)

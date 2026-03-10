@@ -49,7 +49,7 @@ struct HomeScreen: View {
 
 private extension HomeScreen {
     @ViewBuilder
-    func verticalScreen(for card: SampleVertical) -> some View {
+    func verticalScreen(for card: ShowcaseVertical) -> some View {
         switch card {
         case .news: NewsScreen()
         default: EmptyView()

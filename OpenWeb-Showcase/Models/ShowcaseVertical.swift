@@ -1,5 +1,5 @@
 //
-//  SampleVertical.swift
+//  ShowcaseVertical.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 10/03/2026.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-enum SampleVertical: Identifiable, CaseIterable, Hashable {
+enum ShowcaseVertical: Identifiable, CaseIterable, Hashable {
     case news
     case finance
     case recipes
@@ -191,7 +191,7 @@ enum SampleVertical: Identifiable, CaseIterable, Hashable {
 
 // MARK: - Private
 
-private extension SampleVertical {
+private extension ShowcaseVertical {
     static func loadArticle(named name: String) -> String {
         guard let url = Bundle.main.url(forResource: name, withExtension: "md"),
               let content = try? String(contentsOf: url, encoding: .utf8) else {
