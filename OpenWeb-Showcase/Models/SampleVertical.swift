@@ -69,29 +69,47 @@ enum SampleVertical: Identifiable, CaseIterable, Hashable {
     var article: ArticleData {
         switch self {
         case .news:
-            ArticleData(spotId: "sp_LmNIcv7z", postId: "news_1",
-                         title: "Government officials announce sweeping reforms that could reshape the economic landscape",
-                         body: Self.loadArticle(named: "news"))
+            ArticleData(
+                spotId: "sp_LmNIcv7z",
+                postId: "news_1",
+                title: "Government officials announce sweeping reforms that could reshape the economic landscape",
+                body: Self.loadArticle(named: "news")
+            )
         case .finance:
-            ArticleData(spotId: "sp_xT4NGStS", postId: "finance_1",
-                         title: "Apple Stock Surges Amid Strong Q4 Earnings Report.",
-                         body: Self.loadArticle(named: "finance"))
+            ArticleData(
+                spotId: "sp_xT4NGStS",
+                postId: "finance_1",
+                title: "Apple Stock Surges Amid Strong Q4 Earnings Report.",
+                body: Self.loadArticle(named: "finance")
+            )
         case .recipes:
-            ArticleData(spotId: "sp_LmNIcv7z", postId: "recipes_1",
-                         title: "The Ultimate Homemade Pasta Recipe Everyone Loves",
-                         body: Self.loadArticle(named: "recipes"))
+            ArticleData(
+                spotId: "sp_LmNIcv7z",
+                postId: "recipes_1",
+                title: "The Ultimate Homemade Pasta Recipe Everyone Loves",
+                body: Self.loadArticle(named: "recipes")
+            )
         case .sport:
-            ArticleData(spotId: "sp_LmNIcv7z", postId: "sport_1",
-                         title: "Champions League Final: Preview and Predictions",
-                         body: "")
+            ArticleData(
+                spotId: "sp_LmNIcv7z",
+                postId: "sport_1",
+                title: "Champions League Final: Preview and Predictions",
+                body: ""
+            )
         case .video:
-            ArticleData(spotId: "sp_LmNIcv7z", postId: "video_1",
-                         title: "Big Buck Bunny - Animated Short Film",
-                         body: Self.loadArticle(named: "video"))
+            ArticleData(
+                spotId: "sp_LmNIcv7z",
+                postId: "video_1",
+                title: "Big Buck Bunny - Animated Short Film",
+                body: Self.loadArticle(named: "video")
+            )
         case .sideRail:
-            ArticleData(spotId: "sp_LmNIcv7z", postId: "siderail_1",
-                         title: "The Future of Remote Work: A Deep Dive",
-                         body: Self.loadArticle(named: "siderail"))
+            ArticleData(
+                spotId: "sp_LmNIcv7z",
+                postId: "siderail_1",
+                title: "The Future of Remote Work: A Deep Dive",
+                body: Self.loadArticle(named: "siderail")
+            )
         }
     }
 
@@ -109,7 +127,8 @@ enum SampleVertical: Identifiable, CaseIterable, Hashable {
                 Why choose this implementation?
 
                 Perfect for publishers who want higher engagement while keeping a clean, editorial-first experience.
-                """)
+                """
+            )
         case .finance:
             SDKUsageInfo(
                 subtitle: "Sentiment-Based Comments",
@@ -119,7 +138,8 @@ enum SampleVertical: Identifiable, CaseIterable, Hashable {
                 By summarizing sentiment before entering the full conversation, readers can grasp market perspectives at a glance and decide how deeply they want to engage.
 
                 This model works especially well for financial content where insight, clarity, and trend awareness add direct value to the reading experience.
-                """)
+                """
+            )
         case .recipes:
             SDKUsageInfo(
                 subtitle: "Rating Summary + Star Reviews",
@@ -129,7 +149,8 @@ enum SampleVertical: Identifiable, CaseIterable, Hashable {
                 Users can quickly evaluate how others experienced the recipe before reading individual reviews or contributing their own.
 
                 It is particularly effective for lifestyle content where social proof and shared experiences help users make confident decisions.
-                """)
+                """
+            )
         case .sport:
             SDKUsageInfo(
                 subtitle: "Partial screen implementation",
@@ -140,7 +161,8 @@ enum SampleVertical: Identifiable, CaseIterable, Hashable {
                 Users can react and comment in real time while following the game, creating a fast-paced and highly engaging second-screen experience.
 
                 This setup is best suited for live events where immediacy and momentum are key drivers of engagement.
-                """)
+                """
+            )
         case .video:
             SDKUsageInfo(
                 subtitle: "Bottom Sheet Overlay",
@@ -150,7 +172,8 @@ enum SampleVertical: Identifiable, CaseIterable, Hashable {
                 The experience mirrors modern social video platforms, keeping users immersed while making participation easily accessible.
 
                 It is ideal for video-first products that want to increase interaction without impacting watch time or content flow.
-                """)
+                """
+            )
         case .sideRail:
             SDKUsageInfo(
                 subtitle: "Side Rail Panel",
@@ -160,7 +183,8 @@ enum SampleVertical: Identifiable, CaseIterable, Hashable {
                 The conversation is revealed only when the user chooses to open it, giving full control over the reading experience.
 
                 This approach works well for long-form or premium content where thoughtful discussion should complement, not disrupt, consumption.
-                """)
+                """
+            )
         }
     }
 }
