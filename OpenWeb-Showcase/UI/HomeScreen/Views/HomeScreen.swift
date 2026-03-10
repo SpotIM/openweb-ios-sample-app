@@ -37,6 +37,8 @@ struct HomeScreen: View {
                 switch destination {
                 case .about:
                     AboutScreen()
+                case .sport:
+                    SportScreen()
                 }
             }
         }
@@ -52,7 +54,9 @@ private extension HomeScreen {
                 Section {
                     ForEach(viewModel.verticals) { vertical in
                         VerticalCard(vertical: vertical) {
-                            // handle card tap
+                            if vertical.id == "sport" {
+                                navigationPath.append(Destination.sport)
+                            }
                         }
                     }
                 } header: {

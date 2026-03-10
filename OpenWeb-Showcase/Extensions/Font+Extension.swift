@@ -19,4 +19,11 @@ extension Font {
     static let cardDescription: Font = .system(size: 13)
     static let cardIcon: Font = .system(size: 28)
     static let resourceTitle: Font = .subheadline.weight(.semibold)
+    static let scoreboardScore: Font = .system(size: 40, weight: .black)
+    static let scoreboardLive: Font = .system(size: 11, weight: .heavy)
+    static let scoreboardMinute: Font = .system(size: 13, weight: .medium)
+    static let scoreboardFullTime: Font = .system(size: 12, weight: .bold)
+    static let scoreboardTeamName: Font = .system(size: 14, weight: .bold)
+    static let scoreboardGoal: Font = .system(size: 16, weight: .black)
+    static let scoreboardGoalEmoji: Font = .system(size: 18)
 }
