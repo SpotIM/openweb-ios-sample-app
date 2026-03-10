@@ -50,14 +50,14 @@ private extension SportScreenViewModel {
                 if homeGoal {
                     goalId += 1
                     homeScore += 1
-                    goalEvent = GoalEvent(teamName: String(localized: .scoreboardHomeTeam), id: goalId)
+                    goalEvent = GoalEvent(team: .home, id: goalId)
                     dismissGoalAfterDelay()
                 }
 
                 if awayGoal {
                     goalId += 1
                     awayScore += 1
-                    goalEvent = GoalEvent(teamName: String(localized: .scoreboardAwayTeam), id: goalId)
+                    goalEvent = GoalEvent(team: .away, id: goalId)
                     dismissGoalAfterDelay()
                 }
 

@@ -9,7 +9,8 @@
 import SwiftUI
 
 struct GoalEvent: Equatable {
-    var teamName: String
+    enum Team { case home, away }
+    var team: Team
     var id: Int
 }
 
@@ -18,21 +19,35 @@ struct SportScoreboard: View {
         static let cornerRadius: CGFloat = 16
         static let horizontalPadding: CGFloat = 16
         static let verticalPadding: CGFloat = 8
+        static let statusBarHeight: CGFloat = 30
         static let statusBarBackgroundOpacity: CGFloat = 0.2
         static let liveDotSize: CGFloat = 6
+        static let liveIndicatorSpacing: CGFloat = 8
+        static let livePillSpacing: CGFloat = 5
         static let livePillHorizontalPadding: CGFloat = 10
         static let livePillVerticalPadding: CGFloat = 3
+        static let liveTracking: CGFloat = 1
+        static let fullTimeTracking: CGFloat = 1.5
         static let teamsHorizontalPadding: CGFloat = 24
         static let teamsVerticalPadding: CGFloat = 20
+        static let scoreSeparatorOpacity: CGFloat = 0.5
         static let logoSize: CGFloat = 72
         static let logoImageSize: CGFloat = 52
         static let logoBorderWidth: CGFloat = 2
         static let logoBorderOpacity: CGFloat = 0.6
         static let logoGlowRadius: CGFloat = 10
         static let logoGlowOpacity: CGFloat = 0.15
+        static let logoShadowRadius: CGFloat = 6
         static let teamNameSpacing: CGFloat = 10
+        static let teamNameShadowOpacity: CGFloat = 0.4
+        static let teamNameShadowRadius: CGFloat = 3
+        static let teamNameShadowOffset: CGFloat = 1
+        static let goalBannerSpacing: CGFloat = 8
         static let goalBannerVerticalPadding: CGFloat = 10
+        static let goalTracking: CGFloat = 2
         static let goalScaleTarget: CGFloat = 1.5
+        static let livePillColor = Color(red: 1.0, green: 0.23, blue: 0.19)
+        static let goalAnimationDuration: CGFloat = 0.2
     }
 
     var homeTeamName: String = String(localized: .scoreboardHomeTeam)
@@ -80,11 +95,11 @@ private extension SportScoreboard {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 30)
+        .frame(height: Metrics.statusBarHeight)
     }
 
     var liveIndicator: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: Metrics.liveIndicatorSpacing) {
             livePill
             Text(.scoreboardMatchMinute(Int32(matchMinute)))
                 .font(.scoreboardMinute)
@@ -93,16 +108,16 @@ private extension SportScoreboard {
     }
 
     var livePill: some View {
-        HStack(spacing: 5) {
+        HStack(spacing: Metrics.livePillSpacing) {
             PulsingDot(size: Metrics.liveDotSize)
             Text(.scoreboardLive)
                 .font(.scoreboardLive)
                 .foregroundStyle(.white)
-                .tracking(1)
+                .tracking(Metrics.liveTracking)
         }
         .padding(.horizontal, Metrics.livePillHorizontalPadding)
         .padding(.vertical, Metrics.livePillVerticalPadding)
-        .background(Color(red: 1.0, green: 0.23, blue: 0.19))
+        .background(Metrics.livePillColor)
         .clipShape(Capsule())
     }
 
@@ -110,7 +125,7 @@ private extension SportScoreboard {
         Text(.scoreboardFullTime)
             .font(.scoreboardFullTime)
             .foregroundStyle(.white)
-            .tracking(1.5)
+            .tracking(Metrics.fullTimeTracking)
     }
 
     var teamsAndScores: some View {
@@ -133,7 +148,7 @@ private extension SportScoreboard {
                 .foregroundStyle(homeScoreHighlighted ? .yellow : .white)
                 .scaleEffect(homeScoreScale)
             Text(" - ")
-                .foregroundStyle(.white.opacity(0.5))
+                .foregroundStyle(.white.opacity(Metrics.scoreSeparatorOpacity))
             Text("\(awayScore)")
                 .foregroundStyle(awayScoreHighlighted ? .yellow : .white)
                 .scaleEffect(awayScoreScale)
@@ -148,7 +163,7 @@ private extension SportScoreboard {
                 .font(.scoreboardTeamName)
                 .foregroundStyle(.white)
                 .lineLimit(1)
-                .shadow(color: .black.opacity(0.4), radius: 3, x: 1, y: 1)
+                .shadow(color: .black.opacity(Metrics.teamNameShadowOpacity), radius: Metrics.teamNameShadowRadius, x: Metrics.teamNameShadowOffset, y: Metrics.teamNameShadowOffset)
         }
     }
 
@@ -167,7 +182,7 @@ private extension SportScoreboard {
                     Circle()
                         .stroke(.white.opacity(Metrics.logoBorderOpacity), lineWidth: Metrics.logoBorderWidth)
                 )
-                .shadow(radius: 6)
+                .shadow(radius: Metrics.logoShadowRadius)
                 .overlay {
                     Image(logo)
                         .squareFrame(size: Metrics.logoImageSize)
@@ -178,13 +193,13 @@ private extension SportScoreboard {
     @ViewBuilder
     var goalBanner: some View {
         if showGoalBanner {
-            HStack(spacing: 8) {
+            HStack(spacing: Metrics.goalBannerSpacing) {
                 Text("⚽")
                     .font(.scoreboardGoalEmoji)
                 Text(.scoreboardGoal)
                     .font(.scoreboardGoal)
                     .foregroundStyle(.yellow)
-                    .tracking(2)
+                    .tracking(Metrics.goalTracking)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, Metrics.goalBannerVerticalPadding)
@@ -208,7 +223,7 @@ private extension SportScoreboard {
             return
         }
 
-        let isHome = event.teamName == homeTeamName
+        let isHome = event.team == .home
         if isHome {
             homeScoreHighlighted = true
         } else {
@@ -217,12 +232,12 @@ private extension SportScoreboard {
 
         withAnimation { showGoalBanner = true }
 
-        withAnimation(.easeOut(duration: 0.2)) {
+        withAnimation(.easeOut(duration: Metrics.goalAnimationDuration)) {
             if isHome { homeScoreScale = Metrics.goalScaleTarget } else { awayScoreScale = Metrics.goalScaleTarget }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            withAnimation(.easeIn(duration: 0.2)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.goalAnimationDuration) {
+            withAnimation(.easeIn(duration: Metrics.goalAnimationDuration)) {
                 if isHome { homeScoreScale = 1 } else { awayScoreScale = 1 }
             }
         }
@@ -232,6 +247,11 @@ private extension SportScoreboard {
 // MARK: - Pulsing Dot
 
 private struct PulsingDot: View {
+    private struct Metrics {
+        static let animationDuration: CGFloat = 0.8
+        static let minOpacity: CGFloat = 0.3
+    }
+
     var size: CGFloat
 
     @State private var opacity: CGFloat = 1
@@ -241,8 +261,8 @@ private struct PulsingDot: View {
             .fill(.white.opacity(opacity))
             .frame(width: size, height: size)
             .onAppear {
-                withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
-                    opacity = 0.3
+                withAnimation(.easeInOut(duration: Metrics.animationDuration).repeatForever(autoreverses: true)) {
+                    opacity = Metrics.minOpacity
                 }
             }
     }
