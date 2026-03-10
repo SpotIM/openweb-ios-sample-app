@@ -35,10 +35,10 @@ struct SportScoreboard: View {
         static let goalScaleTarget: CGFloat = 1.5
     }
 
-    var homeTeamName: String = "Home Team" // TODO: localize
+    var homeTeamName: String = String(localized: .scoreboardHomeTeam)
     var homeTeamLogo: String = "team_logo_home"
     var homeScore: Int = 2
-    var awayTeamName: String = "Away Team" // TODO: localize
+    var awayTeamName: String = String(localized: .scoreboardAwayTeam)
     var awayTeamLogo: String = "team_logo_away"
     var awayScore: Int = 1
     var matchMinute: Int = 0
@@ -86,7 +86,7 @@ private extension SportScoreboard {
     var liveIndicator: some View {
         HStack(spacing: 8) {
             livePill
-            Text("· \(matchMinute)'")
+            Text(.scoreboardMatchMinute(Int32(matchMinute)))
                 .font(.scoreboardMinute)
                 .foregroundStyle(.white)
         }
@@ -95,7 +95,7 @@ private extension SportScoreboard {
     var livePill: some View {
         HStack(spacing: 5) {
             PulsingDot(size: Metrics.liveDotSize)
-            Text("LIVE")
+            Text(.scoreboardLive)
                 .font(.scoreboardLive)
                 .foregroundStyle(.white)
                 .tracking(1)
@@ -107,7 +107,7 @@ private extension SportScoreboard {
     }
 
     var fullTimeIndicator: some View {
-        Text("FULL TIME")
+        Text(.scoreboardFullTime)
             .font(.scoreboardFullTime)
             .foregroundStyle(.white)
             .tracking(1.5)
@@ -181,7 +181,7 @@ private extension SportScoreboard {
             HStack(spacing: 8) {
                 Text("⚽")
                     .font(.scoreboardGoalEmoji)
-                Text("GOAL!")
+                Text(.scoreboardGoal)
                     .font(.scoreboardGoal)
                     .foregroundStyle(.yellow)
                     .tracking(2)
@@ -218,14 +218,12 @@ private extension SportScoreboard {
         withAnimation { showGoalBanner = true }
 
         withAnimation(.easeOut(duration: 0.2)) {
-            if isHome { homeScoreScale = Metrics.goalScaleTarget }
-            else { awayScoreScale = Metrics.goalScaleTarget }
+            if isHome { homeScoreScale = Metrics.goalScaleTarget } else { awayScoreScale = Metrics.goalScaleTarget }
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             withAnimation(.easeIn(duration: 0.2)) {
-                if isHome { homeScoreScale = 1 }
-                else { awayScoreScale = 1 }
+                if isHome { homeScoreScale = 1 } else { awayScoreScale = 1 }
             }
         }
     }

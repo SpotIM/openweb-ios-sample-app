@@ -11,7 +11,7 @@ import Combine
 
 // swiftlint:disable no_magic_numbers
 class SportScreenViewModel: ObservableObject {
-    let title = "Sport"
+    let title: LocalizedStringResource = "verticalSportTitle"
 
     @Published var homeScore = 2
     @Published var awayScore = 1
@@ -41,28 +41,28 @@ private extension SportScreenViewModel {
                     return
                 }
 
-                self.matchMinute = currentMinute
+                matchMinute = currentMinute
 
                 let goalRoll = Double.random(in: 0..<1)
                 let homeGoal = goalRoll < 0.12
                 let awayGoal = !homeGoal && goalRoll < 0.24
 
                 if homeGoal {
-                    self.goalId += 1
-                    self.homeScore += 1
-                    self.goalEvent = GoalEvent(teamName: "Home Team", id: self.goalId)
-                    self.dismissGoalAfterDelay()
+                    goalId += 1
+                    homeScore += 1
+                    goalEvent = GoalEvent(teamName: String(localized: .scoreboardHomeTeam), id: goalId)
+                    dismissGoalAfterDelay()
                 }
 
                 if awayGoal {
-                    self.goalId += 1
-                    self.awayScore += 1
-                    self.goalEvent = GoalEvent(teamName: "Away Team", id: self.goalId)
-                    self.dismissGoalAfterDelay()
+                    goalId += 1
+                    awayScore += 1
+                    goalEvent = GoalEvent(teamName: String(localized: .scoreboardAwayTeam), id: goalId)
+                    dismissGoalAfterDelay()
                 }
 
                 if currentMinute == 90 {
-                    self.isLive = false
+                    isLive = false
                 }
 
                 currentMinute += 1
