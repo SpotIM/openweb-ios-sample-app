@@ -35,6 +35,7 @@
 		24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		24A4A12E2F558DE500B538E1 /* OpenWeb-Showcase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWeb-Showcase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AFA6079F9C81C1153679317 /* Pods-OpenWeb-Showcase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.release.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.release.xcconfig"; sourceTree = "<group>"; };
+		A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.internal.xcconfig"; sourceTree = "<group>"; };
 		C338E47A6892325DC585734F /* Pods-OpenWeb-Showcase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.debug.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,6 +84,7 @@
 			children = (
 				C338E47A6892325DC585734F /* Pods-OpenWeb-Showcase.debug.xcconfig */,
 				6AFA6079F9C81C1153679317 /* Pods-OpenWeb-Showcase.release.xcconfig */,
+				A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */,
 			);
 			name = Pods;
 			path = ../Pods;
@@ -328,7 +330,7 @@
 		};
 		24A4A13A2F558DE600B538E1 /* Internal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C338E47A6892325DC585734F /* Pods-OpenWeb-Showcase.debug.xcconfig */;
+			baseConfigurationReference = A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
