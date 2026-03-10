@@ -20,9 +20,20 @@ struct SportScreen: View {
                 isLive: viewModel.isLive,
                 goalEvent: viewModel.goalEvent
             )
+            ScrollView {
+                SDKUsageInfoCard(
+                    info: viewModel.sdkUsageInfo,
+                    iconColor: viewModel.color
+                )
+                .padding(.top)
+            }
         }
-        .frame(maxHeight: .infinity, alignment: .top)
-        .navigationTitle(viewModel.title)
+        .background(Color(.systemGroupedBackground))
+        .verticalToolbar(
+            title: viewModel.title,
+            color: viewModel.color,
+            onSettingsClick: {}
+        )
     }
 }
 

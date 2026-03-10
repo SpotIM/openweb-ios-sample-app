@@ -11,7 +11,11 @@ import Combine
 
 // swiftlint:disable no_magic_numbers
 class SportScreenViewModel: ObservableObject {
-    let title: LocalizedStringResource = "verticalSportTitle"
+    private let vertical: ShowcaseVertical = .sport
+
+    var title: LocalizedStringResource { vertical.title }
+    var color: Color { vertical.color }
+    var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
 
     @Published var homeScore = 2
     @Published var awayScore = 1
