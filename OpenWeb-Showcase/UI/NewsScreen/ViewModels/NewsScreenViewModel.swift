@@ -22,8 +22,8 @@ class NewsScreenViewModel: ObservableObject {
     }
 
     func initialize() {
+        // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
-        let uiColor = UIColor(color)
-        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(lightColor: uiColor, darkColor: uiColor)
+        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
     }
 }

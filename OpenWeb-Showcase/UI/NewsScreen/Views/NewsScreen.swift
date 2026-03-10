@@ -19,6 +19,7 @@ struct NewsScreen: View {
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
             )
+            // MARK: OpenWeb SDK
             OpenWebPreConversation(
                 postId: viewModel.article.postId,
                 article: viewModel.conversationArticle
