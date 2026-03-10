@@ -32,7 +32,7 @@ struct ResourceItemCard: View {
                 chevronView
             }
             .padding(Metrics.contentPadding)
-            .roundedRectBorder(cornerRadius: Metrics.cornerRadius)
+            .roundedRect(cornerRadius: Metrics.cornerRadius, background: nil)
         }
         .buttonStyle(.plain)
     }

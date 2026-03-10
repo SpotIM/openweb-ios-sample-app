@@ -33,10 +33,9 @@ struct VerticalCard: View {
             cardContent
                 .padding(Metrics.paddingLarge)
                 .frame(maxWidth: .infinity, minHeight: Metrics.cardHeight, maxHeight: Metrics.cardHeight)
-                .roundedRectBackground(cornerRadius: Metrics.cardCornerRadius)
-                .roundedRectBorder(
+                .roundedRect(
                     cornerRadius: Metrics.cardCornerRadius,
-                    color: Color.black.opacity(Metrics.borderOpacity)
+                    border: Color.black.opacity(Metrics.borderOpacity)
                 )
                 .shadow(color: Color.black.opacity(Metrics.shadowOpacity), radius: Metrics.cardElevation, x: 0, y: Metrics.shadowY)
         }
@@ -61,9 +60,9 @@ private extension VerticalCard {
         Text(vertical.icon)
             .font(.cardIcon)
             .frame(width: Metrics.iconContainerSize, height: Metrics.iconContainerSize)
-            .roundedRectBackground(
+            .roundedRect(
                 cornerRadius: Metrics.iconContainerCornerRadius,
-                color: vertical.color.opacity(Metrics.iconBackgroundOpacity)
+                background: vertical.color.opacity(Metrics.iconBackgroundOpacity)
             )
     }
 

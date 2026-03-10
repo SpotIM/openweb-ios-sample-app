@@ -17,10 +17,9 @@ struct ArticleContent: View {
     var article: ArticleData
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: Metrics.titleBottomSpacing) {
             Text(article.title)
                 .font(.articleTitle)
-            Spacer().frame(height: Metrics.titleBottomSpacing)
             Text(article.body.markdown())
                 .font(.bodyText)
                 .foregroundStyle(.secondary)
