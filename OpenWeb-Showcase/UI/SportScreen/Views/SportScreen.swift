@@ -12,9 +12,17 @@ struct SportScreen: View {
     @StateObject private var viewModel = SportScreenViewModel()
 
     var body: some View {
-        Text(viewModel.title)
-            .font(.largeTitle)
-            .navigationTitle(viewModel.title)
+        VStack(spacing: 0) {
+            SportScoreboard(
+                homeScore: viewModel.homeScore,
+                awayScore: viewModel.awayScore,
+                matchMinute: viewModel.matchMinute,
+                isLive: viewModel.isLive,
+                goalEvent: viewModel.goalEvent
+            )
+        }
+        .frame(maxHeight: .infinity, alignment: .top)
+        .navigationTitle(viewModel.title)
     }
 }
 

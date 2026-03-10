@@ -72,7 +72,7 @@ struct SportScoreboard: View {
 private extension SportScoreboard {
     var statusBar: some View {
         ZStack {
-            Color.black.opacity(Metrics.statusBarBackgroundOpacity)
+            brandColor.overlay(Color.black.opacity(Metrics.statusBarBackgroundOpacity))
             if isLive {
                 liveIndicator
             } else {
