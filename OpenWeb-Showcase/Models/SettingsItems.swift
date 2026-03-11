@@ -53,6 +53,6 @@ enum SettingsItems {
         preConversationStyle.key, numberOfComments.key, preConversationGuidelinesStyle.key,
         preConversationQuestionsStyle.key, conversationStyle.key, conversationGuidelinesStyle.key,
         conversationQuestionsStyle.key, conversationSpacing.key, betweenCommentsSpacing.key,
-        guidelinesSpacing.key, questionsSpacing.key, enablePullToRefresh.key
+        guidelinesSpacing.key, questionsSpacing.key, enablePullToRefresh.key,
     ]
 }

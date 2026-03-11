@@ -43,7 +43,6 @@ class ScreenSettingsViewModel: ObservableObject {
         isCustomConversationEnabled && selectedConversationSpacing == .custom
     }
 
-
     init() {
         loadSettings()
         observeChanges()

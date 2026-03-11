@@ -37,6 +37,8 @@ struct HomeScreen: View {
                 switch destination {
                 case .about:
                     AboutScreen()
+                case .settings:
+                    SettingsScreen()
                 case .vertical(let card):
                     verticalScreen(for: card)
                 }
