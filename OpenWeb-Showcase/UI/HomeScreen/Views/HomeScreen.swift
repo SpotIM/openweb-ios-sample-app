@@ -37,8 +37,22 @@ struct HomeScreen: View {
                 switch destination {
                 case .about:
                     AboutScreen()
+                case .vertical(let card):
+                    verticalScreen(for: card)
                 }
             }
+        }
+    }
+}
+
+// MARK: - Navigation
+
+private extension HomeScreen {
+    @ViewBuilder
+    func verticalScreen(for card: ShowcaseVertical) -> some View {
+        switch card {
+        case .news: NewsScreen()
+        default: EmptyView()
         }
     }
 }
@@ -52,11 +66,11 @@ private extension HomeScreen {
                 Section {
                     ForEach(viewModel.verticals) { vertical in
                         VerticalCard(vertical: vertical) {
-                            // handle card tap
+                            navigationPath.append(Destination.vertical(vertical))
                         }
                     }
                 } header: {
-                    Text("chooseVerticalSectionTitle")
+                    Text(.chooseVerticalSectionTitle)
                         .font(.sectionTitle)
                         .foregroundStyle(.secondary)
                         .tracking(Metrics.sectionHeaderLetterSpacing)

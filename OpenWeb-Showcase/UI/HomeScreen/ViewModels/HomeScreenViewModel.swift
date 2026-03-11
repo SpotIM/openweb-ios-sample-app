@@ -10,48 +10,5 @@ import SwiftUI
 import Combine
 
 class HomeScreenViewModel: ObservableObject {
-    let verticals: [VerticalCardData] = [
-        VerticalCardData(
-            id: "news",
-            icon: "📰",
-            title: "verticalNewsTitle",
-            description: "verticalNewsDescription",
-            color: Color(.news)
-        ),
-        VerticalCardData(
-            id: "finance",
-            icon: "📈",
-            title: "verticalFinanceTitle",
-            description: "verticalFinanceDescription",
-            color: Color(.finance)
-        ),
-        VerticalCardData(
-            id: "recipes",
-            icon: "🍲",
-            title: "verticalRecipesTitle",
-            description: "verticalRecipesDescription",
-            color: Color(.recipes)
-        ),
-        VerticalCardData(
-            id: "sport",
-            icon: "⚽",
-            title: "verticalSportTitle",
-            description: "verticalSportDescription",
-            color: Color(.sport)
-        ),
-        VerticalCardData(
-            id: "video",
-            icon: "▶️",
-            title: "verticalVideoTitle",
-            description: "verticalVideoDescription",
-            color: Color(.video)
-        ),
-        VerticalCardData(
-            id: "siderail",
-            icon: "📄",
-            title: "verticalSiderailTitle",
-            description: "verticalSiderailDescription",
-            color: Color(.sideRail)
-        ),
-    ]
+    let verticals: [ShowcaseVertical] = ShowcaseVertical.allCases
 }

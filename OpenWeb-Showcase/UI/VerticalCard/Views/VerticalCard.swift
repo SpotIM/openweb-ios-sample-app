@@ -25,7 +25,7 @@ struct VerticalCard: View {
         static let titleDescriptionSpacing: CGFloat = 4
     }
 
-    var vertical: VerticalCardData
+    var vertical: ShowcaseVertical
     var onClick: () -> Void
 
     var body: some View {
@@ -33,10 +33,10 @@ struct VerticalCard: View {
             cardContent
                 .padding(Metrics.paddingLarge)
                 .frame(maxWidth: .infinity, minHeight: Metrics.cardHeight, maxHeight: Metrics.cardHeight)
-                .roundedRectBackground(cornerRadius: Metrics.cardCornerRadius)
-                .roundedRectBorder(
+                .roundedRect(
                     cornerRadius: Metrics.cardCornerRadius,
-                    color: Color.black.opacity(Metrics.borderOpacity)
+                    background: Color(uiColor: .systemBackground),
+                    border: Color.black.opacity(Metrics.borderOpacity)
                 )
                 .shadow(color: Color.black.opacity(Metrics.shadowOpacity), radius: Metrics.cardElevation, x: 0, y: Metrics.shadowY)
         }
@@ -61,9 +61,9 @@ private extension VerticalCard {
         Text(vertical.icon)
             .font(.cardIcon)
             .frame(width: Metrics.iconContainerSize, height: Metrics.iconContainerSize)
-            .roundedRectBackground(
+            .roundedRect(
                 cornerRadius: Metrics.iconContainerCornerRadius,
-                color: vertical.color.opacity(Metrics.iconBackgroundOpacity)
+                background: vertical.color.opacity(Metrics.iconBackgroundOpacity)
             )
     }
 
@@ -88,15 +88,6 @@ private extension VerticalCard {
 }
 
 #Preview {
-    VerticalCard(
-        vertical: VerticalCardData(
-            id: "news",
-            icon: "🌍",
-            title: "News",
-            description: "A short description that can wrap to two lines.",
-            color: .blue
-        ),
-        onClick: {}
-    )
-    .padding()
+    VerticalCard(vertical: .news, onClick: {})
+        .padding()
 }

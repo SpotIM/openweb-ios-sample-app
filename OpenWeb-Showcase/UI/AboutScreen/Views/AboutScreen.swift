@@ -40,7 +40,7 @@ struct AboutScreen: View {
             .padding(Metrics.contentPadding)
         }
         .background(Color(uiColor: .systemBackground))
-        .navigationTitle("aboutScreenTitle")
+        .navigationTitle(.aboutScreenTitle)
     }
 }
 
@@ -53,18 +53,18 @@ private extension AboutScreen {
     }
 
     var titleView: some View {
-        Text("aboutCompanyTitle")
+        Text(.aboutCompanyTitle)
             .font(.screenTitle)
     }
 
     var descriptionView: some View {
-        Text("aboutCompanyDescription")
+        Text(.aboutCompanyDescription)
             .font(.bodyText)
             .lineSpacing(Metrics.descriptionLineSpacing)
     }
 
     var sectionTitleView: some View {
-        Text("aboutLinksSectionTitle")
+        Text(.aboutLinksSectionTitle)
             .font(.sectionTitle)
             .frame(maxWidth: .infinity, alignment: .leading)
     }

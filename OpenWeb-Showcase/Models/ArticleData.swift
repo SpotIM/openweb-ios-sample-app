@@ -1,5 +1,5 @@
 //
-//  Destination.swift
+//  ArticleData.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 02/03/2026.
@@ -8,7 +8,9 @@
 
 import Foundation
 
-enum Destination: Hashable {
-    case about
-    case vertical(ShowcaseVertical)
+struct ArticleData {
+    var spotId: String
+    var postId: String
+    var title: String
+    var body: String
 }

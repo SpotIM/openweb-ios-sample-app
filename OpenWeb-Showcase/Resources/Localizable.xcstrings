@@ -1,0 +1,1216 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "aboutCompanyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The OpenWeb Sample App is a live showcase of our SDK capabilities and recommended implementation patterns.\n\nIt features production-ready examples of OpenWeb's engagement experiences - including pre-conversation units, full conversations, side-rail placements, and video integrations across multiple content verticals such as news, finance, sports, recipes, and more.\n\nDesigned as both a demonstration environment and a best-practice reference, the app highlights the flexibility, performance, and adaptability of the OpenWeb platform, helping partners better understand how our solutions can be integrated into their own products."
+          }
+        }
+      }
+    },
+    "aboutCompanyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenWeb SDK Demo"
+          }
+        }
+      }
+    },
+    "aboutGithubTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub Repository"
+          }
+        }
+      }
+    },
+    "aboutLinksSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LINKS & CONTACT"
+          }
+        }
+      }
+    },
+    "aboutPrivacyPolicyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        }
+      }
+    },
+    "aboutScreenTitle" : {
+      "comment" : "About Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
+          }
+        }
+      }
+    },
+    "aboutSdkDocsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SDK Documentation"
+          }
+        }
+      }
+    },
+    "aboutTermsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terms of Service"
+          }
+        }
+      }
+    },
+    "articleSettingsAssociatedURLPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter URL"
+          }
+        }
+      }
+    },
+    "articleSettingsAssociatedURLTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Article Associated URL"
+          }
+        }
+      }
+    },
+    "articleSettingsHideHeaderSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide the article header in the conversation"
+          }
+        }
+      }
+    },
+    "articleSettingsHideHeaderTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Article Header"
+          }
+        }
+      }
+    },
+    "articleSettingsInformationStrategySubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose how article information is provided"
+          }
+        }
+      }
+    },
+    "articleSettingsInformationStrategyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Article Information Strategy"
+          }
+        }
+      }
+    },
+    "articleSettingsReadOnlyModeSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control whether comments are read-only"
+          }
+        }
+      }
+    },
+    "articleSettingsReadOnlyModeTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read Only Mode"
+          }
+        }
+      }
+    },
+    "articleSettingsScreenTitle" : {
+      "comment" : "Article Settings Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Article Settings"
+          }
+        }
+      }
+    },
+    "chooseVerticalSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a Vertical"
+          }
+        }
+      }
+    },
+    "configurationsEnableLandscapeSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow landscape orientation in SDK screens"
+          }
+        }
+      }
+    },
+    "configurationsEnableLandscapeTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Landscape"
+          }
+        }
+      }
+    },
+    "configurationsLanguageStrategySubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select how the SDK determines language"
+          }
+        }
+      }
+    },
+    "configurationsLanguageStrategyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language Strategy"
+          }
+        }
+      }
+    },
+    "configurationsLanguageTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        }
+      }
+    },
+    "configurationsLocaleStrategySubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select how the SDK determines locale"
+          }
+        }
+      }
+    },
+    "configurationsLocaleStrategyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locale Strategy"
+          }
+        }
+      }
+    },
+    "configurationsScreenTitle" : {
+      "comment" : "Configurations Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurations"
+          }
+        }
+      }
+    },
+    "customizationsActionColorSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Customize color style of comment action buttons"
+          }
+        }
+      }
+    },
+    "customizationsActionColorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment Action Color Style"
+          }
+        }
+      }
+    },
+    "customizationsActionFontSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Customize font style of comment action buttons"
+          }
+        }
+      }
+    },
+    "customizationsActionFontTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment Action Font Style"
+          }
+        }
+      }
+    },
+    "customizationsCommentActionsSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment Actions"
+          }
+        }
+      }
+    },
+    "customizationsCustomDarkColorSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a custom dark mode color"
+          }
+        }
+      }
+    },
+    "customizationsCustomDarkColorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Dark Color"
+          }
+        }
+      }
+    },
+    "customizationsCustomThemeColorsSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Customize individual theme colors"
+          }
+        }
+      }
+    },
+    "customizationsCustomThemeColorsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Theme Colors"
+          }
+        }
+      }
+    },
+    "customizationsFontFamilySubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select which font family to use"
+          }
+        }
+      }
+    },
+    "customizationsFontFamilyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Font Family Strategy"
+          }
+        }
+      }
+    },
+    "customizationsScreenTitle" : {
+      "comment" : "Customizations Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Customizations"
+          }
+        }
+      }
+    },
+    "customizationsSortingSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sorting"
+          }
+        }
+      }
+    },
+    "customizationsSortOptionSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose default comment sorting order"
+          }
+        }
+      }
+    },
+    "customizationsSortOptionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Initial Sort Option"
+          }
+        }
+      }
+    },
+    "customizationsThemeModeSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose light, dark, or follow system theme"
+          }
+        }
+      }
+    },
+    "customizationsThemeModeTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme Mode"
+          }
+        }
+      }
+    },
+    "customizationsThemeSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme"
+          }
+        }
+      }
+    },
+    "customizationsUIDelegationSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UI Delegation"
+          }
+        }
+      }
+    },
+    "customizationsUIDelegationSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use custom UI delegate for SDK components"
+          }
+        }
+      }
+    },
+    "customizationsUIDelegationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Custom UI Delegation"
+          }
+        }
+      }
+    },
+    "homeScreenDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engagement solutions for every vertical"
+          }
+        }
+      }
+    },
+    "homeScreenTitle" : {
+      "comment" : "Home Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenWeb SDK Demo"
+          }
+        }
+      }
+    },
+    "resetAlertCancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "resetAlertConfirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
+          }
+        }
+      }
+    },
+    "resetAlertMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to reset all settings to their default values?"
+          }
+        }
+      }
+    },
+    "resetAlertTitle" : {
+      "comment" : "Reset Alert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset Settings"
+          }
+        }
+      }
+    },
+    "scoreboardAwayTeam" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Away Team"
+          }
+        }
+      }
+    },
+    "scoreboardFullTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FULL TIME"
+          }
+        }
+      }
+    },
+    "scoreboardGoal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GOAL!"
+          }
+        }
+      }
+    },
+    "scoreboardHomeTeam" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home Team"
+          }
+        }
+      }
+    },
+    "scoreboardLive" : {
+      "comment" : "Sport Scoreboard",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LIVE"
+          }
+        }
+      }
+    },
+    "scoreboardMatchMinute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\u00b7 %d'"
+          }
+        }
+      }
+    },
+    "screenSettingsBetweenCommentsSpacingSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spacing in pixels (5-40)"
+          }
+        }
+      }
+    },
+    "screenSettingsBetweenCommentsSpacingTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Between Comments Spacing"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationGuidelinesSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose guidelines display style"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationGuidelinesTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Community Guidelines Style"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationQuestionsSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose community questions display style"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationQuestionsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Community Questions Style"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conversation"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationSpacingSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose spacing between conversation elements"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationSpacingTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conversation Spacing"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationStyleSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose conversation display style"
+          }
+        }
+      }
+    },
+    "screenSettingsConversationStyleTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conversation Style"
+          }
+        }
+      }
+    },
+    "screenSettingsEnablePullToRefreshSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow pull-to-refresh gesture in conversation view"
+          }
+        }
+      }
+    },
+    "screenSettingsEnablePullToRefreshTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Pull To Refresh"
+          }
+        }
+      }
+    },
+    "screenSettingsGeneralSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        }
+      }
+    },
+    "screenSettingsGuidelinesSpacingSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spacing in pixels (5-40)"
+          }
+        }
+      }
+    },
+    "screenSettingsGuidelinesSpacingTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guidelines Spacing"
+          }
+        }
+      }
+    },
+    "screenSettingsNumberOfCommentsSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number of comments to show in pre-conversation"
+          }
+        }
+      }
+    },
+    "screenSettingsNumberOfCommentsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number of Comments"
+          }
+        }
+      }
+    },
+    "screenSettingsPreConversationGuidelinesSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose guidelines display style"
+          }
+        }
+      }
+    },
+    "screenSettingsPreConversationGuidelinesTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Community Guidelines Style"
+          }
+        }
+      }
+    },
+    "screenSettingsPreConversationQuestionsSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose community questions display style"
+          }
+        }
+      }
+    },
+    "screenSettingsPreConversationQuestionsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Community Questions Style"
+          }
+        }
+      }
+    },
+    "screenSettingsPreConversationSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pre Conversation"
+          }
+        }
+      }
+    },
+    "screenSettingsPreConversationStyleSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose pre-conversation display style"
+          }
+        }
+      }
+    },
+    "screenSettingsPreConversationStyleTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pre Conversation Style"
+          }
+        }
+      }
+    },
+    "screenSettingsQuestionsSpacingSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spacing in pixels (5-40)"
+          }
+        }
+      }
+    },
+    "screenSettingsQuestionsSpacingTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questions Spacing"
+          }
+        }
+      }
+    },
+    "screenSettingsScreenTitle" : {
+      "comment" : "Screen Settings Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screens Settings"
+          }
+        }
+      }
+    },
+    "screenSettingsSpacingPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter value"
+          }
+        }
+      }
+    },
+    "settingsArticleSettingsSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Article information and display options"
+          }
+        }
+      }
+    },
+    "settingsArticleSettingsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Article Settings"
+          }
+        }
+      }
+    },
+    "settingsConfigurationsSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language, locale, and general configurations"
+          }
+        }
+      }
+    },
+    "settingsConfigurationsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurations"
+          }
+        }
+      }
+    },
+    "settingsCustomizationsSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme, colors, fonts, and UI customization"
+          }
+        }
+      }
+    },
+    "settingsCustomizationsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Customizations"
+          }
+        }
+      }
+    },
+    "settingsScreenSettingsSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PreConversation, Conversation, and screen styles"
+          }
+        }
+      }
+    },
+    "settingsScreenSettingsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screens Settings"
+          }
+        }
+      }
+    },
+    "settingsScreenTitle" : {
+      "comment" : "Settings Screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "verticalFinanceDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Stock Surges Amid Strong Q4 Earnings Report"
+          }
+        }
+      }
+    },
+    "verticalFinanceTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finance"
+          }
+        }
+      }
+    },
+    "verticalNewsDescription" : {
+      "comment" : "Vertical Descriptions",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breaking: Major Policy Changes Expected Next Week"
+          }
+        }
+      }
+    },
+    "verticalNewsTitle" : {
+      "comment" : "Vertical Titles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "News"
+          }
+        }
+      }
+    },
+    "verticalRecipesDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Ultimate Homemade Pasta Recipe Everyone Loves"
+          }
+        }
+      }
+    },
+    "verticalRecipesTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipes"
+          }
+        }
+      }
+    },
+    "verticalSiderailDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Future of Remote Work: A Deep Dive"
+          }
+        }
+      }
+    },
+    "verticalSiderailTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Side Rail"
+          }
+        }
+      }
+    },
+    "verticalSportDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Champions League Final: Preview and Predictions"
+          }
+        }
+      }
+    },
+    "verticalSportTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sport"
+          }
+        }
+      }
+    },
+    "verticalVideoDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Behind the Scenes: Making of a Viral Hit"
+          }
+        }
+      }
+    },
+    "verticalVideoTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}

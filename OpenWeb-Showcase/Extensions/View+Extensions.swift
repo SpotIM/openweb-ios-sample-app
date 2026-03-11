@@ -9,24 +9,20 @@
 import SwiftUI
 
 extension View {
-    func roundedRectBorder(
+    func roundedRect(
         cornerRadius: CGFloat,
-        color: Color = Color(uiColor: .separator),
-        width: CGFloat = 1
+        background: Color? = nil,
+        border: Color? = nil,
+        borderWidth: CGFloat = 1
     ) -> some View {
-        overlay {
-            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                .stroke(color, lineWidth: width)
-        }
-    }
-
-    func roundedRectBackground(
-        cornerRadius: CGFloat,
-        color: Color = Color(uiColor: .systemBackground)
-    ) -> some View {
-        background {
-            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                .fill(color)
-        }
+        self
+            .background {
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(background ?? .clear)
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(border ?? .clear, lineWidth: borderWidth)
+            }
     }
 }

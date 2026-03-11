@@ -32,7 +32,10 @@ struct ResourceItemCard: View {
                 chevronView
             }
             .padding(Metrics.contentPadding)
-            .roundedRectBorder(cornerRadius: Metrics.cornerRadius)
+            .roundedRect(
+                cornerRadius: Metrics.cornerRadius,
+                border: Color(uiColor: .separator)
+            )
         }
         .buttonStyle(.plain)
     }
