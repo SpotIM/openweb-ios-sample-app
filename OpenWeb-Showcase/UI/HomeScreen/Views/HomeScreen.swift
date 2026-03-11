@@ -53,6 +53,7 @@ private extension HomeScreen {
         switch card {
         case .news: NewsScreen()
         case .recipes: RecipesScreen()
+        case .finance: FinanceScreen()
         default: EmptyView()
         }
     }
