@@ -17,6 +17,9 @@ class SideRailScreenViewModel: ObservableObject {
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var color: Color { vertical.color }
     var title: LocalizedStringResource { vertical.title }
+    var conversationArticle: OWArticleProtocol {
+        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
+    }
 
     func initialize() {
         // MARK: OpenWeb SDK

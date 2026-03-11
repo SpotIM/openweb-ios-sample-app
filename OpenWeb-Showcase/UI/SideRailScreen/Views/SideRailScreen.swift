@@ -10,7 +10,7 @@ import SwiftUI
 import OpenWebSDK
 
 struct SideRailScreen: View {
-    @State private var viewModel = SideRailScreenViewModel()
+    @StateObject private var viewModel = SideRailScreenViewModel()
 
     var body: some View {
         ScrollView {
@@ -26,6 +26,19 @@ struct SideRailScreen: View {
             color: viewModel.color,
             onSettingsClick: {}
         )
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    // MARK: OpenWeb SDK
+                    OpenWebConversation(
+                        postId: viewModel.article.postId,
+                        article: viewModel.conversationArticle
+                    )
+                } label: {
+                    Image(systemName: "bubble.right")
+                }
+            }
+        }
         .onAppear { viewModel.initialize() }
     }
 }
