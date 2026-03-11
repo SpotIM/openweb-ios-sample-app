@@ -10,7 +10,7 @@ import SwiftUI
 import OpenWebSDK
 
 struct NewsScreen: View {
-    @State private var viewModel = NewsScreenViewModel()
+    @StateObject private var viewModel = NewsScreenViewModel()
 
     var body: some View {
         ScrollView {

@@ -10,9 +10,20 @@ import SwiftUI
 import OpenWebSDK
 import Combine
 
-// swiftlint:disable no_magic_numbers
 class SportScreenViewModel: ObservableObject {
     private let vertical: ShowcaseVertical = .sport
+
+    private enum MatchConfig {
+        static let initialHomeScore = 2
+        static let initialAwayScore = 1
+        static let initialMinute = 65
+        static let startSimulationMinute = 66
+        static let finalMinute = 90
+        static let tickInterval: TimeInterval = 4
+        static let homeGoalProbability = 0.12
+        static let awayGoalProbability = 0.24
+        static let goalBannerDuration: TimeInterval = 3
+    }
 
     var title: LocalizedStringResource { vertical.title }
     var color: Color { vertical.color }
@@ -22,9 +33,9 @@ class SportScreenViewModel: ObservableObject {
         OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
     }
 
-    @Published var homeScore = 2
-    @Published var awayScore = 1
-    @Published var matchMinute = 65
+    @Published var homeScore = MatchConfig.initialHomeScore
+    @Published var awayScore = MatchConfig.initialAwayScore
+    @Published var matchMinute = MatchConfig.initialMinute
     @Published var isLive = true
     @Published var goalEvent: GoalEvent?
 
@@ -47,11 +58,11 @@ class SportScreenViewModel: ObservableObject {
 
 private extension SportScreenViewModel {
     func startMatch() {
-        var currentMinute = 66
-        matchTimer = Timer.publish(every: 4, on: .main, in: .common)
+        var currentMinute = MatchConfig.startSimulationMinute
+        matchTimer = Timer.publish(every: MatchConfig.tickInterval, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                guard let self, currentMinute <= 90 else {
+                guard let self, currentMinute <= MatchConfig.finalMinute else {
                     self?.matchTimer?.cancel()
                     return
                 }
@@ -59,8 +70,8 @@ private extension SportScreenViewModel {
                 matchMinute = currentMinute
 
                 let goalRoll = Double.random(in: 0..<1)
-                let homeGoal = goalRoll < 0.12
-                let awayGoal = !homeGoal && goalRoll < 0.24
+                let homeGoal = goalRoll < MatchConfig.homeGoalProbability
+                let awayGoal = !homeGoal && goalRoll < MatchConfig.awayGoalProbability
 
                 if homeGoal {
                     goalId += 1
@@ -76,7 +87,7 @@ private extension SportScreenViewModel {
                     dismissGoalAfterDelay()
                 }
 
-                if currentMinute == 90 {
+                if currentMinute == MatchConfig.finalMinute {
                     isLive = false
                 }
 
@@ -87,7 +98,7 @@ private extension SportScreenViewModel {
     func dismissGoalAfterDelay() {
         goalDismissTimer?.cancel()
         goalDismissTimer = Just(())
-            .delay(for: .seconds(3), scheduler: DispatchQueue.main)
+            .delay(for: .seconds(MatchConfig.goalBannerDuration), scheduler: DispatchQueue.main)
             .sink { [weak self] in
                 self?.goalEvent = nil
             }

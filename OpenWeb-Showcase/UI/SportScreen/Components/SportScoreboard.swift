@@ -46,7 +46,7 @@ struct SportScoreboard: View {
         static let goalBannerVerticalPadding: CGFloat = 10
         static let goalTracking: CGFloat = 2
         static let goalScaleTarget: CGFloat = 1.5
-        static let livePillColor = Color(red: 1.0, green: 0.23, blue: 0.19)
+        static let livePillColor = Color(.livePillColor)
         static let goalAnimationDuration: CGFloat = 0.2
     }
 
