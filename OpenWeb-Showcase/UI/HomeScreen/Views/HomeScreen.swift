@@ -54,6 +54,7 @@ private extension HomeScreen {
         case .news: NewsScreen()
         case .recipes: RecipesScreen()
         case .finance: FinanceScreen()
+        case .video: VideoScreen()
         default: EmptyView()
         }
     }
