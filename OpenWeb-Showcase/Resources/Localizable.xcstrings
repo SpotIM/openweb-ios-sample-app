@@ -1,6 +1,17 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "videoCreatorHandle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@creator_official"
+          }
+        }
+      }
+    },
     "aboutCompanyDescription" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -90,6 +101,17 @@
         }
       }
     },
+    "videoDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Behind the Scenes: Making of a Viral Hit ✨ #viral #trending #openweb"
+          }
+        }
+      }
+    },
     "chooseVerticalSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -97,6 +119,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choose a Vertical"
+          }
+        }
+      }
+    },
+    "videoFollowLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Follow"
           }
         }
       }
@@ -120,6 +153,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OpenWeb SDK Demo"
+          }
+        }
+      }
+    },
+    "videoMusicInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Original Sound - Creator Official 🎵"
           }
         }
       }

@@ -9,6 +9,16 @@
 import SwiftUI
 import AVFoundation
 
+// MARK: - Metrics
+
+private struct Metrics {
+    static let bottomContentLeadingPadding: CGFloat = 20
+    static let bottomContentTrailingPadding: CGFloat = 92
+    static let bottomContentBottomPadding: CGFloat = 36
+}
+
+// MARK: - VideoPlayerPage
+
 struct VideoPlayerPage: View {
     var url: URL
     var isActive: Bool
@@ -17,13 +27,19 @@ struct VideoPlayerPage: View {
     @State private var looper: AVPlayerLooper?
 
     var body: some View {
-        VideoLoopingView(player: player)
-            .ignoresSafeArea()
-            .onAppear { setupPlayer() }
-            .onDisappear { tearDownPlayer() }
-            .onChange(of: isActive) { active in
-                active ? player?.play() : player?.pause()
-            }
+        ZStack(alignment: .bottomLeading) {
+            VideoLoopingView(player: player)
+                .ignoresSafeArea()
+            VideoBottomContent()
+                .padding(.leading, Metrics.bottomContentLeadingPadding)
+                .padding(.trailing, Metrics.bottomContentTrailingPadding)
+                .padding(.bottom, Metrics.bottomContentBottomPadding)
+        }
+        .onAppear { setupPlayer() }
+        .onDisappear { tearDownPlayer() }
+        .onChange(of: isActive) { active in
+            active ? player?.play() : player?.pause()
+        }
     }
 }
 
@@ -45,40 +61,5 @@ private extension VideoPlayerPage {
         player?.pause()
         player = nil
         looper = nil
-    }
-}
-
-// MARK: - VideoLoopingView
-
-private struct VideoLoopingView: UIViewRepresentable {
-    var player: AVQueuePlayer?
-
-    func makeUIView(context: Context) -> PlayerUIView {
-        PlayerUIView()
-    }
-
-    func updateUIView(_ uiView: PlayerUIView, context: Context) {
-        uiView.playerLayer.player = player
-    }
-}
-
-// MARK: - PlayerUIView
-
-private class PlayerUIView: UIView {
-    let playerLayer = AVPlayerLayer()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        playerLayer.videoGravity = .resizeAspectFill
-        layer.addSublayer(playerLayer)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        playerLayer.frame = bounds
     }
 }
