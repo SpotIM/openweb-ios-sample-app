@@ -27,13 +27,16 @@ struct VideoPlayerPage: View {
     @State private var looper: AVPlayerLooper?
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
+        ZStack {
             VideoLoopingView(player: player)
                 .ignoresSafeArea()
             VideoBottomContent()
                 .padding(.leading, Metrics.bottomContentLeadingPadding)
                 .padding(.trailing, Metrics.bottomContentTrailingPadding)
                 .padding(.bottom, Metrics.bottomContentBottomPadding)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+            VideoActionButtons()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
         }
         .onAppear { setupPlayer() }
         .onDisappear { tearDownPlayer() }

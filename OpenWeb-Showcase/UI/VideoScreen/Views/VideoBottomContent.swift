@@ -64,7 +64,7 @@ private struct CreatorInfoRow: View {
 private struct FollowButton: View {
     var body: some View {
         Text(.videoFollowLabel)
-            .font(.videoFollowLabel)
+            .font(.videoLabel)
             .foregroundStyle(.white)
             .shadow(color: .black.opacity(Metrics.shadowLightOpacity), radius: Metrics.shadowSmallRadius, x: 0, y: Metrics.shadowYOffset)
             .padding(.horizontal, Metrics.followHorizontalPadding)
