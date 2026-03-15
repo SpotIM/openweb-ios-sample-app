@@ -24,7 +24,7 @@ struct VideoScreen: View {
         .background(.black)
         .navigationBarBackButtonHidden()
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .cancellationAction) {
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
                         .foregroundStyle(.white)

@@ -8,27 +8,26 @@
 
 import SwiftUI
 
-// MARK: - Metrics
-
-private struct Metrics {
-    static let columnSpacing: CGFloat = 28
-    static let iconLabelSpacing: CGFloat = 16
-    static let iconSize: CGFloat = 26
-    static let iconBackgroundSize: CGFloat = 46
-    static let iconBackgroundOpacity: CGFloat = 0.15
-    static let trailingPadding: CGFloat = 20
-    static let pressedScale: CGFloat = 0.85
-    static let springResponse: Double = 0.3
-    static let springDamping: Double = 0.4
-    // Shadows
-    static let shadowStrongOpacity: CGFloat = 0.6
-    static let shadowRadius: CGFloat = 3
-    static let shadowYOffset: CGFloat = 1
-}
-
 // MARK: - VideoActionButtons
 
 struct VideoActionButtons: View {
+    // MARK: - Metrics
+    private struct Metrics {
+        static let columnSpacing: CGFloat = 28
+        static let iconLabelSpacing: CGFloat = 16
+        static let iconSize: CGFloat = 26
+        static let iconBackgroundSize: CGFloat = 46
+        static let iconBackgroundOpacity: CGFloat = 0.15
+        static let trailingPadding: CGFloat = 20
+        static let pressedScale: CGFloat = 0.85
+        static let springResponse: Double = 0.3
+        static let springDamping: Double = 0.4
+        // Shadows
+        static let shadowStrongOpacity: CGFloat = 0.6
+        static let shadowRadius: CGFloat = 3
+        static let shadowYOffset: CGFloat = 1
+    }
+
     var onCommentTap: () -> Void = {}
     var onInfoTap: () -> Void = {}
 
@@ -45,43 +44,47 @@ struct VideoActionButtons: View {
 
 // MARK: - ActionButton
 
-private struct ActionButton: View {
-    var icon: String
-    var label: LocalizedStringResource
-    var tint: Color = .white
-    var action: () -> Void = {}
+private extension VideoActionButtons {
+    struct ActionButton: View {
+        var icon: String
+        var label: LocalizedStringResource
+        var tint: Color = .white
+        var action: () -> Void = {}
 
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: Metrics.iconLabelSpacing) {
-                Image(systemName: icon)
-                    .foregroundStyle(tint)
-                    .shadow(color: .black.opacity(Metrics.shadowStrongOpacity), radius: Metrics.shadowRadius, x: 0, y: Metrics.shadowYOffset)
-                    .squareFrame(size: Metrics.iconSize)
-                    .background(
-                        Circle()
-                            .fill(.black.opacity(Metrics.iconBackgroundOpacity))
-                            .frame(width: Metrics.iconBackgroundSize, height: Metrics.iconBackgroundSize)
-                    )
-                Text(label)
-                    .font(.videoLabel)
-                    .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(Metrics.shadowStrongOpacity), radius: Metrics.shadowRadius, x: 0, y: Metrics.shadowYOffset)
+        var body: some View {
+            Button(action: action) {
+                VStack(spacing: Metrics.iconLabelSpacing) {
+                    Image(systemName: icon)
+                        .foregroundStyle(tint)
+                        .shadow(color: .black.opacity(Metrics.shadowStrongOpacity), radius: Metrics.shadowRadius, x: 0, y: Metrics.shadowYOffset)
+                        .squareFrame(size: Metrics.iconSize)
+                        .background(
+                            Circle()
+                                .fill(.black.opacity(Metrics.iconBackgroundOpacity))
+                                .frame(width: Metrics.iconBackgroundSize, height: Metrics.iconBackgroundSize)
+                        )
+                    Text(label)
+                        .font(.videoLabel)
+                        .foregroundStyle(.white)
+                        .shadow(color: .black.opacity(Metrics.shadowStrongOpacity), radius: Metrics.shadowRadius, x: 0, y: Metrics.shadowYOffset)
+                }
             }
+            .buttonStyle(SpringButtonStyle())
         }
-        .buttonStyle(SpringButtonStyle())
     }
 }
 
 // MARK: - SpringButtonStyle
 
-private struct SpringButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? Metrics.pressedScale : 1)
-            .animation(
-                .spring(response: Metrics.springResponse, dampingFraction: Metrics.springDamping),
-                value: configuration.isPressed
-            )
+private extension VideoActionButtons {
+    struct SpringButtonStyle: ButtonStyle {
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .scaleEffect(configuration.isPressed ? Metrics.pressedScale : 1)
+                .animation(
+                    .spring(response: Metrics.springResponse, dampingFraction: Metrics.springDamping),
+                    value: configuration.isPressed
+                )
+        }
     }
 }

@@ -26,7 +26,6 @@ struct SDKUsageInfoOverlay: View {
         static let descriptionOpacity: CGFloat = 0.8
         // swiftlint:disable no_magic_numbers
         static let cardBackground = Color(red: 28 / 255, green: 28 / 255, blue: 30 / 255)
-        // swiftlint:enable no_magic_numbers
     }
 
     var info: SDKUsageInfo
