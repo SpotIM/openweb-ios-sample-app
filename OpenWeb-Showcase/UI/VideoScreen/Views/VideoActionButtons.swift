@@ -29,12 +29,14 @@ private struct Metrics {
 // MARK: - VideoActionButtons
 
 struct VideoActionButtons: View {
+    var onInfoTap: () -> Void = {}
+
     var body: some View {
         VStack(spacing: Metrics.columnSpacing) {
             ActionButton(icon: "heart", label: .videoLikesCount)
             ActionButton(icon: "message", label: .videoCommentCount, tint: Color(.video))
             ActionButton(icon: "square.and.arrow.up", label: .videoShareLabel)
-            ActionButton(icon: "chevron.left.forwardslash.chevron.right", label: .videoInfoLabel, tint: Color(.video))
+            ActionButton(icon: "chevron.left.forwardslash.chevron.right", label: .videoInfoLabel, tint: Color(.video), action: onInfoTap)
         }
         .padding(.trailing, Metrics.trailingPadding)
     }
@@ -46,9 +48,10 @@ private struct ActionButton: View {
     var icon: String
     var label: LocalizedStringResource
     var tint: Color = .white
+    var action: () -> Void = {}
 
     var body: some View {
-        Button(action: {}) {
+        Button(action: action) {
             VStack(spacing: Metrics.iconLabelSpacing) {
                 Image(systemName: icon)
                     .foregroundStyle(tint)

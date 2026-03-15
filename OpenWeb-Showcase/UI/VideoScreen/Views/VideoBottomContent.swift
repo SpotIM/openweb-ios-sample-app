@@ -87,7 +87,7 @@ private struct MusicInfo: View {
     var body: some View {
         HStack(spacing: Metrics.musicSpacing) {
             Image(systemName: "music.note")
-                .font(.videoMusicIcon)
+                .font(.caption)
                 .shadow(color: .black.opacity(Metrics.shadowMediumOpacity), radius: Metrics.shadowLargeRadius)
             Text(.videoMusicInfo)
                 .font(.bodyText)

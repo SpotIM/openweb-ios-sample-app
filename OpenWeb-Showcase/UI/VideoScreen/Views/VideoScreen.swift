@@ -10,13 +10,13 @@ import SwiftUI
 
 struct VideoScreen: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel = VideoScreenViewModel()
+    @StateObject private var viewModel = VideoScreenViewModel()
     @State private var currentIndex = 0
 
     var body: some View {
         VerticalPager(pageCount: viewModel.videoURLs.count, currentIndex: $currentIndex) {
             ForEach(Array(viewModel.videoURLs.enumerated()), id: \.offset) { index, url in
-                VideoPlayerPage(url: url, isActive: index == currentIndex)
+                VideoPlayerPage(url: url, isActive: index == currentIndex, onInfoTap: viewModel.showInfo)
             }
         }
         .ignoresSafeArea()
@@ -31,6 +31,15 @@ struct VideoScreen: View {
             }
         }
         .onAppear { viewModel.initialize() }
+        .overlay {
+            if viewModel.isInfoVisible {
+                SDKUsageInfoOverlay(
+                    info: viewModel.sdkUsageInfo,
+                    iconColor: viewModel.color,
+                    onDismiss: viewModel.hideInfo
+                )
+            }
+        }
     }
 }
 

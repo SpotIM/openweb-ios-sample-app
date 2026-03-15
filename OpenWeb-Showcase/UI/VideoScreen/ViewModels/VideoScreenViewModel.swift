@@ -19,6 +19,11 @@ class VideoScreenViewModel: ObservableObject {
     var title: LocalizedStringResource { vertical.title }
     var videoURLs: [URL] { VideoURLs.all }
 
+    @Published var isInfoVisible = false
+
+    func showInfo() { isInfoVisible = true }
+    func hideInfo() { isInfoVisible = false }
+
     func initialize() {
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
