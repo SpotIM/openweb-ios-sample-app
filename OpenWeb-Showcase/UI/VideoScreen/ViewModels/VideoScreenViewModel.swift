@@ -16,7 +16,6 @@ class VideoScreenViewModel: ObservableObject {
     var article: ArticleData { vertical.article }
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var color: Color { vertical.color }
-    var title: LocalizedStringResource { vertical.title }
     var videoURLs: [URL] { VideoURLs.all }
     var conversationArticle: OWArticleProtocol {
         OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())

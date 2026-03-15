@@ -8,28 +8,27 @@
 
 import SwiftUI
 
-// MARK: - Metrics
-
-private struct Metrics {
-    static let backgroundOpacity: CGFloat = 0.7
-    static let cardHorizontalPadding: CGFloat = 16
-    static let cardBottomPadding: CGFloat = 140
-    static let cardInnerPadding: CGFloat = 20
-    static let cardCornerRadius: CGFloat = 12
-    static let headerSpacing: CGFloat = 8
-    static let closeButtonSize: CGFloat = 32
-    static let closeButtonBackgroundOpacity: CGFloat = 0.1
-    static let subtitleTopSpacing: CGFloat = 12
-    static let descriptionTopSpacing: CGFloat = 8
-    static let descriptionOpacity: CGFloat = 0.8
-    // swiftlint:disable no_magic_numbers
-    static let cardBackground = Color(red: 28 / 255, green: 28 / 255, blue: 30 / 255)
-    // swiftlint:enable no_magic_numbers
-}
-
 // MARK: - SDKUsageInfoOverlay
 
 struct SDKUsageInfoOverlay: View {
+    // MARK: - Metrics
+    private struct Metrics {
+        static let backgroundOpacity: CGFloat = 0.7
+        static let cardHorizontalPadding: CGFloat = 16
+        static let cardBottomPadding: CGFloat = 140
+        static let cardInnerPadding: CGFloat = 20
+        static let cardCornerRadius: CGFloat = 12
+        static let headerSpacing: CGFloat = 8
+        static let closeButtonSize: CGFloat = 32
+        static let closeButtonBackgroundOpacity: CGFloat = 0.1
+        static let subtitleTopSpacing: CGFloat = 12
+        static let descriptionTopSpacing: CGFloat = 8
+        static let descriptionOpacity: CGFloat = 0.8
+        // swiftlint:disable no_magic_numbers
+        static let cardBackground = Color(red: 28 / 255, green: 28 / 255, blue: 30 / 255)
+        // swiftlint:enable no_magic_numbers
+    }
+
     var info: SDKUsageInfo
     var iconColor: Color
     var onDismiss: () -> Void

@@ -9,17 +9,16 @@
 import SwiftUI
 import AVFoundation
 
-// MARK: - Metrics
-
-private struct Metrics {
-    static let bottomContentLeadingPadding: CGFloat = 20
-    static let bottomContentTrailingPadding: CGFloat = 92
-    static let bottomContentBottomPadding: CGFloat = 36
-}
-
 // MARK: - VideoPlayerPage
 
 struct VideoPlayerPage: View {
+    // MARK: - Metrics
+    private struct Metrics {
+        static let bottomContentLeadingPadding: CGFloat = 20
+        static let bottomContentTrailingPadding: CGFloat = 92
+        static let bottomContentBottomPadding: CGFloat = 36
+    }
+
     var url: URL
     var isActive: Bool
     var onCommentTap: () -> Void = {}
