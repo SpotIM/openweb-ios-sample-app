@@ -29,7 +29,7 @@ struct HomeToolbar: View {
                     .font(.heading)
                     .lineLimit(1)
                 Text(.homeScreenDescription)
-                    .font(.caption)
+                    .font(.smallLabel)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
             }

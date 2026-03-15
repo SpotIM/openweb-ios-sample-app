@@ -12,7 +12,7 @@ import SwiftUI
 extension Font {
     static let screenTitle: Font = .system(size: 20, weight: .bold)
     static let heading: Font = .system(size: 18, weight: .bold)
-    static let caption: Font = .system(size: 12)
+    static let smallLabel: Font = .system(size: 12)
     static let sectionTitle: Font = .system(size: 14, weight: .semibold)
     static let bodyText: Font = .system(size: 14)
     static let cardTitle: Font = .system(size: 18, weight: .semibold)
