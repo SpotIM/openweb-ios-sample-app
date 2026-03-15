@@ -31,10 +31,7 @@ class SportScreenViewModel: ObservableObject {
     var article: ArticleData { vertical.article }
     var conversationArticle: OWArticleProtocol {
         // MARK: OpenWeb SDK
-        OWArticle(
-            articleInformationStrategy: .server,
-            additionalSettings: OWArticleSettings(headerStyle: .none)
-        )
+        OWArticle(additionalSettings: OWArticleSettings(headerStyle: .none))
     }
 
     @Published var homeScore = MatchConfig.initialHomeScore

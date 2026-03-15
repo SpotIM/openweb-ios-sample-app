@@ -19,7 +19,7 @@ class FinanceScreenViewModel: ObservableObject {
     var title: LocalizedStringResource { vertical.title }
     var conversationArticle: OWArticleProtocol {
         // MARK: OpenWeb SDK
-        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
+        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings(section: "stock"))
     }
 
     func initialize() {

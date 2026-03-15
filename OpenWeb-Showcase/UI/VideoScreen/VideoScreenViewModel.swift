@@ -17,9 +17,6 @@ class VideoScreenViewModel: ObservableObject {
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var color: Color { vertical.color }
     var videoURLs: [URL] { VideoURLs.shuffled }
-    var conversationArticle: OWArticleProtocol {
-        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
-    }
 
     @Published var isInfoVisible = false
     @Published var isConversationVisible = false
