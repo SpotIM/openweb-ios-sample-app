@@ -8,15 +8,15 @@
 
 import SwiftUI
 
-struct VerticalPager<Content: View>: View {
-    private struct Metrics {
-        static var swipeThreshold: Int { 20 }
-        static var springResponse: Double { 0.3 }
+private struct Metrics {
+    static let swipeThreshold: CGFloat = 20
+    static let springResponse: Double = 0.3
 }
 
-    let pageCount: Int
+struct VerticalPager<Content: View>: View {
+    var pageCount: Int
     @Binding var currentIndex: Int
-    let content: Content
+    var content: Content
 
     init(pageCount: Int, currentIndex: Binding<Int>, @ViewBuilder content: () -> Content) {
         self.pageCount = pageCount
@@ -41,9 +41,10 @@ struct VerticalPager<Content: View>: View {
                 DragGesture(minimumDistance: 1).updating($translation) { value, state, _ in
                     state = value.translation.height
                 }.onEnded { value in
-                    let offset = -Int(value.translation.height)
+                    let offset = -value.translation.height
                     if abs(offset) > Metrics.swipeThreshold {
-                        let newIndex = currentIndex + min(max(offset, -1), 1)
+                        let direction = offset > 0 ? 1 : -1
+                        let newIndex = currentIndex + direction
                         if newIndex >= 0 && newIndex < pageCount {
                             currentIndex = newIndex
                         }
