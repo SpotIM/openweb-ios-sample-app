@@ -23,8 +23,7 @@ struct SideRailScreen: View {
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
             title: viewModel.title,
-            color: viewModel.color,
-            onSettingsClick: {}
+            color: viewModel.color
         )
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

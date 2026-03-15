@@ -34,8 +34,7 @@ struct SportScreen: View {
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
             title: viewModel.title,
-            color: viewModel.color,
-            onSettingsClick: {}
+            color: viewModel.color
         )
         .onAppear { viewModel.initialize() }
     }
