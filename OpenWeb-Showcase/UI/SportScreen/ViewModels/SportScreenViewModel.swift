@@ -30,7 +30,10 @@ class SportScreenViewModel: ObservableObject {
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var article: ArticleData { vertical.article }
     var conversationArticle: OWArticleProtocol {
-        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
+        OWArticle(
+            articleInformationStrategy: .server,
+            additionalSettings: OWArticleSettings(headerStyle: .none)
+        )
     }
 
     @Published var homeScore = MatchConfig.initialHomeScore
@@ -51,6 +54,7 @@ class SportScreenViewModel: ObservableObject {
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
+        OpenWeb.manager.ui.customizations.navigationBarEnforcement = .style(.regular)
     }
 }
 

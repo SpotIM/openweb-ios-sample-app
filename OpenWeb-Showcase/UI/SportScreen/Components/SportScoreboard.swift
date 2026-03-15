@@ -274,8 +274,10 @@ private struct PulsingDot: View {
     VStack {
         SportScoreboard()
         SportScoreboard(
-            homeScore: 3, awayScore: 2,
-            matchMinute: 90, isLive: false
+            homeScore: 3,
+            awayScore: 2,
+            matchMinute: 90,
+            isLive: false
         )
     }
 }
