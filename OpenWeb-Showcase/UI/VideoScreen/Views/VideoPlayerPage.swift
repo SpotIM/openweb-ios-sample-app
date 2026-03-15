@@ -10,8 +10,8 @@ import SwiftUI
 import AVFoundation
 
 struct VideoPlayerPage: View {
-    let url: URL
-    let isActive: Bool
+    var url: URL
+    var isActive: Bool
 
     @State private var player: AVQueuePlayer?
     @State private var looper: AVPlayerLooper?
@@ -32,7 +32,7 @@ struct VideoPlayerPage: View {
 private extension VideoPlayerPage {
     func setupPlayer() {
         let item = AVPlayerItem(url: url)
-        let queuePlayer = AVQueuePlayer(playerItem: item)
+        let queuePlayer = AVQueuePlayer()
         looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
         player = queuePlayer
 
@@ -51,7 +51,7 @@ private extension VideoPlayerPage {
 // MARK: - VideoLoopingView
 
 private struct VideoLoopingView: UIViewRepresentable {
-    let player: AVQueuePlayer?
+    var player: AVQueuePlayer?
 
     func makeUIView(context: Context) -> PlayerUIView {
         PlayerUIView()
