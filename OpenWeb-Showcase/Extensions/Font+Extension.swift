@@ -26,4 +26,11 @@ extension Font {
     static let infoOverlaySubtitle: Font = .system(size: 16, weight: .semibold)
     static let infoOverlayIcon: Font = .system(size: 24)
     static let infoOverlayCloseIcon: Font = .system(size: 16)
+    static let scoreboardScore: Font = .system(size: 40, weight: .black)
+    static let scoreboardLive: Font = .system(size: 11, weight: .heavy)
+    static let scoreboardMinute: Font = .system(size: 13, weight: .medium)
+    static let scoreboardFullTime: Font = .system(size: 12, weight: .bold)
+    static let scoreboardTeamName: Font = .system(size: 14, weight: .bold)
+    static let scoreboardGoal: Font = .system(size: 16, weight: .black)
+    static let scoreboardGoalEmoji: Font = .system(size: 18)
 }
