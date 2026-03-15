@@ -20,4 +20,8 @@ extension Font {
     static let cardIcon: Font = .system(size: 28)
     static let articleTitle: Font = .system(size: 22, weight: .semibold)
     static let resourceTitle: Font = .subheadline.weight(.semibold)
+    static let videoCreatorName: Font = .system(size: 17, weight: .bold)
+    static let videoFollowLabel: Font = .system(size: 13, weight: .semibold)
+    static let videoDescription: Font = .system(size: 15)
+    static let videoMusicIcon: Font = .system(size: 12)
 }
