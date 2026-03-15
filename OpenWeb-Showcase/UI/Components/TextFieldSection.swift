@@ -9,9 +9,9 @@
 import SwiftUI
 
 struct TextFieldSection: View {
-    var title: LocalizedStringKey
-    var subtitle: LocalizedStringKey?
-    var placeholder: LocalizedStringKey
+    var title: LocalizedStringResource
+    var subtitle: LocalizedStringResource?
+    var placeholder: LocalizedStringResource
     @Binding var text: String
     var isEnabled: Bool = true
 
@@ -24,7 +24,9 @@ struct TextFieldSection: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            TextField(placeholder, text: $text)
+            TextField(text: $text) {
+                Text(placeholder)
+            }
                 .textFieldStyle(.roundedBorder)
                 .disabled(!isEnabled)
         }

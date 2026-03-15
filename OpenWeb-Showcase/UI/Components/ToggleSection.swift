@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct ToggleSection: View {
-    var title: LocalizedStringKey
-    var subtitle: LocalizedStringKey?
+    var title: LocalizedStringResource
+    var subtitle: LocalizedStringResource?
     @Binding var isOn: Bool
 
     var body: some View {

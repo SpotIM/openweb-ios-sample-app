@@ -14,30 +14,30 @@ struct ArticleSettingsScreen: View {
     var body: some View {
         List {
             SegmentedPickerSection(
-                title: "articleSettingsInformationStrategyTitle",
-                subtitle: "articleSettingsInformationStrategySubtitle",
+                title: .articleSettingsInformationStrategyTitle,
+                subtitle: .articleSettingsInformationStrategySubtitle,
                 selection: $viewModel.selectedInformationStrategy,
                 optionTitle: \.title
             )
             TextFieldSection(
-                title: "articleSettingsAssociatedURLTitle",
-                placeholder: "articleSettingsAssociatedURLPlaceholder",
+                title: .articleSettingsAssociatedURLTitle,
+                placeholder: .articleSettingsAssociatedURLPlaceholder,
                 text: $viewModel.articleAssociatedURL,
                 isEnabled: viewModel.isAssociatedURLEnabled
             )
             ToggleSection(
-                title: "articleSettingsHideHeaderTitle",
-                subtitle: "articleSettingsHideHeaderSubtitle",
+                title: .articleSettingsHideHeaderTitle,
+                subtitle: .articleSettingsHideHeaderSubtitle,
                 isOn: $viewModel.hideArticleHeader
             )
             SegmentedPickerSection(
-                title: "articleSettingsReadOnlyModeTitle",
-                subtitle: "articleSettingsReadOnlyModeSubtitle",
+                title: .articleSettingsReadOnlyModeTitle,
+                subtitle: .articleSettingsReadOnlyModeSubtitle,
                 selection: $viewModel.selectedReadOnlyMode,
                 optionTitle: \.title
             )
         }
-        .navigationTitle("articleSettingsScreenTitle")
+        .navigationTitle(.articleSettingsScreenTitle)
         .settingsToolbar { viewModel.loadSettings() }
     }
 }

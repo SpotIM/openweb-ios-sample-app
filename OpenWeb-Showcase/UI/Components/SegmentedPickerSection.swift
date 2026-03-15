@@ -11,8 +11,8 @@ import SwiftUI
 struct SegmentedPickerSection<Option: Hashable & Identifiable & CaseIterable>: View
     where Option.AllCases: RandomAccessCollection {
 
-    var title: LocalizedStringKey
-    var subtitle: LocalizedStringKey?
+    var title: LocalizedStringResource
+    var subtitle: LocalizedStringResource?
     @Binding var selection: Option
     var optionTitle: (Option) -> String
     var isEnabled: Bool = true

@@ -31,7 +31,7 @@ struct SettingsScreen: View {
                 ScreenSettingsScreen()
             }
         }
-        .navigationTitle("settingsScreenTitle")
+        .navigationTitle(.settingsScreenTitle)
         .settingsToolbar()
     }
 }

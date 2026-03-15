@@ -14,12 +14,12 @@ struct ConfigurationsScreen: View {
     var body: some View {
         List {
             SegmentedPickerSection(
-                title: "configurationsLanguageStrategyTitle",
-                subtitle: "configurationsLanguageStrategySubtitle",
+                title: .configurationsLanguageStrategyTitle,
+                subtitle: .configurationsLanguageStrategySubtitle,
                 selection: $viewModel.selectedLanguageStrategy,
                 optionTitle: \.title
             )
-            Picker("configurationsLanguageTitle", selection: $viewModel.selectedLanguage) {
+            Picker(.configurationsLanguageTitle, selection: $viewModel.selectedLanguage) {
                 ForEach(ConfigurationsViewModel.SupportedLanguage.allCases) { language in
                     Text(language.title).tag(language)
                 }
@@ -27,18 +27,18 @@ struct ConfigurationsScreen: View {
             .disabled(!viewModel.isCustomLanguageEnabled)
             .opacity(viewModel.isCustomLanguageEnabled ? 1 : 0.4)
             SegmentedPickerSection(
-                title: "configurationsLocaleStrategyTitle",
-                subtitle: "configurationsLocaleStrategySubtitle",
+                title: .configurationsLocaleStrategyTitle,
+                subtitle: .configurationsLocaleStrategySubtitle,
                 selection: $viewModel.selectedLocaleStrategy,
                 optionTitle: \.title
             )
             ToggleSection(
-                title: "configurationsEnableLandscapeTitle",
-                subtitle: "configurationsEnableLandscapeSubtitle",
+                title: .configurationsEnableLandscapeTitle,
+                subtitle: .configurationsEnableLandscapeSubtitle,
                 isOn: $viewModel.enableLandscape
             )
         }
-        .navigationTitle("configurationsScreenTitle")
+        .navigationTitle(.configurationsScreenTitle)
         .settingsToolbar { viewModel.loadSettings() }
     }
 }

@@ -18,7 +18,7 @@ struct CustomizationsScreen: View {
             themeSection
             uiDelegationSection
         }
-        .navigationTitle("customizationsScreenTitle")
+        .navigationTitle(.customizationsScreenTitle)
         .settingsToolbar { viewModel.loadSettings() }
     }
 }
@@ -27,10 +27,10 @@ struct CustomizationsScreen: View {
 
 private extension CustomizationsScreen {
     var sortingSection: some View {
-        Section("customizationsSortingSectionTitle") {
+        Section(.customizationsSortingSectionTitle) {
             SegmentedPickerSection(
-                title: "customizationsSortOptionTitle",
-                subtitle: "customizationsSortOptionSubtitle",
+                title: .customizationsSortOptionTitle,
+                subtitle: .customizationsSortOptionSubtitle,
                 selection: $viewModel.selectedSortOption,
                 optionTitle: \.title
             )
@@ -38,16 +38,16 @@ private extension CustomizationsScreen {
     }
 
     var commentActionsSection: some View {
-        Section("customizationsCommentActionsSectionTitle") {
+        Section(.customizationsCommentActionsSectionTitle) {
             SegmentedPickerSection(
-                title: "customizationsActionColorTitle",
-                subtitle: "customizationsActionColorSubtitle",
+                title: .customizationsActionColorTitle,
+                subtitle: .customizationsActionColorSubtitle,
                 selection: $viewModel.selectedActionColor,
                 optionTitle: \.title
             )
             SegmentedPickerSection(
-                title: "customizationsActionFontTitle",
-                subtitle: "customizationsActionFontSubtitle",
+                title: .customizationsActionFontTitle,
+                subtitle: .customizationsActionFontSubtitle,
                 selection: $viewModel.selectedActionFont,
                 optionTitle: \.title
             )
@@ -55,22 +55,22 @@ private extension CustomizationsScreen {
     }
 
     var themeSection: some View {
-        Section("customizationsThemeSectionTitle") {
+        Section(.customizationsThemeSectionTitle) {
             SegmentedPickerSection(
-                title: "customizationsFontFamilyTitle",
-                subtitle: "customizationsFontFamilySubtitle",
+                title: .customizationsFontFamilyTitle,
+                subtitle: .customizationsFontFamilySubtitle,
                 selection: $viewModel.selectedFontFamily,
                 optionTitle: \.title
             )
             SegmentedPickerSection(
-                title: "customizationsThemeModeTitle",
-                subtitle: "customizationsThemeModeSubtitle",
+                title: .customizationsThemeModeTitle,
+                subtitle: .customizationsThemeModeSubtitle,
                 selection: $viewModel.selectedThemeMode,
                 optionTitle: \.title
             )
             ColorPicker(selection: $viewModel.customDarkColor) {
                 VStack(alignment: .leading) {
-                    Text("customizationsCustomDarkColorTitle")
+                    Text(.customizationsCustomDarkColorTitle)
                         .font(.bodyText)
                     Text("Current: \(viewModel.customDarkColor.hexString)")
                         .font(.caption)
@@ -82,9 +82,9 @@ private extension CustomizationsScreen {
                 Text("Coming soon")
             } label: {
                 VStack(alignment: .leading) {
-                    Text("customizationsCustomThemeColorsTitle")
+                    Text(.customizationsCustomThemeColorsTitle)
                         .font(.bodyText)
-                    Text("customizationsCustomThemeColorsSubtitle")
+                    Text(.customizationsCustomThemeColorsSubtitle)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -93,10 +93,10 @@ private extension CustomizationsScreen {
     }
 
     var uiDelegationSection: some View {
-        Section("customizationsUIDelegationSectionTitle") {
+        Section(.customizationsUIDelegationSectionTitle) {
             ToggleSection(
-                title: "customizationsUIDelegationTitle",
-                subtitle: "customizationsUIDelegationSubtitle",
+                title: .customizationsUIDelegationTitle,
+                subtitle: .customizationsUIDelegationSubtitle,
                 isOn: $viewModel.enableCustomUIDelegation
             )
         }
