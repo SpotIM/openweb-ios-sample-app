@@ -54,6 +54,10 @@ private extension HomeScreen {
     func verticalScreen(for card: ShowcaseVertical) -> some View {
         switch card {
         case .news: NewsScreen()
+        case .sport: SportScreen()
+        case .finance: FinanceScreen()
+        case .recipes: RecipesScreen()
+        case .sideRail: SideRailScreen()
         default: EmptyView()
         }
     }

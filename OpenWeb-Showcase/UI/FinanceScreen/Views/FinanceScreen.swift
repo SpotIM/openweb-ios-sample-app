@@ -1,16 +1,16 @@
 //
-//  NewsScreen.swift
+//  FinanceScreen.swift
 //  OpenWeb-Showcase
 //
-//  Created by  Nogah Melamed on 02/03/2026.
+//  Created by  Nogah Melamed on 11/03/2026.
 //  Copyright © 2026 OpenWeb. All rights reserved.
 //
 
 import SwiftUI
 import OpenWebSDK
 
-struct NewsScreen: View {
-    @StateObject private var viewModel = NewsScreenViewModel()
+struct FinanceScreen: View {
+    @State private var viewModel = FinanceScreenViewModel()
 
     var body: some View {
         ScrollView {
@@ -28,7 +28,8 @@ struct NewsScreen: View {
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
             title: viewModel.title,
-            color: viewModel.color
+            color: viewModel.color,
+            onSettingsClick: {}
         )
         .onAppear { viewModel.initialize() }
     }
@@ -36,6 +37,6 @@ struct NewsScreen: View {
 
 #Preview {
     NavigationStack {
-        NewsScreen()
+        FinanceScreen()
     }
 }

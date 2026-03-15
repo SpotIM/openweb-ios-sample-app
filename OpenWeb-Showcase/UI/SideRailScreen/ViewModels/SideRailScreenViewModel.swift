@@ -1,8 +1,8 @@
 //
-//  NewsScreenViewModel.swift
+//  SideRailScreenViewModel.swift
 //  OpenWeb-Showcase
 //
-//  Created by  Nogah Melamed on 02/03/2026.
+//  Created by  Nogah Melamed on 11/03/2026.
 //  Copyright © 2026 OpenWeb. All rights reserved.
 //
 
@@ -10,8 +10,8 @@ import SwiftUI
 import OpenWebSDK
 import Combine
 
-class NewsScreenViewModel: ObservableObject {
-    private let vertical: ShowcaseVertical = .news
+class SideRailScreenViewModel: ObservableObject {
+    private let vertical: ShowcaseVertical = .sideRail
 
     var article: ArticleData { vertical.article }
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
