@@ -18,6 +18,7 @@ class FinanceScreenViewModel: ObservableObject {
     var color: Color { vertical.color }
     var title: LocalizedStringResource { vertical.title }
     var conversationArticle: OWArticleProtocol {
+        // MARK: OpenWeb SDK
         OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
     }
 

@@ -30,6 +30,7 @@ class SportScreenViewModel: ObservableObject {
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var article: ArticleData { vertical.article }
     var conversationArticle: OWArticleProtocol {
+        // MARK: OpenWeb SDK
         OWArticle(
             articleInformationStrategy: .server,
             additionalSettings: OWArticleSettings(headerStyle: .none)
