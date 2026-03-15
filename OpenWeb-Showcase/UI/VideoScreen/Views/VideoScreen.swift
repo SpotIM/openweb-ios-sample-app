@@ -12,14 +12,21 @@ import OpenWebSDK
 struct VideoScreen: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = VideoScreenViewModel()
-    @State private var currentIndex = 0
+    @State private var currentIndex: Int? = 0
 
     var body: some View {
-        VerticalPager(pageCount: viewModel.videoURLs.count, currentIndex: $currentIndex) {
-            ForEach(Array(viewModel.videoURLs.enumerated()), id: \.offset) { index, url in
-                VideoPlayerPage(url: url, isActive: index == currentIndex, onCommentTap: viewModel.showConversation, onInfoTap: viewModel.showInfo)
+        ScrollView(.vertical) {
+            LazyVStack(spacing: 0) {
+                ForEach(Array(viewModel.videoURLs.enumerated()), id: \.offset) { index, url in
+                    VideoPlayerPage(url: url, isActive: index == (currentIndex ?? 0), onCommentTap: viewModel.showConversation, onInfoTap: viewModel.showInfo)
+                        .containerRelativeFrame(.vertical)
+                        .id(index)
+                }
             }
+            .scrollTargetLayout()
         }
+        .scrollTargetBehavior(.paging)
+        .scrollPosition(id: $currentIndex)
         .ignoresSafeArea()
         .background(.black)
         .navigationBarBackButtonHidden()
