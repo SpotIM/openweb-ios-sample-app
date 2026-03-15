@@ -18,11 +18,17 @@ class VideoScreenViewModel: ObservableObject {
     var color: Color { vertical.color }
     var title: LocalizedStringResource { vertical.title }
     var videoURLs: [URL] { VideoURLs.all }
+    var conversationArticle: OWArticleProtocol {
+        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
+    }
 
     @Published var isInfoVisible = false
+    @Published var isConversationVisible = false
 
     func showInfo() { isInfoVisible = true }
     func hideInfo() { isInfoVisible = false }
+    func showConversation() { isConversationVisible = true }
+    func hideConversation() { isConversationVisible = false }
 
     func initialize() {
         // MARK: OpenWeb SDK

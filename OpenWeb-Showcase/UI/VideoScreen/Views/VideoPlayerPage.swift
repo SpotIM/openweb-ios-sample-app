@@ -22,6 +22,7 @@ private struct Metrics {
 struct VideoPlayerPage: View {
     var url: URL
     var isActive: Bool
+    var onCommentTap: () -> Void = {}
     var onInfoTap: () -> Void = {}
 
     @State private var player: AVQueuePlayer?
@@ -36,7 +37,7 @@ struct VideoPlayerPage: View {
                 .padding(.trailing, Metrics.bottomContentTrailingPadding)
                 .padding(.bottom, Metrics.bottomContentBottomPadding)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-            VideoActionButtons(onInfoTap: onInfoTap)
+            VideoActionButtons(onCommentTap: onCommentTap, onInfoTap: onInfoTap)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
         }
         .onAppear { setupPlayer() }

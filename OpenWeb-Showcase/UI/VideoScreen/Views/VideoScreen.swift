@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 
 struct VideoScreen: View {
     @Environment(\.dismiss) private var dismiss
@@ -16,7 +17,7 @@ struct VideoScreen: View {
     var body: some View {
         VerticalPager(pageCount: viewModel.videoURLs.count, currentIndex: $currentIndex) {
             ForEach(Array(viewModel.videoURLs.enumerated()), id: \.offset) { index, url in
-                VideoPlayerPage(url: url, isActive: index == currentIndex, onInfoTap: viewModel.showInfo)
+                VideoPlayerPage(url: url, isActive: index == currentIndex, onCommentTap: viewModel.showConversation, onInfoTap: viewModel.showInfo)
             }
         }
         .ignoresSafeArea()
@@ -31,6 +32,13 @@ struct VideoScreen: View {
             }
         }
         .onAppear { viewModel.initialize() }
+        .sheet(isPresented: $viewModel.isConversationVisible) {
+            // MARK: OpenWeb SDK
+            OpenWebConversation(
+                postId: viewModel.article.postId,
+                article: viewModel.conversationArticle
+            )
+        }
         .overlay {
             if viewModel.isInfoVisible {
                 SDKUsageInfoOverlay(

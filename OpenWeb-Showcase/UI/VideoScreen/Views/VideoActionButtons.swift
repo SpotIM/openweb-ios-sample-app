@@ -29,12 +29,13 @@ private struct Metrics {
 // MARK: - VideoActionButtons
 
 struct VideoActionButtons: View {
+    var onCommentTap: () -> Void = {}
     var onInfoTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: Metrics.columnSpacing) {
             ActionButton(icon: "heart", label: .videoLikesCount)
-            ActionButton(icon: "message", label: .videoCommentCount, tint: Color(.video))
+            ActionButton(icon: "message", label: .videoCommentCount, tint: Color(.video), action: onCommentTap)
             ActionButton(icon: "square.and.arrow.up", label: .videoShareLabel)
             ActionButton(icon: "chevron.left.forwardslash.chevron.right", label: .videoInfoLabel, tint: Color(.video), action: onInfoTap)
         }
