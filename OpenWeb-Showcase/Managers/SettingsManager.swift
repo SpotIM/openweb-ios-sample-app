@@ -8,6 +8,10 @@
 
 import Foundation
 
+protocol SDKApplicable {
+    func applyToSDK()
+}
+
 class SettingsManager {
     static let shared = SettingsManager()
 
@@ -27,6 +31,7 @@ class SettingsManager {
         if let data = try? encoder.encode(value) {
             defaults.set(data, forKey: item.key)
         }
+        (value as? SDKApplicable)?.applyToSDK()
     }
 
     func resetAll() {

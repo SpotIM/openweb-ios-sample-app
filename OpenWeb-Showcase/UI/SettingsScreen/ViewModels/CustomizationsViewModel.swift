@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import OpenWebSDK
 
 class CustomizationsViewModel: ObservableObject {
     private let manager = SettingsManager.shared
@@ -54,7 +55,7 @@ private extension CustomizationsViewModel {
 // MARK: - Setting Enums
 
 extension CustomizationsViewModel {
-    enum SortOptionSetting: Codable, CaseIterable, Identifiable {
+    enum SortOptionSetting: Codable, CaseIterable, Identifiable, SDKApplicable {
         case server
         case best
         case newest
@@ -68,6 +69,18 @@ extension CustomizationsViewModel {
             case .newest: "Newest"
             case .oldest: "Oldest"
             }
+        }
+
+        func applyToSDK() {
+            let strategy: OWInitialSortStrategy = switch self {
+            case .server: .useServerConfig
+            case .best: .use(sortOption: .best)
+            case .newest: .use(sortOption: .newest)
+            case .oldest: .use(sortOption: .oldest)
+            }
+
+            // MARK: OpenWeb SDK
+            OpenWeb.manager.ui.customizations.sorting.initialOption = strategy
         }
     }
 
