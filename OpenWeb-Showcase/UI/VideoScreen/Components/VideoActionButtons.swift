@@ -28,15 +28,16 @@ struct VideoActionButtons: View {
         static let shadowYOffset: CGFloat = 1
     }
 
+    var commentsCount: Int
     var onCommentTap: () -> Void = {}
     var onInfoTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: Metrics.columnSpacing) {
-            ActionButton(icon: "heart", label: .videoLikesCount)
-            ActionButton(icon: "message", label: .videoCommentCount, tint: Color(.video), action: onCommentTap)
-            ActionButton(icon: "square.and.arrow.up", label: .videoShareLabel)
-            ActionButton(icon: "chevron.left.forwardslash.chevron.right", label: .videoInfoLabel, tint: Color(.video), action: onInfoTap)
+            ActionButton(icon: "heart", label: String(localized: .videoLikesCount))
+            ActionButton(icon: "message", label: String(commentsCount), tint: Color(.video), action: onCommentTap)
+            ActionButton(icon: "square.and.arrow.up", label: String(localized: .videoShareLabel))
+            ActionButton(icon: "chevron.left.forwardslash.chevron.right", label: String(localized: .videoInfoLabel), tint: Color(.video), action: onInfoTap)
         }
         .padding(.trailing, Metrics.trailingPadding)
     }
@@ -47,7 +48,7 @@ struct VideoActionButtons: View {
 private extension VideoActionButtons {
     struct ActionButton: View {
         var icon: String
-        var label: LocalizedStringResource
+        var label: String
         var tint: Color = .white
         var action: () -> Void = {}
 

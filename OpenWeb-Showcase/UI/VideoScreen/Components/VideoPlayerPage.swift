@@ -21,6 +21,7 @@ struct VideoPlayerPage: View {
 
     var url: URL
     var isActive: Bool
+    var commentsCount: Int
     var onCommentTap: () -> Void = {}
     var onInfoTap: () -> Void = {}
 
@@ -36,7 +37,7 @@ struct VideoPlayerPage: View {
                 .padding(.trailing, Metrics.bottomContentTrailingPadding)
                 .padding(.bottom, Metrics.bottomContentBottomPadding)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-            VideoActionButtons(onCommentTap: onCommentTap, onInfoTap: onInfoTap)
+            VideoActionButtons(commentsCount: commentsCount, onCommentTap: onCommentTap, onInfoTap: onInfoTap)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
         }
         .onAppear { setupPlayer() }

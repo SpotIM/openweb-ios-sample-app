@@ -18,9 +18,18 @@ struct VideoScreen: View {
         ScrollView(.vertical) {
             LazyVStack(spacing: 0) {
                 ForEach(Array(viewModel.videoURLs.enumerated()), id: \.offset) { index, url in
-                    VideoPlayerPage(url: url, isActive: index == (currentIndex ?? 0), onCommentTap: viewModel.showConversation, onInfoTap: viewModel.showInfo)
+                    // MARK: OpenWeb SDK
+                    OpenWebConversationCount(postId: viewModel.article.postId) { counter in
+                        VideoPlayerPage(
+                            url: url,
+                            isActive: index == (currentIndex ?? 0),
+                            commentsCount: counter.commentsNumber,
+                            onCommentTap: viewModel.showConversation,
+                            onInfoTap: viewModel.showInfo
+                        )
                         .containerRelativeFrame(.vertical)
                         .id(index)
+                    }
                 }
             }
             .scrollTargetLayout()
