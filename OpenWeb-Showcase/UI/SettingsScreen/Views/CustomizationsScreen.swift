@@ -68,15 +68,6 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedThemeMode,
                 optionTitle: \.title
             )
-            ColorPicker(selection: $viewModel.customDarkColor) {
-                VStack(alignment: .leading) {
-                    Text(.customizationsCustomDarkColorTitle)
-                        .font(.bodyText)
-                    Text("Current: \(viewModel.customDarkColor.hexString)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
             NavigationLink {
                 // TODO: Custom Theme Colors screen
                 Text("Coming soon")

@@ -365,28 +365,6 @@
         }
       }
     },
-    "customizationsCustomDarkColorSubtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a custom dark mode color"
-          }
-        }
-      }
-    },
-    "customizationsCustomDarkColorTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom Dark Color"
-          }
-        }
-      }
-    },
     "customizationsCustomThemeColorsSubtitle" : {
       "extractionState" : "manual",
       "localizations" : {

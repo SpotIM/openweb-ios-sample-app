@@ -15,7 +15,6 @@ enum SettingsItems {
     static let actionFont = SettingsItem(key: "action_font", defaultValue: CustomizationsViewModel.ActionFontSetting.default)
     static let fontFamily = SettingsItem(key: "font_family", defaultValue: CustomizationsViewModel.FontFamilySetting.default)
     static let themeMode = SettingsItem(key: "theme_mode", defaultValue: CustomizationsViewModel.ThemeModeSetting.system)
-    static let customDarkColor = SettingsItem(key: "custom_dark_color", defaultValue: "#070707")
     static let enableCustomUIDelegation = SettingsItem(key: "enable_custom_ui_delegation", defaultValue: false)
 
     // MARK: - Configurations
@@ -47,7 +46,7 @@ enum SettingsItems {
     // MARK: - All Items (for reset)
     static let allItems: [AnySettingsItem] = [
         sortOption, actionColor, actionFont, fontFamily, themeMode,
-        customDarkColor, enableCustomUIDelegation,
+        enableCustomUIDelegation,
         languageStrategy, customLanguage, localeStrategy, enableLandscape,
         informationStrategy, articleAssociatedURL, hideArticleHeader, readOnlyMode,
         preConversationStyle, numberOfComments, preConversationGuidelinesStyle,
