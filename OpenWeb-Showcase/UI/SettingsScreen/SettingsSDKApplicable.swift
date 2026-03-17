@@ -24,6 +24,18 @@ extension CustomizationsViewModel.SortOptionSetting: SDKApplicable {
     }
 }
 
+extension CustomizationsViewModel.ActionColorSetting: SDKApplicable {
+    func applyToSDK() {
+        let color: OWCommentActionsColor = switch self {
+        case .default: .default
+        case .brandColor: .brandColor
+        }
+
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.ui.customizations.commentActions.color = color
+    }
+}
+
 extension CustomizationsViewModel.ActionFontSetting: SDKApplicable {
     func applyToSDK() {
         let fontStyle: OWCommentActionsFontStyle = switch self {
@@ -36,14 +48,14 @@ extension CustomizationsViewModel.ActionFontSetting: SDKApplicable {
     }
 }
 
-extension CustomizationsViewModel.ActionColorSetting: SDKApplicable {
+extension CustomizationsViewModel.FontFamilySetting: SDKApplicable {
     func applyToSDK() {
-        let color: OWCommentActionsColor = switch self {
+        let fontFamily: OWFontGroupFamily = switch self {
         case .default: .default
-        case .brandColor: .brandColor
+        case .custom: .custom(fontFamily: "Georgia")
         }
 
         // MARK: OpenWeb SDK
-        OpenWeb.manager.ui.customizations.commentActions.color = color
+        OpenWeb.manager.ui.customizations.fontFamily = fontFamily
     }
 }
