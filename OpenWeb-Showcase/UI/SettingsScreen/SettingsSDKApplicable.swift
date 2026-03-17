@@ -59,3 +59,16 @@ extension CustomizationsViewModel.FontFamilySetting: SDKApplicable {
         OpenWeb.manager.ui.customizations.fontFamily = fontFamily
     }
 }
+
+extension CustomizationsViewModel.ThemeModeSetting: SDKApplicable {
+    func applyToSDK() {
+        let enforcement: OWThemeStyleEnforcement = switch self {
+        case .system: .none
+        case .light: .theme(.light)
+        case .dark: .theme(.dark)
+        }
+
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.ui.customizations.themeEnforcement = enforcement
+    }
+}
