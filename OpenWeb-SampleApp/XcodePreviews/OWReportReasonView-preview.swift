@@ -10,10 +10,8 @@
 import Combine
 import UIKit
 
-class MockSpotConfigurationService: OWSpotConfigurationServicing {
-    func spotChanged(spotId: OWSpotId) {}
-
-    func config(spotId: OWSpotId) -> AnyPublisher<SPSpotConfiguration, any Error> {
+class MockSpotConfigurationService: StubSpotConfigurationService {
+    override func config(spotId: OWSpotId) -> AnyPublisher<SPSpotConfiguration, Error> {
         let jsonString = """
         {
             "shared": {
