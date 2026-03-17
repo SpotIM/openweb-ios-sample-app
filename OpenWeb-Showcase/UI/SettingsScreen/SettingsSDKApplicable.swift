@@ -23,3 +23,15 @@ extension CustomizationsViewModel.SortOptionSetting: SDKApplicable {
         OpenWeb.manager.ui.customizations.sorting.initialOption = strategy
     }
 }
+
+extension CustomizationsViewModel.ActionColorSetting: SDKApplicable {
+    func applyToSDK() {
+        let color: OWCommentActionsColor = switch self {
+        case .default: .default
+        case .brandColor: .brandColor
+        }
+
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.ui.customizations.commentActions.color = color
+    }
+}
