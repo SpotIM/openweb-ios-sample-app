@@ -57,7 +57,6 @@ private extension HomeScreen {
         case .video: VideoScreen()
         case .recipes: RecipesScreen()
         case .sideRail: SideRailScreen()
-        default: EmptyView()
         }
     }
 }

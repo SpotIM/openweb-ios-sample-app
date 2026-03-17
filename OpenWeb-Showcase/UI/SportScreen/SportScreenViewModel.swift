@@ -29,10 +29,6 @@ class SportScreenViewModel: ObservableObject {
     var color: Color { vertical.color }
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var article: ArticleData { vertical.article }
-    var conversationArticle: OWArticleProtocol {
-        // MARK: OpenWeb SDK
-        OWArticle(additionalSettings: OWArticleSettings(headerStyle: .none))
-    }
 
     @Published var homeScore = MatchConfig.initialHomeScore
     @Published var awayScore = MatchConfig.initialAwayScore

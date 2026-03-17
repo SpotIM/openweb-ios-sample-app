@@ -42,7 +42,7 @@ struct VideoPlayerPage: View {
         }
         .onAppear { setupPlayer() }
         .onDisappear { tearDownPlayer() }
-        .onChange(of: isActive) { active in
+        .onChange(of: isActive) { _, active in
             active ? player?.play() : player?.pause()
         }
     }
