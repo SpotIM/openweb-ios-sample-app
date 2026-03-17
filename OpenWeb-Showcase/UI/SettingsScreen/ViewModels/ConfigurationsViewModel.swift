@@ -15,7 +15,7 @@ class ConfigurationsViewModel: ObservableObject {
 
     @SDKSetting(SettingsItems.languageStrategy) var selectedLanguageStrategy: LanguageStrategySetting
     @SDKSetting(SettingsItems.customLanguage) var selectedLanguage: SupportedLanguage
-    @Published var selectedLocaleStrategy: LocaleStrategySetting = SettingsItems.localeStrategy.defaultValue
+    @SDKSetting(SettingsItems.localeStrategy) var selectedLocaleStrategy: LocaleStrategySetting
     @Published var enableLandscape: Bool = SettingsItems.enableLandscape.defaultValue
 
     var isCustomLanguageEnabled: Bool {
@@ -28,7 +28,6 @@ class ConfigurationsViewModel: ObservableObject {
     }
 
     func loadSettings() {
-        selectedLocaleStrategy = manager.get(SettingsItems.localeStrategy)
         enableLandscape = manager.get(SettingsItems.enableLandscape)
     }
 }
@@ -37,7 +36,6 @@ class ConfigurationsViewModel: ObservableObject {
 
 private extension ConfigurationsViewModel {
     func observeChanges() {
-        $selectedLocaleStrategy.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.localeStrategy, value: $0) }.store(in: &cancellables)
         $enableLandscape.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enableLandscape, value: $0) }.store(in: &cancellables)
     }
 }

@@ -73,6 +73,18 @@ extension CustomizationsViewModel.ThemeModeSetting: SDKApplicable {
     }
 }
 
+extension ConfigurationsViewModel.LocaleStrategySetting: SDKApplicable {
+    func applyToSDK() {
+        let strategy: OWLocaleStrategy = switch self {
+        case .device: .useDevice
+        case .server: .useServerConfig
+        }
+
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.helpers.localeStrategy = strategy
+    }
+}
+
 extension ConfigurationsViewModel.LanguageStrategySetting: SDKApplicable {
     func applyToSDK() {
         let strategy: OWLanguageStrategy = switch self {
