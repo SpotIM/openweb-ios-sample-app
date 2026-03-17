@@ -13,11 +13,11 @@ class CustomizationsViewModel: ObservableObject {
     private let manager = SettingsManager.shared
     private var cancellables = Set<AnyCancellable>()
 
-    @Published var selectedSortOption: SortOptionSetting = SettingsItems.sortOption.defaultValue
-    @Published var selectedActionColor: ActionColorSetting = SettingsItems.actionColor.defaultValue
-    @Published var selectedActionFont: ActionFontSetting = SettingsItems.actionFont.defaultValue
-    @Published var selectedFontFamily: FontFamilySetting = SettingsItems.fontFamily.defaultValue
-    @Published var selectedThemeMode: ThemeModeSetting = SettingsItems.themeMode.defaultValue
+    @SDKSetting(SettingsItems.sortOption) var selectedSortOption: SortOptionSetting
+    @SDKSetting(SettingsItems.actionColor) var selectedActionColor: ActionColorSetting
+    @SDKSetting(SettingsItems.actionFont) var selectedActionFont: ActionFontSetting
+    @SDKSetting(SettingsItems.fontFamily) var selectedFontFamily: FontFamilySetting
+    @SDKSetting(SettingsItems.themeMode) var selectedThemeMode: ThemeModeSetting
     @Published var customDarkColor: Color = Color(hex: SettingsItems.customDarkColor.defaultValue)
     @Published var enableCustomUIDelegation: Bool = SettingsItems.enableCustomUIDelegation.defaultValue
 
@@ -27,11 +27,6 @@ class CustomizationsViewModel: ObservableObject {
     }
 
     func loadSettings() {
-        selectedSortOption = manager.get(SettingsItems.sortOption)
-        selectedActionColor = manager.get(SettingsItems.actionColor)
-        selectedActionFont = manager.get(SettingsItems.actionFont)
-        selectedFontFamily = manager.get(SettingsItems.fontFamily)
-        selectedThemeMode = manager.get(SettingsItems.themeMode)
         customDarkColor = Color(hex: manager.get(SettingsItems.customDarkColor))
         enableCustomUIDelegation = manager.get(SettingsItems.enableCustomUIDelegation)
     }
@@ -41,11 +36,6 @@ class CustomizationsViewModel: ObservableObject {
 
 private extension CustomizationsViewModel {
     func observeChanges() {
-        $selectedSortOption.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.sortOption, value: $0) }.store(in: &cancellables)
-        $selectedActionColor.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.actionColor, value: $0) }.store(in: &cancellables)
-        $selectedActionFont.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.actionFont, value: $0) }.store(in: &cancellables)
-        $selectedFontFamily.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.fontFamily, value: $0) }.store(in: &cancellables)
-        $selectedThemeMode.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.themeMode, value: $0) }.store(in: &cancellables)
         $customDarkColor.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.customDarkColor, value: $0.hexString) }.store(in: &cancellables)
         $enableCustomUIDelegation.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enableCustomUIDelegation, value: $0) }.store(in: &cancellables)
     }

@@ -44,15 +44,15 @@ enum SettingsItems {
     static let questionsSpacing = SettingsItem(key: "questions_spacing", defaultValue: "12")
     static let enablePullToRefresh = SettingsItem(key: "enable_pull_to_refresh", defaultValue: true)
 
-    // MARK: - All Keys (for reset)
-    static let allKeys: [String] = [
-        sortOption.key, actionColor.key, actionFont.key, fontFamily.key, themeMode.key,
-        customDarkColor.key, enableCustomUIDelegation.key,
-        languageStrategy.key, customLanguage.key, localeStrategy.key, enableLandscape.key,
-        informationStrategy.key, articleAssociatedURL.key, hideArticleHeader.key, readOnlyMode.key,
-        preConversationStyle.key, numberOfComments.key, preConversationGuidelinesStyle.key,
-        preConversationQuestionsStyle.key, conversationStyle.key, conversationGuidelinesStyle.key,
-        conversationQuestionsStyle.key, conversationSpacing.key, betweenCommentsSpacing.key,
-        guidelinesSpacing.key, questionsSpacing.key, enablePullToRefresh.key,
+    // MARK: - All Items (for reset)
+    static let allItems: [AnySettingsItem] = [
+        sortOption, actionColor, actionFont, fontFamily, themeMode,
+        customDarkColor, enableCustomUIDelegation,
+        languageStrategy, customLanguage, localeStrategy, enableLandscape,
+        informationStrategy, articleAssociatedURL, hideArticleHeader, readOnlyMode,
+        preConversationStyle, numberOfComments, preConversationGuidelinesStyle,
+        preConversationQuestionsStyle, conversationStyle, conversationGuidelinesStyle,
+        conversationQuestionsStyle, conversationSpacing, betweenCommentsSpacing,
+        guidelinesSpacing, questionsSpacing, enablePullToRefresh,
     ]
 }

@@ -16,7 +16,8 @@ class SettingsManager {
     static let shared = SettingsManager()
 
     private static let suiteName = "com.open-web.showcase-app"
-    private let defaults = UserDefaults(suiteName: suiteName) ?? UserDefaults.standard
+    static let store = UserDefaults(suiteName: suiteName) ?? UserDefaults.standard
+    private let defaults: UserDefaults = SettingsManager.store
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
@@ -35,6 +36,6 @@ class SettingsManager {
     }
 
     func resetAll() {
-        SettingsItems.allKeys.forEach { defaults.removeObject(forKey: $0) }
+        SettingsItems.allItems.forEach { $0.resetToDefault(defaults: defaults, encoder: encoder) }
     }
 }
