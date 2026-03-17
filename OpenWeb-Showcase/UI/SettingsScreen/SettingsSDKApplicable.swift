@@ -24,6 +24,18 @@ extension CustomizationsViewModel.SortOptionSetting: SDKApplicable {
     }
 }
 
+extension CustomizationsViewModel.ActionFontSetting: SDKApplicable {
+    func applyToSDK() {
+        let fontStyle: OWCommentActionsFontStyle = switch self {
+        case .default: .default
+        case .semiBold: .semiBold
+        }
+
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.ui.customizations.commentActions.fontStyle = fontStyle
+    }
+}
+
 extension CustomizationsViewModel.ActionColorSetting: SDKApplicable {
     func applyToSDK() {
         let color: OWCommentActionsColor = switch self {
