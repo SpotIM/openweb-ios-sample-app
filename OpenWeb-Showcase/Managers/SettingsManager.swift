@@ -36,6 +36,7 @@ class SettingsManager {
     }
 
     func resetAll() {
-        SettingsItems.allItems.forEach { $0.resetToDefault(defaults: defaults, encoder: encoder) }
+        defaults.removePersistentDomain(forName: Self.suiteName)
+        SettingsItems.allItems.forEach { $0.applyDefaultToSDK() }
     }
 }

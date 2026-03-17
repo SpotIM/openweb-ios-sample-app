@@ -13,8 +13,8 @@ class ConfigurationsViewModel: ObservableObject {
     private let manager = SettingsManager.shared
     private var cancellables = Set<AnyCancellable>()
 
-    @Published var selectedLanguageStrategy: LanguageStrategySetting = SettingsItems.languageStrategy.defaultValue
-    @Published var selectedLanguage: SupportedLanguage = SettingsItems.customLanguage.defaultValue
+    @SDKSetting(SettingsItems.languageStrategy) var selectedLanguageStrategy: LanguageStrategySetting
+    @SDKSetting(SettingsItems.customLanguage) var selectedLanguage: SupportedLanguage
     @Published var selectedLocaleStrategy: LocaleStrategySetting = SettingsItems.localeStrategy.defaultValue
     @Published var enableLandscape: Bool = SettingsItems.enableLandscape.defaultValue
 
@@ -28,8 +28,6 @@ class ConfigurationsViewModel: ObservableObject {
     }
 
     func loadSettings() {
-        selectedLanguageStrategy = manager.get(SettingsItems.languageStrategy)
-        selectedLanguage = manager.get(SettingsItems.customLanguage)
         selectedLocaleStrategy = manager.get(SettingsItems.localeStrategy)
         enableLandscape = manager.get(SettingsItems.enableLandscape)
     }
@@ -39,8 +37,6 @@ class ConfigurationsViewModel: ObservableObject {
 
 private extension ConfigurationsViewModel {
     func observeChanges() {
-        $selectedLanguageStrategy.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.languageStrategy, value: $0) }.store(in: &cancellables)
-        $selectedLanguage.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.customLanguage, value: $0) }.store(in: &cancellables)
         $selectedLocaleStrategy.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.localeStrategy, value: $0) }.store(in: &cancellables)
         $enableLandscape.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enableLandscape, value: $0) }.store(in: &cancellables)
     }

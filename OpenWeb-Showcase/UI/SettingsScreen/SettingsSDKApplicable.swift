@@ -72,3 +72,47 @@ extension CustomizationsViewModel.ThemeModeSetting: SDKApplicable {
         OpenWeb.manager.ui.customizations.themeEnforcement = enforcement
     }
 }
+
+extension ConfigurationsViewModel.LanguageStrategySetting: SDKApplicable {
+    func applyToSDK() {
+        let strategy: OWLanguageStrategy = switch self {
+        case .device: .useDevice
+        case .server: .useServerConfig
+        case .custom:
+            .use(language: SettingsManager.shared.get(SettingsItems.customLanguage).owLanguage)
+        }
+
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.helpers.languageStrategy = strategy
+    }
+}
+
+extension ConfigurationsViewModel.SupportedLanguage: SDKApplicable {
+    func applyToSDK() {
+        guard SettingsManager.shared.get(SettingsItems.languageStrategy) == .custom else { return }
+
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.helpers.languageStrategy = .use(language: owLanguage)
+    }
+
+    var owLanguage: OWSupportedLanguage {
+        switch self {
+        case .english: .english
+        case .arabic: .arabic
+        case .dutch: .dutch
+        case .french: .french
+        case .german: .german
+        case .hebrew: .hebrew
+        case .hungarian: .hungarian
+        case .indonesian: .indonesian
+        case .italian: .italian
+        case .japanese: .japanese
+        case .korean: .korean
+        case .portuguese: .portugueseOther
+        case .spanish: .spanish
+        case .thai: .thai
+        case .turkish: .turkish
+        case .vietnamese: .vietnamese
+        }
+    }
+}

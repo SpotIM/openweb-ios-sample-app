@@ -9,7 +9,7 @@
 import Foundation
 
 protocol AnySettingsItem {
-    func resetToDefault(defaults: UserDefaults, encoder: JSONEncoder)
+    func applyDefaultToSDK()
 }
 
 struct SettingsItem<T: Codable> {
@@ -18,9 +18,7 @@ struct SettingsItem<T: Codable> {
 }
 
 extension SettingsItem: AnySettingsItem {
-    func resetToDefault(defaults: UserDefaults, encoder: JSONEncoder) {
-        if let data = try? encoder.encode(defaultValue) {
-            defaults.set(data, forKey: key)
-        }
+    func applyDefaultToSDK() {
+        (defaultValue as? SDKApplicable)?.applyToSDK()
     }
 }
