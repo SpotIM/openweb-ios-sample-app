@@ -18,7 +18,6 @@ class CustomizationsViewModel: ObservableObject {
     @SDKSetting(SettingsItems.actionFont) var selectedActionFont: ActionFontSetting
     @SDKSetting(SettingsItems.fontFamily) var selectedFontFamily: FontFamilySetting
     @SDKSetting(SettingsItems.themeMode) var selectedThemeMode: ThemeModeSetting
-    @Published var customDarkColor: Color = Color(hex: SettingsItems.customDarkColor.defaultValue)
     @Published var enableCustomUIDelegation: Bool = SettingsItems.enableCustomUIDelegation.defaultValue
 
     init() {
@@ -27,7 +26,6 @@ class CustomizationsViewModel: ObservableObject {
     }
 
     func loadSettings() {
-        customDarkColor = Color(hex: manager.get(SettingsItems.customDarkColor))
         enableCustomUIDelegation = manager.get(SettingsItems.enableCustomUIDelegation)
     }
 }
@@ -36,7 +34,6 @@ class CustomizationsViewModel: ObservableObject {
 
 private extension CustomizationsViewModel {
     func observeChanges() {
-        $customDarkColor.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.customDarkColor, value: $0.hexString) }.store(in: &cancellables)
         $enableCustomUIDelegation.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enableCustomUIDelegation, value: $0) }.store(in: &cancellables)
     }
 }
