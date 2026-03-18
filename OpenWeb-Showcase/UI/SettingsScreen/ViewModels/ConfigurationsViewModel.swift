@@ -10,33 +10,20 @@ import SwiftUI
 import Combine
 
 class ConfigurationsViewModel: ObservableObject {
-    private let manager = SettingsManager.shared
-    private var cancellables = Set<AnyCancellable>()
-
     @SDKSetting(SettingsItems.languageStrategy) var selectedLanguageStrategy: LanguageStrategySetting
     @SDKSetting(SettingsItems.customLanguage) var selectedLanguage: SupportedLanguage
     @SDKSetting(SettingsItems.localeStrategy) var selectedLocaleStrategy: LocaleStrategySetting
-    @Published var enableLandscape: Bool = SettingsItems.enableLandscape.defaultValue
+    @SDKSetting(SettingsItems.enableLandscape) var enableLandscape: EnableLandscapeSetting
 
     var isCustomLanguageEnabled: Bool {
         selectedLanguageStrategy == .custom
     }
 
-    init() {
-        loadSettings()
-        observeChanges()
-    }
-
-    func loadSettings() {
-        enableLandscape = manager.get(SettingsItems.enableLandscape)
-    }
-}
-
-// MARK: - Private
-
-private extension ConfigurationsViewModel {
-    func observeChanges() {
-        $enableLandscape.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enableLandscape, value: $0) }.store(in: &cancellables)
+    var enableLandscapeBinding: Binding<Bool> {
+        Binding(
+            get: { [weak self] in self?.enableLandscape == .enabled },
+            set: { [weak self] in self?.enableLandscape = $0 ? .enabled : .disabled }
+        )
     }
 }
 
@@ -97,6 +84,13 @@ extension ConfigurationsViewModel {
             case .vietnamese: "Vietnamese"
             }
         }
+    }
+
+    enum EnableLandscapeSetting: Codable, CaseIterable, Identifiable {
+        case disabled
+        case enabled
+
+        var id: Self { self }
     }
 
     enum LocaleStrategySetting: Codable, CaseIterable, Identifiable {

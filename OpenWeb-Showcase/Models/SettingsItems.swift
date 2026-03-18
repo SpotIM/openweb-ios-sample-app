@@ -21,7 +21,7 @@ enum SettingsItems {
     static let languageStrategy = SettingsItem(key: "language_strategy", defaultValue: ConfigurationsViewModel.LanguageStrategySetting.device)
     static let customLanguage = SettingsItem(key: "custom_language", defaultValue: ConfigurationsViewModel.SupportedLanguage.english)
     static let localeStrategy = SettingsItem(key: "locale_strategy", defaultValue: ConfigurationsViewModel.LocaleStrategySetting.device)
-    static let enableLandscape = SettingsItem(key: "enable_landscape", defaultValue: false)
+    static let enableLandscape = SettingsItem(key: "enable_landscape", defaultValue: ConfigurationsViewModel.EnableLandscapeSetting.disabled)
 
     // MARK: - Article Settings
     static let informationStrategy = SettingsItem(key: "information_strategy", defaultValue: ArticleSettingsViewModel.InformationStrategySetting.server)

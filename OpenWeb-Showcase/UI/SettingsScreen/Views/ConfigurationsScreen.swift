@@ -35,11 +35,11 @@ struct ConfigurationsScreen: View {
             ToggleSection(
                 title: .configurationsEnableLandscapeTitle,
                 subtitle: .configurationsEnableLandscapeSubtitle,
-                isOn: $viewModel.enableLandscape
+                isOn: viewModel.enableLandscapeBinding
             )
         }
         .navigationTitle(.configurationsScreenTitle)
-        .settingsToolbar { viewModel.loadSettings() }
+        .settingsToolbar()
     }
 }
 

@@ -73,6 +73,18 @@ extension CustomizationsViewModel.ThemeModeSetting: SDKApplicable {
     }
 }
 
+extension ConfigurationsViewModel.EnableLandscapeSetting: SDKApplicable {
+    func applyToSDK() {
+        let enforcement: OWOrientationEnforcement = switch self {
+        case .enabled: .enableAll
+        case .disabled: .enable(orientations: [.portrait])
+        }
+
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.helpers.orientationEnforcement = enforcement
+    }
+}
+
 extension ConfigurationsViewModel.LocaleStrategySetting: SDKApplicable {
     func applyToSDK() {
         let strategy: OWLocaleStrategy = switch self {
