@@ -50,7 +50,10 @@ struct VideoScreen: View {
         .onAppear { viewModel.initialize() }
         .sheet(isPresented: $viewModel.isConversationVisible) {
             // MARK: OpenWeb SDK
-            OpenWebConversation(postId: viewModel.article.postId)
+            OpenWebConversation(
+                postId: viewModel.article.postId,
+                article: viewModel.articleSettings
+            )
         }
         .overlay {
             if viewModel.isInfoVisible {

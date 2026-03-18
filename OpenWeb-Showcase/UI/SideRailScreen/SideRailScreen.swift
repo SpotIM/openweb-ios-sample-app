@@ -29,7 +29,10 @@ struct SideRailScreen: View {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
                     // MARK: OpenWeb SDK
-                    OpenWebConversation(postId: viewModel.article.postId)
+                    OpenWebConversation(
+                        postId: viewModel.article.postId,
+                        article: viewModel.articleSettings
+                    )
                 } label: {
                     Image(systemName: "bubble.right")
                 }

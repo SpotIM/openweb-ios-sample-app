@@ -26,7 +26,10 @@ struct SportScreen: View {
                 iconColor: viewModel.color
             )
             // MARK: OpenWeb SDK
-            OpenWebConversation(postId: viewModel.article.postId)
+            OpenWebConversation(
+                postId: viewModel.article.postId,
+                article: viewModel.articleSettings
+            )
                 .headerStyle(.none)
         }
         .background(Color(.systemGroupedBackground))

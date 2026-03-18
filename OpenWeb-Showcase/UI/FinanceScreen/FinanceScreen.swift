@@ -22,7 +22,7 @@ struct FinanceScreen: View {
             // MARK: OpenWeb SDK
             OpenWebPreConversation(
                 postId: viewModel.article.postId,
-                article: viewModel.conversationArticle
+                article: viewModel.articleSettings
             )
         }
         .background(Color(.systemGroupedBackground))

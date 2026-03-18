@@ -38,7 +38,7 @@ struct ArticleSettingsScreen: View {
             )
         }
         .navigationTitle(.articleSettingsScreenTitle)
-        .settingsToolbar { viewModel.loadSettings() }
+        .settingsToolbar()
     }
 }
 

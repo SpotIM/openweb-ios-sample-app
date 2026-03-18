@@ -20,8 +20,11 @@ struct RecipesScreen: View {
                 iconColor: viewModel.color
             )
             // MARK: OpenWeb SDK
-            OpenWebPreConversation(postId: viewModel.article.postId)
-                .starRatingEnabled(true)
+            OpenWebPreConversation(
+                postId: viewModel.article.postId,
+                article: viewModel.articleSettings
+            )
+            .starRatingEnabled(true)
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(

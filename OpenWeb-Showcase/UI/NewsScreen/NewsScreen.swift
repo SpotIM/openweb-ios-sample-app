@@ -20,7 +20,10 @@ struct NewsScreen: View {
                 iconColor: viewModel.color
             )
             // MARK: OpenWeb SDK
-            OpenWebPreConversation(postId: viewModel.article.postId)
+            OpenWebPreConversation(
+                postId: viewModel.article.postId,
+                article: viewModel.articleSettings
+            )
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(

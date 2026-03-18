@@ -17,14 +17,30 @@ class FinanceScreenViewModel: ObservableObject {
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var color: Color { vertical.color }
     var title: LocalizedStringResource { vertical.title }
-    var conversationArticle: OWArticleProtocol {
-        // MARK: OpenWeb SDK
-        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings(section: "stock"))
+    @Published var articleSettings: OWArticleProtocol = OWArticle()
+
+    init() {
+        articleSettings = getArticleSettings()
     }
 
     func initialize() {
+        articleSettings = getArticleSettings()
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
+    }
+}
+
+private extension FinanceScreenViewModel {
+    func getArticleSettings() -> OWArticleProtocol {
+        var settingsArticle = SettingsManager.shared.article
+        let settings = OWArticleSettings(
+            section: "stock",
+            headerStyle: settingsArticle.additionalSettings.headerStyle,
+            readOnlyMode: settingsArticle.additionalSettings.readOnlyMode,
+            starRatingEnabled: settingsArticle.additionalSettings.starRatingEnabled
+        )
+        settingsArticle.additionalSettings = settings
+        return settingsArticle
     }
 }

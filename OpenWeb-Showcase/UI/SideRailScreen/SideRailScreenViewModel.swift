@@ -17,8 +17,10 @@ class SideRailScreenViewModel: ObservableObject {
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var color: Color { vertical.color }
     var title: LocalizedStringResource { vertical.title }
+    @Published var articleSettings = SettingsManager.shared.article
 
     func initialize() {
+        articleSettings = SettingsManager.shared.article
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)

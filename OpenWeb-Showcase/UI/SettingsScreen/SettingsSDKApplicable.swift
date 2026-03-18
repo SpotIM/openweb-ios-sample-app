@@ -73,6 +73,29 @@ extension CustomizationsViewModel.ThemeModeSetting: SDKApplicable {
     }
 }
 
+extension ArticleSettingsViewModel.InformationStrategySetting: SDKApplicable {
+    func applyToSDK() {}
+}
+
+extension String: SDKApplicable {
+    func applyToSDK() {}
+}
+
+extension Bool: SDKApplicable {
+    func applyToSDK() {}
+}
+
+extension ArticleSettingsViewModel.ReadOnlyModeSetting: SDKApplicable {
+    func applyToSDK() {}
+    var owMode: OWReadOnlyMode {
+        switch self {
+        case .server: .server
+        case .enable: .enable
+        case .disable: .disable
+        }
+    }
+}
+
 extension ConfigurationsViewModel.EnableLandscapeSetting: SDKApplicable {
     func applyToSDK() {
         let enforcement: OWOrientationEnforcement = switch self {

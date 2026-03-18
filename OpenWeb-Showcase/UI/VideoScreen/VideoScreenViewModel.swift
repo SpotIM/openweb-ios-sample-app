@@ -20,6 +20,7 @@ class VideoScreenViewModel: ObservableObject {
 
     @Published var isInfoVisible = false
     @Published var isConversationVisible = false
+    @Published var articleSettings = SettingsManager.shared.article
 
     func showInfo() { isInfoVisible = true }
     func hideInfo() { isInfoVisible = false }
@@ -27,6 +28,7 @@ class VideoScreenViewModel: ObservableObject {
     func hideConversation() { isConversationVisible = false }
 
     func initialize() {
+        articleSettings = SettingsManager.shared.article
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
