@@ -1,5 +1,5 @@
 //
-//  FinanceScreenViewModel.swift
+//  SideRailScreenViewModel.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 11/03/2026.
@@ -10,17 +10,13 @@ import SwiftUI
 import OpenWebSDK
 import Combine
 
-class FinanceScreenViewModel: ObservableObject {
-    private let vertical: ShowcaseVertical = .finance
+class SideRailScreenViewModel: ObservableObject {
+    private let vertical: ShowcaseVertical = .sideRail
 
     var article: ArticleData { vertical.article }
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var color: Color { vertical.color }
     var title: LocalizedStringResource { vertical.title }
-    var conversationArticle: OWArticleProtocol {
-        // MARK: OpenWeb SDK
-        OWArticle(articleInformationStrategy: .server, additionalSettings: OWArticleSettings())
-    }
 
     func initialize() {
         // MARK: OpenWeb SDK

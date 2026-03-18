@@ -1,5 +1,5 @@
 //
-//  RecipesScreen.swift
+//  SideRailScreen.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 11/03/2026.
@@ -9,8 +9,8 @@
 import SwiftUI
 import OpenWebSDK
 
-struct RecipesScreen: View {
-    @State private var viewModel = RecipesScreenViewModel()
+struct SideRailScreen: View {
+    @StateObject private var viewModel = SideRailScreenViewModel()
 
     var body: some View {
         ScrollView {
@@ -19,23 +19,28 @@ struct RecipesScreen: View {
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
             )
-            // MARK: OpenWeb SDK
-            OpenWebPreConversation(
-                postId: viewModel.article.postId,
-                article: viewModel.conversationArticle
-            )
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
             title: viewModel.title,
             color: viewModel.color
         )
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    // MARK: OpenWeb SDK
+                    OpenWebConversation(postId: viewModel.article.postId)
+                } label: {
+                    Image(systemName: "bubble.right")
+                }
+            }
+        }
         .onAppear { viewModel.initialize() }
     }
 }
 
 #Preview {
     NavigationStack {
-        RecipesScreen()
+        SideRailScreen()
     }
 }

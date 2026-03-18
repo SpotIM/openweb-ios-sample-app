@@ -76,7 +76,7 @@ struct SportScoreboard: View {
         .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous))
         .padding(.horizontal, Metrics.horizontalPadding)
         .padding(.vertical, Metrics.verticalPadding)
-        .onChange(of: goalEvent) { newEvent in
+        .onChange(of: goalEvent) { _, newEvent in
             handleGoalEvent(newEvent)
         }
     }

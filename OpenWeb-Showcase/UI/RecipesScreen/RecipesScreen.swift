@@ -1,16 +1,16 @@
 //
-//  NewsScreen.swift
+//  RecipesScreen.swift
 //  OpenWeb-Showcase
 //
-//  Created by  Nogah Melamed on 02/03/2026.
+//  Created by  Nogah Melamed on 11/03/2026.
 //  Copyright © 2026 OpenWeb. All rights reserved.
 //
 
 import SwiftUI
 import OpenWebSDK
 
-struct NewsScreen: View {
-    @StateObject private var viewModel = NewsScreenViewModel()
+struct RecipesScreen: View {
+    @State private var viewModel = RecipesScreenViewModel()
 
     var body: some View {
         ScrollView {
@@ -20,10 +20,8 @@ struct NewsScreen: View {
                 iconColor: viewModel.color
             )
             // MARK: OpenWeb SDK
-            OpenWebPreConversation(
-                postId: viewModel.article.postId,
-                article: viewModel.conversationArticle
-            )
+            OpenWebPreConversation(postId: viewModel.article.postId)
+                .starRatingEnabled(true)
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
@@ -36,6 +34,6 @@ struct NewsScreen: View {
 
 #Preview {
     NavigationStack {
-        NewsScreen()
+        RecipesScreen()
     }
 }

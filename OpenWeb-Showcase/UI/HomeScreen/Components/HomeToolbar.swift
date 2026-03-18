@@ -26,10 +26,10 @@ struct HomeToolbar: View {
                 .squareFrame(size: Metrics.logoSize)
             VStack(alignment: .leading, spacing: Metrics.textSpacing) {
                 Text(.homeScreenTitle)
-                    .font(.toolbarTitle)
+                    .font(.heading)
                     .lineLimit(1)
                 Text(.homeScreenDescription)
-                    .font(.toolbarDescription)
+                    .font(.smallLabel)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
             }
