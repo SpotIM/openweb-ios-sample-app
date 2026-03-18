@@ -36,6 +36,7 @@ class SportScreenViewModel: ObservableObject {
     @Published var isLive = true
     @Published var goalEvent: GoalEvent?
     @Published var articleSettings = SettingsManager.shared.article
+    @Published var screenSettings = SettingsManager.shared.additionalSettings
 
     private var goalId = 0
     private var matchTimer: AnyCancellable?
@@ -47,6 +48,7 @@ class SportScreenViewModel: ObservableObject {
 
     func initialize() {
         articleSettings = SettingsManager.shared.article
+        screenSettings = SettingsManager.shared.additionalSettings
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)

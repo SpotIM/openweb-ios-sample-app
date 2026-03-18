@@ -30,7 +30,8 @@ struct SportScreen: View {
                 postId: viewModel.article.postId,
                 article: viewModel.articleSettings
             )
-                .headerStyle(.none)
+            .additionalSettings(viewModel.screenSettings)
+            .headerStyle(.none)
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(

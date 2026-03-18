@@ -24,6 +24,7 @@ struct FinanceScreen: View {
                 postId: viewModel.article.postId,
                 article: viewModel.articleSettings
             )
+            .additionalSettings(viewModel.screenSettings)
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(

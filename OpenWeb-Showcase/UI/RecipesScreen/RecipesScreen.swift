@@ -24,6 +24,7 @@ struct RecipesScreen: View {
                 postId: viewModel.article.postId,
                 article: viewModel.articleSettings
             )
+            .additionalSettings(viewModel.screenSettings)
             .starRatingEnabled(true)
         }
         .background(Color(.systemGroupedBackground))

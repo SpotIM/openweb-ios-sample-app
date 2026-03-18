@@ -14,10 +14,10 @@ class ScreenSettingsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     // Pre Conversation
-    @Published var selectedPreConversationStyle: PreConversationStyleSetting = SettingsItems.preConversationStyle.defaultValue
-    @Published var numberOfComments: Int = SettingsItems.numberOfComments.defaultValue
-    @Published var selectedPreConversationGuidelinesStyle: GuidelinesStyleSetting = SettingsItems.preConversationGuidelinesStyle.defaultValue
-    @Published var selectedPreConversationQuestionsStyle: QuestionsStyleSetting = SettingsItems.preConversationQuestionsStyle.defaultValue
+    @SDKSetting(SettingsItems.preConversationStyle) var selectedPreConversationStyle: PreConversationStyleSetting
+    @SDKSetting(SettingsItems.numberOfComments) var numberOfComments: Int
+    @SDKSetting(SettingsItems.preConversationGuidelinesStyle) var selectedPreConversationGuidelinesStyle: GuidelinesStyleSetting
+    @SDKSetting(SettingsItems.preConversationQuestionsStyle) var selectedPreConversationQuestionsStyle: QuestionsStyleSetting
 
     // Conversation
     @Published var selectedConversationStyle: ConversationStyleSetting = SettingsItems.conversationStyle.defaultValue
@@ -49,10 +49,6 @@ class ScreenSettingsViewModel: ObservableObject {
     }
 
     func loadSettings() {
-        selectedPreConversationStyle = manager.get(SettingsItems.preConversationStyle)
-        numberOfComments = manager.get(SettingsItems.numberOfComments)
-        selectedPreConversationGuidelinesStyle = manager.get(SettingsItems.preConversationGuidelinesStyle)
-        selectedPreConversationQuestionsStyle = manager.get(SettingsItems.preConversationQuestionsStyle)
         selectedConversationStyle = manager.get(SettingsItems.conversationStyle)
         selectedConversationGuidelinesStyle = manager.get(SettingsItems.conversationGuidelinesStyle)
         selectedConversationQuestionsStyle = manager.get(SettingsItems.conversationQuestionsStyle)
@@ -68,10 +64,6 @@ class ScreenSettingsViewModel: ObservableObject {
 
 private extension ScreenSettingsViewModel {
     func observeChanges() {
-        $selectedPreConversationStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.preConversationStyle, value: $0) }.store(in: &cancellables)
-        $numberOfComments.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.numberOfComments, value: $0) }.store(in: &cancellables)
-        $selectedPreConversationGuidelinesStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.preConversationGuidelinesStyle, value: $0) }.store(in: &cancellables)
-        $selectedPreConversationQuestionsStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.preConversationQuestionsStyle, value: $0) }.store(in: &cancellables)
         $selectedConversationStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationStyle, value: $0) }.store(in: &cancellables)
         $selectedConversationGuidelinesStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationGuidelinesStyle, value: $0) }.store(in: &cancellables)
         $selectedConversationQuestionsStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationQuestionsStyle, value: $0) }.store(in: &cancellables)

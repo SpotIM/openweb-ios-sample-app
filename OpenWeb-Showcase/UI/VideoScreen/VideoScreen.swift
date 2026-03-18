@@ -54,6 +54,7 @@ struct VideoScreen: View {
                 postId: viewModel.article.postId,
                 article: viewModel.articleSettings
             )
+            .additionalSettings(viewModel.screenSettings)
         }
         .overlay {
             if viewModel.isInfoVisible {

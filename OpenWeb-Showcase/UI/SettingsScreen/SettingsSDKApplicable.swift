@@ -85,6 +85,38 @@ extension Bool: SDKApplicable {
     func applyToSDK() {}
 }
 
+extension Int: SDKApplicable {
+    func applyToSDK() {}
+}
+
+extension ScreenSettingsViewModel.PreConversationStyleSetting: SDKApplicable {
+    func applyToSDK() {}
+}
+
+extension ScreenSettingsViewModel.GuidelinesStyleSetting: SDKApplicable {
+    func applyToSDK() {}
+
+    var owGuidelinesStyle: OWCommunityGuidelinesStyle {
+        switch self {
+        case .none: .none
+        case .regular: .regular
+        case .compact: .compact
+        }
+    }
+}
+
+extension ScreenSettingsViewModel.QuestionsStyleSetting: SDKApplicable {
+    func applyToSDK() {}
+
+    var owQuestionsStyle: OWCommunityQuestionStyle {
+        switch self {
+        case .none: .none
+        case .regular: .regular
+        case .compact: .compact
+        }
+    }
+}
+
 extension ArticleSettingsViewModel.ReadOnlyModeSetting: SDKApplicable {
     func applyToSDK() {}
     var owMode: OWReadOnlyMode {

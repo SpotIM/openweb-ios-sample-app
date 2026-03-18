@@ -27,6 +27,10 @@ class SettingsManager: ObservableObject {
     @SDKSetting(SettingsItems.articleAssociatedURL) private var articleAssociatedURL: String
     @SDKSetting(SettingsItems.hideArticleHeader) private var hideArticleHeader: Bool
     @SDKSetting(SettingsItems.readOnlyMode) private var readOnlyMode: ArticleSettingsViewModel.ReadOnlyModeSetting
+    @SDKSetting(SettingsItems.preConversationStyle) private var preConversationStyle: ScreenSettingsViewModel.PreConversationStyleSetting
+    @SDKSetting(SettingsItems.numberOfComments) private var numberOfComments: Int
+    @SDKSetting(SettingsItems.preConversationGuidelinesStyle) private var preConversationGuidelinesStyle: ScreenSettingsViewModel.GuidelinesStyleSetting
+    @SDKSetting(SettingsItems.preConversationQuestionsStyle) private var preConversationQuestionsStyle: ScreenSettingsViewModel.QuestionsStyleSetting
 
     private init() {}
 
@@ -53,6 +57,12 @@ class SettingsManager: ObservableObject {
         )
     }
 
+    var additionalSettings: OWAdditionalSettings {
+        OWAdditionalSettings(
+            preConversationStyle: owPreConversationStyle
+        )
+    }
+
     func resetAll() {
         defaults.removePersistentDomain(forName: Self.suiteName)
         SettingsItems.allItems.forEach { $0.applyDefaultToSDK() }
@@ -62,6 +72,23 @@ class SettingsManager: ObservableObject {
 // MARK: - Private
 
 private extension SettingsManager {
+    var owPreConversationStyle: OWPreConversationStyle {
+        switch preConversationStyle {
+        case .regular: .regular
+        case .compact: .compact
+        case .summary: .ctaWithSummary(
+            communityGuidelinesStyle: preConversationGuidelinesStyle.owGuidelinesStyle,
+            communityQuestionsStyle: preConversationQuestionsStyle.owQuestionsStyle
+        )
+        case .buttonOnly: .ctaButtonOnly
+        case .custom: .custom(
+            numberOfComments: numberOfComments,
+            communityGuidelinesStyle: preConversationGuidelinesStyle.owGuidelinesStyle,
+            communityQuestionsStyle: preConversationQuestionsStyle.owQuestionsStyle
+        )
+        }
+    }
+
     var owInformationStrategy: OWArticleInformationStrategy {
         switch informationStrategy {
         case .server: .server

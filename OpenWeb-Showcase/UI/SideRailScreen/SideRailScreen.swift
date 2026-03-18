@@ -33,6 +33,7 @@ struct SideRailScreen: View {
                         postId: viewModel.article.postId,
                         article: viewModel.articleSettings
                     )
+                    .additionalSettings(viewModel.screenSettings)
                 } label: {
                     Image(systemName: "bubble.right")
                 }
