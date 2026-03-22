@@ -12,9 +12,11 @@ import OpenWeb_SampleApp_Internal_Configs
 
 extension DevelopmentConversationPreset {
     func toConversationPreset() -> ConversationPreset {
-        return ConversationPreset(displayName: self.displayName,
-                                  conversationDataModel: self.conversationDataModel.toSDKConversationDataModel(),
-                                  section: self.section)
+        return ConversationPreset(
+            displayName: displayName,
+            conversationDataModel: conversationDataModel.toSDKConversationDataModel(),
+            section: section
+        )
     }
 }
 

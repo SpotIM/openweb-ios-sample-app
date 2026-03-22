@@ -18,8 +18,10 @@ class TestAPICoordinator: BaseCoordinator<Void> {
     }
 
     // swiftlint:disable function_body_length
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
         let testAPIVM: TestAPIViewModeling = TestAPIViewModel()
         let testAPIVC = TestAPIVC(viewModel: testAPIVM)
 
@@ -31,9 +33,11 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             shouldAnimate = false
         }
 
-        router.push(testAPIVC,
-                    animated: shouldAnimate,
-                    completion: vcPopped)
+        router.push(
+            testAPIVC,
+            animated: shouldAnimate,
+            completion: vcPopped
+        )
 
         // 1. Define deep links variables
         let deepLinkSettingsScreen = CurrentValueSubject<Void?, Never>(value: nil)
@@ -51,26 +55,32 @@ class TestAPICoordinator: BaseCoordinator<Void> {
         }
 
         // 2. Define childs coordinators
-        let settingsCoordinator = Publishers.MergeMany(testAPIVM.outputs.openSettings.map { nil },
-                                                deepLinkToSettings.map { deepLinkOptions })
+        let settingsCoordinator = Publishers.MergeMany(
+            testAPIVM.outputs.openSettings.map { nil },
+            deepLinkToSettings.map { deepLinkOptions }
+        )
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinator = SettingsCoordinator(router: self.router)
-                return self.coordinate(to: coordinator,
-                                       deepLinkOptions: deepLink,
-                                       coordinatorData: .settingsScreen(data: SettingsGroupType.all))
+                let coordinator = SettingsCoordinator(router: router)
+                return coordinate(
+                    to: coordinator,
+                    deepLinkOptions: deepLink,
+                    coordinatorData: .settingsScreen(data: SettingsGroupType.all)
+                )
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
 
-        let authenticationPlaygroundCoordinator = Publishers.MergeMany(testAPIVM.outputs.openAuthentication.map { nil },
-                                                                   deepLinkToAuthentication.map { deepLinkOptions })
+        let authenticationPlaygroundCoordinator = Publishers.MergeMany(
+            testAPIVM.outputs.openAuthentication.map { nil },
+            deepLinkToAuthentication.map { deepLinkOptions }
+        )
             .flatMap { [weak self] deepLink -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                let coordinator = AuthenticationPlaygroundCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, deepLinkOptions: deepLink)
+                let coordinator = AuthenticationPlaygroundCoordinator(router: router)
+                return coordinate(to: coordinator, deepLinkOptions: deepLink)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -81,8 +91,8 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
-                let coordinator = UIFlowsCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = UIFlowsCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -93,8 +103,8 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
-                let coordinator = UIFlowsPartialScreenCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = UIFlowsPartialScreenCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -105,8 +115,8 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
-                let coordinator = UIViewsCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = UIViewsCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -117,8 +127,8 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
-                let coordinator = MiscellaneousCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = MiscellaneousCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -130,8 +140,8 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
-                let coordinator = TestingPlaygroundCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = TestingPlaygroundCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -144,8 +154,8 @@ class TestAPICoordinator: BaseCoordinator<Void> {
             .flatMap { [weak self] dataModel -> AnyPublisher<Void, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
                 let coordinatorData = CoordinatorData.conversationDataModel(data: dataModel)
-                let coordinator = AutomationCoordinator(router: self.router)
-                return self.coordinate(to: coordinator, coordinatorData: coordinatorData)
+                let coordinator = AutomationCoordinator(router: router)
+                return coordinate(to: coordinator, coordinatorData: coordinatorData)
             }
             .flatMap { _ -> AnyPublisher<Void, Never> in
                 return Empty(completeImmediately: false).eraseToAnyPublisher()

@@ -41,8 +41,6 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app wants to take pictures.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app wants to use your photos.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This app will use your data to provide better ad experience.</string>
 	<key>SKAdNetworkItems</key>

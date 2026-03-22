@@ -29,7 +29,7 @@ class GeneralSettingsView: UIView {
         static let textFieldCustomSortTitleIdentifier: [OWSortOption: String] = [
             .best: "sort_title_best",
             .newest: "sort_title_newest",
-            .oldest: "sort_title_oldest"
+            .oldest: "sort_title_oldest",
         ]
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
         static let textFieldCustomFontNameIdentifier = "custom_font_name"
@@ -65,36 +65,44 @@ class GeneralSettingsView: UIView {
         let title = viewModel.outputs.articleHeaderStyleTitle
         let items = viewModel.outputs.articleHeaderStyleSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedArticleHeaderStyleIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedArticleHeaderStyleIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedArticleInformationStrategy: SegmentedControlSetting = {
         let title = viewModel.outputs.articleInformationStrategyTitle
         let items = viewModel.outputs.articleInformationStrategySettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedArticleInformationStrategiIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedArticleInformationStrategiIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedElementsCustomizationStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.elementsCustomizationStyleTitle
         let items = viewModel.outputs.elementsCustomizationStyleSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedElementsCustomizationStyleIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedElementsCustomizationStyleIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedColorsCustomizationStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.colorsCustomizationStyleTitle
         let items = viewModel.outputs.colorsCustomizationStyleSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedColorsCustomizationStyleIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedColorsCustomizationStyleIdentifier,
+            items: items
+        )
     }()
 
     private lazy var openCustomColorsBtn: UIButton = {
@@ -107,54 +115,66 @@ class GeneralSettingsView: UIView {
         let title = viewModel.outputs.readOnlyTitle
         let items = viewModel.outputs.readOnlySettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedReadOnlyModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedReadOnlyModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedThemeMode: SegmentedControlSetting = {
         let title = viewModel.outputs.themeModeTitle
         let items = viewModel.outputs.themeModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedThemeModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedThemeModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedStatusBarStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.statusBarStyleTitle
         let items = viewModel.outputs.statusBarStyleSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedStatusBarStyleIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedStatusBarStyleIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedNavigationBarStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.navigationBarStyleTitle
         let items = viewModel.outputs.navigationBarStyleSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedNavigationBarStyleIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedNavigationBarStyleIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedModalStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.modalStyleTitle
         let items = viewModel.outputs.modalStyleSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedModalStyleIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedModalStyleIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedInitialSort: SegmentedControlSetting = {
         let title = viewModel.outputs.initialSortTitle
         let items = viewModel.outputs.initialSortSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedInitialSortIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedInitialSortIdentifier,
+            items: items
+        )
     }()
 
     private lazy var customSortTitles: [OWSortOption: TextFieldSetting] = {
@@ -175,29 +195,37 @@ class GeneralSettingsView: UIView {
         let title = viewModel.outputs.fontGroupTypeTitle
         let items = viewModel.outputs.fontGroupTypeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedFontGroupTypeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedFontGroupTypeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var textFieldCustomFontName: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: viewModel.outputs.customFontGroupTypeNameTitle,
-                                        accessibilityPrefixId: Metrics.textFieldCustomFontNameIdentifier,
-                                        font: FontBook.paragraph)
+        let txtField = TextFieldSetting(
+            title: viewModel.outputs.customFontGroupTypeNameTitle,
+            accessibilityPrefixId: Metrics.textFieldCustomFontNameIdentifier,
+            font: FontBook.paragraph
+        )
         return txtField
     }()
 
     private lazy var textFieldArticleURL: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: viewModel.outputs.articleURLTitle,
-                                        accessibilityPrefixId: Metrics.textFieldArticleURLIdentifier,
-                                        font: FontBook.paragraph)
+        let txtField = TextFieldSetting(
+            title: viewModel.outputs.articleURLTitle,
+            accessibilityPrefixId: Metrics.textFieldArticleURLIdentifier,
+            font: FontBook.paragraph
+        )
         return txtField
     }()
 
     private lazy var textFieldArticleSection: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: viewModel.outputs.articleSectionTitle,
-                                        accessibilityPrefixId: Metrics.textFieldArticleSectionIdentifier,
-                                        font: FontBook.paragraph)
+        let txtField = TextFieldSetting(
+            title: viewModel.outputs.articleSectionTitle,
+            accessibilityPrefixId: Metrics.textFieldArticleSectionIdentifier,
+            font: FontBook.paragraph
+        )
         return txtField
     }()
 
@@ -205,48 +233,58 @@ class GeneralSettingsView: UIView {
         let title = viewModel.outputs.languageStrategyTitle
         let items = viewModel.outputs.languageStrategySettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedLanguageStrategyIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedLanguageStrategyIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedLocaleStrategy: SegmentedControlSetting = {
         let title = viewModel.outputs.localeStrategyTitle
         let items = viewModel.outputs.localeStrategySettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedLocaleStrategyIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedLocaleStrategyIdentifier,
+            items: items
+        )
     }()
 
     private lazy var pickerLanguageCode: PickerSetting = {
         let title = viewModel.outputs.supportedLanguageTitle
         let items = viewModel.outputs.supportedLanguageItems
-        let picker = PickerSetting(title: title,
-                                   accessibilityPrefixId: Metrics.pickerLanguageCodeIdentifier,
-                                   items: items)
+        let picker = PickerSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.pickerLanguageCodeIdentifier,
+            items: items
+        )
         return picker
     }()
 
     private lazy var showLoginPromptSwitch: SwitchSetting = {
         return SwitchSetting(
             title: viewModel.outputs.showLoginPromptTitle,
-            accessibilityPrefixId: Metrics.loginPromptSwitchIdentifier)
+            accessibilityPrefixId: Metrics.loginPromptSwitchIdentifier
+        )
     }()
 
     private lazy var showStarRatingSwitch: SwitchSetting = {
         return SwitchSetting(
             title: viewModel.outputs.showStarRatingTitle,
-            accessibilityPrefixId: Metrics.starRatingSwitchIdentifier)
+            accessibilityPrefixId: Metrics.starRatingSwitchIdentifier
+        )
     }()
 
     private lazy var segmentedOrientationEnforcement: SegmentedControlSetting = {
         let title = viewModel.outputs.orientationEnforcementTitle
         let items = viewModel.outputs.orientationEnforcementSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedLocaleStrategyIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedLocaleStrategyIdentifier,
+            items: items
+        )
     }()
 
     private let viewModel: GeneralSettingsViewModeling
@@ -256,18 +294,22 @@ class GeneralSettingsView: UIView {
         let title = viewModel.outputs.commentActionsColorTitle
         let items = viewModel.outputs.commentActionsColorSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCommentActionsColorIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedCommentActionsColorIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedCommentActionsFontStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.commentActionsFontStyleTitle
         let items = viewModel.outputs.commentActionsFontStyleSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCommentActionsFontStyleIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedCommentActionsFontStyleIdentifier,
+            items: items
+        )
     }()
 
     init(viewModel: GeneralSettingsViewModeling) {
@@ -278,6 +320,7 @@ class GeneralSettingsView: UIView {
         setupObservers()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -285,14 +328,14 @@ class GeneralSettingsView: UIView {
 
 private extension GeneralSettingsView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = ColorPalette.shared.color(type: .background)
+        backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalToSuperview()
@@ -551,7 +594,7 @@ private extension GeneralSettingsView {
 
         viewModel.outputs.languageName
             .map { [weak self] in
-                guard let self, let index = self.viewModel.outputs.supportedLanguageItems.firstIndex(of: $0)
+                guard let self, let index = viewModel.outputs.supportedLanguageItems.firstIndex(of: $0)
                 else { return nil }
                 return (index, 0)
             }
@@ -562,7 +605,7 @@ private extension GeneralSettingsView {
         pickerLanguageCode.pickerControl.publisher.$selectedIndexPath
             .map { [weak self] in
                 guard let self else { return nil }
-                return self.viewModel.outputs.supportedLanguageItems[$0.row]
+                return viewModel.outputs.supportedLanguageItems[$0.row]
             }
             .unwrap()
             .removeDuplicates()

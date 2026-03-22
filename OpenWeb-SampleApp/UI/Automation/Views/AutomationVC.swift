@@ -47,6 +47,7 @@ class AutomationVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -68,7 +69,7 @@ private extension AutomationVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         // Adding scroll view
         view.addSubview(scrollView)
@@ -101,7 +102,7 @@ private extension AutomationVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        viewModel.inputs.setNavigationController(self.navigationController)
+        viewModel.inputs.setNavigationController(navigationController)
 
         btnFonts.tapPublisher
             .bind(to: viewModel.inputs.fontsTapped)
@@ -122,7 +123,7 @@ private extension AutomationVC {
     func showError(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }
 

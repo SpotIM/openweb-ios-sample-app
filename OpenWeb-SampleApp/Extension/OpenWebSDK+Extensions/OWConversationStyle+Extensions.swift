@@ -10,23 +10,29 @@ import Foundation
 import OpenWebSDK
 
 extension OWConversationStyle {
-    static func conversationStyle(fromIndex index: Int,
-                                  communityGuidelinesStyleIndex: Int,
-                                  communityQuestionsStyleIndex: Int,
-                                  spacingIndex: Int,
-                                  betweenComments: CGFloat,
-                                  belowCommunityGuidelines: CGFloat,
-                                  belowCommunityQuestions: CGFloat) -> OWConversationStyle {
+    static func conversationStyle(
+        fromIndex index: Int,
+        communityGuidelinesStyleIndex: Int,
+        communityQuestionsStyleIndex: Int,
+        spacingIndex: Int,
+        betweenComments: CGFloat,
+        belowCommunityGuidelines: CGFloat,
+        belowCommunityQuestions: CGFloat
+    ) -> OWConversationStyle {
 
         switch index {
         case OWConversationStyleIndexer.regular.index: return .regular
         case OWConversationStyleIndexer.compact.index: return .compact
-        case OWConversationStyleIndexer.custom.index: return .custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
-                                                                communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex),
-                                                                spacing: OWConversationSpacing(index: spacingIndex,
-                                                                                               betweenComments: betweenComments,
-                                                                                               communityGuidelines: belowCommunityGuidelines,
-                                                                                               communityQuestions: belowCommunityQuestions))
+        case OWConversationStyleIndexer.custom.index: return .custom(
+            communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
+            communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex),
+            spacing: OWConversationSpacing(
+                index: spacingIndex,
+                betweenComments: betweenComments,
+                communityGuidelines: belowCommunityGuidelines,
+                communityQuestions: belowCommunityQuestions
+            )
+        )
         default: return `default`
         }
     }

@@ -16,15 +16,12 @@ extension UIPickerView {
                 return existing
             } else {
                 let newPublisher = PickerPublisher()
-                self.publisher = newPublisher
+                setup(publisher: newPublisher)
                 return newPublisher
             }
         }
         set {
-            newValue.pickerView = self
-            self.delegate = newValue
-            self.dataSource = newValue
-            setObjectiveCAssociatedObject(key: &AssociatedKeys.pickerPublisher, value: newValue)
+            setup(publisher: newValue)
         }
     }
 
@@ -68,8 +65,17 @@ extension UIPickerView {
             selectedIndexPath = (row, component)
         }
     }
+}
 
-    private struct AssociatedKeys {
+private extension UIPickerView {
+    struct AssociatedKeys {
         static var pickerPublisher = "UIPickerView_PickerPublisher"
+    }
+
+    func setup(publisher: PickerPublisher) {
+        publisher.pickerView = self
+        delegate = publisher
+        dataSource = publisher
+        setObjectiveCAssociatedObject(key: &AssociatedKeys.pickerPublisher, value: publisher)
     }
 }

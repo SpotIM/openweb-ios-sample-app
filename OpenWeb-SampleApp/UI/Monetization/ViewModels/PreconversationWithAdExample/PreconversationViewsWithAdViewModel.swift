@@ -68,8 +68,10 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
     }()
 
     lazy var preconversationCellViewModel: PreconversationCellViewModeling = {
-        PreconversationCellViewModel(showPreConversation: showPreConversation,
-                                     adSizeChanged: adSizeChanged)
+        PreconversationCellViewModel(
+            showPreConversation: showPreConversation,
+            adSizeChanged: adSizeChanged
+        )
     }()
 
     private let _adSizeChanged = PassthroughSubject<Void, Never>()
@@ -96,11 +98,13 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
             .eraseToAnyPublisher()
     }
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIIndependentViewsActionSettings,
-         postId: OWPostId) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        imageProviderAPI: ImageProviding = ImageProvider(),
+        actionSettings: SDKUIIndependentViewsActionSettings,
+        postId: OWPostId
+    ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.imageProviderAPI = imageProviderAPI
         self.commonCreatorService = commonCreatorService
@@ -153,8 +157,8 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
                 let manager = OpenWeb.manager
                 let uiViews = manager.ui.views
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -173,11 +177,12 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
                         }
                     }
                 } else {
-                    uiViews.preConversation(postId: postId,
-                                            article: article,
-                                            additionalSettings: additionalSettings,
-                                            callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
-                                            completion: { [weak self] result in
+                    uiViews.preConversation(
+                        postId: postId,
+                        article: article,
+                        additionalSettings: additionalSettings,
+                        callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
+                        completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
@@ -187,7 +192,8 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
                             let message = error.description
                             DLog("Calling Views PreConversation error: \(message)")
                         }
-                    })
+                        }
+                    )
                 }
             })
             .store(in: &cancellables)
@@ -214,11 +220,11 @@ class PreconversationViewsWithAdViewModel: PreconversationViewsWithAdViewModelin
             case let .adEvent(event, eventData):
                 guard loggerEnabled else { return }
                 let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
         }
     }

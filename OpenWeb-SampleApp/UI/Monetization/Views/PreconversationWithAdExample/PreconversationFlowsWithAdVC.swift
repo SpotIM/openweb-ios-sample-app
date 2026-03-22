@@ -46,6 +46,7 @@ class PreconversationFlowsWithAdVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -88,7 +89,7 @@ class PreconversationFlowsWithAdVC: UIViewController {
     private func setupObservers() {
         title = viewModel.outputs.title
 
-        viewModel.inputs.setNavigationController(self.navigationController)
+        viewModel.inputs.setNavigationController(navigationController)
         viewModel.inputs.setPresentationalVC(self)
 
         viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
@@ -101,7 +102,7 @@ class PreconversationFlowsWithAdVC: UIViewController {
                         guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticleImageCell.identifier) as? ArticleImageCell else {
                             fatalError("\(ArticleImageCell.identifier) must be registered first")
                         }
-                        cell.configure(with: self.articleImageURL)
+                        cell.configure(with: articleImageURL)
                         return cell
 
                     case .content:
@@ -114,14 +115,14 @@ class PreconversationFlowsWithAdVC: UIViewController {
                         guard let cell = tableView.dequeueReusableCell(withIdentifier: IndependentAdCell.identifier) as? IndependentAdCell else {
                             fatalError("\(IndependentAdCell.identifier) must be registered first")
                         }
-                        cell.configure(with: self.viewModel.outputs.independentAdCellViewModel, tableView: tableView)
+                        cell.configure(with: viewModel.outputs.independentAdCellViewModel, tableView: tableView)
                         return cell
 
                     case .preconversation:
                         guard let cell = tableView.dequeueReusableCell(withIdentifier: PreConversationCell.identifier) as? PreConversationCell else {
                             fatalError("\(PreConversationCell.identifier) must be registered first")
                         }
-                        cell.configure(with: self.viewModel.outputs.preconversationCellViewModel, tableView: tableView)
+                        cell.configure(with: viewModel.outputs.preconversationCellViewModel, tableView: tableView)
                         return cell
                     }
             })
@@ -139,7 +140,7 @@ class PreconversationFlowsWithAdVC: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loggerEnabled in
                 guard let self else { return }
-                self.floatingLoggerView.isHidden = !loggerEnabled
+                floatingLoggerView.isHidden = !loggerEnabled
             })
             .store(in: &cancellables)
     }

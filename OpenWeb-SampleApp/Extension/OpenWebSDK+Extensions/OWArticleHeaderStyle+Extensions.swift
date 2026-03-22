@@ -28,7 +28,7 @@ extension OWArticleHeaderStyle {
         case .none: return 0
         case .regular: return 1
         default:
-            return OWArticleHeaderStyle.`default`.index
+            return OWArticleHeaderStyle.default.index
         }
     }
 }

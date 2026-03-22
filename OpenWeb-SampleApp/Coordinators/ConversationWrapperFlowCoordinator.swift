@@ -11,8 +11,10 @@ final class ConversationWrapperFlowCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.actionsFlowPartialScreenSettings(let settings) = data,
@@ -52,9 +54,11 @@ final class ConversationWrapperFlowCoordinator: BaseCoordinator<Void> {
         )
         #endif
 
-        router.push(wrapperVC,
-                    animated: true,
-                    completion: completion)
+        router.push(
+            wrapperVC,
+            animated: true,
+            completion: completion
+        )
 
         return completion
             .handleEvents(receiveOutput: { [weak self] _ in

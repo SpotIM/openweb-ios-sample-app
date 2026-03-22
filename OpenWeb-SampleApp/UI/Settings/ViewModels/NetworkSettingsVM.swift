@@ -74,7 +74,7 @@ private extension NetworkSettingsVM {
     func setupObservers() {
         networkEnvironmentSelected
             .dropFirst()
-            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWNetworkEnvironment>.networkEnvironment))
             .store(in: &cancellables)
     }
 }

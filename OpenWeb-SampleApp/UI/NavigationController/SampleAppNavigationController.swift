@@ -14,7 +14,7 @@ class SampleAppNavigationController: UINavigationController {
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return self.topViewController?.supportedInterfaceOrientations ?? .allButUpsideDown
+        return topViewController?.supportedInterfaceOrientations ?? .allButUpsideDown
     }
 
     static var shared = {
@@ -23,9 +23,10 @@ class SampleAppNavigationController: UINavigationController {
 
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.setupNavigationBarStyle()
+        setupNavigationBarStyle()
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -34,12 +35,12 @@ class SampleAppNavigationController: UINavigationController {
 private extension SampleAppNavigationController {
     func setupNavigationBarStyle() {
         let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationBar.tintColor = ColorPalette.shared.color(type: .text)
+        navigationBar.tintColor = ColorPalette.shared.color(type: .text)
 
         // Setup Title font
         let navigationTitleTextAttributes = [
             NSAttributedString.Key.font: FontBook.secondaryHeadingBold,
-            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text)
+            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text),
         ]
 
         let appearance = UINavigationBarAppearance()
@@ -52,7 +53,7 @@ private extension SampleAppNavigationController {
         backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
         appearance.backButtonAppearance = backButtonAppearance
 
-        self.navigationBar.standardAppearance = appearance
-        self.navigationBar.scrollEdgeAppearance = self.navigationBar.standardAppearance
+        navigationBar.standardAppearance = appearance
+        navigationBar.scrollEdgeAppearance = navigationBar.standardAppearance
      }
 }

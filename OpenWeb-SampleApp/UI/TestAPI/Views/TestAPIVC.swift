@@ -120,14 +120,18 @@ class TestAPIVC: UIViewController {
     }()
 
     private lazy var txtFieldSpotId: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: NSLocalizedString("SpotId", comment: "") + ":",
-                                        accessibilityPrefixId: Metrics.txtFieldSpotIdIdentifier)
+        let txtField = TextFieldSetting(
+            title: NSLocalizedString("SpotId", comment: "") + ":",
+            accessibilityPrefixId: Metrics.txtFieldSpotIdIdentifier
+        )
         return txtField
     }()
 
     private lazy var txtFieldPostId: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: NSLocalizedString("PostId", comment: "") + ":",
-                                        accessibilityPrefixId: Metrics.txtFieldPostIdIdentifier)
+        let txtField = TextFieldSetting(
+            title: NSLocalizedString("PostId", comment: "") + ":",
+            accessibilityPrefixId: Metrics.txtFieldPostIdIdentifier
+        )
         return txtField
     }()
 
@@ -160,13 +164,14 @@ class TestAPIVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         viewModel.inputs.viewWillAppear.send()
     }
 
@@ -203,7 +208,7 @@ private extension TestAPIVC {
     // swiftlint:disable function_body_length
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         // Adding scroll view
         view.addSubview(scrollView)
@@ -300,7 +305,7 @@ private extension TestAPIVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnMiscellaneous.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            #if !(AUTOMATION)
+            #if !AUTOMATION
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
             #endif
         }
@@ -449,12 +454,14 @@ private extension TestAPIVC {
     func showPresetPicker(_ shouldShow: Bool) {
         if shouldShow {
             // Dismiss keyboard
-            self.view.endEditing(true)
+            view.endEditing(true)
         }
-        UIView.animate(withDuration: Metrics.animatePickerDuration,
-                       delay: 0.0,
-                       usingSpringWithDamping: Metrics.animatePickerDamping,
-                       initialSpringVelocity: Metrics.animatePickerVelocity) {
+        UIView.animate(
+            withDuration: Metrics.animatePickerDuration,
+            delay: 0.0,
+            usingSpringWithDamping: Metrics.animatePickerDamping,
+            initialSpringVelocity: Metrics.animatePickerVelocity
+        ) {
             self.conversationPresetSelectionView.snp.updateConstraints { update in
                 update.bottom.equalToSuperview().inset(shouldShow ? 0 : -Metrics.pickerHeight)
             }

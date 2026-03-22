@@ -29,7 +29,7 @@ extension OWCommunityGuidelinesStyle {
         case .none: return 0
         case .regular: return 1
         case .compact: return 2
-        default: return OWCommunityQuestionStyle.`default`.index
+        default: return OWCommunityQuestionStyle.default.index
         }
     }
 

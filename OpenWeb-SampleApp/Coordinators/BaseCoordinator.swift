@@ -35,23 +35,29 @@ class BaseCoordinator<ResultType> {
     // 1. Stores coordinator in a dictionary of child coordinators.
     // 2. Calls method `start()` on that coordinator.
     // 3. On the `onNext:` of returning observable of method `start()` removes coordinator from the dictionary.
-    func coordinate<T>(to coordinator: BaseCoordinator<T>,
-                       deepLinkOptions: DeepLinkOptions? = nil,
-                       coordinatorData: CoordinatorData? = nil) -> AnyPublisher<T, Never> {
+    func coordinate<T>(
+        to coordinator: BaseCoordinator<T>,
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<T, Never> {
         store(coordinator: coordinator)
-        return coordinator.start(deepLinkOptions: deepLinkOptions,
-                                 coordinatorData: coordinatorData)
+        return coordinator.start(
+            deepLinkOptions: deepLinkOptions,
+            coordinatorData: coordinatorData
+        )
             .handleEvents(receiveOutput: { [weak self, weak coordinator] _ in
                 guard let self,
                     let coord = coordinator else { return }
-                self.free(coordinator: coord)
+                free(coordinator: coord)
             })
             .eraseToAnyPublisher()
     }
 
     // Starts job of the coordinator.
-    func start(deepLinkOptions: DeepLinkOptions? = nil,
-               coordinatorData: CoordinatorData? = nil) -> AnyPublisher<ResultType, Never> {
+    func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<ResultType, Never> {
         fatalError("Start method should be implemented.")
     }
 

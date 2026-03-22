@@ -34,9 +34,11 @@ class CommentThreadSettingsView: UIView {
     }()
 
     private lazy var textFieldOpenCommentId: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: viewModel.outputs.openCommentIdTitle,
-                                        accessibilityPrefixId: Metrics.textFieldOpenCommentIdIdentifier,
-                                        font: FontBook.paragraph)
+        let txtField = TextFieldSetting(
+            title: viewModel.outputs.openCommentIdTitle,
+            accessibilityPrefixId: Metrics.textFieldOpenCommentIdIdentifier,
+            font: FontBook.paragraph
+        )
         return txtField
     }()
 
@@ -51,6 +53,7 @@ class CommentThreadSettingsView: UIView {
         setupObservers()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -58,15 +61,15 @@ class CommentThreadSettingsView: UIView {
 
 private extension CommentThreadSettingsView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
         textFieldOpenCommentId.accessibilityIdentifier = Metrics.textFieldOpenCommentIdIdentifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = ColorPalette.shared.color(type: .background)
+        backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalToSuperview()

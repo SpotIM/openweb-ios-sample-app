@@ -31,7 +31,7 @@ extension OWInitialSortStrategy {
         case .use(sortOption: .best): return 1
         case .use(sortOption: .newest): return 2
         case .use(sortOption: .oldest): return 3
-        default: return OWInitialSortStrategy.`default`.index
+        default: return OWInitialSortStrategy.default.index
         }
     }
     // swiftlint:enable no_magic_numbers

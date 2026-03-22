@@ -26,7 +26,7 @@ extension OWModalPresentationStyle {
         switch self {
         case .fullScreen: return 0
         case .pageSheet: return 1
-        default: return OWModalPresentationStyle.`default`.index
+        default: return OWModalPresentationStyle.default.index
         }
     }
 }

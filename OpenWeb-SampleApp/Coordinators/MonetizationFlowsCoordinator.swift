@@ -15,8 +15,10 @@ class MonetizationFlowsCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
         guard let data = coordinatorData,
               case CoordinatorData.postId(let postId) = data else {
             fatalError("MonetizationFlowsCoordinator requires coordinatorData from `CoordinatorData.postId` type")
@@ -29,9 +31,11 @@ class MonetizationFlowsCoordinator: BaseCoordinator<Void> {
 
         setupCoordinatorInternalNavigation(viewModel: monetizationViewModel)
 
-        router.push(monetizationVC,
-                    animated: true,
-                    completion: vcPopped)
+        router.push(
+            monetizationVC,
+            animated: true,
+            completion: vcPopped
+        )
 
         return vcPopped
             .eraseToAnyPublisher()
@@ -45,9 +49,11 @@ private extension MonetizationFlowsCoordinator {
                 guard let self else { return }
                 let singleAdExampleViewModel = SingleAdExampleViewModel(postId: postId)
                 let singleAdExampleVC = SingleAdExampleVC(viewModel: singleAdExampleViewModel)
-                self.router.push(singleAdExampleVC,
-                                 animated: true,
-                                 completion: nil)
+                router.push(
+                    singleAdExampleVC,
+                    animated: true,
+                    completion: nil
+                )
             })
             .store(in: &cancellables)
 
@@ -65,9 +71,11 @@ private extension MonetizationFlowsCoordinator {
                         postId: dataModel.postId
                     )
                     let preconversationFlowsWithAdVC = PreconversationFlowsWithAdVC(viewModel: preconversationFlowsWithAdVM)
-                    self.router.push(preconversationFlowsWithAdVC,
-                                     animated: true,
-                                     completion: nil)
+                    router.push(
+                        preconversationFlowsWithAdVC,
+                        animated: true,
+                        completion: nil
+                    )
                 }
             )
             .store(in: &cancellables)

@@ -12,9 +12,11 @@ import OpenWeb_SampleApp_Internal_Configs
 
 extension DevelopmentUserAuthentication {
     func toUserAuthentication() -> UserAuthentication {
-        return UserAuthentication(username: self.username,
-                                  password: self.password,
-                                  userId: self.userId)
+        return UserAuthentication(
+            username: username,
+            password: password,
+            userId: userId
+        )
     }
 }
 

@@ -42,6 +42,7 @@ class PickerSetting: UIView {
         }
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -55,8 +56,8 @@ private extension PickerSetting {
     }
 
     @objc func setupViews() {
-        self.addSubview(pickerControl)
-        self.addSubview(pickerTitleLbl)
+        addSubview(pickerControl)
+        addSubview(pickerTitleLbl)
 
         pickerTitleLbl.snp.makeConstraints { make in
             make.centerY.equalTo(pickerControl)

@@ -12,8 +12,10 @@ import OpenWeb_SampleApp_Internal_Configs
 
 extension DevelopmentSDKConversationDataModel {
     func toSDKConversationDataModel() -> SDKConversationDataModel {
-        return SDKConversationDataModel(spotId: self.spotId,
-                                        postId: self.postId)
+        return SDKConversationDataModel(
+            spotId: spotId,
+            postId: postId
+        )
     }
 }
 

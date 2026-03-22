@@ -40,6 +40,7 @@ class TestingPlaygroundIndependentViewVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -64,7 +65,7 @@ private extension TestingPlaygroundIndependentViewVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(loggerView)
         loggerView.snp.makeConstraints { make in
@@ -85,8 +86,8 @@ private extension TestingPlaygroundIndependentViewVC {
         viewModel.outputs.testingPlaygroundView
             .sink(receiveValue: { [weak self] view in
                 guard let self else { return }
-                self.testingPlaygroundView = view
-                self.contentView.addSubview(view)
+                testingPlaygroundView = view
+                contentView.addSubview(view)
                 view.snp.makeConstraints { make in
                     make.edges.equalToSuperview()
                 }

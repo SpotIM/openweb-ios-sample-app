@@ -42,8 +42,8 @@ class ColorSelectionItemCellViewModel: ColorSelectionItemCellViewModeling, Color
 
     init(item: ThemeColorItem) {
         self.item = item
-        self.lightColor = CurrentValueSubject(item.initialColor?.lightColor)
-        self.darkColor = CurrentValueSubject(item.initialColor?.darkColor)
+        lightColor = CurrentValueSubject(item.initialColor?.lightColor)
+        darkColor = CurrentValueSubject(item.initialColor?.darkColor)
     }
 
     var displayPicker = PassthroughSubject<ColorType, Never>()

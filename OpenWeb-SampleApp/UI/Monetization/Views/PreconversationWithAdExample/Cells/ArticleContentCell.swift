@@ -24,8 +24,10 @@ class ArticleContentCell: UITableViewCell {
             .textColor(ColorPalette.shared.color(type: .text))
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(lblArticleDescription)
         lblArticleDescription.snp.makeConstraints { make in
@@ -35,6 +37,7 @@ class ArticleContentCell: UITableViewCell {
         setupViews()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -43,6 +46,6 @@ class ArticleContentCell: UITableViewCell {
 private extension ArticleContentCell {
     @objc func setupViews() {
         selectionStyle = .none
-        self.backgroundColor = .clear
+        backgroundColor = .clear
     }
 }

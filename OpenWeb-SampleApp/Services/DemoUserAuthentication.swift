@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import OpenWebSDK
 
-internal class DemoUserAuthentication {
+class DemoUserAuthentication {
 
     /*
      Using a mock sso server for the demo login which is valid in our demo spots.
@@ -48,9 +48,11 @@ internal class DemoUserAuthentication {
         #endif
     }
 
-    internal static func logIn(with username: String,
-                               password: String,
-                               completion: @escaping (_ token: String?, _ error: Error?) -> Void) {
+    static func logIn(
+        with username: String,
+        password: String,
+        completion: @escaping (_ token: String?, _ error: Error?) -> Void
+    ) {
         var urlString = Metrics.loginURLPath
         #if BETA
         let env = OpenWeb.manager.environment
@@ -58,18 +60,22 @@ internal class DemoUserAuthentication {
         #endif
         guard let url = URL(string: urlString) else { return }
 
-        let params = ["username": username,
-                      "password": password]
+        let params = [
+            "username": username,
+            "password": password,
+        ]
 
         struct Response: Codable {
             var token: String
         }
 
-        AF.request(url,
-                   method: .post,
-                   parameters: params,
-                   encoding: JSONEncoding.default,
-                   headers: nil)
+        AF.request(
+            url,
+            method: .post,
+            parameters: params,
+            encoding: JSONEncoding.default,
+            headers: nil
+        )
         .validate()
         .responseDecodable { (data: DataResponse<Response, AFError>) in
             switch data.result {
@@ -81,11 +87,13 @@ internal class DemoUserAuthentication {
         }
     }
 
-    internal static func getCodeB(with codeA: String?,
-                                  accessToken: String?,
-                                  username: String?,
-                                  accessTokenNetwork: String?,
-                                  completion: @escaping (_ authCode: String?, _ error: Error?) -> Void) {
+    static func getCodeB(
+        with codeA: String?,
+        accessToken: String?,
+        username: String?,
+        accessTokenNetwork: String?,
+        completion: @escaping (_ authCode: String?, _ error: Error?) -> Void
+    ) {
         var urlString = Metrics.codeBURLPath
         var environment = "production"
         #if BETA
@@ -95,10 +103,12 @@ internal class DemoUserAuthentication {
         #endif
         guard let url = URL(string: urlString) else { return }
 
-        let params: Parameters = ["code_a": codeA ?? "",
-                                  "access_token": accessToken ?? "",
-                                  "username": username ?? "",
-                                  "env": environment]
+        let params: Parameters = [
+            "code_a": codeA ?? "",
+            "access_token": accessToken ?? "",
+            "username": username ?? "",
+            "env": environment,
+        ]
 
         let headers: HTTPHeaders = ["access-token-network": accessTokenNetwork ?? ""]
 
@@ -111,11 +121,13 @@ internal class DemoUserAuthentication {
             }
         }
 
-        AF.request(url,
-                   method: .post,
-                   parameters: params,
-                   encoding: JSONEncoding.default,
-                   headers: headers)
+        AF.request(
+            url,
+            method: .post,
+            parameters: params,
+            encoding: JSONEncoding.default,
+            headers: headers
+        )
         .validate()
         .responseDecodable { (data: DataResponse<Response, AFError>) in
             switch data.result {

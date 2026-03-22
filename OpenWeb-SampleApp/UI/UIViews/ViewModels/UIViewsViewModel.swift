@@ -133,7 +133,8 @@ private extension UIViewsViewModel {
             commentThreadTappedModel,
             clarityDetailsTappedModel,
             notificationsTappedModel,
-            preConversationTappedModel)
+            preConversationTappedModel
+        )
         .map { $0 } // swiftlint:disable:this array_init
         .bind(to: _openMockArticleScreen)
         .store(in: &cancellables)

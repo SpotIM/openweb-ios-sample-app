@@ -64,15 +64,17 @@ class ConversationWrapperVC: UIViewController {
     }
 
     #if !PUBLIC_DEMO_APP
-    func configureLogger(floatingViewModel: OWFloatingViewModeling,
-                         loggerViewModel: UILoggerViewModeling,
-                         loggerEnabled: AnyPublisher<Bool, Never>) {
+    func configureLogger(
+        floatingViewModel: OWFloatingViewModeling,
+        loggerViewModel: UILoggerViewModeling,
+        loggerEnabled: AnyPublisher<Bool, Never>
+    ) {
         let loggerView = UILoggerView(viewModel: loggerViewModel)
 
         // Add floating view to the window immediately (hidden), then toggle via setting
-        if self.floatingLoggerView == nil {
+        if floatingLoggerView == nil {
             let floatingView = OWFloatingView(viewModel: floatingViewModel)
-            self.floatingLoggerView = floatingView
+            floatingLoggerView = floatingView
 
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
@@ -93,7 +95,7 @@ class ConversationWrapperVC: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] enabled in
                 guard let self else { return }
-                self.floatingLoggerView?.isHidden = !enabled
+                floatingLoggerView?.isHidden = !enabled
             }
             .store(in: &cancellables)
     }

@@ -28,22 +28,26 @@ class Router: NSObject, Routering {
         return navigationController.viewControllers.first
     }
 
-    public init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController) {
         self.navigationController = navigationController
-        self.completions = [:]
+        completions = [:]
         super.init()
         self.navigationController.delegate = self
     }
 
     func present(_ module: Presentable, animated: Bool) {
-        navigationController.present(module.toPresentable(),
-                                     animated: animated,
-                                     completion: nil)
+        navigationController.present(
+            module.toPresentable(),
+            animated: animated,
+            completion: nil
+        )
     }
 
-    func push(_ module: Presentable,
-              animated: Bool,
-              completion: PassthroughSubject<Void, Never>?) {
+    func push(
+        _ module: Presentable,
+        animated: Bool,
+        completion: PassthroughSubject<Void, Never>?
+    ) {
         guard module.toPresentable() is UINavigationController == false else {
                 return
         }

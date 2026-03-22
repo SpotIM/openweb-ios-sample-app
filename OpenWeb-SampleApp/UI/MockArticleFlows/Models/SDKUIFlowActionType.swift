@@ -6,11 +6,11 @@
 //  Copyright © 2022 OpenWeb. All rights reserved.
 //
 
-import Foundation
+import OpenWebSDK
 
 enum SDKUIFlowActionType {
     case preConversation(presentationalMode: PresentationalModeCompact)
     case fullConversation(presentationalMode: PresentationalModeCompact)
-    case commentCreation(presentationalMode: PresentationalModeCompact)
+    case commentCreation(presentationalMode: PresentationalModeCompact, type: OWCommentCreationType)
     case commentThread(presentationalMode: PresentationalModeCompact)
 }

@@ -40,16 +40,20 @@ class PreConversationSettingsView: UIView {
         let title = viewModel.outputs.styleModeTitle
         let items = viewModel.outputs.styleModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var pickerCustomStyleNumberOfComments: PickerSetting = {
         let title = viewModel.outputs.customStyleNumberOfCommentsTitle
-        let picker = PickerSetting(title: title,
-                                   accessibilityPrefixId: Metrics.pickerCustomStyleNumberOfCommentsIdentifier,
-                                   items: viewModel.outputs.customStyleNumberOfCommentsSettings)
+        let picker = PickerSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.pickerCustomStyleNumberOfCommentsIdentifier,
+            items: viewModel.outputs.customStyleNumberOfCommentsSettings
+        )
         return picker
     }()
 
@@ -57,18 +61,22 @@ class PreConversationSettingsView: UIView {
         let title = viewModel.outputs.communityGuidelinesStyleModeTitle
         let items = viewModel.outputs.communityGuidelinesModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCommunityGuidelinesStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedCommunityGuidelinesStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedCommunityQuestionsStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.communityQuestionsStyleModeTitle
         let items = viewModel.outputs.communityQuestionsStyleModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCommunityQuestionsStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedCommunityQuestionsStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private let viewModel: PreConversationSettingsViewModeling
@@ -82,6 +90,7 @@ class PreConversationSettingsView: UIView {
         setupObservers()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -89,14 +98,14 @@ class PreConversationSettingsView: UIView {
 
 private extension PreConversationSettingsView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = ColorPalette.shared.color(type: .background)
+        backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalToSuperview()
@@ -121,7 +130,7 @@ private extension PreConversationSettingsView {
 
         viewModel.outputs.customStyleNumberOfComments
             .map { [weak self] in
-                guard let self, let index = self.viewModel.outputs.customStyleNumberOfCommentsSettings.firstIndex(of: String($0))
+                guard let self, let index = viewModel.outputs.customStyleNumberOfCommentsSettings.firstIndex(of: String($0))
                 else { return nil }
                 return (index, 0)
             }
@@ -132,7 +141,7 @@ private extension PreConversationSettingsView {
         pickerCustomStyleNumberOfComments.pickerControl.publisher.$selectedIndexPath
             .map { [weak self] in
                 guard let self else { return nil }
-                return Int(self.viewModel.outputs.customStyleNumberOfCommentsSettings[$0.row])
+                return Int(viewModel.outputs.customStyleNumberOfCommentsSettings[$0.row])
             }
             .unwrap()
             .removeDuplicates()

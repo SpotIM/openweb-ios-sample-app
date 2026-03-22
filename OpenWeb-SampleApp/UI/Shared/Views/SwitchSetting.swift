@@ -37,13 +37,14 @@ class SwitchSetting: UIView {
 
     init(title: String, accessibilityPrefixId: String, isOn: Bool = false) {
         self.title = title
-        self.initialIsOn = isOn
+        initialIsOn = isOn
         super.init(frame: .zero)
 
         setupViews()
         applyAccessibility(prefixId: accessibilityPrefixId)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -57,13 +58,13 @@ private extension SwitchSetting {
     }
 
     @objc func setupViews() {
-        self.addSubview(settingTitleLbl)
+        addSubview(settingTitleLbl)
         settingTitleLbl.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
         }
 
-        self.addSubview(switchControl)
+        addSubview(switchControl)
         switchControl.snp.makeConstraints { make in
             make.centerY.equalTo(settingTitleLbl)
             make.leading.greaterThanOrEqualTo(settingTitleLbl.snp.trailing).offset(Metrics.verticalOffset)

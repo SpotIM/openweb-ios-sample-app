@@ -43,8 +43,6 @@ extension GenericSSOAuthentication {
 
     static func createMockModels() -> [GenericSSOAuthentication] {
         var authenticationModels: [GenericSSOAuthentication] = []
-
-        // TODO: add some public "users" that can demonstrate creating comment and such for the public Sample Api preset
         let publicModels: [GenericSSOAuthentication] = []
         authenticationModels.append(contentsOf: publicModels)
 

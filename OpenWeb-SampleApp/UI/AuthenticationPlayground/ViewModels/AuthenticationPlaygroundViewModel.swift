@@ -214,9 +214,9 @@ private extension AuthenticationPlaygroundViewModel {
             .unwrap()
             .sink { [weak self] genericSSOAuthentication in
                 guard let self else { return }
-                self.customUsername.send(genericSSOAuthentication.user.username)
-                self.customPassword.send(genericSSOAuthentication.user.password)
-                self.customSSOToken.send(genericSSOAuthentication.ssoToken)
+                customUsername.send(genericSSOAuthentication.user.username)
+                customPassword.send(genericSSOAuthentication.user.password)
+                customSSOToken.send(genericSSOAuthentication.ssoToken)
             }
             .store(in: &cancellables)
 
@@ -296,7 +296,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { [weak self] _ -> AnyPublisher<Int, Never> in
                 // 1. Retrieving selected generic SSO
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self._selectedGenericSSOOptionIndex
+                return _selectedGenericSSOOptionIndex
                     .prefix(1)
                     .eraseToAnyPublisher()
             }
@@ -314,10 +314,12 @@ private extension AuthenticationPlaygroundViewModel {
                 self?._logoutAuthenticationStatus.send(.initial)
             })
             .withLatestFrom(
-                Publishers.CombineLatest4(shouldInitializeSDK,
-                                          customUsername,
-                                          customPassword,
-                                          customSSOToken)
+                Publishers.CombineLatest4(
+                    shouldInitializeSDK,
+                    customUsername,
+                    customPassword,
+                    customSSOToken
+                )
             ) { genericSSO, latestValues in
                 return (genericSSO, latestValues.0, latestValues.1, latestValues.2, latestValues.3)
             }
@@ -342,7 +344,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { [weak self] genericSSO -> AnyPublisher<(String, GenericSSOAuthentication), Never> in
                 // 3. Login user if needed
                 guard let self else { return Just(("", genericSSO)).eraseToAnyPublisher() }
-                return self.login(user: genericSSO.user)
+                return login(user: genericSSO.user)
                     .receive(on: DispatchQueue.main)
                     .replaceError(with: nil) // Keep the main subscription in case of an error
                     .handleEvents(receiveOutput: { [weak self] value in
@@ -357,7 +359,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { [weak self] token, genericSSO -> AnyPublisher<(String, String, GenericSSOAuthentication), Never> in
                 // 4. Start SSO
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.startSSO()
+                return startSSO()
                     .receive(on: DispatchQueue.main)
                     .replaceError(with: nil) // Keep the main subscription in case of an error
                     .handleEvents(receiveOutput: { [weak self] value in
@@ -372,7 +374,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { [weak self] codeA, token, genericSSO -> AnyPublisher<(String, GenericSSOAuthentication), Never> in
             // 5. Retrieving Code B
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
+                return codeB(codeA: codeA, token: token, genericSSO: genericSSO)
                     .receive(on: DispatchQueue.main)
                     .replaceError(with: nil) // Keep the main subscription in case of an error
                     .handleEvents(receiveOutput: { [weak self] value in
@@ -387,7 +389,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { [weak self] codeB, genericSSO -> AnyPublisher<Void, Never> in
                 // 6. Complete SSO
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.completeSSO(codeB: codeB)
+                return completeSSO(codeB: codeB)
                     .receive(on: DispatchQueue.main)
                     .replaceError(with: nil)
                     .handleEvents(receiveOutput: { [weak self] value in
@@ -420,7 +422,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { [weak self] _ -> AnyPublisher<Int, Never> in
                 // 1. Retrieving selected Third-party SSO
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self._selectedThirdPartySSOOptionIndex
+                return _selectedThirdPartySSOOptionIndex
                     .prefix(1)
                     .eraseToAnyPublisher()
             }
@@ -448,7 +450,7 @@ private extension AuthenticationPlaygroundViewModel {
             .flatMapLatest { [weak self] thirdPartySSO -> AnyPublisher<String, Never> in
                 // 4. Perform SSO with token
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.sso(provider: thirdPartySSO.provider, token: thirdPartySSO.token)
+                return sso(provider: thirdPartySSO.provider, token: thirdPartySSO.token)
                     .receive(on: DispatchQueue.main)
                     .replaceError(with: nil) // Keep the main subscription in case of an error
                     .handleEvents(receiveOutput: { [weak self] value in
@@ -549,10 +551,12 @@ private extension AuthenticationPlaygroundViewModel {
 
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> AnyPublisher<String?, Error> {
         return AnyPublisher<String?, Error>.create { observer in
-            DemoUserAuthentication.getCodeB(with: codeA,
-                                            accessToken: token,
-                                            username: genericSSO.user.username,
-                                            accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
+            DemoUserAuthentication.getCodeB(
+                with: codeA,
+                accessToken: token,
+                username: genericSSO.user.username,
+                accessTokenNetwork: genericSSO.ssoToken
+            ) { codeB, error in
                 guard let codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")

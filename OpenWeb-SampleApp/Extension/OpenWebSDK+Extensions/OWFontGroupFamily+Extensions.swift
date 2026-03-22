@@ -12,10 +12,10 @@ import OpenWebSDK
 extension OWFontGroupFamily {
     static func fontGroupFamily(fromIndex index: Int, name: String = "") -> OWFontGroupFamily {
         switch index {
-        case OWFontGroupFamilyIndexer.`default`.index: return .`default`
+        case OWFontGroupFamilyIndexer.default.index: return .default
         case OWFontGroupFamilyIndexer.custom.index: return .custom(fontFamily: name)
         default:
-            return .`default`
+            return .default
         }
     }
 

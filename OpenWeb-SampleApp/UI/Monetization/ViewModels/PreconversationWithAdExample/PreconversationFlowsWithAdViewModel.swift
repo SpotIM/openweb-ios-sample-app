@@ -83,8 +83,10 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
     }()
 
     lazy var preconversationCellViewModel: PreconversationCellViewModeling = {
-        PreconversationCellViewModel(showPreConversation: showPreConversation,
-                                     adSizeChanged: adSizeChanged)
+        PreconversationCellViewModel(
+            showPreConversation: showPreConversation,
+            adSizeChanged: adSizeChanged
+        )
     }()
 
     lazy var independentAdCellViewModel: IndependentAdCellViewModeling = {
@@ -95,11 +97,12 @@ class PreconversationFlowsWithAdViewModel: PreconversationFlowsWithAdViewModelin
         return NSLocalizedString("MockArticle", comment: "")
     }()
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIFlowActionSettings,
-         postId: OWPostId
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        imageProviderAPI: ImageProviding = ImageProvider(),
+        actionSettings: SDKUIFlowActionSettings,
+        postId: OWPostId
     ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
@@ -154,10 +157,10 @@ private extension PreconversationFlowsWithAdViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
-                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                guard let presentationalMode = presentationalMode(fromCompactMode: mode) else { return }
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -176,20 +179,22 @@ private extension PreconversationFlowsWithAdViewModel {
                         }
                     }
                 } else {
-                    flows.preConversation(postId: postId,
-                                          article: article,
-                                          presentationalMode: presentationalMode,
-                                          additionalSettings: additionalSettings,
-                                          callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
-                                          completion: { [weak self] result in
+                    flows.preConversation(
+                        postId: postId,
+                        article: article,
+                        presentationalMode: presentationalMode,
+                        additionalSettings: additionalSettings,
+                        callbacks: actionCallbacks(loggerEnabled: loggerEnabled),
+                        completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let preConversationView):
-                            self._showPreConversation.send(preConversationView)
+                            _showPreConversation.send(preConversationView)
                         case .failure(let error):
                             DLog("Calling flows.preConversation error: \(error)")
                         }
-                    })
+                        }
+                    )
                 }
             })
             .store(in: &cancellables)
@@ -215,11 +220,11 @@ private extension PreconversationFlowsWithAdViewModel {
                 _adSizeChanged.send()
             case let .adEvent(event, eventData):
                 let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             default:
                 guard loggerEnabled else { return }
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
         }
     }
@@ -229,7 +234,7 @@ private extension PreconversationFlowsWithAdViewModel {
     }
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
-        guard let navController = self.navController,
+        guard let navController,
               let presentationalVC else { return nil }
 
         switch mode {

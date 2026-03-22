@@ -19,7 +19,7 @@ extension UIView {
 
     @objc func initHotReload(frame: CGRect) {
             // Call the original implementation (which is now pointing to this method due to swizzling)
-            self.initHotReload(frame: frame)
+            initHotReload(frame: frame)
 
             // Listen to hot reload notifications
             setupHotReload()
@@ -31,11 +31,11 @@ extension UIView {
 
     @objc func handleHotReloadNotification(_ notification: Notification) {
         let setupViewsSelector = NSSelectorFromString("setupViews")
-        if self.responds(to: setupViewsSelector) {
-            let subviewsHiddenStates: [UIView: Bool] = self.subviews.reduce(into: [:]) { partialResult, subview in
+        if responds(to: setupViewsSelector) {
+            let subviewsHiddenStates: [UIView: Bool] = subviews.reduce(into: [:]) { partialResult, subview in
                 partialResult[subview] = subview.isHidden
             }
-            self.perform(setupViewsSelector)
+            perform(setupViewsSelector)
             for (subview, isHidden) in subviewsHiddenStates {
                 subview.isHidden = isHidden
             }

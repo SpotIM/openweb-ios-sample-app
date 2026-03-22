@@ -15,19 +15,21 @@ class PreConversationCell: UITableViewCell {
     private var viewModel: PreconversationCellViewModeling!
     private var cancellables = Set<AnyCancellable>()
 
-    func configure(with viewModel: PreconversationCellViewModeling,
-                   tableView: UITableView) {
+    func configure(
+        with viewModel: PreconversationCellViewModeling,
+        tableView: UITableView
+    ) {
         self.viewModel = viewModel
         self.tableView = tableView
-        self.setupObservers()
-        self.setupViews()
+        setupObservers()
+        setupViews()
     }
 }
 
 private extension PreConversationCell {
     @objc func setupViews() {
         selectionStyle = .none
-        self.backgroundColor = .clear
+        backgroundColor = .clear
     }
 
     func setupObservers() {
