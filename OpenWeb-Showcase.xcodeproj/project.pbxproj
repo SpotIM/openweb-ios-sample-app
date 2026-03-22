@@ -43,9 +43,22 @@
 		C338E47A6892325DC585734F /* Pods-OpenWeb-Showcase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.debug.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		24A4A1402F558DE700B538E1 /* Exceptions for "OpenWeb-Showcase" folder in "OpenWeb-Showcase" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Info.plist,
+			);
+			target = 24A4A12D2F558DE500B538E1 /* OpenWeb-Showcase */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		24A4A1302F558DE500B538E1 /* OpenWeb-Showcase */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				24A4A1402F558DE700B538E1 /* Exceptions for "OpenWeb-Showcase" folder in "OpenWeb-Showcase" target */,
+			);
 			path = "OpenWeb-Showcase";
 			sourceTree = "<group>";
 		};
@@ -282,7 +295,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "OpenWeb-Showcase/Info.plist";
+				INFOPLIST_FILE = "OpenWeb-Showcase/Resources/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -385,7 +398,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "OpenWeb-Showcase/Info.plist";
+				INFOPLIST_FILE = "OpenWeb-Showcase/Resources/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
