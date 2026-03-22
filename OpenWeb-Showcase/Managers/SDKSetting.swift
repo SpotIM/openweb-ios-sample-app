@@ -12,9 +12,9 @@ import Foundation
 @propertyWrapper
 struct SDKSetting<Value: Codable & SDKApplicable> {
 
-    private let key: String
-    private let defaultValue: Value
-    private let store: UserDefaults
+    private var key: String
+    private var defaultValue: Value
+    private var store: UserDefaults
 
     init(key: String, defaultValue: Value, store: UserDefaults = SettingsManager.store) {
         self.key = key

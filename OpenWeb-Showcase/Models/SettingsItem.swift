@@ -13,8 +13,8 @@ protocol AnySettingsItem {
 }
 
 struct SettingsItem<T: Codable> {
-    let key: String
-    let defaultValue: T
+    var key: String
+    var defaultValue: T
 }
 
 extension SettingsItem: AnySettingsItem {

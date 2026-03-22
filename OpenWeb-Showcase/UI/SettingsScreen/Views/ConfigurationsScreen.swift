@@ -9,6 +9,10 @@
 import SwiftUI
 
 struct ConfigurationsScreen: View {
+    private struct Metrics {
+        static let disabledOpacity: Double = 0.4
+    }
+
     @StateObject private var viewModel = ConfigurationsViewModel()
 
     var body: some View {
@@ -25,7 +29,7 @@ struct ConfigurationsScreen: View {
                 }
             }
             .disabled(!viewModel.isCustomLanguageEnabled)
-            .opacity(viewModel.isCustomLanguageEnabled ? 1 : 0.4)
+            .opacity(viewModel.isCustomLanguageEnabled ? 1 : Metrics.disabledOpacity)
             SegmentedPickerSection(
                 title: .configurationsLocaleStrategyTitle,
                 subtitle: .configurationsLocaleStrategySubtitle,

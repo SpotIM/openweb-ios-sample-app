@@ -9,6 +9,10 @@
 import SwiftUI
 
 struct TextFieldSection: View {
+    private struct Metrics {
+        static let disabledOpacity: Double = 0.4
+    }
+
     var title: LocalizedStringResource
     var subtitle: LocalizedStringResource?
     var placeholder: LocalizedStringResource
@@ -30,6 +34,6 @@ struct TextFieldSection: View {
                 .textFieldStyle(.roundedBorder)
                 .disabled(!isEnabled)
         }
-        .opacity(isEnabled ? 1 : 0.4)
+        .opacity(isEnabled ? 1 : Metrics.disabledOpacity)
     }
 }

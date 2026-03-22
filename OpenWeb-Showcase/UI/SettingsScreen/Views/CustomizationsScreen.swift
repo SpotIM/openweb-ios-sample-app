@@ -69,6 +69,7 @@ private extension CustomizationsScreen {
                 optionTitle: \.title
             )
             NavigationLink {
+                // swiftlint:disable:next todo
                 // TODO: Custom Theme Colors screen
                 Text("Coming soon")
             } label: {

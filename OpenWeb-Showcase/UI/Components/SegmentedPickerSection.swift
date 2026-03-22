@@ -8,6 +8,10 @@
 
 import SwiftUI
 
+private enum SegmentedPickerSectionMetrics {
+    static let disabledOpacity: Double = 0.4
+}
+
 struct SegmentedPickerSection<Option: Hashable & Identifiable & CaseIterable>: View
     where Option.AllCases: RandomAccessCollection {
 
@@ -34,6 +38,6 @@ struct SegmentedPickerSection<Option: Hashable & Identifiable & CaseIterable>: V
             .pickerStyle(.segmented)
         }
         .disabled(!isEnabled)
-        .opacity(isEnabled ? 1 : 0.4)
+        .opacity(isEnabled ? 1 : SegmentedPickerSectionMetrics.disabledOpacity)
     }
 }

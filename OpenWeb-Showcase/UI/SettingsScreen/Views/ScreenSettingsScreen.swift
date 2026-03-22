@@ -9,6 +9,11 @@
 import SwiftUI
 
 struct ScreenSettingsScreen: View {
+    private struct Metrics {
+        static let maxNumberOfComments: Double = 8
+        static let disabledOpacity: Double = 0.4
+    }
+
     @StateObject private var viewModel = ScreenSettingsViewModel()
 
     var body: some View {
@@ -45,7 +50,7 @@ private extension ScreenSettingsScreen {
                             get: { Double(viewModel.numberOfComments) },
                             set: { viewModel.numberOfComments = Int($0) }
                         ),
-                        in: 1...8,
+                        in: 1...Metrics.maxNumberOfComments,
                         step: 1
                     )
                     Text("\(viewModel.numberOfComments)")
@@ -53,7 +58,7 @@ private extension ScreenSettingsScreen {
                 }
             }
             .disabled(!viewModel.isNumberOfCommentsEnabled)
-            .opacity(viewModel.isNumberOfCommentsEnabled ? 1 : 0.4)
+            .opacity(viewModel.isNumberOfCommentsEnabled ? 1 : Metrics.disabledOpacity)
             SegmentedPickerSection(
                 title: "screenSettingsPreConversationGuidelinesTitle",
                 subtitle: "screenSettingsPreConversationGuidelinesSubtitle",

@@ -31,7 +31,8 @@ enum SettingsItems {
 
     // MARK: - Screen Settings
     static let preConversationStyle = SettingsItem(key: "pre_conversation_style", defaultValue: ScreenSettingsViewModel.PreConversationStyleSetting.regular)
-    static let numberOfComments = SettingsItem(key: "number_of_comments", defaultValue: 3)
+    private static let defaultNumberOfComments = 3
+    static let numberOfComments = SettingsItem(key: "number_of_comments", defaultValue: defaultNumberOfComments)
     static let preConversationGuidelinesStyle = SettingsItem(key: "pre_conversation_guidelines_style", defaultValue: ScreenSettingsViewModel.GuidelinesStyleSetting.regular)
     static let preConversationQuestionsStyle = SettingsItem(key: "pre_conversation_questions_style", defaultValue: ScreenSettingsViewModel.QuestionsStyleSetting.regular)
     static let conversationStyle = SettingsItem(key: "conversation_style", defaultValue: ScreenSettingsViewModel.ConversationStyleSetting.regular)
