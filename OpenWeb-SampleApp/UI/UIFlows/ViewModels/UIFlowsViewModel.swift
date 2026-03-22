@@ -36,6 +36,7 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
     var outputs: UIFlowsViewModelingOutputs { return self }
 
     private let dataModel: SDKConversationDataModel
+    private let commonCreatorService: CommonCreatorServicing
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -67,8 +68,9 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
         return NSLocalizedString("UIFlows", comment: "")
     }()
 
-    init(dataModel: SDKConversationDataModel) {
+    init(dataModel: SDKConversationDataModel, commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {
         self.dataModel = dataModel
+        self.commonCreatorService = commonCreatorService
         setupObservers()
     }
 }
@@ -87,11 +89,14 @@ private extension UIFlowsViewModel {
             .eraseToAnyPublisher()
 
         let commentCreationTappedModel = commentCreationTapped
-            .map { mode -> SDKUIFlowActionSettings in
-                let action = SDKUIFlowActionType.commentCreation(presentationalMode: mode)
+            .map { [weak self] mode -> SDKUIFlowActionSettings? in
+                guard let self else { return nil }
+                let creationType = commonCreatorService.commentCreationType()
+                let action = SDKUIFlowActionType.commentCreation(presentationalMode: mode, type: creationType)
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
+            .unwrap()
             .eraseToAnyPublisher()
 
         let commentThreadTappedModel = commentThreadTapped

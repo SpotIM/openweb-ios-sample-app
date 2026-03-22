@@ -44,7 +44,7 @@ extension OWOrientationEnforcement {
             }
             return 0
         default:
-            return OWOrientationEnforcement.`default`.index
+            return OWOrientationEnforcement.default.index
         }
     }
 }

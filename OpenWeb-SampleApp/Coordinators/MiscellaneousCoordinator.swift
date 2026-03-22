@@ -17,8 +17,10 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
 
         guard let data = coordinatorData,
               case CoordinatorData.conversationDataModel(let conversationDataModel) = data else {
@@ -32,9 +34,11 @@ class MiscellaneousCoordinator: BaseCoordinator<Void> {
 
         setupCoordinatorInternalNavigation(viewModel: miscellaneousVM)
 
-        router.push(miscellaneousVC,
-                    animated: true,
-                    completion: vcPopped)
+        router.push(
+            miscellaneousVC,
+            animated: true,
+            completion: vcPopped
+        )
 
         return vcPopped
             .eraseToAnyPublisher()
@@ -48,9 +52,11 @@ private extension MiscellaneousCoordinator {
                 guard let self else { return }
                 let conversationCounterVM = ConversationCountersNewAPIViewModel()
                 let conversationCounterVC = ConversationCountersNewAPIVC(viewModel: conversationCounterVM)
-                self.router.push(conversationCounterVC,
-                            animated: true,
-                            completion: nil)
+                router.push(
+                    conversationCounterVC,
+                    animated: true,
+                    completion: nil
+                )
             })
             .store(in: &cancellables)
     }

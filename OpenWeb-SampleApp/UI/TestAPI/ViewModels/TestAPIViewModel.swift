@@ -165,7 +165,7 @@ class TestAPIViewModel: TestAPIViewModeling,
         return viewWillAppear
             .flatMap { [weak self] in
                 guard let self else { return Empty<String?, Never>().eraseToAnyPublisher() }
-                return self.configurationStringSubject.eraseToAnyPublisher()
+                return configurationStringSubject.eraseToAnyPublisher()
             }
             .map { configurationString in
                 guard let configurationString else {

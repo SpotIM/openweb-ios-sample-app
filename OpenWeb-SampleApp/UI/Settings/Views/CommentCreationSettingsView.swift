@@ -15,6 +15,7 @@ class CommentCreationSettingsView: UIView {
     private struct Metrics {
         static let identifier = "comment_creation_settings_view_id"
         static let segmentedStyleModeIdentifier = "custom_style_mode"
+        static let segmentedTypeIdentifier = "custom_type"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -37,9 +38,22 @@ class CommentCreationSettingsView: UIView {
         let title = viewModel.outputs.styleModeTitle
         let items = viewModel.outputs.styleModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
+            items: items
+        )
+    }()
+
+    private lazy var segmentedControlType: SegmentedControlSetting = {
+        let title = viewModel.outputs.typeTitle
+        let items = viewModel.outputs.typeSettings
+
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedTypeIdentifier,
+            items: items
+        )
     }()
 
     private let viewModel: CommentCreationSettingsViewModeling
@@ -53,6 +67,7 @@ class CommentCreationSettingsView: UIView {
         setupObservers()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -60,14 +75,14 @@ class CommentCreationSettingsView: UIView {
 
 private extension CommentCreationSettingsView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = ColorPalette.shared.color(type: .background)
+        backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalToSuperview()
@@ -76,6 +91,7 @@ private extension CommentCreationSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedStyleMode)
+        stackView.addArrangedSubview(segmentedControlType)
     }
 
     func setupObservers() {
@@ -85,6 +101,14 @@ private extension CommentCreationSettingsView {
 
         segmentedStyleMode.segmentedControl.selectedSegmentIndexPublisher
             .bind(to: viewModel.inputs.customStyleModeSelectedIndex)
+            .store(in: &cancellables)
+
+        viewModel.outputs.typeIndex
+            .assign(to: \.selectedSegmentIndex, on: segmentedControlType.segmentedControl)
+            .store(in: &cancellables)
+
+        segmentedControlType.segmentedControl.selectedSegmentIndexPublisher
+            .bind(to: viewModel.inputs.typeSelectedIndex)
             .store(in: &cancellables)
     }
 }

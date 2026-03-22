@@ -35,6 +35,7 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
     var outputs: UIFlowsPartialScreenViewModelingOutputs { return self }
 
     private let dataModel: SDKConversationDataModel
+    private let commonCreatorService: CommonCreatorServicing
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -69,8 +70,9 @@ class UIFlowsPartialScreenViewModel: UIFlowsPartialScreenViewModeling, UIFlowsPa
         return NSLocalizedString("UIFlowsPartialScreen", comment: "")
     }()
 
-    init(dataModel: SDKConversationDataModel) {
+    init(dataModel: SDKConversationDataModel, commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {
         self.dataModel = dataModel
+        self.commonCreatorService = commonCreatorService
         setupObservers()
     }
 }
@@ -99,14 +101,17 @@ private extension UIFlowsPartialScreenViewModel {
             .eraseToAnyPublisher()
 
         let commentCreationModel = commentCreationTapped
-            .map { _ -> SDKUIFlowPartialScreenActionSettings in
-                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation(route: .commentCreation(type: .comment)))
+            .map { [weak self] _ -> SDKUIFlowPartialScreenActionSettings? in
+                guard let self else { return nil }
+                let creationType = commonCreatorService.commentCreationType()
+                return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation(route: .commentCreation(type: creationType)))
             }
+            .unwrap()
             .eraseToAnyPublisher()
 
         let commentThreadModel = commentThreadTapped
-            .map { _ -> SDKUIFlowPartialScreenActionSettings in
-                let commentId = OWCommentThreadSettings.defaultCommentId
+            .map { [weak self] _ -> SDKUIFlowPartialScreenActionSettings in
+                let commentId = self?.commonCreatorService.commentThreadCommentId() ?? OWCommentThreadSettings.defaultCommentId
                 return SDKUIFlowPartialScreenActionSettings(postId: postId, actionType: .fullConversation(route: .commentThread(commentId: commentId)))
             }
             .eraseToAnyPublisher()

@@ -72,10 +72,12 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
             .eraseToAnyPublisher()
     }
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIFlowPartialScreenActionSettings) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        imageProviderAPI: ImageProviding = ImageProvider(),
+        actionSettings: SDKUIFlowPartialScreenActionSettings
+    ) {
         self.imageProviderAPI = imageProviderAPI
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
@@ -117,12 +119,12 @@ class MockArticleFlowsPartialScreenViewModel: MockArticleFlowsPartialScreenViewM
         DLog(log)
 
         if _loggerEnabled.value {
-            self.loggerViewModel.inputs.log(text: log)
+            loggerViewModel.inputs.log(text: log)
         }
 
         switch callbackType {
         case .openConversationFlow(let route):
-            self.handleConversationFlow(route: route, postId: postId)
+            handleConversationFlow(route: route, postId: postId)
         default:
             break
         }
@@ -163,8 +165,8 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 let manager = OpenWeb.manager
                 let views = manager.ui.views
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -176,7 +178,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                                 additionalSettings: additionalSettings,
                                 callbacks: actionsCallbacks
                             )
-                            self._showPreConversation.send(preConversationView)
+                            _showPreConversation.send(preConversationView)
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling views.preConversation error: \(error)")
@@ -184,10 +186,12 @@ private extension MockArticleFlowsPartialScreenViewModel {
                         }
                     }
                 } else {
-                    views.preConversation(postId: postId,
-                                          article: article,
-                                          additionalSettings: additionalSettings,
-                                          callbacks: actionsCallbacks) { result in
+                    views.preConversation(
+                        postId: postId,
+                        article: article,
+                        additionalSettings: additionalSettings,
+                        callbacks: actionsCallbacks
+                    ) { result in
                         switch result {
                         case .success(let preConversationView):
                             self._showPreConversation.send(preConversationView)
@@ -204,9 +208,10 @@ private extension MockArticleFlowsPartialScreenViewModel {
         // Conversation-based flows (full conversation, comment creation, comment thread)
         actionSettings
             .compactMap { settings -> (postId: OWPostId, route: OWConversationRoute)? in
-                if case let .fullConversation(route) = settings.actionType {
+                switch settings.actionType {
+                case .fullConversation(let route):
                     return (postId: settings.postId, route: route)
-                } else {
+                case .preConversationToFullConversation:
                     return nil
                 }
             }
@@ -220,8 +225,8 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
+                let additionalSettings = commonCreatorService.additionalSettings()
+                let article = commonCreatorService.mockArticle(for: manager.spotId)
 
                 if shouldUseAsyncAwaitCallingMethod() {
                     Task { @MainActor [weak self] in
@@ -234,7 +239,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                                 additionalSettings: additionalSettings,
                                 callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled)
                             )
-                            self._showFullConversation.send(conversationViewController)
+                            _showFullConversation.send(conversationViewController)
                         } catch {
                             let message = error.localizedDescription
                             DLog("Calling flows.conversation error: \(error)")
@@ -242,22 +247,24 @@ private extension MockArticleFlowsPartialScreenViewModel {
                         }
                     }
                 } else {
-                    flows.conversation(postId: postId,
-                                       article: article,
-                                       route: route,
-                                       additionalSettings: additionalSettings,
-                                       callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
-                                       completion: { [weak self] result in
+                    flows.conversation(
+                        postId: postId,
+                        article: article,
+                        route: route,
+                        additionalSettings: additionalSettings,
+                        callbacks: loggerActionCallbacks(loggerEnabled: loggerEnabled),
+                        completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let conversationViewController):
-                            self._showFullConversation.send(conversationViewController)
+                            _showFullConversation.send(conversationViewController)
                         case .failure(let error):
                             let message = error.description
                             DLog("Calling flows.conversation error: \(error)")
-                            self._showError.send(message)
+                            _showError.send(message)
                         }
-                    })
+                        }
+                    )
                 }
             })
             .store(in: &cancellables)
@@ -310,10 +317,10 @@ private extension MockArticleFlowsPartialScreenViewModel {
             case .adSizeChanged: break
             case let .adEvent(event, eventData):
                 let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             default:
                 let log = "Received OWFlowActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
         }
     }
@@ -340,7 +347,7 @@ private extension MockArticleFlowsPartialScreenViewModel {
                         callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value)
                     )
                     let wrapperVC = ConversationWrapperVC(conversationViewController: conversationViewController)
-                    self._showWrappedConversation.send((wrapperVC, presentationalMode))
+                    _showWrappedConversation.send((wrapperVC, presentationalMode))
                 } catch {
                     let message = error.localizedDescription
                     DLog("Calling flows.conversation error: \(error)")
@@ -348,23 +355,25 @@ private extension MockArticleFlowsPartialScreenViewModel {
                 }
             }
         } else {
-            flows.conversation(postId: postId,
-                               article: article,
-                               route: route,
-                               additionalSettings: additionalSettings,
-                               callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value),
-                               completion: { [weak self] result in
+            flows.conversation(
+                postId: postId,
+                article: article,
+                route: route,
+                additionalSettings: additionalSettings,
+                callbacks: loggerActionCallbacks(loggerEnabled: _loggerEnabled.value),
+                completion: { [weak self] result in
                 guard let self else { return }
                 switch result {
                 case .success(let conversationViewController):
                     let wrapperVC = ConversationWrapperVC(conversationViewController: conversationViewController)
-                    self._showWrappedConversation.send((wrapperVC, presentationalMode))
+                    _showWrappedConversation.send((wrapperVC, presentationalMode))
                 case .failure(let error):
                     let message = error.description
                     DLog("Calling flows.conversation error: \(error)")
-                    self._showError.send(message)
+                    _showError.send(message)
                 }
-            })
+                }
+            )
         }
     }
 }

@@ -58,6 +58,7 @@ class UILoggerView: UIView {
         applyAccessibility()
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -65,26 +66,26 @@ class UILoggerView: UIView {
 
 private extension UILoggerView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.loggerTitleIdentifier
         loggerTextView.accessibilityIdentifier = Metrics.loggerTextViewIdentifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = .yellow
+        backgroundColor = .yellow
 
-        self.addSubview(titleLabel)
+        addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.leading.top.equalTo(self).inset(Metrics.horizontalOffset)
         }
 
-        self.addSubview(clearButton)
+        addSubview(clearButton)
         clearButton.snp.makeConstraints { make in
             make.trailing.top.equalTo(self).inset(Metrics.horizontalOffset)
             make.centerY.equalTo(titleLabel)
         }
 
-        self.addSubview(loggerTextView)
+        addSubview(loggerTextView)
         loggerTextView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalTo(titleLabel.snp.bottom).offset(Metrics.verticalOffset)
@@ -103,7 +104,7 @@ private extension UILoggerView {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.scrollTextViewToBottom(textView: self.loggerTextView)
+                scrollTextViewToBottom(textView: loggerTextView)
             })
             .store(in: &cancellables)
 
@@ -120,7 +121,7 @@ private extension UILoggerView {
     }
 
     func scrollTextViewToBottom(textView: UITextView) {
-        if textView.text.count > 0,
+        if !textView.text.isEmpty,
            !textView.isDragging,
            textView.contentOffset.y + textView.frame.size.height <= textView.contentSize.height - Metrics.verticalPaddingForAutoScrollToBottom {
             let location = textView.text.count - 1

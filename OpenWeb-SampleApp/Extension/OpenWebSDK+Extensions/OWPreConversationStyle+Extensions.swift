@@ -10,20 +10,26 @@ import Foundation
 import OpenWebSDK
 
 extension OWPreConversationStyle {
-    static func preConversationStyle(fromIndex index: Int,
-                                     numberOfComments: Int = OWPreConversationStyle.Metrics.defaultRegularNumberOfComments,
-                                     communityGuidelinesStyleIndex: Int,
-                                     communityQuestionsStyleIndex: Int) -> OWPreConversationStyle {
+    static func preConversationStyle(
+        fromIndex index: Int,
+        numberOfComments: Int = OWPreConversationStyle.Metrics.defaultRegularNumberOfComments,
+        communityGuidelinesStyleIndex: Int,
+        communityQuestionsStyleIndex: Int
+    ) -> OWPreConversationStyle {
 
         switch index {
         case OWPreConversationStyleIndexer.regular.index: return .regular
         case OWPreConversationStyleIndexer.compact.index: return .compact
         case OWPreConversationStyleIndexer.ctaButtonOnly.index: return .ctaButtonOnly
-        case OWPreConversationStyleIndexer.ctaWithSummary.index: return .ctaWithSummary(communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
-                                                                                        communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex))
-        case OWPreConversationStyleIndexer.custom.index: return .custom(numberOfComments: numberOfComments,
-                                       communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
-                                       communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex))
+        case OWPreConversationStyleIndexer.ctaWithSummary.index: return .ctaWithSummary(
+            communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
+            communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex)
+        )
+        case OWPreConversationStyleIndexer.custom.index: return .custom(
+            numberOfComments: numberOfComments,
+            communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
+            communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex)
+        )
         default: return `default`
         }
     }

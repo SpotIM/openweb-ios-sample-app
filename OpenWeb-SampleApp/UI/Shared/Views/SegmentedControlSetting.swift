@@ -29,7 +29,7 @@ class SegmentedControlSetting: UIView {
     }()
 
     private(set) lazy var segmentedControl: UISegmentedControl = {
-        let segment = UISegmentedControl(items: self.items)
+        let segment = UISegmentedControl(items: items)
             .wrapContent(axis: .horizontal)
 
         return segment
@@ -44,6 +44,7 @@ class SegmentedControlSetting: UIView {
         applyAccessibility(prefixId: accessibilityPrefixId)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -57,13 +58,13 @@ private extension SegmentedControlSetting {
     }
 
     @objc func setupViews() {
-        self.addSubview(segmentTitleLbl)
+        addSubview(segmentTitleLbl)
         segmentTitleLbl.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
         }
 
-        self.addSubview(segmentedControl)
+        addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints { make in
             make.top.equalTo(segmentTitleLbl.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalToSuperview()

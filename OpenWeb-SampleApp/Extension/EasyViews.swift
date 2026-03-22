@@ -10,17 +10,17 @@ import UIKit
 
 extension UIView {
     @discardableResult func backgroundColor(_ color: UIColor) -> Self {
-        self.backgroundColor = color
+        backgroundColor = color
         return self
     }
 
     @discardableResult func wrapContent(axis: NSLayoutConstraint.Axis? = nil) -> Self {
         let both = axis == nil
         if axis == .horizontal || both {
-            self.setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
+            setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
         }
         if axis == .vertical || both {
-            self.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
+            setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
         }
         return self
     }
@@ -28,29 +28,29 @@ extension UIView {
     @discardableResult func hugContent(axis: NSLayoutConstraint.Axis? = nil) -> Self {
         let both = axis == nil
         if axis == .horizontal || both {
-            self.setContentHuggingPriority(UILayoutPriority.required, for: .horizontal)
+            setContentHuggingPriority(UILayoutPriority.required, for: .horizontal)
         }
         if axis == .vertical || both {
-            self.setContentHuggingPriority(UILayoutPriority.required, for: .vertical)
+            setContentHuggingPriority(UILayoutPriority.required, for: .vertical)
         }
         return self
     }
 
     @discardableResult func corner(radius: CGFloat) -> Self {
-        self.layer.cornerRadius = radius
-        self.layer.masksToBounds = radius != 0
+        layer.cornerRadius = radius
+        layer.masksToBounds = radius != 0
 
         return self
     }
 
     @discardableResult func border(width: CGFloat, color: UIColor) -> Self {
-        self.layer.borderWidth = width
-        self.layer.borderColor = color.cgColor
+        layer.borderWidth = width
+        layer.borderColor = color.cgColor
         return self
     }
 
     @discardableResult func tintColor(_ color: UIColor) -> Self {
-        self.tintColor = color
+        tintColor = color
         return self
     }
 
@@ -83,22 +83,22 @@ extension UILabel {
     }
 
     @discardableResult func minimumFontSize(_ size: CGFloat) -> UILabel {
-        self.minimumScaleFactor = size / self.font.pointSize
+        minimumScaleFactor = size / font.pointSize
         return self
     }
 
     @discardableResult func adjustsFontSizeToFitWidth(_ adjust: Bool) -> UILabel {
-        self.adjustsFontSizeToFitWidth = adjust
+        adjustsFontSizeToFitWidth = adjust
         return self
     }
 
     @discardableResult func textColor(_ color: UIColor) -> UILabel {
-        self.textColor = color
+        textColor = color
         return self
     }
 
     @discardableResult func numberOfLines(_ number: Int) -> UILabel {
-        self.numberOfLines = number
+        numberOfLines = number
         return self
     }
 
@@ -108,7 +108,7 @@ extension UILabel {
     }
 
     @discardableResult func lineBreakMode(_ mode: NSLineBreakMode) -> UILabel {
-        self.lineBreakMode = mode
+        lineBreakMode = mode
         return self
     }
 
@@ -124,9 +124,11 @@ extension UILabel {
             text = NSMutableAttributedString(string: self.text ?? "")
         }
 
-        text.addAttributes([NSAttributedString.Key.paragraphStyle: paragraph],
-                           range: NSRange(location: 0, length: text.length))
-        self.attributedText = text
+        text.addAttributes(
+            [NSAttributedString.Key.paragraphStyle: paragraph],
+            range: NSRange(location: 0, length: text.length)
+        )
+        attributedText = text
 
         return self
     }
@@ -139,28 +141,30 @@ extension UILabel {
             text = NSMutableAttributedString(string: self.text ?? "")
         }
 
-        text.addAttribute(NSAttributedString.Key.kern,
-                          value: spacing,
-                          range: NSRange(location: 0, length: text.length - 1))
-        self.attributedText = text
+        text.addAttribute(
+            NSAttributedString.Key.kern,
+            value: spacing,
+            range: NSRange(location: 0, length: text.length - 1)
+        )
+        attributedText = text
 
         return self
     }
 
     @discardableResult func isHidden(_ hidden: Bool) -> UILabel {
-        self.isHidden = hidden
+        isHidden = hidden
         return self
     }
 }
 
 extension UIButton {
     @discardableResult func font(_ font: UIFont) -> Self {
-        self.titleLabel?.font = font
+        titleLabel?.font = font
         return self
     }
 
     @discardableResult func textColor(_ color: UIColor, forState state: UIControl.State = .normal) -> Self {
-        self.setTitleColor(color, for: state)
+        setTitleColor(color, for: state)
         return self
     }
 
@@ -184,12 +188,12 @@ extension UIButton {
     }
 
     @discardableResult func horizontalAlignment(_ align: UIControl.ContentHorizontalAlignment) -> Self {
-        self.contentHorizontalAlignment = align
+        contentHorizontalAlignment = align
         return self
     }
 
     var adjustsFontSizeToFitWidth: UIButton {
-        self.titleLabel?.adjustsFontSizeToFitWidth = true
+        titleLabel?.adjustsFontSizeToFitWidth = true
         return self
     }
 }
@@ -256,17 +260,17 @@ extension UITextView {
     }
 
     @discardableResult func isEditable(_ editable: Bool) -> Self {
-        self.isEditable = editable
+        isEditable = editable
         return self
     }
 
     @discardableResult func isSelectable(_ selectable: Bool) -> Self {
-        self.isSelectable = selectable
+        isSelectable = selectable
         return self
     }
 
     @discardableResult func isScrollEnabled(_ scrollEnabled: Bool) -> Self {
-        self.isScrollEnabled = scrollEnabled
+        isScrollEnabled = scrollEnabled
         return self
     }
 

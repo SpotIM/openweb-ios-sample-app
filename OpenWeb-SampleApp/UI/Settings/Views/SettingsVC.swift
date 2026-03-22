@@ -34,7 +34,7 @@ class SettingsVC: UIViewController {
     }()
 
     private lazy var settingViews: [UIView] = {
-        let views = viewModel.outputs.settingsVMs.map { SettingsViewsFactory.factor(from: ($0)) }.unwrap()
+        let views = viewModel.outputs.settingsVMs.map { SettingsViewsFactory.factor(from: $0) }.unwrap()
         return views
     }()
 
@@ -47,6 +47,7 @@ class SettingsVC: UIViewController {
         setupObservers()
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -111,7 +112,7 @@ private extension SettingsVC {
             // Get the Y position of your child view
             let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
             // swiftlint:disable:next no_magic_numbers
-            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - self.view.frame.height / 3), animated: true)
+            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - view.frame.height / 3), animated: true)
         }
     }
 
@@ -128,17 +129,17 @@ private extension SettingsVC {
                     let expandedKeyboardHeight = notification.keyboardSize?.height,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
-                self.resetButton.snp.updateConstraints { make in
+                resetButton.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-expandedKeyboardHeight)
                 }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self else { return }
-                    self.view.layoutIfNeeded()
+                    view.layoutIfNeeded()
                 } completion: { [weak self] finished in
                     guard let self else { return }
                     if finished,
-                       let firstResponder = self.view.firstResponder {
-                        self.scrollToView(toView: firstResponder)
+                       let firstResponder = view.firstResponder {
+                        scrollToView(toView: firstResponder)
                     }
                 }
             }
@@ -148,7 +149,7 @@ private extension SettingsVC {
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
             .sink { [weak self] _ in
                 guard let self else { return }
-                self.resetButton.snp.updateConstraints { make in
+                resetButton.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-Metrics.resetButtonVerticalPadding)
                 }
             }

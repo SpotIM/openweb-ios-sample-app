@@ -31,7 +31,7 @@ extension OWArticleInformationStrategy {
         case .server: return 0
         case .local: return 1
         default:
-            return OWArticleInformationStrategy.`default`.index
+            return OWArticleInformationStrategy.default.index
         }
     }
 }

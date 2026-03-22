@@ -28,7 +28,7 @@ extension OWReadOnlyMode {
         case .server: return 0
         case .enable: return 1
         case .disable: return 2
-        default: return OWReadOnlyMode.`default`.index
+        default: return OWReadOnlyMode.default.index
         }
     }
 }

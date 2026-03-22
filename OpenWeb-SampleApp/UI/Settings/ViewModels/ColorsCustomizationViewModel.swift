@@ -55,7 +55,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             ThemeColorItem(title: "Vote Up Unselected", initialColor: initialColorTheme.voteUpUnselectedColor),
             ThemeColorItem(title: "Vote Down Unselected", initialColor: initialColorTheme.voteDownUnselectedColor),
             ThemeColorItem(title: "Vote Up Selected", initialColor: initialColorTheme.voteUpSelectedColor),
-            ThemeColorItem(title: "Vote Down Selected", initialColor: initialColorTheme.voteDownSelectedColor)
+            ThemeColorItem(title: "Vote Down Selected", initialColor: initialColorTheme.voteDownSelectedColor),
         ]
     }()
 
@@ -78,7 +78,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
-        self.initialColorTheme = userDefaultsProvider.get(key: .colorCustomizationCustomTheme, defaultValue: OWTheme())
+        initialColorTheme = userDefaultsProvider.get(key: .colorCustomizationCustomTheme, defaultValue: OWTheme())
         setupObservers()
     }
 }
@@ -95,7 +95,7 @@ private extension ColorsCustomizationViewModel {
             .map { colors in
                 return colors.combineLatest().map { [weak self] colorsValues -> OWTheme in
                     guard let self else { return OWTheme() }
-                    return self.getTheme(from: colorsValues)
+                    return getTheme(from: colorsValues)
                 }
             }
             .flatMapLatest { $0 }
@@ -130,7 +130,8 @@ private extension ColorsCustomizationViewModel {
             voteUpUnselectedColor: colors[16],
             voteDownUnselectedColor: colors[17],
             voteUpSelectedColor: colors[18],
-            voteDownSelectedColor: colors[19])
+            voteDownSelectedColor: colors[19]
+        )
     }
     // swiftlint:enable no_magic_numbers
 }

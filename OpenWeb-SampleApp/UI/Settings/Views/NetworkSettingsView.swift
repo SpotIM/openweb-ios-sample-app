@@ -38,23 +38,29 @@ class NetworkSettingsView: UIView {
         let title = viewModel.outputs.networkEnvironmentTitle
         let items = viewModel.outputs.networkEnvironmentSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedNetworkEnvironmentIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedNetworkEnvironmentIdentifier,
+            items: items
+        )
     }()
 
     private lazy var stagingNamespaceTextField: TextFieldSetting = {
-        return TextFieldSetting(title: viewModel.outputs.networkEnvironmentCustomTitle,
-                                placeholder: "staging-v2",
-                                accessibilityPrefixId: Metrics.identifier,
-                                font: FontBook.helperLight)
+        return TextFieldSetting(
+            title: viewModel.outputs.networkEnvironmentCustomTitle,
+            placeholder: "staging-v2",
+            accessibilityPrefixId: Metrics.identifier,
+            font: FontBook.helperLight
+        )
     }()
 
     private lazy var customUrlTextField: TextFieldSetting = {
-        return TextFieldSetting(title: "Custom URL",
-                                placeholder: "https://example.com",
-                                accessibilityPrefixId: Metrics.customUrlTextFieldIdentifier,
-                                font: FontBook.helperLight)
+        return TextFieldSetting(
+            title: "Custom URL",
+            placeholder: "https://example.com",
+            accessibilityPrefixId: Metrics.customUrlTextFieldIdentifier,
+            font: FontBook.helperLight
+        )
     }()
 
     private let viewModel: NetworkSettingsViewModeling
@@ -68,6 +74,7 @@ class NetworkSettingsView: UIView {
         setupObservers()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -75,15 +82,15 @@ class NetworkSettingsView: UIView {
 
 private extension NetworkSettingsView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
-        self.segmentedNetworkEnvironment.accessibilityIdentifier = Metrics.segmentedNetworkEnvironmentIdentifier
+        accessibilityIdentifier = Metrics.identifier
+        segmentedNetworkEnvironment.accessibilityIdentifier = Metrics.segmentedNetworkEnvironmentIdentifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = ColorPalette.shared.color(type: .background)
+        backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalToSuperview()

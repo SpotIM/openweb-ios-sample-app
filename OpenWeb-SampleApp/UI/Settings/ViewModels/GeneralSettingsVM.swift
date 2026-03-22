@@ -357,7 +357,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
             .map { [weak self] _ -> UIViewController? in
                 if #available(iOS 14.0, *) {
                     guard let self else { return nil }
-                    return ColorsCustomizationVC(viewModel: ColorsCustomizationViewModel(userDefaultsProvider: self.userDefaultsProvider))
+                    return ColorsCustomizationVC(viewModel: ColorsCustomizationViewModel(userDefaultsProvider: userDefaultsProvider))
                 } else {
                     return nil
                 }
@@ -584,8 +584,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return OWSupportedLanguage.allCases.map { $0.languageName }
     }()
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         manager: OWManagerProtocol = OpenWeb.manager) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        manager: OWManagerProtocol = OpenWeb.manager
+    ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.manager = manager
         setupObservers()
@@ -687,7 +689,7 @@ private extension GeneralSettingsVM {
         themeModeSelectedIndex // 0. default 1. light 2. dark
             .sink { [weak self] index in
                 guard let self else { return }
-                let customizations = self.manager.ui.customizations
+                let customizations = manager.ui.customizations
                 customizations.themeEnforcement = .themeStyle(fromIndex: index)
             }
             .store(in: &cancellables)
@@ -695,7 +697,7 @@ private extension GeneralSettingsVM {
         statusBarStyleSelectedIndex // 0. matchTheme 1. light 2. dark
             .sink { [weak self] index in
                 guard let self else { return }
-                let customizations = self.manager.ui.customizations
+                let customizations = manager.ui.customizations
                 customizations.statusBarEnforcement = .statusBarStyle(fromIndex: index)
             }
             .store(in: &cancellables)
@@ -703,7 +705,7 @@ private extension GeneralSettingsVM {
         navigationBarStyleSelectedIndex // 0. largeTitles 1. regular 2. keepOriginal
             .sink { [weak self] index in
                 guard let self else { return }
-                let customizations = self.manager.ui.customizations
+                let customizations = manager.ui.customizations
                 customizations.navigationBarEnforcement = .navigationBarEnforcement(fromIndex: index)
             }
             .store(in: &cancellables)
@@ -711,7 +713,7 @@ private extension GeneralSettingsVM {
         fontGroupTypeObservable
             .sink { [weak self] fontGroupType in
                 guard let self else { return }
-                let customizations = self.manager.ui.customizations
+                let customizations = manager.ui.customizations
                 customizations.fontFamily = fontGroupType
             }
             .store(in: &cancellables)
@@ -752,7 +754,7 @@ extension GeneralSettingsVM: SettingsGroupVMProtocol {
         modalStyleSelectedIndex.send(OWModalPresentationStyle.default.index)
         initialSortSelectedIndex.send(OWInitialSortStrategy.default.index)
         customSortTitlesChanged.send([:])
-        fontGroupTypeSelectedIndex.send(OWFontGroupFamilyIndexer.`default`.index)
+        fontGroupTypeSelectedIndex.send(OWFontGroupFamilyIndexer.default.index)
         languageStrategySelectedIndex.send(OWLanguageStrategy.defaultStrategyIndex)
         showLoginPromptSelected.send(false)
         showStarRatingSelected.send(false)

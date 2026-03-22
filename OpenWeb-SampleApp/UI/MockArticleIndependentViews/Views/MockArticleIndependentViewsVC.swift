@@ -50,10 +50,12 @@ class MockArticleIndependentViewsVC: UIViewController {
     private var independentView: UIView?
 
     private lazy var settingsBarItem: UIBarButtonItem = {
-        return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
-                               style: .plain,
-                               target: nil,
-                               action: nil)
+        return UIBarButtonItem(
+            image: UIImage(named: "settingsIcon"),
+            style: .plain,
+            target: nil,
+            action: nil
+        )
     }()
 
     private lazy var loggerView: UILoggerView = {
@@ -65,6 +67,7 @@ class MockArticleIndependentViewsVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -92,7 +95,7 @@ private extension MockArticleIndependentViewsVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(articleView)
         articleView.snp.makeConstraints { make in
@@ -121,18 +124,18 @@ private extension MockArticleIndependentViewsVC {
                 let type = result.1
 
                 // Clean ups
-                self.independentView?.removeFromSuperview()
-                self.independentView = view
+                independentView?.removeFromSuperview()
+                independentView = view
 
                 switch type {
                 case .preConversation:
-                    self.handlePreConversationPresentation()
+                    handlePreConversationPresentation()
                 case .conversation,
                      .commentCreation,
                      .commentThread,
                      .clarityDetails,
                      .notifications:
-                    self.handlePresentation()
+                    handlePresentation()
                 default:
                     break
                 }
@@ -141,7 +144,7 @@ private extension MockArticleIndependentViewsVC {
     }
 
     func handlePreConversationPresentation() {
-        guard let preConversation = self.independentView else { return }
+        guard let preConversation = independentView else { return }
 
         scrollView.addSubview(preConversation)
         preConversation.snp.makeConstraints { make in
@@ -152,7 +155,7 @@ private extension MockArticleIndependentViewsVC {
     }
 
     func handlePresentation() {
-        guard let independentView = self.independentView else { return }
+        guard let independentView else { return }
 
         scrollView.addSubview(independentView)
         independentView.snp.makeConstraints { make in

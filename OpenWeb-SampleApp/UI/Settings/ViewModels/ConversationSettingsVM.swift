@@ -275,13 +275,15 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
             let (styleIndex, communityGuidelinesStyleIndex, questionsStyleIndex, conversationSpacingIndex) = indices
             let (betweenCommentsSpace, communityGuidelinesSpace, communityQuestionsGuidelinesSpace) = spacings
 
-            return OWConversationStyle.conversationStyle(fromIndex: styleIndex,
-                                                         communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
-                                                         communityQuestionsStyleIndex: questionsStyleIndex,
-                                                         spacingIndex: conversationSpacingIndex,
-                                                         betweenComments: OWConversationSpacing.validateSpacing(betweenCommentsSpace),
-                                                         belowCommunityGuidelines: OWConversationSpacing.validateSpacing(communityGuidelinesSpace),
-                                                         belowCommunityQuestions: OWConversationSpacing.validateSpacing(communityQuestionsGuidelinesSpace))
+            return OWConversationStyle.conversationStyle(
+                fromIndex: styleIndex,
+                communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
+                communityQuestionsStyleIndex: questionsStyleIndex,
+                spacingIndex: conversationSpacingIndex,
+                betweenComments: OWConversationSpacing.validateSpacing(betweenCommentsSpace),
+                belowCommunityGuidelines: OWConversationSpacing.validateSpacing(communityGuidelinesSpace),
+                belowCommunityQuestions: OWConversationSpacing.validateSpacing(communityQuestionsGuidelinesSpace)
+            )
         }
         .eraseToAnyPublisher()
 
@@ -296,12 +298,12 @@ private extension ConversationSettingsVM {
     func setupObservers() {
         styleModeObservable
             .dropFirst()
-            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
             .store(in: &cancellables)
 
         allowPullToRefreshSelected
             .dropFirst()
-            .bind(to: self.userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.allowPullToRefresh))
+            .bind(to: userDefaultsProvider.setValues(key: UserDefaultsProvider.UDKey<Bool>.allowPullToRefresh))
             .store(in: &cancellables)
     }
 }

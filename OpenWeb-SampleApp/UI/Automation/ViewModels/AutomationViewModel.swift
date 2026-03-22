@@ -69,15 +69,16 @@ private extension AutomationViewModel {
         fontsTapped
             .sink(receiveValue: { [weak self] _ in
                 guard let self,
-                      let navigationController = self.navController else { return }
+                      let navigationController = navController else { return }
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                flows.fonts(presentationalMode: OWPresentationalMode.push(navigationController: navigationController),
-                                        additionalSettings: OWAutomationSettings(),
-                                        callbacks: nil,
-                                        completion: { [weak self] result in
+                flows.fonts(
+                    presentationalMode: OWPresentationalMode.push(navigationController: navigationController),
+                    additionalSettings: OWAutomationSettings(),
+                    callbacks: nil,
+                    completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success:
@@ -86,24 +87,26 @@ private extension AutomationViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.fonts error: \(message)")
-                        self._showError.send(message)
+                        _showError.send(message)
                     }
-                })
+                    }
+                )
             })
             .store(in: &cancellables)
 
         userInformationTapped
             .sink(receiveValue: { [weak self] _ in
                 guard let self,
-                      let navigationController = self.navController else { return }
+                      let navigationController = navController else { return }
 
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                flows.userStatus(presentationalMode: OWPresentationalMode.push(navigationController: navigationController),
-                                        additionalSettings: OWAutomationSettings(),
-                                        callbacks: nil,
-                                        completion: { [weak self] result in
+                flows.userStatus(
+                    presentationalMode: OWPresentationalMode.push(navigationController: navigationController),
+                    additionalSettings: OWAutomationSettings(),
+                    callbacks: nil,
+                    completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success:
@@ -112,9 +115,10 @@ private extension AutomationViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.userStatus error: \(message)")
-                        self._showError.send(message)
+                        _showError.send(message)
                     }
-                })
+                    }
+                )
             })
             .store(in: &cancellables)
     }

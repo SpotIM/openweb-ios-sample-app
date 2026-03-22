@@ -55,6 +55,7 @@ class TextFieldSetting: UIView {
         applyAccessibility(prefixId: accessibilityPrefixId)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -68,7 +69,7 @@ private extension TextFieldSetting {
 
     @objc func setupViews() {
         let stackView = UIStackView()
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.distribution = .fillProportionally
         stackView.addArrangedSubview(textFieldTitleLbl)
         stackView.addArrangedSubview(textFieldControl)
@@ -115,21 +116,23 @@ private extension TextFieldSetting {
         Publishers.Merge(keyboardShowHeight, keyboardHideHeight)
             .sink { [weak self] keyboardHeight in
                 guard let self else { return }
-                if self.textFieldControl.isFirstResponder,
-                   let scrollView = self.superview as? UIScrollView {
-                    let insets = UIEdgeInsets(top: 0,
-                                              left: 0,
-                                              bottom: keyboardHeight + Metrics.keyboardPadding,
-                                              right: 0)
+                if textFieldControl.isFirstResponder,
+                   let scrollView = superview as? UIScrollView {
+                    let insets = UIEdgeInsets(
+                        top: 0,
+                        left: 0,
+                        bottom: keyboardHeight + Metrics.keyboardPadding,
+                        right: 0
+                    )
                     scrollView.contentInset = insets
                     scrollView.scrollIndicatorInsets = insets
 
-                    if scrollView.frame.height - keyboardHeight + scrollView.contentOffset.y < self.frame.origin.y + Metrics.keyboardPadding + self.frame.size.height {
-                        let moveTo = self.frame.origin.y - keyboardHeight + self.frame.size.height + Metrics.keyboardPadding
+                    if scrollView.frame.height - keyboardHeight + scrollView.contentOffset.y < frame.origin.y + Metrics.keyboardPadding + frame.size.height {
+                        let moveTo = frame.origin.y - keyboardHeight + frame.size.height + Metrics.keyboardPadding
                         let scrollPoint = CGPoint(x: 0, y: moveTo)
                         scrollView.setContentOffset(scrollPoint, animated: true)
                     }
-                } else if let scrollView = self.superview as? UIScrollView {
+                } else if let scrollView = superview as? UIScrollView {
                     let insets = UIEdgeInsets.zero
                     scrollView.contentInset = insets
                     scrollView.scrollIndicatorInsets = insets

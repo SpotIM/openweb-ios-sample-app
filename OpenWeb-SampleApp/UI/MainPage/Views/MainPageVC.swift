@@ -86,6 +86,7 @@ class MainPageVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -99,7 +100,7 @@ class MainPageVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }
 
@@ -118,7 +119,7 @@ private extension MainPageVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(logoImgView)
         view.addSubview(aboutBtn)

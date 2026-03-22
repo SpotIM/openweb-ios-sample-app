@@ -73,7 +73,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
 private extension ConversationCounterNewAPICell {
     @objc func setupViews() {
         selectionStyle = .none
-        self.backgroundColor = .clear
+        backgroundColor = .clear
 
         contentView.addSubview(mainArea)
         mainArea.snp.makeConstraints { make in
@@ -102,7 +102,7 @@ private extension ConversationCounterNewAPICell {
     }
 
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier + viewModel.outputs.postId
+        accessibilityIdentifier = Metrics.identifier + viewModel.outputs.postId
         lblPostId.accessibilityIdentifier = Metrics.lblPostIdentifier + viewModel.outputs.postId
         lblComments.accessibilityIdentifier = Metrics.lblCommentsIdentifier + viewModel.outputs.postId
         lblReplies.accessibilityIdentifier = Metrics.lblRepliesIdentifier + viewModel.outputs.postId

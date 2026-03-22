@@ -85,13 +85,13 @@ private extension ConversationCountersNewAPIViewModel {
             })
             .flatMapLatest { [weak self] _ -> AnyPublisher<String, Never> in
                 guard let self else { return Empty<String, Never>().eraseToAnyPublisher() }
-                return self.userPostIdsInput
+                return userPostIdsInput
                     .prefix(1)
                     .eraseToAnyPublisher()
             }
             .map { [weak self] userInput -> [String] in
                 guard let self else { return [] }
-                return self.parse(postIds: userInput)
+                return parse(postIds: userInput)
             }
             .sink { [weak self] postIds in
                 guard let self else { return }
@@ -104,21 +104,21 @@ private extension ConversationCountersNewAPIViewModel {
                             updateCells(counts: counts)
                         } catch {
                             DLog(error)
-                            self._showError.send(error.localizedDescription)
+                            _showError.send(error.localizedDescription)
                         }
-                        self._showLoader.send(false)
+                        _showLoader.send(false)
                     }
                 } else {
                     helper.conversationCounters(forPostIds: postIds) { [weak self] result in
                         guard let self else { return }
-                        self._showLoader.send(false)
+                        _showLoader.send(false)
 
                         switch result {
                         case .success(let commentDict):
                             updateCells(counts: commentDict)
                         case .failure(let error):
                             DLog(error)
-                            self._showError.send(error.description)
+                            _showError.send(error.description)
                         }
                     }
                 }

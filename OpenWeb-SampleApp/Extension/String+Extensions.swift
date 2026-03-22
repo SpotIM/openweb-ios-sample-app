@@ -11,16 +11,15 @@ import UIKit
 
 extension String {
     var blueRoundedButton: UIButton {
-        return self.button(color: ColorPalette.shared.color(type: .blue))
+        return button(color: ColorPalette.shared.color(type: .blue))
     }
 
     var darkGrayRoundedButton: UIButton {
-        return self.button(color: ColorPalette.shared.color(type: .darkGrey))
+        return button(color: ColorPalette.shared.color(type: .darkGrey))
     }
 
     func button(color: UIColor) -> UIButton {
-        return self
-            .button
+        return button
             .adjustsFontSizeToFitWidth
             .backgroundColor(color)
             .textColor(ColorPalette.shared.color(type: .white))

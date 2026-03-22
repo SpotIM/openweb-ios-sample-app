@@ -60,11 +60,12 @@ private extension SingleAdExampleViewModel {
         let viewEventCallbacks: OWIAUAdViewEventsCallbacks = { [weak self] eventType, _, _ in
             self?.loggerViewModel.inputs.log(text: eventType.description)
         }
-        OpenWebIAU.manager.ui.ad(postId: postId,
-                                           settings: adSettings,
-                                           viewEventCallbacks: viewEventCallbacks,
-                                           actionsCallbacks: nil,
-                                           completion: { [weak self] result in
+        OpenWebIAU.manager.ui.ad(
+            postId: postId,
+            settings: adSettings,
+            viewEventCallbacks: viewEventCallbacks,
+            actionsCallbacks: nil,
+            completion: { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let adView):
@@ -72,7 +73,8 @@ private extension SingleAdExampleViewModel {
             case .failure(let error):
                 DLog("Social monetization example failed: \(error.localizedDescription)")
             }
-        })
+            }
+        )
         #endif
     }
 }

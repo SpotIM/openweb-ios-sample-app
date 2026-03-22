@@ -135,6 +135,7 @@ class MockArticleFlowsVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -196,7 +197,7 @@ private extension MockArticleFlowsVC {
         viewModel.outputs.floatingViewViewModel.inputs.setContentView.send(loggerView)
 
         // Setting those in the VM for integration with the SDK
-        viewModel.inputs.setNavigationController(self.navigationController)
+        viewModel.inputs.setNavigationController(navigationController)
         viewModel.inputs.setPresentationalVC(self)
 
         // Binding button
@@ -232,18 +233,18 @@ private extension MockArticleFlowsVC {
                     btnTitle = NSLocalizedString("FullConversationPresentMode", comment: "")
                 }
 
-                self.btnFullConversation.setTitle(btnTitle, for: .normal)
+                btnFullConversation.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
                 guard let self else { return nil }
-                return self.btnFullConversation
+                return btnFullConversation
             }
             .unwrap()
 
         // Adding comment creation button if needed
         let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
             .prefix(1)
-            .handleEvents(receiveOutput: { [weak self] mode in
+            .handleEvents(receiveOutput: { [weak self] mode, _ in
                 guard let self else { return }
                 let btnTitle: String
                 switch mode {
@@ -253,11 +254,11 @@ private extension MockArticleFlowsVC {
                     btnTitle = NSLocalizedString("CommentCreationPresentMode", comment: "")
                 }
 
-                self.btnCommentCreation.setTitle(btnTitle, for: .normal)
+                btnCommentCreation.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
                 guard let self else { return nil }
-                return self.btnCommentCreation
+                return btnCommentCreation
             }
             .unwrap()
 
@@ -274,11 +275,11 @@ private extension MockArticleFlowsVC {
                     btnTitle = NSLocalizedString("CommentThreadPresentMode", comment: "")
                 }
 
-                self.btnCommentThread.setTitle(btnTitle, for: .normal)
+                btnCommentThread.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
                 guard let self else { return nil }
-                return self.btnCommentThread
+                return btnCommentThread
             }
             .unwrap()
 
@@ -286,9 +287,9 @@ private extension MockArticleFlowsVC {
             .sink(receiveValue: { [weak self] btn in
                 guard let self else { return }
 
-                self.articleView.removeFromSuperview()
-                self.articleScrollView.addSubview(self.articleView)
-                self.articleScrollView.addSubview(btn)
+                articleView.removeFromSuperview()
+                articleScrollView.addSubview(articleView)
+                articleScrollView.addSubview(btn)
 
                 btn.snp.makeConstraints { make in
                     make.height.equalTo(Metrics.buttonHeight)
@@ -296,7 +297,7 @@ private extension MockArticleFlowsVC {
                     make.bottom.equalTo(self.articleScrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
                 }
 
-                self.articleView.snp.makeConstraints { make in
+                articleView.snp.makeConstraints { make in
                     make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(btn.snp.top).offset(-Metrics.verticalMargin)
                 }
@@ -308,16 +309,16 @@ private extension MockArticleFlowsVC {
             .sink(receiveValue: { [weak self] preConversationView in
                 guard let self else { return }
 
-                self.articleView.removeFromSuperview()
-                self.articleScrollView.addSubview(self.articleView)
-                self.articleScrollView.addSubview(preConversationView)
+                articleView.removeFromSuperview()
+                articleScrollView.addSubview(articleView)
+                articleScrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
                     make.bottom.equalTo(self.articleScrollView.snp.bottom).inset(300) // swiftlint:disable:this no_magic_numbers
                     make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide).inset(self.viewModel.outputs.preConversationHorizontalMargin)
                 }
 
-                self.articleView.snp.makeConstraints { make in
+                articleView.snp.makeConstraints { make in
                     make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
                 }
@@ -336,7 +337,7 @@ private extension MockArticleFlowsVC {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loggerEnabled in
                 guard let self else { return }
-                self.floatingLoggerView.isHidden = !loggerEnabled
+                floatingLoggerView.isHidden = !loggerEnabled
             })
             .store(in: &cancellables)
     }
@@ -344,6 +345,6 @@ private extension MockArticleFlowsVC {
     func showError(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }

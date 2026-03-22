@@ -30,7 +30,7 @@ extension OWNavigationBarEnforcement {
         case .style(.regular): return 1
         case .keepOriginal: return 2
         default:
-            return OWNavigationBarEnforcement.`default`.index
+            return OWNavigationBarEnforcement.default.index
         }
     }
 }

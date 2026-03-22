@@ -29,13 +29,16 @@ class ArticleImageCell: UITableViewCell {
         imgViewArticle.image(from: imageURL)
     }
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(imgViewArticle)
         setupViews()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -50,6 +53,6 @@ private extension ArticleImageCell {
             make.height.equalTo(imgViewArticle.snp.width)
         }
         selectionStyle = .none
-        self.backgroundColor = .clear
+        backgroundColor = .clear
     }
 }

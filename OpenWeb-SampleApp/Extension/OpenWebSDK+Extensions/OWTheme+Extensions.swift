@@ -56,7 +56,8 @@ extension OWTheme: @retroactive Codable {
             voteUpUnselectedColor: try? values.decode(OWColor?.self, forKey: .voteUpUnselectedColor),
             voteDownUnselectedColor: try? values.decode(OWColor?.self, forKey: .voteDownUnselectedColor),
             voteUpSelectedColor: try? values.decode(OWColor?.self, forKey: .voteUpSelectedColor),
-            voteDownSelectedColor: try? values.decode(OWColor?.self, forKey: .voteDownSelectedColor))
+            voteDownSelectedColor: try? values.decode(OWColor?.self, forKey: .voteDownSelectedColor)
+        )
     }
 
     public func encode(to encoder: Encoder) throws {

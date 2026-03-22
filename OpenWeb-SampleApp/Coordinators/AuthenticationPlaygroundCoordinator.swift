@@ -17,8 +17,10 @@ class AuthenticationPlaygroundCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
         let authenticationPlaygroundVM: AuthenticationPlaygroundViewModeling = AuthenticationPlaygroundViewModel(filterBySpotId: OpenWeb.manager.spotId)
         let authenticationPlaygroundVC = AuthenticationPlaygroundVC(viewModel: authenticationPlaygroundVM)
 
@@ -29,9 +31,11 @@ class AuthenticationPlaygroundCoordinator: BaseCoordinator<Void> {
             shouldAnimate = false
         }
 
-        router.push(authenticationPlaygroundVC,
-                    animated: shouldAnimate,
-                    completion: vcPopped)
+        router.push(
+            authenticationPlaygroundVC,
+            animated: shouldAnimate,
+            completion: vcPopped
+        )
 
         return vcPopped
             .eraseToAnyPublisher()

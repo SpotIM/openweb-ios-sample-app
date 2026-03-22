@@ -44,54 +44,68 @@ class ConversationSettingsView: UIView {
         let title = viewModel.outputs.styleModeTitle
         let items = viewModel.outputs.styleModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedCommunityGuidelinesStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.communityGuidelinesStyleModeTitle
         let items = viewModel.outputs.communityGuidelinesModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCommunityGuidelinesStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedCommunityGuidelinesStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedCommunityQuestionsStyleMode: SegmentedControlSetting = {
         let title = viewModel.outputs.communityQuestionsStyleModeTitle
         let items = viewModel.outputs.communityQuestionsStyleModeSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCommunityQuestionsStyleModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedCommunityQuestionsStyleModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var segmentedConversationSpacingMode: SegmentedControlSetting = {
         let title = viewModel.outputs.conversationSpacingModeTitle
         let items = viewModel.outputs.conversationSpacingSettings
 
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedConversationSpacingModeIdentifier,
-                                       items: items)
+        return SegmentedControlSetting(
+            title: title,
+            accessibilityPrefixId: Metrics.segmentedConversationSpacingModeIdentifier,
+            items: items
+        )
     }()
 
     private lazy var textFieldBetweenCommentsSpacing: TextFieldSetting = {
-        return TextFieldSetting(title: viewModel.outputs.betweenCommentsSpacingTitle,
-                                accessibilityPrefixId: Metrics.textFieldBetweenCommentsSpacingIdentifier,
-                                font: FontBook.paragraph)
+        return TextFieldSetting(
+            title: viewModel.outputs.betweenCommentsSpacingTitle,
+            accessibilityPrefixId: Metrics.textFieldBetweenCommentsSpacingIdentifier,
+            font: FontBook.paragraph
+        )
     }()
 
     private lazy var textFieldCommunityGuidelinesSpacing: TextFieldSetting = {
-        return TextFieldSetting(title: viewModel.outputs.communityGuidelinesSpacingTitle,
-                                accessibilityPrefixId: Metrics.textFieldBelowCommunityGuidelinesSpacingIdentifier,
-                                font: FontBook.paragraph)
+        return TextFieldSetting(
+            title: viewModel.outputs.communityGuidelinesSpacingTitle,
+            accessibilityPrefixId: Metrics.textFieldBelowCommunityGuidelinesSpacingIdentifier,
+            font: FontBook.paragraph
+        )
     }()
 
     private lazy var textFieldCommunityQuestionsSpacing: TextFieldSetting = {
-        return TextFieldSetting(title: viewModel.outputs.communityQuestionsGuidelinesSpacingTitle,
-                                accessibilityPrefixId: Metrics.textFieldBelowCommunityQuestionsSpacingIdentifier,
-                                font: FontBook.paragraph)
+        return TextFieldSetting(
+            title: viewModel.outputs.communityQuestionsGuidelinesSpacingTitle,
+            accessibilityPrefixId: Metrics.textFieldBelowCommunityQuestionsSpacingIdentifier,
+            font: FontBook.paragraph
+        )
     }()
 
     private lazy var switchAllowPullToRefresh: SwitchSetting = {
@@ -109,6 +123,7 @@ class ConversationSettingsView: UIView {
         setupObservers()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -116,14 +131,14 @@ class ConversationSettingsView: UIView {
 
 private extension ConversationSettingsView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        accessibilityIdentifier = Metrics.identifier
     }
 
     @objc func setupViews() {
-        self.backgroundColor = ColorPalette.shared.color(type: .background)
+        backgroundColor = ColorPalette.shared.color(type: .background)
 
         // Add a StackView so that hidden controlls constraints will be removed
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalToSuperview()

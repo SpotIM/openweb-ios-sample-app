@@ -81,6 +81,7 @@ class UIFlowsVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -109,7 +110,7 @@ private extension UIFlowsVC {
 
     @objc func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        self.navigationItem.largeTitleDisplayMode = .never
+        navigationItem.largeTitleDisplayMode = .never
 
         // Adding scroll view
         view.addSubview(scrollView)
@@ -212,7 +213,7 @@ private extension UIFlowsVC {
         btnPreConversationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
-                let style = self.viewModel.outputs.presentStyle
+                let style = viewModel.outputs.presentStyle
                 return PresentationalModeCompact.present(style: style)
             }
             .bind(to: viewModel.inputs.preConversationTapped)
@@ -226,7 +227,7 @@ private extension UIFlowsVC {
         btnFullConversationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
-                let style = self.viewModel.outputs.presentStyle
+                let style = viewModel.outputs.presentStyle
                 return PresentationalModeCompact.present(style: style)
             }
             .bind(to: viewModel.inputs.fullConversationTapped)
@@ -240,7 +241,7 @@ private extension UIFlowsVC {
         btnCommentCreationPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
-                return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
+                return PresentationalModeCompact.present(style: viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentCreationTapped)
             .store(in: &cancellables)
@@ -253,7 +254,7 @@ private extension UIFlowsVC {
         btnCommentThreadPresentMode.tapPublisher
             .map { [weak self] in
                 guard let self else { return .push }
-                return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
+                return PresentationalModeCompact.present(style: viewModel.outputs.presentStyle)
             }
             .bind(to: viewModel.inputs.commentThreadTapped)
             .store(in: &cancellables)

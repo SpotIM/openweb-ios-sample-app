@@ -51,9 +51,11 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .eraseToAnyPublisher()
     }
 
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
-         actionSettings: SDKUIIndependentViewsActionSettings) {
+    init(
+        userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+        commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+        actionSettings: SDKUIIndependentViewsActionSettings
+    ) {
         self.userDefaultsProvider = userDefaultsProvider
         self.commonCreatorService = commonCreatorService
         _actionSettings.send(actionSettings)
@@ -100,7 +102,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         return viewTypeUpdaters
             .flatMap { [weak self] settings -> AnyPublisher<ComponentAndType, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.retrieveComponent(for: settings)
+                return retrieveComponent(for: settings)
                     .map { ($0, settings.viewType) }
                     .catch { error in Empty().eraseToAnyPublisher() }
                     .eraseToAnyPublisher()
@@ -120,7 +122,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         )
         .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewsActionSettings, Never> in
             guard let self else { return Empty().eraseToAnyPublisher() }
-            return self.actionSettings
+            return actionSettings
                 .first()
                 .eraseToAnyPublisher()
         }
@@ -136,10 +138,10 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     // All the stuff which should trigger new pre conversation component
     private lazy var preConversationStyleChanged: AnyPublisher<Void, Never> = {
-        return self.userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
+        return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
             .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.actionSettings
+                return actionSettings
                     .first()
                     .map { $0.viewType }
                     .eraseToAnyPublisher()
@@ -152,10 +154,10 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     // All the stuff which should trigger new conversation component
     private lazy var conversationStyleChanged: AnyPublisher<Void, Never> = {
-        return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
             .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.actionSettings
+                return actionSettings
                     .first()
                     .map { $0.viewType }
                     .eraseToAnyPublisher()
@@ -167,10 +169,10 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }()
 
     private lazy var commentCreationStyleChanged: AnyPublisher<Void, Never> = {
-        return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
+        return userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
             .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.actionSettings
+                return actionSettings
                     .first()
                     .map { $0.viewType }
                     .eraseToAnyPublisher()
@@ -183,10 +185,10 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     // All the stuff which should trigger new comment thread component
     private lazy var commentThreadStyleChanged: AnyPublisher<Void, Never> = {
-        return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
             .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.actionSettings
+                return actionSettings
                     .first()
                     .map { $0.viewType }
                     .eraseToAnyPublisher()
@@ -199,10 +201,10 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     // All the stuff which should trigger new comment thread component
     private lazy var notificationsStyleChanged: AnyPublisher<Void, Never> = {
-        return self.userDefaultsProvider.values(key: .notificationsStyle, defaultValue: OWConversationStyle.default)
+        return userDefaultsProvider.values(key: .notificationsStyle, defaultValue: OWConversationStyle.default)
             .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
                 guard let self else { return Empty().eraseToAnyPublisher() }
-                return self.actionSettings
+                return actionSettings
                     .first()
                     .map { $0.viewType }
                     .eraseToAnyPublisher()
@@ -213,16 +215,34 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .eraseToAnyPublisher()
     }()
 
-    // All the stuff which should trigger new comment thread component
     private lazy var independentAdUnitStyleChanged: AnyPublisher<Void, Never> = {
-        // TODO: Complete once developed
-        return Empty().eraseToAnyPublisher()
+        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                return actionSettings
+                    .first()
+                    .map { $0.viewType }
+                    .eraseToAnyPublisher()
+            }
+            .filter { $0 == .independentAdUnit }
+            .voidify()
+            .share()
+            .eraseToAnyPublisher()
     }()
 
-    // All the stuff which should trigger new comment thread component
     private lazy var clarityDetailsStyleChanged: AnyPublisher<Void, Never> = {
-        // TODO: Complete once developed
-        return Empty().eraseToAnyPublisher()
+        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+            .flatMap { [weak self] _ -> AnyPublisher<SDKUIIndependentViewType, Never> in
+                guard let self else { return Empty().eraseToAnyPublisher() }
+                return actionSettings
+                    .first()
+                    .map { $0.viewType }
+                    .eraseToAnyPublisher()
+            }
+            .filter { $0 == .clarityDetails }
+            .voidify()
+            .share()
+            .eraseToAnyPublisher()
     }()
 }
 
@@ -234,10 +254,10 @@ private extension MockArticleIndependentViewsViewModel {
                 guard let self else { return }
                 switch settings.viewType {
                 case .preConversation:
-                    let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-                    self._horizontalMargin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
+                    let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
+                    _horizontalMargin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
                 default:
-                    self._horizontalMargin = 0.0
+                    _horizontalMargin = 0.0
                 }
             }
             .store(in: &cancellables)
@@ -246,7 +266,7 @@ private extension MockArticleIndependentViewsViewModel {
         viewTypeUpdaters
             .sink { [weak self] _ in
                 guard let self else { return }
-                self.loggerViewModel.inputs.clear()
+                loggerViewModel.inputs.clear()
             }
             .store(in: &cancellables)
     }
@@ -258,7 +278,7 @@ private extension MockArticleIndependentViewsViewModel {
             guard let self else { return }
             let postIdString = postId ?? "No postId"
             let log = "Received OWCustomizableElementCallback element: \(element), from source: \(source), style: \(style), postId: \(postIdString)\n"
-            self.loggerViewModel.inputs.log(text: log)
+            loggerViewModel.inputs.log(text: log)
         }
 
         customizations.addElementCallback(customizableClosure)
@@ -278,19 +298,19 @@ private extension MockArticleIndependentViewsViewModel {
     func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> AnyPublisher<UIView, Error> {
         switch settings.viewType {
         case .preConversation:
-            return self.retrievePreConversation(settings: settings)
+            return retrievePreConversation(settings: settings)
         case .conversation:
-            return self.retrieveConversation(settings: settings)
+            return retrieveConversation(settings: settings)
         case .commentCreation:
-            return self.retrieveCommentCreation(settings: settings)
+            return retrieveCommentCreation(settings: settings)
         case .commentThread:
-            return self.retrieveCommentThread(settings: settings)
+            return retrieveCommentThread(settings: settings)
         case .independentAdUnit:
             return Empty().eraseToAnyPublisher()
         case .clarityDetails:
-            return self.retrieveClarityDetails(settings: settings)
+            return retrieveClarityDetails(settings: settings)
         case .notifications:
-            return self.retrieveNotifications(settings: settings)
+            return retrieveNotifications(settings: settings)
         }
     }
 
@@ -301,8 +321,8 @@ private extension MockArticleIndependentViewsViewModel {
                 return AnyCancellable {}
             }
 
-            let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+            let additionalSettings = commonCreatorService.additionalSettings()
+            let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -313,10 +333,10 @@ private extension MockArticleIndependentViewsViewModel {
                 case .adSizeChanged: break
                 case let .adEvent(event, eventData):
                     let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                    self.loggerViewModel.inputs.log(text: log)
+                    loggerViewModel.inputs.log(text: log)
                 default:
                     let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                    self.loggerViewModel.inputs.log(text: log)
+                    loggerViewModel.inputs.log(text: log)
                 }
             }
 
@@ -338,11 +358,12 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.preConversation(postId: settings.postId,
-                                        article: article,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: actionsCallbacks,
-                                        completion: { result in
+                uiViews.preConversation(
+                    postId: settings.postId,
+                    article: article,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let preConversationView):
                         observer.send(preConversationView)
@@ -352,7 +373,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrievePreConversation error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -366,8 +388,8 @@ private extension MockArticleIndependentViewsViewModel {
                 return AnyCancellable {}
             }
 
-            let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+            let additionalSettings = commonCreatorService.additionalSettings()
+            let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -378,10 +400,10 @@ private extension MockArticleIndependentViewsViewModel {
                 case .adSizeChanged: break
                 case let .adEvent(event, eventData):
                     let log = "AdEvent (index: \(eventData.index), position: \(eventData.position)): \(event.description)\n"
-                    self.loggerViewModel.inputs.log(text: log)
+                    loggerViewModel.inputs.log(text: log)
                 default:
                     let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                    self.loggerViewModel.inputs.log(text: log)
+                    loggerViewModel.inputs.log(text: log)
                 }
             }
 
@@ -403,11 +425,12 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.conversation(postId: settings.postId,
-                                     article: article,
-                                     additionalSettings: additionalSettings,
-                                     callbacks: actionsCallbacks,
-                                     completion: { result in
+                uiViews.conversation(
+                    postId: settings.postId,
+                    article: article,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let conversationView):
                         observer.send(conversationView)
@@ -417,7 +440,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveConversation error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -431,8 +455,8 @@ private extension MockArticleIndependentViewsViewModel {
                 return AnyCancellable {}
             }
 
-            let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+            let additionalSettings = commonCreatorService.additionalSettings()
+            let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -440,7 +464,7 @@ private extension MockArticleIndependentViewsViewModel {
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
                 guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
 
             if shouldUseAsyncAwaitCallingMethod() {
@@ -462,12 +486,13 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.commentCreation(postId: settings.postId,
-                                        article: article,
-                                        commentCreationType: .comment,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: actionsCallbacks,
-                                        completion: { result in
+                uiViews.commentCreation(
+                    postId: settings.postId,
+                    article: article,
+                    commentCreationType: .comment,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let commentCreationView):
                         observer.send(commentCreationView)
@@ -477,7 +502,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveCommentCreation error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -491,8 +517,8 @@ private extension MockArticleIndependentViewsViewModel {
                 return AnyCancellable {}
             }
 
-            let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+            let additionalSettings = commonCreatorService.additionalSettings()
+            let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -500,7 +526,7 @@ private extension MockArticleIndependentViewsViewModel {
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
                 guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
 
             if shouldUseAsyncAwaitCallingMethod() {
@@ -522,12 +548,13 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.commentThread(postId: settings.postId,
-                                      article: article,
-                                      commentId: self.commonCreatorService.commentThreadCommentId(),
-                                      additionalSettings: additionalSettings,
-                                      callbacks: actionsCallbacks,
-                                      completion: { result in
+                uiViews.commentThread(
+                    postId: settings.postId,
+                    article: article,
+                    commentId: commonCreatorService.commentThreadCommentId(),
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let commentThreadView):
                         observer.send(commentThreadView)
@@ -537,7 +564,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveCommentThread error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -553,12 +581,12 @@ private extension MockArticleIndependentViewsViewModel {
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
-            let additionalSettings = self.commonCreatorService.additionalSettings()
+            let additionalSettings = commonCreatorService.additionalSettings()
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
                 guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
 
             if shouldUseAsyncAwaitCallingMethod() {
@@ -580,12 +608,13 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.clarityDetails(postId: settings.postId,
-                                       commentId: self.commonCreatorService.commentThreadCommentId(),
-                                       type: .rejected,
-                                       additionalSettings: additionalSettings,
-                                       callbacks: actionsCallbacks,
-                                       completion: { result in
+                uiViews.clarityDetails(
+                    postId: settings.postId,
+                    commentId: commonCreatorService.commentThreadCommentId(),
+                    type: .rejected,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let clarityDetailsView):
                         observer.send(clarityDetailsView)
@@ -595,7 +624,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveClarityDetails error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}
@@ -609,8 +639,8 @@ private extension MockArticleIndependentViewsViewModel {
                 return AnyCancellable {}
             }
 
-            let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+            let additionalSettings = commonCreatorService.additionalSettings()
+            let article = commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -618,7 +648,7 @@ private extension MockArticleIndependentViewsViewModel {
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
                 guard let self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
-                self.loggerViewModel.inputs.log(text: log)
+                loggerViewModel.inputs.log(text: log)
             }
 
             if shouldUseAsyncAwaitCallingMethod() {
@@ -639,11 +669,12 @@ private extension MockArticleIndependentViewsViewModel {
                     }
                 }
             } else {
-                uiViews.notifications(postId: settings.postId,
-                                        article: article,
-                                        additionalSettings: additionalSettings,
-                                        callbacks: actionsCallbacks,
-                                        completion: { result in
+                uiViews.notifications(
+                    postId: settings.postId,
+                    article: article,
+                    additionalSettings: additionalSettings,
+                    callbacks: actionsCallbacks,
+                    completion: { result in
                     switch result {
                     case .success(let notificationsView):
                         observer.send(notificationsView)
@@ -653,7 +684,8 @@ private extension MockArticleIndependentViewsViewModel {
                         DLog("Calling retrieveNotifications error: \(message)")
                         observer.send(completion: .failure(error))
                     }
-                })
+                    }
+                )
             }
 
             return AnyCancellable {}

@@ -45,8 +45,10 @@ class AuthenticationPlaygroundVC: UIViewController {
     }()
 
     private lazy var switchInitializeSDK: SwitchSetting = {
-        return SwitchSetting(title: NSLocalizedString("InitializeSDKFirst", comment: "") + ":",
-                             accessibilityPrefixId: Metrics.switchInitializeSDKIdentifier)
+        return SwitchSetting(
+            title: NSLocalizedString("InitializeSDKFirst", comment: "") + ":",
+            accessibilityPrefixId: Metrics.switchInitializeSDKIdentifier
+        )
     }()
 
     private lazy var lblAutomaticallyDismissDescription: UILabel = {
@@ -82,8 +84,11 @@ class AuthenticationPlaygroundVC: UIViewController {
     }()
 
     private lazy var switchAutomaticallyDismiss: SwitchSetting = {
-        return SwitchSetting(title: NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":",
-                             accessibilityPrefixId: Metrics.switchAutomaticallyDismissIdentifier, isOn: true)
+        return SwitchSetting(
+            title: NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":",
+            accessibilityPrefixId: Metrics.switchAutomaticallyDismissIdentifier,
+            isOn: true
+        )
     }()
 
     private lazy var textFieldSSOAutocomplete: TextFieldSetting = {
@@ -141,6 +146,7 @@ class AuthenticationPlaygroundVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -432,13 +438,13 @@ private extension AuthenticationPlaygroundVC {
         viewModel.outputs.dismissVC
             .sink { [weak self] in
                 guard let self else { return }
-                if let navController = self.navigationController {
+                if let navController = navigationController {
                     navController.popViewController(animated: true)
                 } else {
-                    self.dismiss(animated: true, completion: nil)
+                    dismiss(animated: true, completion: nil)
                 }
 
-                self.viewModel.inputs.dismissing.send(())
+                viewModel.inputs.dismissing.send(())
             }
             .store(in: &cancellables)
     }

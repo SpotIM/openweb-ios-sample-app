@@ -52,6 +52,7 @@ class ColorsCustomizationVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -119,7 +120,7 @@ private extension ColorsCustomizationVC {
             })
             .flatMapLatest { [weak self] updateColor -> AnyPublisher<(UIColor?, CurrentValueSubject<UIColor?, Never>)?, Never> in
                 guard let self else { return Just(nil).eraseToAnyPublisher() }
-                return self.pickerColorPublisher
+                return pickerColorPublisher
                     .map { ($0, updateColor) }
                     .eraseToAnyPublisher()
             }
@@ -137,7 +138,7 @@ private extension ColorsCustomizationVC {
     }
 
     func showPicker() {
-        self.present(self.picker, animated: true)
+        present(picker, animated: true)
     }
 
     var pickerColorPublisher: AnyPublisher<UIColor, Never> {

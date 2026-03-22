@@ -17,8 +17,10 @@ class AboutCoordinator: BaseCoordinator<Void> {
         self.router = router
     }
 
-    override func start(deepLinkOptions: DeepLinkOptions? = nil,
-                        coordinatorData: CoordinatorData? = nil) -> AnyPublisher<Void, Never> {
+    override func start(
+        deepLinkOptions: DeepLinkOptions? = nil,
+        coordinatorData: CoordinatorData? = nil
+    ) -> AnyPublisher<Void, Never> {
         let aboutVM: AboutViewModeling = AboutViewModel()
         let aboutVC = AboutVC(viewModel: aboutVM)
 
@@ -29,9 +31,11 @@ class AboutCoordinator: BaseCoordinator<Void> {
 
         let vcPopped = PassthroughSubject<Void, Never>()
 
-        router.push(aboutVC,
-                    animated: shouldAnimate,
-                    completion: vcPopped)
+        router.push(
+            aboutVC,
+            animated: shouldAnimate,
+            completion: vcPopped
+        )
 
         return vcPopped
             .eraseToAnyPublisher()
