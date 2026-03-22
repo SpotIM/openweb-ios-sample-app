@@ -166,7 +166,7 @@ extension ConfigurationsViewModel.LanguageStrategySetting: SDKApplicable {
         case .device: .useDevice
         case .server: .useServerConfig
         case .custom:
-            .use(language: SettingsManager.shared.get(SettingsItems.customLanguage).owLanguage)
+            .use(language: SDKSetting(SettingsItems.customLanguage).wrappedValue.owLanguage)
         }
 
         // MARK: OpenWeb SDK
@@ -176,7 +176,7 @@ extension ConfigurationsViewModel.LanguageStrategySetting: SDKApplicable {
 
 extension ConfigurationsViewModel.SupportedLanguage: SDKApplicable {
     func applyToSDK() {
-        guard SettingsManager.shared.get(SettingsItems.languageStrategy) == .custom else { return }
+        guard SDKSetting(SettingsItems.languageStrategy).wrappedValue == .custom else { return }
 
         // MARK: OpenWeb SDK
         OpenWeb.manager.helpers.languageStrategy = .use(language: owLanguage)

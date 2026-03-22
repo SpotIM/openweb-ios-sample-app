@@ -19,7 +19,7 @@ struct CustomizationsScreen: View {
             uiDelegationSection
         }
         .navigationTitle(.customizationsScreenTitle)
-        .settingsToolbar { viewModel.loadSettings() }
+        .settingsToolbar()
     }
 }
 

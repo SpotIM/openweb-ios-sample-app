@@ -10,32 +10,12 @@ import SwiftUI
 import Combine
 
 class CustomizationsViewModel: ObservableObject {
-    private let manager = SettingsManager.shared
-    private var cancellables = Set<AnyCancellable>()
-
     @SDKSetting(SettingsItems.sortOption) var selectedSortOption: SortOptionSetting
     @SDKSetting(SettingsItems.actionColor) var selectedActionColor: ActionColorSetting
     @SDKSetting(SettingsItems.actionFont) var selectedActionFont: ActionFontSetting
     @SDKSetting(SettingsItems.fontFamily) var selectedFontFamily: FontFamilySetting
     @SDKSetting(SettingsItems.themeMode) var selectedThemeMode: ThemeModeSetting
-    @Published var enableCustomUIDelegation: Bool = SettingsItems.enableCustomUIDelegation.defaultValue
-
-    init() {
-        loadSettings()
-        observeChanges()
-    }
-
-    func loadSettings() {
-        enableCustomUIDelegation = manager.get(SettingsItems.enableCustomUIDelegation)
-    }
-}
-
-// MARK: - Private
-
-private extension CustomizationsViewModel {
-    func observeChanges() {
-        $enableCustomUIDelegation.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enableCustomUIDelegation, value: $0) }.store(in: &cancellables)
-    }
+    @SDKSetting(SettingsItems.enableCustomUIDelegation) var enableCustomUIDelegation: Bool
 }
 
 // MARK: - Setting Enums
