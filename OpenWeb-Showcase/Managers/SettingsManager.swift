@@ -31,6 +31,14 @@ class SettingsManager: ObservableObject {
     @SDKSetting(SettingsItems.numberOfComments) private var numberOfComments: Int
     @SDKSetting(SettingsItems.preConversationGuidelinesStyle) private var preConversationGuidelinesStyle: ScreenSettingsViewModel.GuidelinesStyleSetting
     @SDKSetting(SettingsItems.preConversationQuestionsStyle) private var preConversationQuestionsStyle: ScreenSettingsViewModel.QuestionsStyleSetting
+    @SDKSetting(SettingsItems.conversationStyle) private var conversationStyle: ScreenSettingsViewModel.ConversationStyleSetting
+    @SDKSetting(SettingsItems.conversationGuidelinesStyle) private var conversationGuidelinesStyle: ScreenSettingsViewModel.GuidelinesStyleSetting
+    @SDKSetting(SettingsItems.conversationQuestionsStyle) private var conversationQuestionsStyle: ScreenSettingsViewModel.QuestionsStyleSetting
+    @SDKSetting(SettingsItems.conversationSpacing) private var conversationSpacing: ScreenSettingsViewModel.ConversationSpacingSetting
+    @SDKSetting(SettingsItems.betweenCommentsSpacing) private var betweenCommentsSpacing: String
+    @SDKSetting(SettingsItems.guidelinesSpacing) private var guidelinesSpacing: String
+    @SDKSetting(SettingsItems.questionsSpacing) private var questionsSpacing: String
+    @SDKSetting(SettingsItems.enablePullToRefresh) private var enablePullToRefresh: Bool
 
     private init() {}
 
@@ -59,7 +67,9 @@ class SettingsManager: ObservableObject {
 
     var additionalSettings: OWAdditionalSettings {
         OWAdditionalSettings(
-            preConversationStyle: owPreConversationStyle
+            preConversationStyle: owPreConversationStyle,
+            conversationStyle: owConversationStyle,
+            allowPullToRefresh: enablePullToRefresh
         )
     }
 
@@ -85,6 +95,30 @@ private extension SettingsManager {
             numberOfComments: numberOfComments,
             communityGuidelinesStyle: preConversationGuidelinesStyle.owGuidelinesStyle,
             communityQuestionsStyle: preConversationQuestionsStyle.owQuestionsStyle
+        )
+        }
+    }
+
+    var owConversationStyle: OWConversationStyle {
+        switch conversationStyle {
+        case .regular: .regular
+        case .compact: .compact
+        case .custom: .custom(
+            communityGuidelinesStyle: conversationGuidelinesStyle.owGuidelinesStyle,
+            communityQuestionsStyle: conversationQuestionsStyle.owQuestionsStyle,
+            spacing: owConversationSpacing
+        )
+        }
+    }
+
+    var owConversationSpacing: OWConversationSpacing {
+        switch conversationSpacing {
+        case .regular: .regular
+        case .compact: .compact
+        case .custom: .custom(
+            betweenComments: CGFloat(Double(betweenCommentsSpacing) ?? OWConversationSpacing.Metrics.defaultSpaceBetweenComments),
+            communityGuidelines: CGFloat(Double(guidelinesSpacing) ?? OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines),
+            communityQuestions: CGFloat(Double(questionsSpacing) ?? OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)
         )
         }
     }

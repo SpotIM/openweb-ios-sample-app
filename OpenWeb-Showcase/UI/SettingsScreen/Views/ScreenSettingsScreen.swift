@@ -18,7 +18,7 @@ struct ScreenSettingsScreen: View {
             generalSection
         }
         .navigationTitle("screenSettingsScreenTitle")
-        .settingsToolbar { viewModel.loadSettings() }
+        .settingsToolbar()
     }
 }
 

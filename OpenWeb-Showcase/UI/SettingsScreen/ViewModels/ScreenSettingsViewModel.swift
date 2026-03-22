@@ -10,8 +10,6 @@ import SwiftUI
 import Combine
 
 class ScreenSettingsViewModel: ObservableObject {
-    private let manager = SettingsManager.shared
-    private var cancellables = Set<AnyCancellable>()
 
     // Pre Conversation
     @SDKSetting(SettingsItems.preConversationStyle) var selectedPreConversationStyle: PreConversationStyleSetting
@@ -20,16 +18,16 @@ class ScreenSettingsViewModel: ObservableObject {
     @SDKSetting(SettingsItems.preConversationQuestionsStyle) var selectedPreConversationQuestionsStyle: QuestionsStyleSetting
 
     // Conversation
-    @Published var selectedConversationStyle: ConversationStyleSetting = SettingsItems.conversationStyle.defaultValue
-    @Published var selectedConversationGuidelinesStyle: GuidelinesStyleSetting = SettingsItems.conversationGuidelinesStyle.defaultValue
-    @Published var selectedConversationQuestionsStyle: QuestionsStyleSetting = SettingsItems.conversationQuestionsStyle.defaultValue
-    @Published var selectedConversationSpacing: ConversationSpacingSetting = SettingsItems.conversationSpacing.defaultValue
-    @Published var betweenCommentsSpacing: String = SettingsItems.betweenCommentsSpacing.defaultValue
-    @Published var guidelinesSpacing: String = SettingsItems.guidelinesSpacing.defaultValue
-    @Published var questionsSpacing: String = SettingsItems.questionsSpacing.defaultValue
+    @SDKSetting(SettingsItems.conversationStyle) var selectedConversationStyle: ConversationStyleSetting
+    @SDKSetting(SettingsItems.conversationGuidelinesStyle) var selectedConversationGuidelinesStyle: GuidelinesStyleSetting
+    @SDKSetting(SettingsItems.conversationQuestionsStyle) var selectedConversationQuestionsStyle: QuestionsStyleSetting
+    @SDKSetting(SettingsItems.conversationSpacing) var selectedConversationSpacing: ConversationSpacingSetting
+    @SDKSetting(SettingsItems.betweenCommentsSpacing) var betweenCommentsSpacing: String
+    @SDKSetting(SettingsItems.guidelinesSpacing) var guidelinesSpacing: String
+    @SDKSetting(SettingsItems.questionsSpacing) var questionsSpacing: String
 
     // General
-    @Published var enablePullToRefresh: Bool = SettingsItems.enablePullToRefresh.defaultValue
+    @SDKSetting(SettingsItems.enablePullToRefresh) var enablePullToRefresh: Bool
 
     var isNumberOfCommentsEnabled: Bool {
         selectedPreConversationStyle == .custom
@@ -43,36 +41,6 @@ class ScreenSettingsViewModel: ObservableObject {
         isCustomConversationEnabled && selectedConversationSpacing == .custom
     }
 
-    init() {
-        loadSettings()
-        observeChanges()
-    }
-
-    func loadSettings() {
-        selectedConversationStyle = manager.get(SettingsItems.conversationStyle)
-        selectedConversationGuidelinesStyle = manager.get(SettingsItems.conversationGuidelinesStyle)
-        selectedConversationQuestionsStyle = manager.get(SettingsItems.conversationQuestionsStyle)
-        selectedConversationSpacing = manager.get(SettingsItems.conversationSpacing)
-        betweenCommentsSpacing = manager.get(SettingsItems.betweenCommentsSpacing)
-        guidelinesSpacing = manager.get(SettingsItems.guidelinesSpacing)
-        questionsSpacing = manager.get(SettingsItems.questionsSpacing)
-        enablePullToRefresh = manager.get(SettingsItems.enablePullToRefresh)
-    }
-}
-
-// MARK: - Private
-
-private extension ScreenSettingsViewModel {
-    func observeChanges() {
-        $selectedConversationStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationStyle, value: $0) }.store(in: &cancellables)
-        $selectedConversationGuidelinesStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationGuidelinesStyle, value: $0) }.store(in: &cancellables)
-        $selectedConversationQuestionsStyle.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationQuestionsStyle, value: $0) }.store(in: &cancellables)
-        $selectedConversationSpacing.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.conversationSpacing, value: $0) }.store(in: &cancellables)
-        $betweenCommentsSpacing.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.betweenCommentsSpacing, value: $0) }.store(in: &cancellables)
-        $guidelinesSpacing.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.guidelinesSpacing, value: $0) }.store(in: &cancellables)
-        $questionsSpacing.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.questionsSpacing, value: $0) }.store(in: &cancellables)
-        $enablePullToRefresh.dropFirst().sink { [weak self] in self?.manager.set(SettingsItems.enablePullToRefresh, value: $0) }.store(in: &cancellables)
-    }
 }
 
 // MARK: - Setting Enums

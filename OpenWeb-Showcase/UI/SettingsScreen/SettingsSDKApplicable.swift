@@ -117,6 +117,14 @@ extension ScreenSettingsViewModel.QuestionsStyleSetting: SDKApplicable {
     }
 }
 
+extension ScreenSettingsViewModel.ConversationStyleSetting: SDKApplicable {
+    func applyToSDK() {}
+}
+
+extension ScreenSettingsViewModel.ConversationSpacingSetting: SDKApplicable {
+    func applyToSDK() {}
+}
+
 extension ArticleSettingsViewModel.ReadOnlyModeSetting: SDKApplicable {
     func applyToSDK() {}
     var owMode: OWReadOnlyMode {
