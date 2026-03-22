@@ -42,15 +42,37 @@ struct SDKSetting<Value: Codable & SDKApplicable> {
         }
     }
 
-    static subscript<EnclosingSelf: ObservableObject>(
+    static subscript<EnclosingSelf: ObservableObject & Sendable>(
         _enclosingInstance instance: EnclosingSelf,
         wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
         storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
     ) -> Value {
-        get { instance[keyPath: storageKeyPath].wrappedValue }
+        get {
+            registerResetObserver(for: instance)
+            return instance[keyPath: storageKeyPath].wrappedValue
+        }
         set {
             (instance.objectWillChange as? ObservableObjectPublisher)?.send()
             instance[keyPath: storageKeyPath].wrappedValue = newValue
         }
     }
+
+    private static func registerResetObserver<EnclosingSelf: ObservableObject & Sendable>(for instance: EnclosingSelf) {
+        let alreadyRegistered = objc_getAssociatedObject(instance, &SDKSettingResetObserverKey.key) != nil
+        guard !alreadyRegistered else { return }
+
+        let observer = NotificationCenter.default.addObserver(
+            forName: SettingsManager.didResetNotification,
+            object: nil,
+            queue: .main
+        ) { [weak instance] _ in
+            (instance?.objectWillChange as? ObservableObjectPublisher)?.send()
+        }
+
+        objc_setAssociatedObject(instance, &SDKSettingResetObserverKey.key, observer, .OBJC_ASSOCIATION_RETAIN)
+    }
+}
+
+private enum SDKSettingResetObserverKey {
+    static var key = 0
 }

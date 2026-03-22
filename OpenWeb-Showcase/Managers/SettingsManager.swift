@@ -59,9 +59,12 @@ class SettingsManager: ObservableObject {
         )
     }
 
+    static let didResetNotification = Notification.Name("SettingsManagerDidReset")
+
     func resetAll() {
         defaults.removePersistentDomain(forName: Self.suiteName)
         SettingsItems.allItems.forEach { $0.applyDefaultToSDK() }
+        NotificationCenter.default.post(name: Self.didResetNotification, object: nil)
     }
 }
 
