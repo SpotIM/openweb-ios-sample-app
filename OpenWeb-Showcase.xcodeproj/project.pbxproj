@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		240C56C82F6FE81A00577287 /* OpenWebCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240C56C72F6FE81A00577287 /* OpenWebCommon.framework */; };
-		240C56C92F6FE81A00577287 /* OpenWebCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240C56C72F6FE81A00577287 /* OpenWebCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24A18C9B2F598B4100AB7F6F /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */; };
-		24A18C9C2F598B4100AB7F6F /* OpenWebSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		240C6FB42F6FF0A800577287 /* OpenWebSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		240C6FB52F6FF12600577287 /* OpenWebCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240C56C72F6FE81A00577287 /* OpenWebCommon.framework */; };
+		240C6FB62F6FF12600577287 /* OpenWebCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240C56C72F6FE81A00577287 /* OpenWebCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		24A18C9F2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */; };
 		24A18CA02F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		45BADC79392D837A6CA6702A /* Pods_OpenWeb_Showcase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09AD32D40C016C6C9237419F /* Pods_OpenWeb_Showcase.framework */; };
@@ -23,9 +22,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				240C6FB42F6FF0A800577287 /* OpenWebSDK.framework in Embed Frameworks */,
 				24A18CA02F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */,
-				24A18C9C2F598B4100AB7F6F /* OpenWebSDK.framework in Embed Frameworks */,
-				240C56C92F6FE81A00577287 /* OpenWebCommon.framework in Embed Frameworks */,
+				240C6FB62F6FF12600577287 /* OpenWebCommon.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -47,8 +46,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		24A4A1302F558DE500B538E1 /* OpenWeb-Showcase */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "OpenWeb-Showcase";
 			sourceTree = "<group>";
 		};
@@ -59,10 +56,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				240C56C82F6FE81A00577287 /* OpenWebCommon.framework in Frameworks */,
 				24A18C9F2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */,
-				24A18C9B2F598B4100AB7F6F /* OpenWebSDK.framework in Frameworks */,
 				45BADC79392D837A6CA6702A /* Pods_OpenWeb_Showcase.framework in Frameworks */,
+				240C6FB52F6FF12600577287 /* OpenWebCommon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
