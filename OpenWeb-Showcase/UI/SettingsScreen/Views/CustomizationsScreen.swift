@@ -16,7 +16,7 @@ struct CustomizationsScreen: View {
             sortingSection
             commentActionsSection
             themeSection
-            uiDelegationSection
+            uiCallbackSection
         }
         .navigationTitle(.customizationsScreenTitle)
         .settingsToolbar()
@@ -84,12 +84,12 @@ private extension CustomizationsScreen {
         }
     }
 
-    var uiDelegationSection: some View {
-        Section(.customizationsUIDelegationSectionTitle) {
+    var uiCallbackSection: some View {
+        Section(.customizationsUICallbackSectionTitle) {
             ToggleSection(
-                title: .customizationsUIDelegationTitle,
-                subtitle: .customizationsUIDelegationSubtitle,
-                isOn: $viewModel.enableCustomUIDelegation
+                title: .customizationsUICallbackTitle,
+                subtitle: .customizationsUICallbackSubtitle,
+                isOn: $viewModel.enableCustomUICallback
             )
         }
     }

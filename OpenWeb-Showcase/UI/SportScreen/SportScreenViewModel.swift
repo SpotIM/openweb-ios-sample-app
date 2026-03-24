@@ -49,9 +49,8 @@ class SportScreenViewModel: ObservableObject {
     func initialize() {
         articleSettings = SettingsManager.shared.article
         screenSettings = SettingsManager.shared.additionalSettings
+        ShowcaseScreenConfigurator.configure(for: article, brandColor: color)
         // MARK: OpenWeb SDK
-        OpenWeb.manager.spotId = article.spotId
-        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
         OpenWeb.manager.ui.customizations.navigationBarEnforcement = .style(.regular)
     }
 }

@@ -15,7 +15,7 @@ class CustomizationsViewModel: ObservableObject {
     @SDKSetting(SettingsItems.actionFont) var selectedActionFont: ActionFontSetting
     @SDKSetting(SettingsItems.fontFamily) var selectedFontFamily: FontFamilySetting
     @SDKSetting(SettingsItems.themeMode) var selectedThemeMode: ThemeModeSetting
-    @SDKSetting(SettingsItems.enableCustomUIDelegation) var enableCustomUIDelegation: Bool
+    @SDKSetting(SettingsItems.enableCustomUICallback) var enableCustomUICallback: Bool
 }
 
 // MARK: - Setting Enums

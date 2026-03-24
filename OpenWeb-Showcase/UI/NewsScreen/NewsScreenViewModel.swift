@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import OpenWebSDK
 import Combine
 
 class NewsScreenViewModel: ObservableObject {
@@ -23,8 +22,6 @@ class NewsScreenViewModel: ObservableObject {
     func initialize() {
         articleSettings = SettingsManager.shared.article
         screenSettings = SettingsManager.shared.additionalSettings
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.spotId = article.spotId
-        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
+        ShowcaseScreenConfigurator.configure(for: article, brandColor: color)
     }
 }

@@ -483,35 +483,35 @@
         }
       }
     },
-    "customizationsUIDelegationSectionTitle" : {
+    "customizationsUICallbackSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "UI Delegation"
+            "value" : "UI Callback"
           }
         }
       }
     },
-    "customizationsUIDelegationSubtitle" : {
+    "customizationsUICallbackSubtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use custom UI delegate for SDK components"
+            "value" : "Use custom UI callback for SDK components"
           }
         }
       }
     },
-    "customizationsUIDelegationTitle" : {
+    "customizationsUICallbackTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable Custom UI Delegation"
+            "value" : "Enable Custom UI Callback"
           }
         }
       }

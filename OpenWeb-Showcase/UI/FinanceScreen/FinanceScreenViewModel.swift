@@ -27,9 +27,7 @@ class FinanceScreenViewModel: ObservableObject {
     func initialize() {
         articleSettings = getArticleSettings()
         screenSettings = SettingsManager.shared.additionalSettings
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.spotId = article.spotId
-        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
+        ShowcaseScreenConfigurator.configure(for: article, brandColor: color)
     }
 }
 
