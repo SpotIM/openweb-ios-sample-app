@@ -19,5 +19,6 @@ enum ShowcaseScreenConfigurator {
             }
         }
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(brandColor)
+        SDKSetting(SettingsItems.customThemeColors).wrappedValue.applyToSDK()
     }
 }

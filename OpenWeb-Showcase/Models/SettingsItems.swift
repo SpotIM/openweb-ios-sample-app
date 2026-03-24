@@ -16,6 +16,7 @@ enum SettingsItems {
     static let fontFamily = SettingsItem(key: "font_family", defaultValue: CustomizationsViewModel.FontFamilySetting.default)
     static let themeMode = SettingsItem(key: "theme_mode", defaultValue: CustomizationsViewModel.ThemeModeSetting.system)
     static let enableCustomUICallback = SettingsItem(key: "enable_custom_ui_delegation", defaultValue: false)
+    static let customThemeColors = SettingsItem(key: "custom_theme_colors", defaultValue: CodableTheme())
 
     // MARK: - Configurations
     static let languageStrategy = SettingsItem(key: "language_strategy", defaultValue: ConfigurationsViewModel.LanguageStrategySetting.device)
@@ -47,7 +48,7 @@ enum SettingsItems {
     // MARK: - All Items (for reset)
     static let allItems: [AnySettingsItem] = [
         sortOption, actionColor, actionFont, fontFamily, themeMode,
-        enableCustomUICallback,
+        enableCustomUICallback, customThemeColors,
         languageStrategy, customLanguage, localeStrategy, enableLandscape,
         informationStrategy, articleAssociatedURL, hideArticleHeader, readOnlyMode,
         preConversationStyle, numberOfComments, preConversationGuidelinesStyle,
