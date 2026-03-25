@@ -10,7 +10,7 @@ import SwiftUI
 import OpenWebSDK
 
 struct FinanceScreen: View {
-    @State private var viewModel = FinanceScreenViewModel()
+    @StateObject private var viewModel = FinanceScreenViewModel()
 
     var body: some View {
         ScrollView {

@@ -10,7 +10,7 @@ import SwiftUI
 import OpenWebSDK
 
 struct RecipesScreen: View {
-    @State private var viewModel = RecipesScreenViewModel()
+    @StateObject private var viewModel = RecipesScreenViewModel()
 
     var body: some View {
         ScrollView {
