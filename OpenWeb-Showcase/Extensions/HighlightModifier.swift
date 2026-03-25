@@ -17,17 +17,12 @@ struct HighlightModifier: ViewModifier {
 
     var isHighlighted: Bool
 
-    @ViewBuilder
     func body(content: Content) -> some View {
-        if isHighlighted {
-            content
-                .listRowBackground(
-                    Color(.systemGray5)
-                        .animation(.easeInOut(duration: Metrics.animationDuration), value: isHighlighted)
-                )
-        } else {
-            content
-        }
+        content
+            .listRowBackground(
+                Color(isHighlighted ? .systemGray5 : .secondarySystemGroupedBackground)
+                    .animation(.easeInOut(duration: Metrics.animationDuration), value: isHighlighted)
+            )
     }
 }
 
