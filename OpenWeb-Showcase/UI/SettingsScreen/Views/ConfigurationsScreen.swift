@@ -14,6 +14,8 @@ struct ConfigurationsScreen: View {
     }
 
     @StateObject private var viewModel = ConfigurationsViewModel()
+    var highlightedEntryID: String?
+    @State private var activeHighlightID: String?
 
     var body: some View {
         List {
@@ -23,6 +25,7 @@ struct ConfigurationsScreen: View {
                 selection: $viewModel.selectedLanguageStrategy,
                 optionTitle: \.title
             )
+            .settingsRow("language_strategy", highlightedID: activeHighlightID)
             Picker(.configurationsLanguageTitle, selection: $viewModel.selectedLanguage) {
                 ForEach(ConfigurationsViewModel.SupportedLanguage.allCases) { language in
                     Text(language.title).tag(language)
@@ -30,18 +33,22 @@ struct ConfigurationsScreen: View {
             }
             .disabled(!viewModel.isCustomLanguageEnabled)
             .opacity(viewModel.isCustomLanguageEnabled ? 1 : Metrics.disabledOpacity)
+            .settingsRow("language", highlightedID: activeHighlightID)
             SegmentedPickerSection(
                 title: .configurationsLocaleStrategyTitle,
                 subtitle: .configurationsLocaleStrategySubtitle,
                 selection: $viewModel.selectedLocaleStrategy,
                 optionTitle: \.title
             )
+            .settingsRow("locale_strategy", highlightedID: activeHighlightID)
             ToggleSection(
                 title: .configurationsEnableLandscapeTitle,
                 subtitle: .configurationsEnableLandscapeSubtitle,
                 isOn: viewModel.enableLandscapeBinding
             )
+            .settingsRow("enable_landscape", highlightedID: activeHighlightID)
         }
+        .scrollAndHighlight(entryID: highlightedEntryID, activeHighlightID: $activeHighlightID)
         .navigationTitle(.configurationsScreenTitle)
         .settingsToolbar()
     }

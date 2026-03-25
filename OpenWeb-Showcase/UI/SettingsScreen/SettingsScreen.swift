@@ -15,7 +15,7 @@ struct SettingsScreen: View {
         List {
             if viewModel.isSearching {
                 ForEach(viewModel.filteredEntries) { entry in
-                    NavigationLink(value: entry.section) {
+                    NavigationLink(value: entry) {
                         SearchResultRow(entry: entry)
                     }
                 }
@@ -28,20 +28,32 @@ struct SettingsScreen: View {
             }
         }
         .navigationDestination(for: SettingsSection.self) { section in
-            switch section {
-            case .customizations:
-                CustomizationsScreen()
-            case .configurations:
-                ConfigurationsScreen()
-            case .articleSettings:
-                ArticleSettingsScreen()
-            case .screenSettings:
-                ScreenSettingsScreen()
-            }
+            settingsDestination(for: section)
+        }
+        .navigationDestination(for: SearchableSettingsEntry.self) { entry in
+            settingsDestination(for: entry.section, highlightedEntryID: entry.id)
         }
         .searchable(text: $viewModel.searchText)
         .navigationTitle(.settingsScreenTitle)
         .settingsToolbar()
+    }
+}
+
+// MARK: - Navigation
+
+private extension SettingsScreen {
+    @ViewBuilder
+    func settingsDestination(for section: SettingsSection, highlightedEntryID: String? = nil) -> some View {
+        switch section {
+        case .customizations:
+            CustomizationsScreen(highlightedEntryID: highlightedEntryID)
+        case .configurations:
+            ConfigurationsScreen(highlightedEntryID: highlightedEntryID)
+        case .articleSettings:
+            ArticleSettingsScreen(highlightedEntryID: highlightedEntryID)
+        case .screenSettings:
+            ScreenSettingsScreen(highlightedEntryID: highlightedEntryID)
+        }
     }
 }
 

@@ -10,6 +10,8 @@ import SwiftUI
 
 struct CustomizationsScreen: View {
     @StateObject private var viewModel = CustomizationsViewModel()
+    var highlightedEntryID: String?
+    @State private var activeHighlightID: String?
 
     var body: some View {
         List {
@@ -18,6 +20,7 @@ struct CustomizationsScreen: View {
             themeSection
             uiCallbackSection
         }
+        .scrollAndHighlight(entryID: highlightedEntryID, activeHighlightID: $activeHighlightID)
         .navigationTitle(.customizationsScreenTitle)
         .settingsToolbar()
     }
@@ -34,6 +37,7 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedSortOption,
                 optionTitle: \.title
             )
+            .settingsRow("sort_option", highlightedID: activeHighlightID)
         }
     }
 
@@ -45,12 +49,14 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedActionColor,
                 optionTitle: \.title
             )
+            .settingsRow("action_color", highlightedID: activeHighlightID)
             SegmentedPickerSection(
                 title: .customizationsActionFontTitle,
                 subtitle: .customizationsActionFontSubtitle,
                 selection: $viewModel.selectedActionFont,
                 optionTitle: \.title
             )
+            .settingsRow("action_font", highlightedID: activeHighlightID)
         }
     }
 
@@ -62,12 +68,14 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedFontFamily,
                 optionTitle: \.title
             )
+            .settingsRow("font_family", highlightedID: activeHighlightID)
             SegmentedPickerSection(
                 title: .customizationsThemeModeTitle,
                 subtitle: .customizationsThemeModeSubtitle,
                 selection: $viewModel.selectedThemeMode,
                 optionTitle: \.title
             )
+            .settingsRow("theme_mode", highlightedID: activeHighlightID)
             NavigationLink {
                 CustomThemeColorsScreen()
             } label: {
@@ -79,6 +87,7 @@ private extension CustomizationsScreen {
                         .foregroundStyle(.secondary)
                 }
             }
+            .settingsRow("custom_theme_colors", highlightedID: activeHighlightID)
         }
     }
 
@@ -89,6 +98,7 @@ private extension CustomizationsScreen {
                 subtitle: .customizationsUICallbackSubtitle,
                 isOn: $viewModel.enableCustomUICallback
             )
+            .settingsRow("custom_ui_callback", highlightedID: activeHighlightID)
         }
     }
 }

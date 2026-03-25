@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct SearchableSettingsEntry: Identifiable {
-    let id: String
-    let title: String
-    let subtitle: String
-    let section: SettingsSection
+struct SearchableSettingsEntry: Identifiable, Hashable {
+    var id: String
+    var title: String
+    var subtitle: String
+    var section: SettingsSection
 }
 
 extension SearchableSettingsEntry {
