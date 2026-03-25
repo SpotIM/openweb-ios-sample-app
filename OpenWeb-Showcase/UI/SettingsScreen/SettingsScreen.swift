@@ -13,9 +13,17 @@ struct SettingsScreen: View {
 
     var body: some View {
         List {
-            ForEach(viewModel.sections) { section in
-                NavigationLink(value: section) {
-                    SettingsSectionRow(section: section)
+            if viewModel.isSearching {
+                ForEach(viewModel.filteredEntries) { entry in
+                    NavigationLink(value: entry.section) {
+                        SearchResultRow(entry: entry)
+                    }
+                }
+            } else {
+                ForEach(viewModel.sections) { section in
+                    NavigationLink(value: section) {
+                        SettingsSectionRow(section: section)
+                    }
                 }
             }
         }
@@ -31,6 +39,7 @@ struct SettingsScreen: View {
                 ScreenSettingsScreen()
             }
         }
+        .searchable(text: $viewModel.searchText)
         .navigationTitle(.settingsScreenTitle)
         .settingsToolbar()
     }
@@ -48,6 +57,24 @@ private extension SettingsScreen {
                 Text(section.subtitle)
                     .font(.caption)
                     .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    struct SearchResultRow: View {
+        var entry: SearchableSettingsEntry
+
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text(entry.title)
+                if !entry.subtitle.isEmpty {
+                    Text(entry.subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Text(entry.section.title)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
             }
         }
     }

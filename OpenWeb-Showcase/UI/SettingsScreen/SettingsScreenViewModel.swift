@@ -11,4 +11,16 @@ import Combine
 
 class SettingsScreenViewModel: ObservableObject {
     let sections: [SettingsSection] = SettingsSection.allCases
+
+    @Published var searchText = ""
+
+    var filteredEntries: [SearchableSettingsEntry] {
+        let trimmed = searchText.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return [] }
+        return SearchableSettingsEntry.allEntries.filter { $0.matches(trimmed) }
+    }
+
+    var isSearching: Bool {
+        !searchText.trimmingCharacters(in: .whitespaces).isEmpty
+    }
 }
