@@ -11,6 +11,7 @@ import OpenWebSDK
 
 struct SideRailScreen: View {
     @StateObject private var viewModel = SideRailScreenViewModel()
+    @State private var bubbleTapped = false
 
     var body: some View {
         ScrollView {
@@ -33,6 +34,8 @@ struct SideRailScreen: View {
                     OpenWebConversation(postId: viewModel.article.postId)
                 } label: {
                     Image(systemName: "bubble.right")
+                        .pulseHighlight(tapped: $bubbleTapped)
+                        .onDisappear { bubbleTapped = true }
                 }
             }
         }
