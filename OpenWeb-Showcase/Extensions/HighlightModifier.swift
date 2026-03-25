@@ -37,7 +37,7 @@ extension View {
     }
 
     func settingsRow(_ entryID: String, highlightedID: String?) -> some View {
-        self.id(entryID)
+        id(entryID)
             .settingsHighlight(highlightedID == entryID)
     }
 }

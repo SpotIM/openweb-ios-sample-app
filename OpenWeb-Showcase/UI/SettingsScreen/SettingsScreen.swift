@@ -33,9 +33,21 @@ struct SettingsScreen: View {
         .navigationDestination(for: SearchableSettingsEntry.self) { entry in
             settingsDestination(for: entry.section, highlightedEntryID: entry.id)
         }
-        .searchable(text: $viewModel.searchText)
+        .searchable(text: $viewModel.searchText, placement: searchPlacement)
         .navigationTitle(.settingsScreenTitle)
         .settingsToolbar()
+    }
+}
+
+// MARK: - Search Placement
+
+private extension SettingsScreen {
+    var searchPlacement: SearchFieldPlacement {
+        if #available(iOS 26, *) {
+            return .automatic
+        } else {
+            return .navigationBarDrawer(displayMode: .always)
+        }
     }
 }
 
