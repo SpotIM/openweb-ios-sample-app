@@ -21,22 +21,30 @@ extension View {
 
 private struct PulseHighlightModifier: ViewModifier {
     @Binding var tapped: Bool
-    let delay: TimeInterval
-    let interval: TimeInterval
-    let pulseCount: Int
+    var delay: TimeInterval
+    var interval: TimeInterval
+    var pulseCount: Int
 
     @State private var isPulsing = false
 
     private struct Metrics {
-        static let maxScale: CGFloat = 1.3
-        static let brightnessBoost: Double = 0.3
+        static let highlightColor = Color.yellow
+        static let maxOpacity: Double = 0.5
+        static let circlePadding: CGFloat = 5
+        static let minScale: CGFloat = 0.6
     }
 
     func body(content: Content) -> some View {
         content
-            .scaleEffect(isPulsing ? Metrics.maxScale : 1)
-            .brightness(isPulsing ? Metrics.brightnessBoost : 0)
-            .animation(.easeInOut(duration: interval * 0.4), value: isPulsing)
+            .padding(Metrics.circlePadding)
+            .background {
+                Circle()
+                    .fill(Metrics.highlightColor)
+                    .scaleEffect(isPulsing ? 1 : Metrics.minScale)
+                    .opacity(isPulsing ? Metrics.maxOpacity : 0)
+                    .animation(.easeInOut(duration: interval * 0.4), value: isPulsing)
+            }
+            .padding(-Metrics.circlePadding)
             .task(id: tapped) {
                 guard !tapped else { return }
                 try? await Task.sleep(for: .seconds(delay))
