@@ -15,15 +15,7 @@ struct ToggleRow: View {
 
     var body: some View {
         Toggle(isOn: $isOn) {
-            VStack(alignment: .leading) {
-                Text(title)
-                    .font(.bodyText)
-                if let subtitle {
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
+            SettingsRowHeader(title: title, subtitle: subtitle)
         }
     }
 }

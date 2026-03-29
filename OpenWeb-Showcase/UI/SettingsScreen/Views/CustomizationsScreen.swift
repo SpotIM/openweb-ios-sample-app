@@ -37,7 +37,7 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedSortOption,
                 optionTitle: \.title
             )
-            .settingsRow("sort_option", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.sortOption.key, highlightedID: activeHighlightID)
         }
     }
 
@@ -49,14 +49,14 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedActionColor,
                 optionTitle: \.title
             )
-            .settingsRow("action_color", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.actionColor.key, highlightedID: activeHighlightID)
             SegmentedPickerRow(
                 title: .customizationsActionFontTitle,
                 subtitle: .customizationsActionFontSubtitle,
                 selection: $viewModel.selectedActionFont,
                 optionTitle: \.title
             )
-            .settingsRow("action_font", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.actionFont.key, highlightedID: activeHighlightID)
         }
     }
 
@@ -68,14 +68,14 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedFontFamily,
                 optionTitle: \.title
             )
-            .settingsRow("font_family", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.fontFamily.key, highlightedID: activeHighlightID)
             SegmentedPickerRow(
                 title: .customizationsThemeModeTitle,
                 subtitle: .customizationsThemeModeSubtitle,
                 selection: $viewModel.selectedThemeMode,
                 optionTitle: \.title
             )
-            .settingsRow("theme_mode", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.themeMode.key, highlightedID: activeHighlightID)
             NavigationLink {
                 CustomThemeColorsScreen()
             } label: {
@@ -87,7 +87,7 @@ private extension CustomizationsScreen {
                         .foregroundStyle(.secondary)
                 }
             }
-            .settingsRow("custom_theme_colors", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.customThemeColors.key, highlightedID: activeHighlightID)
         }
     }
 
@@ -98,7 +98,7 @@ private extension CustomizationsScreen {
                 subtitle: .customizationsUICallbackSubtitle,
                 isOn: $viewModel.enableCustomUICallback
             )
-            .settingsRow("custom_ui_callback", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.enableCustomUICallback.key, highlightedID: activeHighlightID)
         }
     }
 }

@@ -21,27 +21,27 @@ struct ArticleSettingsScreen: View {
                 selection: $viewModel.selectedInformationStrategy,
                 optionTitle: \.title
             )
-            .settingsRow("information_strategy", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.informationStrategy.key, highlightedID: activeHighlightID)
             TextFieldRow(
                 title: .articleSettingsAssociatedURLTitle,
                 placeholder: .articleSettingsAssociatedURLPlaceholder,
                 text: $viewModel.articleAssociatedURL,
                 isEnabled: viewModel.isAssociatedURLEnabled
             )
-            .settingsRow("article_associated_url", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.articleAssociatedURL.key, highlightedID: activeHighlightID)
             ToggleRow(
                 title: .articleSettingsHideHeaderTitle,
                 subtitle: .articleSettingsHideHeaderSubtitle,
                 isOn: $viewModel.hideArticleHeader
             )
-            .settingsRow("hide_article_header", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.hideArticleHeader.key, highlightedID: activeHighlightID)
             SegmentedPickerRow(
                 title: .articleSettingsReadOnlyModeTitle,
                 subtitle: .articleSettingsReadOnlyModeSubtitle,
                 selection: $viewModel.selectedReadOnlyMode,
                 optionTitle: \.title
             )
-            .settingsRow("read_only_mode", highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.readOnlyMode.key, highlightedID: activeHighlightID)
         }
         .scrollAndHighlight(entryID: highlightedEntryID, activeHighlightID: $activeHighlightID)
         .navigationTitle(.articleSettingsScreenTitle)

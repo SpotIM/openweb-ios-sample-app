@@ -9,10 +9,6 @@
 import SwiftUI
 
 struct TextFieldRow: View {
-    private struct Metrics {
-        static let disabledOpacity: Double = 0.4
-    }
-
     var title: LocalizedStringResource
     var subtitle: LocalizedStringResource?
     var placeholder: LocalizedStringResource
@@ -21,19 +17,13 @@ struct TextFieldRow: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(title)
-                .font(.bodyText)
-            if let subtitle {
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+            SettingsRowHeader(title: title, subtitle: subtitle)
             TextField(text: $text) {
                 Text(placeholder)
             }
                 .textFieldStyle(.roundedBorder)
                 .disabled(!isEnabled)
         }
-        .opacity(isEnabled ? 1 : Metrics.disabledOpacity)
+        .opacity(isEnabled ? 1 : SettingsRowHeader.disabledOpacity)
     }
 }

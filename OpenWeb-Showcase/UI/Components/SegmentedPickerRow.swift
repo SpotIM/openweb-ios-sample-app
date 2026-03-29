@@ -8,10 +8,6 @@
 
 import SwiftUI
 
-private enum SegmentedPickerRowMetrics {
-    static let disabledOpacity: Double = 0.4
-}
-
 struct SegmentedPickerRow<Option: Hashable & Identifiable & CaseIterable>: View
     where Option.AllCases: RandomAccessCollection {
 
@@ -23,13 +19,7 @@ struct SegmentedPickerRow<Option: Hashable & Identifiable & CaseIterable>: View
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(title)
-                .font(.bodyText)
-            if let subtitle {
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+            SettingsRowHeader(title: title, subtitle: subtitle)
             Picker(title, selection: $selection) {
                 ForEach(Option.allCases) { option in
                     Text(optionTitle(option)).tag(option)
@@ -38,6 +28,6 @@ struct SegmentedPickerRow<Option: Hashable & Identifiable & CaseIterable>: View
             .pickerStyle(.segmented)
         }
         .disabled(!isEnabled)
-        .opacity(isEnabled ? 1 : SegmentedPickerRowMetrics.disabledOpacity)
+        .opacity(isEnabled ? 1 : SettingsRowHeader.disabledOpacity)
     }
 }
