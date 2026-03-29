@@ -14,9 +14,9 @@ struct SettingsScreen: View {
     var body: some View {
         List {
             if viewModel.isSearching {
-                ForEach(viewModel.filteredEntries) { entry in
-                    NavigationLink(value: entry) {
-                        SearchResultRow(entry: entry)
+                ForEach(viewModel.filteredResults, id: \.entry.id) { result in
+                    NavigationLink(value: result.entry) {
+                        SearchResultRow(entry: result.entry, section: result.section)
                     }
                 }
             } else {
@@ -28,10 +28,11 @@ struct SettingsScreen: View {
             }
         }
         .navigationDestination(for: SettingsSection.self) { section in
-            settingsDestination(for: section)
+            settingsDestination(section: section)
         }
-        .navigationDestination(for: SearchableSettingsEntry.self) { entry in
-            settingsDestination(for: entry.section, highlightedEntryID: entry.id)
+        .navigationDestination(for: SettingsEntry.self) { entry in
+            let section = SettingsSection.allCases.first { $0.entries.contains(entry) }
+            settingsDestination(section: section ?? .customizations, highlightedEntryID: entry.id)
         }
         .searchable(text: $viewModel.searchText, placement: searchPlacement)
         .navigationTitle(.settingsScreenTitle)
@@ -55,7 +56,7 @@ private extension SettingsScreen {
 
 private extension SettingsScreen {
     @ViewBuilder
-    func settingsDestination(for section: SettingsSection, highlightedEntryID: String? = nil) -> some View {
+    func settingsDestination(section: SettingsSection, highlightedEntryID: String? = nil) -> some View {
         switch section {
         case .customizations:
             CustomizationsScreen(highlightedEntryID: highlightedEntryID)
@@ -86,7 +87,8 @@ private extension SettingsScreen {
     }
 
     struct SearchResultRow: View {
-        var entry: SearchableSettingsEntry
+        var entry: SettingsEntry
+        var section: SettingsSection
 
         var body: some View {
             VStack(alignment: .leading) {
@@ -96,7 +98,7 @@ private extension SettingsScreen {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                Text(entry.section.title)
+                Text(section.title)
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }

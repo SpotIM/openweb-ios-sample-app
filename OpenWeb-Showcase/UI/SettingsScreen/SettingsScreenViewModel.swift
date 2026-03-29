@@ -14,10 +14,12 @@ class SettingsScreenViewModel: ObservableObject {
 
     @Published var searchText = ""
 
-    var filteredEntries: [SearchableSettingsEntry] {
+    var filteredResults: [(entry: SettingsEntry, section: SettingsSection)] {
         let trimmed = searchText.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return [] }
-        return SearchableSettingsEntry.allEntries.filter { $0.matches(trimmed) }
+        return sections.flatMap { section in
+            section.entries.filter { $0.matches(trimmed) }.map { (entry: $0, section: section) }
+        }
     }
 
     var isSearching: Bool {
