@@ -9,7 +9,7 @@
 import SwiftUI
 import Combine
 
-class ArticleSettingsViewModel: ObservableObject {
+class ArticleSettingsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.informationStrategy) var selectedInformationStrategy: InformationStrategySetting
     @SDKSetting(SettingsItems.articleAssociatedURL) var articleAssociatedURL: String
     @SDKSetting(SettingsItems.hideArticleHeader) var hideArticleHeader: Bool

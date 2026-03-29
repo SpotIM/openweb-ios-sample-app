@@ -14,7 +14,7 @@ protocol OpenWebApplicable {
     func applyToSDK()
 }
 
-class SettingsManager: ObservableObject {
+class SettingsManager: NSObject, ObservableObject {
     static let shared = SettingsManager()
 
     private static let suiteName = "com.open-web.showcase-app"
@@ -38,7 +38,7 @@ class SettingsManager: ObservableObject {
     @SDKSetting(SettingsItems.questionsSpacing) private var questionsSpacing: String
     @SDKSetting(SettingsItems.enablePullToRefresh) private var enablePullToRefresh: Bool
 
-    private init() {}
+    private override init() {}
 
     // MARK: OpenWeb SDK
     var article: OWArticle {
@@ -59,12 +59,12 @@ class SettingsManager: ObservableObject {
         )
     }
 
-    static let didResetNotification = Notification.Name("SettingsManagerDidReset")
+    static let didReset = PassthroughSubject<Void, Never>()
 
     func resetAll() {
         defaults.removePersistentDomain(forName: Self.suiteName)
         SettingsItems.allItems.forEach { $0.applyDefaultToSDK() }
-        NotificationCenter.default.post(name: Self.didResetNotification, object: nil)
+        Self.didReset.send()
     }
 }
 

@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 import OpenWebSDK
 
-class CustomThemeColorsViewModel: ObservableObject {
+class CustomThemeColorsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.customThemeColors) var theme: OWTheme
 
     func isEnabled(_ keyPath: WritableKeyPath<OWTheme, UIColor?>) -> Bool {

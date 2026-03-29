@@ -9,7 +9,7 @@
 import SwiftUI
 import Combine
 
-class ConfigurationsViewModel: ObservableObject {
+class ConfigurationsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.languageStrategy) var selectedLanguageStrategy: LanguageStrategySetting
     @SDKSetting(SettingsItems.customLanguage) var selectedLanguage: SupportedLanguage
     @SDKSetting(SettingsItems.localeStrategy) var selectedLocaleStrategy: LocaleStrategySetting

@@ -9,7 +9,7 @@
 import SwiftUI
 import Combine
 
-class CustomizationsViewModel: ObservableObject {
+class CustomizationsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.sortOption) var selectedSortOption: SortOptionSetting
     @SDKSetting(SettingsItems.actionColor) var selectedActionColor: ActionColorSetting
     @SDKSetting(SettingsItems.actionFont) var selectedActionFont: ActionFontSetting

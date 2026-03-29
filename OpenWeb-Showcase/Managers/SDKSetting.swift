@@ -42,7 +42,7 @@ struct SDKSetting<Value: Codable & OpenWebApplicable> {
         }
     }
 
-    static subscript<EnclosingSelf: ObservableObject & Sendable>(
+    static subscript<EnclosingSelf: NSObject & ObservableObject & Sendable>(
         _enclosingInstance instance: EnclosingSelf,
         wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
         storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
@@ -57,22 +57,20 @@ struct SDKSetting<Value: Codable & OpenWebApplicable> {
         }
     }
 
-    private static func registerResetObserver<EnclosingSelf: ObservableObject & Sendable>(for instance: EnclosingSelf) {
-        let alreadyRegistered = objc_getAssociatedObject(instance, &SDKSettingResetObserverKey.key) != nil
-        guard !alreadyRegistered else { return }
+    private static func registerResetObserver<EnclosingSelf: NSObject & ObservableObject & Sendable>(for instance: EnclosingSelf) {
+        let existing: AnyCancellable? = instance.getObjectiveCAssociatedObject(key: &SDKSettingKeys.resetObserver)
+        guard existing == nil else { return }
 
-        let observer = NotificationCenter.default.addObserver(
-            forName: SettingsManager.didResetNotification,
-            object: nil,
-            queue: .main
-        ) { [weak instance] _ in
-            (instance?.objectWillChange as? ObservableObjectPublisher)?.send()
-        }
+        let cancellable = SettingsManager.didReset
+            .receive(on: DispatchQueue.main)
+            .sink { [weak instance] in
+                (instance?.objectWillChange as? ObservableObjectPublisher)?.send()
+            }
 
-        objc_setAssociatedObject(instance, &SDKSettingResetObserverKey.key, observer, .OBJC_ASSOCIATION_RETAIN)
+        instance.setObjectiveCAssociatedObject(key: &SDKSettingKeys.resetObserver, value: cancellable)
     }
 }
 
-private enum SDKSettingResetObserverKey {
-    static var key = 0
+private enum SDKSettingKeys {
+    static var resetObserver = "SDKSettingResetObserver"
 }

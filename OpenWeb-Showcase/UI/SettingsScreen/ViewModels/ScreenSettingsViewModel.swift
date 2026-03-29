@@ -9,7 +9,7 @@
 import SwiftUI
 import Combine
 
-class ScreenSettingsViewModel: ObservableObject {
+class ScreenSettingsViewModel: NSObject, ObservableObject {
 
     // Pre Conversation
     @SDKSetting(SettingsItems.preConversationStyle) var selectedPreConversationStyle: PreConversationStyleSetting
