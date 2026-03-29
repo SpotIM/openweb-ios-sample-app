@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 import Combine
 
 class SideRailScreenViewModel: ObservableObject {
@@ -22,6 +23,9 @@ class SideRailScreenViewModel: ObservableObject {
     func initialize() {
         articleSettings = SettingsManager.shared.article
         screenSettings = SettingsManager.shared.additionalSettings
-        ShowcaseScreenConfigurator.configure(article: article, brandColor: color)
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.spotId = article.spotId
+        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
+        ShowcaseScreenConfigurator.applyShowcaseSettings()
     }
 }

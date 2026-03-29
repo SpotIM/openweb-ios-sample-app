@@ -10,15 +10,12 @@ import SwiftUI
 import OpenWebSDK
 
 enum ShowcaseScreenConfigurator {
-    static func configure(article: ArticleData, brandColor: Color) {
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.spotId = article.spotId
+    static func applyShowcaseSettings() {
         OpenWeb.manager.ui.customizations.addElementCallback { element, source, themeStyle, postId in
             if SDKSetting(SettingsItems.enableCustomUICallback).wrappedValue {
                 CustomUICallback.customize(element, themeStyle: themeStyle)
             }
         }
-        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(brandColor)
         SDKSetting(SettingsItems.customThemeColors).wrappedValue.applyToSDK()
     }
 }
