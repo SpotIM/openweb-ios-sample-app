@@ -45,7 +45,7 @@ private extension CustomThemeColorsScreen {
 
             if viewModel.isEnabled(keyPath) {
                 HStack(spacing: Metrics.colorPickerSpacing) {
-                    Text("light")
+                    Text(.light)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     ColorPicker(
@@ -58,7 +58,7 @@ private extension CustomThemeColorsScreen {
                     .labelsHidden()
                     .fixedSize()
 
-                    Text("dark")
+                    Text(.dark)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     ColorPicker(

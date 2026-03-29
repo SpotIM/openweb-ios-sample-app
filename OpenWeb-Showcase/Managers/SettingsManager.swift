@@ -19,7 +19,6 @@ class SettingsManager: NSObject, ObservableObject {
 
     private static let suiteName = "com.open-web.showcase-app"
     static let store = UserDefaults(suiteName: suiteName) ?? UserDefaults.standard
-    private let defaults: UserDefaults = SettingsManager.store
 
     @SDKSetting(SettingsItems.informationStrategy) private var informationStrategy: ArticleSettingsViewModel.InformationStrategySetting
     @SDKSetting(SettingsItems.articleAssociatedURL) private var articleAssociatedURL: String
@@ -62,7 +61,7 @@ class SettingsManager: NSObject, ObservableObject {
     static let didReset = PassthroughSubject<Void, Never>()
 
     func resetAll() {
-        defaults.removePersistentDomain(forName: Self.suiteName)
+        Self.store.removePersistentDomain(forName: Self.suiteName)
         SettingsItems.allItems.forEach { $0.applyDefaultToSDK() }
         Self.didReset.send()
     }
