@@ -8,19 +8,20 @@
 
 import SwiftUI
 import Combine
+import OpenWebSDK
 
 class ScreenSettingsViewModel: NSObject, ObservableObject {
 
     // Pre Conversation
     @SDKSetting(SettingsItems.preConversationStyle) var selectedPreConversationStyle: PreConversationStyleSetting
     @SDKSetting(SettingsItems.numberOfComments) var numberOfComments: Int
-    @SDKSetting(SettingsItems.preConversationGuidelinesStyle) var selectedPreConversationGuidelinesStyle: GuidelinesStyleSetting
-    @SDKSetting(SettingsItems.preConversationQuestionsStyle) var selectedPreConversationQuestionsStyle: QuestionsStyleSetting
+    @SDKSetting(SettingsItems.preConversationGuidelinesStyle) var selectedPreConversationGuidelinesStyle: OWCommunityGuidelinesStyle
+    @SDKSetting(SettingsItems.preConversationQuestionsStyle) var selectedPreConversationQuestionsStyle: OWCommunityQuestionStyle
 
     // Conversation
     @SDKSetting(SettingsItems.conversationStyle) var selectedConversationStyle: ConversationStyleSetting
-    @SDKSetting(SettingsItems.conversationGuidelinesStyle) var selectedConversationGuidelinesStyle: GuidelinesStyleSetting
-    @SDKSetting(SettingsItems.conversationQuestionsStyle) var selectedConversationQuestionsStyle: QuestionsStyleSetting
+    @SDKSetting(SettingsItems.conversationGuidelinesStyle) var selectedConversationGuidelinesStyle: OWCommunityGuidelinesStyle
+    @SDKSetting(SettingsItems.conversationQuestionsStyle) var selectedConversationQuestionsStyle: OWCommunityQuestionStyle
     @SDKSetting(SettingsItems.conversationSpacing) var selectedConversationSpacing: ConversationSpacingSetting
     @SDKSetting(SettingsItems.betweenCommentsSpacing) var betweenCommentsSpacing: String
     @SDKSetting(SettingsItems.guidelinesSpacing) var guidelinesSpacing: String
@@ -76,36 +77,6 @@ extension ScreenSettingsViewModel {
             case .regular: "Regular"
             case .compact: "Compact"
             case .custom: "Custom"
-            }
-        }
-    }
-
-    enum GuidelinesStyleSetting: Codable, CaseIterable, Identifiable {
-        case none
-        case regular
-        case compact
-
-        var id: Self { self }
-        var title: String {
-            switch self {
-            case .none: "None"
-            case .regular: "Regular"
-            case .compact: "Compact"
-            }
-        }
-    }
-
-    enum QuestionsStyleSetting: Codable, CaseIterable, Identifiable {
-        case none
-        case regular
-        case compact
-
-        var id: Self { self }
-        var title: String {
-            switch self {
-            case .none: "None"
-            case .regular: "Regular"
-            case .compact: "Compact"
             }
         }
     }

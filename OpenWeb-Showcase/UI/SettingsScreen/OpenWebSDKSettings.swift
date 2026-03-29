@@ -24,27 +24,35 @@ extension CustomizationsViewModel.SortOptionSetting: OpenWebApplicable {
     }
 }
 
-extension CustomizationsViewModel.ActionColorSetting: OpenWebApplicable {
-    func applyToSDK() {
-        let color: OWCommentActionsColor = switch self {
-        case .default: .default
-        case .brandColor: .brandColor
+extension OWCommentActionsColor: @retroactive CaseIterable, @retroactive Identifiable, OpenWebApplicable {
+    public static var allCases: [OWCommentActionsColor] { [.default, .brandColor] }
+    public var id: Self { self }
+    var title: String {
+        switch self {
+        case .default: "Default"
+        case .brandColor: "Brand Color"
+        @unknown default: "Unknown"
         }
-
+    }
+    func applyToSDK() {
         // MARK: OpenWeb SDK
-        OpenWeb.manager.ui.customizations.commentActions.color = color
+        OpenWeb.manager.ui.customizations.commentActions.color = self
     }
 }
 
-extension CustomizationsViewModel.ActionFontSetting: OpenWebApplicable {
-    func applyToSDK() {
-        let fontStyle: OWCommentActionsFontStyle = switch self {
-        case .default: .default
-        case .semiBold: .semiBold
+extension OWCommentActionsFontStyle: @retroactive CaseIterable, @retroactive Identifiable, OpenWebApplicable {
+    public static var allCases: [OWCommentActionsFontStyle] { [.default, .semiBold] }
+    public var id: Self { self }
+    var title: String {
+        switch self {
+        case .default: "Default"
+        case .semiBold: "Semi Bold"
+        @unknown default: "Unknown"
         }
-
+    }
+    func applyToSDK() {
         // MARK: OpenWeb SDK
-        OpenWeb.manager.ui.customizations.commentActions.fontStyle = fontStyle
+        OpenWeb.manager.ui.customizations.commentActions.fontStyle = self
     }
 }
 
@@ -100,28 +108,32 @@ extension ScreenSettingsViewModel.PreConversationStyleSetting: OpenWebApplicable
     func applyToSDK() {}
 }
 
-extension ScreenSettingsViewModel.GuidelinesStyleSetting: OpenWebApplicable {
-    func applyToSDK() {}
-
-    var owGuidelinesStyle: OWCommunityGuidelinesStyle {
+extension OWCommunityGuidelinesStyle: @retroactive CaseIterable, @retroactive Identifiable, OpenWebApplicable {
+    public static var allCases: [OWCommunityGuidelinesStyle] { [.none, .regular, .compact] }
+    public var id: Self { self }
+    var title: String {
         switch self {
-        case .none: .none
-        case .regular: .regular
-        case .compact: .compact
+        case .none: "None"
+        case .regular: "Regular"
+        case .compact: "Compact"
+        @unknown default: "Unknown"
         }
     }
+    func applyToSDK() {}
 }
 
-extension ScreenSettingsViewModel.QuestionsStyleSetting: OpenWebApplicable {
-    func applyToSDK() {}
-
-    var owQuestionsStyle: OWCommunityQuestionStyle {
+extension OWCommunityQuestionStyle: @retroactive CaseIterable, @retroactive Identifiable, OpenWebApplicable {
+    public static var allCases: [OWCommunityQuestionStyle] { [.none, .regular, .compact] }
+    public var id: Self { self }
+    var title: String {
         switch self {
-        case .none: .none
-        case .regular: .regular
-        case .compact: .compact
+        case .none: "None"
+        case .regular: "Regular"
+        case .compact: "Compact"
+        @unknown default: "Unknown"
         }
     }
+    func applyToSDK() {}
 }
 
 extension ScreenSettingsViewModel.ConversationStyleSetting: OpenWebApplicable {
@@ -132,15 +144,42 @@ extension ScreenSettingsViewModel.ConversationSpacingSetting: OpenWebApplicable 
     func applyToSDK() {}
 }
 
-extension ArticleSettingsViewModel.ReadOnlyModeSetting: OpenWebApplicable {
-    func applyToSDK() {}
-    var owMode: OWReadOnlyMode {
+extension OWReadOnlyMode: @retroactive CaseIterable, @retroactive Identifiable, @retroactive Codable, OpenWebApplicable {
+    public static var allCases: [OWReadOnlyMode] { [.server, .enable, .disable] }
+    public var id: Self { self }
+
+    private var rawValue: String {
         switch self {
-        case .server: .server
-        case .enable: .enable
-        case .disable: .disable
+        case .server: "server"
+        case .enable: "enable"
+        case .disable: "disable"
+        @unknown default: "server"
         }
     }
+
+    public init(from decoder: Decoder) throws {
+        let value = try decoder.singleValueContainer().decode(String.self)
+        switch value {
+        case "enable": self = .enable
+        case "disable": self = .disable
+        default: self = .server
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+
+    var title: String {
+        switch self {
+        case .server: "Server"
+        case .enable: "Enable"
+        case .disable: "Disable"
+        @unknown default: "Unknown"
+        }
+    }
+    func applyToSDK() {}
 }
 
 extension ConfigurationsViewModel.EnableLandscapeSetting: OpenWebApplicable {

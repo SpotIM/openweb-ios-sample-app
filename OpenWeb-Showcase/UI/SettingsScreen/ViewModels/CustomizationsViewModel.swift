@@ -8,11 +8,12 @@
 
 import SwiftUI
 import Combine
+import OpenWebSDK
 
 class CustomizationsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.sortOption) var selectedSortOption: SortOptionSetting
-    @SDKSetting(SettingsItems.actionColor) var selectedActionColor: ActionColorSetting
-    @SDKSetting(SettingsItems.actionFont) var selectedActionFont: ActionFontSetting
+    @SDKSetting(SettingsItems.actionColor) var selectedActionColor: OWCommentActionsColor
+    @SDKSetting(SettingsItems.actionFont) var selectedActionFont: OWCommentActionsFontStyle
     @SDKSetting(SettingsItems.fontFamily) var selectedFontFamily: FontFamilySetting
     @SDKSetting(SettingsItems.themeMode) var selectedThemeMode: ThemeModeSetting
     @SDKSetting(SettingsItems.enableCustomUICallback) var enableCustomUICallback: Bool
@@ -34,32 +35,6 @@ extension CustomizationsViewModel {
             case .best: "Best"
             case .newest: "Newest"
             case .oldest: "Oldest"
-            }
-        }
-    }
-
-    enum ActionColorSetting: Codable, CaseIterable, Identifiable {
-        case `default`
-        case brandColor
-
-        var id: Self { self }
-        var title: String {
-            switch self {
-            case .default: "Default"
-            case .brandColor: "Brand Color"
-            }
-        }
-    }
-
-    enum ActionFontSetting: Codable, CaseIterable, Identifiable {
-        case `default`
-        case semiBold
-
-        var id: Self { self }
-        var title: String {
-            switch self {
-            case .default: "Default"
-            case .semiBold: "Semi Bold"
             }
         }
     }

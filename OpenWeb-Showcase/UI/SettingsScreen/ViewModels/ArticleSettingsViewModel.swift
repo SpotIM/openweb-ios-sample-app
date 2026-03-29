@@ -8,12 +8,13 @@
 
 import SwiftUI
 import Combine
+import OpenWebSDK
 
 class ArticleSettingsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.informationStrategy) var selectedInformationStrategy: InformationStrategySetting
     @SDKSetting(SettingsItems.articleAssociatedURL) var articleAssociatedURL: String
     @SDKSetting(SettingsItems.hideArticleHeader) var hideArticleHeader: Bool
-    @SDKSetting(SettingsItems.readOnlyMode) var selectedReadOnlyMode: ReadOnlyModeSetting
+    @SDKSetting(SettingsItems.readOnlyMode) var selectedReadOnlyMode: OWReadOnlyMode
 
     var isAssociatedURLEnabled: Bool {
         selectedInformationStrategy == .local
@@ -36,18 +37,4 @@ extension ArticleSettingsViewModel {
         }
     }
 
-    enum ReadOnlyModeSetting: Codable, CaseIterable, Identifiable {
-        case server
-        case enable
-        case disable
-
-        var id: Self { self }
-        var title: String {
-            switch self {
-            case .server: "Server"
-            case .enable: "Enable"
-            case .disable: "Disable"
-            }
-        }
-    }
 }

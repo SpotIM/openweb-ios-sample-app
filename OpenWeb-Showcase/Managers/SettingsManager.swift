@@ -23,14 +23,14 @@ class SettingsManager: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.informationStrategy) private var informationStrategy: ArticleSettingsViewModel.InformationStrategySetting
     @SDKSetting(SettingsItems.articleAssociatedURL) private var articleAssociatedURL: String
     @SDKSetting(SettingsItems.hideArticleHeader) private var hideArticleHeader: Bool
-    @SDKSetting(SettingsItems.readOnlyMode) private var readOnlyMode: ArticleSettingsViewModel.ReadOnlyModeSetting
+    @SDKSetting(SettingsItems.readOnlyMode) private var readOnlyMode: OWReadOnlyMode
     @SDKSetting(SettingsItems.preConversationStyle) private var preConversationStyle: ScreenSettingsViewModel.PreConversationStyleSetting
     @SDKSetting(SettingsItems.numberOfComments) private var numberOfComments: Int
-    @SDKSetting(SettingsItems.preConversationGuidelinesStyle) private var preConversationGuidelinesStyle: ScreenSettingsViewModel.GuidelinesStyleSetting
-    @SDKSetting(SettingsItems.preConversationQuestionsStyle) private var preConversationQuestionsStyle: ScreenSettingsViewModel.QuestionsStyleSetting
+    @SDKSetting(SettingsItems.preConversationGuidelinesStyle) private var preConversationGuidelinesStyle: OWCommunityGuidelinesStyle
+    @SDKSetting(SettingsItems.preConversationQuestionsStyle) private var preConversationQuestionsStyle: OWCommunityQuestionStyle
     @SDKSetting(SettingsItems.conversationStyle) private var conversationStyle: ScreenSettingsViewModel.ConversationStyleSetting
-    @SDKSetting(SettingsItems.conversationGuidelinesStyle) private var conversationGuidelinesStyle: ScreenSettingsViewModel.GuidelinesStyleSetting
-    @SDKSetting(SettingsItems.conversationQuestionsStyle) private var conversationQuestionsStyle: ScreenSettingsViewModel.QuestionsStyleSetting
+    @SDKSetting(SettingsItems.conversationGuidelinesStyle) private var conversationGuidelinesStyle: OWCommunityGuidelinesStyle
+    @SDKSetting(SettingsItems.conversationQuestionsStyle) private var conversationQuestionsStyle: OWCommunityQuestionStyle
     @SDKSetting(SettingsItems.conversationSpacing) private var conversationSpacing: ScreenSettingsViewModel.ConversationSpacingSetting
     @SDKSetting(SettingsItems.betweenCommentsSpacing) private var betweenCommentsSpacing: String
     @SDKSetting(SettingsItems.guidelinesSpacing) private var guidelinesSpacing: String
@@ -45,7 +45,7 @@ class SettingsManager: NSObject, ObservableObject {
             articleInformationStrategy: owInformationStrategy,
             additionalSettings: OWArticleSettings(
                 headerStyle: hideArticleHeader ? .none : .regular,
-                readOnlyMode: readOnlyMode.owMode
+                readOnlyMode: readOnlyMode
             )
         )
     }
@@ -75,14 +75,14 @@ private extension SettingsManager {
         case .regular: .regular
         case .compact: .compact
         case .summary: .ctaWithSummary(
-            communityGuidelinesStyle: preConversationGuidelinesStyle.owGuidelinesStyle,
-            communityQuestionsStyle: preConversationQuestionsStyle.owQuestionsStyle
+            communityGuidelinesStyle: preConversationGuidelinesStyle,
+            communityQuestionsStyle: preConversationQuestionsStyle
         )
         case .buttonOnly: .ctaButtonOnly
         case .custom: .custom(
             numberOfComments: numberOfComments,
-            communityGuidelinesStyle: preConversationGuidelinesStyle.owGuidelinesStyle,
-            communityQuestionsStyle: preConversationQuestionsStyle.owQuestionsStyle
+            communityGuidelinesStyle: preConversationGuidelinesStyle,
+            communityQuestionsStyle: preConversationQuestionsStyle
         )
         }
     }
@@ -92,8 +92,8 @@ private extension SettingsManager {
         case .regular: .regular
         case .compact: .compact
         case .custom: .custom(
-            communityGuidelinesStyle: conversationGuidelinesStyle.owGuidelinesStyle,
-            communityQuestionsStyle: conversationQuestionsStyle.owQuestionsStyle,
+            communityGuidelinesStyle: conversationGuidelinesStyle,
+            communityQuestionsStyle: conversationQuestionsStyle,
             spacing: owConversationSpacing
         )
         }
