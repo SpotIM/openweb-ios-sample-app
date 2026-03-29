@@ -9,53 +9,53 @@
 import OpenWebSDK
 
 struct CodableTheme: Codable, Equatable {
-    var skeletonColor: CodableColor?
-    var skeletonShimmeringColor: CodableColor?
-    var primarySeparatorColor: CodableColor?
-    var secondarySeparatorColor: CodableColor?
-    var tertiarySeparatorColor: CodableColor?
-    var primaryTextColor: CodableColor?
-    var secondaryTextColor: CodableColor?
-    var tertiaryTextColor: CodableColor?
-    var primaryBackgroundColor: CodableColor?
-    var secondaryBackgroundColor: CodableColor?
-    var tertiaryBackgroundColor: CodableColor?
-    var surfaceColor: CodableColor?
-    var primaryBorderColor: CodableColor?
-    var secondaryBorderColor: CodableColor?
-    var loaderColor: CodableColor?
-    var brandColor: CodableColor?
-    var voteUpUnselectedColor: CodableColor?
-    var voteDownUnselectedColor: CodableColor?
-    var voteUpSelectedColor: CodableColor?
-    var voteDownSelectedColor: CodableColor?
+    var skeletonColor: CodableUIColor?
+    var skeletonShimmeringColor: CodableUIColor?
+    var primarySeparatorColor: CodableUIColor?
+    var secondarySeparatorColor: CodableUIColor?
+    var tertiarySeparatorColor: CodableUIColor?
+    var primaryTextColor: CodableUIColor?
+    var secondaryTextColor: CodableUIColor?
+    var tertiaryTextColor: CodableUIColor?
+    var primaryBackgroundColor: CodableUIColor?
+    var secondaryBackgroundColor: CodableUIColor?
+    var tertiaryBackgroundColor: CodableUIColor?
+    var surfaceColor: CodableUIColor?
+    var primaryBorderColor: CodableUIColor?
+    var secondaryBorderColor: CodableUIColor?
+    var loaderColor: CodableUIColor?
+    var brandColor: CodableUIColor?
+    var voteUpUnselectedColor: CodableUIColor?
+    var voteDownUnselectedColor: CodableUIColor?
+    var voteUpSelectedColor: CodableUIColor?
+    var voteDownSelectedColor: CodableUIColor?
 
     var owTheme: OWTheme {
         OWTheme(
-            skeletonColor: skeletonColor?.owColor,
-            skeletonShimmeringColor: skeletonShimmeringColor?.owColor,
-            primarySeparatorColor: primarySeparatorColor?.owColor,
-            secondarySeparatorColor: secondarySeparatorColor?.owColor,
-            tertiarySeparatorColor: tertiarySeparatorColor?.owColor,
-            primaryTextColor: primaryTextColor?.owColor,
-            secondaryTextColor: secondaryTextColor?.owColor,
-            tertiaryTextColor: tertiaryTextColor?.owColor,
-            primaryBackgroundColor: primaryBackgroundColor?.owColor,
-            secondaryBackgroundColor: secondaryBackgroundColor?.owColor,
-            tertiaryBackgroundColor: tertiaryBackgroundColor?.owColor,
-            surfaceColor: surfaceColor?.owColor,
-            primaryBorderColor: primaryBorderColor?.owColor,
-            secondaryBorderColor: secondaryBorderColor?.owColor,
-            loaderColor: loaderColor?.owColor,
-            brandColor: brandColor?.owColor,
-            voteUpUnselectedColor: voteUpUnselectedColor?.owColor,
-            voteDownUnselectedColor: voteDownUnselectedColor?.owColor,
-            voteUpSelectedColor: voteUpSelectedColor?.owColor,
-            voteDownSelectedColor: voteDownSelectedColor?.owColor
+            skeletonColor: skeletonColor?.toUIColor(),
+            skeletonShimmeringColor: skeletonShimmeringColor?.toUIColor(),
+            primarySeparatorColor: primarySeparatorColor?.toUIColor(),
+            secondarySeparatorColor: secondarySeparatorColor?.toUIColor(),
+            tertiarySeparatorColor: tertiarySeparatorColor?.toUIColor(),
+            primaryTextColor: primaryTextColor?.toUIColor(),
+            secondaryTextColor: secondaryTextColor?.toUIColor(),
+            tertiaryTextColor: tertiaryTextColor?.toUIColor(),
+            primaryBackgroundColor: primaryBackgroundColor?.toUIColor(),
+            secondaryBackgroundColor: secondaryBackgroundColor?.toUIColor(),
+            tertiaryBackgroundColor: tertiaryBackgroundColor?.toUIColor(),
+            surfaceColor: surfaceColor?.toUIColor(),
+            primaryBorderColor: primaryBorderColor?.toUIColor(),
+            secondaryBorderColor: secondaryBorderColor?.toUIColor(),
+            loaderColor: loaderColor?.toUIColor(),
+            brandColor: brandColor?.toUIColor(),
+            voteUpUnselectedColor: voteUpUnselectedColor?.toUIColor(),
+            voteDownUnselectedColor: voteDownUnselectedColor?.toUIColor(),
+            voteUpSelectedColor: voteUpSelectedColor?.toUIColor(),
+            voteDownSelectedColor: voteDownSelectedColor?.toUIColor()
         )
     }
 
-    static let properties: [(keyPath: WritableKeyPath<CodableTheme, CodableColor?>, name: String)] = [
+    static let properties: [(keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>, name: String)] = [
         (\.skeletonColor, "Skeleton"),
         (\.skeletonShimmeringColor, "Skeleton Shimmering"),
         (\.primarySeparatorColor, "Primary Separator"),

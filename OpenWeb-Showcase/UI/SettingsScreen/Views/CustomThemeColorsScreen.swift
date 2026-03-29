@@ -26,7 +26,7 @@ struct CustomThemeColorsScreen: View {
 
 private extension CustomThemeColorsScreen {
     func themeColorRow(
-        _ keyPath: WritableKeyPath<CodableTheme, CodableColor?>,
+        _ keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>,
         name: String
     ) -> some View {
         HStack {
