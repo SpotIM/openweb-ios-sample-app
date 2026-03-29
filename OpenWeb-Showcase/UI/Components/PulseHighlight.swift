@@ -10,17 +10,19 @@ import SwiftUI
 
 extension View {
     func pulseHighlight(
-        tapped: Binding<Bool>,
+        isOn: Binding<Bool>,
+        highlightColor: Color = .yellow,
         delay: TimeInterval = 2,
         interval: TimeInterval = 1,
         pulseCount: Int = 3
     ) -> some View {
-        modifier(PulseHighlightModifier(tapped: tapped, delay: delay, interval: interval, pulseCount: pulseCount))
+        modifier(PulseHighlightModifier(isOn: isOn, highlightColor: highlightColor, delay: delay, interval: interval, pulseCount: pulseCount))
     }
 }
 
 private struct PulseHighlightModifier: ViewModifier {
-    @Binding var tapped: Bool
+    @Binding var isOn: Bool
+    var highlightColor: Color
     var delay: TimeInterval
     var interval: TimeInterval
     var pulseCount: Int
@@ -28,10 +30,11 @@ private struct PulseHighlightModifier: ViewModifier {
     @State private var isPulsing = false
 
     private struct Metrics {
-        static let highlightColor = Color.yellow
         static let maxOpacity: Double = 0.5
-        static let circlePadding: CGFloat = 5
+        static let circlePadding: CGFloat = 8
         static let minScale: CGFloat = 0.6
+        static let pulseOnRatio: Double = 0.4
+        static let pulseOffRatio: Double = 0.6
     }
 
     func body(content: Content) -> some View {
@@ -39,29 +42,29 @@ private struct PulseHighlightModifier: ViewModifier {
             .padding(Metrics.circlePadding)
             .background {
                 Circle()
-                    .fill(Metrics.highlightColor)
+                    .fill(highlightColor)
                     .scaleEffect(isPulsing ? 1 : Metrics.minScale)
                     .opacity(isPulsing ? Metrics.maxOpacity : 0)
-                    .animation(.easeInOut(duration: interval * 0.4), value: isPulsing)
+                    .animation(.easeInOut(duration: interval * Metrics.pulseOnRatio), value: isPulsing)
             }
             .padding(-Metrics.circlePadding)
-            .task(id: tapped) {
-                guard !tapped else { return }
+            .task(id: isOn) {
+                guard isOn else { return }
                 try? await Task.sleep(for: .seconds(delay))
                 await runPulseCycles()
             }
     }
 
     private func runPulseCycles() async {
-        while !tapped {
+        while isOn {
             for _ in 0..<pulseCount {
-                guard !tapped else { return }
+                guard isOn else { return }
                 isPulsing = true
-                try? await Task.sleep(for: .seconds(interval * 0.4))
+                try? await Task.sleep(for: .seconds(interval * Metrics.pulseOnRatio))
                 isPulsing = false
-                try? await Task.sleep(for: .seconds(interval * 0.6))
+                try? await Task.sleep(for: .seconds(interval * Metrics.pulseOffRatio))
             }
-            guard !tapped else { return }
+            guard isOn else { return }
             try? await Task.sleep(for: .seconds(delay))
         }
     }
