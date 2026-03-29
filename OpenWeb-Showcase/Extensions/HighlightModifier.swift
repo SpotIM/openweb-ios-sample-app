@@ -8,8 +8,7 @@
 
 import SwiftUI
 
-// MARK: - Row Highlight
-
+/// Row Highlight
 struct HighlightModifier: ViewModifier {
     private struct Metrics {
         static let animationDuration: Double = 0.5
@@ -53,15 +52,15 @@ struct ScrollHighlightModifier: ViewModifier {
             content
                 .onAppear {
                     guard let highlightedEntryID else { return }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.scrollDelay) {
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(Metrics.scrollDelay))
                         withAnimation {
                             proxy.scrollTo(highlightedEntryID, anchor: .center)
                         }
                         activeHighlightID = highlightedEntryID
-                        DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.highlightDuration) {
-                            withAnimation {
-                                activeHighlightID = nil
-                            }
+                        try? await Task.sleep(for: .seconds(Metrics.highlightDuration))
+                        withAnimation {
+                            activeHighlightID = nil
                         }
                     }
                 }
