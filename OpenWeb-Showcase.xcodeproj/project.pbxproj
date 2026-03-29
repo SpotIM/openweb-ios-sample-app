@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		24A18C9B2F598B4100AB7F6F /* OpenWebSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */; };
-		24A18C9C2F598B4100AB7F6F /* OpenWebSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		240C6FB42F6FF0A800577287 /* OpenWebSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		240C6FB52F6FF12600577287 /* OpenWebCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240C56C72F6FE81A00577287 /* OpenWebCommon.framework */; };
+		240C6FB62F6FF12600577287 /* OpenWebCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240C56C72F6FE81A00577287 /* OpenWebCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		24A18C9F2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */; };
 		24A18CA02F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		45BADC79392D837A6CA6702A /* Pods_OpenWeb_Showcase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09AD32D40C016C6C9237419F /* Pods_OpenWeb_Showcase.framework */; };
@@ -21,8 +22,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				240C6FB42F6FF0A800577287 /* OpenWebSDK.framework in Embed Frameworks */,
 				24A18CA02F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */,
-				24A18C9C2F598B4100AB7F6F /* OpenWebSDK.framework in Embed Frameworks */,
+				240C6FB62F6FF12600577287 /* OpenWebCommon.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -31,17 +33,32 @@
 
 /* Begin PBXFileReference section */
 		09AD32D40C016C6C9237419F /* Pods_OpenWeb_Showcase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWeb_Showcase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		240C56C72F6FE81A00577287 /* OpenWebCommon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		24A4A12E2F558DE500B538E1 /* OpenWeb-Showcase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWeb-Showcase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2AAB7788EBE1CB716850AF7A /* Pods-OpenWeb-Showcase.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		6AFA6079F9C81C1153679317 /* Pods-OpenWeb-Showcase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.release.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.release.xcconfig"; sourceTree = "<group>"; };
 		A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.internal.xcconfig"; sourceTree = "<group>"; };
 		C338E47A6892325DC585734F /* Pods-OpenWeb-Showcase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.debug.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		24A4A1402F558DE700B538E1 /* Exceptions for "OpenWeb-Showcase" folder in "OpenWeb-Showcase" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Info.plist,
+			);
+			target = 24A4A12D2F558DE500B538E1 /* OpenWeb-Showcase */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		24A4A1302F558DE500B538E1 /* OpenWeb-Showcase */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				24A4A1402F558DE700B538E1 /* Exceptions for "OpenWeb-Showcase" folder in "OpenWeb-Showcase" target */,
+			);
 			path = "OpenWeb-Showcase";
 			sourceTree = "<group>";
 		};
@@ -53,8 +70,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				24A18C9F2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */,
-				24A18C9B2F598B4100AB7F6F /* OpenWebSDK.framework in Frameworks */,
 				45BADC79392D837A6CA6702A /* Pods_OpenWeb_Showcase.framework in Frameworks */,
+				240C6FB52F6FF12600577287 /* OpenWebCommon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +102,7 @@
 				C338E47A6892325DC585734F /* Pods-OpenWeb-Showcase.debug.xcconfig */,
 				6AFA6079F9C81C1153679317 /* Pods-OpenWeb-Showcase.release.xcconfig */,
 				A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */,
+				2AAB7788EBE1CB716850AF7A /* Pods-OpenWeb-Showcase.releaseinternal.xcconfig */,
 			);
 			name = Pods;
 			path = ../Pods;
@@ -93,6 +111,7 @@
 		FCC465BCE3536403004F7852 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				240C56C72F6FE81A00577287 /* OpenWebCommon.framework */,
 				24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */,
 				24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */,
 				09AD32D40C016C6C9237419F /* Pods_OpenWeb_Showcase.framework */,
@@ -205,6 +224,96 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		240C54692F6FD3D400577287 /* ReleaseInternal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleaseInternal;
+		};
+		240C546A2F6FD3D400577287 /* ReleaseInternal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2AAB7788EBE1CB716850AF7A /* Pods-OpenWeb-Showcase.releaseinternal.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "OpenWeb-Showcase/Resources/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.showcase;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.openweb.showcase";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseInternal;
+		};
 		24A4A1372F558DE600B538E1 /* Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -270,80 +379,19 @@
 			};
 			name = Internal;
 		};
-		24A4A1382F558DE600B538E1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		24A4A13A2F558DE600B538E1 /* Internal */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_FILE = "OpenWeb-Showcase/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -351,6 +399,8 @@
 				MARKETING_VERSION = 0.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.openweb.showcase";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -361,39 +411,6 @@
 			};
 			name = Internal;
 		};
-		24A4A13B2F558DE600B538E1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6AFA6079F9C81C1153679317 /* Pods-OpenWeb-Showcase.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.showcase;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -401,19 +418,19 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				24A4A1372F558DE600B538E1 /* Internal */,
-				24A4A1382F558DE600B538E1 /* Release */,
+				240C54692F6FD3D400577287 /* ReleaseInternal */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = ReleaseInternal;
 		};
 		24A4A1392F558DE600B538E1 /* Build configuration list for PBXNativeTarget "OpenWeb-Showcase" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				24A4A13A2F558DE600B538E1 /* Internal */,
-				24A4A13B2F558DE600B538E1 /* Release */,
+				240C546A2F6FD3D400577287 /* ReleaseInternal */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = ReleaseInternal;
 		};
 /* End XCConfigurationList section */
 	};
