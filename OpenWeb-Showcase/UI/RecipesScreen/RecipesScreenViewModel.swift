@@ -22,6 +22,6 @@ class RecipesScreenViewModel: ObservableObject {
     func initialize() {
         articleSettings = SettingsManager.shared.article
         screenSettings = SettingsManager.shared.additionalSettings
-        ShowcaseScreenConfigurator.configure(for: article, brandColor: color)
+        ShowcaseScreenConfigurator.configure(article: article, brandColor: color)
     }
 }

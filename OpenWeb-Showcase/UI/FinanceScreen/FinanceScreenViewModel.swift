@@ -27,7 +27,7 @@ class FinanceScreenViewModel: ObservableObject {
     func initialize() {
         articleSettings = getArticleSettings()
         screenSettings = SettingsManager.shared.additionalSettings
-        ShowcaseScreenConfigurator.configure(for: article, brandColor: color)
+        ShowcaseScreenConfigurator.configure(article: article, brandColor: color)
     }
 }
 

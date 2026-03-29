@@ -19,6 +19,6 @@ struct SettingsItem<T: Codable> {
 
 extension SettingsItem: AnySettingsItem {
     func applyDefaultToSDK() {
-        (defaultValue as? SDKApplicable)?.applyToSDK()
+        (defaultValue as? OpenWebApplicable)?.applyToSDK()
     }
 }

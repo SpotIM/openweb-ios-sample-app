@@ -10,7 +10,7 @@ import Combine
 import Foundation
 
 @propertyWrapper
-struct SDKSetting<Value: Codable & SDKApplicable> {
+struct SDKSetting<Value: Codable & OpenWebApplicable> {
 
     private var key: String
     private var defaultValue: Value

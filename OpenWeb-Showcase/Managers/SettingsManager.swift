@@ -10,7 +10,7 @@ import Foundation
 import OpenWebSDK
 import Combine
 
-protocol SDKApplicable {
+protocol OpenWebApplicable {
     func applyToSDK()
 }
 

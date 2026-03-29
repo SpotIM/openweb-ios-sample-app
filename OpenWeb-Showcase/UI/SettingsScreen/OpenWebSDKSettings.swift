@@ -1,5 +1,5 @@
 //
-//  SettingsSDKApplicable.swift
+//  OpenWebSDKSettings.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 17/03/2026.
@@ -8,9 +8,9 @@
 
 import OpenWebSDK
 
-// MARK: - SDKApplicable
+// MARK: - OpenWebApplicable
 
-extension CustomizationsViewModel.SortOptionSetting: SDKApplicable {
+extension CustomizationsViewModel.SortOptionSetting: OpenWebApplicable {
     func applyToSDK() {
         let strategy: OWInitialSortStrategy = switch self {
         case .server: .useServerConfig
@@ -24,7 +24,7 @@ extension CustomizationsViewModel.SortOptionSetting: SDKApplicable {
     }
 }
 
-extension CustomizationsViewModel.ActionColorSetting: SDKApplicable {
+extension CustomizationsViewModel.ActionColorSetting: OpenWebApplicable {
     func applyToSDK() {
         let color: OWCommentActionsColor = switch self {
         case .default: .default
@@ -36,7 +36,7 @@ extension CustomizationsViewModel.ActionColorSetting: SDKApplicable {
     }
 }
 
-extension CustomizationsViewModel.ActionFontSetting: SDKApplicable {
+extension CustomizationsViewModel.ActionFontSetting: OpenWebApplicable {
     func applyToSDK() {
         let fontStyle: OWCommentActionsFontStyle = switch self {
         case .default: .default
@@ -48,7 +48,7 @@ extension CustomizationsViewModel.ActionFontSetting: SDKApplicable {
     }
 }
 
-extension CustomizationsViewModel.FontFamilySetting: SDKApplicable {
+extension CustomizationsViewModel.FontFamilySetting: OpenWebApplicable {
     func applyToSDK() {
         let fontFamily: OWFontGroupFamily = switch self {
         case .default: .default
@@ -60,7 +60,7 @@ extension CustomizationsViewModel.FontFamilySetting: SDKApplicable {
     }
 }
 
-extension CustomizationsViewModel.ThemeModeSetting: SDKApplicable {
+extension CustomizationsViewModel.ThemeModeSetting: OpenWebApplicable {
     func applyToSDK() {
         let enforcement: OWThemeStyleEnforcement = switch self {
         case .system: .none
@@ -73,34 +73,34 @@ extension CustomizationsViewModel.ThemeModeSetting: SDKApplicable {
     }
 }
 
-extension ArticleSettingsViewModel.InformationStrategySetting: SDKApplicable {
+extension ArticleSettingsViewModel.InformationStrategySetting: OpenWebApplicable {
     func applyToSDK() {}
 }
 
-extension String: SDKApplicable {
+extension String: OpenWebApplicable {
     func applyToSDK() {}
 }
 
-extension Bool: SDKApplicable {
+extension Bool: OpenWebApplicable {
     func applyToSDK() {}
 }
 
-extension OWTheme: SDKApplicable {
+extension OWTheme: OpenWebApplicable {
     func applyToSDK() {
         // MARK: OpenWeb SDK
         OpenWeb.manager.ui.customizations.customizedTheme = self
     }
 }
 
-extension Int: SDKApplicable {
+extension Int: OpenWebApplicable {
     func applyToSDK() {}
 }
 
-extension ScreenSettingsViewModel.PreConversationStyleSetting: SDKApplicable {
+extension ScreenSettingsViewModel.PreConversationStyleSetting: OpenWebApplicable {
     func applyToSDK() {}
 }
 
-extension ScreenSettingsViewModel.GuidelinesStyleSetting: SDKApplicable {
+extension ScreenSettingsViewModel.GuidelinesStyleSetting: OpenWebApplicable {
     func applyToSDK() {}
 
     var owGuidelinesStyle: OWCommunityGuidelinesStyle {
@@ -112,7 +112,7 @@ extension ScreenSettingsViewModel.GuidelinesStyleSetting: SDKApplicable {
     }
 }
 
-extension ScreenSettingsViewModel.QuestionsStyleSetting: SDKApplicable {
+extension ScreenSettingsViewModel.QuestionsStyleSetting: OpenWebApplicable {
     func applyToSDK() {}
 
     var owQuestionsStyle: OWCommunityQuestionStyle {
@@ -124,15 +124,15 @@ extension ScreenSettingsViewModel.QuestionsStyleSetting: SDKApplicable {
     }
 }
 
-extension ScreenSettingsViewModel.ConversationStyleSetting: SDKApplicable {
+extension ScreenSettingsViewModel.ConversationStyleSetting: OpenWebApplicable {
     func applyToSDK() {}
 }
 
-extension ScreenSettingsViewModel.ConversationSpacingSetting: SDKApplicable {
+extension ScreenSettingsViewModel.ConversationSpacingSetting: OpenWebApplicable {
     func applyToSDK() {}
 }
 
-extension ArticleSettingsViewModel.ReadOnlyModeSetting: SDKApplicable {
+extension ArticleSettingsViewModel.ReadOnlyModeSetting: OpenWebApplicable {
     func applyToSDK() {}
     var owMode: OWReadOnlyMode {
         switch self {
@@ -143,7 +143,7 @@ extension ArticleSettingsViewModel.ReadOnlyModeSetting: SDKApplicable {
     }
 }
 
-extension ConfigurationsViewModel.EnableLandscapeSetting: SDKApplicable {
+extension ConfigurationsViewModel.EnableLandscapeSetting: OpenWebApplicable {
     func applyToSDK() {
         let enforcement: OWOrientationEnforcement = switch self {
         case .enabled: .enableAll
@@ -155,7 +155,7 @@ extension ConfigurationsViewModel.EnableLandscapeSetting: SDKApplicable {
     }
 }
 
-extension ConfigurationsViewModel.LocaleStrategySetting: SDKApplicable {
+extension ConfigurationsViewModel.LocaleStrategySetting: OpenWebApplicable {
     func applyToSDK() {
         let strategy: OWLocaleStrategy = switch self {
         case .device: .useDevice
@@ -167,7 +167,7 @@ extension ConfigurationsViewModel.LocaleStrategySetting: SDKApplicable {
     }
 }
 
-extension ConfigurationsViewModel.LanguageStrategySetting: SDKApplicable {
+extension ConfigurationsViewModel.LanguageStrategySetting: OpenWebApplicable {
     func applyToSDK() {
         let strategy: OWLanguageStrategy = switch self {
         case .device: .useDevice
@@ -181,7 +181,7 @@ extension ConfigurationsViewModel.LanguageStrategySetting: SDKApplicable {
     }
 }
 
-extension ConfigurationsViewModel.SupportedLanguage: SDKApplicable {
+extension ConfigurationsViewModel.SupportedLanguage: OpenWebApplicable {
     func applyToSDK() {
         guard SDKSetting(SettingsItems.languageStrategy).wrappedValue == .custom else { return }
 
