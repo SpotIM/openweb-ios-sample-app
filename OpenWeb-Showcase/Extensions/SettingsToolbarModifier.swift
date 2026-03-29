@@ -26,7 +26,7 @@ struct SettingsToolbarModifier: ViewModifier {
             .alert(.resetAlertTitle, isPresented: $showAlert) {
                 Button(.resetAlertCancel, role: .cancel) {}
                 Button(.resetAlertConfirm, role: .destructive) {
-                    SettingsManager.shared.resetAll()
+                    SettingsStore.shared.resetAll()
                     onReset?()
                 }
             } message: {

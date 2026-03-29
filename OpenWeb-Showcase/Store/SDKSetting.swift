@@ -16,13 +16,13 @@ struct SDKSetting<Value: Codable & OpenWebApplicable> {
     private var defaultValue: Value
     private var store: UserDefaults
 
-    init(key: String, defaultValue: Value, store: UserDefaults = SettingsManager.store) {
+    init(key: String, defaultValue: Value, store: UserDefaults = SettingsStore.store) {
         self.key = key
         self.defaultValue = defaultValue
         self.store = store
     }
 
-    init(_ item: SettingsItem<Value>, store: UserDefaults = SettingsManager.store) {
+    init(_ item: SettingsItem<Value>, store: UserDefaults = SettingsStore.store) {
         self.init(key: item.key, defaultValue: item.defaultValue, store: store)
     }
 
@@ -61,7 +61,7 @@ struct SDKSetting<Value: Codable & OpenWebApplicable> {
         let existing: AnyCancellable? = instance.getObjectiveCAssociatedObject(key: &SDKSettingKeys.resetObserver)
         guard existing == nil else { return }
 
-        let cancellable = SettingsManager.didReset
+        let cancellable = SettingsStore.didReset
             .receive(on: DispatchQueue.main)
             .sink { [weak instance] in
                 (instance?.objectWillChange as? ObservableObjectPublisher)?.send()

@@ -18,7 +18,7 @@ class FinanceScreenViewModel: ObservableObject {
     var color: Color { vertical.color }
     var title: LocalizedStringResource { vertical.title }
     @Published var articleSettings: OWArticleProtocol = OWArticle()
-    @Published var screenSettings = SettingsManager.shared.additionalSettings
+    @Published var screenSettings = SettingsStore.shared.additionalSettings
 
     init() {
         articleSettings = getArticleSettings()
@@ -26,7 +26,7 @@ class FinanceScreenViewModel: ObservableObject {
 
     func initialize() {
         articleSettings = getArticleSettings()
-        screenSettings = SettingsManager.shared.additionalSettings
+        screenSettings = SettingsStore.shared.additionalSettings
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
@@ -36,7 +36,7 @@ class FinanceScreenViewModel: ObservableObject {
 
 private extension FinanceScreenViewModel {
     func getArticleSettings() -> OWArticleProtocol {
-        var settingsArticle = SettingsManager.shared.article
+        var settingsArticle = SettingsStore.shared.article
         let settings = OWArticleSettings(
             section: "stock",
             headerStyle: settingsArticle.additionalSettings.headerStyle,

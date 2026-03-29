@@ -1,5 +1,5 @@
 //
-//  SettingsManager.swift
+//  SettingsStore.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 08/03/2026.
@@ -14,8 +14,8 @@ protocol OpenWebApplicable {
     func applyToSDK()
 }
 
-class SettingsManager: NSObject, ObservableObject {
-    static let shared = SettingsManager()
+class SettingsStore: NSObject, ObservableObject {
+    static let shared = SettingsStore()
 
     private static let suiteName = "com.open-web.showcase-app"
     static let store = UserDefaults(suiteName: suiteName) ?? UserDefaults.standard
@@ -69,7 +69,7 @@ class SettingsManager: NSObject, ObservableObject {
 
 // MARK: - Private
 
-private extension SettingsManager {
+private extension SettingsStore {
     var owPreConversationStyle: OWPreConversationStyle {
         switch preConversationStyle {
         case .regular: .regular

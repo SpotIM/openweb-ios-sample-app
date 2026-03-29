@@ -20,8 +20,8 @@ class VideoScreenViewModel: ObservableObject {
 
     @Published var isInfoVisible = false
     @Published var isConversationVisible = false
-    @Published var articleSettings = SettingsManager.shared.article
-    @Published var screenSettings = SettingsManager.shared.additionalSettings
+    @Published var articleSettings = SettingsStore.shared.article
+    @Published var screenSettings = SettingsStore.shared.additionalSettings
 
     func showInfo() { isInfoVisible = true }
     func hideInfo() { isInfoVisible = false }
@@ -29,8 +29,8 @@ class VideoScreenViewModel: ObservableObject {
     func hideConversation() { isConversationVisible = false }
 
     func initialize() {
-        articleSettings = SettingsManager.shared.article
-        screenSettings = SettingsManager.shared.additionalSettings
+        articleSettings = SettingsStore.shared.article
+        screenSettings = SettingsStore.shared.additionalSettings
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
