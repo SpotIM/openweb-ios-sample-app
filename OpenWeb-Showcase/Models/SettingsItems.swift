@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OpenWebSDK
 
 enum SettingsItems {
     // MARK: - Customizations
@@ -16,7 +17,7 @@ enum SettingsItems {
     static let fontFamily = SettingsItem(key: "font_family", defaultValue: CustomizationsViewModel.FontFamilySetting.default)
     static let themeMode = SettingsItem(key: "theme_mode", defaultValue: CustomizationsViewModel.ThemeModeSetting.system)
     static let enableCustomUICallback = SettingsItem(key: "enable_custom_ui_delegation", defaultValue: false)
-    static let customThemeColors = SettingsItem(key: "custom_theme_colors", defaultValue: CodableTheme())
+    static let customThemeColors = SettingsItem(key: "custom_theme_colors", defaultValue: OWTheme())
 
     // MARK: - Configurations
     static let languageStrategy = SettingsItem(key: "language_strategy", defaultValue: ConfigurationsViewModel.LanguageStrategySetting.device)

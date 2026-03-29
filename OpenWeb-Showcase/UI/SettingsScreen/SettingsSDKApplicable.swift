@@ -85,10 +85,10 @@ extension Bool: SDKApplicable {
     func applyToSDK() {}
 }
 
-extension CodableTheme: SDKApplicable {
+extension OWTheme: SDKApplicable {
     func applyToSDK() {
         // MARK: OpenWeb SDK
-        OpenWeb.manager.ui.customizations.customizedTheme = owTheme
+        OpenWeb.manager.ui.customizations.customizedTheme = self
     }
 }
 

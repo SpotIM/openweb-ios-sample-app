@@ -8,37 +8,40 @@
 
 import SwiftUI
 import Combine
+import OpenWebSDK
 
 class CustomThemeColorsViewModel: ObservableObject {
-    @SDKSetting(SettingsItems.customThemeColors) var theme: CodableTheme
+    @SDKSetting(SettingsItems.customThemeColors) var theme: OWTheme
 
-    func isEnabled(_ keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>) -> Bool {
+    func isEnabled(_ keyPath: WritableKeyPath<OWTheme, UIColor?>) -> Bool {
         theme[keyPath: keyPath] != nil
     }
 
-    func toggle(_ keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>) {
+    func toggle(_ keyPath: WritableKeyPath<OWTheme, UIColor?>) {
         if theme[keyPath: keyPath] != nil {
             theme[keyPath: keyPath] = nil
         } else {
-            theme[keyPath: keyPath] = CodableUIColor(from: .black)
+            theme[keyPath: keyPath] = .black
         }
     }
 
-    func lightColor(_ keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>) -> Color {
+    func lightColor(_ keyPath: WritableKeyPath<OWTheme, UIColor?>) -> Color {
         guard let color = theme[keyPath: keyPath] else { return .black }
-        return Color(uiColor: color.lightColor.toUIColor())
+        return Color(uiColor: color.lightColor)
     }
 
-    func darkColor(_ keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>) -> Color {
+    func darkColor(_ keyPath: WritableKeyPath<OWTheme, UIColor?>) -> Color {
         guard let color = theme[keyPath: keyPath] else { return .black }
-        return Color(uiColor: color.darkColor.toUIColor())
+        return Color(uiColor: color.darkColor)
     }
 
-    func setLightColor(_ color: Color, for keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>) {
-        theme[keyPath: keyPath]?.lightColor = CodableUIColor.ColorComponents(from: UIColor(color))
+    func setLightColor(_ color: Color, for keyPath: WritableKeyPath<OWTheme, UIColor?>) {
+        guard let existing = theme[keyPath: keyPath] else { return }
+        theme[keyPath: keyPath] = UIColor(lightColor: UIColor(color), darkColor: existing.darkColor)
     }
 
-    func setDarkColor(_ color: Color, for keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>) {
-        theme[keyPath: keyPath]?.darkColor = CodableUIColor.ColorComponents(from: UIColor(color))
+    func setDarkColor(_ color: Color, for keyPath: WritableKeyPath<OWTheme, UIColor?>) {
+        guard let existing = theme[keyPath: keyPath] else { return }
+        theme[keyPath: keyPath] = UIColor(lightColor: existing.lightColor, darkColor: UIColor(color))
     }
 }

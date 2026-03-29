@@ -7,13 +7,14 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 
 struct CustomThemeColorsScreen: View {
     @StateObject private var viewModel = CustomThemeColorsViewModel()
 
     var body: some View {
         List {
-            ForEach(CodableTheme.properties, id: \.name) { property in
+            ForEach(OWTheme.properties, id: \.name) { property in
                 themeColorRow(property.keyPath, name: property.name)
             }
         }
@@ -26,7 +27,7 @@ struct CustomThemeColorsScreen: View {
 
 private extension CustomThemeColorsScreen {
     func themeColorRow(
-        _ keyPath: WritableKeyPath<CodableTheme, CodableUIColor?>,
+        _ keyPath: WritableKeyPath<OWTheme, UIColor?>,
         name: String
     ) -> some View {
         HStack {
