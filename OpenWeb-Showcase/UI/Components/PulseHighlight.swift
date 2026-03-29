@@ -33,8 +33,6 @@ private struct PulseHighlightModifier: ViewModifier {
         static let maxOpacity: Double = 0.5
         static let circlePadding: CGFloat = 8
         static let minScale: CGFloat = 0.6
-        static let pulseOnRatio: Double = 0.4
-        static let pulseOffRatio: Double = 0.6
     }
 
     func body(content: Content) -> some View {
@@ -45,7 +43,7 @@ private struct PulseHighlightModifier: ViewModifier {
                     .fill(highlightColor)
                     .scaleEffect(isPulsing ? 1 : Metrics.minScale)
                     .opacity(isPulsing ? Metrics.maxOpacity : 0)
-                    .animation(.easeInOut(duration: interval * Metrics.pulseOnRatio), value: isPulsing)
+                    .animation(.easeInOut(duration: interval), value: isPulsing)
             }
             .padding(-Metrics.circlePadding)
             .task(id: isOn) {
@@ -60,9 +58,9 @@ private struct PulseHighlightModifier: ViewModifier {
             for _ in 0..<pulseCount {
                 guard isOn else { return }
                 isPulsing = true
-                try? await Task.sleep(for: .seconds(interval * Metrics.pulseOnRatio))
+                try? await Task.sleep(for: .seconds(interval))
                 isPulsing = false
-                try? await Task.sleep(for: .seconds(interval * Metrics.pulseOffRatio))
+                try? await Task.sleep(for: .seconds(interval))
             }
             guard isOn else { return }
             try? await Task.sleep(for: .seconds(delay))
