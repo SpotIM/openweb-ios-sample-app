@@ -1,5 +1,5 @@
 //
-//  ToggleSection.swift
+//  ToggleRow.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 08/03/2026.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ToggleSection: View {
+struct ToggleRow: View {
     var title: LocalizedStringResource
     var subtitle: LocalizedStringResource?
     @Binding var isOn: Bool

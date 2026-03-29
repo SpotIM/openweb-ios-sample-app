@@ -1,5 +1,5 @@
 //
-//  SegmentedPickerSection.swift
+//  SegmentedPickerRow.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 08/03/2026.
@@ -8,11 +8,11 @@
 
 import SwiftUI
 
-private enum SegmentedPickerSectionMetrics {
+private enum SegmentedPickerRowMetrics {
     static let disabledOpacity: Double = 0.4
 }
 
-struct SegmentedPickerSection<Option: Hashable & Identifiable & CaseIterable>: View
+struct SegmentedPickerRow<Option: Hashable & Identifiable & CaseIterable>: View
     where Option.AllCases: RandomAccessCollection {
 
     var title: LocalizedStringResource
@@ -38,6 +38,6 @@ struct SegmentedPickerSection<Option: Hashable & Identifiable & CaseIterable>: V
             .pickerStyle(.segmented)
         }
         .disabled(!isEnabled)
-        .opacity(isEnabled ? 1 : SegmentedPickerSectionMetrics.disabledOpacity)
+        .opacity(isEnabled ? 1 : SegmentedPickerRowMetrics.disabledOpacity)
     }
 }

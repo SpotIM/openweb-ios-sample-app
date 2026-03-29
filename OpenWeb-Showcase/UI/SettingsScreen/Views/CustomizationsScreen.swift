@@ -31,7 +31,7 @@ struct CustomizationsScreen: View {
 private extension CustomizationsScreen {
     var sortingSection: some View {
         Section(.customizationsSortingSectionTitle) {
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .customizationsSortOptionTitle,
                 subtitle: .customizationsSortOptionSubtitle,
                 selection: $viewModel.selectedSortOption,
@@ -43,14 +43,14 @@ private extension CustomizationsScreen {
 
     var commentActionsSection: some View {
         Section(.customizationsCommentActionsSectionTitle) {
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .customizationsActionColorTitle,
                 subtitle: .customizationsActionColorSubtitle,
                 selection: $viewModel.selectedActionColor,
                 optionTitle: \.title
             )
             .settingsRow("action_color", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .customizationsActionFontTitle,
                 subtitle: .customizationsActionFontSubtitle,
                 selection: $viewModel.selectedActionFont,
@@ -62,14 +62,14 @@ private extension CustomizationsScreen {
 
     var themeSection: some View {
         Section(.customizationsThemeSectionTitle) {
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .customizationsFontFamilyTitle,
                 subtitle: .customizationsFontFamilySubtitle,
                 selection: $viewModel.selectedFontFamily,
                 optionTitle: \.title
             )
             .settingsRow("font_family", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .customizationsThemeModeTitle,
                 subtitle: .customizationsThemeModeSubtitle,
                 selection: $viewModel.selectedThemeMode,
@@ -93,7 +93,7 @@ private extension CustomizationsScreen {
 
     var uiCallbackSection: some View {
         Section(.customizationsUICallbackSectionTitle) {
-            ToggleSection(
+            ToggleRow(
                 title: .customizationsUICallbackTitle,
                 subtitle: .customizationsUICallbackSubtitle,
                 isOn: $viewModel.enableCustomUICallback

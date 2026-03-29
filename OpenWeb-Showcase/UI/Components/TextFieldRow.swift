@@ -1,5 +1,5 @@
 //
-//  TextFieldSection.swift
+//  TextFieldRow.swift
 //  OpenWeb-Showcase
 //
 //  Created by  Nogah Melamed on 08/03/2026.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct TextFieldSection: View {
+struct TextFieldRow: View {
     private struct Metrics {
         static let disabledOpacity: Double = 0.4
     }

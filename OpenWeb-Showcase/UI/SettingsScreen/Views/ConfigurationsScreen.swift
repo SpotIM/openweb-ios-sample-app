@@ -19,7 +19,7 @@ struct ConfigurationsScreen: View {
 
     var body: some View {
         List {
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .configurationsLanguageStrategyTitle,
                 subtitle: .configurationsLanguageStrategySubtitle,
                 selection: $viewModel.selectedLanguageStrategy,
@@ -34,14 +34,14 @@ struct ConfigurationsScreen: View {
             .disabled(!viewModel.isCustomLanguageEnabled)
             .opacity(viewModel.isCustomLanguageEnabled ? 1 : Metrics.disabledOpacity)
             .settingsRow("language", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .configurationsLocaleStrategyTitle,
                 subtitle: .configurationsLocaleStrategySubtitle,
                 selection: $viewModel.selectedLocaleStrategy,
                 optionTitle: \.title
             )
             .settingsRow("locale_strategy", highlightedID: activeHighlightID)
-            ToggleSection(
+            ToggleRow(
                 title: .configurationsEnableLandscapeTitle,
                 subtitle: .configurationsEnableLandscapeSubtitle,
                 isOn: viewModel.enableLandscapeBinding

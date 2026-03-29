@@ -15,27 +15,27 @@ struct ArticleSettingsScreen: View {
 
     var body: some View {
         List {
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .articleSettingsInformationStrategyTitle,
                 subtitle: .articleSettingsInformationStrategySubtitle,
                 selection: $viewModel.selectedInformationStrategy,
                 optionTitle: \.title
             )
             .settingsRow("information_strategy", highlightedID: activeHighlightID)
-            TextFieldSection(
+            TextFieldRow(
                 title: .articleSettingsAssociatedURLTitle,
                 placeholder: .articleSettingsAssociatedURLPlaceholder,
                 text: $viewModel.articleAssociatedURL,
                 isEnabled: viewModel.isAssociatedURLEnabled
             )
             .settingsRow("article_associated_url", highlightedID: activeHighlightID)
-            ToggleSection(
+            ToggleRow(
                 title: .articleSettingsHideHeaderTitle,
                 subtitle: .articleSettingsHideHeaderSubtitle,
                 isOn: $viewModel.hideArticleHeader
             )
             .settingsRow("hide_article_header", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .articleSettingsReadOnlyModeTitle,
                 subtitle: .articleSettingsReadOnlyModeSubtitle,
                 selection: $viewModel.selectedReadOnlyMode,

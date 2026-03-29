@@ -35,7 +35,7 @@ struct ScreenSettingsScreen: View {
 private extension ScreenSettingsScreen {
     var preConversationSection: some View {
         Section(.screenSettingsPreConversationSectionTitle) {
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .screenSettingsPreConversationStyleTitle,
                 subtitle: .screenSettingsPreConversationStyleSubtitle,
                 selection: $viewModel.selectedPreConversationStyle,
@@ -64,14 +64,14 @@ private extension ScreenSettingsScreen {
             .disabled(!viewModel.isNumberOfCommentsEnabled)
             .opacity(viewModel.isNumberOfCommentsEnabled ? 1 : Metrics.disabledOpacity)
             .settingsRow("number_of_comments", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .screenSettingsPreConversationGuidelinesTitle,
                 subtitle: .screenSettingsPreConversationGuidelinesSubtitle,
                 selection: $viewModel.selectedPreConversationGuidelinesStyle,
                 optionTitle: \.title
             )
             .settingsRow("pre_conversation_guidelines", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .screenSettingsPreConversationQuestionsTitle,
                 subtitle: .screenSettingsPreConversationQuestionsSubtitle,
                 selection: $viewModel.selectedPreConversationQuestionsStyle,
@@ -83,14 +83,14 @@ private extension ScreenSettingsScreen {
 
     var conversationSection: some View {
         Section(.screenSettingsConversationSectionTitle) {
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .screenSettingsConversationStyleTitle,
                 subtitle: .screenSettingsConversationStyleSubtitle,
                 selection: $viewModel.selectedConversationStyle,
                 optionTitle: \.title
             )
             .settingsRow("conversation_style", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .screenSettingsConversationGuidelinesTitle,
                 subtitle: .screenSettingsConversationGuidelinesSubtitle,
                 selection: $viewModel.selectedConversationGuidelinesStyle,
@@ -98,7 +98,7 @@ private extension ScreenSettingsScreen {
                 isEnabled: viewModel.isCustomConversationEnabled
             )
             .settingsRow("conversation_guidelines", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .screenSettingsConversationQuestionsTitle,
                 subtitle: .screenSettingsConversationQuestionsSubtitle,
                 selection: $viewModel.selectedConversationQuestionsStyle,
@@ -106,7 +106,7 @@ private extension ScreenSettingsScreen {
                 isEnabled: viewModel.isCustomConversationEnabled
             )
             .settingsRow("conversation_questions", highlightedID: activeHighlightID)
-            SegmentedPickerSection(
+            SegmentedPickerRow(
                 title: .screenSettingsConversationSpacingTitle,
                 subtitle: .screenSettingsConversationSpacingSubtitle,
                 selection: $viewModel.selectedConversationSpacing,
@@ -114,7 +114,7 @@ private extension ScreenSettingsScreen {
                 isEnabled: viewModel.isCustomConversationEnabled
             )
             .settingsRow("conversation_spacing", highlightedID: activeHighlightID)
-            TextFieldSection(
+            TextFieldRow(
                 title: .screenSettingsBetweenCommentsSpacingTitle,
                 subtitle: .screenSettingsBetweenCommentsSpacingSubtitle,
                 placeholder: .screenSettingsSpacingPlaceholder,
@@ -122,7 +122,7 @@ private extension ScreenSettingsScreen {
                 isEnabled: viewModel.isCustomSpacingEnabled
             )
             .settingsRow("between_comments_spacing", highlightedID: activeHighlightID)
-            TextFieldSection(
+            TextFieldRow(
                 title: "screenSettingsGuidelinesSpacingTitle",
                 subtitle: "screenSettingsGuidelinesSpacingSubtitle",
                 placeholder: "screenSettingsSpacingPlaceholder",
@@ -130,7 +130,7 @@ private extension ScreenSettingsScreen {
                 isEnabled: viewModel.isCustomSpacingEnabled
             )
             .settingsRow("guidelines_spacing", highlightedID: activeHighlightID)
-            TextFieldSection(
+            TextFieldRow(
                 title: .screenSettingsQuestionsSpacingTitle,
                 subtitle: .screenSettingsQuestionsSpacingSubtitle,
                 placeholder: .screenSettingsSpacingPlaceholder,
@@ -143,7 +143,7 @@ private extension ScreenSettingsScreen {
 
     var generalSection: some View {
         Section(.screenSettingsGeneralSectionTitle) {
-            ToggleSection(
+            ToggleRow(
                 title: .screenSettingsEnablePullToRefreshTitle,
                 subtitle: .screenSettingsEnablePullToRefreshSubtitle,
                 isOn: $viewModel.enablePullToRefresh
