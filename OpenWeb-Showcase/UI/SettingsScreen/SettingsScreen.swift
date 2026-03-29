@@ -34,21 +34,9 @@ struct SettingsScreen: View {
             let section = SettingsSection.allCases.first { $0.entries.contains(entry) }
             settingsDestination(section: section ?? .customizations, highlightedEntryID: entry.id)
         }
-        .searchable(text: $viewModel.searchText, placement: searchPlacement)
+        .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always))
         .navigationTitle(.settingsScreenTitle)
         .settingsToolbar()
-    }
-}
-
-// MARK: - Search Placement
-
-private extension SettingsScreen {
-    var searchPlacement: SearchFieldPlacement {
-        if #available(iOS 26, *) {
-            return .automatic
-        } else {
-            return .navigationBarDrawer(displayMode: .always)
-        }
     }
 }
 
