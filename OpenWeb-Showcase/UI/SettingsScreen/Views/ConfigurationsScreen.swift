@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 
 struct ConfigurationsScreen: View {
     private struct Metrics {
@@ -27,8 +28,8 @@ struct ConfigurationsScreen: View {
             )
             .settingsRow(SettingsItems.languageStrategy.key, highlightedID: activeHighlightID)
             Picker(.configurationsLanguageTitle, selection: $viewModel.selectedLanguage) {
-                ForEach(ConfigurationsViewModel.SupportedLanguage.allCases) { language in
-                    Text(language.title).tag(language)
+                ForEach(OWSupportedLanguage.showcaseLanguages) { language in
+                    Text(language.displayName).tag(language)
                 }
             }
             .disabled(!viewModel.isCustomLanguageEnabled)

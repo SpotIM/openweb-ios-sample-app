@@ -216,7 +216,7 @@ extension ConfigurationsViewModel.LanguageStrategySetting: OpenWebApplicable {
         case .device: .useDevice
         case .server: .useServerConfig
         case .custom:
-            .use(language: SDKSetting(SettingsItems.customLanguage).wrappedValue.owLanguage)
+            .use(language: SDKSetting(SettingsItems.customLanguage).wrappedValue)
         }
 
         // MARK: OpenWeb SDK
@@ -224,32 +224,21 @@ extension ConfigurationsViewModel.LanguageStrategySetting: OpenWebApplicable {
     }
 }
 
-extension ConfigurationsViewModel.SupportedLanguage: OpenWebApplicable {
+extension OWSupportedLanguage: @retroactive Identifiable, OpenWebApplicable {
+    public var id: Self { self }
+
     func applyToSDK() {
         guard SDKSetting(SettingsItems.languageStrategy).wrappedValue == .custom else { return }
 
         // MARK: OpenWeb SDK
-        OpenWeb.manager.helpers.languageStrategy = .use(language: owLanguage)
+        OpenWeb.manager.helpers.languageStrategy = .use(language: self)
     }
 
-    var owLanguage: OWSupportedLanguage {
-        switch self {
-        case .english: .english
-        case .arabic: .arabic
-        case .dutch: .dutch
-        case .french: .french
-        case .german: .german
-        case .hebrew: .hebrew
-        case .hungarian: .hungarian
-        case .indonesian: .indonesian
-        case .italian: .italian
-        case .japanese: .japanese
-        case .korean: .korean
-        case .portuguese: .portugueseOther
-        case .spanish: .spanish
-        case .thai: .thai
-        case .turkish: .turkish
-        case .vietnamese: .vietnamese
-        }
+    static let showcaseLanguages: [OWSupportedLanguage] = allCases.filter {
+        $0 != .portugueseBrazil && $0 != .portuguesePortugal
+    }
+
+    var displayName: String {
+        Locale.current.localizedString(forLanguageCode: rawValue) ?? rawValue
     }
 }

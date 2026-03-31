@@ -29,7 +29,7 @@ class FinanceScreenViewModel: ObservableObject {
         screenSettings = SettingsStore.shared.additionalSettings
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
-        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = OWColor(color)
+        OpenWeb.manager.ui.customizations.customizedTheme.brandColor = UIColor(color)
         ShowcaseScreenConfigurator.applyShowcaseSettings()
     }
 }
