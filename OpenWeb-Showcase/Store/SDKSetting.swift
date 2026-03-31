@@ -42,7 +42,7 @@ struct SDKSetting<Value: Codable & OpenWebApplicable> {
         }
     }
 
-    static subscript<EnclosingSelf: NSObject & ObservableObject & Sendable>(
+    static subscript<EnclosingSelf: NSObject & ObservableObject>(
         _enclosingInstance instance: EnclosingSelf,
         wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
         storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
@@ -57,7 +57,7 @@ struct SDKSetting<Value: Codable & OpenWebApplicable> {
         }
     }
 
-    private static func registerResetObserver<EnclosingSelf: NSObject & ObservableObject & Sendable>(for instance: EnclosingSelf) {
+    private static func registerResetObserver<EnclosingSelf: NSObject & ObservableObject>(for instance: EnclosingSelf) {
         let existing: AnyCancellable? = instance.getObjectiveCAssociatedObject(key: &SDKSettingKeys.resetObserver)
         guard existing == nil else { return }
 
