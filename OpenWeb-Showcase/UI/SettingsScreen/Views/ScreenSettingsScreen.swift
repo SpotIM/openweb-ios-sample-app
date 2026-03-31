@@ -15,7 +15,6 @@ struct ScreenSettingsScreen: View {
 
     @StateObject private var viewModel = ScreenSettingsViewModel()
     var highlightedEntryID: String?
-    @State private var activeHighlightID: String?
 
     var body: some View {
         List {
@@ -23,7 +22,7 @@ struct ScreenSettingsScreen: View {
             conversationSection
             generalSection
         }
-        .scrollAndHighlight(entryID: highlightedEntryID, activeHighlightID: $activeHighlightID)
+        .scrollAndHighlight(entryID: highlightedEntryID)
         .navigationTitle(.screenSettingsScreenTitle)
         .settingsToolbar()
     }
@@ -40,7 +39,7 @@ private extension ScreenSettingsScreen {
                 selection: $viewModel.selectedPreConversationStyle,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.preConversationStyle.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.preConversationStyle.key)
             SliderRow(
                 title: .screenSettingsNumberOfCommentsTitle,
                 subtitle: .screenSettingsNumberOfCommentsSubtitle,
@@ -48,21 +47,21 @@ private extension ScreenSettingsScreen {
                 range: 1...Metrics.maxNumberOfComments,
                 isEnabled: viewModel.isNumberOfCommentsEnabled
             )
-            .settingsRow(SettingsItems.numberOfComments.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.numberOfComments.key)
             SegmentedPickerRow(
                 title: .screenSettingsPreConversationGuidelinesTitle,
                 subtitle: .screenSettingsPreConversationGuidelinesSubtitle,
                 selection: $viewModel.selectedPreConversationGuidelinesStyle,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.preConversationGuidelinesStyle.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.preConversationGuidelinesStyle.key)
             SegmentedPickerRow(
                 title: .screenSettingsPreConversationQuestionsTitle,
                 subtitle: .screenSettingsPreConversationQuestionsSubtitle,
                 selection: $viewModel.selectedPreConversationQuestionsStyle,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.preConversationQuestionsStyle.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.preConversationQuestionsStyle.key)
         }
     }
 
@@ -74,7 +73,7 @@ private extension ScreenSettingsScreen {
                 selection: $viewModel.selectedConversationStyle,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.conversationStyle.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.conversationStyle.key)
             SegmentedPickerRow(
                 title: .screenSettingsConversationGuidelinesTitle,
                 subtitle: .screenSettingsConversationGuidelinesSubtitle,
@@ -82,7 +81,7 @@ private extension ScreenSettingsScreen {
                 optionTitle: \.title,
                 isEnabled: viewModel.isCustomConversationEnabled
             )
-            .settingsRow(SettingsItems.conversationGuidelinesStyle.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.conversationGuidelinesStyle.key)
             SegmentedPickerRow(
                 title: .screenSettingsConversationQuestionsTitle,
                 subtitle: .screenSettingsConversationQuestionsSubtitle,
@@ -90,7 +89,7 @@ private extension ScreenSettingsScreen {
                 optionTitle: \.title,
                 isEnabled: viewModel.isCustomConversationEnabled
             )
-            .settingsRow(SettingsItems.conversationQuestionsStyle.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.conversationQuestionsStyle.key)
             SegmentedPickerRow(
                 title: .screenSettingsConversationSpacingTitle,
                 subtitle: .screenSettingsConversationSpacingSubtitle,
@@ -98,7 +97,7 @@ private extension ScreenSettingsScreen {
                 optionTitle: \.title,
                 isEnabled: viewModel.isCustomConversationEnabled
             )
-            .settingsRow(SettingsItems.conversationSpacing.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.conversationSpacing.key)
             NumericTextFieldRow(
                 title: .screenSettingsBetweenCommentsSpacingTitle,
                 subtitle: .screenSettingsBetweenCommentsSpacingSubtitle,
@@ -106,7 +105,7 @@ private extension ScreenSettingsScreen {
                 value: $viewModel.betweenCommentsSpacing,
                 isEnabled: viewModel.isCustomSpacingEnabled
             )
-            .settingsRow(SettingsItems.betweenCommentsSpacing.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.betweenCommentsSpacing.key)
             NumericTextFieldRow(
                 title: .screenSettingsGuidelinesSpacingTitle,
                 subtitle: .screenSettingsGuidelinesSpacingSubtitle,
@@ -114,7 +113,7 @@ private extension ScreenSettingsScreen {
                 value: $viewModel.guidelinesSpacing,
                 isEnabled: viewModel.isCustomSpacingEnabled
             )
-            .settingsRow(SettingsItems.guidelinesSpacing.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.guidelinesSpacing.key)
             NumericTextFieldRow(
                 title: .screenSettingsQuestionsSpacingTitle,
                 subtitle: .screenSettingsQuestionsSpacingSubtitle,
@@ -122,7 +121,7 @@ private extension ScreenSettingsScreen {
                 value: $viewModel.questionsSpacing,
                 isEnabled: viewModel.isCustomSpacingEnabled
             )
-            .settingsRow(SettingsItems.questionsSpacing.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.questionsSpacing.key)
         }
     }
 
@@ -133,7 +132,7 @@ private extension ScreenSettingsScreen {
                 subtitle: .screenSettingsEnablePullToRefreshSubtitle,
                 isOn: $viewModel.enablePullToRefresh
             )
-            .settingsRow(SettingsItems.enablePullToRefresh.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.enablePullToRefresh.key)
         }
     }
 }

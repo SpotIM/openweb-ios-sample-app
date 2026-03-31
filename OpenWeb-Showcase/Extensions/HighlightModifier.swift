@@ -8,6 +8,21 @@
 
 import SwiftUI
 
+// MARK: - Environment
+
+private struct ActiveHighlightIDKey: EnvironmentKey {
+    static let defaultValue: String? = nil
+}
+
+extension EnvironmentValues {
+    var activeHighlightID: String? {
+        get { self[ActiveHighlightIDKey.self] }
+        set { self[ActiveHighlightIDKey.self] = newValue }
+    }
+}
+
+// MARK: - Row Highlight
+
 /// Row Highlight
 struct HighlightModifier: ViewModifier {
     private struct Metrics {
@@ -30,9 +45,19 @@ extension View {
         modifier(HighlightModifier(isHighlighted: isHighlighted))
     }
 
-    func settingsRow(_ entryID: String, highlightedID: String?) -> some View {
-        id(entryID)
-            .settingsHighlight(highlightedID == entryID)
+    func settingsRow(_ entryID: String) -> some View {
+        modifier(SettingsRowHighlightModifier(entryID: entryID))
+    }
+}
+
+private struct SettingsRowHighlightModifier: ViewModifier {
+    var entryID: String
+    @Environment(\.activeHighlightID) private var activeHighlightID
+
+    func body(content: Content) -> some View {
+        content
+            .id(entryID)
+            .settingsHighlight(activeHighlightID == entryID)
     }
 }
 
@@ -45,11 +70,12 @@ struct ScrollHighlightModifier: ViewModifier {
     }
 
     var highlightedEntryID: String?
-    @Binding var activeHighlightID: String?
+    @State private var activeHighlightID: String?
 
     func body(content: Content) -> some View {
         ScrollViewReader { proxy in
             content
+                .environment(\.activeHighlightID, activeHighlightID)
                 .onAppear {
                     guard let highlightedEntryID else { return }
                     Task { @MainActor in
@@ -69,7 +95,7 @@ struct ScrollHighlightModifier: ViewModifier {
 }
 
 extension View {
-    func scrollAndHighlight(entryID: String?, activeHighlightID: Binding<String?>) -> some View {
-        modifier(ScrollHighlightModifier(highlightedEntryID: entryID, activeHighlightID: activeHighlightID))
+    func scrollAndHighlight(entryID: String?) -> some View {
+        modifier(ScrollHighlightModifier(highlightedEntryID: entryID))
     }
 }

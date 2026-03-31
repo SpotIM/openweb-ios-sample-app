@@ -11,7 +11,6 @@ import SwiftUI
 struct ArticleSettingsScreen: View {
     @StateObject private var viewModel = ArticleSettingsViewModel()
     var highlightedEntryID: String?
-    @State private var activeHighlightID: String?
 
     var body: some View {
         List {
@@ -21,29 +20,29 @@ struct ArticleSettingsScreen: View {
                 selection: $viewModel.selectedInformationStrategy,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.informationStrategy.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.informationStrategy.key)
             TextFieldRow(
                 title: .articleSettingsAssociatedURLTitle,
                 placeholder: .articleSettingsAssociatedURLPlaceholder,
                 text: $viewModel.articleAssociatedURL,
                 isEnabled: viewModel.isAssociatedURLEnabled
             )
-            .settingsRow(SettingsItems.articleAssociatedURL.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.articleAssociatedURL.key)
             ToggleRow(
                 title: .articleSettingsHideHeaderTitle,
                 subtitle: .articleSettingsHideHeaderSubtitle,
                 isOn: $viewModel.hideArticleHeader
             )
-            .settingsRow(SettingsItems.hideArticleHeader.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.hideArticleHeader.key)
             SegmentedPickerRow(
                 title: .articleSettingsReadOnlyModeTitle,
                 subtitle: .articleSettingsReadOnlyModeSubtitle,
                 selection: $viewModel.selectedReadOnlyMode,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.readOnlyMode.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.readOnlyMode.key)
         }
-        .scrollAndHighlight(entryID: highlightedEntryID, activeHighlightID: $activeHighlightID)
+        .scrollAndHighlight(entryID: highlightedEntryID)
         .navigationTitle(.articleSettingsScreenTitle)
         .settingsToolbar()
     }

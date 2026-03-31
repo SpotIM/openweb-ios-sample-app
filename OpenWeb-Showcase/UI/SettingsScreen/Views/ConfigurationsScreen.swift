@@ -16,7 +16,6 @@ struct ConfigurationsScreen: View {
 
     @StateObject private var viewModel = ConfigurationsViewModel()
     var highlightedEntryID: String?
-    @State private var activeHighlightID: String?
 
     var body: some View {
         List {
@@ -26,7 +25,7 @@ struct ConfigurationsScreen: View {
                 selection: $viewModel.selectedLanguageStrategy,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.languageStrategy.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.languageStrategy.key)
             Picker(.configurationsLanguageTitle, selection: $viewModel.selectedLanguage) {
                 ForEach(OWSupportedLanguage.showcaseLanguages) { language in
                     Text(language.displayName).tag(language)
@@ -34,22 +33,22 @@ struct ConfigurationsScreen: View {
             }
             .disabled(!viewModel.isCustomLanguageEnabled)
             .opacity(viewModel.isCustomLanguageEnabled ? 1 : Metrics.disabledOpacity)
-            .settingsRow(SettingsItems.customLanguage.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.customLanguage.key)
             SegmentedPickerRow(
                 title: .configurationsLocaleStrategyTitle,
                 subtitle: .configurationsLocaleStrategySubtitle,
                 selection: $viewModel.selectedLocaleStrategy,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.localeStrategy.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.localeStrategy.key)
             ToggleRow(
                 title: .configurationsEnableLandscapeTitle,
                 subtitle: .configurationsEnableLandscapeSubtitle,
                 isOn: viewModel.enableLandscapeBinding
             )
-            .settingsRow(SettingsItems.enableLandscape.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.enableLandscape.key)
         }
-        .scrollAndHighlight(entryID: highlightedEntryID, activeHighlightID: $activeHighlightID)
+        .scrollAndHighlight(entryID: highlightedEntryID)
         .navigationTitle(.configurationsScreenTitle)
         .settingsToolbar()
     }

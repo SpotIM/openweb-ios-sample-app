@@ -11,7 +11,6 @@ import SwiftUI
 struct CustomizationsScreen: View {
     @StateObject private var viewModel = CustomizationsViewModel()
     var highlightedEntryID: String?
-    @State private var activeHighlightID: String?
 
     var body: some View {
         List {
@@ -20,7 +19,7 @@ struct CustomizationsScreen: View {
             themeSection
             uiCallbackSection
         }
-        .scrollAndHighlight(entryID: highlightedEntryID, activeHighlightID: $activeHighlightID)
+        .scrollAndHighlight(entryID: highlightedEntryID)
         .navigationTitle(.customizationsScreenTitle)
         .settingsToolbar()
     }
@@ -37,7 +36,7 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedSortOption,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.sortOption.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.sortOption.key)
         }
     }
 
@@ -49,14 +48,14 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedActionColor,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.actionColor.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.actionColor.key)
             SegmentedPickerRow(
                 title: .customizationsActionFontTitle,
                 subtitle: .customizationsActionFontSubtitle,
                 selection: $viewModel.selectedActionFont,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.actionFont.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.actionFont.key)
         }
     }
 
@@ -68,14 +67,14 @@ private extension CustomizationsScreen {
                 selection: $viewModel.selectedFontFamily,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.fontFamily.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.fontFamily.key)
             SegmentedPickerRow(
                 title: .customizationsThemeModeTitle,
                 subtitle: .customizationsThemeModeSubtitle,
                 selection: $viewModel.selectedThemeMode,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.themeMode.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.themeMode.key)
             NavigationLink {
                 CustomThemeColorsScreen()
             } label: {
@@ -87,7 +86,7 @@ private extension CustomizationsScreen {
                         .foregroundStyle(.secondary)
                 }
             }
-            .settingsRow(SettingsItems.customThemeColors.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.customThemeColors.key)
         }
     }
 
@@ -98,7 +97,7 @@ private extension CustomizationsScreen {
                 subtitle: .customizationsUICallbackSubtitle,
                 isOn: $viewModel.enableCustomUICallback
             )
-            .settingsRow(SettingsItems.enableCustomUICallback.key, highlightedID: activeHighlightID)
+            .settingsRow(SettingsItems.enableCustomUICallback.key)
         }
     }
 }
