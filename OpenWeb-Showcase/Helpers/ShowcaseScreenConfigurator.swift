@@ -11,6 +11,7 @@ import OpenWebSDK
 
 enum ShowcaseScreenConfigurator {
     static func applyShowcaseSettings() {
+        // MARK: SDK Usage
         OpenWeb.manager.ui.customizations.addElementCallback { element, source, themeStyle, postId in
             if SDKSetting(SettingsItems.enableCustomUICallback).wrappedValue {
                 CustomUICallback.customize(element, themeStyle: themeStyle)

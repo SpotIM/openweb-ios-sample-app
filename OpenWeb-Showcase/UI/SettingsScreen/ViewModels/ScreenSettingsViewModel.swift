@@ -23,9 +23,9 @@ class ScreenSettingsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.conversationGuidelinesStyle) var selectedConversationGuidelinesStyle: OWCommunityGuidelinesStyle
     @SDKSetting(SettingsItems.conversationQuestionsStyle) var selectedConversationQuestionsStyle: OWCommunityQuestionStyle
     @SDKSetting(SettingsItems.conversationSpacing) var selectedConversationSpacing: ConversationSpacingSetting
-    @SDKSetting(SettingsItems.betweenCommentsSpacing) var betweenCommentsSpacing: String
-    @SDKSetting(SettingsItems.guidelinesSpacing) var guidelinesSpacing: String
-    @SDKSetting(SettingsItems.questionsSpacing) var questionsSpacing: String
+    @SDKSetting(SettingsItems.betweenCommentsSpacing) var betweenCommentsSpacing: Double
+    @SDKSetting(SettingsItems.guidelinesSpacing) var guidelinesSpacing: Double
+    @SDKSetting(SettingsItems.questionsSpacing) var questionsSpacing: Double
 
     // General
     @SDKSetting(SettingsItems.enablePullToRefresh) var enablePullToRefresh: Bool

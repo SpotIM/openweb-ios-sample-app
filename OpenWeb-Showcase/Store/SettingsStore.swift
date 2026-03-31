@@ -32,9 +32,9 @@ class SettingsStore: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.conversationGuidelinesStyle) private var conversationGuidelinesStyle: OWCommunityGuidelinesStyle
     @SDKSetting(SettingsItems.conversationQuestionsStyle) private var conversationQuestionsStyle: OWCommunityQuestionStyle
     @SDKSetting(SettingsItems.conversationSpacing) private var conversationSpacing: ScreenSettingsViewModel.ConversationSpacingSetting
-    @SDKSetting(SettingsItems.betweenCommentsSpacing) private var betweenCommentsSpacing: String
-    @SDKSetting(SettingsItems.guidelinesSpacing) private var guidelinesSpacing: String
-    @SDKSetting(SettingsItems.questionsSpacing) private var questionsSpacing: String
+    @SDKSetting(SettingsItems.betweenCommentsSpacing) private var betweenCommentsSpacing: Double
+    @SDKSetting(SettingsItems.guidelinesSpacing) private var guidelinesSpacing: Double
+    @SDKSetting(SettingsItems.questionsSpacing) private var questionsSpacing: Double
     @SDKSetting(SettingsItems.enablePullToRefresh) private var enablePullToRefresh: Bool
 
     private override init() {}
@@ -104,9 +104,9 @@ private extension SettingsStore {
         case .regular: .regular
         case .compact: .compact
         case .custom: .custom(
-            betweenComments: CGFloat(Double(betweenCommentsSpacing) ?? OWConversationSpacing.Metrics.defaultSpaceBetweenComments),
-            communityGuidelines: CGFloat(Double(guidelinesSpacing) ?? OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines),
-            communityQuestions: CGFloat(Double(questionsSpacing) ?? OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)
+            betweenComments: betweenCommentsSpacing,
+            communityGuidelines: guidelinesSpacing,
+            communityQuestions: questionsSpacing
         )
         }
     }

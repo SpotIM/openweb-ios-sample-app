@@ -41,9 +41,12 @@ enum SettingsItems {
     static let conversationGuidelinesStyle = SettingsItem(key: "conversationGuidelinesStyle", defaultValue: OWCommunityGuidelinesStyle.regular)
     static let conversationQuestionsStyle = SettingsItem(key: "conversationQuestionsStyle", defaultValue: OWCommunityQuestionStyle.regular)
     static let conversationSpacing = SettingsItem(key: "conversationSpacing", defaultValue: ScreenSettingsViewModel.ConversationSpacingSetting.regular)
-    static let betweenCommentsSpacing = SettingsItem(key: "betweenCommentsSpacing", defaultValue: "16")
-    static let guidelinesSpacing = SettingsItem(key: "guidelinesSpacing", defaultValue: "12")
-    static let questionsSpacing = SettingsItem(key: "questionsSpacing", defaultValue: "12")
+    private static let defaultBetweenCommentsSpacing: Double = 16
+    private static let defaultGuidelinesSpacing: Double = 12
+    private static let defaultQuestionsSpacing: Double = 12
+    static let betweenCommentsSpacing = SettingsItem(key: "betweenCommentsSpacing", defaultValue: defaultBetweenCommentsSpacing)
+    static let guidelinesSpacing = SettingsItem(key: "guidelinesSpacing", defaultValue: defaultGuidelinesSpacing)
+    static let questionsSpacing = SettingsItem(key: "questionsSpacing", defaultValue: defaultQuestionsSpacing)
     static let enablePullToRefresh = SettingsItem(key: "enablePullToRefresh", defaultValue: true)
 
     // MARK: - All Items (for reset)

@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct SettingsToolbarModifier: ViewModifier {
-    var onReset: (() -> Void)?
     @State private var showAlert = false
 
     func body(content: Content) -> some View {
@@ -27,7 +26,6 @@ struct SettingsToolbarModifier: ViewModifier {
                 Button(.resetAlertCancel, role: .cancel) {}
                 Button(.resetAlertConfirm, role: .destructive) {
                     SettingsStore.shared.resetAll()
-                    onReset?()
                 }
             } message: {
                 Text(.resetAlertMessage)
@@ -36,7 +34,7 @@ struct SettingsToolbarModifier: ViewModifier {
 }
 
 extension View {
-    func settingsToolbar(onReset: (() -> Void)? = nil) -> some View {
-        modifier(SettingsToolbarModifier(onReset: onReset))
+    func settingsToolbar() -> some View {
+        modifier(SettingsToolbarModifier())
     }
 }

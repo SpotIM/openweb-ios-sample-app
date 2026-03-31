@@ -104,6 +104,10 @@ extension Int: OpenWebApplicable {
     func applyToSDK() {}
 }
 
+extension Double: OpenWebApplicable {
+    func applyToSDK() {}
+}
+
 extension ScreenSettingsViewModel.PreConversationStyleSetting: OpenWebApplicable {
     func applyToSDK() {}
 }

@@ -99,27 +99,27 @@ private extension ScreenSettingsScreen {
                 isEnabled: viewModel.isCustomConversationEnabled
             )
             .settingsRow(SettingsItems.conversationSpacing.key, highlightedID: activeHighlightID)
-            TextFieldRow(
+            NumericTextFieldRow(
                 title: .screenSettingsBetweenCommentsSpacingTitle,
                 subtitle: .screenSettingsBetweenCommentsSpacingSubtitle,
                 placeholder: .screenSettingsSpacingPlaceholder,
-                text: $viewModel.betweenCommentsSpacing,
+                value: $viewModel.betweenCommentsSpacing,
                 isEnabled: viewModel.isCustomSpacingEnabled
             )
             .settingsRow(SettingsItems.betweenCommentsSpacing.key, highlightedID: activeHighlightID)
-            TextFieldRow(
-                title: "screenSettingsGuidelinesSpacingTitle",
-                subtitle: "screenSettingsGuidelinesSpacingSubtitle",
-                placeholder: "screenSettingsSpacingPlaceholder",
-                text: $viewModel.guidelinesSpacing,
+            NumericTextFieldRow(
+                title: .screenSettingsGuidelinesSpacingTitle,
+                subtitle: .screenSettingsGuidelinesSpacingSubtitle,
+                placeholder: .screenSettingsSpacingPlaceholder,
+                value: $viewModel.guidelinesSpacing,
                 isEnabled: viewModel.isCustomSpacingEnabled
             )
             .settingsRow(SettingsItems.guidelinesSpacing.key, highlightedID: activeHighlightID)
-            TextFieldRow(
+            NumericTextFieldRow(
                 title: .screenSettingsQuestionsSpacingTitle,
                 subtitle: .screenSettingsQuestionsSpacingSubtitle,
                 placeholder: .screenSettingsSpacingPlaceholder,
-                text: $viewModel.questionsSpacing,
+                value: $viewModel.questionsSpacing,
                 isEnabled: viewModel.isCustomSpacingEnabled
             )
             .settingsRow(SettingsItems.questionsSpacing.key, highlightedID: activeHighlightID)

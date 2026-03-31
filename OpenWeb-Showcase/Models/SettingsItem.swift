@@ -12,13 +12,13 @@ protocol AnySettingsItem {
     func applyDefaultToSDK()
 }
 
-struct SettingsItem<T: Codable> {
+struct SettingsItem<T: Codable & OpenWebApplicable> {
     var key: String
     var defaultValue: T
 }
 
 extension SettingsItem: AnySettingsItem {
     func applyDefaultToSDK() {
-        (defaultValue as? OpenWebApplicable)?.applyToSDK()
+        defaultValue.applyToSDK()
     }
 }

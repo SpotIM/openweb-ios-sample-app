@@ -11,6 +11,9 @@ import OpenWebSDK
 
 enum CustomUICallback {
 
+    // MARK: - SDK Usage
+
+    // Called from `OpenWeb.manager.ui.customizations.addElementCallback` to customize SDK UI elements
     static func customize(_ element: OWCustomizableElement, themeStyle: OWThemeStyle) {
         let isDark = themeStyle == .dark
 
