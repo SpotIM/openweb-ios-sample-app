@@ -10,7 +10,7 @@ import SwiftUI
 import OpenWebSDK
 
 struct FinanceScreen: View {
-    @State private var viewModel = FinanceScreenViewModel()
+    @StateObject private var viewModel = FinanceScreenViewModel()
 
     var body: some View {
         ScrollView {
@@ -22,14 +22,14 @@ struct FinanceScreen: View {
             // MARK: OpenWeb SDK
             OpenWebPreConversation(
                 postId: viewModel.article.postId,
-                article: viewModel.conversationArticle
+                article: viewModel.articleSettings
             )
+            .additionalSettings(viewModel.screenSettings)
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
             title: viewModel.title,
-            color: viewModel.color,
-            onSettingsClick: {}
+            color: viewModel.color
         )
         .onAppear { viewModel.initialize() }
     }

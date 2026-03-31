@@ -11,7 +11,6 @@ import SwiftUI
 struct VerticalToolbarModifier: ViewModifier {
     var title: LocalizedStringResource
     var color: Color
-    var onSettingsClick: () -> Void
 
     func body(content: Content) -> some View {
         content
@@ -21,7 +20,7 @@ struct VerticalToolbarModifier: ViewModifier {
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: onSettingsClick) {
+                    NavigationLink(value: Destination.settings) {
                         Image(systemName: "gearshape")
                     }
                 }
@@ -30,7 +29,7 @@ struct VerticalToolbarModifier: ViewModifier {
 }
 
 extension View {
-    func verticalToolbar(title: LocalizedStringResource, color: Color, onSettingsClick: @escaping () -> Void) -> some View {
-        modifier(VerticalToolbarModifier(title: title, color: color, onSettingsClick: onSettingsClick))
+    func verticalToolbar(title: LocalizedStringResource, color: Color) -> some View {
+        modifier(VerticalToolbarModifier(title: title, color: color))
     }
 }

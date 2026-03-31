@@ -35,6 +35,8 @@ class SportScreenViewModel: ObservableObject {
     @Published var matchMinute = MatchConfig.initialMinute
     @Published var isLive = true
     @Published var goalEvent: GoalEvent?
+    @Published var articleSettings = SettingsStore.shared.article
+    @Published var screenSettings = SettingsStore.shared.additionalSettings
 
     private var goalId = 0
     private var matchTimer: AnyCancellable?
@@ -45,9 +47,12 @@ class SportScreenViewModel: ObservableObject {
     }
 
     func initialize() {
+        articleSettings = SettingsStore.shared.article
+        screenSettings = SettingsStore.shared.additionalSettings
         // MARK: OpenWeb SDK
         OpenWeb.manager.spotId = article.spotId
         OpenWeb.manager.ui.customizations.customizedTheme.brandColor = UIColor(color)
+        ShowcaseScreenConfigurator.applyShowcaseSettings()
         OpenWeb.manager.ui.customizations.navigationBarEnforcement = .style(.regular)
     }
 }

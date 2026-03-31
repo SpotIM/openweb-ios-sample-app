@@ -10,5 +10,6 @@ import Foundation
 
 enum Destination: Hashable {
     case about
+    case settings
     case vertical(ShowcaseVertical)
 }

@@ -10,7 +10,7 @@ import SwiftUI
 import OpenWebSDK
 
 struct RecipesScreen: View {
-    @State private var viewModel = RecipesScreenViewModel()
+    @StateObject private var viewModel = RecipesScreenViewModel()
 
     var body: some View {
         ScrollView {
@@ -20,14 +20,17 @@ struct RecipesScreen: View {
                 iconColor: viewModel.color
             )
             // MARK: OpenWeb SDK
-            OpenWebPreConversation(postId: viewModel.article.postId)
-                .starRatingEnabled(true)
+            OpenWebPreConversation(
+                postId: viewModel.article.postId,
+                article: viewModel.articleSettings
+            )
+            .additionalSettings(viewModel.screenSettings)
+            .starRatingEnabled(true)
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(
             title: viewModel.title,
-            color: viewModel.color,
-            onSettingsClick: {}
+            color: viewModel.color
         )
         .onAppear { viewModel.initialize() }
     }
