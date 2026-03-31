@@ -16,8 +16,7 @@ struct SliderRow: View {
     var isEnabled: Bool = true
 
     var body: some View {
-        VStack(alignment: .leading) {
-            SettingsRowHeader(title: title, subtitle: subtitle)
+        SettingsRow(title: title, subtitle: subtitle, isEnabled: isEnabled) {
             HStack {
                 Slider(
                     value: Binding(
@@ -31,7 +30,5 @@ struct SliderRow: View {
                     .monospacedDigit()
             }
         }
-        .disabled(!isEnabled)
-        .opacity(isEnabled ? 1 : SettingsRowHeader.disabledOpacity)
     }
 }

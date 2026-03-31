@@ -18,8 +18,7 @@ struct SegmentedPickerRow<Option: Hashable & Identifiable & CaseIterable>: View
     var isEnabled: Bool = true
 
     var body: some View {
-        VStack(alignment: .leading) {
-            SettingsRowHeader(title: title, subtitle: subtitle)
+        SettingsRow(title: title, subtitle: subtitle, isEnabled: isEnabled) {
             Picker(title, selection: $selection) {
                 ForEach(Option.allCases) { option in
                     Text(optionTitle(option)).tag(option)
@@ -27,7 +26,5 @@ struct SegmentedPickerRow<Option: Hashable & Identifiable & CaseIterable>: View
             }
             .pickerStyle(.segmented)
         }
-        .disabled(!isEnabled)
-        .opacity(isEnabled ? 1 : SettingsRowHeader.disabledOpacity)
     }
 }

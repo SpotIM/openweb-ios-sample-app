@@ -16,15 +16,12 @@ struct TextFieldRow: View {
     var isEnabled: Bool = true
 
     var body: some View {
-        VStack(alignment: .leading) {
-            SettingsRowHeader(title: title, subtitle: subtitle)
+        SettingsRow(title: title, subtitle: subtitle, isEnabled: isEnabled) {
             TextField(text: $text) {
                 Text(placeholder)
             }
-                .textFieldStyle(.roundedBorder)
-                .disabled(!isEnabled)
+            .textFieldStyle(.roundedBorder)
         }
-        .opacity(isEnabled ? 1 : SettingsRowHeader.disabledOpacity)
     }
 }
 
@@ -36,15 +33,12 @@ struct NumericTextFieldRow: View {
     var isEnabled: Bool = true
 
     var body: some View {
-        VStack(alignment: .leading) {
-            SettingsRowHeader(title: title, subtitle: subtitle)
+        SettingsRow(title: title, subtitle: subtitle, isEnabled: isEnabled) {
             TextField(value: $value, format: .number) {
                 Text(placeholder)
             }
-                .textFieldStyle(.roundedBorder)
-                .keyboardType(.decimalPad)
-                .disabled(!isEnabled)
+            .textFieldStyle(.roundedBorder)
+            .keyboardType(.decimalPad)
         }
-        .opacity(isEnabled ? 1 : SettingsRowHeader.disabledOpacity)
     }
 }
