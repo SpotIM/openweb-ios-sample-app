@@ -14,6 +14,10 @@ protocol OpenWebApplicable {
     func applyToSDK()
 }
 
+extension OpenWebApplicable {
+    func applyToSDK() {}
+}
+
 class SettingsStore: NSObject, ObservableObject {
     static let shared = SettingsStore()
 
