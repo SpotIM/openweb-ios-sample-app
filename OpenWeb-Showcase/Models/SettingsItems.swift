@@ -14,7 +14,7 @@ enum SettingsItems {
     static let sortOption = SettingsItem(key: "sortOption", defaultValue: CustomizationsViewModel.SortOptionSetting.server)
     static let actionColor = SettingsItem(key: "actionColor", defaultValue: OWCommentActionsColor.default)
     static let actionFont = SettingsItem(key: "actionFont", defaultValue: OWCommentActionsFontStyle.default)
-    static let fontFamily = SettingsItem(key: "fontFamily", defaultValue: CustomizationsViewModel.FontFamilySetting.default)
+    static let fontFamily = SettingsItem(key: "fontFamily", defaultValue: OWFontGroupFamily.default)
     static let themeMode = SettingsItem(key: "themeMode", defaultValue: CustomizationsViewModel.ThemeModeSetting.system)
     static let enableCustomUICallback = SettingsItem(key: "enableCustomUIDelegation", defaultValue: false)
     static let customThemeColors = SettingsItem(key: "customThemeColors", defaultValue: OWTheme())

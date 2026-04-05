@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OpenWebSDK
 
 struct CustomizationsScreen: View {
     @StateObject private var viewModel = CustomizationsViewModel()
@@ -61,11 +62,18 @@ private extension CustomizationsScreen {
 
     var themeSection: some View {
         Section(.customizationsThemeSectionTitle) {
-            SegmentedPickerRow(
+            FontPickerRow(
                 title: .customizationsFontFamilyTitle,
                 subtitle: .customizationsFontFamilySubtitle,
-                selection: $viewModel.selectedFontFamily,
-                optionTitle: \.title
+                fontFamilyName: Binding(
+                    get: {
+                        if case .custom(fontFamily: let name) = viewModel.selectedFontFamily { return name }
+                        return nil
+                    },
+                    set: { name in
+                        viewModel.selectedFontFamily = if let name { .custom(fontFamily: name) } else { .default }
+                    }
+                )
             )
             .settingsRow(SettingsItems.fontFamily.key)
             SegmentedPickerRow(

@@ -54,15 +54,10 @@ extension OWCommentActionsFontStyle: @retroactive CaseIterable, @retroactive Ide
     }
 }
 
-extension CustomizationsViewModel.FontFamilySetting: OpenWebApplicable {
+extension OWFontGroupFamily: OpenWebApplicable {
     func applyToSDK() {
-        let fontFamily: OWFontGroupFamily = switch self {
-        case .default: .default
-        case .custom: .custom(fontFamily: "Georgia")
-        }
-
         // MARK: OpenWeb SDK
-        OpenWeb.manager.ui.customizations.fontFamily = fontFamily
+        OpenWeb.manager.ui.customizations.fontFamily = self
     }
 }
 

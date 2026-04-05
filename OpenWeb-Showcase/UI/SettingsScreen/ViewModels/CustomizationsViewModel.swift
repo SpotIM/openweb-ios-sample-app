@@ -14,7 +14,7 @@ class CustomizationsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.sortOption) var selectedSortOption: SortOptionSetting
     @SDKSetting(SettingsItems.actionColor) var selectedActionColor: OWCommentActionsColor
     @SDKSetting(SettingsItems.actionFont) var selectedActionFont: OWCommentActionsFontStyle
-    @SDKSetting(SettingsItems.fontFamily) var selectedFontFamily: FontFamilySetting
+    @SDKSetting(SettingsItems.fontFamily) var selectedFontFamily: OWFontGroupFamily
     @SDKSetting(SettingsItems.themeMode) var selectedThemeMode: ThemeModeSetting
     @SDKSetting(SettingsItems.enableCustomUICallback) var enableCustomUICallback: Bool
 }
@@ -35,19 +35,6 @@ extension CustomizationsViewModel {
             case .best: "Best"
             case .newest: "Newest"
             case .oldest: "Oldest"
-            }
-        }
-    }
-
-    enum FontFamilySetting: Codable, CaseIterable, Identifiable {
-        case `default`
-        case custom
-
-        var id: Self { self }
-        var title: String {
-            switch self {
-            case .default: "Default"
-            case .custom: "Custom"
             }
         }
     }
