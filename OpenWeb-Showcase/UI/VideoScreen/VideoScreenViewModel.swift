@@ -16,7 +16,7 @@ class VideoScreenViewModel: ObservableObject {
     var article: ArticleData { vertical.article }
     var sdkUsageInfo: SDKUsageInfo { vertical.sdkUsageInfo }
     var color: Color { vertical.color }
-    var videoURLs: [URL] { VideoURLs.shuffled }
+    let videoURLs: [URL] = VideoURLs.shuffled
 
     @Published var isInfoVisible = false
     @Published var isConversationVisible = false
