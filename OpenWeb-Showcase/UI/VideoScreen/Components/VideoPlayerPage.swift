@@ -7,12 +7,10 @@
 //
 
 import SwiftUI
-import AVFoundation
 
 // MARK: - VideoPlayerPage
 
 struct VideoPlayerPage: View {
-    // MARK: - Metrics
     private struct Metrics {
         static let bottomContentLeadingPadding: CGFloat = 20
         static let bottomContentTrailingPadding: CGFloat = 92
@@ -25,12 +23,11 @@ struct VideoPlayerPage: View {
     var onCommentTap: () -> Void = {}
     var onInfoTap: () -> Void = {}
 
-    @State private var player: AVQueuePlayer?
-    @State private var looper: AVPlayerLooper?
+    @State private var videoPlayer = VideoPlayer()
 
     var body: some View {
         ZStack {
-            VideoLoopingView(player: player)
+            VideoLoopingView(player: videoPlayer.player)
                 .ignoresSafeArea()
             VideoBottomContent()
                 .padding(.leading, Metrics.bottomContentLeadingPadding)
@@ -40,31 +37,11 @@ struct VideoPlayerPage: View {
             VideoActionButtons(commentsCount: commentsCount, onCommentTap: onCommentTap, onInfoTap: onInfoTap)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
         }
-        .onAppear { setupPlayer() }
-        .onDisappear { tearDownPlayer() }
-        .onChange(of: isActive) { _, active in
-            active ? player?.play() : player?.pause()
+        .onAppear {
+            videoPlayer.isActive = isActive
+            videoPlayer.setup(url: url)
         }
-    }
-}
-
-// MARK: - Private
-
-private extension VideoPlayerPage {
-    func setupPlayer() {
-        let item = AVPlayerItem(url: url)
-        let queuePlayer = AVQueuePlayer()
-        looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
-        player = queuePlayer
-
-        if isActive {
-            queuePlayer.play()
-        }
-    }
-
-    func tearDownPlayer() {
-        player?.pause()
-        player = nil
-        looper = nil
+        .onDisappear { videoPlayer.tearDown() }
+        .onChange(of: isActive) { _, active in videoPlayer.isActive = active }
     }
 }
