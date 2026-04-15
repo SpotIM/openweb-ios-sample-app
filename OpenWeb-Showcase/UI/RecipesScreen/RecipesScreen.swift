@@ -50,7 +50,7 @@ private extension RecipesScreen {
     var recipeBody: some View {
         VStack(alignment: .leading, spacing: Metrics.bodySpacing) {
             ArticleBodyText(text: ShowcaseVertical.loadArticle(named: "recipes"))
-            AsyncImage(url: URL(string: Metrics.bodyImageURL)!) { phase in
+            AsyncImage(url: URL(string: Metrics.bodyImageURL)) { phase in
                 switch phase {
                 case .success(let image):
                     image
