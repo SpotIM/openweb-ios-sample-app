@@ -564,6 +564,127 @@
         }
       }
     },
+    "mutingEmptyState" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You haven't muted anyone yet. Mute a user from the comment menu to see them listed here."
+          }
+        }
+      }
+    },
+    "mutingMuteConfirmationMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After muting this user, you will no longer see their activity. To manage your muted users, go to Settings > Muting."
+          }
+        }
+      }
+    },
+    "mutingMutedUsersSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Users you've muted in this app"
+          }
+        }
+      }
+    },
+    "mutingMutedUsersTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muted Users"
+          }
+        }
+      }
+    },
+    "mutingUnknownUser" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown user"
+          }
+        }
+      }
+    },
+    "mutingUnmute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unmute"
+          }
+        }
+      }
+    },
+    "mutingUnmuteAllAlertCancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "mutingUnmuteAllAlertConfirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unmute All"
+          }
+        }
+      }
+    },
+    "mutingUnmuteAllAlertMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All previously muted users will be visible again on the next conversation load."
+          }
+        }
+      }
+    },
+    "mutingUnmuteAllAlertTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unmute All Users?"
+          }
+        }
+      }
+    },
+    "mutingUnmuteAllTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unmute All"
+          }
+        }
+      }
+    },
     "resetAlertCancel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1058,6 +1179,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Customizations"
+          }
+        }
+      }
+    },
+    "settingsMutingSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage muted users"
+          }
+        }
+      }
+    },
+    "settingsMutingTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muting"
           }
         }
       }

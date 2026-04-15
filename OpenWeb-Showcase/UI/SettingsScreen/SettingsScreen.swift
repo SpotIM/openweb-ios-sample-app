@@ -54,6 +54,8 @@ private extension SettingsScreen {
             ArticleSettingsScreen(highlightedEntryID: highlightedEntryID)
         case .screenSettings:
             ScreenSettingsScreen(highlightedEntryID: highlightedEntryID)
+        case .muting:
+            MutingScreen()
         }
     }
 }
