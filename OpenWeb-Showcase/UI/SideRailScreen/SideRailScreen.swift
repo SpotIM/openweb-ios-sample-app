@@ -15,7 +15,8 @@ struct SideRailScreen: View {
 
     var body: some View {
         ScrollView {
-            ArticleContent(article: viewModel.article)
+            ArticleTopSection(title: viewModel.article.title, content: viewModel.article.content!)
+            sideRailBody
             SDKUsageInfoCard(
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
@@ -43,6 +44,35 @@ struct SideRailScreen: View {
             }
         }
         .onAppear { viewModel.initialize() }
+    }
+}
+
+private extension SideRailScreen {
+    private static let headerPrefix = "### "
+
+    var sideRailBody: some View {
+        let paragraphs = ShowcaseVertical.loadArticle(named: "siderail")
+            .components(separatedBy: "\n\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+
+        return VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(paragraphs.enumerated()), id: \.offset) { _, paragraph in
+                if paragraph.hasPrefix(Self.headerPrefix) {
+                    Text(String(paragraph.dropFirst(Self.headerPrefix.count)))
+                        .font(.heading)
+                        .padding(.top, 24)
+                        .padding(.bottom, 12)
+                } else {
+                    Text(paragraph)
+                        .font(.bodyText)
+                        .foregroundStyle(.primary.opacity(0.9))
+                        .lineSpacing(4)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
     }
 }
 

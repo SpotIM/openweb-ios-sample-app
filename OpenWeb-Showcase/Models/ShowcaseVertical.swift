@@ -72,43 +72,73 @@ enum ShowcaseVertical: Identifiable, CaseIterable, Hashable {
             ArticleData(
                 spotId: "sp_LmNIcv7z",
                 postId: "news_1",
-                title: "Government officials announce sweeping reforms that could reshape the economic landscape",
-                body: Self.loadArticle(named: "news")
+                title: "Breaking: Major Policy Changes Expected Next Week",
+                content: ArticleContent(
+                    imageURL: "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80",
+                    sourceName: "The Daily Tribune",
+                    readTime: "4 min read",
+                    subtitle: "Government officials announce sweeping reforms that could reshape the economic landscape",
+                    authorName: "Rachel Adams",
+                    date: "Dec 9, 2025",
+                    leadParagraph: Self.loadArticle(named: "news_lead")
+                )
             )
         case .finance:
             ArticleData(
                 spotId: "sp_xT4NGStS",
                 postId: "finance_1",
-                title: "Apple Stock Surges Amid Strong Q4 Earnings Report.",
-                body: Self.loadArticle(named: "finance")
+                title: "Apple Stock Surges Amid Strong Q4 Earnings Report",
+                content: ArticleContent(
+                    imageURL: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+                    sourceName: "Market Watch Daily",
+                    readTime: "5 min read",
+                    subtitle: "Services segment drives record revenue as Wall Street raises price targets",
+                    authorName: "Marcus Webb",
+                    date: "Dec 9, 2025",
+                    leadParagraph: Self.loadArticle(named: "finance_lead")
+                )
             )
         case .recipes:
             ArticleData(
                 spotId: "sp_LmNIcv7z",
                 postId: "recipes_1",
                 title: "The Ultimate Homemade Pasta Recipe Everyone Loves",
-                body: Self.loadArticle(named: "recipes")
+                content: ArticleContent(
+                    imageURL: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
+                    sourceName: "Taste & Table",
+                    readTime: "6 min read",
+                    subtitle: "From silky fettuccine to perfect ravioli — master fresh pasta with this foolproof guide",
+                    authorName: "Sofia Caruso",
+                    date: "Dec 8, 2025",
+                    leadParagraph: Self.loadArticle(named: "recipes_lead")
+                )
             )
         case .sport:
             ArticleData(
                 spotId: "sp_LmNIcv7z",
                 postId: "sport_1",
-                title: "Champions League Final: Preview and Predictions",
-                body: ""
+                title: "Champions League Final: Preview and Predictions"
             )
         case .video:
             ArticleData(
                 spotId: "sp_LmNIcv7z",
                 postId: "video_1",
-                title: "Big Buck Bunny - Animated Short Film",
-                body: Self.loadArticle(named: "video")
+                title: "Big Buck Bunny - Animated Short Film"
             )
         case .sideRail:
             ArticleData(
                 spotId: "sp_LmNIcv7z",
                 postId: "siderail_1",
                 title: "The Future of Remote Work: A Deep Dive",
-                body: Self.loadArticle(named: "siderail")
+                content: ArticleContent(
+                    imageURL: "https://images.unsplash.com/photo-1587560699334-cc4ff634909a?w=800&q=80",
+                    sourceName: "Future of Work",
+                    readTime: "7 min read",
+                    subtitle: "How organizations are reimagining productivity, collaboration, and work-life balance",
+                    authorName: "Jordan Lee",
+                    date: "Dec 7, 2025",
+                    leadParagraph: ""
+                )
             )
         }
     }
@@ -189,9 +219,9 @@ enum ShowcaseVertical: Identifiable, CaseIterable, Hashable {
     }
 }
 
-// MARK: - Private
+// MARK: - Articles
 
-private extension ShowcaseVertical {
+extension ShowcaseVertical {
     static func loadArticle(named name: String) -> String {
         guard let url = Bundle.main.url(forResource: name, withExtension: "md"),
               let content = try? String(contentsOf: url, encoding: .utf8) else {
