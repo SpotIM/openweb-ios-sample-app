@@ -619,7 +619,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Away Team"
+            "value" : "Man City"
           }
         }
       }
@@ -652,7 +652,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Home Team"
+            "value" : "Real Madrid"
           }
         }
       }
