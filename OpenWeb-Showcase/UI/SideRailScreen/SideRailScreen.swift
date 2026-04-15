@@ -15,7 +15,9 @@ struct SideRailScreen: View {
 
     var body: some View {
         ScrollView {
-            ArticleTopSection(title: viewModel.article.title, content: viewModel.article.content!)
+            if let content = viewModel.article.content {
+                ArticleTopSection(title: viewModel.article.title, content: content)
+            }
             sideRailBody
             SDKUsageInfoCard(
                 info: viewModel.sdkUsageInfo,
