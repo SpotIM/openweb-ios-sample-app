@@ -74,7 +74,7 @@ enum ShowcaseVertical: Identifiable, CaseIterable, Hashable {
                 postId: "news_1",
                 title: "Breaking: Major Policy Changes Expected Next Week",
                 content: ArticleContent(
-                    imageURL: "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80",
+                    imageURL: "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800&q=80",
                     sourceName: "The Daily Tribune",
                     readTime: "4 min read",
                     subtitle: "Government officials announce sweeping reforms that could reshape the economic landscape",

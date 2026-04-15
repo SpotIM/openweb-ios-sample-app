@@ -50,6 +50,15 @@ struct SideRailScreen: View {
 private extension SideRailScreen {
     private static let headerPrefix = "### "
 
+    private struct Metrics {
+        static let headerTopPadding: CGFloat = 24
+        static let headerBottomPadding: CGFloat = 12
+        static let textOpacity: Double = 0.9
+        static let lineSpacing: CGFloat = 4
+        static let horizontalPadding: CGFloat = 16
+        static let topPadding: CGFloat = 8
+    }
+
     var sideRailBody: some View {
         let paragraphs = ShowcaseVertical.loadArticle(named: "siderail")
             .components(separatedBy: "\n\n")
@@ -61,18 +70,18 @@ private extension SideRailScreen {
                 if paragraph.hasPrefix(Self.headerPrefix) {
                     Text(String(paragraph.dropFirst(Self.headerPrefix.count)))
                         .font(.heading)
-                        .padding(.top, 24)
-                        .padding(.bottom, 12)
+                        .padding(.top, Metrics.headerTopPadding)
+                        .padding(.bottom, Metrics.headerBottomPadding)
                 } else {
                     Text(paragraph)
                         .font(.bodyText)
-                        .foregroundStyle(.primary.opacity(0.9))
-                        .lineSpacing(4)
+                        .foregroundStyle(.primary.opacity(Metrics.textOpacity))
+                        .lineSpacing(Metrics.lineSpacing)
                 }
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 8)
+        .padding(.horizontal, Metrics.horizontalPadding)
+        .padding(.top, Metrics.topPadding)
     }
 }
 

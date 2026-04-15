@@ -12,6 +12,8 @@ struct ArticleBodyText: View {
     private struct Metrics {
         static let horizontalPadding: CGFloat = 16
         static let topPadding: CGFloat = 8
+        static let textOpacity: Double = 0.8
+        static let lineSpacing: CGFloat = 4
     }
 
     var text: String
@@ -20,8 +22,8 @@ struct ArticleBodyText: View {
         if !text.isEmpty {
             Text(text.markdown())
                 .font(.bodyText)
-                .foregroundStyle(.primary.opacity(0.8))
-                .lineSpacing(4)
+                .foregroundStyle(.primary.opacity(Metrics.textOpacity))
+                .lineSpacing(Metrics.lineSpacing)
                 .padding(.horizontal, Metrics.horizontalPadding)
                 .padding(.top, Metrics.topPadding)
         }

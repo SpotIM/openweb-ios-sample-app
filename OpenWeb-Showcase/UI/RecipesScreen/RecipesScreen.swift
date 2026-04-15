@@ -40,11 +40,13 @@ struct RecipesScreen: View {
 private extension RecipesScreen {
     private struct Metrics {
         static let bodyImageURL = "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=80"
+        // swiftlint:disable:next no_magic_numbers
         static let bodyImageAspectRatio: CGFloat = 4.0 / 3.0
+        static let bodySpacing: CGFloat = 8
     }
 
     var recipeBody: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Metrics.bodySpacing) {
             ArticleBodyText(text: ShowcaseVertical.loadArticle(named: "recipes"))
             AsyncImage(url: URL(string: Metrics.bodyImageURL)!) { phase in
                 switch phase {

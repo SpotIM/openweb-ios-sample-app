@@ -21,7 +21,11 @@ struct ArticleTopSection: View {
         static let authorTextSpacing: CGFloat = 2
         static let dividerTopPadding: CGFloat = 4
         static let avatarSize: CGFloat = 36
-        static let imageAspectRatio: CGFloat = 16 / 9
+        // swiftlint:disable:next no_magic_numbers
+        static let imageAspectRatio: CGFloat = 16.0 / 9.0
+        static let sourceTracking: CGFloat = 0.5
+        static let titleLineSpacing: CGFloat = 2
+        static let leadLineSpacing: CGFloat = 4
     }
 
     var title: String
@@ -63,7 +67,7 @@ private extension ArticleTopSection {
         HStack(spacing: Metrics.metaSpacing) {
             Text(content.sourceName.uppercased())
                 .font(.articleSourceLabel)
-                .tracking(0.5)
+                .tracking(Metrics.sourceTracking)
                 .foregroundStyle(.primary)
             Text("·")
             HStack(spacing: Metrics.clockIconSpacing) {
@@ -79,11 +83,11 @@ private extension ArticleTopSection {
     var titleSection: some View {
         Text(title)
             .font(.screenTitle)
-            .lineSpacing(2)
+            .lineSpacing(Metrics.titleLineSpacing)
         Text(content.subtitle)
             .font(.articleSubtitle)
             .foregroundStyle(.secondary)
-            .lineSpacing(2)
+            .lineSpacing(Metrics.titleLineSpacing)
     }
 
     var authorRow: some View {
@@ -117,7 +121,7 @@ private extension ArticleTopSection {
             Text(content.leadParagraph)
                 .font(.articleAuthorName)
                 .foregroundStyle(.secondary)
-                .lineSpacing(4)
+                .lineSpacing(Metrics.leadLineSpacing)
         }
     }
 }
