@@ -32,8 +32,9 @@ struct MutingScreen: View {
                         mutedUserRow(for: user)
                     }
                     .onDelete { indexSet in
-                        for index in indexSet {
-                            provider.unmute(userId: provider.mutedUsers[index].userId)
+                        let userIdsToUnmute = indexSet.map { index in provider.mutedUsers[index].userId }
+                        for userId in userIdsToUnmute {
+                            provider.unmute(userId: userId)
                         }
                     }
                 }
