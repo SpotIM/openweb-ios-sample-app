@@ -14,7 +14,10 @@ struct FinanceScreen: View {
 
     var body: some View {
         ScrollView {
-            ArticleContent(article: viewModel.article)
+            if let content = viewModel.article.content {
+                ArticleTopSection(title: viewModel.article.title, content: content)
+            }
+            ArticleBodyText(text: ShowcaseVertical.loadArticle(named: "finance"))
             SDKUsageInfoCard(
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
