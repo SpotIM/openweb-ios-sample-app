@@ -532,6 +532,72 @@
         }
       }
     },
+    "eulaBodyText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By using the OpenWeb Showcase, you agree to our [Terms of Use](https://www.openweb.com/terms-of-service/). Abusive or objectionable content is strictly prohibited. Users who violate these terms may be blocked from the platform."
+          }
+        }
+      }
+    },
+    "eulaCheckboxLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I agree to the Terms of Use"
+          }
+        }
+      }
+    },
+    "eulaContinueButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
+    },
+    "eulaFootnote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You must accept to use the app"
+          }
+        }
+      }
+    },
+    "eulaSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please review before continuing"
+          }
+        }
+      }
+    },
+    "eulaTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terms of Use"
+          }
+        }
+      }
+    },
     "homeScreenDescription" : {
       "extractionState" : "manual",
       "localizations" : {
