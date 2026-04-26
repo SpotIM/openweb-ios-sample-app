@@ -15,22 +15,12 @@ struct EULAView: View {
         static let iconSymbolSize: CGFloat = 32
         static let headerHorizontalPadding: CGFloat = 24
         static let headerTopPadding: CGFloat = 38
-        static let headerBottomPadding: CGFloat = 12
-        static let titleTopSpacing: CGFloat = 16
         static let subtitleTopSpacing: CGFloat = 4
-        static let contentHorizontalPadding: CGFloat = 16
         static let cardCornerRadius: CGFloat = 16
-        static let cardPadding: CGFloat = 16
+        static let padding: CGFloat = 16
         static let checkboxSize: CGFloat = 22
-        static let checkboxBorderWidth: CGFloat = 2
-        static let checkboxLabelSpacing: CGFloat = 12
-        static let checkboxCardTopSpacing: CGFloat = 12
-        static let actionHorizontalPadding: CGFloat = 16
-        static let actionTopPadding: CGFloat = 16
+        static let spacing: CGFloat = 12
         static let actionBottomPadding: CGFloat = 24
-        static let buttonHeight: CGFloat = 50
-        static let buttonCornerRadius: CGFloat = 16
-        static let footnoteTopSpacing: CGFloat = 12
         static let bodyLineSpacing: CGFloat = 3.75
         // swiftlint:disable no_magic_numbers
         static let sheetBackground = Color(white: 0.98)
@@ -64,7 +54,7 @@ private extension EULAView {
             iconView
             Text(.eulaTitle)
                 .font(.eulaTitle)
-                .padding(.top, Metrics.titleTopSpacing)
+                .padding(.top, Metrics.padding)
             Text(.eulaSubtitle)
                 .font(.eulaSubtitle)
                 .foregroundStyle(.secondary)
@@ -72,7 +62,7 @@ private extension EULAView {
         }
         .padding(.horizontal, Metrics.headerHorizontalPadding)
         .padding(.top, Metrics.headerTopPadding)
-        .padding(.bottom, Metrics.headerBottomPadding)
+        .padding(.bottom, Metrics.spacing)
     }
 
     var iconView: some View {
@@ -94,12 +84,11 @@ private extension EULAView {
     }
 
     var contentSection: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: Metrics.spacing) {
             bodyTextCard
             checkboxCard
-                .padding(.top, Metrics.checkboxCardTopSpacing)
         }
-        .padding(.horizontal, Metrics.contentHorizontalPadding)
+        .padding(.horizontal, Metrics.padding)
     }
 
     var bodyTextCard: some View {
@@ -109,51 +98,42 @@ private extension EULAView {
             .lineSpacing(Metrics.bodyLineSpacing)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(Metrics.cardPadding)
+            .padding(Metrics.padding)
             .roundedRect(cornerRadius: Metrics.cardCornerRadius, background: Color(uiColor: .systemBackground))
             .tint(.blue)
     }
 
     var checkboxCard: some View {
         Button(action: { isAgreed.toggle() }) {
-            HStack(spacing: Metrics.checkboxLabelSpacing) {
+            HStack(spacing: Metrics.spacing) {
                 checkboxIcon
                 Text(.eulaCheckboxLabel)
                     .font(.eulaBody)
                     .foregroundStyle(Color.primary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(Metrics.cardPadding)
+            .padding(Metrics.padding)
             .roundedRect(cornerRadius: Metrics.cardCornerRadius, background: Color(uiColor: .systemBackground))
         }
         .buttonStyle(.plain)
     }
 
     var checkboxIcon: some View {
-        Group {
-            if isAgreed {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(.blue)
-                    .font(.system(size: Metrics.checkboxSize))
-            } else {
-                Circle()
-                    .strokeBorder(Color(uiColor: .systemGray3), lineWidth: Metrics.checkboxBorderWidth)
-                    .squareFrame(size: Metrics.checkboxSize)
-            }
-        }
-        .squareFrame(size: Metrics.checkboxSize)
+        Image(systemName: isAgreed ? "checkmark.circle.fill" : "circle")
+            .foregroundStyle(isAgreed ? Color.blue : Color(uiColor: .systemGray3))
+            .font(.system(size: Metrics.checkboxSize))
+            .squareFrame(size: Metrics.checkboxSize)
     }
 
     var actionSection: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: Metrics.spacing) {
             continueButton
             Text(.eulaFootnote)
                 .font(.eulaFootnote)
                 .foregroundStyle(.secondary)
-                .padding(.top, Metrics.footnoteTopSpacing)
         }
-        .padding(.horizontal, Metrics.actionHorizontalPadding)
-        .padding(.top, Metrics.actionTopPadding)
+        .padding(.horizontal, Metrics.padding)
+        .padding(.top, Metrics.padding)
         .padding(.bottom, Metrics.actionBottomPadding)
     }
 
@@ -162,13 +142,10 @@ private extension EULAView {
             Text(.eulaContinueButton)
                 .font(.eulaButton)
                 .frame(maxWidth: .infinity)
-                .frame(height: Metrics.buttonHeight)
-                .foregroundStyle(isAgreed ? .white : Color(white: 0.55))
-                .roundedRect(
-                    cornerRadius: Metrics.buttonCornerRadius,
-                    background: isAgreed ? .blue : Color(uiColor: .systemGray4)
-                )
         }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .clipShape(RoundedRectangle(cornerRadius: Metrics.cardCornerRadius, style: .continuous))
         .disabled(!isAgreed)
     }
 }
