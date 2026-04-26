@@ -14,7 +14,7 @@ struct EULAView: View {
         static let iconCornerRadius: CGFloat = 20
         static let iconSymbolSize: CGFloat = 32
         static let headerHorizontalPadding: CGFloat = 24
-        static let headerTopPadding: CGFloat = 20
+        static let headerTopPadding: CGFloat = 38
         static let headerBottomPadding: CGFloat = 12
         static let titleTopSpacing: CGFloat = 16
         static let subtitleTopSpacing: CGFloat = 4
@@ -31,6 +31,9 @@ struct EULAView: View {
         static let buttonHeight: CGFloat = 50
         static let buttonCornerRadius: CGFloat = 16
         static let footnoteTopSpacing: CGFloat = 12
+        static let bodyLineSpacing: CGFloat = 3.75
+        // swiftlint:disable no_magic_numbers
+        static let sheetBackground = Color(white: 0.98)
         static let iconGradientTop = Color(red: 0.1, green: 0.535, blue: 1.0)
         static let iconGradientBottom = Color(red: 0, green: 0.435, blue: 0.9)
     }
@@ -46,9 +49,9 @@ struct EULAView: View {
             contentSection
             actionSection
         }
-        .background(Color(uiColor: .systemGroupedBackground))
         .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
         .presentationDetents([.height(contentHeight)])
+        .presentationBackground(Metrics.sheetBackground)
         .presentationDragIndicator(.visible)
     }
 }
@@ -103,6 +106,8 @@ private extension EULAView {
         Text(String(localized: "eulaBodyText").markdown())
             .font(.eulaBody)
             .foregroundStyle(Color.primary)
+            .lineSpacing(Metrics.bodyLineSpacing)
+            .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(Metrics.cardPadding)
             .roundedRect(cornerRadius: Metrics.cardCornerRadius, background: Color(uiColor: .systemBackground))
