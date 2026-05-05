@@ -15,7 +15,6 @@ struct ResourceItemCard: View {
         static let iconSize: CGFloat = 24
         static let iconTextSpacing: CGFloat = 12
         static let chevronSize: CGFloat = 20
-        static let descriptionTopSpacing: CGFloat = 4
         static let trailingSpacing: CGFloat = 12
     }
 

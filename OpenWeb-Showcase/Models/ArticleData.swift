@@ -8,9 +8,23 @@
 
 import Foundation
 
+struct ArticleContent {
+    var imageURL: String
+    var sourceName: String
+    var readTime: String
+    var subtitle: String
+    var authorName: String
+    var date: String
+    var leadParagraph: String
+
+    var authorInitials: String {
+        authorName.split(separator: " ").compactMap { $0.first.map(String.init) }.joined()
+    }
+}
+
 struct ArticleData {
     var spotId: String
     var postId: String
     var title: String
-    var body: String
+    var content: ArticleContent?
 }

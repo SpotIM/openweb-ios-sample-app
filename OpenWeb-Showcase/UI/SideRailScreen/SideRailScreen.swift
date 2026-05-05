@@ -15,7 +15,10 @@ struct SideRailScreen: View {
 
     var body: some View {
         ScrollView {
-            ArticleContent(article: viewModel.article)
+            if let content = viewModel.article.content {
+                ArticleTopSection(title: viewModel.article.title, content: content)
+            }
+            sideRailBody
             SDKUsageInfoCard(
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
@@ -43,6 +46,44 @@ struct SideRailScreen: View {
             }
         }
         .onAppear { viewModel.initialize() }
+    }
+}
+
+private extension SideRailScreen {
+    private static let headerPrefix = "### "
+
+    private struct Metrics {
+        static let headerTopPadding: CGFloat = 24
+        static let headerBottomPadding: CGFloat = 12
+        static let textOpacity: Double = 0.9
+        static let lineSpacing: CGFloat = 4
+        static let horizontalPadding: CGFloat = 16
+        static let topPadding: CGFloat = 8
+    }
+
+    var sideRailBody: some View {
+        let paragraphs = ShowcaseVertical.loadArticle(named: "siderail")
+            .components(separatedBy: "\n\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+
+        return VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(paragraphs.enumerated()), id: \.offset) { _, paragraph in
+                if paragraph.hasPrefix(Self.headerPrefix) {
+                    Text(String(paragraph.dropFirst(Self.headerPrefix.count)))
+                        .font(.heading)
+                        .padding(.top, Metrics.headerTopPadding)
+                        .padding(.bottom, Metrics.headerBottomPadding)
+                } else {
+                    Text(paragraph)
+                        .font(.bodyText)
+                        .foregroundStyle(.primary.opacity(Metrics.textOpacity))
+                        .lineSpacing(Metrics.lineSpacing)
+                }
+            }
+        }
+        .padding(.horizontal, Metrics.horizontalPadding)
+        .padding(.top, Metrics.topPadding)
     }
 }
 

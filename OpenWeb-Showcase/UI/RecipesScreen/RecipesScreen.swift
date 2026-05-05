@@ -14,7 +14,10 @@ struct RecipesScreen: View {
 
     var body: some View {
         ScrollView {
-            ArticleContent(article: viewModel.article)
+            if let content = viewModel.article.content {
+                ArticleTopSection(title: viewModel.article.title, content: content)
+            }
+            recipeBody
             SDKUsageInfoCard(
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
@@ -33,6 +36,35 @@ struct RecipesScreen: View {
             color: viewModel.color
         )
         .onAppear { viewModel.initialize() }
+    }
+}
+
+private extension RecipesScreen {
+    private struct Metrics {
+        static let bodyImageURL = "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=80"
+        // swiftlint:disable:next no_magic_numbers
+        static let bodyImageAspectRatio: CGFloat = 4.0 / 3.0
+        static let bodySpacing: CGFloat = 8
+    }
+
+    var recipeBody: some View {
+        VStack(alignment: .leading, spacing: Metrics.bodySpacing) {
+            ArticleBodyText(text: ShowcaseVertical.loadArticle(named: "recipes"))
+            AsyncImage(url: URL(string: Metrics.bodyImageURL)) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                default:
+                    Color(.systemGray5)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .aspectRatio(Metrics.bodyImageAspectRatio, contentMode: .fill)
+            .clipped()
+            ArticleBodyText(text: ShowcaseVertical.loadArticle(named: "recipes_body2"))
+        }
     }
 }
 

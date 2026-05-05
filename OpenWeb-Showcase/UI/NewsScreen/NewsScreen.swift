@@ -14,7 +14,10 @@ struct NewsScreen: View {
 
     var body: some View {
         ScrollView {
-            ArticleContent(article: viewModel.article)
+            if let content = viewModel.article.content {
+                ArticleTopSection(title: viewModel.article.title, content: content)
+            }
+            ArticleBodyText(text: ShowcaseVertical.loadArticle(named: "news"))
             SDKUsageInfoCard(
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
