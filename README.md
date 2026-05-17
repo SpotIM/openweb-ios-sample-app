@@ -1,18 +1,42 @@
-# OpenWeb Showcase
+<p align="center">
+  <img src="https://files.readme.io/8487c1a-ios-sdk-hp.png" alt="OpenWeb iOS SDK" width="600"/>
+</p>
 
-A SwiftUI demo app showcasing the OpenWeb SDK's engagement solutions across multiple content verticals.
+# OpenWeb Showcase — iOS Sample App
 
-## Overview
+A SwiftUI sample app demonstrating how to integrate the [OpenWeb iOS SDK](https://developers.openweb.com/docs/ios-getting-started) across multiple content verticals.
 
-The Showcase app demonstrates best practices for integrating OpenWeb's conversation and engagement features into different content types. Each vertical presents a unique integration pattern tailored to its content format.
+---
 
-## SDK Integration
+<p align="center">
+  <img src="https://files.readme.io/6f404c6-ios-sdk-new-preconvo-convo-comment.png" alt="Pre-conversation, Conversation, and Comment Thread" width="700"/>
+</p>
 
-Each vertical screen (`UI/<Vertical>Screen/`) demonstrates the two steps required to display an SDK component:
+## Verticals
 
-**Setting SDK parameters** (in ViewModels):
-- `OpenWeb.manager.spotId` — Set the spot ID for the conversation
-- `OpenWeb.manager.ui.customizations.customizedTheme.brandColor` — Configure brand color
+Each vertical showcases a real-world integration pattern:
 
-**Integrating SDK views** (in Views):
-- `OpenWebPreConversation(postId:article:)` — Embed a pre-conversation module
+| Vertical | Description |
+|----------|-------------|
+| 📰 News | Article-based conversation with pre-conversation module |
+| 📈 Finance | Market content with embedded comment thread |
+| 🍲 Recipes | Media-rich content with community engagement |
+| ⚽ Sport | Live-event style conversation |
+| ▶️ Video | Video content with side-by-side comments |
+| 📄 SideRail | Sidebar conversation layout |
+
+## Requirements
+
+- Xcode 26+
+- iOS 16+
+
+## Quick Start
+
+1. Open `OpenWeb-Showcase.xcodeproj`
+2. Xcode resolves the [OpenWeb iOS SDK](https://github.com/SpotIM/openweb-ios-sdk-pod) via SPM automatically
+3. Select the `OpenWeb-Showcase` scheme and build
+
+## Learn More
+
+- [OpenWeb Developer Docs](https://developers.openweb.com/docs/ios-getting-started)
+- [openweb.com](https://www.openweb.com)
