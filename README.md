@@ -18,7 +18,7 @@ Each vertical showcases a real-world integration pattern:
 | 📈 Finance | Market content with embedded comment thread |
 | 🍲 Recipes | Media-rich content with community engagement |
 | ⚽ Sport | Live-event style conversation |
-| ▶️ Video | Video content with side-by-side comments |
+| ▶️ Video | Video content with comments overlay |
 | 📄 SideRail | Sidebar conversation layout |
 
 <p>
