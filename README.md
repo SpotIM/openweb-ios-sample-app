@@ -1,15 +1,11 @@
-<p align="center">
-  <img src="https://files.readme.io/8487c1a-ios-sdk-hp.png" alt="OpenWeb iOS SDK" width="600"/>
-</p>
-
-# OpenWeb Showcase — iOS Sample App
+# OpenWeb Showcase - iOS Sample App
 
 A SwiftUI sample app demonstrating how to integrate the [OpenWeb iOS SDK](https://developers.openweb.com/docs/ios-getting-started) across multiple content verticals.
 
 ---
 
 <p align="center">
-  <img src="https://files.readme.io/6f404c6-ios-sdk-new-preconvo-convo-comment.png" alt="Pre-conversation, Conversation, and Comment Thread" width="700"/>
+  <img src="https://files.readme.io/8487c1a-ios-sdk-hp.png" alt="OpenWeb iOS SDK" width="600"/>
 </p>
 
 ## Verticals
