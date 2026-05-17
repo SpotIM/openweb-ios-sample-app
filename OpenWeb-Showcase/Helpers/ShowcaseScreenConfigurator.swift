@@ -7,11 +7,9 @@
 //
 
 import SwiftUI
-@_spi(Muting) import OpenWebSDK
+import OpenWebSDK
 
 enum ShowcaseScreenConfigurator {
-    static let mutedUsersProvider = ShowcaseMutedUsersProvider()
-
     static func applyShowcaseSettings() {
         // MARK: SDK Usage
         OpenWeb.manager.ui.customizations.addElementCallback { element, source, themeStyle, postId in
@@ -19,7 +17,6 @@ enum ShowcaseScreenConfigurator {
                 CustomUICallback.customize(element, themeStyle: themeStyle)
             }
         }
-        OpenWeb.manager.helpers.mutedUsersProvider = mutedUsersProvider
         SDKSetting(SettingsItems.customThemeColors).wrappedValue.applyToSDK()
     }
 }

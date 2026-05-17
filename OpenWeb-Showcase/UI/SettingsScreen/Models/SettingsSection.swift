@@ -13,7 +13,6 @@ enum SettingsSection: Identifiable, CaseIterable {
     case configurations
     case articleSettings
     case screenSettings
-    case muting
 
     var id: Self { self }
 
@@ -23,7 +22,6 @@ enum SettingsSection: Identifiable, CaseIterable {
         case .configurations: .settingsConfigurationsTitle
         case .articleSettings: .settingsArticleSettingsTitle
         case .screenSettings: .settingsScreenSettingsTitle
-        case .muting: .settingsMutingTitle
         }
     }
 
@@ -33,7 +31,6 @@ enum SettingsSection: Identifiable, CaseIterable {
         case .configurations: .settingsConfigurationsSubtitle
         case .articleSettings: .settingsArticleSettingsSubtitle
         case .screenSettings: .settingsScreenSettingsSubtitle
-        case .muting: .settingsMutingSubtitle
         }
     }
 
@@ -43,7 +40,6 @@ enum SettingsSection: Identifiable, CaseIterable {
         case .configurations: Self.configurationsEntries
         case .articleSettings: Self.articleSettingsEntries
         case .screenSettings: Self.screenSettingsEntries
-        case .muting: Self.mutingEntries
         }
     }
 
@@ -194,11 +190,4 @@ enum SettingsSection: Identifiable, CaseIterable {
         ),
     ]
 
-    private static let mutingEntries: [SettingsEntry] = [
-        SettingsEntry(
-            id: "mutedUsers",
-            title: String(localized: .mutingMutedUsersTitle),
-            subtitle: String(localized: .mutingMutedUsersSubtitle)
-        ),
-    ]
 }
