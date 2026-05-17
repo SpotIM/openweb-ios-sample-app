@@ -7,40 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		240C6FB42F6FF0A800577287 /* OpenWebSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		240C6FB52F6FF12600577287 /* OpenWebCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240C56C72F6FE81A00577287 /* OpenWebCommon.framework */; };
-		240C6FB62F6FF12600577287 /* OpenWebCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240C56C72F6FE81A00577287 /* OpenWebCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24A18C9F2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */; };
-		24A18CA02F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		45BADC79392D837A6CA6702A /* Pods_OpenWeb_Showcase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09AD32D40C016C6C9237419F /* Pods_OpenWeb_Showcase.framework */; };
+		16E3E5C42FB9D15D002B0F06 /* OpenWebSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 16E3E5C32FB9D15D002B0F06 /* OpenWebSDK */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		24A18C9D2F598B4100AB7F6F /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				240C6FB42F6FF0A800577287 /* OpenWebSDK.framework in Embed Frameworks */,
-				24A18CA02F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Embed Frameworks */,
-				240C6FB62F6FF12600577287 /* OpenWebCommon.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		09AD32D40C016C6C9237419F /* Pods_OpenWeb_Showcase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenWeb_Showcase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		240C56C72F6FE81A00577287 /* OpenWebCommon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWebSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenWeb_SampleApp_Internal_Configs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		24A4A12E2F558DE500B538E1 /* OpenWeb-Showcase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWeb-Showcase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2AAB7788EBE1CB716850AF7A /* Pods-OpenWeb-Showcase.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.releaseinternal.xcconfig"; sourceTree = "<group>"; };
-		6AFA6079F9C81C1153679317 /* Pods-OpenWeb-Showcase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.release.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.release.xcconfig"; sourceTree = "<group>"; };
-		A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.internal.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.internal.xcconfig"; sourceTree = "<group>"; };
-		C338E47A6892325DC585734F /* Pods-OpenWeb-Showcase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWeb-Showcase.debug.xcconfig"; path = "Target Support Files/Pods-OpenWeb-Showcase/Pods-OpenWeb-Showcase.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -69,9 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24A18C9F2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework in Frameworks */,
-				45BADC79392D837A6CA6702A /* Pods_OpenWeb_Showcase.framework in Frameworks */,
-				240C6FB52F6FF12600577287 /* OpenWebCommon.framework in Frameworks */,
+				16E3E5C42FB9D15D002B0F06 /* OpenWebSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,8 +52,6 @@
 			children = (
 				24A4A1302F558DE500B538E1 /* OpenWeb-Showcase */,
 				24A4A12F2F558DE500B538E1 /* Products */,
-				A9BDF1B38C9E48A4EB5AAA8A /* Pods */,
-				FCC465BCE3536403004F7852 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,29 +63,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A9BDF1B38C9E48A4EB5AAA8A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				C338E47A6892325DC585734F /* Pods-OpenWeb-Showcase.debug.xcconfig */,
-				6AFA6079F9C81C1153679317 /* Pods-OpenWeb-Showcase.release.xcconfig */,
-				A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */,
-				2AAB7788EBE1CB716850AF7A /* Pods-OpenWeb-Showcase.releaseinternal.xcconfig */,
-			);
-			name = Pods;
-			path = ../Pods;
-			sourceTree = "<group>";
-		};
-		FCC465BCE3536403004F7852 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				240C56C72F6FE81A00577287 /* OpenWebCommon.framework */,
-				24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */,
-				24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */,
-				09AD32D40C016C6C9237419F /* Pods_OpenWeb_Showcase.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -126,11 +70,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 24A4A1392F558DE600B538E1 /* Build configuration list for PBXNativeTarget "OpenWeb-Showcase" */;
 			buildPhases = (
-				2821DD39DAAF459EBA708F5A /* [CP] Check Pods Manifest.lock */,
 				24A4A12A2F558DE500B538E1 /* Sources */,
 				24A4A12B2F558DE500B538E1 /* Frameworks */,
 				24A4A12C2F558DE500B538E1 /* Resources */,
-				24A18C9D2F598B4100AB7F6F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -168,6 +110,9 @@
 			);
 			mainGroup = 24A4A1252F558DE500B538E1;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				16E3E5C22FB9D15D002B0F06 /* XCRemoteSwiftPackageReference "openweb-ios-sdk-pod" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 24A4A12F2F558DE500B538E1 /* Products */;
 			projectDirPath = "";
@@ -187,31 +132,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		2821DD39DAAF459EBA708F5A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OpenWeb-Showcase-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		24A4A12A2F558DE500B538E1 /* Sources */ = {
@@ -286,7 +206,6 @@
 		};
 		240C546A2F6FD3D400577287 /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2AAB7788EBE1CB716850AF7A /* Pods-OpenWeb-Showcase.releaseinternal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -301,7 +220,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.1;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -385,7 +304,6 @@
 		};
 		24A4A13A2F558DE600B538E1 /* Internal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A04C50622278D5692E034F5D /* Pods-OpenWeb-Showcase.internal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -400,7 +318,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.1;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openweb.showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -437,6 +355,25 @@
 			defaultConfigurationName = ReleaseInternal;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		16E3E5C22FB9D15D002B0F06 /* XCRemoteSwiftPackageReference "openweb-ios-sdk-pod" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SpotIM/openweb-ios-sdk-pod";
+			requirement = {
+				kind = exactVersion;
+				version = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		16E3E5C32FB9D15D002B0F06 /* OpenWebSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16E3E5C22FB9D15D002B0F06 /* XCRemoteSwiftPackageReference "openweb-ios-sdk-pod" */;
+			productName = OpenWebSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 24A4A1262F558DE500B538E1 /* Project object */;
 }
