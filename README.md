@@ -21,6 +21,12 @@ Each vertical showcases a real-world integration pattern:
 | ▶️ Video | Video content with side-by-side comments |
 | 📄 SideRail | Sidebar conversation layout |
 
+<p>
+<img width="400" alt="Simulator Screenshot - iPhone 17 Pro - 2026-05-17 at 14 31 25" src="https://github.com/user-attachments/assets/c8d0d654-2cca-49a9-a152-464fa5500d86" />
+</p>
+
+---
+
 ## Requirements
 
 - Xcode 26+
