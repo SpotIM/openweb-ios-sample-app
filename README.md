@@ -38,6 +38,10 @@ Each vertical showcases a real-world integration pattern:
 2. Xcode resolves the [OpenWeb iOS SDK](https://github.com/SpotIM/openweb-ios-sdk-pod) via SPM automatically
 3. Select the `OpenWeb-Showcase` scheme and build
 
+## SDK Integration Code
+
+Search for `MARK: OpenWeb SDK` comments throughout the codebase to find all SDK integration sample code.
+
 ## Learn More
 
 - [OpenWeb Developer Docs](https://developers.openweb.com/docs/ios-getting-started)
