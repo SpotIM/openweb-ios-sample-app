@@ -37,13 +37,7 @@ struct VideoPlayerPage: View {
             VideoActionButtons(commentsCount: commentsCount, onCommentTap: onCommentTap, onInfoTap: onInfoTap)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
         }
-        .onAppear {
-            print("[VideoScreen] onAppear: \(url.lastPathComponent) isActive=\(isActive)")
-            videoPlayer.setup(url: url)
-        }
-        .onDisappear {
-            print("[VideoScreen] onDisappear: \(url.lastPathComponent)")
-            videoPlayer.tearDown()
-        }
+        .onAppear { videoPlayer.setup(url: url) }
+        .onDisappear { videoPlayer.tearDown() }
     }
 }

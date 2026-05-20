@@ -17,14 +17,12 @@ final class VideoPlayer {
 
     func setup(url: URL) {
         tearDown()
-        print("[VideoScreen] setup: \(url.lastPathComponent)")
         let queuePlayer = AVQueuePlayer()
         looper = AVPlayerLooper(player: queuePlayer, templateItem: AVPlayerItem(url: url))
         player = queuePlayer
     }
 
     func tearDown() {
-        print("[VideoScreen] tearDown")
         player?.pause()
         player = nil
         looper = nil
