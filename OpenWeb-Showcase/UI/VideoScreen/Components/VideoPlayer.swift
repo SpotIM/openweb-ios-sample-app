@@ -7,7 +7,6 @@
 //
 
 import AVFoundation
-import Combine
 
 // MARK: - VideoPlayer
 
@@ -20,7 +19,6 @@ final class VideoPlayer {
     }
 
     private var looper: AVPlayerLooper?
-    private var cancellables = Set<AnyCancellable>()
 
     func setup(url: URL) {
         tearDown()
@@ -28,22 +26,10 @@ final class VideoPlayer {
         let queuePlayer = AVQueuePlayer()
         looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
         player = queuePlayer
-
-        queuePlayer.publisher(for: \.currentItem?.status)
-            .compactMap { $0 }
-            .filter { $0 == .readyToPlay }
-            .prefix(1)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.updatePlayback()
-            }
-            .store(in: &cancellables)
-
         updatePlayback()
     }
 
     func tearDown() {
-        cancellables.removeAll()
         player?.pause()
         player = nil
         looper = nil

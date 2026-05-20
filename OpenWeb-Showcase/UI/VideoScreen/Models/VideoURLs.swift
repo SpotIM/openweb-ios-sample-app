@@ -41,5 +41,5 @@ enum VideoURLs {
         "https://cdn.pixabay.com/video/2021/04/19/71570-538974134_small.mp4",
     ].compactMap { URL(string: $0) }
 
-    static var shuffled: [URL] { all.shuffled() }
+    static let shuffled: [URL] = all.shuffled()
 }

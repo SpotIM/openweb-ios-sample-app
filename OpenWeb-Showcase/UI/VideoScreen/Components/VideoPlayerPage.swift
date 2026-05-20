@@ -38,8 +38,8 @@ struct VideoPlayerPage: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
         }
         .onAppear {
-            videoPlayer.isActive = isActive
             videoPlayer.setup(url: url)
+            videoPlayer.isActive = isActive
         }
         .onDisappear { videoPlayer.tearDown() }
         .onChange(of: isActive) { _, active in videoPlayer.isActive = active }
