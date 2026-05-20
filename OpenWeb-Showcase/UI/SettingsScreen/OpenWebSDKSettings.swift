@@ -22,38 +22,6 @@ extension CustomizationsViewModel.SortOptionSetting: OpenWebApplicable {
     }
 }
 
-extension OWCommentActionsColor: @retroactive CaseIterable, @retroactive Identifiable, OpenWebApplicable {
-    public static var allCases: [OWCommentActionsColor] { [.default, .brandColor] }
-    public var id: Self { self }
-    var title: String {
-        switch self {
-        case .default: "Default"
-        case .brandColor: "Brand Color"
-        @unknown default: "Unknown"
-        }
-    }
-    func applyToSDK() {
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.ui.customizations.commentActions.color = self
-    }
-}
-
-extension OWCommentActionsFontStyle: @retroactive CaseIterable, @retroactive Identifiable, OpenWebApplicable {
-    public static var allCases: [OWCommentActionsFontStyle] { [.default, .semiBold] }
-    public var id: Self { self }
-    var title: String {
-        switch self {
-        case .default: "Default"
-        case .semiBold: "Semi Bold"
-        @unknown default: "Unknown"
-        }
-    }
-    func applyToSDK() {
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.ui.customizations.commentActions.fontStyle = self
-    }
-}
-
 extension OWFontGroupFamily: OpenWebApplicable {
     func applyToSDK() {
         // MARK: OpenWeb SDK
@@ -74,10 +42,10 @@ extension CustomizationsViewModel.ThemeModeSetting: OpenWebApplicable {
     }
 }
 
-extension OWTheme: OpenWebApplicable {
+extension OWCustomizationElements: OpenWebApplicable {
     func applyToSDK() {
         // MARK: OpenWeb SDK
-        OpenWeb.manager.ui.customizations.customizedTheme = self
+        OpenWeb.manager.ui.customizations.elements = self
     }
 }
 

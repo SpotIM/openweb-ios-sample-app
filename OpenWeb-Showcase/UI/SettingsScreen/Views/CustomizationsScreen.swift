@@ -16,8 +16,7 @@ struct CustomizationsScreen: View {
     var body: some View {
         List {
             sortingSection
-            commentActionsSection
-            themeSection
+            fontsAndColorsSection
             uiCallbackSection
         }
         .scrollAndHighlight(entryID: highlightedEntryID)
@@ -41,27 +40,15 @@ private extension CustomizationsScreen {
         }
     }
 
-    var commentActionsSection: some View {
-        Section(.customizationsCommentActionsSectionTitle) {
+    var fontsAndColorsSection: some View {
+        Section(.customizationsElementsSectionTitle) {
             SegmentedPickerRow(
-                title: .customizationsActionColorTitle,
-                subtitle: .customizationsActionColorSubtitle,
-                selection: $viewModel.selectedActionColor,
+                title: .customizationsThemeModeTitle,
+                subtitle: .customizationsThemeModeSubtitle,
+                selection: $viewModel.selectedThemeMode,
                 optionTitle: \.title
             )
-            .settingsRow(SettingsItems.actionColor.key)
-            SegmentedPickerRow(
-                title: .customizationsActionFontTitle,
-                subtitle: .customizationsActionFontSubtitle,
-                selection: $viewModel.selectedActionFont,
-                optionTitle: \.title
-            )
-            .settingsRow(SettingsItems.actionFont.key)
-        }
-    }
-
-    var themeSection: some View {
-        Section(.customizationsThemeSectionTitle) {
+            .settingsRow(SettingsItems.themeMode.key)
             FontPickerRow(
                 title: .customizationsFontFamilyTitle,
                 subtitle: .customizationsFontFamilySubtitle,
@@ -76,25 +63,18 @@ private extension CustomizationsScreen {
                 )
             )
             .settingsRow(SettingsItems.fontFamily.key)
-            SegmentedPickerRow(
-                title: .customizationsThemeModeTitle,
-                subtitle: .customizationsThemeModeSubtitle,
-                selection: $viewModel.selectedThemeMode,
-                optionTitle: \.title
-            )
-            .settingsRow(SettingsItems.themeMode.key)
             NavigationLink {
-                CustomThemeColorsScreen()
+                CustomElementsScreen()
             } label: {
                 VStack(alignment: .leading) {
-                    Text(.customizationsCustomThemeColorsTitle)
+                    Text(.customizationsCustomElementsTitle)
                         .font(.bodyText)
-                    Text(.customizationsCustomThemeColorsSubtitle)
+                    Text(.customizationsCustomElementsSubtitle)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
-            .settingsRow(SettingsItems.customThemeColors.key)
+            .settingsRow(SettingsItems.customElements.key)
         }
     }
 
