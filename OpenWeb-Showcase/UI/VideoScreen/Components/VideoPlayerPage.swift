@@ -27,7 +27,7 @@ struct VideoPlayerPage: View {
 
     var body: some View {
         ZStack {
-            VideoLoopingView(player: videoPlayer.player)
+            VideoLoopingView(player: videoPlayer.player, isActive: isActive)
                 .ignoresSafeArea()
             VideoBottomContent()
                 .padding(.leading, Metrics.bottomContentLeadingPadding)
@@ -38,10 +38,12 @@ struct VideoPlayerPage: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
         }
         .onAppear {
+            print("[VideoScreen] onAppear: \(url.lastPathComponent) isActive=\(isActive)")
             videoPlayer.setup(url: url)
-            videoPlayer.isActive = isActive
         }
-        .onDisappear { videoPlayer.tearDown() }
-        .onChange(of: isActive) { _, active in videoPlayer.isActive = active }
+        .onDisappear {
+            print("[VideoScreen] onDisappear: \(url.lastPathComponent)")
+            videoPlayer.tearDown()
+        }
     }
 }

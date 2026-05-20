@@ -13,33 +13,20 @@ import AVFoundation
 @Observable
 final class VideoPlayer {
     private(set) var player: AVQueuePlayer?
-
-    var isActive = false {
-        didSet { updatePlayback() }
-    }
-
     private var looper: AVPlayerLooper?
 
     func setup(url: URL) {
         tearDown()
-        let item = AVPlayerItem(url: url)
+        print("[VideoScreen] setup: \(url.lastPathComponent)")
         let queuePlayer = AVQueuePlayer()
-        looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
+        looper = AVPlayerLooper(player: queuePlayer, templateItem: AVPlayerItem(url: url))
         player = queuePlayer
-        updatePlayback()
     }
 
     func tearDown() {
+        print("[VideoScreen] tearDown")
         player?.pause()
         player = nil
         looper = nil
-    }
-
-    private func updatePlayback() {
-        guard isActive else {
-            player?.pause()
-            return
-        }
-        player?.play()
     }
 }

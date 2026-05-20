@@ -13,14 +13,19 @@ import AVFoundation
 
 struct VideoLoopingView: UIViewRepresentable {
     var player: AVQueuePlayer?
+    var isActive: Bool
 
     func makeUIView(context: Context) -> PlayerUIView {
         PlayerUIView()
     }
 
     func updateUIView(_ uiView: PlayerUIView, context: Context) {
-        guard uiView.playerLayer.player !== player else { return }
-        uiView.playerLayer.player = player
+        if uiView.playerLayer.player !== player {
+            print("[VideoScreen] updateUIView: layer \(uiView.playerLayer.player != nil ? "set" : "nil") → \(player != nil ? "set" : "nil")")
+            uiView.playerLayer.player = player
+        }
+        print("[VideoScreen] updateUIView: \(isActive ? "play" : "pause")")
+        isActive ? player?.play() : player?.pause()
     }
 }
 
