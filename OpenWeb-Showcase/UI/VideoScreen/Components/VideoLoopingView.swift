@@ -21,10 +21,8 @@ struct VideoLoopingView: UIViewRepresentable {
 
     func updateUIView(_ uiView: PlayerUIView, context: Context) {
         if uiView.playerLayer.player !== player {
-            print("[VideoScreen] updateUIView: layer \(uiView.playerLayer.player != nil ? "set" : "nil") → \(player != nil ? "set" : "nil")")
             uiView.playerLayer.player = player
         }
-        print("[VideoScreen] updateUIView: \(isActive ? "play" : "pause")")
         isActive ? player?.play() : player?.pause()
     }
 }
