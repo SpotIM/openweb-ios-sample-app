@@ -27,9 +27,9 @@ struct VideoScreen: View {
                             onCommentTap: viewModel.showConversation,
                             onInfoTap: viewModel.showInfo
                         )
-                        .containerRelativeFrame(.vertical)
                         .id(index)
                     }
+                    .containerRelativeFrame(.vertical)
                 }
             }
             .scrollTargetLayout()

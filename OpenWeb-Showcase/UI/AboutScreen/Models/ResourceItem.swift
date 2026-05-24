@@ -37,7 +37,7 @@ enum ResourceItem: Identifiable, CaseIterable {
     var url: URL {
         switch self {
         case .sdkDocs: URL(string: "https://developers.openweb.com/docs/android-social-sdk-getting-started")!
-        case .github: URL(string: "https://github.com/SpotIM/spotim-android-sample-app")! // TODO: change to iOS repo
+        case .github: URL(string: "https://github.com/SpotIM/openweb-ios-sample-app")!
         case .privacyPolicy: URL(string: "https://www.openweb.com/privacy")!
         case .terms: URL(string: "https://www.openweb.com/terms")!
         }
