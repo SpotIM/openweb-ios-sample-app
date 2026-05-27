@@ -9,7 +9,7 @@ import Foundation
 import OpenWebSDK
 import UIKit
 
-struct CodableElement: Codable {
+struct CodableColorElement: Codable {
     var color: CodableUIColor?
 
     init(from element: OWCustomizationElement) {
@@ -59,23 +59,23 @@ extension OWCustomizationElements: @retroactive Codable {
             inputText: (try? container.decode(CodableTextElement.self, forKey: .inputText))?.toModel() ?? .init(),
             avatarText: (try? container.decode(CodableTextElement.self, forKey: .avatarText))?.toModel() ?? .init(),
             commentActions: (try? container.decode(CodableTextElement.self, forKey: .commentActions))?.toModel() ?? .init(),
-            subtitle: (try? container.decode(CodableElement.self, forKey: .subtitle))?.toModel() ?? .init(),
-            detail: (try? container.decode(CodableElement.self, forKey: .detail))?.toModel() ?? .init(),
-            background: (try? container.decode(CodableElement.self, forKey: .background))?.toModel() ?? .init(),
-            overlayBackground: (try? container.decode(CodableElement.self, forKey: .overlayBackground))?.toModel() ?? .init(),
-            cardBackground: (try? container.decode(CodableElement.self, forKey: .cardBackground))?.toModel() ?? .init(),
-            border: (try? container.decode(CodableElement.self, forKey: .border))?.toModel() ?? .init(),
-            sectionDivider: (try? container.decode(CodableElement.self, forKey: .sectionDivider))?.toModel() ?? .init(),
-            contentDivider: (try? container.decode(CodableElement.self, forKey: .contentDivider))?.toModel() ?? .init(),
-            divider: (try? container.decode(CodableElement.self, forKey: .divider))?.toModel() ?? .init(),
-            skeletonGradientEdge: (try? container.decode(CodableElement.self, forKey: .skeletonGradientEdge))?.toModel() ?? .init(),
-            skeletonGradientCenter: (try? container.decode(CodableElement.self, forKey: .skeletonGradientCenter))?.toModel() ?? .init(),
-            loader: (try? container.decode(CodableElement.self, forKey: .loader))?.toModel() ?? .init(),
-            brand: (try? container.decode(CodableElement.self, forKey: .brand))?.toModel() ?? .init(),
-            voteUpSelected: (try? container.decode(CodableElement.self, forKey: .voteUpSelected))?.toModel() ?? .init(),
-            voteDownSelected: (try? container.decode(CodableElement.self, forKey: .voteDownSelected))?.toModel() ?? .init(),
-            voteUpUnselected: (try? container.decode(CodableElement.self, forKey: .voteUpUnselected))?.toModel() ?? .init(),
-            voteDownUnselected: (try? container.decode(CodableElement.self, forKey: .voteDownUnselected))?.toModel() ?? .init()
+            subtitle: (try? container.decode(CodableColorElement.self, forKey: .subtitle))?.toModel() ?? .init(),
+            detail: (try? container.decode(CodableColorElement.self, forKey: .detail))?.toModel() ?? .init(),
+            background: (try? container.decode(CodableColorElement.self, forKey: .background))?.toModel() ?? .init(),
+            overlayBackground: (try? container.decode(CodableColorElement.self, forKey: .overlayBackground))?.toModel() ?? .init(),
+            cardBackground: (try? container.decode(CodableColorElement.self, forKey: .cardBackground))?.toModel() ?? .init(),
+            border: (try? container.decode(CodableColorElement.self, forKey: .border))?.toModel() ?? .init(),
+            sectionDivider: (try? container.decode(CodableColorElement.self, forKey: .sectionDivider))?.toModel() ?? .init(),
+            contentDivider: (try? container.decode(CodableColorElement.self, forKey: .contentDivider))?.toModel() ?? .init(),
+            divider: (try? container.decode(CodableColorElement.self, forKey: .divider))?.toModel() ?? .init(),
+            skeletonGradientEdge: (try? container.decode(CodableColorElement.self, forKey: .skeletonGradientEdge))?.toModel() ?? .init(),
+            skeletonGradientCenter: (try? container.decode(CodableColorElement.self, forKey: .skeletonGradientCenter))?.toModel() ?? .init(),
+            loader: (try? container.decode(CodableColorElement.self, forKey: .loader))?.toModel() ?? .init(),
+            brand: (try? container.decode(CodableColorElement.self, forKey: .brand))?.toModel() ?? .init(),
+            voteUpSelected: (try? container.decode(CodableColorElement.self, forKey: .voteUpSelected))?.toModel() ?? .init(),
+            voteDownSelected: (try? container.decode(CodableColorElement.self, forKey: .voteDownSelected))?.toModel() ?? .init(),
+            voteUpUnselected: (try? container.decode(CodableColorElement.self, forKey: .voteUpUnselected))?.toModel() ?? .init(),
+            voteDownUnselected: (try? container.decode(CodableColorElement.self, forKey: .voteDownUnselected))?.toModel() ?? .init()
         )
     }
 
@@ -87,22 +87,22 @@ extension OWCustomizationElements: @retroactive Codable {
         try container.encode(CodableTextElement(from: inputText), forKey: .inputText)
         try container.encode(CodableTextElement(from: avatarText), forKey: .avatarText)
         try container.encode(CodableTextElement(from: commentActions), forKey: .commentActions)
-        try container.encode(CodableElement(from: subtitle), forKey: .subtitle)
-        try container.encode(CodableElement(from: detail), forKey: .detail)
-        try container.encode(CodableElement(from: background), forKey: .background)
-        try container.encode(CodableElement(from: overlayBackground), forKey: .overlayBackground)
-        try container.encode(CodableElement(from: cardBackground), forKey: .cardBackground)
-        try container.encode(CodableElement(from: border), forKey: .border)
-        try container.encode(CodableElement(from: sectionDivider), forKey: .sectionDivider)
-        try container.encode(CodableElement(from: contentDivider), forKey: .contentDivider)
-        try container.encode(CodableElement(from: divider), forKey: .divider)
-        try container.encode(CodableElement(from: skeletonGradientEdge), forKey: .skeletonGradientEdge)
-        try container.encode(CodableElement(from: skeletonGradientCenter), forKey: .skeletonGradientCenter)
-        try container.encode(CodableElement(from: loader), forKey: .loader)
-        try container.encode(CodableElement(from: brand), forKey: .brand)
-        try container.encode(CodableElement(from: voteUpSelected), forKey: .voteUpSelected)
-        try container.encode(CodableElement(from: voteDownSelected), forKey: .voteDownSelected)
-        try container.encode(CodableElement(from: voteUpUnselected), forKey: .voteUpUnselected)
-        try container.encode(CodableElement(from: voteDownUnselected), forKey: .voteDownUnselected)
+        try container.encode(CodableColorElement(from: subtitle), forKey: .subtitle)
+        try container.encode(CodableColorElement(from: detail), forKey: .detail)
+        try container.encode(CodableColorElement(from: background), forKey: .background)
+        try container.encode(CodableColorElement(from: overlayBackground), forKey: .overlayBackground)
+        try container.encode(CodableColorElement(from: cardBackground), forKey: .cardBackground)
+        try container.encode(CodableColorElement(from: border), forKey: .border)
+        try container.encode(CodableColorElement(from: sectionDivider), forKey: .sectionDivider)
+        try container.encode(CodableColorElement(from: contentDivider), forKey: .contentDivider)
+        try container.encode(CodableColorElement(from: divider), forKey: .divider)
+        try container.encode(CodableColorElement(from: skeletonGradientEdge), forKey: .skeletonGradientEdge)
+        try container.encode(CodableColorElement(from: skeletonGradientCenter), forKey: .skeletonGradientCenter)
+        try container.encode(CodableColorElement(from: loader), forKey: .loader)
+        try container.encode(CodableColorElement(from: brand), forKey: .brand)
+        try container.encode(CodableColorElement(from: voteUpSelected), forKey: .voteUpSelected)
+        try container.encode(CodableColorElement(from: voteDownSelected), forKey: .voteDownSelected)
+        try container.encode(CodableColorElement(from: voteUpUnselected), forKey: .voteUpUnselected)
+        try container.encode(CodableColorElement(from: voteDownUnselected), forKey: .voteDownUnselected)
     }
 }
