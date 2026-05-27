@@ -12,8 +12,6 @@ import OpenWebSDK
 
 class CustomizationsViewModel: NSObject, ObservableObject {
     @SDKSetting(SettingsItems.sortOption) var selectedSortOption: SortOptionSetting
-    @SDKSetting(SettingsItems.actionColor) var selectedActionColor: OWCommentActionsColor
-    @SDKSetting(SettingsItems.actionFont) var selectedActionFont: OWCommentActionsFontStyle
     @SDKSetting(SettingsItems.fontFamily) var selectedFontFamily: OWFontGroupFamily
     @SDKSetting(SettingsItems.themeMode) var selectedThemeMode: ThemeModeSetting
     @SDKSetting(SettingsItems.enableCustomUICallback) var enableCustomUICallback: Bool
