@@ -20,6 +20,6 @@ enum ShowcaseScreenConfigurator {
             }
         }
         OpenWeb.manager.helpers.mutedUsersProvider = mutedUsersProvider
-        SDKSetting(SettingsItems.customThemeColors).wrappedValue.applyToSDK()
+        SDKSetting(SettingsItems.customElements).wrappedValue.applyToSDK()
     }
 }

@@ -309,79 +309,90 @@
         }
       }
     },
-    "customizationsActionColorSubtitle" : {
+    "customizationsCustomElementsSubtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Customize color style of comment action buttons"
+            "value" : "Customize element colors and fonts"
           }
         }
       }
     },
-    "customizationsActionColorTitle" : {
+    "customizationsCustomElementsTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comment Action Color Style"
+            "value" : "Custom Element Colors & Fonts"
           }
         }
       }
     },
-    "customizationsActionFontSubtitle" : {
+    "customizationsElementsColorLabel" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Customize font style of comment action buttons"
+            "value" : "Color"
           }
         }
       }
     },
-    "customizationsActionFontTitle" : {
+    "customizationsElementsColorSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comment Action Font Style"
+            "value" : "Color Elements"
           }
         }
       }
     },
-    "customizationsCommentActionsSectionTitle" : {
+    "customizationsElementsFontFamilyLabel" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comment Actions"
+            "value" : "Font Family"
           }
         }
       }
     },
-    "customizationsCustomThemeColorsSubtitle" : {
+    "customizationsElementsFontWeightLabel" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Customize individual theme colors"
+            "value" : "Font Weight"
           }
         }
       }
     },
-    "customizationsCustomThemeColorsTitle" : {
+    "customizationsElementsSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Custom Theme Colors"
+            "value" : "Fonts & Colors"
+          }
+        }
+      }
+    },
+    "customizationsElementsTextSectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text Elements"
           }
         }
       }
@@ -403,7 +414,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Font Family Strategy"
+            "value" : "Font Family"
+          }
+        }
+      }
+    },
+    "customizationsThemeModeSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose light, dark, or follow system theme"
+          }
+        }
+      }
+    },
+    "customizationsThemeModeTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme Mode"
           }
         }
       }
@@ -449,39 +482,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Initial Sort Option"
-          }
-        }
-      }
-    },
-    "customizationsThemeModeSubtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose light, dark, or follow system theme"
-          }
-        }
-      }
-    },
-    "customizationsThemeModeTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Theme Mode"
-          }
-        }
-      }
-    },
-    "customizationsThemeSectionTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Theme"
           }
         }
       }

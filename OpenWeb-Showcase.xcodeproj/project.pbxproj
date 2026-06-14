@@ -94,7 +94,7 @@
 				240C56C72F6FE81A00577287 /* OpenWebCommon.framework */,
 				24A18C9E2F598B4500AB7F6F /* OpenWeb_SampleApp_Internal_Configs.framework */,
 				24A18C9A2F598B4100AB7F6F /* OpenWebSDK.framework */,
-				);
+			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
