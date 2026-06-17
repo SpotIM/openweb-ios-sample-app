@@ -21,10 +21,6 @@ class CustomElementsViewModel: NSObject, ObservableObject {
 
     // MARK: - Text Element Helpers
 
-    func textElement(_ keyPath: WritableKeyPath<OWCustomizationElements, OWCustomizationTextElement>) -> OWCustomizationTextElement {
-        elements[keyPath: keyPath]
-    }
-
     func fontFamily(for keyPath: WritableKeyPath<OWCustomizationElements, OWCustomizationTextElement>) -> String? {
         elements[keyPath: keyPath].fontFamily
     }
@@ -39,14 +35,6 @@ class CustomElementsViewModel: NSObject, ObservableObject {
 
     func setFontWeight(_ weight: UIFont.Weight?, for keyPath: WritableKeyPath<OWCustomizationElements, OWCustomizationTextElement>) {
         elements[keyPath: keyPath].fontWeight = weight
-    }
-
-    func textColor(for keyPath: WritableKeyPath<OWCustomizationElements, OWCustomizationTextElement>) -> UIColor? {
-        elements[keyPath: keyPath].color
-    }
-
-    func setTextColor(_ color: UIColor?, for keyPath: WritableKeyPath<OWCustomizationElements, OWCustomizationTextElement>) {
-        elements[keyPath: keyPath].color = color
     }
 
     // MARK: - Color Helpers (generic)
