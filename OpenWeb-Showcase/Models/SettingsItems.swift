@@ -12,12 +12,10 @@ import OpenWebSDK
 enum SettingsItems {
     // MARK: - Customizations
     static let sortOption = SettingsItem(key: "sortOption", defaultValue: CustomizationsViewModel.SortOptionSetting.server)
-    static let actionColor = SettingsItem(key: "actionColor", defaultValue: OWCommentActionsColor.default)
-    static let actionFont = SettingsItem(key: "actionFont", defaultValue: OWCommentActionsFontStyle.default)
     static let fontFamily = SettingsItem(key: "fontFamily", defaultValue: OWFontGroupFamily.default)
     static let themeMode = SettingsItem(key: "themeMode", defaultValue: CustomizationsViewModel.ThemeModeSetting.system)
+    static let customElements = SettingsItem(key: "customElements", defaultValue: OWCustomizationElements())
     static let enableCustomUICallback = SettingsItem(key: "enableCustomUIDelegation", defaultValue: false)
-    static let customThemeColors = SettingsItem(key: "customThemeColors", defaultValue: OWTheme())
 
     // MARK: - Configurations
     static let languageStrategy = SettingsItem(key: "languageStrategy", defaultValue: ConfigurationsViewModel.LanguageStrategySetting.device)
@@ -51,8 +49,8 @@ enum SettingsItems {
 
     // MARK: - All Items (for reset)
     static let allItems: [AnySettingsItem] = [
-        sortOption, actionColor, actionFont, fontFamily, themeMode,
-        enableCustomUICallback, customThemeColors,
+        sortOption, fontFamily, themeMode, customElements,
+        enableCustomUICallback,
         languageStrategy, customLanguage, localeStrategy, enableLandscape,
         informationStrategy, articleAssociatedURL, hideArticleHeader, readOnlyMode,
         preConversationStyle, numberOfComments, preConversationGuidelinesStyle,

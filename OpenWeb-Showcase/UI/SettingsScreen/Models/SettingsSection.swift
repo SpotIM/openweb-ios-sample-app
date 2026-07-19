@@ -50,14 +50,9 @@ enum SettingsSection: Identifiable, CaseIterable {
             subtitle: String(localized: .customizationsSortOptionSubtitle)
         ),
         SettingsEntry(
-            id: SettingsItems.actionColor.key,
-            title: String(localized: .customizationsActionColorTitle),
-            subtitle: String(localized: .customizationsActionColorSubtitle)
-        ),
-        SettingsEntry(
-            id: SettingsItems.actionFont.key,
-            title: String(localized: .customizationsActionFontTitle),
-            subtitle: String(localized: .customizationsActionFontSubtitle)
+            id: SettingsItems.themeMode.key,
+            title: String(localized: .customizationsThemeModeTitle),
+            subtitle: String(localized: .customizationsThemeModeSubtitle)
         ),
         SettingsEntry(
             id: SettingsItems.fontFamily.key,
@@ -65,14 +60,9 @@ enum SettingsSection: Identifiable, CaseIterable {
             subtitle: String(localized: .customizationsFontFamilySubtitle)
         ),
         SettingsEntry(
-            id: SettingsItems.themeMode.key,
-            title: String(localized: .customizationsThemeModeTitle),
-            subtitle: String(localized: .customizationsThemeModeSubtitle)
-        ),
-        SettingsEntry(
-            id: SettingsItems.customThemeColors.key,
-            title: String(localized: .customizationsCustomThemeColorsTitle),
-            subtitle: String(localized: .customizationsCustomThemeColorsSubtitle)
+            id: SettingsItems.customElements.key,
+            title: String(localized: .customizationsCustomElementsTitle),
+            subtitle: String(localized: .customizationsCustomElementsSubtitle)
         ),
         SettingsEntry(
             id: SettingsItems.enableCustomUICallback.key,
