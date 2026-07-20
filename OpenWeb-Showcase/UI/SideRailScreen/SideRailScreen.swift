@@ -23,7 +23,11 @@ struct SideRailScreen: View {
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
             )
-            ReactionsCard(postId: viewModel.article.postId, themeName: String(localized: viewModel.title), iconColor: viewModel.color)
+            ReactionsCard(
+                postId: viewModel.article.postId,
+                themeName: String(localized: viewModel.title),
+                iconColor: viewModel.color
+            )
         }
         .background(Color(.systemGroupedBackground))
         .verticalToolbar(

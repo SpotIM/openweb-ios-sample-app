@@ -11,8 +11,7 @@ import OpenWebSDK
 
 struct ReactionsCard: View {
     private struct Metrics {
-        static let cardPadding: CGFloat = 16
-        static let contentPadding: CGFloat = 16
+        static let padding: CGFloat = 16
         static let iconSize: CGFloat = 16
         static let iconTextSpacing: CGFloat = 12
         static let cornerRadius: CGFloat = 12
@@ -43,13 +42,13 @@ struct ReactionsCard: View {
         }
         .id(settingsVersion)
         .tint(.primary)
-        .padding(Metrics.contentPadding)
+        .padding(Metrics.padding)
         .roundedRect(
             cornerRadius: Metrics.cornerRadius,
             background: Color(uiColor: .systemBackground),
             border: Color.black.opacity(Metrics.borderOpacity)
         )
-        .padding(.horizontal, Metrics.cardPadding)
+        .padding(.horizontal, Metrics.padding)
         .onAppear {
             // On reappear, force the SDK widget to reinitialize so it picks up
             // any customization changes (theme, fonts, colors) applied while away.
