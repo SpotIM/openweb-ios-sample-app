@@ -43,6 +43,8 @@ class SportScreenViewModel: ObservableObject {
     private var goalDismissTimer: AnyCancellable?
 
     init() {
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.spotId = article.spotId
         startMatch()
     }
 

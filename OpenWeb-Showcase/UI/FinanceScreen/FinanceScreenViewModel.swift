@@ -22,6 +22,8 @@ class FinanceScreenViewModel: ObservableObject {
 
     init() {
         articleSettings = getArticleSettings()
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.spotId = article.spotId
     }
 
     func initialize() {

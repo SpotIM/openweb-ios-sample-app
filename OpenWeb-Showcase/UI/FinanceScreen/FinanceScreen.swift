@@ -22,6 +22,7 @@ struct FinanceScreen: View {
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
             )
+            ReactionsCard(postId: viewModel.article.postId, themeName: String(localized: viewModel.title), iconColor: viewModel.color)
             // MARK: OpenWeb SDK
             OpenWebPreConversation(
                 postId: viewModel.article.postId,

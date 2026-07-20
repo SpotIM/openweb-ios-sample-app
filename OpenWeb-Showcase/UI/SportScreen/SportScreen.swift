@@ -25,6 +25,7 @@ struct SportScreen: View {
                 info: viewModel.sdkUsageInfo,
                 iconColor: viewModel.color
             )
+            ReactionsCard(postId: viewModel.article.postId, themeName: String(localized: viewModel.title), iconColor: viewModel.color)
             // MARK: OpenWeb SDK
             OpenWebConversation(
                 postId: viewModel.article.postId,
