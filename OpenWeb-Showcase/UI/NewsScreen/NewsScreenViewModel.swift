@@ -29,9 +29,6 @@ class NewsScreenViewModel: ObservableObject {
         articleSettings = SettingsStore.shared.article
         screenSettings = SettingsStore.shared.additionalSettings
 
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.spotId = article.spotId
-
         ShowcaseScreenConfigurator.applyShowcaseSettings()
         if nil == OpenWeb.manager.ui.customizations.elements.brand.color {
             // MARK: OpenWeb SDK

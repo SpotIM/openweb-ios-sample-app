@@ -52,9 +52,6 @@ class SportScreenViewModel: ObservableObject {
         articleSettings = SettingsStore.shared.article
         screenSettings = SettingsStore.shared.additionalSettings
 
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.spotId = article.spotId
-
         ShowcaseScreenConfigurator.applyShowcaseSettings()
         OpenWeb.manager.ui.customizations.navigationBarEnforcement = .style(.regular)
         if nil == OpenWeb.manager.ui.customizations.elements.brand.color {
