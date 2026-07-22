@@ -20,12 +20,14 @@ class SideRailScreenViewModel: ObservableObject {
     @Published var articleSettings = SettingsStore.shared.article
     @Published var screenSettings = SettingsStore.shared.additionalSettings
 
+    init() {
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.spotId = article.spotId
+    }
+
     func initialize() {
         articleSettings = SettingsStore.shared.article
         screenSettings = SettingsStore.shared.additionalSettings
-
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.spotId = article.spotId
 
         ShowcaseScreenConfigurator.applyShowcaseSettings()
         if nil == OpenWeb.manager.ui.customizations.elements.brand.color {

@@ -43,15 +43,14 @@ class SportScreenViewModel: ObservableObject {
     private var goalDismissTimer: AnyCancellable?
 
     init() {
+        // MARK: OpenWeb SDK
+        OpenWeb.manager.spotId = article.spotId
         startMatch()
     }
 
     func initialize() {
         articleSettings = SettingsStore.shared.article
         screenSettings = SettingsStore.shared.additionalSettings
-
-        // MARK: OpenWeb SDK
-        OpenWeb.manager.spotId = article.spotId
 
         ShowcaseScreenConfigurator.applyShowcaseSettings()
         OpenWeb.manager.ui.customizations.navigationBarEnforcement = .style(.regular)
