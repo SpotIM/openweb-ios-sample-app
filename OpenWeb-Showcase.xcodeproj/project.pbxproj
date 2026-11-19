@@ -94,7 +94,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2630;
-				LastUpgradeCheck = 2660;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					24A4A12D2F558DE500B538E1 = {
 						CreatedOnToolsVersion = 26.3;
@@ -364,7 +364,7 @@
 			repositoryURL = "https://github.com/SpotIM/openweb-ios-sdk-pod";
 			requirement = {
 				kind = exactVersion;
-				version = 3.3.0;
+				version = 3.3.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
